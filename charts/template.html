@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{Title}}</title>
+    <link rel="stylesheet" type="text/css" href="/Users/cervas/Google Drive/Projects/Web Development/jcervas_web/charts/chart.css">
+</head>
+<body class="chart">
+
+<style type="text/css">
+.container--ph {
+  height: 0;
+  padding-top: 48%;
+  position: relative;
+}
+
+.iframe--responsive {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none; /* get rid of the border */
+}
+</style>
+
+
+<div class="dw-chart-header" id="header">
+    <h1>
+        <span class="chart-title">{{Caption}}</span>
+    </h1>
+</div>
+
+    <div class="container container--ph">
+    <iframe class="iframe--responsive" src="/Users/cervas/Google Drive/Projects/Dogs that Didn't Bark/plots/seatvotes/bias_shift_2016-01.svg"></iframe>
+</div>
+
+<div class="dw-chart-notes ">
+    Notes: {{notes}}
+</div>
+<div class="dw-chart-footer" id="footer">
+    <div class="footer-left">
+        <span class="footer-block byline-block ">
+            <span class="byline-caption">
+                
+            </span>
+            <span class="chart-byline">Jonathan Cervas | University of California Irvine</span>
+            <span class="byline-append"></span>
+        </span>
+        <span class="footer-block source-block ">
+            <span class="separator"></span>
+            <span class="source-caption">Source:</span>
+            <a href="{{urfl}}" rel="nofollow noopener noreferrer" target="_blank">{{source text}}</a> <span class="separator"></span> {{source 2}}
+        </span>
+    </div>
+    <div class="footer-right">
+    </div>
+</div>
+
+
+
+</body>
+</html>
