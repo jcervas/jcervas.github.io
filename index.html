@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jonathan Cervas | Political Science, Carnegie Mellon University</title>
+    <!-- Bootstrap -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="stylesheet" id="ironstrap_gfonts-css" href="https://fonts.googleapis.com/css?family=Fjalla+One%7CRoboto+Condensed%3A400%2C700&amp;display=swap&amp;ver=1.0" type="text/css" media="all">
+    <!-- <link href="css/bootstrap-4.3.1.css" rel="stylesheet"> -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
+    <link href="css/cervas.css" rel="stylesheet" type="text/css">
+    <link href="css/bars.css" rel="stylesheet" type="text/css">
+    <link href="css/jc-pubs.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
+    <link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
+    <script src="js/modernizr.js"></script> <!-- Modernizr -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="//d3js.org/topojson.v1.min.js"></script>
+    <!-- <link href="https://htmlstream.com/preview/space-v1.6.1/assets/css/theme.css" rel="stylesheet" type="text/css"> -->
+    <style type="text/css">
+    iframe {
+        margin-bottom: 24px;
+        border: 0;
+        display: block;
+        margin: 0 0;
+        max-width: 100%;
+        /*height: 100vh;*/
+    }
+
+    .center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+    }
+
+    .pattern-background {
+        -webkit-font-smoothing: antialiased;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Arial";
+        line-height: 1.42857143;
+        color: #333;
+        font-size: 14px;
+        box-sizing: border-box;
+        background: transparent url(https://cdns.directv.com/content/dam/dtv/NFLST_OTT/2017/images/repeat-pattern.png) repeat 0 0;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        opacity: .7;
+    }
+
+    .full-background {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        overflow: hidden;
+    }
+
+    .background-image {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: 100%;
+        position: fixed;
+        background: url(images/PAROADS.svg) no-repeat 50% 0;
+        background-size: cover;
+        background-image: url(images/PAROADS.svg);
+    }
+
+    #chart {
+        background-color: "";
+        stroke-width: 1;
+    }
+
+    . {
+        stroke: white;
+        stroke-width: 0.1;
+    }
+
+    .boundary {
+        fill: none;
+        stroke: #222426;
+        stroke-linejoin: round;
+        stroke-linecap: round;
+        vector-effect: non-scaling-stroke;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+
+    /* Style the counter cards */
+    .second_title {
+        text-align: left;
+        box-sizing: border-box;
+        color: #2d2a26;
+        line-height: 3vw;
+        font-weight: 400;
+        font-size: 4vw;
+        font-family: avenir-lt-w01_85-heavy1475544, sans-serif;
+        opacity: 0.85;
+        letter-spacing: -.1vw;
+        padding: 12px;
+    }
+
+    .items {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        list-style: none;
+        /*padding: 16px;*/
+    }
+
+    .cards {
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: space-between;
+}
+    .card-wide {
+        /*box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);*/
+        /* this adds the "card" effect */
+        text-align: center;
+/*        width: 550px;*/
+        flex: 0 1 100%;
+    }
+
+    .card-wide img {
+        width: 100%
+    }
+
+    /* Flexbox stuff */
+
+@media screen and (min-width: 40em) {
+    .cards {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .card-wide {
+        flex: 0 1 calc(50%);
+    }
+}
+
+@media screen and (min-width: 60em) {
+
+    .card-wide {
+        flex: 0 1 calc(50%);
+    }
+}
+
+
+
+
+
+
+
+    .card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        /* this adds the "card" effect */
+        padding: 16px;
+        margin: 1%;
+        text-align: center;
+        background-color: #f1f1f1;
+        width: 260px;
+    }
+
+    .card-img {
+        margin: 1%;
+        text-align: center;
+    }
+
+    .card-img img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 250px;
+        max-width: 90%;
+        background-color: ;
+        border: 10px solid #63676b;
+        border-radius: 50%;
+        box-sizing: border-box;
+        height: 100%;
+        margin: 0 auto;
+        overflow: hidden;
+        position: relative;
+    }
+
+
+
+    .card .sub {
+        color: #6a6a6a;
+        font-style: italic;
+        line-height: 0.9;
+        font-weight: 400;
+        font-size: 1.0rem;
+        margin-bottom: 15px;
+    }
+
+    .card-link {
+        width: 100%;
+        height: 100%;
+    }
+
+    .jc-nav {
+        position: fixed;
+        top: 0;
+        display: inline-block;
+        width: 100%;
+        max-height: 30px;
+        overflow: hidden;
+        color: #FFF;
+        font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+        font-weight: 700;
+        background-color: #000;
+        font-size: .75rem;
+        letter-spacing: -.01em;
+        line-height: 1.25rem;
+        vertical-align: baseline;
+        text-transform: uppercase;
+        z-index: 9999;
+    }
+
+    .jc-nav svg {
+        max-height: 25px;
+        vertical-align: baseline;
+    }
+
+    .jc-nav li {
+        display: inline-block;
+        position: relative;
+        top: 0;
+        left: 0;
+        float: left;
+        text-decoration: none;
+    }
+
+    /*---------------------------------*/
+    /*---------HEADER STUFF-----------*/
+    /*-------------------------------*/
+    #headerContainer {
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 200;
+        background: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, .35)), to(rgba(0, 0, 0, 0)));
+        background: -moz-linear-gradient(top, rgba(0, 0, 0, .35), rgba(0, 0, 0, 0));
+    }
+
+    #headerContainer.afterLoad {
+        z-index: 2;
+    }
+
+    body.iDivice #headerContainer {
+        position: absolute;
+    }
+
+    #header {
+        position: relative;
+        margin: 0 auto;
+        max-width: 900px;
+        height: 45px;
+        /*padding: 5px 0 0;*/
+        padding: auto;
+    }
+
+    a#logo {
+        display: inline-block;
+        padding-bottom: 20px;
+    }
+
+    a#logo img {
+        max-width: 100%;
+    }
+
+    /*-------------------------------------*/
+    /*-------MAIN NAVIGATION STUFF--------*/
+    /*-----------------------------------*/
+    #navigation {
+        float: right;
+        margin: -10px 35px 0 0;
+    }
+
+    #dropmenu {
+        list-style: none;
+        position: relative;
+        width: 100%;
+        z-index: 400;
+    }
+
+    #dropmenu li {
+        list-style: none;
+        position: relative;
+        float: left;
+        line-height: 60px;
+    }
+
+    #dropmenu li a {
+        display: block;
+        line-height: 45px;
+        font-size: 11px;
+        border-bottom: 0px solid transparent;
+        text-transform: uppercase;
+        position: relative;
+        padding: 0 10px;
+        color: #fff;
+        opacity: .45;
+        font-weight: bold;
+
+        -moz-transition-property: opacity;
+        -moz-transition-duration: 0.20s;
+        -moz-transition-timing-function: linear;
+
+        -webkit-transition-property: opacity;
+        -webkit-transition-duration: 0.20s;
+        -webkit-transition-timing-function: linear;
+
+        -o-transition-property: opacity;
+        -o-transition-duration: 0.20s;
+        -o-transition-timing-function: linear;
+    }
+
+    #dropmenu li a:hover {
+        text-decoration: none;
+        opacity: 1;
+    }
+
+    #dropmenu li ul {
+        list-style: none;
+        display: block;
+        visibility: hidden;
+        opacity: 0;
+        position: absolute;
+        width: 190px;
+        padding: 10px 0;
+        z-index: 300;
+        top: 45px;
+        right: 0;
+        background: #111;
+        background: rgba(0, 0, 0, .5);
+    }
+
+    #dropmenu>li>ul:before {
+        content: "";
+        height: 0;
+        width: 0;
+        position: absolute;
+        right: 20px;
+        z-index: 1000;
+        display: block;
+        border-width: 10px;
+        border-style: solid;
+        top: -20px;
+        border-color: transparent transparent #111;
+        border-color: transparent transparent rgba(0, 0, 0, .5);
+    }
+
+    #dropmenu li ul li {
+        position: relative;
+        z-index: 2;
+        display: block;
+        text-align: left;
+    }
+
+    #dropmenu li ul li a {
+        line-height: 1.5em;
+        text-transform: none;
+        display: block;
+        padding: 8px 20px;
+        width: 150px;
+    }
+
+    #dropmenu li ul li ul {
+        position: absolute;
+        top: -10px;
+        right: 190px;
+        border-width: 1px;
+    }
+
+    #dropmenu li:hover ul ul,
+    #dropmenu li:hover ul ul ul,
+    #dropmenu li:hover ul ul ul ul {
+        visibility: hidden;
+        opacity: 0;
+    }
+
+    #dropmenu li:hover ul,
+    #dropmenu li li:hover ul,
+    #dropmenu li li li:hover ul,
+    #dropmenu li li li li:hover ul {
+        display: block;
+        visibility: visible;
+        opacity: 1;
+        -moz-transition-property: opacity;
+        -moz-transition-duration: 0.15s;
+        -moz-transition-timing-function: linear;
+
+        -webkit-transition-property: opacity;
+        -webkit-transition-duration: 0.15s;
+        -webkit-transition-timing-function: linear;
+
+        -o-transition-property: opacity;
+        -o-transition-duration: 0.15s;
+        -o-transition-timing-function: linear;
+    }
+
+    #dropmenu>li>a:hover,
+    #dropmenu li.current-menu-parent>a,
+    #dropmenu li.current-menu-item>a,
+    #dropmenu li.current-menu-ancestor>a {
+        color: #fff;
+        border-bottom-color: #fff;
+        opacity: 1;
+        background: none;
+    }
+
+    #selectMenu {
+        display: none;
+        position: absolute;
+        z-index: 1000;
+        right: 25px;
+        bottom: 16px;
+        width: 150px;
+        background: #191919;
+        color: #fafafa;
+        border: 1px solid #1f1f1f;
+        padding: 10px;
+        height: 37px;
+        line-height: 37px;
+        margin: 0;
+    }
+
+
+    .site-header__date {
+        color: #FFFFFF;
+        font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+        font-weight: 700;
+        background-color: #000;
+        display: none;
+        font-size: .75rem;
+        height: 1.25rem;
+        letter-spacing: -.01em;
+        line-height: 1.25rem;
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    @media (min-width:48rem) {
+        .site-header__date {
+            display: block
+        }
+
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <!-- <script>
+  function resizeIframe(obj) {
+    obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+  }
+</script> -->
+</head>
+
+<body>
+    <!--         <section>
+        <div class="full-background">
+            <div class="background-image">
+                <div class="pattern-background">
+                </div>
+            </div>
+
+        </div>
+    </section> -->
+    <section>
+        <div class="jc-nav">
+            <li><a class="" href="/">
+                    <svg viewBox="0 0 224 168" fill="#FFF">
+                        <path d="M95.29,106.53c.02,18.79-3.61,39.58-22.53,48.05-25.01,10.84-64.37,2.99-68.62-29.53l29.43-7.2c1.24,14.52,23.83,17.69,27.57,3.09,4.29-10.62,1.15-98.37,2.06-111.32h32.1V106.53Z" />
+                        <path d="M187.23,47.47c-27.27-28.92-71.77-2.55-69.76,34.98-2.17,39.29,46.04,65.63,71.2,31.28l26.75,19.96c-18.22,26.51-56.43,30.36-84.16,19.96-29.96-10.64-47.66-39.35-47.12-71.2-.54-31.84,17.17-60.55,47.12-71.2,25.94-9.55,62.03-7.56,80.66,16.05l-24.69,20.17Z" /></svg>
+                </a></li>
+            <!-- <a class="navbar-brand" href="#">Jonathan Cervas</a> -->
+            <div id="headerContainer" class="afterLoad">
+                <div id="header">
+                    <!-- <a id="logo" href="http://www.oldfanfilms.com"><img src="http://www.oldfanfilms.com/wp-content/uploads/2018/10/White-Logo-300.png" alt="Old Fan Films"></a> -->
+                    <!--end logo-->
+                    <div id="navigation" class="menu-homemain-container">
+                        <ul id="dropmenu" class="menu">
+                            <!-- <li id="menu-item-28" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-28"><a href="http://www.oldfanfilms.com/?page_id=11">Films</a>
+<ul class="sub-menu">
+    <li id="menu-item-179" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-179"><a href="http://www.oldfanfilms.com/?page_id=32">Documentaries</a></li>
+    <li id="menu-item-176" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-176"><a href="http://www.oldfanfilms.com/?page_id=38">NGO Films</a></li>
+    <li id="menu-item-178" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-178"><a href="http://www.oldfanfilms.com/?page_id=34">Music Videos</a></li>
+    <li id="menu-item-177" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-177"><a href="http://www.oldfanfilms.com/?page_id=36">Short Films</a></li>
+</ul>
+</li>-->
+                            <li id="menu-item-367" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-367"><a href="#about">About</a></li>
+                            <li id="menu-item-27" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-27"><a href="#cases">Redistricting Cases</a></li>
+                            <li id="menu-item-29" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-29"><a href="#pubs">Publications</a></li>
+                            <li id="menu-item-25" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-25"><a href="cv.pdf">CV</a></li>
+                            <!-- <li id="menu-item-366" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-366"><a href="http://www.oldfanfilms.com/?page_id=364">Clients</a></li>
+<li id="menu-item-619" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-619"><a href="http://www.oldfanfilms.com/?page_id=613">Press</a></li>
+<li id="menu-item-24" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-24"><a href="http://www.oldfanfilms.com/?page_id=20">Contact</a></li>-->
+                        </ul>
+                    </div>
+                </div>
+                <select id="selectMenu">
+                    <option value="" selected="selected">Menu</option>
+                    <option value="#about">About</option>
+                    <option value="#cases">Redistricting Cases</option>
+                    <option value="#pubs">Publications</option>
+                    <option value="https://www.polisci.uci.edu/~jcervas/cv.pdf">CV</option>
+                </select>
+                <!--end header-->
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="container_first">
+            <div class="container_first_small"></div>
+            <div class="frosted-box">
+                <div class="animate__animated animate__slideInRight animate__delay-1s">
+                    <div class="text_title animate__animated animate__rubberBand animate__delay-2s">
+                        <svg viewBox="0 0 1366 453.5">
+                            <g>
+                                <path d="M137.56,148.8c.03,27.86-5.35,58.7-33.42,71.25-37.08,16.07-95.45,4.44-101.77-43.79l43.64-10.68c.95,15.64,22.78,24.81,34.18,14.8,6.59-5.87,8.63-14.66,9.31-23.5,.65,.82,.46-147.09,.46-151.81h47.6V148.8Z" />
+                                <path d="M116.19,113.1C113.78,24.8,202.4-20.59,279.45,7.52c93.17,31.55,93.18,179.62,0,211.16-77.05,28.09-165.68-17.27-163.26-105.58Zm49.44,0c-1.72,51.69,48.16,83.09,94.75,64.39,52.74-20.47,52.71-108.24,0-128.77-46.69-18.71-96.37,12.73-94.75,64.39Z" />
+                                <path d="M331.02,5.07h64.69l91.85,150.14h.61V5.07h47.6V221.12h-62.25l-94.29-153.8h-.61V221.12h-47.6V5.07Z" />
+                                <path d="M600.16,5.07h39.36l93.99,216.05h-53.71l-18.61-45.77h-83.92l-18,45.77h-52.49L600.16,5.07Zm18.31,62.86l-26.24,67.13h52.79l-26.55-67.13Z" />
+                                <path d="M718.26,47.19h-61.64V5.07h170.89V47.19h-61.64V221.12h-47.6V47.19Z" />
+                                <path d="M800.95,5.07h47.6V85.63h92.46V5.07h47.6V221.12h-47.6V127.75h-92.46v93.38h-47.6V5.07Z" />
+                                <path d="M1053,5.07h39.36l93.99,216.05h-53.71l-18.62-45.77h-83.92l-18,45.77h-52.49L1053,5.07Zm18.31,62.86l-26.24,67.13h52.79l-26.55-67.13Z" />
+                                <path d="M1157.37,5.07h64.69l91.85,150.14h.61V5.07h47.6V221.12h-62.25l-94.29-153.8h-.61V221.12h-47.6V5.07Z" />
+                            </g>
+                            <g>
+                                <path d="M155.26,283.64c-14.89-18.86-44.42-22.12-65.76-12.51-24.69,11-37.94,37.54-37.69,64.39-.25,26.84,12.76,53.07,37.08,64.39,23.48,11.07,54.53,4.36,68.51-18l39.67,29.6c-27.03,39.32-83.69,45.03-124.81,29.6C27.83,425.32,1.57,382.75,2.38,335.52c-.81-47.22,25.46-89.8,69.88-105.58,38.48-14.16,91.99-11.21,119.62,23.8l-36.62,29.91Z" />
+                                <path d="M185.16,227.49h146.78v43.94h-99.17v40.28h93.68v43.94h-93.68v43.94h104.67v43.94H185.16V227.49Z" />
+                                <path d="M335.91,227.49c37.31,2.6,108.77-8.59,140.83,13.88,39.97,26.67,29.98,104.54-22.43,110.92l54.93,91.24h-57.06l-45.16-86.36h-23.5v86.36h-47.6V227.49Zm47.6,89.41c21.74-2.21,67.44,9.58,68.05-24.11-.32-33.67-46.28-23.29-68.05-25.02v49.13Z" />
+                                <path d="M472.61,227.49h54.32l53.4,141.59h.61l54.32-141.59h50.96l-89.11,216.05h-38.14l-86.36-216.05Z" />
+                                <path d="M694.46,227.49h39.36l93.99,216.05h-53.71l-18.62-45.77h-83.92l-18,45.77h-52.49l93.38-216.05Zm18.31,62.86l-26.24,67.13h52.79l-26.55-67.13Z" />
+                                <path d="M916.61,280.29c-12.87-15.2-38.33-18.29-55.54-9.31-12.48,5.37-15.11,24.6-3.66,32.19,18.67,12.91,46.67,13.82,66.37,26.55,36.23,19.58,32.51,79.21,.91,101.92-38.12,27.12-96.87,22.57-131.06-9.76l33.87-37.23c27.18,38.47,98.2,16.23,66.98-17.55-18.77-13.82-47.44-15.36-67.59-28.23-36.87-19.41-32.83-76.45-1.07-99.18,35.02-25.58,90.41-23.76,123.43,4.88l-32.65,35.7Z" />
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="cd-intro" style="padding: 20px; margin-left: 10%; text-align: left;">
+                <h2 class="cd-headline slide font-weight-bold text-8 mb-3" style="margin-left: 20px;">
+                    <span>I study</span>
+                    <span class="cd-words-wrapper">
+                        <b class=" is-visible">representation</b>
+                        <b class="">voting rights</b>
+                        <b class="">polarization</b>
+                        <b class="">politics</b>
+                        <b class="">elections</b>
+                        <b class="">redistricting</b>
+                        <b class="">electoral reform</b>
+                        <b class="">gerrymandering</b>
+                        <b class="">election integrity</b>
+                        <b class="">institutions</b>
+                        <b class="">election law</b>
+                    </span>
+                    <!-- <span>our public hearings.</span> -->
+                </h2>
+            </div>
+        </div>
+        </div>
+    </section>
+    <div class="site-header__date">Carnegie Mellon University</div>
+    <section class="gradiant-two">
+        <div class="items">
+            <div class="cards">
+            <div class="card-wide">
+                <img alt="Headshot of Cervas" src="images/jonny-ross-mantle-16-9-01.png">
+            </div>
+            <div class="card-wide">
+                <div id="about" class="" style="margin: 5%;">
+                    <p>Jonathan began at Carnegie Mellon University after receiving his PhD in Political Science from the University of California, Irvine. His Bachelor’s degree (also in political science) is from the University of Nevada, Las Vegas. His dissertation is a historical, quantitative look at the Electoral College and its consequences.</p>
+                    <p>In 2021, Jonathan served as the redistricting consultant for the Pennsylvania <span class="jc-highlight highlighted">Legislative Reapportionment Commission</span>. He was appointed to that position by a vote of the commission. The final plan received a bi-partisan vote and was upheld unanimously by the Pennsylvania Supreme Court. <a href="https://www.redistricting.state.pa.us/maps/">You can see these plans here</a>. He served as Special Master for the state of New York in 2022 [Harkenrider v. Hochel (2022)] and <a href="http://jonathancervas.com/2022/NY/CERVAS-SM-NY-2022.pdf" target=”_blank”>drew the state's 26 Congressional Districts and 63 state Senate districts</a>. He has also served as the assistant to a federal court Special Master in drawing remedial maps in three redistricting cases involving minority rights. The first of these was <span class="jc-highlight highlighted">Navajo Nation et al v. San Juan County</span>,Utah in 2017; followed in 2018-19 by <span class="jc-highlight highlighted">Bethune-Hill et al v. State Board of Election</span>,which involved the redrawing of one quarter of the districts in Virginia's legislative districts in the House Of Delegates; and in 2019-20, he worked on <span class="jc-highlight highlighted">Wright v. Sumter County Board of Elections</span>, a case involving school districts in a small Georgia County where former President Jimmy Carter makes his home. He has published several articles on both the elections and gerrymandering, and is a Research Associate at the <a href="https://www.electoral-lab.org" target=”_blank”>Electoral Innovation Lab</a>.</p>
+                </div>
+            </div>
+            </div>
+        </div>
+    </section>
+    <div class="divider"></div>
+    <section>
+        <div id="cases" class="second_title" style="padding: 20px; margin-left: 10%; text-align: left;">Redistricting Case Involvement</div>
+        <div class="items">
+            <div class="card">
+                <div class="card-img">
+                    <img src="images/ny.png" alt="2022 NY Special Master"></div>
+                <h3>New York</h3>
+                <div class="sub">Harkenrider v. Hochel (2022)</div>
+                <p>I was <a href="https://iapps.courts.state.ny.us/nyscef/ViewDocument?docIndex=ffzj4348UcVesF4ziHLc1g==" target=”_blank”>appointed Special Master</a> tasked with drawing the 2022-2030 NY Congressional and State Senate Maps.
+                    <br>
+                    <a href="http://jonathancervas.com/2022/NY/CERVAS-SM-NY-2022.pdf" target=”_blank”>View my report here</a>
+                    <br>
+                    <a href="https://davesredistricting.org/maps#viewmap::a3a223ed-54cf-4b54-8ea3-6f9312d7c405" target=”_blank”>View Congressional Map here</a></p>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="images/pa.png" alt="PA LRC"></div>
+                <h3>Pennsylvania</h3>
+                <div class="sub">Legislative Reapportionment Commission (2021-2022)</div>
+                <p>I served as the <a href="https://www.cmu.edu/ips/news-and-events/jonathan-cervas-pa-reapportionment-commission.html" target=”_blank”>redistricting consultant</a> for the <a href="https://www.redistricting.state.pa.us/" target=”_blank”>Pennsylvania Legislative Reapportionment Commission</a>. The LRC developed state Senate and House of Represenative lines for the 2020 decade. Those maps were <a href="https://www.redistricting.state.pa.us/commission/article/1096" target=”_blank”>approved via a bipartisan vote</a>, and the Pennsylvania Supreme Court <a href="https://www.pacourts.us/Storage/media/pdfs/20220316/195610-lrcpetitonsforrevieworder.pdf" target=”_blank”>unanimously affirmed</a> their constitutionality.</p>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="images/ga.png" alt="Sumter County"></div>
+                <h3>Georgia</h3>
+                <div class="sub">Wright v. Sumter County School Board (2020)</div>
+                <p>As the Assistant to the Special Master, I helped redraw Sumter County's <a href="https://www.nytimes.com/2020/10/25/us/politics/voting-rights-georgia.html" target=”_blank”>racially gerrymandered school board.</a></p>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="images/ut.png" alt="San Juan County"></div>
+                <h3>Utah</h3>
+                <div class="sub">Navajo Nation v. San Juan County (2019)</div>
+                <p>The Navajo Nation had been denied represenation in the county commission. My <a href="https://github.com/jcervas/Completed-Projects/tree/master/San%20Juan%20County" target=”_blank”>redraw</a> allowed them to elect a majority for the first time in American history.</p>
+            </div>
+            <div class="card">
+                <div class="card-link">
+                    <div class="card-img">
+                        <img class="_aa8j" src="images/va.png" alt="Bethune-Hill"></div>
+                    <h3>Virginia</h3>
+                    <div class="sub">Bethune-Hill v. Virginia Board of Elections (2019)</div>
+                    <p>As the Assistant to the Special Master, I helped <a href="https://www.nytimes.com/2017/03/01/us/politics/supreme-court-virginia-house-delegates-gerrymandering.html" target=”_blank”>redraw 25 of the 100</a> Virginia state legislative districts</p>
+                </div>
+            </div>
+                        <div class="card">
+                <div class="card-img">
+                    <img src="images/tn.png" alt="Tennessee"></div>
+                <h3>Tennessee</h3>
+                <div class="sub">Moore v. Lee (TN)</div>
+                <p>I am an expert witness for the plaintiffs. I have filed five reports regarding either the TN House or TN Senate. See here. <a href="http://jonathancervas.com/2022/TN/tn1.pdf">1</a>, <a href="http://jonathancervas.com/2022/TN/tn2.pdf">2</a>, <a href="http://jonathancervas.com/2022/TN/tn3.pdf">3</a>, <a href="http://jonathancervas.com/2022/TN/tn4.pdf">4</a>, <a href="http://jonathancervas.com/2022/TN/tn5.pdf">5</a></p>
+            </div>
+        </div>
+    </section>
+    <div class="divider"></div>
+    <section style="background-color: #bcbec0">
+        <div class="items">
+            <div class="card-wide">
+                <!-- <div class="col-6 col-s-12"> -->
+                <a href="http://jonathancervas.com/apportionment.html"><img src="https://s3-us-west-1.amazonaws.com/jonathancervas.com/images/2020_Apportionment.png" alt="2020 Apportionment" width="50%" min-width="300px" class="center"></a>
+            </div>
+            <div class="card-wide">
+                <a href="/images/2022_Senate_Map.svg">
+                    <!-- <div class="col-6 col-s-12"> -->
+                    <h2><span>2022 US Senate Elections</span></h2>
+                    <img src="images/2022_Senate_Map.svg" alt="2022 Senate Election Map" width="50%" min-width="300px" class="center">
+                </a>
+            </div>
+        </div>
+    </section>
+    <div class="divider"></div>
+    <section style="background-color: #ffffff">
+        <div id="pubs" class="container" style="padding: 10px 10px;">
+            <!-- <iframe width="100%" frameBorder="0" scrolling="no" height="1500px" src="pubs.html"></iframe> -->
+            <div class="jc-publications">
+                <div class="jc-references-container">
+                    <h3 class="jc-subtitle">Journal Articles</h3>
+                    <ul class="jc-section" id="journal"></ul>
+                    <h3 class="jc-subtitle">Other Publications</h3>
+                    <ul class="jc-section" id="otherpubs">
+                        <li class="item">
+                            Wang, Samuel, and Jonathan Cervas. 2021. <span class="jc-highlight highlighted">The GOP scared Latinos from the census. Now that may cost the party red seats.</span> May 1, 2021. <em>The Washington Post</em>.
+                            <span class="jc-cite">
+                                <span class="jc-fulltext"><a target="_parent" href="https://www.washingtonpost.com/outlook/2021/05/01/hispanics-census-undercount-house-seats/">Full Text</a></span>
+                            </span>
+                        </li>
+                        <br>
+                        <li class="item">
+                            Grofman, Bernard, and Jonathan Cervas. 2018. <span class="jc-highlight highlighted">Pennsylvania has to draw new congressional districts, but getting rid of gerrymandering will be harder than you think.</span> February 9, 2018. <em>The Washington Post</em>.
+                            <span class="jc-cite">
+                                <span class="jc-fulltext"><a target="_parent" href="https://www.washingtonpost.com/news/monkey-cage/wp/2018/02/09/now-pennsylvania-has-to-draw-new-house-districts-but-getting-rid-of-gerrymandering-is-harder-than-you-think/?utm_term=.8fb902a02179">Full Text</a></span>
+                            </span>
+                        </li>
+                    </ul>
+                    <h3 class="jc-subtitle">Working Papers</h3>
+                    <ul class="jc-section" id="working"></ul>
+                </div>
+            </div>
+    </section>
+    <section id="#contact" style="padding-top: 0px">
+        <div class="map_oc">
+            <div class="divider"></div>
+            <!-- <img src="images/oc.svg" alt="main" width="100%"> -->
+            <span class="main_title">CONTACT JONATHAN</span>
+            <div class="container" style="padding: 25px">
+                <style type="text/css">
+                .tg {
+                    border: none;
+                    border-collapse: collapse;
+                    border-spacing: 0;
+                    color: #FFFFFF;
+                }
+
+                .tg td {
+                    border-style: solid;
+                    border-width: 0px;
+                    overflow: hidden;
+                    padding: 10px 5px;
+                    word-break: normal;
+                }
+
+                .tg th {
+                    border-style: solid;
+                    border-width: 0px;
+                    font-weight: normal;
+                    overflow: hidden;
+                    padding: 10px 5px;
+                    word-break: normal;
+                }
+
+                .tg .tg-0lax {
+                    text-align: left;
+                    vertical-align: top
+                }
+                </style>
+                <table class="tg">
+                    <thead>
+                        <tr>
+                            <th class="tg-0lax">Email:</th>
+                            <th class="tg-0lax">cervas@cmu.edu</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="tg-0lax">Address:</td>
+                            <td class="tg-0lax">5000 Forbes Ave.<br>Pittsburgh, PA 15213<br></td>
+                        </tr>
+                        <tr>
+                            <td class="tg-0lax">Office:</td>
+                            <td class="tg-0lax">387D Posner Hall</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    <div class="footer">
+        <div class="divider_end"></div>
+        <p class="footer_text">JONATHAN R. CERVAS</p>
+    </div>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap-4.4.1.js"></script>
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="pubs.js"></script>
+    <script src="trips/trips2019.js"></script>
+    <script src="js/main.js"></script> <!-- Resource jQuery -->
+</body>
+
+</html>

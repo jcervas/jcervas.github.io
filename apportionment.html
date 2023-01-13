@@ -1,0 +1,463 @@
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apportionment and Redistricting</title>
+    <meta author="Jonathan Cervas">
+    <meta name="citation_doi" content="" />
+    <meta name="dc.identifier" content="" />
+    <meta name="citation_journal_title" content="">
+    <meta name="citation_title" content="Apportionment and Redistricting">
+    <meta name="citation_volume" content="">
+    <meta name="citation_issue" content="">
+    <meta name="citation_firstpage" content="">
+    <meta name="citation_lastpage" content="">
+    <meta name="citation_publication_date" content="2">
+    <meta name="citation_online_date" content="">
+    <meta name="citation_issn" content="">
+    <meta name="citation_language" content="en">
+    <meta name="citation_author" content="Jonathan Cervas">
+    <meta name="citation_author_institution" content="Carnegie Mellon University">
+    <meta name="citation_abstract_html_url" content="">
+    <meta name="citation_fulltext_html_url" content="">
+    <meta name="citation_pdf_url" content="">
+    <meta name="citation_publisher" content="">
+    <meta name="article_references" content=""><!-- <link rel="stylesheet" href="https://dhbhdrzi4tiry.cloudfront.net/cdn/sites/foundation.min.css"> -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://underscorejs.org/underscore-min.js"></script>
+    <link href="http://jonathancervas.com/css/article.css" type="text/css" rel="stylesheet">
+</head>
+<style>
+    .jc-input-notice {
+  font-size: 13px;
+  font-weight: 400;
+  margin-top: 9px;
+  color: #AA66D3;
+}
+#jc-input {
+  margin-top: 30px;
+  /* height: 60px; */
+    font-family: sans-serif;
+    margin: 1.5em auto;
+    /*max-width: 700px;*/
+    padding: 0 10px;
+    line-height: 1.7;
+    font-size: 1.1em;
+    font-weight: 300;
+    text-align: center;
+}
+.jc-hidden {
+  display: none;
+}
+iframe {
+  max-width: 800px;
+  margin: 0 auto;
+  display: block;
+}
+
+p {
+  font-family: san-serif;
+  font-size: 12px;
+  font-weight: 300;
+  width: 100%;
+  position: relative;
+  margin-bottom: 300px;
+}
+table {
+    padding: 15px 20px 0;
+    margin: 10px auto 20px;
+    max-width: 600px;
+    background-color: rgba(0, 0, 0, .04);
+    color: #000000;
+    text-align: center;
+}
+.jc-instructions-panel p {
+    font-family: sans-serif;
+    margin: 1.5em auto;
+    max-width: 900px;
+    padding: 0 10px;
+    line-height: 1.7;
+    font-size: 1.1em;
+    font-weight: 300
+}
+.jc-overall-instructions {
+  margin-bottom: 25px;
+}
+.jc-top-section p {
+  font-size: 17px;
+  line-height: 1.4em;
+}
+
+button,
+input {
+  padding: 5px 8px;
+  margin-right: 3px;
+  font-family: sans-serif;
+  font-size: 13px;
+  border: none;
+  border-radius: 3px;
+  border: 1px solid #777;
+}
+button.jc-submit {
+  cursor: pointer;
+  background: #16212B;
+  border-color: #16212B;
+  color: #fff;
+}
+button.jc-submit:disabled,
+button.jc-submit.jc-disabled {
+  background: #999;
+  border-color: #999;
+}
+.jc-disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+button:disabled {
+  opacity: .5;
+  pointer-events: none;
+}
+input {
+  color: #666;
+  border: 1px solid #ddd;
+  background: #fff;
+  text-align: center;
+}
+.jc-input-notice {
+  font-size: 13px;
+  font-weight: 400;
+  margin-top: 9px;
+  color: #AA66D3;
+}
+.jc-select-container {
+  font-family: nyt-franklin;
+  font-weight: 300;
+  position: absolute;
+  left: 100%;
+  display: none;
+}
+#jc-note {
+  font-weight: 300;
+  font-size: 13px;
+  color: #999;
+  line-height: 1.3em;
+}
+blockquote p {
+  color: #777;
+}
+blockquote {
+  margin-top: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+}
+.jc-header {
+    max-width: 750px;
+    margin: 0 auto 10px;
+    display: block
+}
+h1 {
+font-size: 2em;
+text-align: center;
+margin: 0 auto;
+padding: 0 20px 10px;
+font-family: sans-serif;
+line-height: 1.2
+}
+h2 {
+font-size: 1.5em;
+text-align: left;
+margin: 0 auto;
+padding: 50px 100px 10px;
+font-family: sans-serif;
+line-height: 1.2
+}
+
+.jc-instructions-panel li .jc-highlight,
+.jc-instructions-panel p .jc-highlight {
+    background-image: -webkit-gradient(linear, left top, right top, color-stop(50%, #fefefe), color-stop(50%, rgba(0, 0, 0, .09)));
+    background-image: linear-gradient(90deg, #fefefe 50%, rgba(0, 0, 0, .09) 0);
+    background-position: 0;
+    background-size: 200%;
+    -webkit-transition: all .8s;
+    transition: all .8s;
+font-weight: 800;
+}
+.jc-instructions-panel li .jc-highlight.highlighted,
+.jc-instructions-panel p .jc-highlight.highlighted {
+    background-position: -100%;
+}
+.jc-pagewidth {
+ display:-webkit-box;
+ display:-webkit-flex;
+ display:-ms-flexbox;
+ display:flex;
+ -webkit-flex-direction:column;
+ -ms-flex-direction:column;
+ flex-direction:column;
+ margin:0 auto;
+}
+@media screen and (-ms-high-contrast:active),(-ms-high-contrast:none) {
+ .jc-pagewidth > * {
+  min-height:1px;
+ }
+}
+@media (min-width:740px) {
+ .jc-pagewidth {
+  padding:0 3%;
+  margin:20px auto 0;
+ }
+}
+@media (min-width:1070px) {
+ .jc-pagewidth {
+  max-width:1200px;
+ }
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 4px;
+}
+
+/* Create two equal columns that sits next to each other */
+.column {
+  flex: 50%;
+  padding: 0 4px;
+}
+
+.column img {
+  margin-top: 8px;
+  vertical-align: middle;
+}
+hr {
+    margin: 40px auto;
+}
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  /*width: 50%;*/
+}
+</style>
+<div class="jc-pagewidth">
+    <div class="jc-header">
+        <h1 class="jc-title">Apportionment and the Electoral College</h1>
+        <h2>By: Jonathan Cervas, Post-doctoral fellow, Carnegie Mellon University</h2>
+        <h3>This is an article under development. Updated August 16, 2021 at 8:58pm</h3>
+    </div>
+    <img src="https://s3.us-west-1.amazonaws.com/jonathancervas.com/2021/PA/images/redist.png" width="50%">
+    <div class="jc-graphic">
+        <div class="jc-top-section">
+            <div class="jc-select-container"></div>
+            <div class="jc-instructions-panel">
+                <div style="padding-bottom: 20px">
+                    <p>Every ten years, it becomes necessary to re-apportion the U.S. House of Representatives because the population of the states changes. Apportionment is the first step in the redistricting process. This larger process ensures formal representation in the United States adheres to the 'one person, one vote' criteria; this principle was reaffirmed in the U.S. Supreme Court case <i>Reynolds v. Sims</i> (1964).
+                        <a class="jc-footnote-link" data-footnote-content="The U.S. Constitution requires reapportioning the House. It has happened every decade, with the exception of the 1920s, when political stalemate and divisions between rural and urban states eventually led to the automatic reapportionment act in 1929." data-footnote-id="1" href="#Fn1"></a></p>
+                    <div style="align-content: center; margin: auto; display: flex; width: 80%">
+                        <blockquote class="twitter-tweet tw-align-center">
+                            <p lang="en" dir="ltr">&quot;Representatives shall be apportioned among the several states according to their respective numbers, counting the whole number of persons in each state...&quot; <br><br>- U.S. Const. amend. XIV, § 2 (1868).</p>&mdash; The Redistrict Network (@RedistrictNet) <a href="https://twitter.com/RedistrictNet/status/1386096881231671296?ref_src=twsrc%5Etfw" target="_blank">April 24, 2021</a>
+                        </blockquote>
+                        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                    </div>
+                    <p>
+                        The U.S. Census Bureau counts the total population in each state. Once these totals are finalized, the 385 representatives not reserved to any state are divvied up. Over the course of the decade, people move, new children are born, and some people pass away. Because these human migration patterns are not uniform across states, the relative population of each state change and it become necessary to re-allocate seats.
+                    </p>
+                    <!-- <div style="align-content: center; margin: auto; display: block; width: 600px"> -->
+                    <iframe title="" aria-label="Column Chart" id="datawrapper-chart-GmBGl" src="https://datawrapper.dwcdn.net/GmBGl/1/" scrolling="no" frameborder="0" style="width: 100%;  border: none;" max-height="400"></iframe>
+                    <!-- </div> -->
+                    <p>
+                        While the total population in the U.S. grew by more than 7.4% in between 2010 and 2020, this was the slowest rate of growth since 1940 (a product of the Great Depression), and the second slowest of all time. Of course, population growth was not uniform across states. Idaho and Utah grew by more than 17%, while West Virginia lost nearly one in every twenty five people either through out-migration or death minus births.
+                    </p>
+                    <iframe title="" aria-label="Map" id="datawrapper-chart-vDYgt" src="https://datawrapper.dwcdn.net/vDYgt/3/" scrolling="no" frameborder="0" style="width: 100%;  border: none;" height="484"></iframe>
+                    <p>
+                        The House of Representatives elects members in an approximately proportionate way. Early in the country's history, Congress simply increased its size after every Census so that no state would ever lose a representative, but some states would increase their share. That changed after 1929 when Congress froze the size of the House at 435.
+                    </p>
+                    <p>
+                        Simply dividing the total population by each state's population leads to remainers. To determine the precise number of members each state will recieve, the Census applies what is called the "Hill-Huntington method" of apportionment, which is a formula that creates a priority list in which the first 385 are awarded.
+                    </p>
+                    <p>
+                        In a typical Census, apportionment numbers are delivered by December 31 of the year ending in 0, but delays caused by COVID-19 have led the Census to spend additional months preparing the counts. When they were finally released in April 2021, several states gained one or more members of Congress, while others decreased their counts.
+                    </p>
+                    <iframe title="Congressional Apportionment" aria-label="Map" id="datawrapper-chart-2MJF6" src="https://datawrapper.dwcdn.net/2MJF6/2/" scrolling="no" frameborder="0" style="width: 100%; border: none;" height="663"></iframe>
+                    <p>
+                        Apportionment also determines the Electoral College. The Electoral College is the total Members of the House plus the total number of Senators. Apportionment has huge impacts in the relative power of states, reflected in both Congress and in the EC. It is therefore a very political process, even if the formulas are determined in advance. Lawsuits typically happen after apportionment, challenging either the method, or the population counts
+                    </p>
+                    <iframe title="Electoral College 2024" aria-label="Map" id="datawrapper-chart-2MJF6" src="https://datawrapper.dwcdn.net/CteuR/4/" scrolling="no" frameborder="0" style="width: 100%; border: none;"></iframe>
+                    <p>
+                        We can also figure out which was the last state to recieve a seat, and which is the next state that would have recieved one. Recieving an additional seat can have a huge impact on representation. In 2010, Minnesota recieved the 385th and final seat. Just missing out was North Carolina. In 2020, Minnesota kept this seat, but with just 23 persons to spare. New York, on the other hand, would have taken Minnesota's seat had it had 89 more people -- the equivalant to the residents of one floor of a Manhatten luxury apartment building!
+                    </p>
+                    <!--                     <iframe title="Census Expectations" aria-label="Map" id="datawrapper-chart-lf2Gm" src="https://datawrapper.dwcdn.net/lf2Gm/8/" scrolling="no" frameborder="0" style="width: 100%;  border: none;" height="689"></iframe>
+                     -->
+                    <p>
+                        <script type="text/javascript">
+                        ! function() {
+                            "use strict";
+                            window.addEventListener("message", (function(a) {
+                                if (void 0 !== a.data["datawrapper-height"])
+                                    for (var e in a.data["datawrapper-height"]) {
+                                        var t = document.getElementById("datawrapper-chart-" + e) || document.querySelector("iframe[src*='" + e + "']");
+                                        t && (t.style.height = a.data["datawrapper-height"][e] + "px")
+                                    }
+                            }))
+                        }();
+                        </script>
+                        No matter how thorough a job the Census Bureau does, some populations will surely be missed, and others double counted. One way to compare the numbers to some baseline is to measure against the Census's own projetions. In July of 2020, the Census released the Population Estimates Programs estimates. While some states had counts that exceeded their estimates, others, like Arizona, were exceedingly lower than expected.
+                    </p>
+                    <h1 class="jc-title"> 2020 Census | Pennsylvania</h1>
+                    <p>
+                        One August 12, 2021, the Census Bureau <a href="https://www.census.gov/programs-surveys/decennial-census/about/rdo/summary-files.html" target="_blank">delivered the P.L. 94-171 redistricting data</a>. This high resolution data tells us the population of areas as small as a neighborhood, also called a "census block". The data was delivered in what the Bureau has called a "legacy format"; this just means that the files were delivered the same way they were in the previous two decades, but not in the format that they had originally intended, which includes easy to access data on <a href="https://data.census.gov" target="_blank">data.census.gov</a>, and the ability to make internet calls via the API. This data will now be delivered by September 30, 2021. It will be identical to that data which was delivered on August 12.
+                    </p>
+                    <p>
+                        The population of Pennsylvania has grown been much slower than the United States more broadly. That slow growth has caused PA to go from 36 members on Congress in 1930 to 17 in 2020; meanwhile, the <a href="https://projects.fivethirtyeight.com/435-representatives/" target="_blank">total member of the U.S. House</a> has remained unchanged.
+                    </p>
+                    <iframe title="Population Over Time" aria-label="Interactive line chart" id="datawrapper-chart-2z7cq" src="https://datawrapper.dwcdn.net/2z7cq/3/" scrolling="no" frameborder="0" style="width: 100%;  border: none;" height="689"></iframe>
+                    <iframe title="Population Change by Decade" aria-label="Interactive line chart" id="datawrapper-chart-pruqB" src="https://datawrapper.dwcdn.net/pruqB/1/" scrolling="no" frameborder="0" style="width: 100%;  border: none;" height="689"></iframe>
+                    <hr>
+                    <h1>Shifting Populations</h1>
+                    <p>
+                        Population growth (and decrease) is uneven within any state. The change in population can happen naturally (i.e., through different birth/death rates) or because people move, say from the city to a suburb, or even because of migration from other states or countries. Areas that once had significant growth might have seen changes in the economy that lead to job loss, which in turn lead people to relocate to find work in other places.
+                    </p>
+                    <p>
+                        We can find the geographic center of the population, such that half of all residents live north and half live south, and that half live east, and half west of the spot. In 2020, the median geographic center of Pennsylvania was in southeastern Lebanon County. The Census Bureau also calculates the population mean geography, though that metric has less meaning. Both are displayed on the map below.
+                    </p>
+                    <iframe title="Pennsylvania Center of Population" aria-label="Map" id="datawrapper-chart-8CIQp" src="https://datawrapper.dwcdn.net/8CIQp/3/" scrolling="no" frameborder="0" style="width: 100%;  border: none;" height="689"></iframe>
+
+                    <p>
+                        To understand the difference between the "median point" and the "mean point", consider this. Image the median point, as described above, is Harrisburg. This means that half of the population lives east of Harrisburg, and half west. If the mean point is also Harrisburg, that means that the center of gravity of the population is at this point. Now let's imagine that one million people move from Philadelphia to just east of Harrisburg. In this sitution, the median point remains the same, but the mean point would shift significantly west. So, the points tell us different things about the geographic distribution of the population. For more on the center of population, <a href="https://www.census.gov/geographies/reference-files/2010/geo/2010-centers-population.html" target="_blank">see the Census Bureau website</a>.
+                    </p>
+                    <hr>
+                    <h2>East v. West Population Shifts</h2>
+                    <p>
+                        We can see the center of population moving to the east across census periods. Though subtle, these shifts can have large effects on how districts are arranged.
+                    </p>
+                    <p>
+                        For the next set of data, I have divided the state into two parts, what I am calling "east" and "west". Other breakdowns are just as valid, but this definition provides some insights into how the populations are shifted. The map below shows which counties are in which part.
+                    </p>
+                    <iframe title="East v. West Population Change" aria-label="Map" id="datawrapper-chart-RKV86" src="https://datawrapper.dwcdn.net/RKV86/5/" scrolling="no" frameborder="0" style="width: 100%;  border: none;" height="689"></iframe>
+                    <iframe title="" aria-label="table" id="datawrapper-chart-hXKEK" src="https://datawrapper.dwcdn.net/hXKEK/5/" scrolling="no" frameborder="0" style="width: 100%; border: none;" height="264"></iframe>
+
+                    <h2>Regions</h2>
+
+                    <iframe title="Regions of Pennsylvania" aria-label="Map" id="datawrapper-chart-EnGy2" src="https://datawrapper.dwcdn.net/EnGy2/3/" scrolling="no" frameborder="0" style="width: 100%;  border: none;" height="689"></iframe>
+                    <iframe title="Regional Change 1960-2020" aria-label="table" id="datawrapper-chart-8bvF6" src="https://datawrapper.dwcdn.net/8bvF6/1/" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="279"></iframe><script type="text/javascript">!function(){"use strict";window.addEventListener("message",(function(e){if(void 0!==e.data["datawrapper-height"]){var t=document.querySelectorAll("iframe");for(var a in e.data["datawrapper-height"])for(var r=0;r<t.length;r++){if(t[r].contentWindow===e.source)t[r].style.height=e.data["datawrapper-height"][a]+"px"}}}))}();
+</script>
+
+<h2>Urban v. Rural</h2>
+After the 2020 census, Pennsylvania now has an overall density of 290.61 persons per square miles. This is a higher density than in 2010, which the Center for Rural Pennsylvania calculates as 284 persons per mile.
+
+<iframe title="Urban v. Rural Pennsylvania" aria-label="Map" id="datawrapper-chart-zNiXC" src="https://datawrapper.dwcdn.net/zNiXC/2/" scrolling="no" frameborder="0" style="width: 100%;  border: none;" height="689"></iframe>
+<div class="graybox">
+                        <p class="jc-fig-note"><i><a href="https://datawrapper.dwcdn.net/zNiXC/2/" target="_blank">Click here to see this map in full screen.</a></i></p>
+                    </div>
+
+<iframe title="Pennsylvania Municipalities (Rural v. Urban)" aria-label="Map" id="datawrapper-chart-DHPQv" src="https://datawrapper.dwcdn.net/DHPQv/2/" scrolling="no" frameborder="0" style="width: 100%;  border: none;" height="689"></iframe>
+                    <div class="graybox">
+                        <p class="jc-fig-note"><i><a href="https://datawrapper.dwcdn.net/DHPQv/2/" target="_blank">Click here to see this map in full screen.</a></i></p>
+                    </div>
+
+
+<hr>
+
+                    <br>
+                    <h2>Counties</h2>
+                    <p>
+                        County boundaries do not often change. This facilitates temporal evalutation of population change. There are 67 counties in Pennsylvania. Among the counties that have grown, the vast majority are in the southeastern part of the state. Only three counties in the western part of the state saw their populations grow, and those counties only account for 38,000 additional people. Philadelpia added 77,000, alone offsetting the marginal gains in the west. These differences show clearly the necessity for the re-drawing of districts in both the state House and Senate (as well as in Congress, where major changes will need to be made to accommodate the loss of one seat).
+                    </p>
+                    <iframe title="Pennsylvania Population Change | Counties" aria-label="Map" id="datawrapper-chart-MVu7m" src="https://datawrapper.dwcdn.net/MVu7m/2/" scrolling="no" frameborder="0" style="width: 100%;  border: none;" height="689"></iframe>
+                    <p>
+                        Growth in the southwest is visually apparent, while decline throughtout much of the rest of the state is stark. In a trend that resembles that of the United States more generally, 65% of all counties in PA saw their population decrease from 2010 to 2020.
+                    </p>
+                    <iframe title="County Population Change" aria-label="Arrow Plot" id="datawrapper-chart-GQxZv" src="https://datawrapper.dwcdn.net/GQxZv/1/" scrolling="no" frameborder="0" style="width: 100%;  border: none;" height="1363"></iframe>
+                    <p>
+                        Below is a sortable table of all County populations in 2010 and 2020, including the demographic breakdown. You can click "Show more" below the table to view all 67 counties. To sort, click on the table headers, like "2010 Population" or "Minority"; click a second time to show in inverse order.
+                    </p>
+                    <iframe title="Pennsylvania Counties" aria-label="table" id="datawrapper-chart-m67V3" src="https://datawrapper.dwcdn.net/m67V3/1/" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="1030"></iframe>
+                    <hr>
+                    <h2>Municpalities</h2>
+                    <p>
+                        In Pennsylvania, Philadelphia and Pittsburgh have long been urban centers of population. Until recently Philadelphia was the country's 5th largest city. As of 2020, it has fallen out of the top five, replaced by Phoenix, AZ. Pittsburgh, once with a population reaching the top 10 in the United States (peaking in 1910, though the population continue to grow to over 650,000 in the 1950s, its relative population began to sink), is now the 27th largest Metropolitan area (a metropolitan area includes both the central city and its surrounding suburbs) and 67th largest city.
+                    </p>
+                    <iframe title="Largest Municipalities in Pennsylvania" aria-label="table" id="datawrapper-chart-Luh78" src="https://datawrapper.dwcdn.net/Luh78/1/" scrolling="no" frameborder="0" style="width: 100%;  border: none;" height="689"></iframe>
+                    <p>
+                        In both Pittsburgh and Philadelphia, white flight has caused the population of the inner-city to decrease precipitously. Between 1960 and 2000, Philadelphia had lost over 500,000 total residents, including <a href="https://www.inquirer.com/news/philadelphia-population-2020-census-growth-race-black-white-hispanic-asian-20210812.html" target="_blank">over 1 million white residents</a>.
+                    </p>
+                    <iframe title="Philadelphia Population (1860-2020)" aria-label="Arrow Plot" id="datawrapper-chart-LYjUC" src="https://datawrapper.dwcdn.net/LYjUC/4/" scrolling="no" frameborder="0" style="width: 100%;  border: none;" height="689"></iframe>
+                    <hr>
+                    <h1>Demographics</h1>
+                    <p>
+                        Growth, although limited overall in Pennsylvania, is largely being driven by sharp upticks in Hispanics, Asians, and multiracial residents. The non-Hispanic white population decreased by 5.36%. Meanwhile, the Hispanic population increased by 45% to over 1 million residents, and the Asian population increased 46% to over 1/2 million.
+                    </p>
+                    <iframe title="Demographic Population Change" aria-label="Grouped Column Chart" id="datawrapper-chart-FLEPk" src="https://datawrapper.dwcdn.net/FLEPk/1/" scrolling="no" frameborder="0" style="width: 100%;  border: none;" height="689"></iframe>
+                    <p>
+                        One should be cautious when interpreting changes in these racial category's totals since changes in question wording could account for the decrease in non-Hispanic White population and increase in respondants claiming multiple racial groups. In fact, the difference between the change in these two numbers is just 4,586, less than 1% of the entire half-million person change.
+                    </p>
+                    <p>
+                        Statewide, the minority population 25%, but it is not distributed randomly. The map below shows the percent of each census "tract" that is minority.
+                    </p>
+
+                    <iframe title="PA Minority Population" aria-label="Map" id="datawrapper-chart-y6MHG" src="https://datawrapper.dwcdn.net/y6MHG/2/" scrolling="no" frameborder="0" style="width: 100%;  border: none;" height="689"></iframe>
+                    
+                    <h2>Map depicting each of the 13,002,700 people in Pennsylvania as of April 1, 2020</h2>
+                    <a href="https://s3.us-west-1.amazonaws.com/jonathancervas.com/2021/PA/images/all20_countynames.png" target="_blank"><img src="https://s3.us-west-1.amazonaws.com/jonathancervas.com/2021/PA/images/all20_countynames_thumb.png" width="90%"></a>
+                    <div class="graybox">
+                        <p class="jc-fig-note"><i>Each dot represents one person. Non-hispanic Whites are show in gray, Hispanics are shown in yellow, Asians are shown in green, Blacks are shown in Blue. Click for higher resolution image.</i></p>
+                    </div>
+                    <p>
+                        The next four maps show individual dots for each person who identifies with each of the racial categories, separately, for better clarity.
+                    </p>
+                    <table style="max-width: 100%; background-color: white;">
+                        <tr>
+                            <td>
+                                <h2>Non-Hispanic Whites</h2>
+                                <a href="https://s3.us-west-1.amazonaws.com/jonathancervas.com/2021/PA/images/white20.png" target="_blank"><img src="https://s3.us-west-1.amazonaws.com/jonathancervas.com/2021/PA/images/white20_thumb.png" width="100%"></a>
+                            </td>
+                            <td>
+                                <h2>Hispanics</h2>
+                                <a href="https://s3.us-west-1.amazonaws.com/jonathancervas.com/2021/PA/images/hispanic20.png" target="_blank"><img src="https://s3.us-west-1.amazonaws.com/jonathancervas.com/2021/PA/images/hispanic20_thumb.png" width="100%"></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <h2>Blacks</h2>
+                                <a href="https://s3.us-west-1.amazonaws.com/jonathancervas.com/2021/PA/images/black20.png" target="_blank"><img src="https://s3.us-west-1.amazonaws.com/jonathancervas.com/2021/PA/images/black20_thumb.png" width="100%"></a>
+                            </td>
+                            <td>
+                                <h2>Asians</h2>
+                                <a href="https://s3.us-west-1.amazonaws.com/jonathancervas.com/2021/PA/images/asian20.png" target="_blank"><img src="https://s3.us-west-1.amazonaws.com/jonathancervas.com/2021/PA/images/asian20_thumb.png" width="100%"></a>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="graybox">
+                        <p class="jc-fig-note"><i>Each dot represents one person. Map depicts location (block level) of those who identify as a single race only for the purposes of the Census. Does not include those with whom identify with multple races. Click for higher resolution image.</i></p>
+                    </div>
+                   
+                    <h1>Pennsylvania Redistricting</h1>
+                    <h2>State House of Representatives</h2>
+                    <p>
+                        The Pennsylvania state House of Representatives consists of 203 members, elected in single-member districts of roughly equal size. In 2010, the "ideal size" (To find the ideal size of a district, take the total state population and divide by the number of districts) 62,573. After the 2020 census, the state population grew by 300,000, and likewise the "ideal" district size increased to 64,053. The U.S. Supreme Court requires that districts be approximately equal, allowing deviations for state legislative districts that are no more than 5% higher or lower than ideal. That means, for 2020, districts must have populations between 60,850 and 67,255 persons.
+                    </p>
+                    <p>
+                        The following map shows how much the current districts (from the 2010 decade) deviate from "ideal".
+                    </p>
+                    <iframe title="Pennsylvania State House" aria-label="Map" id="datawrapper-chart-sPYl6" src="https://datawrapper.dwcdn.net/sPYl6/2/" scrolling="no" frameborder="0" style="width: 100%;  border: none;" height="689"></iframe>
+                    <p>
+                        Of the 203 districts in the lower house, 101 have populations below the ideal amount, and 102 have populations above the ideal amount.
+                        <h2>State Senate</h2>
+                        <p>
+                            In the upper chamber of the state legislature, the PA constitution sets the size at 50 members. In 2010, the "ideal" district population was 254,048. In 2020, that number has increased by 6,006 to 260,054. Allowing for a +/-5% deviation, districts must now have populations between 247,051 and 273,057 residents.
+                        </p>
+                        <iframe title="Pennsylvania State Senate" aria-label="Map" id="datawrapper-chart-UgFUU" src="https://datawrapper.dwcdn.net/UgFUU/1/" scrolling="no" frameborder="0" style="width: 100%;  border: none;" height="689"></iframe>
+                        <p>
+                            Twenty-three districts have populations that are below the "ideal" size, while twenty-six have populations that exceed the ideal. One district is just one person different than the ideal (Senate District 24, which includes parts of Bucks, Montgomery, and Berks Counties).
+                        </p>
+                        <iframe title="Pennsylvania Municipalities" aria-label="Map" id="datawrapper-chart-s0sFX" src="https://datawrapper.dwcdn.net/s0sFX/1/" scrolling="no" frameborder="0" style="width: 100%;  border: none;" height="689">
+                            <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <ol class="footnotes" id="footnotes">
+    </ol>
+</div>
+<script src="http://jonathancervas.com/js/article.js"></script>

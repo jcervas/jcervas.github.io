@@ -1,3 +1,1 @@
-# jcervas.github.io
-
-Personal website, jonathancervas.com
+Contains all the code for my personal website.

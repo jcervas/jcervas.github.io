@@ -1,0 +1,260 @@
+body {
+    background-color: #FFFFFF;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 100%;
+    width: 100vw;
+    height: calc(100vh - 13rem);
+    position: relative;
+    align-items: center;
+    justify-items: center;
+}
+
+.demo-2 .content__title {
+    -webkit-text-stroke: 1px #eaecef;
+    text-stroke: 1px #eaecef;
+}
+
+.demo-3 .content__title {
+    -webkit-text-stroke: 1px #cec298;
+    text-stroke: 1px #cec298;
+}
+
+.content__title {
+    position: relative;
+    font-size: 5em;
+    pointer-events: none;
+    max-width: 65vw;
+    max-height: 100vh;
+    overflow: hidden;
+    line-height: 1;
+    grid-area: 1 / 1 / 2 / 2;
+    text-align: center;
+    -webkit-text-stroke: 1px #afada3;
+    text-stroke: 1px #afada3;
+    -webkit-text-fill-color: transparent;
+    text-fill-color: transparent;
+    color: transparent;
+    text-transform: lowercase;
+}
+
+.jc-input-notice {
+    font-size: 1.1em;
+    font-weight: 400;
+    margin-top: 9px;
+    color: #AA66D3;
+}
+
+#jc-input {
+    margin-top: 30px;
+    /* height: 60px; */
+    font-family: sans-serif;
+    margin: 1.5em auto;
+    /*max-width: 700px;*/
+    padding: 0 10px;
+    line-height: 1.7;
+    font-size: 1.1em;
+    font-weight: 300;
+    text-align: center;
+}
+
+.jc-hidden {
+    display: none;
+}
+
+.jc-publications {
+    grid-area: 1 / 1 / 2 / 2;
+    font-family: sans-serif;
+    font-size: 1em;
+    font-weight: 300;
+    width: 100%;
+    position: relative;
+}
+
+.jc-year {}
+
+.jc-authors {}
+
+.jc-issue::before {
+    content: "(";
+}
+
+.jc-issue::after {
+    content: "):";
+}
+
+.jc-volume {}
+
+.jc-pages {}
+
+.jc-journal {
+    font-style: italic;
+}
+
+
+table {
+    padding: 15px 20px 0;
+    margin: 10px auto 20px;
+    max-width: 600px;
+    background-color: rgba(0, 0, 0, .04);
+    color: #000000;
+    text-align: center;
+}
+
+.jc-overall-instructions {
+    margin-bottom: 25px;
+}
+
+button,
+input {
+    padding: 5px 8px;
+    margin-right: 3px;
+    font-family: sans-serif;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 3px;
+    border: 1px solid #777;
+}
+
+button.jc-submit {
+    cursor: pointer;
+    background: #16212B;
+    border-color: #16212B;
+    color: #fff;
+}
+
+button.jc-submit:disabled,
+button.jc-submit.jc-disabled {
+    background: #999;
+    border-color: #999;
+}
+
+.jc-disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+button:disabled {
+    opacity: .5;
+    pointer-events: none;
+}
+
+input {
+    color: #666;
+    border: 1px solid #ddd;
+    background: #fff;
+    text-align: center;
+}
+
+.jc-input-notice {
+    font-size: 1.1em;
+    font-weight: 400;
+    margin-top: 9px;
+    color: #AA66D3;
+}
+
+.jc-select-container {
+    font-family: sans-serif;
+    font-weight: 300;
+    position: absolute;
+    left: 100%;
+    display: none;
+}
+
+#jc-note {
+    font-weight: 300;
+    font-size: 1.1em;
+    color: #999;
+    line-height: 1.3em;
+}
+
+blockquote p {
+    color: #777;
+}
+
+blockquote {
+    margin-top: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+}
+
+.jc-header {
+    max-width: 750px;
+    margin: 0 auto 10px;
+    display: block
+}
+.jc-references-container {
+    padding: 20px 10px;
+}
+.jc-item li {
+    display: list-item;
+    list-style-type: none;
+    font-family: sans-serif;
+    margin-bottom: 1.5em;
+    max-width: 800px;
+    padding: 0 10px;
+    line-height: 1.3em;
+    font-size: 1em;
+    font-weight: 300;
+    text-indent: -10px;
+    padding-left: 10px;
+}
+.jc-cite {
+    font-weight: 300;
+    color: #999;
+    font-size: 0.7em;
+    vertical-align: middle;
+}
+.jc-cite a {
+    color: #646f79;
+}
+
+
+.jc-section {
+    position: relative;
+    padding-top: 4px;
+}
+
+.jc-item {
+    position: relative;
+    padding-top: 1px;
+}
+
+
+@media print {
+    ahref::after {
+        content: " ("attr(href) ")";
+    }
+}
+
+.jc-pdf::before {
+    content: "[";
+    /*url(http://polisci.uci.edu/~jcervas/images/icon-pdf.svg) ;*/
+    /*padding-right: 5px;  create some space between the image and the content before it */
+}
+
+.jc-pdf::after {
+    content: "]";
+}
+
+.jc-fulltext::before {
+    content: "[";
+}
+
+.jc-fulltext::after {
+    content: "]";
+}
+
+.jc-citedownload::before {
+    content: "[Download Citation: ";
+}
+
+.jc-citedownload::after {
+    content: "]";
+}
+
+.jc-journal {}
