@@ -210,7 +210,7 @@ ul.jc-item > li::before {
     text-indent: -10px;
 }
 
-jc-item.a {
+jc-title.a {
     color: #000;
 }
 
