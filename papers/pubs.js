@@ -84,7 +84,7 @@ function newEntry(data) {
         // };
 
         
-        li.appendChild(span);
+        // li.appendChild(span);
         newIndex.appendChild(li);
     }
     return newIndex;
