@@ -126,15 +126,16 @@
     }
 
     .cards {
-   display: flex;
-   flex-wrap: wrap;
-   justify-content: space-between;
-}
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
     .card-wide {
         /*box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);*/
         /* this adds the "card" effect */
         text-align: center;
-/*        width: 550px;*/
+        /*        width: 550px;*/
         flex: 0 1 100%;
     }
 
@@ -144,24 +145,24 @@
 
     /* Flexbox stuff */
 
-@media screen and (min-width: 40em) {
-    .cards {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
+    @media screen and (min-width: 40em) {
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .card-wide {
+            flex: 0 1 calc(50%);
+        }
     }
 
-    .card-wide {
-        flex: 0 1 calc(50%);
-    }
-}
+    @media screen and (min-width: 60em) {
 
-@media screen and (min-width: 60em) {
-
-    .card-wide {
-        flex: 0 1 calc(50%);
+        .card-wide {
+            flex: 0 1 calc(50%);
+        }
     }
-}
 
 
 
@@ -587,15 +588,15 @@
     <section class="gradiant-two">
         <div class="items">
             <div class="cards">
-            <div class="card-wide">
-                <img alt="Headshot of Cervas" src="images/jonny-ross-mantle-16-9-01.png">
-            </div>
-            <div class="card-wide">
-                <div id="about" class="" style="margin: 5%;">
-                    <p>Jonathan began at Carnegie Mellon University after receiving his PhD in Political Science from the University of California, Irvine. His Bachelor’s degree (also in political science) is from the University of Nevada, Las Vegas. His dissertation is a historical, quantitative look at the Electoral College and its consequences.</p>
-                    <p>In 2021, Jonathan served as the redistricting consultant for the Pennsylvania <span class="jc-highlight highlighted">Legislative Reapportionment Commission</span>. He was appointed to that position by a vote of the commission. The final plan received a bi-partisan vote and was upheld unanimously by the Pennsylvania Supreme Court. <a href="https://www.redistricting.state.pa.us/maps/">You can see these plans here</a>. He served as Special Master for the state of New York in 2022 [Harkenrider v. Hochel (2022)] and <a href="/2022/NY/CERVAS-SM-NY-2022.pdf" target=”_blank”>drew the state's 26 Congressional Districts and 63 state Senate districts</a>. He has also served as the assistant to a federal court Special Master in drawing remedial maps in three redistricting cases involving minority rights. The first of these was <span class="jc-highlight highlighted">Navajo Nation et al v. San Juan County</span>,Utah in 2017; followed in 2018-19 by <span class="jc-highlight highlighted">Bethune-Hill et al v. State Board of Election</span>,which involved the redrawing of one quarter of the districts in Virginia's legislative districts in the House Of Delegates; and in 2019-20, he worked on <span class="jc-highlight highlighted">Wright v. Sumter County Board of Elections</span>, a case involving school districts in a small Georgia County where former President Jimmy Carter makes his home. He has published several articles on both the elections and gerrymandering, and is a Research Associate at the <a href="https://www.electoral-lab.org" target=”_blank”>Electoral Innovation Lab</a>.</p>
+                <div class="card-wide">
+                    <img alt="Headshot of Cervas" src="images/jonny-ross-mantle-16-9-01.png">
                 </div>
-            </div>
+                <div class="card-wide">
+                    <div id="about" class="" style="margin: 5%;">
+                        <p>Jonathan began at Carnegie Mellon University after receiving his PhD in Political Science from the University of California, Irvine. His Bachelor’s degree (also in political science) is from the University of Nevada, Las Vegas. His dissertation is a historical, quantitative look at the Electoral College and its consequences.</p>
+                        <p>In 2021, Jonathan served as the redistricting consultant for the Pennsylvania <span class="jc-highlight highlighted">Legislative Reapportionment Commission</span>. He was appointed to that position by a vote of the commission. The final plan received a bi-partisan vote and was upheld unanimously by the Pennsylvania Supreme Court. <a href="https://www.redistricting.state.pa.us/maps/">You can see these plans here</a>. He served as Special Master for the state of New York in 2022 [Harkenrider v. Hochel (2022)] and <a href="/2022/NY/CERVAS-SM-NY-2022.pdf" target=”_blank”>drew the state's 26 Congressional Districts and 63 state Senate districts</a>. He has also served as the assistant to a federal court Special Master in drawing remedial maps in three redistricting cases involving minority rights. The first of these was <span class="jc-highlight highlighted">Navajo Nation et al v. San Juan County</span>,Utah in 2017; followed in 2018-19 by <span class="jc-highlight highlighted">Bethune-Hill et al v. State Board of Election</span>,which involved the redrawing of one quarter of the districts in Virginia's legislative districts in the House Of Delegates; and in 2019-20, he worked on <span class="jc-highlight highlighted">Wright v. Sumter County Board of Elections</span>, a case involving school districts in a small Georgia County where former President Jimmy Carter makes his home. He has published several articles on both the elections and gerrymandering, and is a Research Associate at the <a href="https://www.electoral-lab.org" target=”_blank”>Electoral Innovation Lab</a>.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -644,7 +645,7 @@
                     <p>As the Assistant to the Special Master, I helped <a href="https://www.nytimes.com/2017/03/01/us/politics/supreme-court-virginia-house-delegates-gerrymandering.html" target=”_blank”>redraw 25 of the 100</a> Virginia state legislative districts</p>
                 </div>
             </div>
-                        <div class="card">
+            <div class="card">
                 <div class="card-img">
                     <img src="images/tn.png" alt="Tennessee"></div>
                 <h3>Tennessee</h3>
