@@ -3,14 +3,26 @@ function newEntry(data) {
     newIndex.classList.add('jc-item');
 
     for (const obj of data) {
-        const authors = obj.author.map(author => `${author.given} ${author.family}`).join(" and ");
+
+const authors = obj.author.map(author => `${author.given} ${author.family}`);
+let formattedAuthors;
+if (authors.length === 1) {
+    formattedAuthors = authors.join("");
+} else if (authors.length === 2) {
+    formattedAuthors = authors.join(" and ");
+} else {
+    const lastTwoAuthors = authors.slice(-2).join(", and ");
+    const remainingAuthors = authors.slice(0, -2);
+    formattedAuthors = `${remainingAuthors.join(", ")}, ${lastTwoAuthors}`;
+}
+
         const li = document.createElement('li');
         li.setAttribute("id", `#pub${obj.id}`);
         li.setAttribute("data-pub-id", obj.id);
         li.setAttribute("class", "item");
         li.innerHTML = `
             ${obj.title ? `<span class="jc-title"><a href="${obj.pdf}">${obj.title}</a>.</span>` : ""}
-            ${authors ? `${authors}` : ""}
+            ${formattedAuthors ? `${formattedAuthors}` : ""}
             ${obj.year ? ` <span class="jc-year">${obj.year}</span>.` : ""}
             ${obj.journal ? `<span class="jc-journal"> ${obj.journal}</span> ` : ""}
             ${obj.volume ? `<span class="jc-volume">${obj.volume}</span>` : ""}
@@ -42,5 +54,3 @@ fetch("papers/working.json")
         workingindex.appendChild(WorkingEntry);
     })
     .catch(error => console.error(error));
-
-
