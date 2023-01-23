@@ -1,13 +1,12 @@
 function newEntry(data) {
-    var newIndex = document.createElement('ul');
+    const newIndex = document.createElement('ul');
     newIndex.classList.add('jc-item');
 
-    for (var i = 0; i < data.length; i++) {
-        var obj = data[i];
-        var authors = obj.author.map(author => author.given + " " + author.family).join(" and ");
-        var li = document.createElement('li');
-        li.setAttribute("id", "#pub" + parseInt(i + 1));
-        li.setAttribute("data-pub-id", parseInt(i + 1));
+    for (const obj of data) {
+        const authors = obj.author.map(author => `${author.given} ${author.family}`).join(" and ");
+        const li = document.createElement('li');
+        li.setAttribute("id", `#pub${obj.id}`);
+        li.setAttribute("data-pub-id", obj.id);
         li.setAttribute("class", "item");
         li.innerHTML = `
             ${obj.title ? `. <span class="jc-title"><a href="${obj.pdf}">${obj.title}</a>.</span>` : ""}
@@ -22,3 +21,22 @@ function newEntry(data) {
     }
     document.body.appendChild(newIndex);
 }
+
+
+
+// This starts the collection of data from the JSON database
+d3.json("papers/pubs.json")
+    .then(function(data) {
+        // if (error) throw error;
+        var journalindex = document.getElementById("journal");
+        var JournalEntry = newEntry(data)
+        journalindex.appendChild(JournalEntry);
+    });
+
+d3.json("papers/working.json")
+    .then(function(data) {
+        // if (error) throw error;
+        var workingindex = document.getElementById("working");
+        var WorkingEntry = newEntry(data)
+        workingindex.appendChild(WorkingEntry);
+    });
