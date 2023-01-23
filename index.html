@@ -11,463 +11,9 @@
     <link href="css/cd-words.css" rel="stylesheet" type="text/css">
     <link href="css/cervas.css" rel="stylesheet" type="text/css">
     <link href="css/jc-pubs.css" rel="stylesheet" type="text/css">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
 
-    <style type="text/css">
-    iframe {
-        margin-bottom: 24px;
-        border: 0;
-        display: block;
-        margin: 0 0;
-        max-width: 100%;
-        /*height: 100vh;*/
-    }
-
-    .center {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        width: 100%;
-    }
-
-    .pattern-background {
-        -webkit-font-smoothing: antialiased;
-        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-        font-family: "Arial";
-        line-height: 1.42857143;
-        color: #333;
-        font-size: 14px;
-        box-sizing: border-box;
-        background: transparent url(https://cdns.directv.com/content/dam/dtv/NFLST_OTT/2017/images/repeat-pattern.png) repeat 0 0;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        z-index: 0;
-        opacity: .7;
-    }
-
-    .full-background {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        overflow: hidden;
-    }
-
-    .background-image {
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        min-width: 100%;
-        min-height: 100%;
-        width: auto;
-        height: 100%;
-        position: fixed;
-        background: url(images/PAROADS.svg) no-repeat 50% 0;
-        background-size: cover;
-        background-image: url(images/PAROADS.svg);
-    }
-
-    #chart {
-        background-color: "";
-        stroke-width: 1;
-    }
-
-    . {
-        stroke: white;
-        stroke-width: 0.1;
-    }
-
-    .boundary {
-        fill: none;
-        stroke: #222426;
-        stroke-linejoin: round;
-        stroke-linecap: round;
-        vector-effect: non-scaling-stroke;
-    }
-
-    * {
-        box-sizing: border-box;
-    }
-
-
-    /* Style the counter cards */
-    .second_title {
-        text-align: left;
-        box-sizing: border-box;
-        color: #2d2a26;
-        line-height: 3vw;
-        font-weight: 400;
-        font-size: 4vw;
-        font-family: avenir-lt-w01_85-heavy1475544, sans-serif;
-        opacity: 0.85;
-        letter-spacing: -.1vw;
-        padding: 12px;
-    }
-
-    .items {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        list-style: none;
-        /*padding: 16px;*/
-    }
-
-    .cards {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-    }
-
-    .card-wide {
-        /*box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);*/
-        /* this adds the "card" effect */
-        text-align: center;
-        /*        width: 550px;*/
-        flex: 0 1 100%;
-    }
-
-    .card-wide img {
-        width: 100%
-    }
-
-    /* Flexbox stuff */
-
-    @media screen and (min-width: 40em) {
-        .cards {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-
-        .card-wide {
-            flex: 0 1 calc(50%);
-        }
-    }
-
-    @media screen and (min-width: 60em) {
-
-        .card-wide {
-            flex: 0 1 calc(50%);
-        }
-    }
-
-
-
-
-
-
-
-    .card {
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-        /* this adds the "card" effect */
-        padding: 16px;
-        margin: 1%;
-        text-align: center;
-        background-color: #f1f1f1;
-        width: 260px;
-    }
-
-    .card-img {
-        margin: 1%;
-        text-align: center;
-    }
-
-    .card-img img {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        width: 250px;
-        max-width: 90%;
-        background-color: ;
-        border: 10px solid #63676b;
-        border-radius: 50%;
-        box-sizing: border-box;
-        height: 100%;
-        margin: 0 auto;
-        overflow: hidden;
-        position: relative;
-    }
-
-
-
-    .card .sub {
-        color: #6a6a6a;
-        font-style: italic;
-        line-height: 0.9;
-        font-weight: 400;
-        font-size: 1.0rem;
-        margin-bottom: 15px;
-    }
-
-    .card-link {
-        width: 100%;
-        height: 100%;
-    }
-
-    .jc-nav {
-        position: fixed;
-        top: 0;
-        display: inline-block;
-        width: 100%;
-        max-height: 30px;
-        overflow: hidden;
-        color: #FFF;
-        font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-        font-weight: 700;
-        background-color: #000;
-        font-size: .75rem;
-        letter-spacing: -.01em;
-        line-height: 1.25rem;
-        vertical-align: baseline;
-        text-transform: uppercase;
-        z-index: 9999;
-    }
-
-    .jc-nav svg {
-        max-height: 25px;
-        vertical-align: baseline;
-    }
-
-    .jc-nav li {
-        display: inline-block;
-        position: relative;
-        top: 0;
-        left: 0;
-        float: left;
-        text-decoration: none;
-    }
-
-    /*---------------------------------*/
-    /*---------HEADER STUFF-----------*/
-    /*-------------------------------*/
-    #headerContainer {
-        width: 100%;
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 200;
-        background: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, .35)), to(rgba(0, 0, 0, 0)));
-        background: -moz-linear-gradient(top, rgba(0, 0, 0, .35), rgba(0, 0, 0, 0));
-    }
-
-    #headerContainer.afterLoad {
-        z-index: 2;
-    }
-
-    body.iDivice #headerContainer {
-        position: absolute;
-    }
-
-    #header {
-        position: relative;
-        margin: 0 auto;
-        max-width: 900px;
-        height: 45px;
-        /*padding: 5px 0 0;*/
-        padding: auto;
-    }
-
-    a#logo {
-        display: inline-block;
-        padding-bottom: 20px;
-    }
-
-    a#logo img {
-        max-width: 100%;
-    }
-
-    /*-------------------------------------*/
-    /*-------MAIN NAVIGATION STUFF--------*/
-    /*-----------------------------------*/
-    #navigation {
-        float: right;
-        margin: -10px 35px 0 0;
-    }
-
-    #dropmenu {
-        list-style: none;
-        position: relative;
-        width: 100%;
-        z-index: 400;
-    }
-
-    #dropmenu li {
-        list-style: none;
-        position: relative;
-        float: left;
-        line-height: 60px;
-    }
-
-    #dropmenu li a {
-        display: block;
-        line-height: 45px;
-        font-size: 11px;
-        border-bottom: 0px solid transparent;
-        text-transform: uppercase;
-        position: relative;
-        padding: 0 10px;
-        color: #fff;
-        opacity: .45;
-        font-weight: bold;
-
-        -moz-transition-property: opacity;
-        -moz-transition-duration: 0.20s;
-        -moz-transition-timing-function: linear;
-
-        -webkit-transition-property: opacity;
-        -webkit-transition-duration: 0.20s;
-        -webkit-transition-timing-function: linear;
-
-        -o-transition-property: opacity;
-        -o-transition-duration: 0.20s;
-        -o-transition-timing-function: linear;
-    }
-
-    #dropmenu li a:hover {
-        text-decoration: none;
-        opacity: 1;
-    }
-
-    #dropmenu li ul {
-        list-style: none;
-        display: block;
-        visibility: hidden;
-        opacity: 0;
-        position: absolute;
-        width: 190px;
-        padding: 10px 0;
-        z-index: 300;
-        top: 45px;
-        right: 0;
-        background: #111;
-        background: rgba(0, 0, 0, .5);
-    }
-
-    #dropmenu>li>ul:before {
-        content: "";
-        height: 0;
-        width: 0;
-        position: absolute;
-        right: 20px;
-        z-index: 1000;
-        display: block;
-        border-width: 10px;
-        border-style: solid;
-        top: -20px;
-        border-color: transparent transparent #111;
-        border-color: transparent transparent rgba(0, 0, 0, .5);
-    }
-
-    #dropmenu li ul li {
-        position: relative;
-        z-index: 2;
-        display: block;
-        text-align: left;
-    }
-
-    #dropmenu li ul li a {
-        line-height: 1.5em;
-        text-transform: none;
-        display: block;
-        padding: 8px 20px;
-        width: 150px;
-    }
-
-    #dropmenu li ul li ul {
-        position: absolute;
-        top: -10px;
-        right: 190px;
-        border-width: 1px;
-    }
-
-    #dropmenu li:hover ul ul,
-    #dropmenu li:hover ul ul ul,
-    #dropmenu li:hover ul ul ul ul {
-        visibility: hidden;
-        opacity: 0;
-    }
-
-    #dropmenu li:hover ul,
-    #dropmenu li li:hover ul,
-    #dropmenu li li li:hover ul,
-    #dropmenu li li li li:hover ul {
-        display: block;
-        visibility: visible;
-        opacity: 1;
-        -moz-transition-property: opacity;
-        -moz-transition-duration: 0.15s;
-        -moz-transition-timing-function: linear;
-
-        -webkit-transition-property: opacity;
-        -webkit-transition-duration: 0.15s;
-        -webkit-transition-timing-function: linear;
-
-        -o-transition-property: opacity;
-        -o-transition-duration: 0.15s;
-        -o-transition-timing-function: linear;
-    }
-
-    #dropmenu>li>a:hover,
-    #dropmenu li.current-menu-parent>a,
-    #dropmenu li.current-menu-item>a,
-    #dropmenu li.current-menu-ancestor>a {
-        color: #fff;
-        border-bottom-color: #fff;
-        opacity: 1;
-        background: none;
-    }
-
-    #selectMenu {
-        display: none;
-        position: absolute;
-        z-index: 1000;
-        right: 25px;
-        bottom: 16px;
-        width: 150px;
-        background: #191919;
-        color: #fafafa;
-        border: 1px solid #1f1f1f;
-        padding: 10px;
-        height: 37px;
-        line-height: 37px;
-        margin: 0;
-    }
-
-
-    .site-header__date {
-        color: #FFFFFF;
-        font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-        font-weight: 700;
-        background-color: #000;
-        display: none;
-        font-size: .75rem;
-        height: 1.25rem;
-        letter-spacing: -.01em;
-        line-height: 1.25rem;
-        text-align: center;
-        text-transform: uppercase;
-    }
-
-    @media (min-width:48rem) {
-        .site-header__date {
-            display: block
-        }
-
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-    </style>
-    <!-- <script>
-  function resizeIframe(obj) {
-    obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
-  }
-</script> -->
 </head>
 
 <body>
@@ -483,32 +29,19 @@
     <section>
         <div class="jc-nav">
             <li><a class="" href="/">
-                    <svg viewBox="0 0 224 168" fill="#FFF">
+                    <svg viewBox="0 0 224 168" fill="#222">
                         <path d="M95.29,106.53c.02,18.79-3.61,39.58-22.53,48.05-25.01,10.84-64.37,2.99-68.62-29.53l29.43-7.2c1.24,14.52,23.83,17.69,27.57,3.09,4.29-10.62,1.15-98.37,2.06-111.32h32.1V106.53Z" />
                         <path d="M187.23,47.47c-27.27-28.92-71.77-2.55-69.76,34.98-2.17,39.29,46.04,65.63,71.2,31.28l26.75,19.96c-18.22,26.51-56.43,30.36-84.16,19.96-29.96-10.64-47.66-39.35-47.12-71.2-.54-31.84,17.17-60.55,47.12-71.2,25.94-9.55,62.03-7.56,80.66,16.05l-24.69,20.17Z" /></svg>
                 </a></li>
             <!-- <a class="navbar-brand" href="#">Jonathan Cervas</a> -->
             <div id="headerContainer" class="afterLoad">
                 <div id="header">
-                    <!-- <a id="logo" href="http://www.oldfanfilms.com"><img src="http://www.oldfanfilms.com/wp-content/uploads/2018/10/White-Logo-300.png" alt="Old Fan Films"></a> -->
-                    <!--end logo-->
                     <div id="navigation" class="menu-homemain-container">
                         <ul id="dropmenu" class="menu">
-                            <!-- <li id="menu-item-28" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-28"><a href="http://www.oldfanfilms.com/?page_id=11">Films</a>
-<ul class="sub-menu">
-    <li id="menu-item-179" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-179"><a href="http://www.oldfanfilms.com/?page_id=32">Documentaries</a></li>
-    <li id="menu-item-176" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-176"><a href="http://www.oldfanfilms.com/?page_id=38">NGO Films</a></li>
-    <li id="menu-item-178" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-178"><a href="http://www.oldfanfilms.com/?page_id=34">Music Videos</a></li>
-    <li id="menu-item-177" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-177"><a href="http://www.oldfanfilms.com/?page_id=36">Short Films</a></li>
-</ul>
-</li>-->
                             <li id="menu-item-367" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-367"><a href="#about">About</a></li>
                             <li id="menu-item-27" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-27"><a href="#cases">Redistricting Cases</a></li>
                             <li id="menu-item-29" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-29"><a href="#pubs">Publications</a></li>
                             <li id="menu-item-25" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-25"><a href="cv.pdf">CV</a></li>
-                            <!-- <li id="menu-item-366" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-366"><a href="http://www.oldfanfilms.com/?page_id=364">Clients</a></li>
-<li id="menu-item-619" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-619"><a href="http://www.oldfanfilms.com/?page_id=613">Press</a></li>
-<li id="menu-item-24" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-24"><a href="http://www.oldfanfilms.com/?page_id=20">Contact</a></li>-->
                         </ul>
                     </div>
                 </div>
@@ -591,6 +124,38 @@
         </div>
     </section>
     <div class="divider"></div>
+    <section style="background-color: #ffffff">
+        <div id="pubs" class="container" style="padding: 10px 10px;">
+            <!-- <iframe width="100%" frameBorder="0" scrolling="no" height="1500px" src="pubs.html"></iframe> -->
+            <div class="jc-publications">
+                <div class="jc-references-container">
+                    <h3 class="jc-subtitle">Journal Articles</h3>
+                    <ul class="jc-section" id="journal"></ul>
+                    <h3 class="jc-subtitle">Other Publications</h3>
+                    <ul class="jc-section" id="otherpubs">
+                        <ul class="jc-item">
+                            <li class="item">
+                                <span class="jc-highlight highlighted">The GOP scared Latinos from the census. Now that may cost the party red seats.</span>Samuel Wang and Jonathan Cervas. 2021. May 1, 2021. <em>The Washington Post</em>.
+                                <span class="jc-cite">
+                                    <span class="jc-fulltext"><a target="_parent" href="https://www.washingtonpost.com/outlook/2021/05/01/hispanics-census-undercount-house-seats/">Full Text</a></span>
+                                </span>
+                            </li>
+                            <br>
+                            <li class="item">
+                                <span class="jc-highlight highlighted">Pennsylvania has to draw new congressional districts, but getting rid of gerrymandering will be harder than you think.</span>Bernard Grofman and Jonathan Cervas. 2018. February 9, 2018. <em>The Washington Post</em>.
+                                <span class="jc-cite">
+                                    <span class="jc-fulltext"><a target="_parent" href="https://www.washingtonpost.com/news/monkey-cage/wp/2018/02/09/now-pennsylvania-has-to-draw-new-house-districts-but-getting-rid-of-gerrymandering-is-harder-than-you-think/?utm_term=.8fb902a02179">Full Text</a></span>
+                                </span>
+                            </li>
+                        </ul>
+                    </ul>
+                    <h3 class="jc-subtitle">Working Papers</h3>
+                    <ul class="jc-section" id="working"></ul>
+                </div>
+            </div>
+    </section>
+    <div class="divider"></div>
+    <div class="site-header__date"></div>
     <section>
         <div id="cases" class="second_title" style="padding: 20px; margin-left: 10%; text-align: left;">Redistricting Case Involvement</div>
         <div class="items">
@@ -661,36 +226,6 @@
         </div>
     </section>
     <div class="divider"></div>
-    <section style="background-color: #ffffff">
-        <div id="pubs" class="container" style="padding: 10px 10px;">
-            <!-- <iframe width="100%" frameBorder="0" scrolling="no" height="1500px" src="pubs.html"></iframe> -->
-            <div class="jc-publications">
-                <div class="jc-references-container">
-                    <h3 class="jc-subtitle">Journal Articles</h3>
-                    <ul class="jc-section" id="journal"></ul>
-                    <h3 class="jc-subtitle">Other Publications</h3>
-                    <ul class="jc-section" id="otherpubs">
-                        <ul class="jc-item">
-                        <li class="item">
-                            <span class="jc-highlight highlighted">The GOP scared Latinos from the census. Now that may cost the party red seats.</span>Samuel Wang and Jonathan Cervas. 2021.  May 1, 2021. <em>The Washington Post</em>.
-                            <span class="jc-cite">
-                                <span class="jc-fulltext"><a target="_parent" href="https://www.washingtonpost.com/outlook/2021/05/01/hispanics-census-undercount-house-seats/">Full Text</a></span>
-                            </span>
-                        </li>
-                        <br>
-                        <li class="item">
-                            <span class="jc-highlight highlighted">Pennsylvania has to draw new congressional districts, but getting rid of gerrymandering will be harder than you think.</span>Bernard Grofman and Jonathan Cervas. 2018.  February 9, 2018. <em>The Washington Post</em>.
-                            <span class="jc-cite">
-                                <span class="jc-fulltext"><a target="_parent" href="https://www.washingtonpost.com/news/monkey-cage/wp/2018/02/09/now-pennsylvania-has-to-draw-new-house-districts-but-getting-rid-of-gerrymandering-is-harder-than-you-think/?utm_term=.8fb902a02179">Full Text</a></span>
-                            </span>
-                        </li>
-                    </ul>
-                </ul>
-                    <h3 class="jc-subtitle">Working Papers</h3>
-                    <ul class="jc-section" id="working"></ul>
-                </div>
-            </div>
-    </section>
     <section id="#contact" style="padding-top: 0px">
         <div class="map_oc">
             <div class="divider"></div>
