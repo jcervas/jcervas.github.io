@@ -19,7 +19,7 @@ function newEntry(data) {
         `
         newIndex.appendChild(li);
     }
-    document.body.appendChild(newIndex);
+    return newIndex;
 }
 
 
