@@ -403,9 +403,6 @@ section {
     content: "\"";
 }*/
 
-jc-item.jc-highlight {
-    color: #000;
-}
 
     /* For mobile phones: */
     [class*="col-"] {
