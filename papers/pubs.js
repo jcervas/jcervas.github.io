@@ -33,11 +33,11 @@ function newEntry(data) {
         li.setAttribute("data-pub-id", parseInt(i + 1));
         li.setAttribute("class", "item");
 
-        if (typeof obj.author !== 'undefined') {
-            li.innerHTML += authors;
-        };
         if (typeof obj.title !== 'undefined') {
             li.innerHTML += title;
+        };
+        if (typeof obj.author !== 'undefined') {
+            li.innerHTML += authors;
         };
         if (typeof obj.year !== 'undefined') {
             li.innerHTML += year;
