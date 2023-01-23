@@ -9,7 +9,7 @@ function newEntry(data) {
         li.setAttribute("data-pub-id", obj.id);
         li.setAttribute("class", "item");
         li.innerHTML = `
-            ${obj.title ? `. <span class="jc-title"><a href="${obj.pdf}">${obj.title}</a>.</span>` : ""}
+            ${obj.title ? `<span class="jc-title"><a href="${obj.pdf}">${obj.title}</a>.</span>` : ""}
             ${authors ? `${authors}` : ""}
             ${obj.year ? ` <span class="jc-year">${obj.year}</span>.` : ""}
             ${obj.journal ? `<span class="jc-journal"> ${obj.journal}</span> ` : ""}
