@@ -25,18 +25,22 @@ function newEntry(data) {
 
 
 // This starts the collection of data from the JSON database
-d3.json("papers/pubs.json")
-    .then(function(data) {
-        // if (error) throw error;
+fetch("papers/pubs.json")
+    .then(response => response.json())
+    .then(data => {
         var journalindex = document.getElementById("journal");
         var JournalEntry = newEntry(data)
         journalindex.appendChild(JournalEntry);
-    });
+    })
+    .catch(error => console.error(error));
 
-d3.json("papers/working.json")
-    .then(function(data) {
-        // if (error) throw error;
+fetch("papers/working.json")
+    .then(response => response.json())
+    .then(data => {
         var workingindex = document.getElementById("working");
         var WorkingEntry = newEntry(data)
         workingindex.appendChild(WorkingEntry);
-    });
+    })
+    .catch(error => console.error(error));
+
+
