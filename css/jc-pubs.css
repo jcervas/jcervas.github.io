@@ -210,8 +210,9 @@ ul.jc-item > li::before {
     text-indent: -10px;
 }
 
-jc-title.a {
+.jc-title a {
     color: #000;
+    font-weight: 600;
 }
 
 .jc-cite {
