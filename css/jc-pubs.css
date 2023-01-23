@@ -202,13 +202,21 @@ blockquote {
     font-weight: 300;
     text-indent: -10px;
     padding-left: 10px;
+    text-indent: -10px;
 }
+
+ul.jc-item > li::before {
+    content: "- ";
+    text-indent: -10px;
+}
+
 .jc-cite {
     font-weight: 300;
     color: #999;
     font-size: 0.7em;
     vertical-align: middle;
 }
+
 .jc-cite a {
     color: #646f79;
 }
