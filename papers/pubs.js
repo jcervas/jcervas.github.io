@@ -55,19 +55,19 @@ function newEntry(data) {
             li.innerHTML += pages;
         };
 
-    var span = document.createElement('span');
-            span.setAttribute("class", "jc-cite");
-        if (typeof obj.pdf | obj.fulltext !== 'undefined') {
+    // var span = document.createElement('span');
+    //         span.setAttribute("class", "jc-cite");
+    //     if (typeof obj.pdf | obj.fulltext !== 'undefined') {
             
-            li.innerHTML += "<span class=\"jc-cite\">";
+    //         li.innerHTML += "<span class=\"jc-cite\">";
 
-            if (typeof obj.pdf !== 'undefined') {
-                span.innerHTML += pdf;
-            };
-            // if (typeof obj.fulltext !== 'undefined') {
-            //     span.innerHTML += fulltext;
-            // };
-        }
+    //         if (typeof obj.pdf !== 'undefined') {
+    //             span.innerHTML += pdf;
+    //         };
+    //         // if (typeof obj.fulltext !== 'undefined') {
+    //         //     span.innerHTML += fulltext;
+    //         // };
+    //     }
 
         // if (typeof (obj.bibtex !== 'undefined') || (obj.xml !== 'undefined')) {
         //     var span_cite = document.createElement('span');
