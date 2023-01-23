@@ -16,7 +16,7 @@ function newEntry(data) {
             // console.log(authors)
         }
         var year = " <span class=\"jc-year\">" + obj.year + "</span>."
-        var title = ". <span class=\"jc-highlight highlighted\">" + obj.title + ".</span> "
+        var title = ". <span class=\"jc-highlight highlighted\"><a href=" + obj.pdf + ">" +  obj.title + "</a>.</span> "
         var journal = "<span class=\"jc-journal\"> " + obj.journal + "</span> "
         var volume = "<span class=\"jc-volume\">" + obj.volume + "</span>"
         var issue = "<span class=\"jc-issue\">" + obj.issue + "</span> "
