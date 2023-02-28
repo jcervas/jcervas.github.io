@@ -3,14 +3,13 @@
 <html>
 <head>
     <title>{{Title}}</title>
-    <link rel="stylesheet" type="text/css" href="/Users/cervas/Google Drive/Projects/Web Development/jcervas_web/charts/chart.css">
 </head>
 <body class="chart">
 
 <style type="text/css">
 .container--ph {
   height: 0;
-  padding-top: 48%;
+  padding-top: 505px;
   position: relative;
 }
 
@@ -22,17 +21,22 @@
   height: 100%;
   border: none; /* get rid of the border */
 }
+.iframe--static {
+  position: absolute;
+  width: 100%;
+  border: none; /* get rid of the border */
+}
 </style>
 
 
 <div class="dw-chart-header" id="header">
     <h1>
-        <span class="chart-title">{{Caption}}</span>
+        <span class="chart-title">2013 House Districts Deviations in 2020</span>
     </h1>
 </div>
-
+    <iframe class="iframe--static" src="/Users/cervas/My Drive/GitHub/Data Files/Census/PA2020.pl/legend.svg"></iframe>
     <div class="container container--ph">
-    <iframe class="iframe--responsive" src="/Users/cervas/Google Drive/Projects/Dogs that Didn't Bark/plots/seatvotes/bias_shift_2016-01.svg"></iframe>
+    <iframe class="iframe--responsive" src="/Users/cervas/My Drive/GitHub/Data Files/Census/PA2020.pl/maps/PA_House_2020.svg"></iframe>
 </div>
 
 <div class="dw-chart-notes ">
@@ -44,13 +48,13 @@
             <span class="byline-caption">
                 
             </span>
-            <span class="chart-byline">Jonathan Cervas | University of California Irvine</span>
+            <span class="chart-byline">Jonathan Cervas | Carnegie Mellon University</span>
             <span class="byline-append"></span>
         </span>
         <span class="footer-block source-block ">
             <span class="separator"></span>
             <span class="source-caption">Source:</span>
-            <a href="{{urfl}}" rel="nofollow noopener noreferrer" target="_blank">{{source text}}</a> <span class="separator"></span> {{source 2}}
+            <a href="{{urfl}}" rel="nofollow noopener noreferrer" target="_blank">Census Bureau</a> <span class="separator"></span> Pennsylvania Legislative Data Processing Center
         </span>
     </div>
     <div class="footer-right">
@@ -60,4 +64,668 @@
 
 
 </body>
+
+<style type="text/css">
+            @import 'https://static.dwcdn.net/css/roboto.css';
+.chart {
+  font-family: Roboto,sans-serif;
+  color: #181818;
+  font-size: 12px;
+  background: transparent;
+  margin: 0 0px;
+  height: 100%;
+}
+.separator {
+  content: "•";
+  display: inline-block;
+}
+.chart.vis-height-fit {
+  overflow: hidden;
+}
+.chart a {
+  color: #18a1cd;
+  text-decoration: none;
+}
+.chart .dw-chart-header {
+  min-height: 1px;
+  position: relative;
+  overflow: auto;
+}
+.chart .dw-chart-header .header-right {
+  position: absolute;
+  right: 10px;
+  z-index: 20;
+}
+.chart .dw-chart-header h1 {
+  font-family: Roboto,sans-serif;
+  font-weight: bold;
+  font-size: 22px;
+  font-style: normal;
+  text-decoration: none;
+  color: #000000;
+  margin: 0 0 10px;
+}
+.chart .dw-chart-header p {
+  font-family: Roboto,sans-serif;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 17px;
+  font-style: normal;
+  text-decoration: none;
+  margin: 5px 0 10px !important;
+}
+.chart .dw-chart-body.dark-bg .label span {
+  color: #181818;
+  fill: #181818;
+}
+.chart .dw-chart-body .bc-grid-line {
+  border-left-style: solid;
+}
+.chart .dw-chart-body.content-below-chart {
+  margin: 0px 0px 20px 0px;
+}
+.chart .labels text {
+  font-size: 12px;
+}
+.chart .label {
+  font-size: 12px;
+}
+.chart .label span,
+.chart .label tspan {
+  color: #181818;
+  fill: #181818;
+}
+.chart .label.inverted span {
+  text-shadow: 0 0px 2px #000000;
+  color: #ffffff;
+}
+.chart .label.inside:not(.inverted) span {
+  text-shadow: 0 0px 2px #ffffff;
+  color: #333333;
+}
+.chart .label sup {
+  text-shadow: none;
+}
+.chart .label.highlighted {
+  font-weight: bold;
+}
+.chart .label.highlighted,
+.chart .label .label.axis {
+  font-size: 12px;
+  z-index: 100;
+}
+.chart .label.hover {
+  font-weight: bold;
+}
+.chart .label.smaller span {
+  font-size: 80%;
+}
+.chart .dw-chart-notes {
+  font-family: Roboto,sans-serif;
+  font-weight: normal;
+  font-size: 12px;
+  font-style: italic;
+  text-decoration: none;
+  color: #656565;
+  margin: 10px 0px 5px 0px;
+  position: relative;
+}
+.chart #footer,
+.chart .dw-chart-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: Roboto,sans-serif;
+  font-weight: normal;
+  font-size: 11px;
+  font-style: normal;
+  text-decoration: none;
+  color: #888;
+}
+.chart #footer > div > .footer-block,
+.chart .dw-chart-footer > div > .footer-block {
+  display: inline-block;
+}
+.chart #footer > div > .footer-block.hidden,
+.chart .dw-chart-footer > div > .footer-block.hidden {
+  display: none;
+}
+.chart #footer > div > .footer-block a[href=""],
+.chart .dw-chart-footer > div > .footer-block a[href=""] {
+  color: #888;
+  pointer-events: none;
+  text-decoration: none;
+  padding: 0;
+  border-bottom: 0;
+}
+.chart #footer > div > .footer-block .separator,
+.chart .dw-chart-footer > div > .footer-block .separator {
+  display: inline-block;
+  font-style: initial;
+}
+.chart #footer > div > .footer-block .separator:before,
+.chart .dw-chart-footer > div > .footer-block .separator:before {
+  content: "•";
+  display: inline-block;
+}
+/*.chart #footer > div .footer-block.hidden:first-child + .footer-block:not(.hidden) .separator,
+.chart #footer > div .footer-block.hidden:first-child
+              + .footer-block.hidden
+              + .footer-block:not(.hidden) .separator,
+.chart #footer > div .footer-block.hidden:first-child
+              + .footer-block.hidden
+              + .footer-block.hidden
+              + .footer-block:not(.hidden) .separator,
+.chart #footer > div .footer-block.hidden:first-child
+              + .footer-block.hidden
+              + .footer-block.hidden
+              + .footer-block.hidden
+              + .footer-block:not(.hidden) .separator,
+.chart #footer > div .footer-block.hidden:first-child
+              + .footer-block.hidden
+              + .footer-block.hidden
+              + .footer-block.hidden
+              + .footer-block.hidden
+              + .footer-block:not(.hidden) .separator,
+.chart #footer > div .footer-block.hidden:first-child
+              + .footer-block.hidden
+              + .footer-block.hidden
+              + .footer-block.hidden
+              + .footer-block.hidden
+              + .footer-block.hidden
+              + .footer-block:not(.hidden) .separator,
+.chart .dw-chart-footer > div .footer-block.hidden:first-child + .footer-block:not(.hidden) .separator,
+.chart .dw-chart-footer > div .footer-block.hidden:first-child
+              + .footer-block.hidden
+              + .footer-block:not(.hidden) .separator,
+.chart .dw-chart-footer > div .footer-block.hidden:first-child
+              + .footer-block.hidden
+              + .footer-block.hidden
+              + .footer-block:not(.hidden) .separator,
+.chart .dw-chart-footer > div .footer-block.hidden:first-child
+              + .footer-block.hidden
+              + .footer-block.hidden
+              + .footer-block.hidden
+              + .footer-block:not(.hidden) .separator,
+.chart .dw-chart-footer > div .footer-block.hidden:first-child
+              + .footer-block.hidden
+              + .footer-block.hidden
+              + .footer-block.hidden
+              + .footer-block.hidden
+              + .footer-block:not(.hidden) .separator,
+.chart .dw-chart-footer > div .footer-block.hidden:first-child
+              + .footer-block.hidden
+              + .footer-block.hidden
+              + .footer-block.hidden
+              + .footer-block.hidden
+              + .footer-block.hidden
+              + .footer-block:not(.hidden) .separator {
+  display: none;
+}*/
+.chart #footer > div > a:first-child::before,
+.chart #footer > div > .source-block:first-child::before,
+.chart #footer > div > .footer-block:first-child::before,
+.chart .dw-chart-footer > div > a:first-child::before,
+.chart .dw-chart-footer > div > .source-block:first-child::before,
+.chart .dw-chart-footer > div > .footer-block:first-child::before {
+  content: "";
+  display: none;
+}
+.chart .dw-chart-notes a,
+.chart .dw-chart-footer a {
+  font-family: Roboto,sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: none;
+  color: #18a1cd;
+}
+.chart a img {
+  border: 0px;
+}
+.chart .embed-code {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  padding: 15px;
+  background: #eee;
+  color: #000;
+  border-radius: 6px;
+  text-transform: none;
+  font-size: 1em;
+  box-shadow: 2px 2px 0px rgba(0,0,0,0.4);
+  z-index: 10;
+}
+.chart .embed-code textarea {
+  width: 90%;
+  margin-top: 2%;
+  height: 7em;
+}
+.chart .hide {
+  display: none;
+}
+.chart .embed-code .close {
+  cursor: pointer;
+  position: absolute;
+  right: 2%;
+  top: 2%;
+  font-size: 1.125em;
+  opacity: 0.7;
+}
+.chart .embed-code .close:hover {
+  opacity: 1;
+}
+.chart .dw-tooltip {
+  color: #333333;
+}
+.chart .tooltip {
+  z-index: 200;
+  padding-bottom: 0px;
+}
+.chart .tooltip .content {
+  background-color: #fff;
+  border: 1px solid #888;
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+  padding: 5px 8px;
+}
+.chart .tooltip label {
+  font-weight: 700;
+}
+.chart .tooltip label:after {
+  content: ": ";
+}
+.chart .logo {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+.chart .logo .big {
+  display: none;
+}
+.chart svg .axis,
+.chart svg .tick,
+.chart svg .grid,
+.chart svg rect {
+  shape-rendering: crispEdges;
+}
+.chart .filter-links {
+  height: 30px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  border-bottom: 1px solid #ccc;
+  font-size: 12px;
+}
+.chart .filter-links a {
+  color: #666;
+  height: 28px;
+  line-height: 28px;
+  padding: 10px;
+  text-decoration: none;
+}
+.chart .filter-links a:hover {
+  color: #222;
+}
+.chart .filter-links a.active {
+  font-weight: bold;
+  color: #000;
+  box-shadow: none;
+  cursor: default;
+  text-decoration: none;
+  border-bottom: 3px solid #555;
+  padding: 10px 10px 6px 10px;
+}
+.chart .filter-select {
+  background-color: #FFFFFF;
+  border: 1px solid #CCCCCC;
+  border-radius: 4px 4px 4px 4px;
+  padding: 4px 6px;
+  vertical-align: middle;
+  font-size: 12px;
+}
+.chart.plain #footer {
+  height: 10px;
+}
+.chart.js .noscript {
+  display: none;
+}
+.chart .hidden {
+  display: none;
+}
+.chart .label.annotation span {
+  background: transparent;
+}
+.chart .legend-item.hover .label {
+  font-weight: bold;
+}
+.chart .watermark {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  transform-origin: top left;
+  opacity: 0.182;
+  font-weight: bold;
+  font-size: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.clearfix:after {
+  content: ".";
+  display: block;
+  clear: both;
+  visibility: hidden;
+  line-height: 0;
+  height: 0;
+}
+.clearfix {
+  display: inline-block;
+}
+html[xmlns] .clearfix {
+  display: block;
+}
+* html .clearfix {
+  height: 1%;
+}
+.point {
+  border: 1px solid #ccc;
+  display: inline-block;
+  position: absolute;
+  background: #fff;
+  z-index: 100;
+  cursor: pointer;
+  height: 20px;
+  width: 20px;
+  border-radius: 20px;
+  top: 20px;
+}
+.point:hover {
+  background: #ebebeb;
+}
+.point.active {
+  background: #ccc;
+  height: 20px;
+  width: 20px;
+  border-radius: 20px;
+  top: 20px;
+  border-color: #888;
+}
+.point-label {
+  position: absolute;
+}
+.line {
+  height: 1px;
+  background: #ccc;
+  position: absolute;
+  left: 0px;
+  top: 30px;
+  z-index: 1;
+}
+.vis-pie-chart path,
+.vis-donut-chart path,
+.vis-election-donut-chart path {
+  stroke-width: 0.5;
+}
+.chart.vis-d3-lines div.d3l-main {
+  position: absolute;
+}
+.chart.vis-d3-lines .d3l-line-label {
+  position: absolute;
+  width: 100px;
+}
+.chart.vis-d3-lines .d3l-hidden {
+  display: none !important;
+}
+.chart.vis-d3-lines .d3l-color-key {
+  position: absolute;
+}
+.chart.vis-d3-lines .d3l-color-key .d3l-item {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 8px;
+}
+.chart.vis-d3-lines .d3l-color-key .d3l-item .label br {
+  display: inline;
+  content: ' ';
+  clear: none;
+}
+.chart.vis-d3-lines .d3l-color-key .d3l-item .label br:after {
+  content: ' ';
+}
+.chart.vis-d3-lines .d3l-color-key .d3l-item .d3l-key {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+.chart.vis-d3-lines g.tooltip {
+  display: none;
+  pointer-events: none;
+}
+.chart.vis-d3-lines g.tooltip.show {
+  display: block;
+}
+.chart.vis-d3-lines g.tooltip text {
+  font-size: 90%;
+  text-anchor: start;
+}
+.chart.vis-d3-lines g.tooltip text.bg {
+  stroke: white;
+  fill: white;
+  stroke-width: 5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.chart.vis-d3-lines g.tooltip text tspan:first-child {
+  font-weight: bold;
+  font-size: 110%;
+}
+.chart.vis-d3-lines g.tooltip line {
+  stroke: black;
+  opacity: 0.3;
+}
+.chart.vis-d3-lines g.tooltip circle {
+  stroke: black;
+  fill: none;
+  opacity: 0.3;
+}
+.chart.vis-d3-lines svg rect.bg {
+  fill: #fff;
+  fill-opacity: 0;
+}
+.chart.vis-d3-lines svg rect.frame {
+  fill: none;
+}
+.chart.vis-d3-lines svg line.y-axis {
+  shape-rendering: crispEdges;
+}
+.chart.vis-d3-lines svg .x.axis line,
+.chart.vis-d3-lines svg .x.ticks line {
+  shape-rendering: crispEdges;
+}
+.chart.vis-d3-lines svg .x.axis text,
+.chart.vis-d3-lines svg .x.ticks text {
+  text-anchor: middle;
+}
+.chart.vis-d3-lines svg .y-grid line {
+  shape-rendering: crispEdges;
+}
+.chart.vis-d3-lines svg .y-grid text {
+  text-anchor: end;
+}
+.chart.vis-d3-lines svg .area-fill {
+  opacity: 0.2;
+}
+.chart.vis-d3-lines svg line.cursor {
+  fill: none;
+  stroke: #c00;
+  opacity: 0.3;
+  stroke-dasharray: 3, 2;
+}
+.chart.vis-d3-lines svg rect.cursor {
+  fill: #c00;
+  opacity: 0.2;
+}
+.chart.vis-d3-lines svg text.cursor-display {
+  fill: #c00;
+  opacity: 0.5;
+  pointer-events: none;
+  font-size: 10px;
+  font-family: Arial;
+}
+@media (min-width: 451px) {
+  .chart.vis-d3-lines svg .free-texts text.mobile-only {
+    display: none;
+  }
+  .chart.vis-d3-lines svg .free-texts g.bg.mobile-only {
+    display: none;
+  }
+}
+@media (max-width: 450px) {
+  .chart.vis-d3-lines svg .free-texts text.desktop-only {
+    display: none;
+  }
+  .chart.vis-d3-lines svg .free-texts g.bg.desktop-only {
+    display: none;
+  }
+}
+.chart.vis-d3-lines svg .free-texts text {
+  text-anchor: middle;
+  alignment-baseline: middle;
+}
+.chart.vis-d3-lines svg .free-texts text.dw-bold {
+  font-weight: bold;
+}
+.chart.vis-d3-lines svg .free-texts text.dw-italic {
+  font-style: italic;
+}
+.chart.vis-d3-lines svg .free-texts text.dw-underline {
+  text-decoration: underline;
+}
+.chart.vis-d3-lines svg .lbl-connect-lines path {
+  stroke: black;
+  stroke-dasharray: 2, 2;
+  fill: none;
+}
+.chart.vis-d3-lines .dw-chart-body {
+  position: relative;
+  padding-bottom: 0px;
+}
+.chart.vis-d3-lines .dw-chart-body.grid-labels-inside .y-grid text {
+  text-anchor: start;
+}
+.chart.vis-d3-lines .dw-chart-body.grid-labels-right .y-grid text {
+  text-anchor: start;
+}
+.chart.vis-d3-lines .dw-chart-body.grid-labels-right.grid-labels-inside .y-grid text {
+  text-anchor: end;
+}
+.chart.vis-d3-lines .legend-text span {
+  vertical-align: middle;
+}
+.chart.vis-d3-lines svg .lines .line path.line-style-dash-1,
+.chart.vis-d3-lines svg .lines .line path.line-style-dash-2,
+.chart.vis-d3-lines svg .lines .line path.line-style-dash-3,
+.chart.vis-d3-lines .legend-key .key-line.line-style-dash-1,
+.chart.vis-d3-lines .legend-key .key-line.line-style-dash-2,
+.chart.vis-d3-lines .legend-key .key-line.line-style-dash-3 {
+  stroke-linecap: round;
+}
+.chart.vis-d3-lines svg .lines .line path.line-style-dash-0 {
+  stroke-linecap: round;
+}
+.chart.vis-d3-lines .legend-key .key-line {
+  stroke-linecap: round;
+}
+.chart.vis-d3-lines svg .lines .line path,
+.chart.vis-d3-lines .legend-key .key-line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.chart.vis-d3-lines svg .lines .line path.line-style-width-0,
+.chart.vis-d3-lines .legend-key .key-line.line-style-width-0 {
+  stroke-width: 2;
+}
+.chart.vis-d3-lines svg .lines .line path.line-style-width-1,
+.chart.vis-d3-lines .legend-key .key-line.line-style-width-1 {
+  stroke-width: 3;
+}
+.chart.vis-d3-lines svg .lines .line path.line-style-width-2,
+.chart.vis-d3-lines .legend-key .key-line.line-style-width-2 {
+  stroke-width: 4;
+}
+.chart.vis-d3-lines svg .lines .line path.line-style-width-3,
+.chart.vis-d3-lines .legend-key .key-line.line-style-width-3 {
+  stroke-width: 1;
+}
+.chart.vis-d3-lines svg .lines .line path.line-style-width-4,
+.chart.vis-d3-lines .legend-key .key-line.line-style-width-4 {
+  stroke-width: 0;
+}
+.chart.vis-d3-lines svg .lines .line path.line-style-dash-0,
+.chart.vis-d3-lines .legend-key .key-line.line-style-dash-0 {
+  stroke-dasharray: none;
+}
+.chart.vis-d3-lines svg .lines .line path.line-style-dash-1,
+.chart.vis-d3-lines .legend-key .key-line.line-style-dash-1 {
+  stroke-dasharray: 0.5, 4;
+}
+.chart.vis-d3-lines svg .lines .line path.line-style-dash-1.line-style-width-1,
+.chart.vis-d3-lines .legend-key .key-line.line-style-dash-1.line-style-width-1 {
+  stroke-dasharray: 0.25, 5;
+}
+.chart.vis-d3-lines svg .lines .line path.line-style-dash-1.line-style-width-2,
+.chart.vis-d3-lines .legend-key .key-line.line-style-dash-1.line-style-width-2 {
+  stroke-dasharray: 0, 6;
+}
+.chart.vis-d3-lines svg .lines .line path.line-style-dash-1.line-style-width-3,
+.chart.vis-d3-lines .legend-key .key-line.line-style-dash-1.line-style-width-3 {
+  stroke-dasharray: 0.5, 2;
+}
+.chart.vis-d3-lines svg .lines .line path.line-style-dash-2,
+.chart.vis-d3-lines .legend-key .key-line.line-style-dash-2 {
+  stroke-dasharray: 3, 6;
+}
+.chart.vis-d3-lines svg .lines .line path.line-style-dash-2.line-style-width-1,
+.chart.vis-d3-lines .legend-key .key-line.line-style-dash-2.line-style-width-1 {
+  stroke-dasharray: 4, 8;
+}
+.chart.vis-d3-lines svg .lines .line path.line-style-dash-2.line-style-width-2,
+.chart.vis-d3-lines .legend-key .key-line.line-style-dash-2.line-style-width-2 {
+  stroke-dasharray: 5, 10;
+}
+.chart.vis-d3-lines svg .lines .line path.line-style-dash-2.line-style-width-3,
+.chart.vis-d3-lines .legend-key .key-line.line-style-dash-2.line-style-width-3 {
+  stroke-dasharray: 2, 4;
+}
+.chart.vis-d3-lines svg .lines .line path.line-style-dash-3,
+.chart.vis-d3-lines .legend-key .key-line.line-style-dash-3 {
+  stroke-dasharray: 6, 6;
+}
+.chart.vis-d3-lines svg .lines .line path.line-style-dash-3.line-style-width-1,
+.chart.vis-d3-lines .legend-key .key-line.line-style-dash-3.line-style-width-1 {
+  stroke-dasharray: 8, 8;
+}
+.chart.vis-d3-lines svg .lines .line path.line-style-dash-3.line-style-width-2,
+.chart.vis-d3-lines .legend-key .key-line.line-style-dash-3.line-style-width-2 {
+  stroke-dasharray: 10, 10;
+}
+.chart.vis-d3-lines svg .lines .line path.line-style-dash-3.line-style-width-3,
+.chart.vis-d3-lines .legend-key .key-line.line-style-dash-3.line-style-width-3 {
+  stroke-dasharray: 4, 4;
+}
+.no-baseline {
+  fill-rule: evenodd;
+  clip-rule: evenodd;
+  fill: none;
+  stroke: #808080;
+  stroke-width: 1px;
+  stroke-miterlimit: 4;
+}
+.chart.png-export .dw-chart-footer .static-image,
+.chart.png-export .dw-chart-footer .chart-action-data {
+  display: none !important;
+}
+.chart.png-export a {
+  color: unset !important;
+}
+</style>
 </html>
