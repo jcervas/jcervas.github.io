@@ -641,26 +641,25 @@ Create Maps
     ## quartz_off_screen 
     ##                 2
 
-Make Choropleth Plot in mapshaper.org \## FIGURE 2A and 2B - Choropleth
-Plot, 2020 Presidential Election by county; Bubble Plot, 2020
-Presidential Election by county (RUN IN TERMINAL) mapshaper -i
-“/Users/cervas/My Drive/GitHub/Data
-Files/GIS/NYT/counties-albers-med.json” -i
-“/Users/cervas/Downloads/county\_2020.csv” string-fields=GEOID name=data
--join target=counties data keys=GEOID,GEOID -each target=counties
-‘marginper = per\_dem-0.5’ -each target=counties ‘absmargin =
-Math.abs(per\_point\_diff)’ -each ‘absmargin =
-Math.abs(per\_point\_diff)’ -style target=counties
-r=‘Math.sqrt(total\_votes) \* 0.008’ -sort absmargin descending -style
-target=counties opacity=1 fill=‘per\_point\_diff &gt; 0 ? “\#cc0000” :
-“\#0061aa”’ -innerlines + name=counties\_style -style
-target=counties\_style stroke=“\#ddd” stroke-width=0.15 -style
-target=states stroke=“\#000” fill=none -o
-“/Users/cervas/Downloads/us\_chor.svg”
-target=counties,states,state\_labels -points target=counties inner +
-name=points -style opacity=0.5 fill=‘per\_point\_diff &gt; 0 ?
-“\#cc0000” : “\#0061aa”’ -o “/Users/cervas/Downloads/us\_bubble.svg”
-target=points,states,state\_labels
+Make Choropleth Plot in mapshaper.org
+
+    ## FIGURE 2A and 2B - Choropleth Plot, 2020 Presidential Election by county; Bubble Plot, 2020 Presidential Election by county (RUN IN TERMINAL)
+    mapshaper -i "/Users/cervas/My Drive/GitHub/Data Files/GIS/NYT/counties-albers-med.json"
+    -i "/Users/cervas/Downloads/county_2020.csv" string-fields=GEOID name=data
+    -join target=counties data keys=GEOID,GEOID
+    -each target=counties 'marginper = per_dem-0.5'
+    -each target=counties 'absmargin = Math.abs(per_point_diff)'
+    -each 'absmargin = Math.abs(per_point_diff)'
+    -style target=counties r='Math.sqrt(total_votes) * 0.008'
+    -sort absmargin descending
+    -style target=counties opacity=1 fill='per_point_diff > 0 ? "#cc0000" : "#0061aa"'
+    -innerlines + name=counties_style
+    -style target=counties_style stroke="#ddd" stroke-width=0.15
+    -style target=states stroke="#000" fill=none
+    -o "/Users/cervas/Downloads/us_chor.svg" target=counties,states,state_labels
+    -points target=counties inner + name=points
+    -style opacity=0.5 fill='per_point_diff > 0 ? "#cc0000" : "#0061aa"'
+    -o "/Users/cervas/Downloads/us_bubble.svg" target=points,states,state_labels
 
 Create Cartograms
 
