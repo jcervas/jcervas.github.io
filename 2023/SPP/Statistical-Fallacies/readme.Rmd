@@ -15,8 +15,9 @@ Set directories where data will be read from or written to
 ```{r}
 dir.download <- "/Users/cervas/Downloads"
 dir.git <- "/Users/cervas/My Drive/GitHub/Data Files"
-dir.data <- "/Volumes/GoogleDrive/My Drive/Projects/Statistical Fallacies/data"
-dir.figures <- "/Users/cervas/My Drive/Projects/Statistical Fallacies/figures"
+dir.paper <- "/Users/cervas/My Drive/GitHub/jcervas.github.io/2023/SPP/Statistical-Fallacies"
+dir.data <- paste0(dir.paper, "/data")
+dir.figures <- paste0(dir.paper,"/figures")
 ```
 
 Read in Functions used in other projects
@@ -210,7 +211,7 @@ write.csv(county.2020, "/Users/cervas/Downloads/county_2020.csv", row.names=F)
 
 Figure 1 - 2020 Presidential Election Results, by county
 ```{r}
-svglite::svglite("/Users/cervas/My Drive/Projects/Statistical Fallacies/figures/2020county.svg", width=8, height=5)
+svglite::svglite(paste0(dir.figures,"/2020county.svg"), width=8, height=5)
 	par(mfrow=c(2,1),
 		mar = c(1, 0.1, 1, 0.1))
 		hist(county.2020$per_dem, 
@@ -282,9 +283,9 @@ Read Shapefiles
 
 US Census Bureau's County Shapefile
 ```{r}
-counties.tiger <- rgdal::readOGR(paste0(dir.data, "/GIS/Tigerline/TIGER2020PL/counties/tl_2020pl_counties_simplified/tl_2020pl_counties_simplified.shp"))
+counties.tiger <- rgdal::readOGR(paste0(dir.git, "/GIS/Tigerline/TIGER2020PL/counties/tl_2020pl_counties_simplified/tl_2020pl_counties_simplified.shp"))
 
-tiger.cart <- rgdal::readOGR(paste0(dir.data, "/GIS/Tigerline/TIGER2020PL/counties-cartographic/cb_2020_us_county_500k_simlified_projected.json"))
+tiger.cart <- rgdal::readOGR(paste0(dir.git, "/GIS/Tigerline/TIGER2020PL/counties-cartographic/cb_2020_us_county_500k_simlified_projected.json"))
 ```
 
 
