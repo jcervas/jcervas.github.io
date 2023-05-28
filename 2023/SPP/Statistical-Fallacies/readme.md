@@ -3,19 +3,10 @@
 By Bernard Grofman and Jonathan Cervas Accepted, Minor Revisions,
 Statistics and Public Policy
 
-    # Remove all objects just to be safe.
-                rm(list=ls(all=TRUE))
-    library(tidyverse)
+Remove all objects just to be safe.
 
-    ## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
-    ## ✔ ggplot2 3.3.6      ✔ purrr   1.0.1 
-    ## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
-    ## ✔ tidyr   1.2.1      ✔ stringr 1.5.0 
-    ## ✔ readr   2.1.2      ✔ forcats 0.5.2 
-    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-    ## ✖ dplyr::filter() masks stats::filter()
-    ## ✖ dplyr::lag()    masks stats::lag()
-
+    rm(list=ls(all=TRUE))
+    #library(tidyverse)
     options(scipen=999)
 
 Set directories where data will be read from or written to
@@ -40,7 +31,7 @@ Read in Functions used in other projects
 
     ## Seats-Votes Function - v1.0
 
-Load Data
+# Load Data
 
     # source("https://raw.githubusercontent.com/jcervas/2020-Elections/main/NYT_json.R")
     ## FIPS Codes
@@ -49,7 +40,7 @@ Load Data
     ## US House Delegation Aggregate
     house.del <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/House/housedelegations1868-2020.csv")
     house <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/House/house_elections_1968_2020.csv")
-        house$district[house$district > 54] <- 1
+         house$district[house$district > 54] <- 1
 
     ## State-level Presidential Election Results
     pres <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/Presidential/Pres%20by%20State/president_state.csv")
@@ -61,6 +52,75 @@ Load Data
     pres.cnty.2016 <- read.csv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2016_US_County_Level_Presidential_Results.csv")
     pres.cnty.2020 <- read.csv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv")
 
+Read 2020 Presidential election data by county, via:
+<https://observablehq.com/@charliesmart/dorling-cartogram>
+
+    county.2020 <- read.csv("/Users/cervas/My Drive/GitHub/Data Files/GIS/NYT/2020/2020_county_results.csv")
+         county.2020$GEOID <- leadingZeroes(county.2020$GEOID, d=5)
+         county.2020 <- county.2020[!is.na(county.2020$total_votes),]
+    write.csv(county.2020, "/Users/cervas/Downloads/county_2020.csv", row.names=F)
+
+## Read Shapefiles
+
+US Census Bureau’s County Shapefile
+
+    counties.tiger <- rgdal::readOGR(paste0(dir.git, "/GIS/Tigerline/TIGER2020PL/counties/tl_2020pl_counties_simplified/tl_2020pl_counties_simplified.shp"))
+
+    ## OGR data source with driver: ESRI Shapefile 
+    ## Source: "/Users/cervas/My Drive/GitHub/Data Files/GIS/Tigerline/TIGER2020PL/counties/tl_2020pl_counties_simplified/tl_2020pl_counties_simplified.shp", layer: "tl_2020pl_counties_simplified"
+    ## with 3142 features
+    ## It has 17 fields
+    ## Integer64 fields read as strings:  ALAND20 AWATER20
+
+    tiger.cart <- rgdal::readOGR(paste0(dir.git, "/GIS/Tigerline/TIGER2020PL/counties-cartographic/cb_2020_us_county_500k_simlified_projected.json"))
+
+    ## OGR data source with driver: GeoJSON 
+    ## Source: "/Users/cervas/My Drive/GitHub/Data Files/GIS/Tigerline/TIGER2020PL/counties-cartographic/cb_2020_us_county_500k_simlified_projected.json", layer: "cb_2020_us_county_500k_simlified_projected"
+    ## with 3234 features
+    ## It has 12 fields
+    ## Integer64 fields read as strings:  ALAND AWATER
+
+    ## Warning in rgdal::readOGR(paste0(dir.git,
+    ## "/GIS/Tigerline/TIGER2020PL/counties-cartographic/cb_2020_us_county_500k_simlified_projected.json")):
+    ## Dropping null geometries: 265, 266, 267, 268, 325, 326, 660, 661, 662, 663, 664,
+    ## 665, 912, 943, 1139, 1140, 1141, 1184, 1235, 1278, 1397, 1432, 1489, 1583, 1584,
+    ## 1593, 1594, 1602, 1610, 1734, 1735, 1746, 1747, 2003, 2004, 2025, 2026, 2268,
+    ## 2269, 2277, 2278, 2288, 2318, 2319, 2361, 2408, 2417, 2418, 2431, 2432, 2453,
+    ## 2454, 2463, 2464, 2474, 2475, 2483, 2484, 2491, 2492, 2588, 2589, 2590, 2598,
+    ## 2607, 2608, 2620, 2751, 2752, 2758, 2760, 2761, 2763, 2771, 2772, 2783, 2784,
+    ## 2787, 2905, 2958, 2967, 2968, 3028, 3099, 3119, 3129, 3132, 3133, 3144, 3198,
+    ## 3234
+
+NYTs County Shapefile
+
+    counties.shp <- rgdal::readOGR(paste0(dir.git, "/GIS/NYT/2020/counties-albers-med/counties.shp"))
+
+    ## OGR data source with driver: ESRI Shapefile 
+    ## Source: "/Users/cervas/My Drive/GitHub/Data Files/GIS/NYT/2020/counties-albers-med/counties.shp", layer: "counties"
+    ## with 3153 features
+    ## It has 7 fields
+
+    state_labels <- rgdal::readOGR(paste0(dir.git, "/GIS/NYT/2020/counties-albers-med/state_labels.shp"))
+
+    ## OGR data source with driver: ESRI Shapefile 
+    ## Source: "/Users/cervas/My Drive/GitHub/Data Files/GIS/NYT/2020/counties-albers-med/state_labels.shp", layer: "state_labels"
+    ## with 51 features
+    ## It has 13 fields
+
+    states <- rgdal::readOGR(paste0(dir.git, "/GIS/NYT/2020/counties-albers-med/states.shp"))
+
+    ## OGR data source with driver: ESRI Shapefile 
+    ## Source: "/Users/cervas/My Drive/GitHub/Data Files/GIS/NYT/2020/counties-albers-med/states.shp", layer: "states"
+    ## with 51 features
+    ## It has 7 fields
+
+    state_lines <- rgdal::readOGR(paste0(dir.git, "/GIS/NYT/2020/counties-albers-med/statelines.shp"))
+
+    ## OGR data source with driver: ESRI Shapefile 
+    ## Source: "/Users/cervas/My Drive/GitHub/Data Files/GIS/NYT/2020/counties-albers-med/statelines.shp", layer: "statelines"
+    ## with 107 features
+    ## It has 2 fields
+
 Set years examined
 
     years <- seq(1868,2020,4)
@@ -68,9 +128,9 @@ Set years examined
 Clean data
 
     ## Presidential results by Congressional District
-        presCD$ed[presCD$ed > 54] <- 1 # At large districts are `98` in dataset
-        presCD <- data.frame(year=presCD$year, state=presCD$state, district=presCD$ed, demPres=two_party(presCD$dem,presCD$rep))
-        head(presCD)
+         presCD$ed[presCD$ed > 54] <- 1 # At large districts are `98` in dataset
+         presCD <- data.frame(year=presCD$year, state=presCD$state, district=presCD$ed, demPres=two_party(presCD$dem,presCD$rep))
+         head(presCD)
 
     ##   year   state district   demPres
     ## 1 1952 Alabama        1 0.5775672
@@ -80,7 +140,7 @@ Clean data
     ## 5 1952 Alabama        5 0.7269408
     ## 6 1952 Alabama        6 0.6127380
 
-        presCD <- presCD[presCD$year %in% seq(1968,2020,2),]
+         presCD <- presCD[presCD$year %in% seq(1968,2020,2),]
 
     ## US House of Represenatives
     houseCD <- data.frame(year=house$year, state=house$state, district=house$district, demCD=two_party(house$dem,house$gop))
@@ -88,7 +148,7 @@ Clean data
 
     ## Joining, by = c("year", "state", "district")
 
-        head(cd.elections)
+         head(cd.elections)
 
     ##   year   state district     demCD   demPres
     ## 1 1968 Alabama        1 0.4022654 0.6861826
@@ -103,8 +163,8 @@ Compare 2016 and 2018 elections
     presCD.2016 <- presCD[presCD$year %in% "2016",]
     houseCD.2016 <- houseCD[houseCD$year %in% "2016",]
     houseCD.2018 <- houseCD[houseCD$year %in% "2018",]
-        elec.2016.2018 <- dplyr::full_join(presCD.2016,houseCD.2018, by=c("state", "district"))
-        elec.2016.2016 <- dplyr::full_join(presCD.2016,houseCD.2016, by=c("state", "district"))
+         elec.2016.2018 <- dplyr::full_join(presCD.2016,houseCD.2018, by=c("state", "district"))
+         elec.2016.2016 <- dplyr::full_join(presCD.2016,houseCD.2016, by=c("state", "district"))
     head(elec.2016.2018)
 
     ##   year.x   state district   demPres year.y     demCD
@@ -175,8 +235,8 @@ Plot Coattails over time
 2016 Presidential elections by county
 
     pres.cnty.2016 <- data.frame(fips=leadingZeroes(pres.cnty.2016$combined_fips,5), dem2016=pres.cnty.2016$votes_dem, gop2016=pres.cnty.2016$votes_gop)
-        pres.cnty.2016$total <- pres.cnty.2016$dem2016+pres.cnty.2016$gop2016
-        head(pres.cnty.2016)
+         pres.cnty.2016$total <- pres.cnty.2016$dem2016+pres.cnty.2016$gop2016
+         head(pres.cnty.2016)
 
     ##    fips dem2016 gop2016  total
     ## 1 02013   93003  130413 223416
@@ -189,7 +249,7 @@ Plot Coattails over time
 2020 Presidential elections by county
 
     pres.cnty.2020 <- data.frame(fips=leadingZeroes(pres.cnty.2020$county_fips,5), dem2020=pres.cnty.2020$votes_dem, gop2020=pres.cnty.2020$votes_gop)
-        pres.cnty.2020$total <- pres.cnty.2020$dem2020+pres.cnty.2020$gop2020
+         pres.cnty.2020$total <- pres.cnty.2020$dem2020+pres.cnty.2020$gop2020
 
     ## Order from largest to smallest county (votes)
     pres.cnty.2020.decrease <- pres.cnty.2020[order(pres.cnty.2020$total, decreasing=T),]
@@ -199,30 +259,30 @@ Plot Coattails over time
 
     ## Half the Population in X Counties
     pres.top.cnty <- pres.cnty.2020.decrease[cumsum(pres.cnty.2020.decrease$total)<sum(pres.cnty.2020.decrease$total)/2,]
-        dim(pres.top.cnty)[1] # 150 counties have half the votes
+         dim(pres.top.cnty)[1] # 150 counties have half the votes
 
     ## [1] 150
 
     ## Reverse
     pres.top.cnty.rev <- pres.cnty.2020.increase[cumsum(pres.cnty.2020.increase$total)<sum(pres.cnty.2020.increase$total)/2,]
-        dim(pres.top.cnty.rev)[1] # 3001 have the other half
+         dim(pres.top.cnty.rev)[1] # 3001 have the other half
 
     ## [1] 3001
 
 Population of top 150 counties and bottom 3001 counties
 
-        sum(pres.cnty.2020.increase$total[1:3001])
+         sum(pres.cnty.2020.increase$total[1:3001])
 
     ## [1] 77708312
 
-        sum(pres.cnty.2020.decrease$total[1:150])
+         sum(pres.cnty.2020.decrease$total[1:150])
 
     ## [1] 77537909
 
 Compare 2016 and 2020 by county
 
     a <- dplyr::full_join(pres.cnty.2016, pres.cnty.2020, by="fips")
-        tail(a)
+         tail(a)
 
     ##       fips dem2016 gop2016 total.x dem2020 gop2020 total.y
     ## 3177 02936      NA      NA      NA    3796    5114    8910
@@ -235,11 +295,11 @@ Compare 2016 and 2020 by county
     counties.16.20 <- a[complete.cases(a),] # Problems with Alaska
 
     plot(
-        two_party(counties.16.20$dem2016,counties.16.20$gop2016), 
-        two_party(counties.16.20$dem2020,counties.16.20$gop2020), 
-        xlab="Clinton 2016 County Vote Share", 
-        ylab="Biden 2020 County Vote Share", 
-        col="#33333333")
+         two_party(counties.16.20$dem2016,counties.16.20$gop2016), 
+         two_party(counties.16.20$dem2020,counties.16.20$gop2020), 
+         xlab="Clinton 2016 County Vote Share", 
+         ylab="Biden 2020 County Vote Share", 
+         col="#33333333")
     abline(0,1)
 
 ![](readme_files/figure-markdown_strict/compare-16-20-1.png)
@@ -278,72 +338,43 @@ Compare 2016 and 2020 by county
 This time with raw votes
 
     plot(
-        counties.16.20$dem2016-counties.16.20$gop2016, 
-        counties.16.20$dem2020-counties.16.20$gop2020, 
-        xlab="Clinton Advantage 2016 County Vote", 
-        ylab="Biden Advantage 2020 County Vote", 
-        col="#33333333")
+         counties.16.20$dem2016-counties.16.20$gop2016, 
+         counties.16.20$dem2020-counties.16.20$gop2020, 
+         xlab="Clinton Advantage 2016 County Vote", 
+         ylab="Biden Advantage 2020 County Vote", 
+         col="#33333333")
     abline(0,1)
 
 ![](readme_files/figure-markdown_strict/compare-raw-1.png)
 
-Ignore this, for now
-
-    # Read in 2000-2020 Presidential election results, by county (MIT Election Data and Science Lab, 2018, "County Presidential Election Returns 2000-2020", https://doi.org/10.7910/DVN/VOQCHQ, Harvard Dataverse, V10, UNF:6:pVAMya52q7VM1Pl7EZMW0Q== [fileUNF])
-    # county.pres <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/Presidential/Pres%20By%20County/County%20Presidential%20Election%20Returns%202000-2020/countypres_2000-2020.csv")
-    #   head(county.pres)
-    #   county.pres$fips <- leadingZeroes(county.pres$county_fips, d=5)
-    # county.pres.2020 <- county.pres[county.pres$year == 2020,]
-
-    # county.pres.2020.dem <- county.pres.2020[county.pres.2020$party == "DEMOCRAT",]
-    #   county.2020.dem <- aggregate(list(dem=county.pres.2020.dem$candidatevotes), by=list(state=county.pres.2020.dem$state, county=county.pres.2020.dem$county_name, fips=county.pres.2020.dem$fips), FUN=sum)
-    # county.pres.2020.gop <- county.pres.2020[county.pres.2020$party == "gopUBLICAN",]
-    #   county.2020.gop <- aggregate(list(gop=county.pres.2020.gop$candidatevotes), by=list(state=county.pres.2020.gop$state, county=county.pres.2020.gop$county_name, fips=county.pres.2020.gop$fips), FUN=sum)
-
-
-
-    # county.2020 <- (dplyr::full_join(county.2020.dem, county.2020.gop, by=c("state", "county", "fips")))
-    # county.2020 <- county.2020[!county.2020$fips %in% "   NA",]
-    # county.2020$total <- county.2020$dem + county.2020$gop
-    #   head(county.2020)
-    # county.2020$DEM <- two_party(county.2020$dem, county.2020$gop)
-
-Read 2020 Presidential election data by county, via:
-<https://observablehq.com/@charliesmart/dorling-cartogram>
-
-    county.2020 <- read.csv("/Users/cervas/My Drive/GitHub/Data Files/GIS/NYT/2020/2020_county_results.csv")
-        county.2020$GEOID <- leadingZeroes(county.2020$GEOID, d=5)
-        county.2020 <- county.2020[!is.na(county.2020$total_votes),]
-    write.csv(county.2020, "/Users/cervas/Downloads/county_2020.csv", row.names=F)
-
 Figure 1 - 2020 Presidential Election Results, by county
 
     svglite::svglite(paste0(dir.figures,"/2020county.svg"), width=8, height=5)
-        par(mfrow=c(2,1),
-            mar = c(1, 0.1, 1, 0.1))
-            hist(county.2020$per_dem, 
-                xlim=c(0,1), 
-                breaks=101, 
-                col="white", 
-                border="#000000", 
-                main="Unweighted", 
-                axes=F, 
-                xlab="", 
-                ylab="")
-                abline(v=0.5, lty=1, lwd=2)
-        par(mar = c(2, 0.1, 1, 0.1))
-            hist(rep(county.2020$per_dem, county.2020$total_votes), 
-                xlim=c(0,1), 
-                breaks=101, 
-                col="white", 
-                border="#000000",
-                main="Weighted", 
-                axes=F, 
-                xlab="", 
-                ylab="")
-                abline(v=0.5, lty=1, lwd=2)
-                axis(side=1, at=c(0,0.5,1), labels=c("0%", "50%", "100%"))
-                mtext("More Democratic          ", side=1, line=0, adj=1)
+         par(mfrow=c(2,1),
+              mar = c(1, 0.1, 1, 0.1))
+              hist(county.2020$per_dem, 
+                   xlim=c(0,1), 
+                   breaks=101, 
+                   col="white", 
+                   border="#000000", 
+                   main="Unweighted", 
+                   axes=F, 
+                   xlab="", 
+                   ylab="")
+                   abline(v=0.5, lty=1, lwd=2)
+         par(mar = c(2, 0.1, 1, 0.1))
+              hist(rep(county.2020$per_dem, county.2020$total_votes), 
+                   xlim=c(0,1), 
+                   breaks=101, 
+                   col="white", 
+                   border="#000000",
+                   main="Weighted", 
+                   axes=F, 
+                   xlab="", 
+                   ylab="")
+                   abline(v=0.5, lty=1, lwd=2)
+                   axis(side=1, at=c(0,0.5,1), labels=c("0%", "50%", "100%"))
+                   mtext("More Democratic          ", side=1, line=0, adj=1)
     dev.off()
 
     ## quartz_off_screen 
@@ -353,34 +384,34 @@ Biden Counties vs. Trump Counties
 
     ## Biden Counties
     county.2020.biden <- county.2020[county.2020$votes_dem > county.2020$votes_gop,]
-        sum(county.2020.biden$votes_dem) # Biden Votes
+         sum(county.2020.biden$votes_dem) # Biden Votes
 
     ## [1] 59019426
 
-        sum(county.2020.biden$votes_gop) # Trump Votes
+         sum(county.2020.biden$votes_gop) # Trump Votes
 
     ## [1] 33564182
 
-        sum(county.2020.biden$diff) # Difference
+         sum(county.2020.biden$diff) # Difference
 
     ## [1] -25455244
 
     ## Trump Counties
     county.2020.trump <- county.2020[county.2020$votes_dem < county.2020$votes_gop,]
-        sum(county.2020.trump$votes_dem) # Biden Votes
+         sum(county.2020.trump$votes_dem) # Biden Votes
 
     ## [1] 22245568
 
-        sum(county.2020.trump$votes_gop) # Trump Votes
+         sum(county.2020.trump$votes_gop) # Trump Votes
 
     ## [1] 40644014
 
-        sum(county.2020.trump$diff) # Difference
+         sum(county.2020.trump$diff) # Difference
 
     ## [1] 18398446
 
     ## Trump most votes, county
-        county.2020[order(county.2020$votes_gop, decreasing=T),][1:10,]
+         county.2020[order(county.2020$votes_gop, decreasing=T),][1:10,]
 
     ##      ST GEOID        NAME STATEFP state_name        county_name votes_gop
     ## 49   CA 06037 Los Angeles       6 California Los Angeles County   1145530
@@ -408,89 +439,26 @@ Biden Counties vs. Trump Counties
 Statewide Vote
 
     state.2020 <- aggregate(
-        data.frame(
-            votes_gop=county.2020$votes_gop,
-            votes_dem=county.2020$votes_dem,
-            total_votes=county.2020$total_votes,
-            diff=county.2020$diff), 
-        by=
-        list(
-            state_name=county.2020$state_name), 
-        FUN=sum)
+         data.frame(
+              votes_gop=county.2020$votes_gop,
+              votes_dem=county.2020$votes_dem,
+              total_votes=county.2020$total_votes,
+              diff=county.2020$diff), 
+         by=
+         list(
+              state_name=county.2020$state_name), 
+         FUN=sum)
 
     sum((4263443 > state.2020$total_votes) * 1)
 
     ## [1] 39
-
-# GIS
-
-Read Shapefiles
-
-US Census Bureau’s County Shapefile
-
-    counties.tiger <- rgdal::readOGR(paste0(dir.git, "/GIS/Tigerline/TIGER2020PL/counties/tl_2020pl_counties_simplified/tl_2020pl_counties_simplified.shp"))
-
-    ## OGR data source with driver: ESRI Shapefile 
-    ## Source: "/Users/cervas/My Drive/GitHub/Data Files/GIS/Tigerline/TIGER2020PL/counties/tl_2020pl_counties_simplified/tl_2020pl_counties_simplified.shp", layer: "tl_2020pl_counties_simplified"
-    ## with 3142 features
-    ## It has 17 fields
-    ## Integer64 fields read as strings:  ALAND20 AWATER20
-
-    tiger.cart <- rgdal::readOGR(paste0(dir.git, "/GIS/Tigerline/TIGER2020PL/counties-cartographic/cb_2020_us_county_500k_simlified_projected.json"))
-
-    ## OGR data source with driver: GeoJSON 
-    ## Source: "/Users/cervas/My Drive/GitHub/Data Files/GIS/Tigerline/TIGER2020PL/counties-cartographic/cb_2020_us_county_500k_simlified_projected.json", layer: "cb_2020_us_county_500k_simlified_projected"
-    ## with 3234 features
-    ## It has 12 fields
-    ## Integer64 fields read as strings:  ALAND AWATER
-
-    ## Warning in rgdal::readOGR(paste0(dir.git,
-    ## "/GIS/Tigerline/TIGER2020PL/counties-cartographic/cb_2020_us_county_500k_simlified_projected.json")):
-    ## Dropping null geometries: 265, 266, 267, 268, 325, 326, 660, 661, 662, 663, 664,
-    ## 665, 912, 943, 1139, 1140, 1141, 1184, 1235, 1278, 1397, 1432, 1489, 1583, 1584,
-    ## 1593, 1594, 1602, 1610, 1734, 1735, 1746, 1747, 2003, 2004, 2025, 2026, 2268,
-    ## 2269, 2277, 2278, 2288, 2318, 2319, 2361, 2408, 2417, 2418, 2431, 2432, 2453,
-    ## 2454, 2463, 2464, 2474, 2475, 2483, 2484, 2491, 2492, 2588, 2589, 2590, 2598,
-    ## 2607, 2608, 2620, 2751, 2752, 2758, 2760, 2761, 2763, 2771, 2772, 2783, 2784,
-    ## 2787, 2905, 2958, 2967, 2968, 3028, 3099, 3119, 3129, 3132, 3133, 3144, 3198,
-    ## 3234
-
-NYTs County Shapefile
-
-    counties.shp <- rgdal::readOGR(paste0(dir.git, "/GIS/NYT/2020/counties-albers-med/counties.shp"))
-
-    ## OGR data source with driver: ESRI Shapefile 
-    ## Source: "/Users/cervas/My Drive/GitHub/Data Files/GIS/NYT/2020/counties-albers-med/counties.shp", layer: "counties"
-    ## with 3153 features
-    ## It has 7 fields
-
-    state_labels <- rgdal::readOGR(paste0(dir.git, "/GIS/NYT/2020/counties-albers-med/state_labels.shp"))
-
-    ## OGR data source with driver: ESRI Shapefile 
-    ## Source: "/Users/cervas/My Drive/GitHub/Data Files/GIS/NYT/2020/counties-albers-med/state_labels.shp", layer: "state_labels"
-    ## with 51 features
-    ## It has 13 fields
-
-    states <- rgdal::readOGR(paste0(dir.git, "/GIS/NYT/2020/counties-albers-med/states.shp"))
-
-    ## OGR data source with driver: ESRI Shapefile 
-    ## Source: "/Users/cervas/My Drive/GitHub/Data Files/GIS/NYT/2020/counties-albers-med/states.shp", layer: "states"
-    ## with 51 features
-    ## It has 7 fields
-
-    state_lines <- rgdal::readOGR(paste0(dir.git, "/GIS/NYT/2020/counties-albers-med/statelines.shp"))
-
-    ## OGR data source with driver: ESRI Shapefile 
-    ## Source: "/Users/cervas/My Drive/GitHub/Data Files/GIS/NYT/2020/counties-albers-med/statelines.shp", layer: "statelines"
-    ## with 107 features
-    ## It has 2 fields
 
 Combine 2020 data with Shapefiles
 
     counties.shp@data <- dplyr::left_join(counties.shp@data, county.2020, by=c("GEOID"))
     counties.tiger@data <- dplyr::left_join(counties.tiger@data, county.2020, by=c("GEOID20"="GEOID"))
 
-        head(counties.shp@data)
+         head(counties.shp@data)
 
     ##   ST.x GEOID    NAME.x STATEFP.x         X         Y   SQKM ST.y    NAME.y
     ## 1   IA 19107    Keokuk        19  317271.6 436242.12 1502.0   IA    Keokuk
@@ -514,7 +482,7 @@ Combine 2020 data with Shapefiles
     ## 5 0.7913950 0.1916558      0.5997392
     ## 6 0.7289120 0.2526030      0.4763090
 
-        # counties.shp <- counties.shp[!counties.shp@data$ST %in% c("AK","HI"),]
+         # counties.shp <- counties.shp[!counties.shp@data$ST %in% c("AK","HI"),]
     rgdal::writeOGR(counties.shp, dir.download, "us2020", driver="ESRI Shapefile", overwrite_layer=TRUE)
 
     ## Warning in rgdal::writeOGR(counties.shp, dir.download, "us2020", driver = "ESRI
@@ -539,21 +507,21 @@ Set Colors
 
 Create Choropleth inputs
 
-        pop.brks <- seq(0,1,0.5)
-        counties.shp@data$col <- colors.map[findInterval(counties.shp@data$per_dem, vec = pop.brks)]
+         pop.brks <- seq(0,1,0.5)
+         counties.shp@data$col <- colors.map[findInterval(counties.shp@data$per_dem, vec = pop.brks)]
 
-        # brks <- c(0, 10000, 25000, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000)
-        # size.brks <- c(0.25, 0.5, seq(1,25,4))
-        # pop.blocks <- size.brks[findInterval(counties.shp@data$total_votes, vec = brks)]
-        absmargin <- abs(counties.shp@data$votes_dem-counties.shp@data$votes_gop)
+         # brks <- c(0, 10000, 25000, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000)
+         # size.brks <- c(0.25, 0.5, seq(1,25,4))
+         # pop.blocks <- size.brks[findInterval(counties.shp@data$total_votes, vec = brks)]
+         absmargin <- abs(counties.shp@data$votes_dem-counties.shp@data$votes_gop)
 
     # Function to calculate the rScale
     scaleSqrt <- function(value, maxRadius=20, maxDomain=NA) {
     if (is.na(maxDomain)) {stop("Need max Domain")}
     # Input domain values
-        domain <- c(0, maxDomain)  # Example domain values
+         domain <- c(0, maxDomain)  # Example domain values
     # Output range values
-        range <- c(0, maxRadius)  # Example range values
+         range <- c(0, maxRadius)  # Example range values
 
       # Calculate the square root of the value
       sqrt_value <- sqrt(value)
@@ -569,9 +537,9 @@ Create Choropleth inputs
     scaleOpacitySqrt <- function(value, minOpacity=0, maxOpacity=20, maxDomain=NA) {
     if (is.na(maxDomain)) {stop("Need max Domain")}
     # Input domain values
-        domain <- c(0, maxDomain)  # Example domain values
+         domain <- c(0, maxDomain)  # Example domain values
     # Output range values
-        range <- c(minOpacity, maxOpacity)  # Example range values
+         range <- c(minOpacity, maxOpacity)  # Example range values
 
       # Calculate the square root of the value
       sqrt_value <- sqrt(value)
@@ -586,16 +554,16 @@ Create Choropleth inputs
 
     pop.sizes <- 
     scaleSqrt(
-        county.2020$total_votes,
-        maxRadius= 5, 
-        maxDomain= max(county.2020$total_votes))
+         county.2020$total_votes,
+         maxRadius= 5, 
+         maxDomain= max(county.2020$total_votes))
 
     pop.opacity <- 
     scaleOpacitySqrt(
-        abs(county.2020$per_point_diff),
-        minOpacity=0.25,
-        maxOpacity= 0.75, 
-        maxDomain= max(abs(county.2020$per_point_diff)))
+         abs(county.2020$per_point_diff),
+         minOpacity=0.25,
+         maxOpacity= 0.75, 
+         maxDomain= max(abs(county.2020$per_point_diff)))
 
     # pop.sizes <- sqrt(absmargin) * 0.005
 
@@ -603,19 +571,19 @@ Create Maps
 
     ## If we wanted to make a .png file
     # png(paste0("us2020.png"), 
-    #   height = 4000, width = 6000, 
-    #   units = "px", pointsize = 24)
+    #    height = 4000, width = 6000, 
+    #    units = "px", pointsize = 24)
 
     ## To make a *.svg file
 
     ## Choropleth Map
     svglite::svglite(paste0(dir.download,"us2020.svg"))
     par(mfrow=c(1,1),
-            mar = c(0.1, 0.1, 0.1, 0.1))
-        sp::plot(counties.shp, col=counties.shp@data$col, border="#ffffff", lwd=0.15)
-        sp::plot(states, border="#ffffff", add=T, lwd=1)
-        sp::plot(nation.shp, col=NA, border="#777777", add=T, lwd=1)
-        text(state_labels@data$X, state_labels@data$Y, labels=state_labels@data$label_text, cex=0.8)
+              mar = c(0.1, 0.1, 0.1, 0.1))
+         sp::plot(counties.shp, col=counties.shp@data$col, border="#ffffff", lwd=0.15)
+         sp::plot(states, border="#ffffff", add=T, lwd=1)
+         sp::plot(nation.shp, col=NA, border="#777777", add=T, lwd=1)
+         text(state_labels@data$X, state_labels@data$Y, labels=state_labels@data$label_text, cex=0.8)
     dev.off()
 
     ## quartz_off_screen 
@@ -624,18 +592,18 @@ Create Maps
     ## Bubble Map
     svglite::svglite(paste0(dir.download,"/us2020_bubble.svg"))
     par(mfrow=c(1,1),
-            mar = c(0.1, 0.1, 0.1, 0.1))
-        sp::plot(counties.shp, border="#ffffff", col="#ffffff", lwd=0.15)
+              mar = c(0.1, 0.1, 0.1, 0.1))
+         sp::plot(counties.shp, border="#ffffff", col="#ffffff", lwd=0.15)
     counties.shp@data$col_trans <- ifelse(is.na(counties.shp@data$col), counties.shp@data$col, paste0(counties.shp@data$col, pop.opacity)) # Add transparency
-        sp::plot(states, border="#999999", add=T, lwd=1)
-        points(counties.shp@data$X, counties.shp@data$Y, 
-            cex=pop.sizes, 
-            col="#00000033", 
-            bg=counties.shp@data$col_trans, 
-            pch=21, 
-            lwd=1)
-        sp::plot(nation.shp, col=NA, border="#777777", add=T, lwd=1)
-        text(state_labels@data$X, state_labels@data$Y, labels=state_labels@data$label_text, cex=0.8)
+         sp::plot(states, border="#999999", add=T, lwd=1)
+         points(counties.shp@data$X, counties.shp@data$Y, 
+              cex=pop.sizes, 
+              col="#00000033", 
+              bg=counties.shp@data$col_trans, 
+              pch=21, 
+              lwd=1)
+         sp::plot(nation.shp, col=NA, border="#777777", add=T, lwd=1)
+         text(state_labels@data$X, state_labels@data$Y, labels=state_labels@data$label_text, cex=0.8)
     dev.off()
 
     ## quartz_off_screen 
@@ -668,22 +636,22 @@ Create Cartograms
     counties.shp.cart@data$margin <- abs(counties.shp.cart@data$votes_dem-counties.shp.cart@data$votes_gop)
     counties.shp.cart1 <- cartogram::cartogram_ncont(counties.shp.cart, "margin")
     counties.shp.cart2 <- cartogram::cartogram_cont(counties.shp.cart, "margin", itermax=3)
-        # rgdal::writeOGR(counties.shp, dir.data, "counties_shp_cart2", driver="ESRI Shapefile", overwrite_layer=TRUE)
+         # rgdal::writeOGR(counties.shp, dir.data, "counties_shp_cart2", driver="ESRI Shapefile", overwrite_layer=TRUE)
 
     counties.shp.dorling <- cartogram::cartogram_dorling(x=counties.shp, weight="margin")
 
 Plot Cartograms
 
     svglite::svglite(paste0(dir.download,"us2020_cart.svg"))
-        sp::plot(counties.shp.cart1, border="#dddddd", col=counties.shp.cart1@data$col, lwd=0.15)
+         sp::plot(counties.shp.cart1, border="#dddddd", col=counties.shp.cart1@data$col, lwd=0.15)
     dev.off()
 
     svglite::svglite(paste0(dir.download,"us2020_cart2.svg"))
-        sp::plot(counties.shp.cart2, border=counties.shp.cart2@data$gs.pop.blocks, col=counties.shp.cart2@data$col, lwd=0.15)
+         sp::plot(counties.shp.cart2, border=counties.shp.cart2@data$gs.pop.blocks, col=counties.shp.cart2@data$col, lwd=0.15)
     dev.off()
 
     svglite::svglite(paste0(dir.download,"us2020_dorling.svg"))
-        sp::plot(counties.shp.dorling, id=counties.shp.dorling@data$NAME, border=NA, col=counties.shp.dorling@data$col, lwd=0.15)
+         sp::plot(counties.shp.dorling, id=counties.shp.dorling@data$NAME, border=NA, col=counties.shp.dorling@data$col, lwd=0.15)
     dev.off()
 
     rgdal::writeOGR(counties.shp.cart1, dir.download, "counties.shp.cart1", driver="ESRI Shapefile", overwrite_layer=TRUE)
@@ -698,20 +666,20 @@ Figure X: County Size and Number of Voters
 
     svglite::svglite(paste0(dir.figures,"county-vote.svg"), width = 8,height = 3)
     par(mfrow=c(1,1),
-            mar = c(0.5, 4, 0.1, 0.1))
+              mar = c(0.5, 4, 0.1, 0.1))
     barplot(
-        cnty$total_votes, 
-        names.arg = cnty$NAME,
-        col = ifelse(cnty$votes_dem > cnty$votes_gop, "#1375b7","#c93135"),
-        border=NA,
-        xlab = "", 
-        ylab = "Total Votes",
+         cnty$total_votes, 
+         names.arg = cnty$NAME,
+         col = ifelse(cnty$votes_dem > cnty$votes_gop, "#1375b7","#c93135"),
+         border=NA,
+         xlab = "", 
+         ylab = "Total Votes",
       main = "",
       axes=F,
-        xaxt="n")
+         xaxt="n")
     x_ticks <- barplot(cnty$total_votes, plot = FALSE)
     ## Calculate the center of the plot
-        plot_center <- mean(par("usr")[3:4])
+         plot_center <- mean(par("usr")[3:4])
 
     axis(side=2, las=2, at=seq(0,4000000, 1000000), paste0(seq(0,4,1),"mil"))
     abline(v = x_ticks[3153-150], lty = "dashed", col = "black")
@@ -747,30 +715,30 @@ Figure X: County Size and Number of Voters
     # Create the stacked bar plot
     svglite::svglite(paste0(dir.figures,"county-vote.svg"), width = 8,height = 3)
     par(mfrow=c(1,1),
-            mar = c(0.5, 4, 0.1, 0.1))
+              mar = c(0.5, 4, 0.1, 0.1))
     barplot(
-        rbind(dem, gop), 
-        beside = FALSE, 
+         rbind(dem, gop), 
+         beside = FALSE, 
       col = c("#1375b7","#c93135"),
-        border=NA,
-        xlab = "", 
-        ylab = "Total Votes",
+         border=NA,
+         xlab = "", 
+         ylab = "Total Votes",
       main = "",
       axes=F,
-        xaxt="n")
+         xaxt="n")
     x_ticks <- barplot(cnty$total_votes, plot = FALSE)
     ## Calculate the center of the plot
-        plot_center <- mean(par("usr")[3:4])
+         plot_center <- mean(par("usr")[3:4])
 
     axis(side=2, las=2, at=seq(0,4000000, 1000000), paste0(seq(0,4,1),"mil"))
     abline(v = x_ticks[3153-150], lty = "dashed", col = "black")
     text(x = x_ticks[3153-150], y = plot_center, labels = "Half of voters live in counties\n on either side of line", srt = 90)
     # Add a legend
     legend(
-        "topleft", 
-        legend = c("Democratic", "Republican"), 
-        fill = c("#1375b7","#c93135"),
-        bty="n")
+         "topleft", 
+         legend = c("Democratic", "Republican"), 
+         fill = c("#1375b7","#c93135"),
+         bty="n")
     dev.off()
 
     ## quartz_off_screen 
@@ -779,28 +747,28 @@ Figure X: County Size and Number of Voters
 Exit Poll Data
 
     groups <- c(
-        "White",
-        "Black",
-        "Hispanic",
-        "Asian",
-        "Other")
+         "White",
+         "Black",
+         "Hispanic",
+         "Asian",
+         "Other")
     type.exit <- c(
-        "proportion_vote",
-        "Democratic",
-        "Republican"
+         "proportion_vote",
+         "Democratic",
+         "Republican"
     )
     exit.2016 <- 
-        matrix(
-            c(0.70,0.12,0.11,0.04,0.03,
-                0.37,0.89,0.66,0.65,0.56,
-                0.57,0.08,0.28,0.27,0.36),
-            ncol=5, byrow = TRUE)
+         matrix(
+              c(0.70,0.12,0.11,0.04,0.03,
+                   0.37,0.89,0.66,0.65,0.56,
+                   0.57,0.08,0.28,0.27,0.36),
+              ncol=5, byrow = TRUE)
     exit.2020 <-
-        matrix(
-            c(0.67,  0.13,  0.13,  0.04,  0.04,
-                0.41,  0.87,  0.65,  0.61,  0.55,
-                0.58,  0.12,  0.32,  0.34,  0.41),
-            ncol=5, byrow = TRUE)
+         matrix(
+              c(0.67,  0.13,  0.13,  0.04,  0.04,
+                   0.41,  0.87,  0.65,  0.61,  0.55,
+                   0.58,  0.12,  0.32,  0.34,  0.41),
+              ncol=5, byrow = TRUE)
 
     colnames(exit.2016) <- colnames(exit.2020) <- groups
     rownames(exit.2016) <- rownames(exit.2020) <- type.exit
@@ -818,3 +786,24 @@ Exit Poll Data
     ## proportion_vote  0.67  0.13     0.13  0.04  0.04
     ## Democratic       0.41  0.87     0.65  0.61  0.55
     ## Republican       0.58  0.12     0.32  0.34  0.41
+
+Ignore this, for now
+
+    # Read in 2000-2020 Presidential election results, by county (MIT Election Data and Science Lab, 2018, "County Presidential Election Returns 2000-2020", https://doi.org/10.7910/DVN/VOQCHQ, Harvard Dataverse, V10, UNF:6:pVAMya52q7VM1Pl7EZMW0Q== [fileUNF])
+    # county.pres <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/Presidential/Pres%20By%20County/County%20Presidential%20Election%20Returns%202000-2020/countypres_2000-2020.csv")
+    #    head(county.pres)
+    #    county.pres$fips <- leadingZeroes(county.pres$county_fips, d=5)
+    # county.pres.2020 <- county.pres[county.pres$year == 2020,]
+
+    # county.pres.2020.dem <- county.pres.2020[county.pres.2020$party == "DEMOCRAT",]
+    #    county.2020.dem <- aggregate(list(dem=county.pres.2020.dem$candidatevotes), by=list(state=county.pres.2020.dem$state, county=county.pres.2020.dem$county_name, fips=county.pres.2020.dem$fips), FUN=sum)
+    # county.pres.2020.gop <- county.pres.2020[county.pres.2020$party == "gopUBLICAN",]
+    #    county.2020.gop <- aggregate(list(gop=county.pres.2020.gop$candidatevotes), by=list(state=county.pres.2020.gop$state, county=county.pres.2020.gop$county_name, fips=county.pres.2020.gop$fips), FUN=sum)
+
+
+
+    # county.2020 <- (dplyr::full_join(county.2020.dem, county.2020.gop, by=c("state", "county", "fips")))
+    # county.2020 <- county.2020[!county.2020$fips %in% "   NA",]
+    # county.2020$total <- county.2020$dem + county.2020$gop
+    #    head(county.2020)
+    # county.2020$DEM <- two_party(county.2020$dem, county.2020$gop)
