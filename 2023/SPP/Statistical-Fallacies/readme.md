@@ -16,6 +16,7 @@ Set directories where data will be read from or written to
     dir.paper <- "/Users/cervas/My Drive/GitHub/jcervas.github.io/2023/SPP/Statistical-Fallacies"
     dir.data <- paste0(dir.paper, "/data")
     dir.figures <- paste0(dir.paper,"/figures")
+    dir.gis <- paste0(dir.paper,"/writeOGR")
 
 Read in Functions used in other projects
 
@@ -483,9 +484,9 @@ Combine 2020 data with Shapefiles
     ## 6 0.7289120 0.2526030      0.4763090
 
          # counties.shp <- counties.shp[!counties.shp@data$ST %in% c("AK","HI"),]
-    rgdal::writeOGR(counties.shp, dir.download, "us2020", driver="ESRI Shapefile", overwrite_layer=TRUE)
+    rgdal::writeOGR(counties.shp, dir.gis, "us2020", driver="ESRI Shapefile", overwrite_layer=TRUE)
 
-    ## Warning in rgdal::writeOGR(counties.shp, dir.download, "us2020", driver = "ESRI
+    ## Warning in rgdal::writeOGR(counties.shp, dir.gis, "us2020", driver = "ESRI
     ## Shapefile", : Field names abbreviated for ESRI Shapefile driver
 
     nation.shp <- rmapshaper::ms_dissolve(states)
@@ -577,7 +578,7 @@ Create Maps
     ## To make a *.svg file
 
     ## Choropleth Map
-    svglite::svglite(paste0(dir.download,"us2020.svg"))
+    svglite::svglite(paste0(dir.figures,"/us2020.svg"))
     par(mfrow=c(1,1),
               mar = c(0.1, 0.1, 0.1, 0.1))
          sp::plot(counties.shp, col=counties.shp@data$col, border="#ffffff", lwd=0.15)
@@ -590,7 +591,7 @@ Create Maps
     ##                 2
 
     ## Bubble Map
-    svglite::svglite(paste0(dir.download,"/us2020_bubble.svg"))
+    svglite::svglite(paste0(dir.figures,"/us2020_bubble.svg"))
     par(mfrow=c(1,1),
               mar = c(0.1, 0.1, 0.1, 0.1))
          sp::plot(counties.shp, border="#ffffff", col="#ffffff", lwd=0.15)
@@ -636,26 +637,26 @@ Create Cartograms
     counties.shp.cart@data$margin <- abs(counties.shp.cart@data$votes_dem-counties.shp.cart@data$votes_gop)
     counties.shp.cart1 <- cartogram::cartogram_ncont(counties.shp.cart, "margin")
     counties.shp.cart2 <- cartogram::cartogram_cont(counties.shp.cart, "margin", itermax=3)
-         # rgdal::writeOGR(counties.shp, dir.data, "counties_shp_cart2", driver="ESRI Shapefile", overwrite_layer=TRUE)
+         # rgdal::writeOGR(counties.shp, dir.gis, "counties_shp_cart2", driver="ESRI Shapefile", overwrite_layer=TRUE)
 
     counties.shp.dorling <- cartogram::cartogram_dorling(x=counties.shp, weight="margin")
 
 Plot Cartograms
 
-    svglite::svglite(paste0(dir.download,"us2020_cart.svg"))
+    svglite::svglite(paste0(dir.figures,"/us2020_cart.svg"))
          sp::plot(counties.shp.cart1, border="#dddddd", col=counties.shp.cart1@data$col, lwd=0.15)
     dev.off()
 
-    svglite::svglite(paste0(dir.download,"us2020_cart2.svg"))
+    svglite::svglite(paste0(dir.figures,"us2020_cart2.svg"))
          sp::plot(counties.shp.cart2, border=counties.shp.cart2@data$gs.pop.blocks, col=counties.shp.cart2@data$col, lwd=0.15)
     dev.off()
 
-    svglite::svglite(paste0(dir.download,"us2020_dorling.svg"))
+    svglite::svglite(paste0(dir.figures,"us2020_dorling.svg"))
          sp::plot(counties.shp.dorling, id=counties.shp.dorling@data$NAME, border=NA, col=counties.shp.dorling@data$col, lwd=0.15)
     dev.off()
 
-    rgdal::writeOGR(counties.shp.cart1, dir.download, "counties.shp.cart1", driver="ESRI Shapefile", overwrite_layer=TRUE)
-    rgdal::writeOGR(counties.shp.cart2, dir.download, "counties.shp.cart2", driver="ESRI Shapefile", overwrite_layer=TRUE)
+    rgdal::writeOGR(counties.shp.cart1, dir.gis, "counties.shp.cart1", driver="ESRI Shapefile", overwrite_layer=TRUE)
+    rgdal::writeOGR(counties.shp.cart2, dir.gis, "counties.shp.cart2", driver="ESRI Shapefile", overwrite_layer=TRUE)
 
 Figure X: County Size and Number of Voters
 
@@ -664,7 +665,7 @@ Figure X: County Size and Number of Voters
     cnty$dem_cumsum <- cumsum(cnty$votes_dem)
     cnty$gop_cumsum <- cumsum(cnty$votes_gop)
 
-    svglite::svglite(paste0(dir.figures,"county-vote.svg"), width = 8,height = 3)
+    svglite::svglite(paste0(dir.figures,"/county-vote.svg"), width = 8,height = 3)
     par(mfrow=c(1,1),
               mar = c(0.5, 4, 0.1, 0.1))
     barplot(
@@ -713,7 +714,7 @@ Figure X: County Size and Number of Voters
     totalvotes <- dem + gop
 
     # Create the stacked bar plot
-    svglite::svglite(paste0(dir.figures,"county-vote.svg"), width = 8,height = 3)
+    svglite::svglite(paste0(dir.figures,"/county-vote.svg"), width = 8,height = 3)
     par(mfrow=c(1,1),
               mar = c(0.5, 4, 0.1, 0.1))
     barplot(
@@ -797,7 +798,7 @@ Ignore this, for now
 
     # county.pres.2020.dem <- county.pres.2020[county.pres.2020$party == "DEMOCRAT",]
     #    county.2020.dem <- aggregate(list(dem=county.pres.2020.dem$candidatevotes), by=list(state=county.pres.2020.dem$state, county=county.pres.2020.dem$county_name, fips=county.pres.2020.dem$fips), FUN=sum)
-    # county.pres.2020.gop <- county.pres.2020[county.pres.2020$party == "gopUBLICAN",]
+    # county.pres.2020.gop <- county.pres.2020[county.pres.2020$party == "REPUBLICAN",]
     #    county.2020.gop <- aggregate(list(gop=county.pres.2020.gop$candidatevotes), by=list(state=county.pres.2020.gop$state, county=county.pres.2020.gop$county_name, fips=county.pres.2020.gop$fips), FUN=sum)
 
 
