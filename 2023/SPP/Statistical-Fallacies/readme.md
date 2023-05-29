@@ -790,7 +790,12 @@ Exit Poll Data
 
 Ignore this, for now
 
-    # Read in 2000-2020 Presidential election results, by county (MIT Election Data and Science Lab, 2018, "County Presidential Election Returns 2000-2020", https://doi.org/10.7910/DVN/VOQCHQ, Harvard Dataverse, V10, UNF:6:pVAMya52q7VM1Pl7EZMW0Q== [fileUNF])
+    # Read in 2000-2020 Presidential election results, by county 
+    # (MIT Election Data and Science Lab, 2018, 
+    # "County Presidential Election Returns 2000-2020", 
+    # https://doi.org/10.7910/DVN/VOQCHQ, 
+    # Harvard Dataverse, V10, UNF:6:pVAMya52q7VM1Pl7EZMW0Q== [fileUNF])
+
     # county.pres <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/Presidential/Pres%20By%20County/County%20Presidential%20Election%20Returns%202000-2020/countypres_2000-2020.csv")
     #    head(county.pres)
     #    county.pres$fips <- leadingZeroes(county.pres$county_fips, d=5)
