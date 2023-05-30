@@ -1,5 +1,10 @@
-By Bernard Grofman and Jonathan Cervas Accepted, Minor Revisions,
-Statistics and Public Policy
+# Replication Code for Massive Election Fraud?: A Compendium of Statistically Fallacies in Claims about the 2020 Presidential Election
+
+By: Bernard Grofman & Jonathan Cervas
+
+Conditionally Accepted, Minor Revisions, Statistics and Public Policy
+
+------------------------------------------------------------------------
 
 Remove all objects just to be safe.
 
