@@ -28,25 +28,13 @@ dir.gis <- paste0(dir.paper,"/writeOGR")
 
 Read in Functions used in other projects
 
-``` r
-source("https://raw.githubusercontent.com/jcervas/R-Functions/main/GERRYfunctions.R")
-```
-
     ## 
     ## 
     ## •••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
     ##     LOADING FUNCTIONS. . . . . . . . . . . . . . . . . . . . . . 
     ## •••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
 
-``` r
-source("https://raw.githubusercontent.com/jcervas/R-Functions/main/seatsvotes.R")
-```
-
     ## Seats-Votes Function - v1.0
-
-``` r
-source("https://raw.githubusercontent.com/jcervas/R-Functions/main/sv-hyp.R")
-```
 
 ![](readme_files/figure-gfm/sources-1.png)<!-- -->
 
