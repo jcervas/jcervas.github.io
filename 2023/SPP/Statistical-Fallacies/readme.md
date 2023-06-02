@@ -946,6 +946,7 @@ head(
     ## 6   0.3636364           0.5566038 -0.1929674
 
 ``` r
+par(mfrow=c(1,2))
 seatsvotes.plot(
      main="Kent County, Michigan (2020 Election)", 
      xlab="Straight-Ticket Voters (GOP %)", 
@@ -955,7 +956,18 @@ points(
      y=trump_split, 
      pch=23, 
      col="black", 
-     bg="blue")
+     bg="#c93135")
+
+seatsvotes.plot(
+     main="Kent County, Michigan (2020 Election)", 
+     xlab="Straight-Ticket Voters (DEM %)", 
+     ylab="Split-Ticket Voters (Biden %)")
+points(
+     x=1-gop_straight, 
+     y=biden_split, 
+     pch=23, 
+     col="black", 
+     bg="#1375b7")
 ```
 
 ![](readme_files/figure-gfm/kent-scatter-1.png)<!-- -->
