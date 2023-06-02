@@ -19,6 +19,7 @@ Set directories where data will be read from or written to
 ``` r
 dir.download <- "/Users/cervas/Downloads"
 dir.git <- "/Users/cervas/My Drive/GitHub/Data Files"
+dir.online.git <- "https://raw.githubusercontent.com/jcervas/Data"
 dir.paper <- "/Users/cervas/My Drive/GitHub/jcervas.github.io/2023/SPP/Statistical-Fallacies"
 dir.data <- paste0(dir.paper, "/data")
 dir.figures <- paste0(dir.paper,"/figures")
@@ -42,6 +43,12 @@ source("https://raw.githubusercontent.com/jcervas/R-Functions/main/seatsvotes.R"
 ```
 
     ## Seats-Votes Function - v1.0
+
+``` r
+source("https://raw.githubusercontent.com/jcervas/R-Functions/main/sv-hyp.R")
+```
+
+![](readme_files/figure-gfm/sources-1.png)<!-- -->
 
 # Load Data
 
@@ -930,3 +937,37 @@ Ignore this, for now
 #    head(county.2020)
 # county.2020$DEM <- two_party(county.2020$dem, county.2020$gop)
 ```
+
+Summary of Kent County, Michigan precinct data
+
+``` r
+head(
+     data.frame(
+          Trump_Split = trump_split,
+          Republican_Straight = gop_straight,
+          Difference = trump_minus_straight
+     ))
+```
+
+    ##   Trump_Split Republican_Straight Difference
+    ## 1   0.3228963           0.5443262 -0.2214300
+    ## 2   0.3641026           0.5369060 -0.1728034
+    ## 3   0.4068100           0.6303972 -0.2235872
+    ## 4   0.3701799           0.7081174 -0.3379375
+    ## 5   0.4274510           0.7157360 -0.2882851
+    ## 6   0.3636364           0.5566038 -0.1929674
+
+``` r
+seatsvotes.plot(
+     main="Kent County, Michigan (2020 Election)", 
+     xlab="Straight-Ticket Voters (GOP %)", 
+     ylab="Split-Ticket Voters (Trump %)")
+points(
+     x=gop_straight, 
+     y=trump_split, 
+     pch=23, 
+     col="black", 
+     bg="blue")
+```
+
+![](readme_files/figure-gfm/kent-scatter-1.png)<!-- -->
