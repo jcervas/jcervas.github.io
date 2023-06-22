@@ -1,0 +1,87 @@
+"0","# Required packages"
+"0","library(tidyverse)"
+"0","library(sf)"
+"2","Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 7.2.1; sf_use_s2() is TRUE
+"
+"0","library(dplyr)"
+"0","library(rgeos)"
+"2","Loading required package: sp
+"
+"2","rgeos version: 0.6-2, (SVN revision 693)
+ GEOS runtime version: 3.10.2-CAPI-1.16.0 
+ Please note that rgeos will be retired during 2023,
+plan transition to sf functions using GEOS at your earliest convenience.
+ GEOS using OverlayNG
+ Linking to sp version: 1.6-0 
+ Polygon checking: TRUE 
+
+"
+"2","
+Attaching package: ‘rgeos’
+
+"
+"2","The following object is masked from ‘package:dplyr’:
+
+    symdiff
+
+"
+"0","library(rgdal)"
+"2","Please note that rgdal will be retired during 2023,
+plan transition to sf/stars/terra functions using GDAL and PROJ
+at your earliest convenience.
+See https://r-spatial.org/r/2022/04/12/evolution.html and https://github.com/r-spatial/evolution
+rgdal: version: 1.6-5, (SVN revision 1199)
+Geospatial Data Abstraction Library extensions to R successfully loaded
+Loaded GDAL runtime: GDAL 3.4.1, released 2021/12/27
+Path to GDAL shared files: C:/Users/seanj/Documents/R/win-library/4.1/rgdal/gdal
+GDAL binary built with GEOS: TRUE 
+Loaded PROJ runtime: Rel. 7.2.1, January 1st, 2021, [PJ_VERSION: 721]
+Path to PROJ shared files: C:/Users/seanj/Documents/R/win-library/4.1/rgdal/proj
+PROJ CDN enabled: FALSE
+Linking to sp version:1.6-0
+To mute warnings of possible GDAL/OSR exportToProj4() degradation,
+use options(""rgdal_show_exportToProj4_warnings""=""none"") before loading sp or rgdal.
+"
+"0","library(gridExtra)"
+"2","
+Attaching package: ‘gridExtra’
+
+"
+"2","The following object is masked from ‘package:dplyr’:
+
+    combine
+
+"
+"0","library(viridis)"
+"2","Loading required package: viridisLite
+"
+"0","library(pdftools)"
+"2","Using poppler version 22.04.0
+"
+"0","library(readxl)"
+"0","library(janitor)"
+"2","
+Attaching package: ‘janitor’
+
+"
+"2","The following objects are masked from ‘package:stats’:
+
+    chisq.test, fisher.test
+
+"
+"0","library(stringr)"
+"0",""
+"0","library(tidycensus)"
+"0","tidycensus::census_api_key(""5f98a6c74bd7ae588481b45d22d48b487611ab89"")"
+"2","To install your API key for use in future sessions, run this function with `install = TRUE`.
+"
+"0","library(stargazer)"
+"2","
+Please cite as: 
+
+"
+"2"," Hlavac, Marek (2022). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+"
+"2"," R package version 5.2.3. https://CRAN.R-project.org/package=stargazer 
+
+"

@@ -1,0 +1,79 @@
+---
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+  word_document: default
+header-includes: 
+   - \usepackage{wrapfig}
+   - \usepackage{caption}
+---
+
+```{r}
+library(tidyverse)
+library(dplyr)
+load("PA/PA_model_data.Rdata")
+```
+
+```{r}
+# Unpaired models
+lm_PA_m <- lm(Porp_Trump_Absentee ~ Porp_Trump_election_day + County_lm, # Reduce model
+             data = Conglomerate_Absentee_Border)
+lm_PA <- lm(Porp_Trump_Absentee ~ Porp_Trump_election_day + County_lm + Minority + Age + income + Internet + vehicle + School, # Full model
+             data = Conglomerate_Absentee_Border)
+
+lm_PA %>% summary
+# lmtest::coeftest(lm_PA, vcov = sandwich::vcovHC(lm_PA, "HC3"))
+
+lm_PA %>% plot(1, main = "Full")
+lm_PA_m %>% plot(1)
+lm_PA %>% plot(2, main = "Full")
+lm_PA_m %>% plot(2)
+
+(PA_anova <- anova(lm_PA_m, lm_PA, test = "F")) # F test
+```
+
+```{r}
+Precinct_match_data_3rd <- Precinct_match_data_3rd %>% # Put factor variable in correct order
+  dplyr::mutate(ring = factor(ring, levels = c("Recessed", "Exterior")))
+
+lm_PA_D_m <- lm(Porp_Trump_Absentee ~ Porp_Trump_election_day + ring, data = Precinct_match_data_3rd) # Reduce model
+lm_PA_D <- lm(Porp_Trump_Absentee ~ Porp_Trump_election_day + ring + Minority + Age + income + Internet + vehicle + School, # Full model
+              data = Precinct_match_data_3rd)
+lm_PA_D %>% summary
+
+lm_PA_D %>% plot(1, main = "Full")
+lm_PA_D_m %>% plot(1)
+lm_PA_D %>% plot(2, main = "Full")
+lm_PA_D_m %>% plot(2)
+
+# lmtest::coeftest(lm_PA_D_m, vcov = sandwich::vcovHC(lm_PA_D_m, "HC3"))
+
+(PA_anova_D <- anova(lm_PA_D_m, lm_PA_D, test = "F")) # F test
+```
+
+```{r}
+# Test that negative of difference calculation does not affect conclusions
+
+# Precinct_match_data_3rd_neg1 <- Precinct_match_data_3rd %>% 
+#   dplyr::mutate(Porp_Trump_Absentee = Porp_Trump_Absentee * (-1),
+#                 Porp_Trump_election_day = Porp_Trump_election_day * (-1),
+#                 Minority = Minority * (-1),
+#                 Age = Age * (-1),
+#                 income = income * (-1), 
+#                 Internet = Internet * (-1),
+#                 vehicle = vehicle * (-1))
+
+# lm_PA_D_m <- lm(Porp_Trump_Absentee ~ Porp_Trump_election_day * ring + Minority + Age + income + Internet + vehicle, data = Precinct_match_data_3rd_neg1)
+# lm_PA_D_m %>% summary
+# lm_PA_D_m %>% plot
+```
+
+```{r}
+save(lm_PA,
+     lm_PA_D,
+     PA_anova,
+     PA_anova_D,
+     file = "PA/PA_Models.Rdata")
+```
+

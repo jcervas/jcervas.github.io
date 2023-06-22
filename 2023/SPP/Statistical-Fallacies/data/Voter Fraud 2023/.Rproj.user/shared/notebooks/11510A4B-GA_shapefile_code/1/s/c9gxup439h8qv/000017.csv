@@ -1,0 +1,8 @@
+"0","ggplot() +"
+"0","  geom_sf(data = Precinct_Exterior, color = ""black"", fill = ""gray90"") +"
+"0","  geom_sf(data = Precinct_Interior, color = ""black"", fill = ""gray90"") +"
+"0","  geom_sf(data = subset(us_county, GEOID == County_GEOID), color = ""red"", fill = NA) +"
+"0","  coord_sf()+"
+"0","  theme_void()+"
+"0","  scale_fill_viridis(discrete = TRUE)+"
+"0","  theme(legend.position = ""none"")"

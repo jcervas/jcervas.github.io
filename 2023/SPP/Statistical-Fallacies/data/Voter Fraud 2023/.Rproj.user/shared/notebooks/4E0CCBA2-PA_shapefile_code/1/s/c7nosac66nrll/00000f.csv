@@ -1,0 +1,7 @@
+"0",""
+"0","ggplot() +"
+"0","  geom_sf(data = State_Precinct_County_GEO, color = ""black"", fill = ""gray90"") +"
+"0","  coord_sf()+"
+"0","  theme_void()+"
+"0","  scale_fill_viridis(discrete = TRUE)+"
+"0","  theme(legend.position = ""none"")"
