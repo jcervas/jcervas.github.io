@@ -1,8 +1,0 @@
-"0",""
-"0","ggplot() +"
-"0","  geom_sf(data = BlockGroup_overlap_summarise, color = ""black"", aes(fill = Minority, geometry = geometry)) +"
-"0","  geom_sf(data = subset(us_county, GEOID %in% c(""42129"", ""42019"", ""42007"", ""42125"", ""42003"")), color = ""red"", fill = NA) +"
-"0","  coord_sf()+"
-"0","  theme_void()+"
-"0","  scale_fill_viridis(discrete = FALSE)+"
-"0","  theme(legend.position = ""none"")"

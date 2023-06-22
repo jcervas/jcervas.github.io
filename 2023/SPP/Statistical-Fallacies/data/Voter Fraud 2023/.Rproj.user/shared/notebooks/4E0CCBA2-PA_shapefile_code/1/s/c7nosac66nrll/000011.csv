@@ -1,8 +1,0 @@
-"0",""
-"0","# Combine both rings of differences into one data frame"
-"0","Precinct_match_data$ring <- ""1st"""
-"0","Precinct_match_data_2nd$ring <- ""2nd"""
-"0","Precinct_match_data_3rd <- rbind(Precinct_match_data, Precinct_match_data_2nd)"
-"0","Precinct_match_data_3rd$ring <- factor(Precinct_match_data_3rd$ring, "
-"0","                                       levels = c(""1st"", ""2nd""),"
-"0","                                      labels = c(""Exterior"", ""Recessed""))"

@@ -1,5 +1,0 @@
-"0","Conglomerate_Absentee_Border <- Conglomerate_Absentee_data %>% "
-"0","  subset(Border == ""Border"") %>% "
-"0","  dplyr::mutate(county_party = factor(county_party, "
-"0","                                       levels = c(""Fulton"", ""Democrat"", ""Republican""),"
-"0","                                      labels = c(""Fulton"", ""Democrat County"", ""Republican County"")))"
