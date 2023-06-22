@@ -1,0 +1,7 @@
+"0","Precinct_Relational_Data <- data.frame(Precinct1_Index = numeric(), Precinct2_Index = numeric())"
+"0",""
+"0","for(i in 1:length(Adjacent_List_Border)){ # Create two columns in a data frame from the adjacency list"
+"0","County_temp_data <- data.frame(Precinct1_Index = Adjacent_List_Border[[i]])"
+"0","County_temp_data$Precinct2_Index <- i"
+"0","Precinct_Relational_Data <- rbind(Precinct_Relational_Data, County_temp_data)"
+"0","}"

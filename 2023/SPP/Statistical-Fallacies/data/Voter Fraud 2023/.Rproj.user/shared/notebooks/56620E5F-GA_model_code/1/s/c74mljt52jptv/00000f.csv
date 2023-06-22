@@ -1,0 +1,7 @@
+"0","save(lm_GA,"
+"0","     lm_GA_D,"
+"0","     GA_anova,"
+"0","     GA_anova_D,"
+"0","     lm_GA_ris, lm_GA_nor,"
+"0","     lm_GA_D_ris, lm_GA_D_nor,"
+"0","     file = ""GA/GA_Models.Rdata"")"
