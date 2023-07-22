@@ -1,0 +1,993 @@
+# Remove all objects just to be safe.#
+            rm(list=ls(all=TRUE))#
+library(tidyverse)#
+library(jsonlite)#
+setwd("/Users/user/Google Drive/Projects/Polarization PNAS")#
+options(scipen=999) # Turn off Scientific Notation#
+source("/Users/user/Google Drive/GitHub/R Functions/GERRYfunctions.R")
+years <- seq(1868,2020,4)#
+elect.dta <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/Presidential/Pres%20by%20State/president_state.csv")#
+    electiondata <- split(elect.dta, elect.dta$year)#
+house.del <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/House/housedelegations1868-2020.csv")#
+presCD <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/Presidential/Pres%20by%20CD/prezvote%20by%20cd%201952-2016.csv")#
+presCD$ed[presCD$ed %in% "99"] <- 1#
+    presCD.elections <- data.frame(year=presCD$year, abv=presCD$sta, district=presCD$ed, demPres=two_party(presCD$dem,presCD$rep))#
+# Ideology#
+a <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Ideology/HSall_members.csv")#
+    years.match <- data.frame(congress=seq(1,116,1),year=seq(1788,2018,2))#
+    a$year <- years.match$year[match(a$congress, years.match$congress)]#
+    housesenate <- a[a$congress %in% seq(41,max(a$congress)),]#
+    house <- housesenate[housesenate$chamber %in% "House",]#
+    house.ideo <- data.frame(year=house$year, abv=house$state_abbrev, district=house$district_code, DWnom1=house$nominate_dim1, party=house$party_code)#
+    senate <- housesenate[housesenate$chamber %in% "Senate",]#
+#
+houseCD <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/House/house_elections_1968_2020.csv")#
+    house.elections <- data.frame(year=houseCD$year, abv=houseCD$abv, district=houseCD$district, demCD=two_party(replaceNA(houseCD$dem),replaceNA(houseCD$rep)))#
+cd.elections <- full_join(house.elections,presCD.elections)#
+cd.full <- full_join(cd.elections, house.ideo)#
+# head(house.del)
+houseCD <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/House/house_elections_1968_2020.csv")
+house.elections <- data.frame(year=houseCD$year, abv=houseCD$abv, district=houseCD$district, demCD=two_party(replaceNA(houseCD$dem),replaceNA(houseCD$rep)))
+head(houseCD)
+house.elections <- data.frame(year=houseCD$year, state=houseCD$state, district=houseCD$district, demCD=two_party(replaceNA(houseCD$dem),replaceNA(houseCD$rep)))
+cd.elections <- full_join(house.elections,presCD.elections)
+cd.full <- full_join(cd.elections, house.ideo)
+head(cd.full)
+senate.dem <- senate[senate$party_code %in% "100",]
+senate.rep <- senate[senate$party_code %in% "200",]
+house.dem <- house[house$party_code %in% "100",]
+house.rep <- house[house$party_code %in% "200",]
+sen.dem.median <- aggregate(senate.dem$nominate_dim1, by=list(senate.dem$congress), FUN=function(x) quantile(x, 0.5, na.rm=T))
+sen.dem.05 <- aggregate(senate.dem$nominate_dim1, by=list(senate.dem$congress), FUN=function(x) quantile(x, 0.025, na.rm=T))
+sen.dem.95 <- aggregate(senate.dem$nominate_dim1, by=list(senate.dem$congress), FUN=function(x) quantile(x, 0.975, na.rm=T))
+sen.rep.median <- aggregate(senate.rep$nominate_dim1, by=list(senate.rep$congress), FUN=function(x) quantile(x, 0.5, na.rm=T))
+sen.rep.05 <- aggregate(senate.rep$nominate_dim1, by=list(senate.rep$congress), FUN=function(x) quantile(x, 0.025, na.rm=T))
+sen.rep.95 <- aggregate(senate.rep$nominate_dim1, by=list(senate.rep$congress), FUN=function(x) quantile(x, 0.975, na.rm=T))
+plot(sen.dem.median[,1], sen.dem.median[,2], #
+    type="l", #
+    cex=0.3, #
+    pch=19, #
+    ylim=c(-1,1), #
+    axes="F", #
+    xlab="Year", #
+    ylab="Ideology",#
+    main="Senate")
+lines(sen.rep.median[,1], sen.rep.median[,2])
+polygon(x= c(sen.dem.median[,1], rev(sen.dem.median[,1])),  y= c(sen.dem.95[,2], rev(sen.dem.05[,2])), col="#11111111", border=NA)
+polygon(x= c(sen.rep.median[,1], rev(sen.rep.median[,1])),  y= c(sen.rep.95[,2], rev(sen.rep.05[,2])), col="#11111111", border=NA)
+abline(h=0, lty=3, col="gray50")
+axis(side=1, at=seq(41,117,2), labels=years)
+axis(side=2, las=1, at=seq(-1,1,0.5), labels=seq(-1,1,0.5))
+par(mfrow(c(2,1)))
+par(mfrow=c(2,1))
+plot(sen.dem.median[,1], sen.dem.median[,2], #
+    type="l", #
+    cex=0.3, #
+    pch=19, #
+    ylim=c(-1,1), #
+    axes="F", #
+    xlab="Year", #
+    ylab="Ideology",#
+    main="Senate")#
+lines(sen.rep.median[,1], sen.rep.median[,2])#
+    polygon(x= c(sen.dem.median[,1], rev(sen.dem.median[,1])),  y= c(sen.dem.95[,2], rev(sen.dem.05[,2])), col="#11111111", border=NA)#
+    polygon(x= c(sen.rep.median[,1], rev(sen.rep.median[,1])),  y= c(sen.rep.95[,2], rev(sen.rep.05[,2])), col="#11111111", border=NA)#
+    abline(h=0, lty=3, col="gray50")#
+axis(side=1, at=seq(41,117,2), labels=years)#
+axis(side=2, las=1, at=seq(-1,1,0.5), labels=seq(-1,1,0.5))
+plot(house.dem.median[,1], house.dem.median[,2], #
+    type="l", #
+    cex=0.3, #
+    pch=19, #
+    ylim=c(-1,1), #
+    axes="F", #
+    xlab="Year", #
+    ylab="Ideology",#
+    main="House")#
+lines(house.rep.median[,1], house.rep.median[,2])#
+    polygon(x= c(house.dem.median[,1], rev(house.dem.median[,1])),  y= c(house.dem.95[,2], rev(house.dem.05[,2])), col="#11111111", border=NA)#
+    polygon(x= c(house.rep.median[,1], rev(house.rep.median[,1])),  y= c(house.rep.95[,2], rev(house.rep.05[,2])), col="#11111111", border=NA)#
+    abline(h=0, lty=3, col="gray50")#
+axis(side=1, at=seq(41,117,2), labels=years)#
+axis(side=2, las=1, at=seq(-1,1,0.5), labels=seq(-1,1,0.5))#
+#
+# Delegation Sizes#
+plot(house.del[,2], house.del[,"seats"], #
+    type="n", #
+    ylim=c(0,435),#
+    cex=0.3, #
+    pch=19, #
+    axes="F", #
+    xlab="Year", #
+    ylab="Delegation Size",#
+    main="House")#
+lines(lowess(house.del[,2], house.del[,"Democrats"], f=0.1))#
+lines(lowess(house.del[,2], house.del[,"Republicans"], f=0.1), lty=2)#
+axis(side=1, at=seq(41,117,2), labels=years)#
+axis(side=2, las=1, at=seq(0,435,50), labels=seq(0,435,50))#
+legend("bottomright",legend=c("Democrats","Republicans"), lty=c(1,2))
+par(mfrow=c(2,1))
+senate.dem <- senate[senate$party_code %in% "100",]#
+senate.rep <- senate[senate$party_code %in% "200",]#
+#
+house.dem <- house[house$party_code %in% "100",]#
+house.rep <- house[house$party_code %in% "200",]#
+#
+sen.dem.median <- aggregate(senate.dem$nominate_dim1, by=list(senate.dem$congress), FUN=function(x) quantile(x, 0.5, na.rm=T))#
+sen.dem.05 <- aggregate(senate.dem$nominate_dim1, by=list(senate.dem$congress), FUN=function(x) quantile(x, 0.025, na.rm=T))#
+sen.dem.95 <- aggregate(senate.dem$nominate_dim1, by=list(senate.dem$congress), FUN=function(x) quantile(x, 0.975, na.rm=T))#
+#
+sen.rep.median <- aggregate(senate.rep$nominate_dim1, by=list(senate.rep$congress), FUN=function(x) quantile(x, 0.5, na.rm=T))#
+sen.rep.05 <- aggregate(senate.rep$nominate_dim1, by=list(senate.rep$congress), FUN=function(x) quantile(x, 0.025, na.rm=T))#
+sen.rep.95 <- aggregate(senate.rep$nominate_dim1, by=list(senate.rep$congress), FUN=function(x) quantile(x, 0.975, na.rm=T))#
+#
+plot(sen.dem.median[,1], sen.dem.median[,2], #
+    type="l", #
+    cex=0.3, #
+    pch=19, #
+    ylim=c(-1,1), #
+    axes="F", #
+    xlab="Year", #
+    ylab="Ideology",#
+    main="Senate")#
+lines(sen.rep.median[,1], sen.rep.median[,2])#
+    polygon(x= c(sen.dem.median[,1], rev(sen.dem.median[,1])),  y= c(sen.dem.95[,2], rev(sen.dem.05[,2])), col="#11111111", border=NA)#
+    polygon(x= c(sen.rep.median[,1], rev(sen.rep.median[,1])),  y= c(sen.rep.95[,2], rev(sen.rep.05[,2])), col="#11111111", border=NA)#
+    abline(h=0, lty=3, col="gray50")#
+axis(side=1, at=seq(41,117,2), labels=years)#
+axis(side=2, las=1, at=seq(-1,1,0.5), labels=seq(-1,1,0.5))#
+house.dem.median <- aggregate(house.dem$nominate_dim1, by=list(house.dem$congress), FUN=function(x) quantile(x, 0.5, na.rm=T))#
+house.dem.05 <- aggregate(house.dem$nominate_dim1, by=list(house.dem$congress), FUN=function(x) quantile(x, 0.025, na.rm=T))#
+house.dem.95 <- aggregate(house.dem$nominate_dim1, by=list(house.dem$congress), FUN=function(x) quantile(x, 0.975, na.rm=T))#
+#
+house.rep.median <- aggregate(house.rep$nominate_dim1, by=list(house.rep$congress), FUN=function(x) quantile(x, 0.5, na.rm=T))#
+house.rep.05 <- aggregate(house.rep$nominate_dim1, by=list(house.rep$congress), FUN=function(x) quantile(x, 0.025, na.rm=T))#
+house.rep.95 <- aggregate(house.rep$nominate_dim1, by=list(house.rep$congress), FUN=function(x) quantile(x, 0.975, na.rm=T))#
+#
+plot(house.dem.median[,1], house.dem.median[,2], #
+    type="l", #
+    cex=0.3, #
+    pch=19, #
+    ylim=c(-1,1), #
+    axes="F", #
+    xlab="Year", #
+    ylab="Ideology",#
+    main="House")#
+lines(house.rep.median[,1], house.rep.median[,2])#
+    polygon(x= c(house.dem.median[,1], rev(house.dem.median[,1])),  y= c(house.dem.95[,2], rev(house.dem.05[,2])), col="#11111111", border=NA)#
+    polygon(x= c(house.rep.median[,1], rev(house.rep.median[,1])),  y= c(house.rep.95[,2], rev(house.rep.05[,2])), col="#11111111", border=NA)#
+    abline(h=0, lty=3, col="gray50")#
+axis(side=1, at=seq(41,117,2), labels=years)#
+axis(side=2, las=1, at=seq(-1,1,0.5), labels=seq(-1,1,0.5))
+plot(house.del[,2], house.del[,"seats"], #
+    type="n", #
+    ylim=c(0,435),#
+    cex=0.3, #
+    pch=19, #
+    axes="F", #
+    xlab="Year", #
+    ylab="Delegation Size",#
+    main="House")#
+lines(lowess(house.del[,2], house.del[,"Democrats"], f=0.1))#
+lines(lowess(house.del[,2], house.del[,"Republicans"], f=0.1), lty=2)#
+axis(side=1, at=seq(41,117,2), labels=years, cex=.5)#
+axis(side=2, las=1, at=seq(0,435,50), labels=seq(0,435,50))#
+legend("bottomright",legend=c("Democrats","Republicans"), lty=c(1,2))
+plot(house.del[,2], house.del[,"seats"], #
+    type="n", #
+    ylim=c(0,435),#
+    cex=0.3, #
+    pch=19, #
+    axes="F", #
+    xlab="Year", #
+    ylab="Delegation Size",#
+    main="House")#
+lines(lowess(house.del[,2], house.del[,"Democrats"], f=0.1))#
+lines(lowess(house.del[,2], house.del[,"Republicans"], f=0.1), lty=2)#
+axis(side=1, at=seq(41,117,2), labels=years, cex.axis=.5)#
+axis(side=2, las=1, at=seq(0,435,50), labels=seq(0,435,50))#
+legend("bottomright",legend=c("Democrats","Republicans"), lty=c(1,2))
+years
+par(mfrow=c(2,1))
+par(mfrow=c(2,1))#
+plot(sen.dem.median[,1], sen.dem.median[,2], #
+    type="l", #
+    cex=0.3, #
+    pch=19, #
+    ylim=c(-1,1), #
+    axes="F", #
+    xlab="Year", #
+    ylab="Ideology",#
+    main="Senate")#
+lines(sen.rep.median[,1], sen.rep.median[,2])#
+    polygon(x= c(sen.dem.median[,1], rev(sen.dem.median[,1])),  y= c(sen.dem.95[,2], rev(sen.dem.05[,2])), col="#11111111", border=NA)#
+    polygon(x= c(sen.rep.median[,1], rev(sen.rep.median[,1])),  y= c(sen.rep.95[,2], rev(sen.rep.05[,2])), col="#11111111", border=NA)#
+    abline(h=0, lty=3, col="gray50")#
+axis(side=1, at=seq(41,117,2), labels=years, cex.axis=.25)#
+axis(side=2, las=1, at=seq(-1,1,0.5), labels=seq(-1,1,0.5))#
+house.dem.median <- aggregate(house.dem$nominate_dim1, by=list(house.dem$congress), FUN=function(x) quantile(x, 0.5, na.rm=T))#
+house.dem.05 <- aggregate(house.dem$nominate_dim1, by=list(house.dem$congress), FUN=function(x) quantile(x, 0.025, na.rm=T))#
+house.dem.95 <- aggregate(house.dem$nominate_dim1, by=list(house.dem$congress), FUN=function(x) quantile(x, 0.975, na.rm=T))#
+#
+house.rep.median <- aggregate(house.rep$nominate_dim1, by=list(house.rep$congress), FUN=function(x) quantile(x, 0.5, na.rm=T))#
+house.rep.05 <- aggregate(house.rep$nominate_dim1, by=list(house.rep$congress), FUN=function(x) quantile(x, 0.025, na.rm=T))#
+house.rep.95 <- aggregate(house.rep$nominate_dim1, by=list(house.rep$congress), FUN=function(x) quantile(x, 0.975, na.rm=T))#
+#
+plot(house.dem.median[,1], house.dem.median[,2], #
+    type="l", #
+    cex=0.3, #
+    pch=19, #
+    ylim=c(-1,1), #
+    axes="F", #
+    xlab="Year", #
+    ylab="Ideology",#
+    main="House")#
+lines(house.rep.median[,1], house.rep.median[,2])#
+    polygon(x= c(house.dem.median[,1], rev(house.dem.median[,1])),  y= c(house.dem.95[,2], rev(house.dem.05[,2])), col="#11111111", border=NA)#
+    polygon(x= c(house.rep.median[,1], rev(house.rep.median[,1])),  y= c(house.rep.95[,2], rev(house.rep.05[,2])), col="#11111111", border=NA)#
+    abline(h=0, lty=3, col="gray50")#
+axis(side=1, at=seq(41,117,2), labels=years)#
+axis(side=2, las=1, at=seq(-1,1,0.5), labels=seq(-1,1,0.5))#
+#
+# Delegation Sizes#
+plot(house.del[,2], house.del[,"seats"], #
+    type="n", #
+    ylim=c(0,435),#
+    cex=0.3, #
+    pch=19, #
+    axes="F", #
+    xlab="Year", #
+    ylab="Delegation Size",#
+    main="House")#
+lines(lowess(house.del[,2], house.del[,"Democrats"], f=0.1))#
+lines(lowess(house.del[,2], house.del[,"Republicans"], f=0.1), lty=2)#
+axis(side=1, at=seq(41,117,2), labels=years, cex.axis=.25)#
+axis(side=2, las=1, at=seq(0,435,50), labels=seq(0,435,50))#
+legend("bottomright",legend=c("Democrats","Republicans"), lty=c(1,2))
+par(mfrow=c(2,1))#
+plot(sen.dem.median[,1], sen.dem.median[,2], #
+    type="l", #
+    cex=0.3, #
+    pch=19, #
+    ylim=c(-1,1), #
+    axes="F", #
+    xlab="Year", #
+    ylab="Ideology",#
+    main="Senate")#
+lines(sen.rep.median[,1], sen.rep.median[,2])#
+    polygon(x= c(sen.dem.median[,1], rev(sen.dem.median[,1])),  y= c(sen.dem.95[,2], rev(sen.dem.05[,2])), col="#11111111", border=NA)#
+    polygon(x= c(sen.rep.median[,1], rev(sen.rep.median[,1])),  y= c(sen.rep.95[,2], rev(sen.rep.05[,2])), col="#11111111", border=NA)#
+    abline(h=0, lty=3, col="gray50")#
+axis(side=1, at=seq(41,117,2), labels=years, cex.axis=.25)#
+axis(side=2, las=1, at=seq(-1,1,0.5), labels=seq(-1,1,0.5))#
+house.dem.median <- aggregate(house.dem$nominate_dim1, by=list(house.dem$congress), FUN=function(x) quantile(x, 0.5, na.rm=T))#
+house.dem.05 <- aggregate(house.dem$nominate_dim1, by=list(house.dem$congress), FUN=function(x) quantile(x, 0.025, na.rm=T))#
+house.dem.95 <- aggregate(house.dem$nominate_dim1, by=list(house.dem$congress), FUN=function(x) quantile(x, 0.975, na.rm=T))#
+#
+house.rep.median <- aggregate(house.rep$nominate_dim1, by=list(house.rep$congress), FUN=function(x) quantile(x, 0.5, na.rm=T))#
+house.rep.05 <- aggregate(house.rep$nominate_dim1, by=list(house.rep$congress), FUN=function(x) quantile(x, 0.025, na.rm=T))#
+house.rep.95 <- aggregate(house.rep$nominate_dim1, by=list(house.rep$congress), FUN=function(x) quantile(x, 0.975, na.rm=T))#
+#
+plot(house.dem.median[,1], house.dem.median[,2], #
+    type="l", #
+    cex=0.3, #
+    pch=19, #
+    ylim=c(-1,1), #
+    axes="F", #
+    xlab="Year", #
+    ylab="Ideology",#
+    main="House")#
+lines(house.rep.median[,1], house.rep.median[,2])#
+    polygon(x= c(house.dem.median[,1], rev(house.dem.median[,1])),  y= c(house.dem.95[,2], rev(house.dem.05[,2])), col="#11111111", border=NA)#
+    polygon(x= c(house.rep.median[,1], rev(house.rep.median[,1])),  y= c(house.rep.95[,2], rev(house.rep.05[,2])), col="#11111111", border=NA)#
+    abline(h=0, lty=3, col="gray50")#
+axis(side=1, at=seq(41,117,2), labels=years)#
+axis(side=2, las=1, at=seq(-1,1,0.5), labels=seq(-1,1,0.5))#
+#
+# Delegation Sizes#
+plot(house.del[,2], house.del[,"seats"], #
+    type="n", #
+    ylim=c(0,435),#
+    cex=0.3, #
+    pch=19, #
+    axes="F", #
+    xlab="Year", #
+    ylab="Delegation Size",#
+    main="House")#
+lines(lowess(house.del[,2], house.del[,"Democrats"], f=0.1))#
+lines(lowess(house.del[,2], house.del[,"Republicans"], f=0.1), lty=2)#
+axis(side=1, at=seq(41,117,2), labels=years, cex.axis=.25)#
+axis(side=2, las=1, at=seq(0,435,50), labels=seq(0,435,50))#
+legend("bottomright",legend=c("Democrats","Republicans"), lty=c(1,2))
+par(mfrow=c(2,1))#
+plot(sen.dem.median[,1], sen.dem.median[,2], #
+    type="l", #
+    cex=0.3, #
+    pch=19, #
+    ylim=c(-1,1), #
+    axes="F", #
+    xlab="Year", #
+    ylab="Ideology",#
+    main="Senate")#
+lines(sen.rep.median[,1], sen.rep.median[,2])#
+    polygon(x= c(sen.dem.median[,1], rev(sen.dem.median[,1])),  y= c(sen.dem.95[,2], rev(sen.dem.05[,2])), col="#11111111", border=NA)#
+    polygon(x= c(sen.rep.median[,1], rev(sen.rep.median[,1])),  y= c(sen.rep.95[,2], rev(sen.rep.05[,2])), col="#11111111", border=NA)#
+    abline(h=0, lty=3, col="gray50")#
+axis(side=1, at=seq(41,117,2), labels=years, cex.axis=.25)#
+axis(side=2, las=1, at=seq(-1,1,0.5), labels=seq(-1,1,0.5))#
+house.dem.median <- aggregate(house.dem$nominate_dim1, by=list(house.dem$congress), FUN=function(x) quantile(x, 0.5, na.rm=T))#
+house.dem.05 <- aggregate(house.dem$nominate_dim1, by=list(house.dem$congress), FUN=function(x) quantile(x, 0.025, na.rm=T))#
+house.dem.95 <- aggregate(house.dem$nominate_dim1, by=list(house.dem$congress), FUN=function(x) quantile(x, 0.975, na.rm=T))#
+#
+house.rep.median <- aggregate(house.rep$nominate_dim1, by=list(house.rep$congress), FUN=function(x) quantile(x, 0.5, na.rm=T))#
+house.rep.05 <- aggregate(house.rep$nominate_dim1, by=list(house.rep$congress), FUN=function(x) quantile(x, 0.025, na.rm=T))#
+house.rep.95 <- aggregate(house.rep$nominate_dim1, by=list(house.rep$congress), FUN=function(x) quantile(x, 0.975, na.rm=T))#
+#
+plot(house.dem.median[,1], house.dem.median[,2], #
+    type="l", #
+    cex=0.3, #
+    pch=19, #
+    ylim=c(-1,1), #
+    axes="F", #
+    xlab="Year", #
+    ylab="Ideology",#
+    main="House")#
+lines(house.rep.median[,1], house.rep.median[,2])#
+    polygon(x= c(house.dem.median[,1], rev(house.dem.median[,1])),  y= c(house.dem.95[,2], rev(house.dem.05[,2])), col="#11111111", border=NA)#
+    polygon(x= c(house.rep.median[,1], rev(house.rep.median[,1])),  y= c(house.rep.95[,2], rev(house.rep.05[,2])), col="#11111111", border=NA)#
+    abline(h=0, lty=3, col="gray50")#
+axis(side=1, at=seq(41,117,2), labels=years, cex.axis=.25)#
+axis(side=2, las=1, at=seq(-1,1,0.5), labels=seq(-1,1,0.5))
+par(mfrow=c(2,1))#
+plot(sen.dem.median[,1], sen.dem.median[,2], #
+    type="l", #
+    cex=0.3, #
+    pch=19, #
+    ylim=c(-1,1), #
+    axes="F", #
+    xlab="Year", #
+    ylab="Ideology",#
+    main="Senate")#
+lines(sen.rep.median[,1], sen.rep.median[,2])#
+    polygon(x= c(sen.dem.median[,1], rev(sen.dem.median[,1])),  y= c(sen.dem.95[,2], rev(sen.dem.05[,2])), col="#11111111", border=NA)#
+    polygon(x= c(sen.rep.median[,1], rev(sen.rep.median[,1])),  y= c(sen.rep.95[,2], rev(sen.rep.05[,2])), col="#11111111", border=NA)#
+    abline(h=0, lty=3, col="gray50")#
+axis(side=1, las=2, at=seq(41,117,2), labels=years, cex.axis=0.5)#
+axis(side=2, las=1, at=seq(-1,1,0.5), labels=seq(-1,1,0.5))#
+house.dem.median <- aggregate(house.dem$nominate_dim1, by=list(house.dem$congress), FUN=function(x) quantile(x, 0.5, na.rm=T))#
+house.dem.05 <- aggregate(house.dem$nominate_dim1, by=list(house.dem$congress), FUN=function(x) quantile(x, 0.025, na.rm=T))#
+house.dem.95 <- aggregate(house.dem$nominate_dim1, by=list(house.dem$congress), FUN=function(x) quantile(x, 0.975, na.rm=T))#
+#
+house.rep.median <- aggregate(house.rep$nominate_dim1, by=list(house.rep$congress), FUN=function(x) quantile(x, 0.5, na.rm=T))#
+house.rep.05 <- aggregate(house.rep$nominate_dim1, by=list(house.rep$congress), FUN=function(x) quantile(x, 0.025, na.rm=T))#
+house.rep.95 <- aggregate(house.rep$nominate_dim1, by=list(house.rep$congress), FUN=function(x) quantile(x, 0.975, na.rm=T))#
+#
+plot(house.dem.median[,1], house.dem.median[,2], #
+    type="l", #
+    cex=0.3, #
+    pch=19, #
+    ylim=c(-1,1), #
+    axes="F", #
+    xlab="Year", #
+    ylab="Ideology",#
+    main="House")#
+lines(house.rep.median[,1], house.rep.median[,2])#
+    polygon(x= c(house.dem.median[,1], rev(house.dem.median[,1])),  y= c(house.dem.95[,2], rev(house.dem.05[,2])), col="#11111111", border=NA)#
+    polygon(x= c(house.rep.median[,1], rev(house.rep.median[,1])),  y= c(house.rep.95[,2], rev(house.rep.05[,2])), col="#11111111", border=NA)#
+    abline(h=0, lty=3, col="gray50")#
+axis(side=1, las=2, at=seq(41,117,2), labels=years, cex.axis=0.5)#
+axis(side=2, las=1, at=seq(-1,1,0.5), labels=seq(-1,1,0.5))
+62984828+65853514
+81268757+74216722
+155485479-128838342
+26647137/128838342
+128838342/.6
+155485479/214730570
+# Delegation Sizes#
+plot(house.del[,2], house.del[,"seats"], #
+    type="n", #
+    ylim=c(0,435),#
+    cex=0.3, #
+    pch=19, #
+    axes="F", #
+    xlab="Year", #
+    ylab="Delegation Size",#
+    main="House")#
+lines(lowess(house.del[,2], house.del[,"Democrats"], f=0.1))#
+lines(lowess(house.del[,2], house.del[,"Republicans"], f=0.1), lty=2)#
+axis(side=1, at=seq(41,117,2), labels=years)#
+axis(side=2, las=1, at=seq(0,435,50), labels=seq(0,435,50))#
+legend("bottomright",legend=c("Democrats","Republicans"), lty=c(1,2))
+# Delegation Sizes#
+plot(house.del[,2], house.del[,"seats"], #
+    type="n", #
+    ylim=c(0,435),#
+    cex=0.3, #
+    pch=19, #
+    axes="F", #
+    xlab="Year", #
+    ylab="Delegation Size",#
+    main="House")#
+lines(lowess(house.del[,2], house.del[,"Democrats"], f=0.1))#
+lines(lowess(house.del[,2], house.del[,"Republicans"], f=0.1), lty=2)#
+axis(side=1, at=seq(41,117,2), labels=years)#
+axis(side=2, las=1, at=seq(0,435,50), labels=seq(0,435,50))#
+legend("bottomright",legend=c("Democrats","Republicans"), lty=c(1,2))
+#install.packages("JudgeIt",repos="http://r.iq.harvard.edu")#
+# library(JudgeIt)#
+library(stargazer)#
+library(jsonlite)#
+###########################################################################################################
+######### - Functions - #############
+###########################################################################################################
+source("/Users/user/Google Drive/GitHub/R Functions/apportion.R")#
+source("/Users/user/Google Drive/GitHub/R Functions/GERRYfunctions.R")#
+source("/Users/user/Google Drive/GitHub/R Functions/seatsvotes.R")#
+source("/Users/user/Google Drive/GitHub/R Functions/getPresData.R")#
+###########################################################################################################
+########## - Election data Set-up - #######################################################################
+###########################################################################################################
+###########################################################################################################
+######### - Set-up - ##########
+###########################################################################################################
+comp.def <- c(0.47,0.53)#
+#
+`battleground` <- function(x, comp.def=c(0.47,0.53)) {#
+    ifelse(x < 0.5 & x > comp.def[1], -1, ifelse(x > 0.5 & x < comp.def[2], 1, 0))#
+    }#
+#
+`meanNA` <- function(x) {#
+    tmp <- x[!is.na(x)]#
+    new.mean <- mean(tmp)#
+    x[is.na(x)] <- new.mean#
+    return(x)#
+}#
+#
+`second_party` <- function(x) {#
+    out <- numeric()#
+    for (i in 1:length(x[,1])) {#
+        c <- max(as.numeric(x[i,5:25]), na.rm=TRUE)#
+        out <- c(out, c)#
+    }#
+    return(out)#
+}#
+#
+nca <- function(dvote, ecvotes, total, comp.def=c(0.47,0.53)) {#
+    tmp <- cbind(#
+        dem_battle = sum(1 * battleground(dvote) %in% 1),#
+        rep_battle = sum(1 * battleground(dvote) %in% -1),#
+        dem_nc = sum(1 * dvote > comp.def[2]),#
+        rep_nc = sum(1 * dvote < comp.def[1]),#
+        total_st = sum(1 * length(dvote)),#
+        dem_nc_ec = sum(ecvotes[dvote > comp.def[2]]),#
+        rep_nc_ec = sum(ecvotes[dvote < comp.def[1]]),#
+        total_ec = sum(ecvotes))#
+    return((tmp[,"dem_nc_ec"] - tmp[,"rep_nc_ec"]) / tmp[,"total_ec"])#
+}#
+#
+inversion.interval <- function(x,w,t) {#
+    xx <- x#
+    while(sum(find.winner(xx) * w) / sum(w) < 0.5) {#
+        xx <- xx + 0.00001#
+        sum(find.winner(xx) * w) / sum(w)#
+        mean.w(xx, t)#
+        }#
+    intrv <- mean.w(xx, t) - 0.5#
+    return(intrv)#
+}#
+#
+`noncompetitive` <- function(x,e, comp.def=comp.def) {#
+    upp <- x > comp.def[2]#
+    low <- x < comp.def[1]#
+}#
+#
+# New Min.Shift Development#
+`min.shift` <- function(x,e) {#
+    (ec <- sum(e)/2)#
+    (start.ec <- seats.w(x,e)*sum(e))#
+    (diff.ec <- ec-start.ec)#
+    if (seats.w(x,e) < 0.5) {#
+            x.i <- x<0.5#
+            x1 <- x[x.i]#
+            e1 <- e[x.i]#
+            order.x <- order(-x1-0.5)#
+                x2 <- x1[order.x]#
+                e2 <- e1[order.x]#
+            tippingpoint <- which(cumsum(e2) > diff.ec)[1]#
+            (out <- 0.5 - x2[tippingpoint])#
+        } else {#
+            x.i <- x>0.5#
+            x1 <- x[x.i]#
+            e1 <- e[x.i]#
+            order.x <- order(x1-0.5)#
+                x2 <- x1[order.x]#
+                e2 <- e1[order.x]#
+            tippingpoint <- which(cumsum(e2) > diff.ec)[1]#
+            (out <- 0.5 - x2[tippingpoint])#
+        }#
+            return(out)#
+    }#
+#
+e.2016 <- pres$year==2016#
+x <- pres$dem[e.2016]#
+e <- pres$ecvotes[e.2016]#
+#
+e.2020 <- pres$year==2020#
+x <- pres$dem[e.2020]#
+e <- pres$ecvotes[e.2020]#
+min.shift(x,e)#
+# ----------------------------------------#
+# Data Cleaning#
+pres.2016 <- electiondata[[38]]#
+pres.2020 <- electiondata[[39]]#
+#
+electiondata <- getPres()#
+#
+# ----------------------------#
+# Not competitive in Election t#
+    mean(1*(abs(0.5-pres.2020$dem)>0.03), na.rm=T)#
+# Not competitive in election t conditioned on t-1#
+    nc <- function(x) 1 *(abs(0.5-x)>0.03)#
+nc_table.tmp <- winnertable.tmp <- data.frame(e=pres$dem,e_t1=pres$dlag, e_t2=pres$dlag2)#
+    nc_table <- nc(nc_table.tmp)#
+    nc_table <- rowSums(nc_table, na.rm=T)#
+    nc_table <- data.frame(year=pres$year, three=1 * (nc_table==3), two=1 * (nc_table==2), one=1 * (nc_table==1))#
+    nc_table <- nc_table[nc_table$year<2017,]#
+    nc_table.list <- lapply(split(nc_table,nc_table$year), function(x)colSums(x)/nrow(x))#
+    nctable <- do.call(rbind, nc_table.list)#
+    nctable <- nctable[rownames(nctable)>1876,]#
+#
+    winnertable <- find.winner(winnertable.tmp)#
+    winnertable <- rowSums(winnertable, na.rm=T)#
+    winnertable <- data.frame(year=pres$year, three=1 * (winnertable==3), two=1 * (winnertable==2), one=1 * (winnertable==1))#
+    winnertable <- winnertable[winnertable$year<2017,]#
+#
+    ecdta <- do.call(rbind, electiondata)#
+    ecdta <- ecdta[!is.na(ecdta$ecvotes),]  #
+        swing.by.year <- aggregate(abs(ecdta$dem-ecdta$dlag), by=list(ecdta$year), mean, na.rm=T)#
+        swing.reg <- lm(swing.by.year[20:39,2] ~ swing.by.year[20:39,1])#
+#
+    ecdta.b <- ecdta[battleground(ecdta$dem) %in% c(-1,1),]#
+        swing.by.year.b <- aggregate(abs(ecdta.b$dem-ecdta.b$dlag), by=list(ecdta.b$year), mean, na.rm=T)#
+        swing.sd.by.year.b <- aggregate(abs(ecdta.b$dem-ecdta.b$dlag), by=list(ecdta.b$year), sd, na.rm=T)#
+        swing.reg.b <- lm(swing.by.year.b[20:39,2] ~ swing.by.year.b[20:39,1])#
+    ecdta.n <- ecdta[battleground(ecdta$dem) %in% 0,]#
+        swing.by.year.n <- aggregate(abs(ecdta.n$dem-ecdta.n$dlag), by=list(ecdta.n$year), mean, na.rm=T)#
+        swing.sd.by.year.n <- aggregate(abs(ecdta.n$dem-ecdta.n$dlag), by=list(ecdta.n$year), sd, na.rm=T)#
+        swing.reg.n <- lm(swing.by.year.n[20:39,2] ~ swing.by.year.n[20:39,1])#
+#
+        # plot(x=swing.by.year[20:39,1], y=swing.by.year[20:39,2], xlab="", ylab="|Inter-Election Swing|", axes=F)#
+        #   axis(side=1, las=1, at=seq(1868,2020,4))#
+        #   axis(side=2, las=2)#
+        #   abline(swing.reg)#
+        # plot(x=swing.by.year.b[20:39,1], y=swing.by.year.b[20:39,2], xlab="", ylab="|Inter-Election SD|", axes=F, main="SD")#
+        #   axis(side=1, las=1, at=seq(1868,2020,4))#
+        #   axis(side=2, las=2)#
+        #   abline(swing.reg.b) #
+        # points(x=swing.by.year.n[20:39,1], y=swing.by.year.n[20:39,2], pch=19, col="gray50")#
+        #   abline(swing.reg.n, lty=3, col="gray50")#
+#
+        E <- P <- M <- R <- shift <- inv.interval <- SeatShare <- rep(NA, length(years)) #create empty vector for avg. state vote, 1868-2016#
+        NonCompetitive <- numeric()#
+        seatsvotes.4060 <- seatsvotes.4555 <- seatsvotes.4852 <- list()#
+            for (i in 1:length(years)) {#
+                x.i <- ecdta[ecdta$year %in% years[i],]#
+                x.i <- x.i[!is.na(x.i$dem),]#
+                E[i] <- sum(x.i$dem)/length(x.i$dem) # E - Average (Equally weighted)#
+                P[i] <- mean.w(x.i$dem, x.i$ecvotes) # P - Electoral College Weighted#
+                M[i] <- mean.w(x.i$dem, x.i$pop) # M - Population Weighted (Malapportionment)#
+                R[i] <- mean.w(x.i$dem, x.i$total) # R - Turnout Weighted (National Popular Vote)#
+                shift[i] <- min.shift(x.i$dem, x.i$ecvotes)#
+                inv.interval[i] <- inversion.interval(x.i$dem, x.i$ecvotes, x.i$total)#
+                SeatShare[i] <- sum(find.winner(x.i$dem) * x.i$ecvotes) / sum(x.i$ecvotes)#
+#
+            NonCompetitive <- rbind(NonCompetitive, cbind(#
+                Year = years[i],#
+                dem_battle = sum(1 * battleground(x.i$dem) %in% 1),#
+                rep_battle = sum(1 * battleground(x.i$dem) %in% -1),#
+                dem_nc = sum(1 * x.i$dem > comp.def[2]),#
+                rep_nc = sum(1 * x.i$dem < comp.def[1]),#
+                total_st = sum(1 * length(x.i$dem)),#
+                dem_nc_ec = sum(x.i$ecvotes[x.i$dem > comp.def[2]]),#
+                rep_nc_ec = sum(x.i$ecvotes[x.i$dem < comp.def[1]]),#
+                total_ec = sum(x.i$ecvotes)#
+                ))#
+#
+            seatsvotes.4555[[i]] <- #
+                unlist(seatsvotes(#
+                    VOTES = x.i$dem, #
+                    DEMvotes = NULL, #
+                    REPvotes = NULL,#
+                    POP = x.i$total,#
+                    SEATS = x.i$ecvotes,#
+                    year = years[i], #
+                    center = "fifty", # center options ["fifty", "actual", "average"]#
+                    iterations = 0.005, #
+                    vBar.range = c(0.45, 0.55),#
+                    output = "default"))#
+#
+            seatsvotes.4060[[i]] <- #
+                unlist(seatsvotes(#
+                    VOTES = x.i$dem, #
+                    DEMvotes = NULL, #
+                    REPvotes = NULL,#
+                    POP = x.i$total,#
+                    SEATS = x.i$ecvotes,#
+                    year = years[i], #
+                    center = "fifty", # center options ["fifty", "actual", "average"]#
+                    iterations = 0.005, #
+                    vBar.range = c(0.4, 0.60),#
+                    output = "default"))#
+            }#
+#
+        NonCompetitive <- as.data.frame(NonCompetitive)#
+        seatsvotes.45.55 <- do.call(rbind, seatsvotes.4555)#
+        seatsvotes.40.60 <- do.call(rbind, seatsvotes.4060)#
+        chart <- cbind(R,P,M,E,SeatShare)#
+            chart
+dem.win <- (chart[,"SeatShare"]>0.5)#
+            rep.win <- (chart[,"SeatShare"]<0.5)#
+            absR <- ifelse(dem.win, chart[,"R"]-0.5, 0.5-chart[,"R"])#
+            absR <- absR*2#
+            inversion <- chart[,"SeatShare"][chart[,"R"]>0.5] < 0.5#
+#
+            gilded.age.years <- years %in% seq(1876,1896,4)#
+            non.gilded.age.years <- years %in% seq(1900,1996,4)#
+            second.gilded.age.years <- years %in% seq(2000,2020,4)#
+median(absR)
+median(absR[gilded.age.years])#
+median(absR[non.gilded.age.years])#
+median(absR[second.gilded.age.years])#
+#
+    plot(x=years, y=absR, type="l", axes=F, ylim=c(-0.05,0.30), xlab="Year", ylab="Popular Vote Margin of EC Winner")#
+        points(x=years, y=absR, pch=19)#
+        points(years[chart[,"R"]>0.5][inversion], absR[chart[,"R"]>0.5][inversion], pch=19, col="red")#
+        abline(h=0)#
+        axis(side=1, at=seq(1868,2020,4))#
+        axis(side=2, las=1, at=seq(-0.05,0.30,0.05), labels=paste0(seq(-5,30,5), "%"))#
+    segments(1874, median(absR[gilded.age.years]), 1898, median(absR[gilded.age.years]), col= "#33333333", lwd=3)#
+    segments(1898, median(absR[non.gilded.age.years]), 1998, median(absR[non.gilded.age.years]), col= "#33333333", lwd=3)#
+    segments(1998, median(absR[second.gilded.age.years]), 2022, median(absR[second.gilded.age.years]), col= "#33333333", lwd=3)#
+    segments(1866, median(absR), 2022, median(absR), col= "#000000", lwd=1, lty=3)
+# Delegation Sizes#
+plot(house.del[,2], house.del[,"seats"], #
+    type="n", #
+    ylim=c(0,435),#
+    cex=0.3, #
+    pch=19, #
+    axes="F", #
+    xlab="Year", #
+    ylab="Delegation Size",#
+    main="House")#
+lines(lowess(house.del[,2], house.del[,"Democrats"], f=0.1))#
+lines(lowess(house.del[,2], house.del[,"Republicans"], f=0.1), lty=2)#
+axis(side=1, at=seq(41,117,2), labels=years)#
+axis(side=2, las=1, at=seq(0,435,50), labels=seq(0,435,50))#
+legend("bottomright",legend=c("Democrats","Republicans"), lty=c(1,2))
+pres.cnty.2020 <- read.csv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv")
+pres.cnty.2016 <- read.csv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2016_US_County_Level_Presidential_Results.csv")
+head(pres.cnty.2016)
+head(pres.cnty.2020)
+a <- full_join(pres.cnty.2016, pres.cnty.2020)
+leadingZeroes(pres.cnty.2020$county_fips)
+pres.cnty.2020$county_fips <- leadingZeroes(pres.cnty.2020$county_fips)
+pres.cnty.2016$county_fips <- leadingZeroes(pres.cnty.2016$county_fips)
+a <- full_join(pres.cnty.2016, pres.cnty.2020, by="county_fips")
+head(a)
+a
+head(pres.cnty.2016)
+tail(pres.cnty.2016)
+data.frame(year=2016, fips=leadingZeroes(pres.cnty.2016$county_fips), dem2016=pres.cnty.2016$votes_dem, rep2016=pres.cnty.2016$votes_gop)
+pres.cnty.2016 <- data.frame(year=2016, fips=leadingZeroes(pres.cnty.2016$county_fips), dem2016=pres.cnty.2016$votes_dem, rep2016=pres.cnty.2016$votes_gop)
+head(pres.cnty.2020)
+pres.cnty.2020 <- data.frame(year=2020, fips=leadingZeroes(pres.cnty.2020$county_fips), dem2016=pres.cnty.2020$votes_dem, rep2016=pres.cnty.2020$votes_gop)
+head(pres.cnty.2020)
+pres.cnty.2016 <- read.csv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2016_US_County_Level_Presidential_Results.csv")
+pres.cnty.2020 <- read.csv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv")
+pres.cnty.2016 <- data.frame(year=2016, fips=leadingZeroes(pres.cnty.2016$county_fips,5), dem2016=pres.cnty.2016$votes_dem, rep2016=pres.cnty.2016$votes_gop)#
+pres.cnty.2020 <- data.frame(year=2020, fips=leadingZeroes(pres.cnty.2020$county_fips,5), dem2016=pres.cnty.2020$votes_dem, rep2016=pres.cnty.2020$votes_gop)
+a <- full_join(pres.cnty.2016, pres.cnty.2020)
+head(a)
+a[!is.na(a$fips)]
+a[!is.na(a$fips),]
+a <- full_join(pres.cnty.2016, pres.cnty.2020)
+head(a)
+a <- full_join(pres.cnty.2016, pres.cnty.2020, by="fips")
+head(a)
+a[!is.na(a$fips),]
+pres.cnty.2016 <- read.csv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2016_US_County_Level_Presidential_Results.csv")#
+pres.cnty.2020 <- read.csv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv")#
+#
+pres.cnty.2016 <- data.frame(fips=leadingZeroes(pres.cnty.2016$county_fips,5), dem2016=pres.cnty.2016$votes_dem, rep2016=pres.cnty.2016$votes_gop)#
+pres.cnty.2020 <- data.frame(fips=leadingZeroes(pres.cnty.2020$county_fips,5), dem2016=pres.cnty.2020$votes_dem, rep2016=pres.cnty.2020$votes_gop)
+a <- full_join(pres.cnty.2016, pres.cnty.2020)
+head(a)
+leadingZeroes(pres.cnty.2016$county_fips,5)
+pres.cnty.2016$county_fips
+pres.cnty.2016 <- read.csv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2016_US_County_Level_Presidential_Results.csv")
+pres.cnty.2020 <- read.csv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv")
+pres.cnty.2016$county_fips
+pres.cnty.2016 <- read.csv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2016_US_County_Level_Presidential_Results.csv")
+pres.cnty.2020 <- read.csv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv")
+head(pres.cnty.2016)
+head(pres.cnty.2020)
+pres.cnty.2016 <- read.csv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2016_US_County_Level_Presidential_Results.csv")
+pres.cnty.2020 <- read.csv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv")
+pres.cnty.2016 <- data.frame(fips=leadingZeroes(pres.cnty.2016$combined_fips,5), dem2016=pres.cnty.2016$votes_dem, rep2016=pres.cnty.2016$votes_gop)
+pres.cnty.2020 <- data.frame(fips=leadingZeroes(pres.cnty.2020$county_fips,5), dem2016=pres.cnty.2020$votes_dem, rep2016=pres.cnty.2020$votes_gop)
+a <- full_join(pres.cnty.2016, pres.cnty.2020)
+head(a)
+a[!is.na(a$fips),]
+leadingZeroes(pres.cnty.2016$combined_fips,5)
+pres.cnty.2016 <- read.csv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2016_US_County_Level_Presidential_Results.csv")
+pres.cnty.2020 <- read.csv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv")
+pres.cnty.2016$combined_fips
+class(pres.cnty.2016$combined_fips)
+leadingZeroes(pres.cnty.2016$combined_fips,5)
+pres.cnty.2020$county_fips
+class(pres.cnty.2020$county_fips)
+leadingZeroes(pres.cnty.2020$county_fips,5)
+pres.cnty.2016 <- read.csv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2016_US_County_Level_Presidential_Results.csv")#
+pres.cnty.2020 <- read.csv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv")#
+#
+pres.cnty.2016 <- data.frame(fips=leadingZeroes(pres.cnty.2016$combined_fips,5), dem2016=pres.cnty.2016$votes_dem, rep2016=pres.cnty.2016$votes_gop)#
+pres.cnty.2020 <- data.frame(fips=leadingZeroes(pres.cnty.2020$county_fips,5), dem2016=pres.cnty.2020$votes_dem, rep2016=pres.cnty.2020$votes_gop)
+head(pres.cnty.2020)
+head(pres.cnty.2016)
+dim(pres.cnty.2020)
+dim(pres.cnty.2016)
+a <- full_join(pres.cnty.2016, pres.cnty.2020)
+pres.cnty.2020 <- read.csv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv")
+pres.cnty.2020 <- data.frame(fips=leadingZeroes(pres.cnty.2020$county_fips,5), dem2020=pres.cnty.2020$votes_dem, rep2020=pres.cnty.2020$votes_gop)
+a <- full_join(pres.cnty.2016, pres.cnty.2020)
+head(a)
+a[!is.na(a$fips),]
+a[!is.na(a$fips),]
+a[complete.cases(a$fips),]
+complete.cases
+a[complete.cases(a),]
+counties.16.20 <- a[complete.cases(a),]
+plot(two_party(counties.16.20$dem2016,counties.16.20$rep2016), two_party(counties.16.20$dem2020,counties.16.20$rep2020))
+plot(two_party(counties.16.20$dem2016,counties.16.20$rep2016), two_party(counties.16.20$dem2020,counties.16.20$rep2020), xlab="2016 Election", ylab="2020 Election")
+plot(two_party(counties.16.20$dem2016,counties.16.20$rep2016), two_party(counties.16.20$dem2020,counties.16.20$rep2020), xlab="2016 Election", ylab="2020 Election", col="#33333333")
+abline(0,1)
+plot(two_party(counties.16.20$dem2016,counties.16.20$rep2016), two_party(counties.16.20$dem2020,counties.16.20$rep2020), xlab="Clinton 2016 County Vote Share", ylab="Biden 2020 County Vote Share", col="#33333333")
+abline(0,1)
+summary(two_party(counties.16.20$dem2020,counties.16.20$rep2020) ~ two_party(counties.16.20$dem2016,counties.16.20$rep2016))
+summary(lm(two_party(counties.16.20$dem2020,counties.16.20$rep2020) ~ two_party(counties.16.20$dem2016,counties.16.20$rep2016)))
+# pops$sTaTe <- standardizeText(rownames(pops))#
+#
+# DENSITY <- full_join(pops,st.area)#
+# DENSITY <- data.frame(state=DENSITY$state,DENSITY[,1:23]/DENSITY[,26])#
+urban.st <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Census/Urban/urban_state.csv")#
+years.urban <- seq(1900,2008,4)#
+    urban.partisanship <- rep(NA, length(years.urban))#
+        for (j in 1:length(years.urban)) {#
+head(urban.st)#
+#
+elect.tmp <- elect.dta[elect.dta$year %in% years.urban[j],]#
+elect.tmp <- elect.tmp[!is.na(elect.tmp$pop),]#
+#
+urban.tmp <- urban.st[urban.st$year %in% years.urban[j],]#
+#
+elect.tmp <- left_join(elect.tmp, urban.tmp)#
+            urban.partisanship[j] <- cor(rank(elect.tmp$dem),rank(elect.tmp$urban))#
+    }#
+plot(years.urban, urban.partisanship, type="l",#
+    cex=0.3, #
+    pch=19, #
+    ylim=c(-0.6,0.6), #
+    axes="F", #
+    xlab="Year", #
+    ylab="Correlation rank(Partisanship | Urban)",#
+    main="")#
+    axis(side=1, at=years.urban, labels=years.urban)#
+    axis(side=2, las=2, at=seq(-0.55,0.55,0.1), labels=seq(-0.55,0.55,0.1))#
+    points(years.urban, urban.partisanship, pch=19)#
+    abline(h=0, lty=3)
+source("https://raw.githubusercontent.com/jcervas/2020-Elections/main/NYT_json.R")#
+source("https://raw.githubusercontent.com/jcervas/R-Functions/main/seatsvotes.R")#
+fips <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/fips.csv")#
+house.del <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/House/housedelegations1868-2020.csv")#
+#
+years <- seq(1868,2020,4)#
+#
+house <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/House/house_elections_1968_2020.csv")#
+    house$district[house$district > 54] <- 1#
+    head(house)#
+#
+pres <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/Presidential/Pres%20by%20State/president_state.csv")#
+#
+# house.del <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/House/housedelegations1868-2020.csv")#
+presCD <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/Presidential/Pres%20by%20CD/pres_cd_1952_2016.csv")#
+#
+presCD$ed[presCD$ed > 54] <- 1#
+    presCD <- data.frame(year=presCD$year, state=presCD$state, district=presCD$ed, demPres=two_party(presCD$dem,presCD$rep))#
+    head(presCD)#
+    presCD <- presCD[presCD$year %in% seq(1968,2020,2),]#
+#
+houseCD <- data.frame(year=house$year, state=house$state, district=house$district, demCD=two_party(house$dem,house$rep))#
+cd.elections <- inner_join(houseCD,presCD)#
+    head(cd.elections)#
+presCD.2016 <- presCD[presCD$year %in% "2016",]#
+houseCD.2016 <- houseCD[houseCD$year %in% "2016",]#
+houseCD.2018 <- houseCD[houseCD$year %in% "2018",]#
+    elec.2016.2018 <- full_join(presCD.2016,houseCD.2018, by=c("state", "district"))#
+    elec.2016.2016 <- full_join(presCD.2016,houseCD.2016, by=c("state", "district"))#
+head(elec.2016.2018)#
+#
+sum(1 * (elec.2016.2018$demCD > 0.5 & elec.2016.2018$demPres < 0.5), na.rm=T) # Trump win, Dem wins in 2018#
+sum(1 * (elec.2016.2018$demCD < 0.5 & elec.2016.2018$demPres > 0.5), na.rm=T) # Clinton win, Rep wins in 2018#
+#
+sum(1 * (elec.2016.2016$demCD > 0.5 & elec.2016.2016$demPres < 0.5), na.rm=T) # Trump win, Dem wins in 2018#
+sum(1 * (elec.2016.2016$demCD < 0.5 & elec.2016.2016$demPres > 0.5), na.rm=T) # Clinton win, Rep wins in 2018#
+seatsvotes(DEMvotes=house$dem, REPvotes=house$rep, year="2020", vBar.range = c(0.45, 0.55))#
+    sum(pres$dem)/(sum(pres$dem)+sum(pres$rep))#
+#
+# Alertnative Pres without NY and CA#
+pres.alt <- pres[!pres$state %in% c("New York", "California"),]#
+    sum(pres.alt$dem)/(sum(pres.alt$dem)+sum(pres.alt$rep))#
+# Coattails#
+house.del$coattails <- as.numeric(ifelse(house.del$pres_party==1, house.del$DemChange, house.del$RepChange))#
+#
+pres.del <- house.del[(house.del$Congress %% 2) %in% 1,]#
+pres.del#
+#
+midterm.del <- house.del[(house.del$Congress %% 2) %in% 0,]
+pres.del
+plot(pres.del$Congress, pres.del$coattails)
+line(lowess(pres.del$coattails~ pres.del$Congress))
+lowess(pres.del$coattails~ pres.del$Congress)
+pres.del$coattails
+source("https://raw.githubusercontent.com/jcervas/2020-Elections/main/NYT_json.R")#
+source("https://raw.githubusercontent.com/jcervas/R-Functions/main/seatsvotes.R")#
+fips <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/fips.csv")#
+house.del <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/House/housedelegations1868-2020.csv")#
+#
+years <- seq(1868,2020,4)#
+#
+house <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/House/house_elections_1968_2020.csv")#
+    house$district[house$district > 54] <- 1#
+    head(house)#
+#
+pres <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/Presidential/Pres%20by%20State/president_state.csv")#
+#
+# house.del <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/House/housedelegations1868-2020.csv")#
+presCD <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/Presidential/Pres%20by%20CD/pres_cd_1952_2016.csv")#
+#
+presCD$ed[presCD$ed > 54] <- 1#
+    presCD <- data.frame(year=presCD$year, state=presCD$state, district=presCD$ed, demPres=two_party(presCD$dem,presCD$rep))#
+    head(presCD)#
+    presCD <- presCD[presCD$year %in% seq(1968,2020,2),]#
+#
+houseCD <- data.frame(year=house$year, state=house$state, district=house$district, demCD=two_party(house$dem,house$rep))#
+cd.elections <- inner_join(houseCD,presCD)#
+    head(cd.elections)#
+presCD.2016 <- presCD[presCD$year %in% "2016",]#
+houseCD.2016 <- houseCD[houseCD$year %in% "2016",]#
+houseCD.2018 <- houseCD[houseCD$year %in% "2018",]#
+    elec.2016.2018 <- full_join(presCD.2016,houseCD.2018, by=c("state", "district"))#
+    elec.2016.2016 <- full_join(presCD.2016,houseCD.2016, by=c("state", "district"))#
+head(elec.2016.2018)#
+#
+sum(1 * (elec.2016.2018$demCD > 0.5 & elec.2016.2018$demPres < 0.5), na.rm=T) # Trump win, Dem wins in 2018#
+sum(1 * (elec.2016.2018$demCD < 0.5 & elec.2016.2018$demPres > 0.5), na.rm=T) # Clinton win, Rep wins in 2018#
+#
+sum(1 * (elec.2016.2016$demCD > 0.5 & elec.2016.2016$demPres < 0.5), na.rm=T) # Trump win, Dem wins in 2018#
+sum(1 * (elec.2016.2016$demCD < 0.5 & elec.2016.2016$demPres > 0.5), na.rm=T) # Clinton win, Rep wins in 2018#
+seatsvotes(DEMvotes=house$dem, REPvotes=house$rep, year="2020", vBar.range = c(0.45, 0.55))#
+    sum(pres$dem)/(sum(pres$dem)+sum(pres$rep))#
+#
+# Alertnative Pres without NY and CA#
+pres.alt <- pres[!pres$state %in% c("New York", "California"),]#
+    sum(pres.alt$dem)/(sum(pres.alt$dem)+sum(pres.alt$rep))#
+# Coattails#
+house.del$coattails <- as.numeric(ifelse(house.del$pres_party==1, house.del$DemChange, house.del$RepChange))#
+#
+pres.del <- house.del[(house.del$Congress %% 2) %in% 1,]#
+pres.del#
+plot(pres.del$Congress, pres.del$coattails)
+rm(list=ls(all=TRUE))
+source("https://raw.githubusercontent.com/jcervas/2020-Elections/main/NYT_json.R")#
+source("https://raw.githubusercontent.com/jcervas/R-Functions/main/seatsvotes.R")#
+fips <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/fips.csv")#
+house.del <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/House/housedelegations1868-2020.csv")#
+#
+years <- seq(1868,2020,4)#
+#
+house <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/House/house_elections_1968_2020.csv")#
+    house$district[house$district > 54] <- 1#
+    head(house)#
+#
+pres <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/Presidential/Pres%20by%20State/president_state.csv")#
+#
+# house.del <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/House/housedelegations1868-2020.csv")#
+presCD <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/Presidential/Pres%20by%20CD/pres_cd_1952_2016.csv")#
+#
+presCD$ed[presCD$ed > 54] <- 1#
+    presCD <- data.frame(year=presCD$year, state=presCD$state, district=presCD$ed, demPres=two_party(presCD$dem,presCD$rep))#
+    head(presCD)#
+    presCD <- presCD[presCD$year %in% seq(1968,2020,2),]#
+#
+houseCD <- data.frame(year=house$year, state=house$state, district=house$district, demCD=two_party(house$dem,house$rep))#
+cd.elections <- inner_join(houseCD,presCD)#
+    head(cd.elections)#
+presCD.2016 <- presCD[presCD$year %in% "2016",]#
+houseCD.2016 <- houseCD[houseCD$year %in% "2016",]#
+houseCD.2018 <- houseCD[houseCD$year %in% "2018",]#
+    elec.2016.2018 <- full_join(presCD.2016,houseCD.2018, by=c("state", "district"))#
+    elec.2016.2016 <- full_join(presCD.2016,houseCD.2016, by=c("state", "district"))#
+head(elec.2016.2018)#
+#
+sum(1 * (elec.2016.2018$demCD > 0.5 & elec.2016.2018$demPres < 0.5), na.rm=T) # Trump win, Dem wins in 2018#
+sum(1 * (elec.2016.2018$demCD < 0.5 & elec.2016.2018$demPres > 0.5), na.rm=T) # Clinton win, Rep wins in 2018#
+#
+sum(1 * (elec.2016.2016$demCD > 0.5 & elec.2016.2016$demPres < 0.5), na.rm=T) # Trump win, Dem wins in 2018#
+sum(1 * (elec.2016.2016$demCD < 0.5 & elec.2016.2016$demPres > 0.5), na.rm=T) # Clinton win, Rep wins in 2018#
+seatsvotes(DEMvotes=house$dem, REPvotes=house$rep, year="2020", vBar.range = c(0.45, 0.55))#
+    sum(pres$dem)/(sum(pres$dem)+sum(pres$rep))#
+#
+# Alertnative Pres without NY and CA#
+pres.alt <- pres[!pres$state %in% c("New York", "California"),]#
+    sum(pres.alt$dem)/(sum(pres.alt$dem)+sum(pres.alt$rep))#
+# Coattails#
+house.del$coattails <- as.numeric(ifelse(house.del$pres_party==1, house.del$DemChange, house.del$RepChange))#
+#
+pres.del <- house.del[(house.del$Congress %% 2) %in% 1,]#
+pres.del
+# Remove all objects just to be safe.#
+            rm(list=ls(all=TRUE))#
+    library(tidyverse)#
+#
+source("https://raw.githubusercontent.com/jcervas/2020-Elections/main/NYT_json.R")#
+source("https://raw.githubusercontent.com/jcervas/R-Functions/main/seatsvotes.R")#
+fips <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/fips.csv")#
+house.del <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/House/housedelegations1868-2020.csv")#
+#
+years <- seq(1868,2020,4)#
+#
+house <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/House/house_elections_1968_2020.csv")#
+    house$district[house$district > 54] <- 1#
+    head(house)#
+#
+pres <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/Presidential/Pres%20by%20State/president_state.csv")#
+#
+# house.del <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/House/housedelegations1868-2020.csv")#
+presCD <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/Presidential/Pres%20by%20CD/pres_cd_1952_2016.csv")#
+#
+presCD$ed[presCD$ed > 54] <- 1#
+    presCD <- data.frame(year=presCD$year, state=presCD$state, district=presCD$ed, demPres=two_party(presCD$dem,presCD$rep))#
+    head(presCD)#
+    presCD <- presCD[presCD$year %in% seq(1968,2020,2),]#
+#
+houseCD <- data.frame(year=house$year, state=house$state, district=house$district, demCD=two_party(house$dem,house$rep))#
+cd.elections <- inner_join(houseCD,presCD)#
+    head(cd.elections)#
+presCD.2016 <- presCD[presCD$year %in% "2016",]#
+houseCD.2016 <- houseCD[houseCD$year %in% "2016",]#
+houseCD.2018 <- houseCD[houseCD$year %in% "2018",]#
+    elec.2016.2018 <- full_join(presCD.2016,houseCD.2018, by=c("state", "district"))#
+    elec.2016.2016 <- full_join(presCD.2016,houseCD.2016, by=c("state", "district"))#
+head(elec.2016.2018)#
+#
+sum(1 * (elec.2016.2018$demCD > 0.5 & elec.2016.2018$demPres < 0.5), na.rm=T) # Trump win, Dem wins in 2018#
+sum(1 * (elec.2016.2018$demCD < 0.5 & elec.2016.2018$demPres > 0.5), na.rm=T) # Clinton win, Rep wins in 2018#
+#
+sum(1 * (elec.2016.2016$demCD > 0.5 & elec.2016.2016$demPres < 0.5), na.rm=T) # Trump win, Dem wins in 2018#
+sum(1 * (elec.2016.2016$demCD < 0.5 & elec.2016.2016$demPres > 0.5), na.rm=T) # Clinton win, Rep wins in 2018#
+seatsvotes(DEMvotes=house$dem, REPvotes=house$rep, year="2020", vBar.range = c(0.45, 0.55))#
+    sum(pres$dem)/(sum(pres$dem)+sum(pres$rep))#
+#
+# Alertnative Pres without NY and CA#
+pres.alt <- pres[!pres$state %in% c("New York", "California"),]#
+    sum(pres.alt$dem)/(sum(pres.alt$dem)+sum(pres.alt$rep))#
+# Coattails#
+house.del$coattails <- as.numeric(ifelse(house.del$pres_party==1, house.del$DemChange, house.del$RepChange))#
+#
+pres.del <- house.del[(house.del$Congress %% 2) %in% 1,]#
+pres.del
+house.del <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/House/housedelegations1868-2020.csv")
+house.del
+rm(list=ls(all=TRUE))
+house.del <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/House/housedelegations1868-2020.csv")
+house.del
