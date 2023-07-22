@@ -49,7 +49,7 @@ All the plans create contiguous districts. Similarly, all four plans appear to s
 | Gov. Wolf           | 19            | 0.393         | 0.310        |
 | 2018 Court Remedial | 17            | 0.426         | 0.324        |
 
-###### _Note:_ County splits include all the pieces in which a county is split, #not just the total number of counties that have been split. (The latter number is the one most often reported in both court documents and in the media, but we regard the measure we report as both more precise and more informative.)
+##### _Note:_ County splits include all the pieces in which a county is split, #not just the total number of counties that have been split. (The latter number is the one most often reported in both court documents and in the media, but we regard the measure we report as both more precise and more informative.)
 
 ## Institutional Measures
 
