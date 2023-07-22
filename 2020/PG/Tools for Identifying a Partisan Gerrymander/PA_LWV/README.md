@@ -1,7 +1,9 @@
 # TOOLS FOR IDENTIFYING A PARTISAN GERRYMANDER
-*JONATHAN R. CERVAS* _UNIVERSITY OF CALIFORNIA, IRVINE_
+*JONATHAN R. CERVAS* [^*]
 
-*BERNARD GROFMAN* _UNIVERSITY OF CALIFORNIA, IRVINE_
+*BERNARD GROFMAN* [^*]
+
+[^*]: UNIVERSITY OF CALIFORNIA, IRVINE_
 
 Key Words:  *gerrymandering*, *Pennsylvania Supreme Court*, *redistricting*, *League of Women Voters*, *good government*
 
