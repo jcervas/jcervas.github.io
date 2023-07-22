@@ -69,7 +69,7 @@ Which counties get split and how many ways can impact a plan's election outcome,
 ### Figure 1: Maps Of The Proposed Pennsylvania Congressional Districts
 
 <img src="Figures/fig_maps.png" alt="Maps Of The Proposed Pennsylvania Congressional Districts" width="450"/>
-###### _Notes:_ Maps a drawn with a Mercator projection. Shapefiles were obtained from the Pennsylvania Supreme Court website for the four government plans.
+##### _Notes:_ Maps a drawn with a Mercator projection. Shapefiles were obtained from the Pennsylvania Supreme Court website for the four government plans.
 
 ### Compactness
 
@@ -127,7 +127,7 @@ The best evidence about a plan's partisan consequences is, of course, evidence d
 | Mean/Median    | 0.06   | 0.06   | 0.06   | 0.06   |
 | Declination    | 0.46   | 0.36   | 0.39   | 0.4    |
 
-###### _Notes:_ Calculations based on actual congressional elections in Pennsylvania under the map found unconstitutional in 2018. Uncontested races are imputed with 0.25 and 0.75 for the respective winners. Un-adjusted Republican two-party vote totals are 49.2% for 2012, 55.5% for 2014, and 54.1% for 2016. All votes are calculated from the Republican perspective of the two-party vote. We've adjusted all gerrymandering measures such that negative numbers indicate bias in favor of the Democrats.
+##### _Notes:_ Calculations based on actual congressional elections in Pennsylvania under the map found unconstitutional in 2018. Uncontested races are imputed with 0.25 and 0.75 for the respective winners. Un-adjusted Republican two-party vote totals are 49.2% for 2012, 55.5% for 2014, and 54.1% for 2016. All votes are calculated from the Republican perspective of the two-party vote. We've adjusted all gerrymandering measures such that negative numbers indicate bias in favor of the Democrats.
 
 ## Evaluating district plans using Statewide elections to provide a normal vote baseline
 
@@ -153,7 +153,7 @@ We wish to do a further robustness check on the plausibility of using our five-e
 | Declination    | 0.39\*\*                   | 0.33\*                    | 0.21                      | 0.14                      |
 |                |               _[0.13, 0.63]_  |               _[0.07, 0.61]_  |               _[-0.02, 0.47]_  |               _[-0.1, 0.42]_   |
 
-###### _Note:_ \*p ; 0.05; \*\*p &lt; .01; \*\*\*p &lt; 0.001. Measures are averages of 1,000 simulations for each map using the 2016 composite. Brackets numbers are the 95\% range.
+##### _Note:_ \*p ; 0.05; \*\*p &lt; .01; \*\*\*p &lt; 0.001. Measures are averages of 1,000 simulations for each map using the 2016 composite. Brackets numbers are the 95\% range.
 
 The findings from [Table 3](#measures-of-gerrymandering-for-the-four-considered-plans-at-50-vote-share) are very clear; regardless of which metric we examine, the 2011 map is the most gerrymandered. Not surprisingly, the nature of the bias is in a pro-Republican direction. Given the cumulative weight of all the evidence, the 2011 congressional map was clearly an egregious pro-Republican gerrymander. All four measures of potential gerrymandering are statistically significant for the 2011 map. In contrast, as we might expect, the court-ordered plan, prepared by a respected expert whose instructions were to satisfy good government criteria, was by a considerable margin the closest to a perfectly neutral plan in partisan terms according to all four measures. Indeed, none of the four measures of potential gerrymandering is statistically significant for the court-ordered map. And when we turn to the Republican Joint Legislative plan we find that all four measures are again statistically significant.
 
@@ -169,7 +169,7 @@ Finally, we return to the plan offered by the Democratic governor, Governor Wolf
 | Probability Democratic Majority | 0.3%                                     | 0.3%                                | 2.0%                                | 6.6%                                     |
 | Probability Tied Delegation     | 1.1%                                     | 2.4%                                | 9.7%                                | 24.0%                                    |
 
-###### _Note:_ Using a Composite of Five Statewide Elections (adjusted to a 50% Vote Share) but not correcting for incumbency. We report the mean seat-share from 1,000 simulations, along with a 95% range of the simulated outcomes.
+##### _Note:_ Using a Composite of Five Statewide Elections (adjusted to a 50% Vote Share) but not correcting for incumbency. We report the mean seat-share from 1,000 simulations, along with a 95% range of the simulated outcomes.
 
 Looking at the evidence above, we see exactly the same ordering of plans according to their characterizability as a partisan gerrymander as we saw when we ordered plans according to the degree to which they satisfied good government criteria (see [Table 1](#county-splits-and-compactness-scores-of-the-plans)), with the 2011 map the worst and the 2018 court-ordered map far and away the best. This conclusion is further buttressed by the data we present in [Table 4](probabilistic-projections-of-partisan-outcomes-for-four-plans-at-50-vote-share). Here we create a probabilistic simulation using statewide five-election composite (set to a 50-50 vote share) to estimate the likelihood that random shocks (based on past state inter-election shift data) would change party control of the congressional delegation. We report the 95 percentile interval of expect seat shares for each party when the vote is exactly tied 50-50. [^27] The expectation is that at a tied vote, when there is an even number of districts, that each party would receive half the seats. This symmetric result is equivalent to a "fair plan". In the court-remedial plan, we see a normal distribution of expected seat-shares ranging from 7.2 to 12.6 Republican seats at 50% of the vote (Republicans are expected to gain at least 10 seats 69% of the time). For the Republican joint plan and the Democratic plan submitted by Gov. Wolf, the Democrats are virtually never expected to have a majority of seats. Even in the Democratic plan, claimed by some to be a pro-Democratic gerrymander, Democrats are only expected to receive half or more of the seats 11.7% of the time. In looking at the unconstitutional gerrymander plan of 2011, Republicans are, except in highly unlikely outliers, predicted to gain a majority (10+) seats, and to win as many as 14/18 at of the vote! In our simulations of 1,000 potential election outcomes under the enacted 2011 map, 986 resulted in at least ten Republican seats. The Republican remedial plan is not much better, delivering ten plus seats for the Republicans in 973 of the 1,000 simulations. The Democratic plan improves slightly by limiting Republican majorities to just 883/1,000 simulations, while the courts map is the most fair with only 694 simulations resulting in an outright majority for Republicans.
 
