@@ -1,0 +1,113 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%% text.tex %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Legal, political science and economics approaches to measuring malapportionment}
+    \author{J. Cervas \& B. Grofman} %Shortened for Header
+% 
+%
+% Author Name - email - Institution or Affiliation
+%
+% 
+% 
+% First Submitted: 
+% Revise and Resubmit: 
+% Accepted: 
+% =================================================================
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%% - Load Document Class - %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%...............
+\documentclass[12pt, a4paper, twoside]{article}
+% \RequirePackage{util/cervas}
+\RequirePackage{util/cervas}
+
+\titleseal{Images/seal-black.eps}
+\titlebanner{Images/democracy_logo.png}
+%...............
+\begin{document}
+%...............
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%...............
+    \authorone{Jonathan R. Cervas*}
+        \institone{University of California Irvine}
+    \authortwo{Bernard Grofman**}
+        \instittwo{University of California Irvine}
+
+%...............
+\titlerunning{Legal, political science and economics approaches to measuring malapportionment}
+    \subtitle{The U.S. House, the Senate and the Electoral College 1790-2010.}
+%...............
+    \status{\scriptsize{This draft was generated on \textit{\today} at \textit{\DTMcurrenttime} PST}} % Working Paper, Revise and Resubmit, Accepted
+    \paperdate{\today} % \today gives current date
+%...............    
+   \abstract{We compare and contrast methods for measuring malapportionment from different disciplines: law, political science, and economics. For example, in political science, the comparative politics approach to measuring malapportionment has been in terms of an adaptation of standard measures of seats-votes discrepancy, such as the \textit{Loosemore-Hanby} Index of Distortion. This approach examines malapportionment levels as a whole, taking into account the differences in each of the districts between actual population and ideal population. In contrast, U.S. courts, and courts in many other countries, including Canada, France and Germany, measure compliance with the one person, one vote standard using what is called the total population deviation, which looks only at the two extreme poles of malapportionment. In economics, the Gini index is the standard approach to measuring inequality; we adapted it to the malapportionment context. We demonstrate that which approach to measurement we take can dramatically affect some of the conclusions we reach, illustrating this point with data from the U.S. House, Senate, and Electoral College over the period 1790-2010. We demonstrate that the House and the Electoral College hardly malapportioned, regardless of which measure we use, while the level of malapportionment we observe in the Senate can depend on which measure we use. \\
+    
+    % Keywords: Malapportionment; Electoral College; Total Population Deviation; Gallagher Index; Gini Index; Elections; Representation; One person, one vote; Voting
+    }
+
+%...............
+    \data{Data: \href{url}{Surpressed until publication}}
+%...............
+    \thanks{Many thanks to Esther E. Bailey, Nathan Cisneros, Marek Kaminski, Nicholas Miller, and Aruhn Venkat for useful comments on earlier drafts and general encouragement.}
+    %
+%...............
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%...............
+%...............
+   \maketitle
+%\doublespacing
+\input{_maintext.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%...............
+    \newpage
+\singlespacing
+\clearpage
+    \nolinenumbers
+    \newgeometry{
+		top=1in,
+		bottom=1in,
+		inner=0.85in,
+		outer=0.85in,
+		ignorehead,
+		ignorefoot,
+		nomarginpar,
+	}
+%...............
+\begin{multicols}{2}
+    \footnotesize{\bibliography{util/library}}   % Bibliography linked to bib.bib
+\end{multicols}
+%...............
+
+\singlespacing
+
+\clearpage
+% \input{Tables/table1.tex}
+% \clearpage
+% \input{figure1.tex}
+
+
+
+
+%...............
+\setcounter{section}{0} \renewcommand{\thesection}{Appendix \Alph{section}}%
+\setcounter{table}{0}%
+\clearpage
+\setcounter{table}{0}%
+
+% \section{ -- U.S. House Appendix}
+%     \input{Tables/data_house.tex}
+
+% \clearpage
+% \setcounter{table}{0}%
+
+% \section{ -- Electoral College Appendix}
+%     \input{Tables/data_ec.tex}
+
+% \clearpage
+
+% \section{ -- U.S. Senate Appendix}
+%     \input{Tables/data_sen.tex}
+
+\end{document}
