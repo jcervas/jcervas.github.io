@@ -1,0 +1,18 @@
+
+Regressions with Non-Competitive Advantage vs Winningness to Predict Final Republican EC seat share
+--------------------------------------------------------------------------------------------------
+                                           RepECOutcome                        EC.Outcome.REP     
+                                 Model 1                  Model 2                  Model 3        
+--------------------------------------------------------------------------------------------------
+noncompetitiveadvantage          0.530***                                                         
+                                 (0.018)                                                          
+winningness                                               0.553***                0.273***        
+                                                          (0.044)                  (0.067)        
+Constant                         0.502***                 0.230***                0.357***        
+                                 (0.009)                  (0.031)                  (0.033)        
+N                                   38                       38                      17           
+Adj. R-squared                    0.958                    0.806                    0.495         
+F Statistic              840.011*** (df = 1; 36)  154.927*** (df = 1; 36)  16.695*** (df = 1; 15) 
+--------------------------------------------------------------------------------------------------
+***p < .01; **p < .05; *p < .1                                                                    
+Note: All Regressions calculated using plus or minus 3% as the definition of competitive state.   
