@@ -1,0 +1,104 @@
+@charset "UTF-8";
+/* CSS Document */
+
+.g-states {
+    border-bottom: solid 1px #ddd;
+}
+
+.g-key-container {
+    display: block;
+}
+
+.g-key {
+    position: absolute;
+    top: 5%;
+    right: 15%;
+    font-size: 11px;
+    color: #666;
+    width: 230px;
+    z-index: 1;
+}
+.g-row-header {
+    position: relative;
+}
+.g-row {
+    border-bottom: solid 1px #eee;
+    overflow: hidden;
+    padding: 1px 0;
+    width: 230px;
+}
+
+.g-label {
+    width: 45%;
+    float: right;
+}
+
+.g-row .g-swatch {
+    width: 25%;
+    height: 12px;
+    float: left;
+}
+.g-row .g-swatches {
+    width: 50%;
+    float: left;
+}
+
+.g-dem .g-swatch, .g-party-d .g-swatch {
+    background-color: rgb(5, 48, 97);
+}
+
+.g-tossup .g-swatch, .g-party-tossup .g-swatch {
+    background-color: rgb(195, 222, 236);
+}
+
+.g-rep .g-swatch, .g-party-r .g-swatch {
+    background-color: rgb(103, 0, 31);
+}
+
+.g-row:last-child {
+    border-bottom: none;
+}
+
+.g-row-header div span {
+    position: absolute;
+    height: 6px;
+    border-left: solid 1px #666;
+    bottom: -8px;
+    left: 8px;
+}
+
+.g-row-header div span {
+    position: absolute;
+    height: 6px;
+    border-left: solid 1px #666;
+    bottom: -8px;
+    left: 8px;
+}
+
+
+.g-row-header div:first-child {
+    width: 20px;
+    position: absolute;
+    bottom: 4px;
+    left: 0;
+}
+
+.g-row-header div:first-child {
+    width: 20px;
+    position: absolute;
+    bottom: 4px;
+    left: 0;
+}
+
+.g-row-header div:last-child {
+    width: 80px;
+    text-align: right;
+    position: absolute;
+    bottom: 4px;
+    right: 50%;
+}
+
+.g-row-header div:last-child span {
+    right: 8px;
+    left: inherit;
+}
