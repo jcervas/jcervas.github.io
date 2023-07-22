@@ -1,0 +1,14 @@
+{
+  "name": "@mcmcclur/nc-congressional-districts",
+  "main": "d5532f9f0e9cbdbc@915.js",
+  "version": "915.0.0",
+  "homepage": "https://observablehq.com/@mcmcclur/nc-congressional-districts",
+  "author": {
+    "name": "Mark McClure",
+    "url": "https://observablehq.com/@mcmcclur"
+  },
+  "type": "module",
+  "peerDependencies": {
+    "@observablehq/runtime": "4"
+  }
+}

@@ -1,0 +1,93 @@
+
+% 
+% 
+% 
+% 
+% 
+% 	Past congressional results alone often are departures from the underlying district partisanship several reasons. The vote share of an incumbent has historically been greater than it is for a non-incumbent or two non-incumbents running for an open seat.
+% %        ================================================================= 
+% %        -- FOOTNOTE -- FOOTNOTE -- FOOTNOTE -- FOOTNOTE -- FOOTNOTE --  %
+% % ------------------------------------------------------------------------
+% 		\footnote{A long literature in political science has evaluated and confirmed the presence and increased incumbency advantage \citep{Abramowitz1991,Levitt1997,Ansolabehere2002b,Gelman_Huang_2008}. Recent scholarship, however, has shown a decrease in the advantage towards zero \citep{Jacobson2015_JOP}.}
+% % ------------------------------------------------------------------------ 
+% %        -- END FOOTNOTE -- END FOOTNOTE -- END FOOTNOTE -- END FOOTNOTE %
+% %        =================================================================
+
+
+
+
+
+%     A well-financed incumbent tends to suppress quality competition \citep{Jacobson2015_JOP}, vulnerable incumbents who can sense the political winds opt against running for re-election \citep{Jacobson_Kernell_1981,Ansolabehere_Snyder_2004_LSQ}, and electoral tides and varying turnout can distort the state-wide average. Midterm elections often have vastly different electorates than presidential elections \citep{Abramowitz_et_al_1986_AJPS}, while the midterm pattern of ``surge and decline'' (what goes up must come down principle) reduces the sitting Presidents' party's vote share \citep{CampbellA1960}. 
+%  \par
+% 	What we are after is a measure of the ``normal vote''. The normal vote is the underlying partisanship of a district \citep{Converse1966}. It is sort of a mystical number since it is uncovered and unobserved, but powerful theoretically. Map builders implicitly assume a normal vote when constructing a district plan. We believe that state-wide elections offer the most useful approximation of the normal vote.
+% %        ================================================================= 
+% %        -- FOOTNOTE -- FOOTNOTE -- FOOTNOTE -- FOOTNOTE -- FOOTNOTE --  %
+% % ------------------------------------------------------------------------
+% 		\footnote{We particularly believe this is true when the votes between elections are highly correlated, and the district-level variation is low, as it was in Pennsylvania from 2012 to 2016. The more stable the electorate is, the more confidence we have that state-wide elections are revealing the normal vote \citep{Ansolabehere_et_al_2000_AJPS}.}
+% % ------------------------------------------------------------------------ 
+% %        -- END FOOTNOTE -- END FOOTNOTE -- END FOOTNOTE -- END FOOTNOTE %
+% %        =================================================================
+% 	 All districts vote on the same candidates; hence outcome affects all voters equally. The effects of incumbency can distort the vote in congressional races in a way that doesn't resemble the actual partisan preferences at the district-level. State-wide elections eliminate the need to impute or otherwise deal with uncontested districts. Taking an average of the state-wide elections provides additional reason to believe it's capturing a normal vote due to a regression to the mean effects. Justices in \textit{Vieth} offered skepticism in using elections that have contrasting results; we do not share this view, instead seeing it as an important source of variation that helps to recognize the underlying partisanship in which \textit{should} be used in measuring bias in districting plans. Additionally, averaging over multiple races and years helps to reduce the bias imposed by candidate effects.
+% \par
+% 	We construct the five-election composite of state-wide elections by aggregating voting district level (precincts) data to the congressional district level.
+
+
+
+
+
+% 	Additionally, each district's outcome is identical to the 2016 congressional district results. Indeed, after accounting for incumbency, our composite measure is remarkably accurate in its predictions of the actual congressional results validating our measure. The average difference between our composite and the congressional results was just 2.16\%. 
+
+
+
+
+% %        ================================================================= 
+% %        -- FOOTNOTE -- FOOTNOTE -- FOOTNOTE -- FOOTNOTE -- FOOTNOTE --  %
+% % ------------------------------------------------------------------------	
+% 	We calculate this average only for districts contested in 2016, since uncontested results have significant deviations. Including the uncontested districts increases this mean difference to just 3.93\%. We believe our composite measure offers better representation of the true partisanship in these districts. Individually, only the Auditor's race correctly predicts all the districts correctly, but by either summing or by taking the average of the five races, both methods correctly predict each district's outcome.
+% % ------------------------------------------------------------------------ 
+% %        -- END FOOTNOTE -- END FOOTNOTE -- END FOOTNOTE -- END FOOTNOTE %
+% %        =================================================================
+
+
+
+
+%     We imputed the values 25\% and 75\% for uncontested or essentially uncontested races. Rather than taking the projected outcome we arrive at from this method as a single value, we looked at the sensitivity of this projection to the empirical range of inter-election swing, simulating outcomes 1,000 times. To arrive at our estimate for inter-election variation that can't be attributed to the normal vote or incumbency advantage, we estimate the equation using congressional elections in Pennsylvania in the 2004-16 time period:
+%         \begin{align*}
+%         \mathrm{Vote}_{ty} = \alpha + \beta_{1} \mathrm{Vote}_{yt-1} + \beta_{2} \mathrm{Incumbency}_{yt} + \beta_{4} \mathrm{Uncontestedness}_y{t} + \epsilon
+%         \end{align*}
+%     We are interested in $\epsilon$, which is the unexplained variance, which includes inter-election swing. We run this equation separately for each of the non-redistricting years and then average the coefficients. We estimate incumbency advantage to average 4.27\% for this time period, while inter-election variance is 4.46\%. When simulating elections, we use the composite as the normal vote, but add in for each district a random draw from a normal distribution centered at the district vote with a standard deviation of $\epsilon$. We can then calculate statistics for each of these simulated elections to find a distribution for each measure of gerrymandering.
+
+
+\par
+%        ================================================================= 
+%        -- FOOTNOTE -- FOOTNOTE -- FOOTNOTE -- FOOTNOTE -- FOOTNOTE --  %
+% ------------------------------------------------------------------------
+%        \footnote{After uniformly shifting each district's composite such that the statewide average equalled the actual 2018 statewide average. The large range is indicative of the number of competitive districts that Republican candidates won. Had we modeled incumbency advantage instead of the `normal vote', the two Republican incumbents who won re-election by less than 2 percentage points, along with the one who won by less than 3 percentage points would have made the actual 9R-9D outcome the likely predicted outcome.}
+% ------------------------------------------------------------------------ 
+%        -- END FOOTNOTE -- END FOOTNOTE -- END FOOTNOTE -- END FOOTNOTE %
+%        =================================================================
+
+
+%        ================================================================= 
+%        -- FOOTNOTE -- FOOTNOTE -- FOOTNOTE -- FOOTNOTE -- FOOTNOTE --  %
+% ------------------------------------------------------------------------
+%		\footnote{Whether we take the sum of the five elections or average the five elections, both methods deliver the same relative distributions.}
+% ------------------------------------------------------------------------ 
+%        -- END FOOTNOTE -- END FOOTNOTE -- END FOOTNOTE -- END FOOTNOTE %
+%        ================================================================= 
+
+
+%        ================================================================= 
+%        -- FOOTNOTE -- FOOTNOTE -- FOOTNOTE -- FOOTNOTE -- FOOTNOTE --  %
+% ------------------------------------------------------------------------
+%		\footnote{We can only validate our measure for the 2016 election and only for the 2011 enacted plan. For all the remedial plans we are analyzing, the composite is our ``best guess''. We have to make some assumptions about state and district inter-election swings. For simplicity, we assume that all districts have a national shift equal to the state-level swing, ie, difference from the 2016 elections. Later in the paper, we conduct simulated elections that vary the district level variability.}
+% ------------------------------------------------------------------------ 
+%        -- END FOOTNOTE -- END FOOTNOTE -- END FOOTNOTE -- END FOOTNOTE %
+%        =================================================================
+
+
+
+
+
+
+
