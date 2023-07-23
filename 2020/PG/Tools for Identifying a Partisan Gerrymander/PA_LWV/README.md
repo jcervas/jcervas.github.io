@@ -1,4 +1,5 @@
-# TOOLS FOR IDENTIFYING A PARTISAN GERRYMANDER
+# Tools For Identifying A Partisan Gerrymander
+
 *JONATHAN R. CERVAS* [^*]
 
 *BERNARD GROFMAN* [^*]
