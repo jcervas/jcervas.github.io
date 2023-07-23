@@ -1,8 +1,8 @@
 # Tools For Identifying A Partisan Gerrymander
 
-*JONATHAN R. CERVAS* [^*]
+*Jonathan Cervas* [^*]
 
-*BERNARD GROFMAN* [^*]
+*Bernard Grofman* [^*]
 
 [^*]: UNIVERSITY OF CALIFORNIA, IRVINE_
 
