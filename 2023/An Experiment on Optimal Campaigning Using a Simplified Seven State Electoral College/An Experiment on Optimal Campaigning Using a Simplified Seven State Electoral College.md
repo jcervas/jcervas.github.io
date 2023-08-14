@@ -956,7 +956,7 @@ In class you will pair up and play the game. You may play multiple games
 against different opponents to determine who can spend his or her money
 most effectively.
 
-## Figure 1 
+## Figure 1
 
 <img src="./attachments/myfilename/media/image2.png"
 style="width:6.5in;height:3.30347in"
