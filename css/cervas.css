@@ -778,14 +778,14 @@ section {
     /*    display: table-cell;*/
 }
 
-.container_first_small {
+/*.container_first_small {
     height: 5vh;
-}
+}*/
 
 @media (min-width:48rem) {
-    .container_first_small {
+    /*.container_first_small {
         height: 20vh;
-    }
+    }*/
 
     .content_min {
         display: table-row;
@@ -987,6 +987,4 @@ section {
         .text_title {
             padding-left: 20%;
         }
-
-        /*.container_first {height: 700px;}*/
     }
