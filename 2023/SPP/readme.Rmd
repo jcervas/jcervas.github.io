@@ -641,25 +641,16 @@ gop_y_axis <- c(
 )
 
 # Create the initial plot without axes and without the box
-seatsvotes.plot(
-  main = "A", 
-  xlab = "", 
-  ylab = "Total Votes",
-  xlim = c(0, 4000),
-  xaxis = FALSE, 
-  yaxis = FALSE,
-  prop.line = FALSE
+plot(
+  type = "l",
+  x = 1:dim(cnty)[1],
+  y = dem_cumsum/max(dem_cumsum),
+  col = "blue",
+  axes = FALSE,
+  xlab = "",
+  ylab = "",
+  # ylab = "Percent of Total Votes",
 )
-# plot(
-#   type = "l",
-#   x = 1:dim(cnty)[1],
-#   y = dem_cumsum/max(dem_cumsum),
-#   col = "blue",
-#   xlim = c(0, 4000),
-#   axes = FALSE,
-#   xlab = "",
-#   ylab = "Percent of Total Votes",
-# )
 # Add the blue line
 lines(
   x = 1:dim(cnty)[1],
@@ -675,7 +666,7 @@ lines(
 # Add x-axis with custom labels
 axis(
   side = 1,
-  at = c(1000, 2700),
+  at = c(500, 2700),
   labels = c("Smallest Counties", "Largest Counties"),
   tcl = 0,
   lwd=0
@@ -687,7 +678,7 @@ axis(
   las=2
 )
 abline(
-  h=seq(0,1,.25),
+  h=seq(0.25,0.75,0.25),
   lty=3,
   col="gray70")
 abline(
@@ -699,14 +690,15 @@ points(
   y=dem_y_axis,
   col="blue",
   pch=16,
-  cex=2.5)
+  cex=1.5)
 points(
   x=gop_x_axis,
   y=gop_y_axis,
   col="red",
   pch=16,
-  cex=2.5)
+  cex=1.5)
 ```
+
 
 
 
