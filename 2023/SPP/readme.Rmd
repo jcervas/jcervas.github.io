@@ -225,34 +225,39 @@ plot(
 abline(0,1)
 ```
 
-Figure 1 - 2020 Presidential Election Results, by county
-```{r figure-1}
+## Figure 3 - Histogram of the 2020 Presidential Election Results, by county
+```{r fig-3}
 svglite::svglite(paste0(dir.figures,"/2020county.svg"), width=8, height=5)
   par(mfrow=c(2,1),
     mar = c(1, 0.1, 1, 0.1))
-    hist(county.2020$per_dem, 
+    hist_data <- hist(county.2020$per_dem, 
       xlim=c(0,1), 
       breaks=101, 
-      col="white", 
-      border="#000000", 
+      col="#d5d5d5", 
+      border="#FFFFFF", 
       main="Unweighted", 
       axes=F, 
       xlab="", 
       ylab="")
-      abline(v=0.5, lty=1, lwd=2)
+    segments(x0=0.5, y0=0, x1=0.5, y1=95, lty=1, lwd=2)
+# Add labels to each bar
+mids <- hist_data$mids # The midpoints of each bin
+counts <- hist_data$counts # The count of observations in each bin
+    text(mids, -5, labels = counts, pos = 3, cex = 0.2)
   par(mar = c(2, 0.1, 1, 0.1))
     hist(rep(county.2020$per_dem, county.2020$total_votes), 
       xlim=c(0,1), 
       breaks=101, 
-      col="white", 
-      border="#000000",
+      col="#d5d5d5", 
+      border="#FFFFFF", 
       main="Weighted", 
       axes=F, 
       xlab="", 
       ylab="")
-      abline(v=0.5, lty=1, lwd=2)
+      segments(x0=0.5, y0=0, x1=0.5, y1=6000000, lty=1, lwd=2)
       axis(side=1, at=c(0,0.5,1), labels=c("0%", "50%", "100%"))
-      mtext("More Democratic    ", side=1, line=0, adj=1)
+      mtext("More Democratic", side=1, line=0, adj=0.95)
+      mtext("More Republican", side=1, line=0, adj=0.05)
 dev.off()
 ```
 
@@ -602,24 +607,6 @@ layout_matrix <- matrix(c(1, 1, 2), nrow = 3, ncol = 1, byrow = TRUE)
 
 # Set the layout
 layout(layout_matrix)
-
-# barplot(
-#   cnty$total_votes, 
-#   names.arg = cnty$NAME,
-#   col = ifelse(cnty$votes_dem > cnty$votes_gop, "#1375b7","#c93135"),
-#   border=NA,
-#   xlab = "", 
-#   ylab = "Total Votes",
-#   main = "",
-#   axes=F,
-#   xaxt="n")
-# x_ticks <- barplot(cnty$total_votes, plot = FALSE)
-# ## Calculate the center of the plot
-#   plot_center <- mean(par("usr")[3:4])
-
-# axis(side=2, las=2, at=seq(0,4000000, 1000000), paste0(seq(0,4,1),"mil"))
-# abline(v = x_ticks[3153-150], lty = "dashed", col = "black")
-# text(x = x_ticks[3153-150], y = plot_center, labels = "Half of voters live in counties\n on either side of line", srt = 90)
 
 # Top Panel
 barplot(
