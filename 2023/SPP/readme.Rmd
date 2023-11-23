@@ -10,11 +10,8 @@ output:
     variant: gfm
 ---
 
-# Replication Code for Massive Election Fraud?: A Compendium of Statistically Fallacies in Claims about the 2020 Presidential Election
 
-By: Bernard Grofman & Jonathan Cervas
-
-Conditionally Accepted, Minor Revisions, Statistics and Public Policy
+Accepted, Statistics and Public Policy
 
 ---
 
@@ -42,12 +39,12 @@ source("https://raw.githubusercontent.com/jcervas/R-Functions/main/GERRYfunction
 source("https://raw.githubusercontent.com/jcervas/R-Functions/main/seatsvotes.R")
 source("https://raw.githubusercontent.com/jcervas/R-Functions/main/sv-hyp.R")
 ```
-Set years examined
+### Set years examined
 ```{r years}
 years <- seq(1868,2020,4)
 ```
 
-# Load Data
+## Load Data
 ```{r data}
 # source("https://raw.githubusercontent.com/jcervas/2020-Elections/main/NYT_json.R")
 ## FIPS Codes
@@ -69,7 +66,7 @@ pres.county.2016 <- read.csv("https://raw.githubusercontent.com/tonmcg/US_County
 pres.county.2020 <- read.csv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv")
 ```
 
-Read 2020 Presidential election data by county, via: https://observablehq.com/@charliesmart/dorling-cartogram
+### Read 2020 Presidential election data by county, via: https://observablehq.com/@charliesmart/dorling-cartogram
 ```{r pres-2020-county}
 county.2020 <- read.csv("/Users/cervas/My Drive/GitHub/Data Files/GIS/NYT/2020/2020_county_results.csv")
   county.2020$GEOID <- leadingZeroes(county.2020$GEOID, d=5)
@@ -85,15 +82,14 @@ kent <- read.csv("/Users/cervas/My Drive/GitHub/jcervas.github.io/2023/SPP/data/
 
 ## Read Shapefiles
 
-US Census Bureau's County Shapefile
+### US Census Bureau's County Shapefile
 ```{r GIS-data}
 counties.tiger <- rgdal::readOGR(paste0(dir.git, "/GIS/Tigerline/TIGER2020PL/counties/tl_2020pl_counties_simplified/tl_2020pl_counties_simplified.shp"))
 
 tiger.cart <- rgdal::readOGR(paste0(dir.git, "/GIS/Tigerline/TIGER2020PL/counties-cartographic/cb_2020_us_county_500k_simlified_projected.json"))
 ```
 
-
-NYTs County Shapefile
+### NYTs County Shapefile
 ```{r NYTs-Shapefile}
 counties.shp <- rgdal::readOGR(paste0(dir.git, "/GIS/NYT/2020/counties-albers-med/counties.shp"))
 state_labels <- rgdal::readOGR(paste0(dir.git, "/GIS/NYT/2020/counties-albers-med/state_labels.shp"))
@@ -101,7 +97,7 @@ states <- rgdal::readOGR(paste0(dir.git, "/GIS/NYT/2020/counties-albers-med/stat
 state_lines <- rgdal::readOGR(paste0(dir.git, "/GIS/NYT/2020/counties-albers-med/statelines.shp"))
 ```
 
-Clean data
+## Clean data
 ```{r data-cleaning}
 ## Presidential results by Congressional District
   presCD$ed[presCD$ed > 54] <- 1 # At large districts are `98` in dataset
@@ -115,7 +111,7 @@ cd.elections <- dplyr::inner_join(houseCD,presCD)
   head(cd.elections)
 ```
 
-Compare 2016 and 2018 elections
+### Compare 2016 and 2018 elections
 ```{r compare-elections}
 presCD.2016 <- presCD[presCD$year %in% "2016",]
 houseCD.2016 <- houseCD[houseCD$year %in% "2016",]
@@ -131,18 +127,18 @@ sum(1 * (elec.2016.2016$demCD > 0.5 & elec.2016.2016$demPres < 0.5), na.rm=T) # 
 sum(1 * (elec.2016.2016$demCD < 0.5 & elec.2016.2016$demPres > 0.5), na.rm=T) # Clinton win, gop wins in 2018
 ```
 
-Bias in the 2020 US House of Representatives
+### Bias in the 2020 US House of Representatives
 ```{r seats-votes}
 seatsvotes(DEMvotes=house$dem, REPvotes=house$gop, year="2020", vBar.range = c(0.45, 0.55))
 ```
 
-Alternative Pres without NY and CA
+### Alternative Pres without NY and CA
 ```{r AltEC}
 pres.alt <- pres[!pres$state %in% c("New York", "California"),]
   head(pres.alt)
 ```
 
-Coattails
+### Coattails
 ```{r coattails}
 house.del$coattails <- as.numeric(ifelse(house.del$pres_party==1, house.del$DemChange, house.del$RepChange))
 
@@ -150,7 +146,7 @@ pres.del <- house.del[(house.del$Congress %% 2) %in% 1,]
 midterm.del <- house.del[(house.del$Congress %% 2) %in% 0,]
 ```
 
-Plot Coattails over time
+### Plot Coattails over time (not used)
 ```{r coattails-plot}
 plot(pres.del$Congress, pres.del$coattails/pres.del$seats, axes=F, xlab="", ylab="Presidential Coattails", col="#33333333")
 axis(side=2, las=1, at=seq(-0.2,0.2, 0.05), labels=paste0(seq(-0.2,0.2, 0.05) * 100, "%"), cex.axis=0.5)
@@ -159,14 +155,14 @@ lines(lowess(pres.del$coattails/pres.del$seats ~ pres.del$Congress))
 abline(h=0, lty=3)
 ```
 
-2016 Presidential elections by county
+### 2016 Presidential elections by county
 ```{r pres-county-2026}
 pres.county.2016 <- data.frame(fips=leadingZeroes(pres.county.2016$combined_fips,5), dem2016=pres.county.2016$votes_dem, gop2016=pres.county.2016$votes_gop)
   pres.county.2016$total <- pres.county.2016$dem2016pres.county.2016$gop2016
   tail(pres.county.2016)
 ```
 
-2020 Presidential elections by county
+### 2020 Presidential elections by county
 ```{r pres-county-2020}
 pres.cnty.2020 <- data.frame(fips=leadingZeroes(pres.county.2020$county_fips,5), dem2020=pres.county.2020$votes_dem, gop2020=pres.county.2020$votes_gop)
   pres.county.2020$total <- pres.county.2020$dem2020pres.county.2020$gop2020
@@ -186,13 +182,13 @@ pres.top.cnty.rev <- pres.cnty.2020.increase[cumsum(pres.cnty.2020.increase$tota
   dim(pres.top.cnty.rev)[1] # 3001 have the other half
 ```
 
-Population of top 150 counties and bottom 3001 counties
+### Population of top 150 counties and bottom 3001 counties
 ```{r top150}
   sum(pres.cnty.2020.increase$total[1:3001])
   sum(pres.cnty.2020.decrease$total[1:150])
 ```
 
-Compare 2016 and 2020 by county
+### Compare 2016 and 2020 by county (not used)
 ```{r compare-16-20}
 a <- dplyr::full_join(pres.county.2016, pres.cnty.2020, by="fips")
   tail(a)
@@ -209,7 +205,7 @@ abline(0,1)
 summary(lm(two_party(counties.16.20$dem2020,counties.16.20$gop2020) ~ two_party(counties.16.20$dem2016,counties.16.20$gop2016)))
 ```
 
-This time with raw votes
+### This time with raw votes (not used)
 ```{r compare-raw}
 plot(
   counties.16.20$dem2016-counties.16.20$gop2016, 
@@ -256,7 +252,7 @@ counts <- hist_data$counts # The count of observations in each bin
 dev.off()
 ```
 
-Biden Counties vs. Trump Counties
+### Biden Counties vs. Trump Counties
 ```{r D-R-counties}
 ## Biden Counties
 county.2020.biden <- county.2020[county.2020$votes_dem > county.2020$votes_gop,]
@@ -274,7 +270,7 @@ county.2020.trump <- county.2020[county.2020$votes_dem < county.2020$votes_gop,]
   county.2020[order(county.2020$votes_gop, decreasing=T),][1:10,]
 ```
 
-Statewide Vote
+### Statewide Vote
 ```{r statewide-vote}
 state.2020 <- aggregate(
   data.frame(
@@ -290,7 +286,7 @@ state.2020 <- aggregate(
 sum((4263443 > state.2020$total_votes) * 1)
 ```
 
-Combine 2020 data with Shapefiles
+### Combine 2020 data with Shapefiles
 ```{r GIS-data-combine}
 counties.shp@data <- dplyr::left_join(counties.shp@data, county.2020, by=c("GEOID"))
 counties.tiger@data <- dplyr::left_join(counties.tiger@data, county.2020, by=c("GEOID20"="GEOID"))
@@ -302,7 +298,7 @@ rgdal::writeOGR(counties.shp, dir.gis, "us2020", driver="ESRI Shapefile", overwr
 nation.shp <- rmapshaper::ms_dissolve(states)
 ```
 
-Exit Poll Data 
+### Exit Poll Data 
 ```{r exit-polls}
 groups <- c(
   "White",
@@ -338,7 +334,7 @@ exit.2016
 exit.2020
 ```
 
-Demographic and Election Results
+### Demographic and Election Results
 ```{r}
 ## https://en.wikipedia.org/wiki/2016_United_States_presidential_election
 trump_votes_16 <- 62984828
@@ -386,7 +382,7 @@ totalwhite20 <- rbind(
 
 ```
 
-### Table 4 - Change in Non-Hispanic White Votes between 2016 and 2020
+## Table 4 - Change in Non-Hispanic White Votes between 2016 and 2020
 ```{r tab-4}
 tab4 <- rbind(
   cbind(
@@ -419,7 +415,8 @@ tab4
 ```
 
 # Maps
-Set Colors
+
+### Set Colors
 ```{r colors}
 # dodgerblue.t <- rgb(30, 144, 255, 127.5, max =255)
 # dodgerblue <- rgb(30, 144, 255, max =255)
@@ -432,7 +429,7 @@ colors.map <- c("#c93135","#1375b7")
 ```
 
 
-Create Choropleth inputs
+### Create Choropleth inputs
 ```{r choropleth}
   pop.brks <- seq(0,1,0.5)
   counties.shp@data$col <- colors.map[findInterval(counties.shp@data$per_dem, vec = pop.brks)]
@@ -501,7 +498,7 @@ scaleOpacitySqrt(
 # pop.sizes <- sqrt(absmargin) * 0.005
 ```
 
-Create Maps
+# Create Maps
 ```{r map-create}
 ## If we wanted to make a .png file
 # png(paste0("us2020.png"), 
@@ -511,7 +508,7 @@ Create Maps
 ## To make a *.svg file
 ```
 
-### Figure 4 - Choropleth Plot, 2020 Presidential Election by county
+## Figure 4 - Choropleth Plot, 2020 Presidential Election by county
 ```{r fig-4}
 svglite::svglite(paste0(dir.figures,"/fig4.svg"))
 par(mfrow=c(1,1),
@@ -593,7 +590,7 @@ rgdal::writeOGR(counties.shp.cart1, dir.gis, "counties.shp.cart1", driver="ESRI 
 rgdal::writeOGR(counties.shp.cart2, dir.gis, "counties.shp.cart2", driver="ESRI Shapefile", overwrite_layer=TRUE)
 ```
 
-## Setup Figure 2 plot data
+### Setup Figure 2 plot data
 ```{r county-size-plot}
 cnty <- county.2020[order(county.2020$total_votes),]
 cnty$pop_cumsum <- cumsum(cnty$total_votes)
@@ -642,7 +639,7 @@ gop <- cnty$votes_gop
 totalvotes <- dem + gop
 ```
 
-### Figure 2 – Votes in each County
+## Figure 2 – Votes in each County
 ```{r fig-2}
 svglite::svglite(paste0(dir.figures,"/fig2.svg"), width = 8,height = 5)
 par(mfrow=c(2,1),
@@ -738,7 +735,7 @@ abline(
 dev.off()
 ```
 
-## Alternative bar plot (not used)
+#### Alternative bar plot (not used)
 ```{r alt-bar-plot, eval=F}
 # Create example data
 dem <- cnty$votes_dem
@@ -779,8 +776,7 @@ dev.off()
 ```
 
 
-## Summary of Kent County, Michigan precinct data
-
+### Summary of Kent County, Michigan precinct data
 ```{r kent}
 head(
   data.frame(
@@ -804,8 +800,10 @@ gop_reg <- lm(kent$GOP_Split ~ kent$GOP_Straight)
 dem_reg <- lm(kent$DEM_Split ~ kent$DEM_Straight)
 summary(gop_reg)
 summary(dem_reg)
+```
 
-### Figure 6 – Kent County, Michigan 2020 election data plotted as Ayyadurai shows it.
+## Figure 6 – Kent County, Michigan 2020 election data plotted as Ayyadurai shows it.
+```{r fig6}
 svglite::svglite(paste0(dir.figures,"/fig6.svg"), width = 8,height = 5)
   par(mfrow = c(1, 2))
   par(
@@ -881,7 +879,7 @@ svglite::svglite(paste0(dir.figures,"/fig6.svg"), width = 8,height = 5)
 dev.off()
 ```
 
-### Figure 7 – Kent County, Michigan Precinct comparison between Trump Straight-ticket and Trump Split-Ticket Support
+## Figure 7 – Kent County, Michigan Precinct comparison between Trump Straight-ticket and Trump Split-Ticket Support
 ```{r kent-scatter}
 svglite::svglite(paste0(dir.figures,"/fig7.svg"), width = 8,height = 5)
   par(mfrow=c(1,2))
@@ -920,10 +918,7 @@ svglite::svglite(paste0(dir.figures,"/fig7.svg"), width = 8,height = 5)
 dev.off()
 ```
 
-kent$GOP_Straight
-kent$DEM_Straight
-kent$GOP_Split
-kent$DEM_Split
+#### Toy Example (not used)
 ```{r toy-example}
 # Generating the first set of random numbers
 random_numbers1 <- runif(100, min = 0.35, max = 0.65)
@@ -1004,7 +999,6 @@ c(bday[10],bday[23],bday[68])
 ```
 
 #### Birthday Paradox Plot (not used)
-
 ```{r, echo=F}
 par(oma = c(0, 2, 0, 0))
 seatsvotes.plot(
