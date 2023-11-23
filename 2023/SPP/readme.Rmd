@@ -5,6 +5,7 @@ author:
 - "Jonathan Cervas"
 - "Bernard Grofman"
 output:
+  pdf_document: default
   md_document: 
     variant: gfm
 ---
