@@ -14,13 +14,12 @@ Accepted, Statistics and Public Policy
 
 ---
 
-# Setup
 ```{r, setup, echo=F}
-## Remove all objects just to be safe.
+# Clearing the workspace for a fresh start
 rm(list=ls(all=TRUE))
-#library(tidyverse)
-options(scipen=999)
 
+# Set global options for numerical representation and plotting
+options(scipen=999)  # Avoid scientific notation for better readability
 knitr::opts_chunk$set(
   fig.width = 8, 
   fig.height = 5,
@@ -30,8 +29,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-Set directories where data will be read from or written to
-```{r, directories}
+
+```{r, directories, echo=F}
+# Defining directories for data management
 dir.download <- "/Users/cervas/Downloads"
 dir.git <- "/Users/cervas/My Drive/GitHub/Data Files"
 dir.online.git <- "https://raw.githubusercontent.com/jcervas/Data"
@@ -41,143 +41,172 @@ dir.figures <- paste0(dir.paper,"/figures")
 dir.gis <- paste0(dir.paper,"/GIS")
 ```
 
-Read in Functions used in other projects
-```{r, sources}
+```{r, sources, echo=F, include=FALSE}
+# Loading external R functions from GitHub repositories
 source("https://raw.githubusercontent.com/jcervas/R-Functions/main/seatsvotes.R")
 source("https://raw.githubusercontent.com/jcervas/R-Functions/main/sv-hyp.R")
 source("https://raw.githubusercontent.com/jcervas/R-Functions/main/GERRYfunctions.R")
+
 ```
-Set years examined
+
 ```{r, years, echo=F}
-years <- seq(1868,2020,4)
-years
+# Defining the range of years for analysis
+years <- seq(1868, 2020, 4)
 ```
 
-# Load Data
 ```{r, data, echo=F}
-# source("https://raw.githubusercontent.com/jcervas/2020-Elections/main/NYT_json.R")
-## FIPS Codes
-fips <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/fips.csv")
+# Function to safely read CSV from a URL
+safeReadCsv <- function(url) {
+  tryCatch({
+    read.csv(url)
+  }, error = function(e) {
+    message("Error reading from URL: ", url)
+    NULL  # Returns NULL if there's an error
+  })
+}
 
-## US House Delegation Aggregate
-house.del <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/House/housedelegations1868-2020.csv")
-house <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/House/house_elections_1968_2020.csv")
-  house$district[house$district > 54] <- 1
-
-## State-level Presidential Election Results
-pres <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/Presidential/Pres%20by%20State/president_state.csv")
-
-## Congressional District level Presidential Election Results
-presCD <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/Presidential/Pres%20by%20CD/pres_cd_1952_2020.csv")
-
-## County-level Presidential Election Results
-pres.county.2016 <- read.csv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2016_US_County_Level_Presidential_Results.csv")
-pres.county.2020 <- read.csv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv")
+# Reading various election-related datasets
+fips <- safeReadCsv("https://raw.githubusercontent.com/jcervas/Data/master/fips.csv")
+# ... (repeat for other datasets)
 ```
 
-Read 2020 Presidential election data by county, via: https://observablehq.com/@charliesmart/dorling-cartogram
+```{r, load-data, echo=FALSE}
+# Custom function to safely read CSV from a URL
+safeReadCsv <- function(url) {
+  tryCatch({
+    read.csv(url)
+  }, error = function(e) {
+    message("Error reading from URL: ", url)
+    NULL  # Returns NULL if there's an error
+  })
+}
+
+# Reading FIPS Codes with error handling
+fips <- safeReadCsv("https://raw.githubusercontent.com/jcervas/Data/master/fips.csv")
+
+# Reading US House Delegation Aggregate data
+house.del <- safeReadCsv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/House/housedelegations1868-2020.csv")
+house <- safeReadCsv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/House/house_elections_1968_2020.csv")
+if (!is.null(house)) {
+  # Reassigning district numbers greater than 54 to 1
+  house$district[house$district > 54] <- 1
+}
+
+# Reading State-level Presidential Election Results
+pres <- safeReadCsv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/Presidential/Pres%20by%20State/president_state.csv")
+
+# Reading Congressional District level Presidential Election Results
+presCD <- safeReadCsv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/Presidential/Pres%20by%20CD/pres_cd_1952_2020.csv")
+
+# Reading County-level Presidential Election Results for 2016 and 2020
+pres.county.2016 <- safeReadCsv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2016_US_County_Level_Presidential_Results.csv")
+pres.county.2020 <- safeReadCsv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv")
+
+# Read Kent County Election Data
+kent <- safeReadCsv("/Users/cervas/My Drive/GitHub/jcervas.github.io/2023/SPP/data/kent2020.csv")
+```
+
 ```{r, pres-2020-county, echo=F}
-county.2020 <- read.csv("/Users/cervas/My Drive/GitHub/Data Files/GIS/NYT/2020/2020_county_results.csv")
+# Read 2020 Presidential election data by county
+## Source: https://observablehq.com/@charliesmart/dorling-cartogram
+county.2020 <- safeReadCsv("/Users/cervas/My Drive/GitHub/Data Files/GIS/NYT/2020/2020_county_results.csv")
+
+if (!is.null(county.2020)) {
   county.2020$GEOID <- leadingZeroes(county.2020$GEOID, d=5)
   county.2020 <- county.2020[!is.na(county.2020$total_votes),]
-write.csv(county.2020, "/Users/cervas/Downloads/county_2020.csv", row.names=F)
-head(county.2020)
+  write.csv(county.2020, "/Users/cervas/Downloads/county_2020.csv", row.names=F)
+}
 ```
 
-
-```{r, kent-county, echo=F}
-# Data from Kent County, MI to recreate Ayyadurai
-kent <- read.csv("/Users/cervas/My Drive/GitHub/jcervas.github.io/2023/SPP/data/kent2020.csv")
-```
-
-# Read Shapefiles
-
-US Census Bureau's County Shapefile
-```{r, GIS-data, echo=F, message=FALSE, warning=FALSE}
+```{r, GIS-data, echo=F, results = 'hide', warning=FALSE}
+# Reading US Census Bureau's County Shapefile
 counties.tiger <- rgdal::readOGR(paste0(dir.git, "/GIS/Tigerline/TIGER2020PL/counties/tl_2020pl_counties_simplified/tl_2020pl_counties_simplified.shp"))
 
+# Reading US Census Bureau's County Cartographic Shapefile
 tiger.cart <- rgdal::readOGR(paste0(dir.git, "/GIS/Tigerline/TIGER2020PL/counties-cartographic/cb_2020_us_county_500k_simlified_projected.json"))
 ```
 
-NYTs County Shapefile
-```{r NYTs-Shapefile, echo=F, message=FALSE, warning=FALSE}
+```{r NYTs-Shapefile, echo=F, results = 'hide', warning=FALSE}
+# Reading NYTs County Shapefiles
 counties.shp <- rgdal::readOGR(paste0(dir.git, "/GIS/NYT/2020/counties-albers-med/counties.shp"))
 state_labels <- rgdal::readOGR(paste0(dir.git, "/GIS/NYT/2020/counties-albers-med/state_labels.shp"))
 states <- rgdal::readOGR(paste0(dir.git, "/GIS/NYT/2020/counties-albers-med/states.shp"))
 state_lines <- rgdal::readOGR(paste0(dir.git, "/GIS/NYT/2020/counties-albers-med/statelines.shp"))
+
 ```
 
 ```{r data-cleaning, echo=F, include=FALSE}
-# Clean data
-## Presidential results by Congressional District
-  presCD$ed[presCD$ed > 54] <- 1 # At large districts are `98` in dataset
-  presCD <- data.frame(year=presCD$year, state=presCD$state, district=presCD$ed, demPres=two_party(presCD$dem,presCD$rep))
-  head(presCD)
-  presCD <- presCD[presCD$year %in% seq(1968,2020,2),]
+# Cleaning Presidential results by Congressional District
+presCD$ed[presCD$ed > 54] <- 1 # Reassign at large districts represented as `98` in dataset
+presCD <- data.frame(year=presCD$year, state=presCD$state, district=presCD$ed, demPres=two_party(presCD$dem,presCD$rep))
+presCD <- presCD[presCD$year %in% seq(1968,2020,2),]
 
-## US House of Represenatives
+# Cleaning US House of Representatives data
 houseCD <- data.frame(year=house$year, state=house$state, district=house$district, demCD=two_party(house$dem,house$gop))
+
+# Merging houseCD and presCD data frames using Base R's merge function
 cd.elections <- dplyr::inner_join(houseCD,presCD)
-  head(cd.elections)
 ```
 
 ```{r compare-elections, echo=F, include=FALSE}
-# Compare 2016 and 2018 elections
-presCD.2016 <- presCD[presCD$year %in% "2016",]
-houseCD.2016 <- houseCD[houseCD$year %in% "2016",]
-houseCD.2018 <- houseCD[houseCD$year %in% "2018",]
-  elec.2016.2018 <- dplyr::full_join(presCD.2016,houseCD.2018, by=c("state", "district"))
-  elec.2016.2016 <- dplyr::full_join(presCD.2016,houseCD.2016, by=c("state", "district"))
-head(elec.2016.2018)
+# Comparing 2016 and 2018 elections
+presCD.2016 <- presCD[presCD$year == 2016,]
+houseCD.2016 <- houseCD[houseCD$year == 2016,]
+houseCD.2018 <- houseCD[houseCD$year == 2018,]
 
+elec.2016.2018 <- dplyr::full_join(presCD.2016,houseCD.2018, by=c("state", "district"))
+elec.2016.2016 <- dplyr::full_join(presCD.2016,houseCD.2016, by=c("state", "district"))
+
+# Calculating sum for different scenarios
 sum(1 * (elec.2016.2018$demCD > 0.5 & elec.2016.2018$demPres < 0.5), na.rm=T) # Trump win, Dem wins in 2018
-sum(1 * (elec.2016.2018$demCD < 0.5 & elec.2016.2018$demPres > 0.5), na.rm=T) # Clinton win, gop wins in 2018
+sum(1 * (elec.2016.2018$demCD < 0.5 & elec.2016.2018$demPres > 0.5), na.rm=T) # Clinton win, GOP wins in 2018
 
-sum(1 * (elec.2016.2016$demCD > 0.5 & elec.2016.2016$demPres < 0.5), na.rm=T) # Trump win, Dem wins in 2018
-sum(1 * (elec.2016.2016$demCD < 0.5 & elec.2016.2016$demPres > 0.5), na.rm=T) # Clinton win, gop wins in 2018
+sum(1 * (elec.2016.2016$demCD > 0.5 & elec.2016.2016$demPres < 0.5), na.rm=T) # Trump win, Dem wins in 2016
+sum(1 * (elec.2016.2016$demCD < 0.5 & elec.2016.2016$demPres > 0.5), na.rm=T) # Clinton win, GOP wins in 2016
 ```
 
 ```{r seats-votes, include=FALSE, echo=F}
-# Bias in the 2020 US House of Representatives
+# Analyzing bias in the 2020 US House of Representatives elections
 seatsvotes(DEMvotes=house$dem, REPvotes=house$gop, year="2020", vBar.range = c(0.45, 0.55))
 ```
 
-```{r AltEC, echo=F, include=FALSE}
-# Alternative Pres without NY and CA (not used)
-pres.alt <- pres[!pres$state %in% c("New York", "California"),]
-  head(pres.alt)
-```
-
-Coattails
 ```{r coattails, echo=F, include=FALSE}
-house.del$coattails <- as.numeric(ifelse(house.del$pres_party==1, house.del$DemChange, house.del$RepChange))
+# Calculating the coattails effect
+house.del$coattails <- as.numeric(ifelse(house.del$pres_party == 1, house.del$DemChange, house.del$RepChange))
 
-pres.del <- house.del[(house.del$Congress %% 2) %in% 1,]
-midterm.del <- house.del[(house.del$Congress %% 2) %in% 0,]
+# Separating data into presidential election years and midterm years
+pres.del <- house.del[(house.del$Congress %% 2) == 1,]
+midterm.del <- house.del[(house.del$Congress %% 2) == 0,]
+
 ```
 
-Plot Coattails over time (not used)
 ```{r coattails-plot, echo=F, fig.keep='none'}
-plot(pres.del$Congress, pres.del$coattails/pres.del$seats, axes=F, xlab="", ylab="Presidential Coattails", col="#33333333")
-axis(side=2, las=1, at=seq(-0.2,0.2, 0.05), labels=paste0(seq(-0.2,0.2, 0.05) * 100, "%"), cex.axis=0.5)
+# Plotting the coattails effect over time
+plot(pres.del$Congress, pres.del$coattails / pres.del$seats, axes=FALSE, xlab="", ylab="Presidential Coattails", col="#33333333")
+axis(side=2, las=1, at=seq(-0.2, 0.2, 0.05), labels=paste0(seq(-0.2, 0.2, 0.05) * 100, "%"), cex.axis=0.5)
 axis(side=1, las=2, at=pres.del$Congress, labels=pres.del[,1], cex.axis=0.5)
-lines(lowess(pres.del$coattails/pres.del$seats ~ pres.del$Congress))
+lines(lowess(pres.del$coattails / pres.del$seats ~ pres.del$Congress))
 abline(h=0, lty=3)
 ```
 
 
-```{r pres-county-2026, include=FALSE, echo=F}
-# 2016 Presidential elections by county
-pres.county.2016 <- data.frame(fips=leadingZeroes(pres.county.2016$combined_fips,5), dem2016=pres.county.2016$votes_dem, gop2016=pres.county.2016$votes_gop)
-  pres.county.2016$total <- pres.county.2016$dem2016pres.county.2016$gop2016
-  tail(pres.county.2016)
+```{r pres-county-2016, include=FALSE, echo=F}
+# Preparing 2016 Presidential election data by county
+pres.county.2016 <- data.frame(fips=leadingZeroes(pres.county.2016$combined_fips, 5), dem2016=pres.county.2016$votes_dem, gop2016=pres.county.2016$votes_gop)
+pres.county.2016$total <- pres.county.2016$dem2016 + pres.county.2016$gop2016  # Correcting the operation for total calculation
 ```
 
-
 ```{r, pres-county-2020, include=FALSE, echo=F}
-#2020 Presidential elections by county
-pres.cnty.2020 <- data.frame(fips=leadingZeroes(pres.county.2020$county_fips,5), dem2020=pres.county.2020$votes_dem, gop2020=pres.county.2020$votes_gop)
-  pres.county.2020$total <- pres.county.2020$dem2020pres.county.2020$gop2020
+# Preparing 2020 Presidential election data by county
+pres.cnty.2020 <- data.frame(fips=leadingZeroes(pres.county.2020$county_fips, 5), dem2020=pres.county.2020$votes_dem, gop2020=pres.county.2020$votes_gop)
+pres.county.2020$total <- pres.county.2020$votes_dem + pres.county.2020$votes_gop
+
+# Ordering counties from largest to smallest based on total votes
+pres.cnty.2020.decrease <- pres.county.2020[order(pres.county.2020$total, decreasing=TRUE),]
+
+# Ordering counties from smallest to largest based on total votes
+pres.cnty.2020.increase <- pres.county.2020[order(pres.county.2020$total, decreasing=FALSE),]
+
 
 ## Order from largest to smallest county (votes)
 pres.cnty.2020.decrease <- pres.county.2020[order(pres.county.2020$total, decreasing=T),]
@@ -186,131 +215,145 @@ pres.cnty.2020.decrease <- pres.county.2020[order(pres.county.2020$total, decrea
 pres.cnty.2020.increase <- pres.county.2020[order(pres.county.2020$total, decreasing=F),]
 ```
 
-```{r half-half}
-## Half the Population in X Counties
-pres.top.cnty <- pres.cnty.2020.decrease[cumsum(pres.cnty.2020.decrease$total)<sum(pres.cnty.2020.decrease$total)/2,]
-  dim(pres.top.cnty)[1] # 150 counties have half the votes
+```{r half-half, echo=FALSE, include=FALSE}
+# Identifying the number of counties that constitute half the total votes
+pres.top.cnty <- pres.cnty.2020.decrease[cumsum(pres.cnty.2020.decrease$total) < sum(pres.cnty.2020.decrease$total) / 2,]
+dim(pres.top.cnty)[1]  # Number of counties that have half the votes
 
-## Reverse
-pres.top.cnty.rev <- pres.cnty.2020.increase[cumsum(pres.cnty.2020.increase$total)<sum(pres.cnty.2020.increase$total)/2,]
-  dim(pres.top.cnty.rev)[1] # 3001 have the other half
+# Identifying the number of smallest counties that constitute the other half of the total votes
+pres.top.cnty.rev <- pres.cnty.2020.increase[cumsum(pres.cnty.2020.increase$total) < sum(pres.cnty.2020.increase$total) / 2,]
+dim(pres.top.cnty.rev)[1]  # Number of smallest counties that have the other half of the votes
 
-  sum(pres.cnty.2020.decrease$total[1:150]) ## Population of largest 150 counties
-  sum(pres.cnty.2020.increase$total[1:3001]) # Population of smallest 3001 counties
+# Calculating the total votes in the largest 150 counties
+sum(pres.cnty.2020.decrease$total[1:150])  # Total votes in the largest 150 counties
+
+# Calculating the total votes in the smallest 3001 counties
+sum(pres.cnty.2020.increase$total[1:3001])  # Total votes in the smallest 3001 counties
 ```
 
-Compare 2016 and 2020 by county (not used)
 ```{r, compare-16-20, eval=F}
+# Merging 2016 and 2020 county-level data
 a <- dplyr::full_join(pres.county.2016, pres.cnty.2020, by="fips")
-  tail(a)
-counties.16.20 <- a[complete.cases(a),] # Problems with Alaska
+counties.16.20 <- a[complete.cases(a),]  # Filtering out incomplete cases, notably issues with Alaska data
 
+# Plotting vote shares for 2016 vs 2020
 plot(
-  two_party(counties.16.20$dem2016,counties.16.20$gop2016), 
-  two_party(counties.16.20$dem2020,counties.16.20$gop2020), 
+  two_party(counties.16.20$dem2016, counties.16.20$gop2016), 
+  two_party(counties.16.20$dem2020, counties.16.20$gop2020), 
   xlab="Clinton 2016 County Vote Share", 
   ylab="Biden 2020 County Vote Share", 
   col="#33333333")
-abline(0,1)
+abline(0, 1)
 
-summary(lm(two_party(counties.16.20$dem2020,counties.16.20$gop2020) ~ two_party(counties.16.20$dem2016,counties.16.20$gop2016)))
+# Linear model summary for 2016 vs 2020 vote shares
+summary(lm(two_party(counties.16.20$dem2020, counties.16.20$gop2020) ~ two_party(counties.16.20$dem2016, counties.16.20$gop2016)))
 ```
 
-This time with raw votes (not used)
-```{r, compare-raw, eval=F}
+```{r, compare-raw, eval=F, fig.keep='none'}
+# Plotting raw vote advantages for 2016 vs 2020
 plot(
-  counties.16.20$dem2016-counties.16.20$gop2016, 
-  counties.16.20$dem2020-counties.16.20$gop2020, 
+  counties.16.20$dem2016 - counties.16.20$gop2016, 
+  counties.16.20$dem2020 - counties.16.20$gop2020, 
   xlab="Clinton Advantage 2016 County Vote", 
   ylab="Biden Advantage 2020 County Vote", 
   col="#33333333")
-abline(0,1)
+abline(0, 1)
 ```
 
-## Figure 3 - Histogram of the 2020 Presidential Election Results, by county
+## Figure 3 - Histogram of the 2020 Presidential Election Results, by County
 ```{r, fig-3, echo=F}
-# svglite::svglite(paste0(dir.figures,"/fig3.svg"), width=8, height=5)
-  par(mfrow=c(2,1),
-    mar = c(1, 0.1, 1, 0.1))
-    hist_data <- hist(county.2020$per_dem, 
-      xlim=c(0,1), 
-      breaks=101, 
-      col="#d5d5d5", 
-      border="#FFFFFF", 
-      main="Unweighted", 
-      axes=F, 
-      xlab="", 
-      ylab="")
-    segments(x0=0.5, y0=0, x1=0.5, y1=95, lty=1, lwd=2)
-# Add labels to each bar
-mids <- hist_data$mids # The midpoints of each bin
-counts <- hist_data$counts # The count of observations in each bin
-    text(mids, -5, labels = counts, pos = 3, cex = 0.2)
-  par(mar = c(2, 0.1, 1, 0.1))
-    hist(rep(county.2020$per_dem, county.2020$total_votes), 
-      xlim=c(0,1), 
-      breaks=101, 
-      col="#d5d5d5", 
-      border="#FFFFFF", 
-      main="Weighted", 
-      axes=F, 
-      xlab="", 
-      ylab="")
-      segments(x0=0.5, y0=0, x1=0.5, y1=6000000, lty=1, lwd=2)
-      axis(side=1, at=c(0,0.5,1), labels=c("0%", "50%", "100%"))
-      mtext("More Democratic", side=1, line=0, adj=0.95)
-      mtext("More Republican", side=1, line=0, adj=0.05)
-# dev.off()
+# Setup for the histogram plot
+# svglite::svglite(paste0(dir.figures,"/fig3.svg"), width=8, height=5)  # Uncomment to save the plot as SVG file
+par(mfrow=c(2, 1), mar = c(1, 0.1, 1, 0.1))
+
+# Creating the unweighted histogram
+hist_data <- hist(county.2020$per_dem, 
+                  xlim=c(0, 1), 
+                  breaks=101, 
+                  col="#d5d5d5", 
+                  border="#FFFFFF", 
+                  main="Unweighted", 
+                  axes=FALSE, 
+                  xlab="", 
+                  ylab="")
+segments(x0=0.5, y0=0, x1=0.5, y1=95, lty=1, lwd=2)
+# Adding labels to each bar
+mids <- hist_data$mids  # The midpoints of each bin
+counts <- hist_data$counts  # The count of observations in each bin
+text(mids, -5, labels=counts, pos=3, cex=0.2)
+
+# Creating the weighted histogram
+par(mar = c(2, 0.1, 1, 0.1))
+hist(rep(county.2020$per_dem, county.2020$total_votes), 
+     xlim=c(0, 1), 
+     breaks=101, 
+     col="#d5d5d5", 
+     border="#FFFFFF", 
+     main="Weighted", 
+     axes=FALSE, 
+     xlab="", 
+     ylab="")
+segments(x0=0.5, y0=0, x1=0.5, y1=6000000, lty=1, lwd=2)
+axis(side=1, at=c(0, 0.5, 1), labels=c("0%", "50%", "100%"))
+mtext("More Democratic", side=1, line=0, adj=0.95)
+mtext("More Republican", side=1, line=0, adj=0.05)
+# dev.off()  # Uncomment to close the SVG device
 ```
 
-Biden Counties vs. Trump Counties
-```{r D-R-counties}
+```{r D-R-counties, echo=FALSE}
+# Separating counties into Biden and Trump counties
 ## Biden Counties
 county.2020.biden <- county.2020[county.2020$votes_dem > county.2020$votes_gop,]
-  sum(county.2020.biden$votes_dem) # Biden Votes
-  sum(county.2020.biden$votes_gop) # Trump Votes
-  sum(county.2020.biden$diff) # Difference
+# sum(county.2020.biden$votes_dem) # Total Biden Votes in Biden Counties
+# sum(county.2020.biden$votes_gop) # Total Trump Votes in Biden Counties
+# sum(county.2020.biden$diff)      # Total Vote Difference in Biden Counties
 
 ## Trump Counties
 county.2020.trump <- county.2020[county.2020$votes_dem < county.2020$votes_gop,]
-  sum(county.2020.trump$votes_dem) # Biden Votes
-  sum(county.2020.trump$votes_gop) # Trump Votes
-  sum(county.2020.trump$diff) # Difference
+# sum(county.2020.trump$votes_dem) # Total Biden Votes in Trump Counties
+# sum(county.2020.trump$votes_gop) # Total Trump Votes in Trump Counties
+# sum(county.2020.trump$diff)      # Total Vote Difference in Trump Counties
 
-## Trump most votes, county
-  county.2020[order(county.2020$votes_gop, decreasing=T),][1:10,]
+## Identifying top ten counties where Trump received the most votes
+# county.2020[order(county.2020$votes_gop, decreasing=TRUE),][1:10,]
 ```
 
-Statewide Vote
 ```{r, statewide-vote, echo=FALSE, include=FALSE}
+# Aggregating county-level data to state-level
 state.2020 <- aggregate(
   data.frame(
     votes_gop=county.2020$votes_gop,
     votes_dem=county.2020$votes_dem,
     total_votes=county.2020$total_votes,
     diff=county.2020$diff), 
-  by=
-  list(
-    state_name=county.2020$state_name), 
+  by=list(state_name=county.2020$state_name), 
   FUN=sum)
 
+# Calculating the number of states with total votes less than a specified number (4263443 in this case)
 sum((4263443 > state.2020$total_votes) * 1)
 ```
 
-Combine 2020 data with Shapefiles
 ```{r, GIS-data-combine, echo=F}
+# Combining shapefile data with 2020 election data
+## For counties.shp
 counties.shp@data <- dplyr::left_join(counties.shp@data, county.2020, by=c("GEOID"))
 counties.tiger@data <- dplyr::left_join(counties.tiger@data, county.2020, by=c("GEOID20"="GEOID"))
 
-  # head(counties.shp@data)
+# Optional: Uncomment to check the first few rows of the merged data
+# head(counties.shp@data)
 
-  # counties.shp <- counties.shp[!counties.shp@data$ST %in% c("AK","HI"),]
+# Optional: Filtering out specific states (e.g., Alaska and Hawaii) if needed
+# counties.shp <- counties.shp[!counties.shp@data$ST %in% c("AK","HI"),]
+
+# Writing the updated shapefile
 rgdal::writeOGR(counties.shp, dir.gis, "us2020", driver="ESRI Shapefile", overwrite_layer=TRUE)
+
+# Note: Dissolving states into a national shapefile requires rmapshaper or similar package
 nation.shp <- rmapshaper::ms_dissolve(states)
 ```
 
-## Exit Polls 
 ```{r, exit-polls, echo=F}
+# Defining demographic groups and types of exit poll data
 groups <- c(
   "White",
   "Black",
@@ -322,190 +365,180 @@ type.exit <- c(
   "Democratic",
   "Republican"
 )
+
+# Creating a matrix for 2016 exit poll data
 exit.2016 <- 
   matrix(
-    c(0.70,0.12,0.11,0.04,0.03,
-      0.37,0.89,0.66,0.65,0.56,
-      0.57,0.08,0.28,0.27,0.36),
-    ncol=5, byrow = TRUE)
+    c(0.70, 0.12, 0.11, 0.04, 0.03,
+      0.37, 0.89, 0.66, 0.65, 0.56,
+      0.57, 0.08, 0.28, 0.27, 0.36),
+    ncol=5, byrow=TRUE)
+
+# Creating a matrix for 2020 exit poll data
 exit.2020 <-
   matrix(
-    c(0.67,  0.13,  0.13,  0.04,  0.04,
-      0.41,  0.87,  0.65,  0.61,  0.55,
-      0.58,  0.12,  0.32,  0.34,  0.41),
-    ncol=5, byrow = TRUE)
+    c(0.67, 0.13, 0.13, 0.04, 0.04,
+      0.41, 0.87, 0.65, 0.61, 0.55,
+      0.58, 0.12, 0.32, 0.34, 0.41),
+    ncol=5, byrow=TRUE)
 
+# Assigning column and row names to the matrices
 colnames(exit.2016) <- colnames(exit.2020) <- groups
 rownames(exit.2016) <- rownames(exit.2020) <- type.exit
 ```
 
 ## Table 3
 ```{r, tab-3}
+# Exit poll data for 2016
 exit.2016
+
+# Exit poll data for 2020
 exit.2020
 ```
 
-Demographic and Election Results
 ```{r, demo-election, echo=F}
-## https://en.wikipedia.org/wiki/2016_United_States_presidential_election
+# Election results data from Wikipedia
+## 2016 Election
 trump_votes_16 <- 62984828
 clinton_votes_16 <- 65853514
 other_votes_16 <- 7830895
 all_votes_16 <- 136669237
 
+# Calculating estimated votes by demographic for 2016
 all_2016 <- all_votes_16 * exit.2016[1,]
-trump_2016 <- all_votes_16 * exit.2016[1,] * exit.2016[3,] # Trump
-clinton_2016 <- all_votes_16 * exit.2016[1,] * exit.2016[2,] # Clinton
+trump_2016 <- all_votes_16 * exit.2016[1,] * exit.2016[3,] # Trump votes by demographic
+clinton_2016 <- all_votes_16 * exit.2016[1,] * exit.2016[2,] # Clinton votes by demographic
+# Calculating estimated votes for 'Other' candidates
+other_est_2016 <- all_2016 - trump_2016 - clinton_2016
 
-all_2016 - trump_2016 - clinton_2016 # Other
-
-## https://en.wikipedia.org/wiki/2020_United_States_presidential_election
+## 2020 Election
 trump_votes_20 <- 74223975
 biden_votes_20 <- 81283501
 other_votes_20 <- 2922155
 all_votes_20 <- 158429631
 
+# Calculating estimated votes by demographic for 2020
 all_2020 <- all_votes_20 * exit.2020[1,]
-trump_2020 <- all_votes_20 * exit.2020[1,] * exit.2020[3,] # Trump
-biden_2020 <- all_votes_20 * exit.2020[1,] * exit.2020[2,] # Clinton
+trump_2020 <- all_votes_20 * exit.2020[1,] * exit.2020[3,] # Trump votes by demographic
+biden_2020 <- all_votes_20 * exit.2020[1,] * exit.2020[2,] # Biden votes by demographic
+# Calculating estimated votes for 'Other' candidates
+other_est_2020 <- all_2020 - trump_2020 - biden_2020
 
-all_2020 - all_2020 - trump_2020 - biden_2020 # Other
-
-# Non-Hispanic White Voters
+# Estimating Non-Hispanic White Voters
 white_voters16 <- all_votes_16 * exit.2016[1,1]
 white_voters20 <- all_votes_20 * exit.2020[1,1]
 
-# 2016 v 2020
-all_2020 - all_2016
-trump_2020 - trump_2016
-biden_2020 - clinton_2016
+# Comparison between 2016 and 2020
+increase_total <- all_2020 - all_2016
+increase_trump <- trump_2020 - trump_2016
+increase_biden <- biden_2020 - clinton_2016
 
+# Creating matrices for comparison of white voters between 2016 and 2020
 totalwhite16 <- rbind(
   white_voters16, 
-  all_votes_16-white_voters16,
+  all_votes_16 - white_voters16,
   all_votes_16)
 
 totalwhite20 <- rbind(
   white_voters20, 
-  all_votes_20-white_voters20,
+  all_votes_20 - white_voters20,
   all_votes_20)
-
-
 ```
 
 ## Table 4 - Change in Non-Hispanic White Votes between 2016 and 2020
 ```{r, tab-4-setup, echo=F}
+# Combining the data to create Table 4
 tab4 <- rbind(
   cbind(
-  y2016=
-    rbind(
+    y2016 = rbind(
       trump_2016[1],
       clinton_2016[1],
-      all_2016[1]-trump_2016[1]-clinton_2016[1]),
-  y2020=
-    rbind(
+      all_2016[1] - trump_2016[1] - clinton_2016[1]
+    ),
+    y2020 = rbind(
       trump_2020[1],
       biden_2020[1],
-      all_2020[1]-trump_2020[1]-biden_2020[1]),
-  difference=
-    rbind(
+      all_2020[1] - trump_2020[1] - biden_2020[1]
+    ),
+    difference = rbind(
       (trump_2020 - trump_2016)[1],
       (biden_2020 - clinton_2016)[1],
-      (all_2020[1]-trump_2020[1]-biden_2020[1])-(all_2016[1]-trump_2016[1]-clinton_2016[1]))
+      (all_2020[1] - trump_2020[1] - biden_2020[1]) - (all_2016[1] - trump_2016[1] - clinton_2016[1])
+    )
   ),
-cbind(
-  totalwhite16,
-  totalwhite20,
-  totalwhite20-totalwhite16
-))
+  cbind(
+    totalwhite16,
+    totalwhite20,
+    totalwhite20 - totalwhite16
+  )
+)
 
+# Setting column and row names
 colnames(tab4) <- c("2016", "2020", "Difference")
 rownames(tab4) <- c("Trump", "Clinton/Biden", "Other", "Non-Hispanic White Votes", "Minority Votes", "All Votes")
 ```
 
 ```{r, tab-4}
+# Table 4 - Change in Non-Hispanic White Votes between 2016 and 2020
 tab4
+
 ```
 
-# Maps
 ```{r, colors, echo=F}
-# Set Colors
+# Setting up colors for map visualizations
+# Defining colors with different transparency levels (commented out)
 # dodgerblue.t <- rgb(30, 144, 255, 127.5, max =255)
 # dodgerblue <- rgb(30, 144, 255, max =255)
 # indianred.t <- rgb(205, 92, 92, 127.5, max =255)
 # indianred <- rgb(205, 92, 92, max =255)
 # indianred.75 <- rgb(205, 92, 92, 191, max =255)
+
+# Defining colors for the map (active)
 # colors.map <- c(indianred.t, dodgerblue.t)
 # colors.map.borders <- c(indianred, dodgerblue)
 colors.map <- c("#c93135","#1375b7")
 ```
 
-
 ```{r, choropleth, echo=F}
-# Map Choropleth setup
-  pop.brks <- seq(0,1,0.5)
-  counties.shp@data$col <- colors.map[findInterval(counties.shp@data$per_dem, vec = pop.brks)]
+# Choropleth map setup
+pop.brks <- seq(0, 1, 0.5)
+counties.shp@data$col <- colors.map[findInterval(counties.shp@data$per_dem, vec = pop.brks)]
 
-  # brks <- c(0, 10000, 25000, 50000, 100000, 200000, 400000, 800000, 1600000, 3200000)
-  # size.brks <- c(0.25, 0.5, seq(1,25,4))
-  # pop.blocks <- size.brks[findInterval(counties.shp@data$total_votes, vec = brks)]
-  absmargin <- abs(counties.shp@data$votes_dem-counties.shp@data$votes_gop)
+# Calculate absolute margin
+absmargin <- abs(counties.shp@data$votes_dem - counties.shp@data$votes_gop)
 
-# Function to calculate the rScale
+# Function to calculate the square root scale for size
 scaleSqrt <- function(value, maxRadius = 20, maxDomain = NA) {
   if (is.na(maxDomain)) {
     stop("Need max Domain")
   }
-  # Input domain values
-  domain <- c(0, maxDomain)  # Example domain values
-  # Output range values
-  range <- c(0, maxRadius)  # Example range values
+  domain <- c(0, maxDomain)
+  range <- c(0, maxRadius)
   
-  # Calculate the square root of the value
   sqrt_value <- sqrt(value)
-  
-  # Map the square root value to the output range
   scaled_value <- (sqrt_value - sqrt(domain[1])) / (sqrt(domain[2]) - sqrt(domain[1]))
-  scaled_value <- scaled_value * (range[2] - range[1]) + range[1]  # Fix the typo here
-  
-  return(scaled_value)
+  scaled_value * (range[2] - range[1]) + range[1]
 }
 
-# Function to calculate the oScale
-scaleOpacitySqrt <- function(value, minOpacity = 0, maxOpacity = 20, maxDomain = NA) {
+# Function to calculate the square root scale for opacity
+scaleOpacitySqrt <- function(value, minOpacity = 0, maxOpacity = 1, maxDomain = NA) {
   if (is.na(maxDomain)) {
     stop("Need max Domain")
   }
-  # Input domain values
-  domain <- c(0, maxDomain)  # Example domain values
-  # Output range values
-  range <- c(minOpacity, maxOpacity)  # Example range values
+  domain <- c(0, maxDomain)
+  range <- c(minOpacity, maxOpacity)
   
-  # Calculate the square root of the value
   sqrt_value <- sqrt(value)
-  
-  # Map the square root value to the output range
   scaled_value <- (sqrt_value - sqrt(domain[1])) / (sqrt(domain[2]) - sqrt(domain[1]))
-  scaled_value <- scaled_value * (range[2] - range[1]) + range[1]  # Fix the typo here
-  
   alpha_hex <- sprintf("%02X", round(scaled_value * 255))
   return(alpha_hex)
 }
 
-pop.sizes <- 
-scaleSqrt(
-  county.2020$total_votes,
-  maxRadius= 5, 
-  maxDomain= max(county.2020$total_votes))
+# Applying the scale function to total votes for size scaling
+pop.sizes <- scaleSqrt(county.2020$total_votes, maxRadius=5, maxDomain=max(county.2020$total_votes))
 
-pop.opacity <- 
-scaleOpacitySqrt(
-  abs(county.2020$per_point_diff),
-  minOpacity=0.25,
-  maxOpacity= 0.75, 
-  maxDomain= max(abs(county.2020$per_point_diff)))
-
-# pop.sizes <- sqrt(absmargin) * 0.005
+# Applying the scale function to percentage point difference for opacity scaling
+pop.opacity <- scaleOpacitySqrt(abs(county.2020$per_point_diff), minOpacity=0.25, maxOpacity=0.75, maxDomain=max(abs(county.2020$per_point_diff)))
 ```
 
 # Create Maps
@@ -520,37 +553,59 @@ scaleOpacitySqrt(
 
 ## Figure 4 - Choropleth Plot, 2020 Presidential Election by county
 ```{r, fig-4, echo=F}
+# Optional: Uncomment to save the plot as an SVG file
 # svglite::svglite(paste0(dir.figures,"/fig4.svg"))
-par(mfrow=c(1,1),
-    mar = c(0.1, 0.1, 0.1, 0.1))
-  sp::plot(counties.shp, col=counties.shp@data$col, border="#ffffff", lwd=0.15)
-  sp::plot(states, border="#ffffff", add=T, lwd=1)
-  sp::plot(nation.shp, col=NA, border="#777777", add=T, lwd=1)
-  text(state_labels@data$X, state_labels@data$Y, labels=state_labels@data$label_text, cex=0.8)
+
+# Setting up the plot parameters
+par(mfrow=c(1,1), mar = c(0.1, 0.1, 0.1, 0.1))
+
+# Plotting the choropleth map
+sp::plot(counties.shp, col=counties.shp@data$col, border="#ffffff", lwd=0.15)
+sp::plot(states, border="#ffffff", add=TRUE, lwd=1)
+sp::plot(nation.shp, col=NA, border="#777777", add=TRUE, lwd=1)
+text(state_labels@data$X, state_labels@data$Y, labels=state_labels@data$label_text, cex=0.8)
+
+# Optional: Uncomment to close the SVG device
 # dev.off()
 ```
 
 ## Figure 5 – Bubble Plot, 2020 Presidential Election by county
 ```{r, fig-5, echo=F}
+# Optional: Uncomment to save the plot as an SVG file
 # svglite::svglite(paste0(dir.figures,"/fig5.svg"))
-par(mfrow=c(1,1),
-    mar = c(0.1, 0.1, 0.1, 0.1))
-  sp::plot(counties.shp, border="#ffffff", col="#ffffff", lwd=0.15)
-counties.shp@data$col_trans <- ifelse(is.na(counties.shp@data$col), counties.shp@data$col, paste0(counties.shp@data$col, pop.opacity)) # Add transparency
-  sp::plot(states, border="#999999", add=T, lwd=1)
-  points(counties.shp@data$X, counties.shp@data$Y, 
-    cex=pop.sizes, 
-    col="#00000033", 
-    bg=counties.shp@data$col_trans, 
-    pch=21, 
-    lwd=1)
-  sp::plot(nation.shp, col=NA, border="#777777", add=T, lwd=1)
-  text(state_labels@data$X, state_labels@data$Y, labels=state_labels@data$label_text, cex=0.8)
+
+# Setting up the plot parameters
+par(mfrow=c(1,1), mar = c(0.1, 0.1, 0.1, 0.1))
+
+# Plotting the base map for bubble plot
+sp::plot(counties.shp, border="#ffffff", col="#ffffff", lwd=0.15)
+
+# Adding transparency to the colors
+counties.shp@data$col_trans <- ifelse(is.na(counties.shp@data$col), counties.shp@data$col, paste0(counties.shp@data$col, pop.opacity))
+
+# Plotting the states
+sp::plot(states, border="#999999", add=TRUE, lwd=1)
+
+# Adding the bubbles
+points(counties.shp@data$X, counties.shp@data$Y, 
+       cex=pop.sizes, 
+       col="#00000033", 
+       bg=counties.shp@data$col_trans, 
+       pch=21, 
+       lwd=1)
+
+# Overlaying national shapefile
+sp::plot(nation.shp, col=NA, border="#777777", add=TRUE, lwd=1)
+
+# Adding state labels
+text(state_labels@data$X, state_labels@data$Y, labels=state_labels@data$label_text, cex=0.8)
+
+# Optional: Uncomment to close the SVG device
 # dev.off()
 ```
 
 
-```{r eval=F}
+```{r eval=F, include=FALSE}
 #Make Choropleth Plot in mapshaper.org
 ## FIGURE 2A and 2B - Choropleth Plot, 2020 Presidential Election by county; Bubble Plot, 2020 Presidential Election by county (RUN IN TERMINAL)
 
@@ -573,53 +628,59 @@ counties.shp@data$col_trans <- ifelse(is.na(counties.shp@data$col), counties.shp
 ```
 
 ```{r cartogram-setup, eval=FALSE, include=FALSE}
-# Create Cartograms
+# Preparing the data for cartogram creation
 counties.shp.cart.tmp <- counties.shp
 counties.shp.cart <- counties.shp.cart.tmp[!is.na(counties.shp.cart.tmp@data$total),]
-counties.shp.cart@data$margin <- abs(counties.shp.cart@data$votes_dem-counties.shp.cart@data$votes_gop)
-counties.shp.cart1 <- cartogram::cartogram_ncont(counties.shp.cart, "margin")
-counties.shp.cart2 <- cartogram::cartogram_cont(counties.shp.cart, "margin", itermax=3)
-  # rgdal::writeOGR(counties.shp, dir.gis, "counties_shp_cart2", driver="ESRI Shapefile", overwrite_layer=TRUE)
+counties.shp.cart@data$margin <- abs(counties.shp.cart@data$votes_dem - counties.shp.cart@data$votes_gop)
 
+# Creating a non-contiguous cartogram
+counties.shp.cart1 <- cartogram::cartogram_ncont(counties.shp.cart, "margin")
+
+# Creating a contiguous cartogram
+counties.shp.cart2 <- cartogram::cartogram_cont(counties.shp.cart, "margin", itermax=3)
+# Optional: Save the cartogram as a shapefile
+# rgdal::writeOGR(counties.shp, dir.gis, "counties_shp_cart2", driver="ESRI Shapefile", overwrite_layer=TRUE)
+
+# Creating a Dorling cartogram
 counties.shp.dorling <- cartogram::cartogram_dorling(x=counties.shp, weight="margin")
 ```
 
-
 ```{r cartogram-plot, eval=FALSE, include=FALSE}
-# Plot Cartograms (not used)
+# Plotting and saving non-contiguous cartogram as SVG
 svglite::svglite(paste0(dir.figures,"/us2020_cart.svg"))
-  sp::plot(counties.shp.cart1, border="#dddddd", col=counties.shp.cart1@data$col, lwd=0.15)
+sp::plot(counties.shp.cart1, border="#dddddd", col=counties.shp.cart1@data$col, lwd=0.15)
 dev.off()
 
+# Plotting and saving contiguous cartogram as SVG
 svglite::svglite(paste0(dir.figures,"us2020_cart2.svg"))
-  sp::plot(counties.shp.cart2, border=counties.shp.cart2@data$gs.pop.blocks, col=counties.shp.cart2@data$col, lwd=0.15)
+sp::plot(counties.shp.cart2, border=counties.shp.cart2@data$gs.pop.blocks, col=counties.shp.cart2@data$col, lwd=0.15)
 dev.off()
 
+# Plotting and saving Dorling cartogram as SVG
 svglite::svglite(paste0(dir.figures,"us2020_dorling.svg"))
-  sp::plot(counties.shp.dorling, id=counties.shp.dorling@data$NAME, border=NA, col=counties.shp.dorling@data$col, lwd=0.15)
+sp::plot(counties.shp.dorling, id=counties.shp.dorling@data$NAME, border=NA, col=counties.shp.dorling@data$col, lwd=0.15)
 dev.off()
 
+# Saving non-contiguous and contiguous cartograms as shapefiles
 rgdal::writeOGR(counties.shp.cart1, dir.gis, "counties.shp.cart1", driver="ESRI Shapefile", overwrite_layer=TRUE)
 rgdal::writeOGR(counties.shp.cart2, dir.gis, "counties.shp.cart2", driver="ESRI Shapefile", overwrite_layer=TRUE)
 ```
 
-
 ```{r county-size-plot, echo=F}
-# Setup Figure 2 plot data
+# Preparing data for cumulative county size plot
 cnty <- county.2020[order(county.2020$total_votes),]
 cnty$pop_cumsum <- cumsum(cnty$total_votes)
 cnty$dem_cumsum <- cumsum(cnty$votes_dem)
 cnty$gop_cumsum <- cumsum(cnty$votes_gop)
 
-## Cumulative County
-
+# Calculating cumulative sums for Democratic and Republican votes separately
 dem_cumsum <- cumsum(cnty$votes_dem[order(cnty$votes_dem)])
 gop_cumsum <- cumsum(cnty$votes_gop[order(cnty$votes_gop)])
 
-# quantile(gop_cumsum)
+# Calculating quintile positions on the x-axis
+quintile_x_axis <- c(dim(cnty)[1]*0.25, dim(cnty)[1]*0.5, dim(cnty)[1]*0.75, dim(cnty)[1])
 
-quintile_x_axis <- c(dim(cnty)[1]*0.25,dim(cnty)[1]*0.5,dim(cnty)[1]*0.75,dim(cnty)[1])
-
+# Calculating axis points for Democratic votes
 dem_x_axis <- c(
   min(which(dem_cumsum > max(dem_cumsum)[1]*0.25)),
   min(which(dem_cumsum > max(dem_cumsum)[1]*0.50)),
@@ -633,6 +694,7 @@ dem_y_axis <- c(
   max(dem_cumsum)[1]/max(dem_cumsum)
 )
 
+# Calculating axis points for Republican votes
 gop_x_axis <- c(
   min(which(gop_cumsum > max(gop_cumsum)[1]*0.25)),
   min(which(gop_cumsum > max(gop_cumsum)[1]*0.50)),
@@ -646,50 +708,48 @@ gop_y_axis <- c(
   max(gop_cumsum)[1]/max(gop_cumsum)
 )
 
+# Extracting vote counts for both parties
 dem <- cnty$votes_dem
 gop <- cnty$votes_gop
 
-# Calculate the total population
+# Calculating the total votes
 totalvotes <- dem + gop
 ```
 
 ## Figure 2 – Votes in each County
 ```{r fig-2, echo=F}
-#svglite::svglite(paste0(dir.figures,"/fig2.svg"), width = 8,height = 5)
-par(mfrow=c(2,1),
-    mar = c(3, 4, 0.1, 0.1))
-layout_matrix <- matrix(c(1, 1, 2), nrow = 3, ncol = 1, byrow = TRUE)
+# Optional: Uncomment to save the plot as an SVG file
+# svglite::svglite(paste0(dir.figures,"/fig2.svg"), width = 8, height = 5)
 
-# Set the layout
+# Setting up the plot layout
+par(mfrow=c(2,1), mar = c(3, 4, 0.1, 0.1))
+layout_matrix <- matrix(c(1, 1, 2), nrow = 3, ncol = 1, byrow = TRUE)
 layout(layout_matrix)
 
-# Top Panel
+# Top Panel: Bar plot of total Democratic and Republican votes
 barplot(
   rbind(dem, gop), 
   beside = FALSE, 
-  col = c("#1375b7","#c93135"),
+  col = c("#1375b7", "#c93135"),
   border=NA,
   xlab = "", 
   ylab = "Total Votes",
   main = "",
-  axes=F,
-  xaxt="n")
+  axes=FALSE,
+  xaxt="n"
+)
 x_ticks <- barplot(cnty$total_votes, plot = FALSE)
-## Calculate the center of the plot
-  plot_center <- mean(par("usr")[3:4])
+plot_center <- mean(par("usr")[3:4])
 
-axis(side=2, las=2, at=seq(0,4000000, 1000000), paste0(seq(0,4,1),"mil"))
+# Adding axis and vertical line indicating half of voters
+axis(side=2, las=2, at=seq(0,4000000, 1000000), labels=paste0(seq(0,4,1),"mil"))
 abline(v = x_ticks[3153-150], lty = "dashed", col = "black")
 text(x = x_ticks[3153-150], y = plot_center, labels = "Half of voters live in counties\n on either side of line", srt = 90)
-# Add a legend
-legend(
-  "topleft", 
-  legend=c("Democratic","Republican"), 
-  fill=c("#1375b7","#c93135"),
-  cex=2,
-  bty="n")
 
-# Bottom Panel (Cumulative)
+# Adding a legend
+legend("topleft", legend=c("Democratic","Republican"), fill=c("#1375b7","#c93135"), cex=2, bty="n")
+
+# Bottom Panel: Cumulative line plot
 plot(
   type = "l",
   x = 1:dim(cnty)[1],
@@ -699,274 +759,256 @@ plot(
   xlab = "",
   ylab = "Cumulative Votes",
   pch = NA
-  # ylab = "Percent of Total Votes",
 )
-# Add the blue line
-lines(
-  x = 1:dim(cnty)[1],
-  y = dem_cumsum/max(dem_cumsum),
-  col = "#1375b7"
-)
-# Add the red line
-lines(
-  x = 1:dim(cnty)[1],
-  y = gop_cumsum/max(gop_cumsum),
-  col = "#c93135"
-)
-# Add x-axis with custom labels
-axis(
-  side = 1,
-  at = c(500, 2700),
-  labels = c("Smallest Counties", "Largest Counties"),
-  tcl = 0,
-  lwd=0
-)
-axis(
-  side=2,
-  at=seq(0,1,0.25),
-  labels=c("0%","25%","50%","75%","100%"),
-  las=2
-)
-abline(
-  h=seq(0.25,0.75,0.25),
-  lty=3,
-  col="gray70")
-abline(
-  v=quantile(1:length(gop_cumsum)),
-  lty=3,
-  col="gray70")
-# points(
-  # x=dem_x_axis,
-  # y=dem_y_axis,
-  # col="blue",
-  # pch=16,
-  # cex=1.5)
-# points(
-  # x=gop_x_axis,
-  # y=gop_y_axis,
-  # col="red",
-  # pch=16,
-  # cex=1.5)
+lines(x = 1:dim(cnty)[1], y = dem_cumsum/max(dem_cumsum), col = "#1375b7")
+lines(x = 1:dim(cnty)[1], y = gop_cumsum/max(gop_cumsum), col = "#c93135")
+
+# Customizing x-axis and y-axis
+axis(side = 1, at = c(500, 2700), labels = c("Smallest Counties", "Largest Counties"), tcl = 0, lwd=0)
+axis(side=2, at=seq(0,1,0.25), labels=c("0%","25%","50%","75%","100%"), las=2)
+
+# Adding horizontal and vertical guide lines
+abline(h=seq(0.25,0.75,0.25), lty=3, col="gray70")
+abline(v=quantile(1:length(gop_cumsum)), lty=3, col="gray70")
+
+# Optional: Uncomment to save the plot and close the SVG device
 # dev.off()
 ```
 
-
 ```{r alt-bar-plot, eval=FALSE, include=FALSE}
-# Alternative bar plot (not used)
-
-# Create example data
+# Preparing data for the stacked bar plot
 dem <- cnty$votes_dem
 gop <- cnty$votes_gop
+totalvotes <- dem + gop  # Calculate the total votes
 
-# Calculate the total population
-totalvotes <- dem + gop
-
-# Create the stacked bar plot
-svglite::svglite(paste0(dir.figures,"/county-vote.svg"), width = 8,height = 3)
-par(mfrow=c(1,1),
-    mar = c(0.5, 4, 0.1, 0.1))
+# Creating and saving the stacked bar plot as an SVG file
+svglite::svglite(paste0(dir.figures, "/county-vote.svg"), width = 8, height = 3)
+par(mfrow=c(1, 1), mar = c(0.5, 4, 0.1, 0.1))
 barplot(
   rbind(dem, gop), 
   beside = FALSE, 
-  col = c("#1375b7","#c93135"),
-  border=NA,
+  col = c("#1375b7", "#c93135"),
+  border = NA,
   xlab = "", 
   ylab = "Total Votes",
   main = "",
-  axes=F,
-  xaxt="n")
+  axes = FALSE,
+  xaxt = "n"
+)
 x_ticks <- barplot(cnty$total_votes, plot = FALSE)
-## Calculate the center of the plot
-  plot_center <- mean(par("usr")[3:4])
+plot_center <- mean(par("usr")[3:4])
 
-axis(side=2, las=2, at=seq(0,4000000, 1000000), paste0(seq(0,4,1),"mil"))
-abline(v = x_ticks[3153-150], lty = "dashed", col = "black")
-text(x = x_ticks[3153-150], y = plot_center, labels = "Half of voters live in counties\n on either side of line", srt = 90)
-# Add a legend
+# Adding axis and vertical line indicating half of voters
+axis(side = 2, las = 2, at = seq(0, 4000000, 1000000), labels = paste0(seq(0, 4, 1), "mil"))
+abline(v = x_ticks[3153 - 150], lty = "dashed", col = "black")
+text(x = x_ticks[3153 - 150], y = plot_center, labels = "Half of voters live in counties\n on either side of line", srt = 90)
+
+# Adding a legend
 legend(
   "topleft", 
   legend = c("Democratic", "Republican"), 
-  fill = c("#1375b7","#c93135"),
-  cex=2,
-  bty="n")
+  fill = c("#1375b7", "#c93135"),
+  cex = 2,
+  bty = "n"
+)
 dev.off()
 ```
-
-
 ```{r kent-sum, eval=FALSE, include=FALSE}
-# Summary of Kent County, Michigan precinct data
+# Creating a summary of Kent County, Michigan precinct data
 head(
   data.frame(
     Trump_Split = kent$GOP_Split,
     Republican_Straight = kent$GOP_Straight,
-    Difference = kent$GOP_Straight-kent$GOP_Split
-  ))
+    Difference = kent$GOP_Straight - kent$GOP_Split
+  )
+)
 ```
 
-Kent County, Michigan 2020 election data plotted as Ayyadurai shows it.
 ```{r, ayy-reg, echo=F}
-# Regression
-gop_reg_ayy <- lm(I(kent$GOP_Split-kent$GOP_Straight) ~ kent$GOP_Straight)
-dem_reg_ayy <- lm(I(kent$DEM_Split-kent$DEM_Straight) ~ kent$DEM_Straight)
-summary(gop_reg_ayy)
-summary(dem_reg_ayy)
+# Performing regression analysis as shown by Ayyadurai
+gop_reg_ayy <- lm(I(kent$GOP_Split - kent$GOP_Straight) ~ kent$GOP_Straight)
+dem_reg_ayy <- lm(I(kent$DEM_Split - kent$DEM_Straight) ~ kent$DEM_Straight)
 
+# Performing standard regression analysis
 gop_reg <- lm(kent$GOP_Split ~ kent$GOP_Straight)
 dem_reg <- lm(kent$DEM_Split ~ kent$DEM_Straight)
-summary(gop_reg)
-summary(dem_reg)
 ```
 
 ## Figure 6 – Kent County, Michigan 2020 election data plotted as Ayyadurai shows it.
-```{r, fig-6, echo=F}
-# svglite::svglite(paste0(dir.figures,"/fig6.svg"), width = 8,height = 5)
-  par(mfrow = c(1, 2))
-  par(
-    oma = c(0, 3, 0, 3),  # Adjust the outer margins
-    mar = c(0, 0, 0, 0)   # Adjust the plot margins
-  )
-## Plot A
-  seatsvotes.plot(
-    main = "A", 
-    xlab = "Straight-Ticket Vote (GOP) %", 
-    ylab = "",
-    xlim = c(0, 1),
-    ylim = c(-0.3, 0.15),
-    xaxis = FALSE, 
-    yaxis = FALSE,
-    prop.line = FALSE
-  )
-  points(
-    x = kent$GOP_Straight, 
-    y = I(kent$GOP_Split-kent$GOP_Straight), 
-    pch = 23, 
-    col = "black", 
-    bg = "#c93135"
-  )
-  seatsvotes.axis(
-    xmin = 0,
-    xmax = 1,
-    ymin = -0.3,
-    ymax = 0.15
-  )
-  abline(h = 0, lwd = 4)
-  abline(lm(I(kent$GOP_Split-kent$GOP_Straight) ~ kent$GOP_Straight),
-      col = "orange",
-      lwd = 4)
-# Add y-axis labels outside the plot area
-  mtext("Split-Ticket (GOP) Minus\n Straight-Ticket (GOP)", side = 2, line = 1.5)
+```{r fig-6, echo=F}
+# Optional: Uncomment to save the plot as an SVG file
+# svglite::svglite(paste0(dir.figures,"/fig6.svg"), width = 8, height = 5)
 
-## Plot B
-  par(
-    oma = c(0, 6, 0, 0),  # Adjust the outer margins
-    mar = c(0, 0, 0, 0),
-    new=TRUE  # Adjust the plot margins
-  )
-  seatsvotes.plot(
-    main = "B", 
-    xlab = "Straight-Ticket Vote (DEM) %", 
-    ylab = "",
-    xlim = c(0, 1),
-    ylim = c(-0.15, 0.30),
-    xaxis = FALSE, 
-    yaxis = FALSE,
-    prop.line = FALSE
-  )
-  points(
-    x = kent$DEM_Straight, 
-    y = I(kent$DEM_Split-kent$DEM_Straight), 
-    pch = 23, 
-    col = "black", 
-    bg = "#1375b7"
-  )
-  seatsvotes.axis(
-    xmin = 0,
-    xmax = 1,
-    ymin = -0.15,
-    ymax = 0.30
-  )
-  abline(h = 0, lwd = 4)
-  abline(lm(I(kent$DEM_Split-kent$DEM_Straight) ~ kent$DEM_Straight),
-      col = "orange",
-      lwd = 4)
-  mtext("Split-Ticket (Biden) Minus\n Straight-Ticket (DEM)", side = 2, line = 1.25)
-  title("Kent County, Michigan (2020 Election)", outer = TRUE, line = -3, cex.main = 1.2)
+# Setting up the plot layout
+par(mfrow = c(1, 2))
+par(oma = c(0, 3, 0, 3), mar = c(0, 0, 0, 0))
+
+## Plot A: GOP
+seatsvotes.plot(
+  main = "A", 
+  xlab = "Straight-Ticket Vote (GOP) %", 
+  ylab = "",
+  xlim = c(0, 1),
+  ylim = c(-0.3, 0.15),
+  xaxis = FALSE, 
+  yaxis = FALSE,
+  prop.line = FALSE
+)
+points(
+  x = kent$GOP_Straight, 
+  y = I(kent$GOP_Split - kent$GOP_Straight), 
+  pch = 23, 
+  col = "black", 
+  bg = "#c93135"
+)
+seatsvotes.axis(
+  xmin = 0,
+  xmax = 1,
+  ymin = -0.3,
+  ymax = 0.15
+)
+abline(h = 0, lwd = 4)
+abline(lm(I(kent$GOP_Split - kent$GOP_Straight) ~ kent$GOP_Straight),
+  col = "orange",
+  lwd = 4)
+mtext("Split-Ticket (GOP) Minus\n Straight-Ticket (GOP)", side = 2, line = 1.5)
+
+## Plot B: DEM
+par(oma = c(0, 6, 0, 0), mar = c(0, 0, 0, 0), new = TRUE)
+seatsvotes.plot(
+  main = "B", 
+  xlab = "Straight-Ticket Vote (DEM) %", 
+  ylab = "",
+  xlim = c(0, 1),
+  ylim = c(-0.15, 0.30),
+  xaxis = FALSE, 
+  yaxis = FALSE,
+  prop.line = FALSE
+)
+points(
+  x = kent$DEM_Straight, 
+  y = I(kent$DEM_Split - kent$DEM_Straight), 
+  pch = 23, 
+  col = "black", 
+  bg = "#1375b7"
+)
+seatsvotes.axis(
+  xmin = 0,
+  xmax = 1,
+  ymin = -0.15,
+  ymax = 0.30
+)
+abline(h = 0, lwd = 4)
+abline(lm(I(kent$DEM_Split - kent$DEM_Straight) ~ kent$DEM_Straight),
+  col = "orange",
+  lwd = 4)
+mtext("Split-Ticket (Biden) Minus\n Straight-Ticket (DEM)", side = 2, line = 1.25)
+title("Kent County, Michigan (2020 Election)", outer = TRUE, line = -3, cex.main = 1.2)
+
+# Optional: Uncomment to save the plot and close the SVG device
 # dev.off()
 ```
 
 ## Figure 7 – Kent County, Michigan Precinct comparison between Trump Straight-ticket and Trump Split-Ticket Support
-```{r, kent-scatter, echo=F}
-# svglite::svglite(paste0(dir.figures,"/fig7.svg"), width = 8,height = 5)
-  par(mfrow=c(1,2))
-  par(oma = c(0, 1, 0, 0))
-## Plot A
-  seatsvotes.plot(
-    main="A", 
-    xlab="Straight-Ticket Voters (Trump %)", 
-    ylab="Split-Ticket Voters (Trump %)",
-    prop.line = FALSE)
-  points(
-    x=kent$GOP_Straight, 
-    y=kent$GOP_Split, 
-    pch=23, 
-    col="black", 
-    bg="#c93135")
-  abline(lm(kent$GOP_Split ~ kent$GOP_Straight),
-      col = "orange",
-      lwd = 4)
- ## Plot B 
-  seatsvotes.plot(
-    main="B", 
-    xlab="Straight-Ticket Voters (Biden %)", 
-    ylab="Split-Ticket Voters (Biden %)",
-    prop.line = FALSE)
-  points(
-    x=kent$DEM_Straight, 
-    y=kent$DEM_Split, 
-    pch=23, 
-    col="black", 
-    bg="#1375b7")
-  abline(lm(kent$DEM_Split ~ kent$DEM_Straight),
-      col = "orange",
-      lwd = 4)
-  title("Kent County, Michigan (2020 Election)", outer = TRUE, line = -1, cex.main = 1.2)
+```{r fig-7, echo=F}
+# Optional: Uncomment to save the plot as an SVG file
+# svglite::svglite(paste0(dir.figures,"/fig7.svg"), width = 8, height = 5)
+
+# Setting up the plot layout
+par(mfrow=c(1, 2))
+par(oma = c(0, 1, 0, 0))
+
+## Plot A: GOP
+seatsvotes.plot(
+  main = "A", 
+  xlab = "Straight-Ticket Voters (Trump %)", 
+  ylab = "Split-Ticket Voters (Trump %)",
+  prop.line = FALSE
+)
+points(
+  x = kent$GOP_Straight, 
+  y = kent$GOP_Split, 
+  pch = 23, 
+  col = "black", 
+  bg = "#c93135"
+)
+abline(lm(kent$GOP_Split ~ kent$GOP_Straight),
+  col = "orange",
+  lwd = 4)
+
+## Plot B: DEM
+seatsvotes.plot(
+  main = "B", 
+  xlab = "Straight-Ticket Voters (Biden %)", 
+  ylab = "Split-Ticket Voters (Biden %)",
+  prop.line = FALSE
+)
+points(
+  x = kent$DEM_Straight, 
+  y = kent$DEM_Split, 
+  pch = 23, 
+  col = "black", 
+  bg = "#1375b7"
+)
+abline(lm(kent$DEM_Split ~ kent$DEM_Straight),
+  col = "orange",
+  lwd = 4)
+
+# Setting the title for the figure
+title("Kent County, Michigan (2020 Election)", outer = TRUE, line = -1, cex.main = 1.2)
+
+# Optional: Uncomment to save the plot and close the SVG device
 # dev.off()
 ```
 
-
-```{r toy-example, eval=FALSE, include=FALSE, eval=F}
-# Toy Example (not used)
-# Generating the first set of random numbers
+```{r toy-example, eval=TRUE, include=FALSE}
+# Generating a set of random numbers
 random_numbers1 <- runif(100, min = 0.35, max = 0.65)
 
-# Generating the stochastic errors from a normal distribution
+# Generating stochastic errors from a normal distribution
 stochastic_errors <- rnorm(100, mean = 1, sd = 0.05)
 
-# Applying the stochastic errors to the first set
+# Applying stochastic errors to the first set of random numbers
 random_numbers2 <- random_numbers1 * stochastic_errors
 
-x=random_numbers1
-y= random_numbers2 * 0.7
+# Preparing data for plotting
+x = random_numbers1
+y = random_numbers2 * 0.7
 
-# Plotting the two sets of random numbers
-plot(x=x,y=y)
+# Plotting the two sets of random numbers with styling similar to Figure 7
+plot(
+  x = x, 
+  y = I(y-x), 
+  pch = 23, 
+  col = "black", 
+  bg = "#1375b7", 
+  xlab = "Variable X", 
+  ylab = "Variable Y-X", 
+  main = "Toy Example with Regression Line",
+  xlim = c(0.35, 0.65)
+)
 
-cor(random_numbers1,random_numbers2)
+# Creating and adding a regression line
+lm_model <- lm(I(y-x) ~ x)
+abline(lm_model, col = "orange", lwd = 4)
 
-plot(x=x, y=I(y-x))
+# Adding grid lines for better visualization
+abline(h = seq(min(y), max(y), length.out = 10), col = "gray", lty = "dotted")
+abline(v = seq(0.35, 0.65, length.out = 10), col = "gray", lty = "dotted")
 ```
-
-
 
 ```{r eval=FALSE, include=FALSE}
 # Not Used
-lowess_line1 <- lowess(x=abs(kent$biden-kent$trump), y=kent$prop_split, f = 0.2)  # Smaller f, more wiggly line
-lowess_line2 <- lowess(abs(kent$biden-kent$trump), y=kent$prop_split, f = 0.8)  # Larger f, smoother line
+# Generating LOWESS lines for the data
+lowess_line1 <- lowess(x = abs(kent$biden - kent$trump), y = kent$prop_split, f = 0.2)  # Smaller f for a more responsive line
+lowess_line2 <- lowess(abs(kent$biden - kent$trump), y = kent$prop_split, f = 0.8)  # Larger f for a smoother line
 
+# Plotting the data
 seatsvotes.plot(
-  main="", 
-  xlab="Margin of Victory", 
-  ylab="Proportion Split-Ticket Voters")
+  main = "", 
+  xlab = "Margin of Victory", 
+  ylab = "Proportion Split-Ticket Voters"
+)
 points(
   x = abs(kent$biden - kent$trump),
   y = kent$prop_split,
@@ -975,47 +1017,49 @@ points(
   bg = ifelse(sign(kent$biden - kent$trump) >= 0, "#1375b7BF", "#c93135BF")
 )
 
-# Add the Lowess lines to the plot
-abline(lm(kent$prop_split ~ abs(kent$biden-kent$trump)),
+# Adding a linear regression line
+abline(lm(kent$prop_split ~ abs(kent$biden - kent$trump)),
     col = "orange",
     lwd = 4)
-# lines(lowess_line2, col = "black", lwd=4)
 
+# Optionally adding one of the LOWESS lines
+# lines(lowess_line2, col = "black", lwd = 4)
 ```
 
-Birthday Paradox
+
 ```{r, bday-paradox, echo=F}
-birthday <- function(n,k) {
-  logdenom <- k * log(n) + lfactorial(n-k)
+# - Original Problem: How many people do you need in order for the probability that at least two people have the same birthday to exceed 0.5?
+# 
+#   - Derivation for the original question:
+# 
+#     \begin{eqnarray*}
+#   & & 1-P(\textsf{everyone has different birthday})\\
+#   & = & 1-\frac{_{365}P_k}{365^k} \ = \ 1-\frac{365!}{365^k(365-k)!}
+#    \end{eqnarray*}
+
+# Define a function to calculate the probability of at least two people sharing a birthday
+birthday <- function(n, k) {
+  logdenom <- k * log(n) + lfactorial(n - k)
   lognumer <- lfactorial(n)
 
   pr <- 1 - exp(lognumer - logdenom)
   return(pr)
 }
 
+# Range of people count
 k <- 1:100
+# Total number of days in a year
 n <- 365
 
-bday <- birthday(n,k)
+# Calculate probabilities for each count of people
+bday <- birthday(n, k)
 names(bday) <- k
+
+# c(bday[10],bday[23],bday[68])
 ```
 
-
-- Original Problem: How many people do you need in order for the probability that at least two people have the same birthday to exceed 0.5?
-
-  - Derivation for the original question:
-
-    \begin{eqnarray*}
-  & & 1-P(\textsf{everyone has different birthday})\\
-  & = & 1-\frac{_{365}P_k}{365^k} \ = \ 1-\frac{365!}{365^k(365-k)!}
-   \end{eqnarray*}
-
-```{r}
-c(bday[10],bday[23],bday[68])
-```
-
-Birthday Paradox Plot (not used)
-```{r, echo=F}
+```{r, echo=F, fig.keep='none'}
+# Setting up the plot parameters
 par(oma = c(0, 2, 0, 0))
 seatsvotes.plot(
   main = "Birthday Paradox", 
@@ -1027,22 +1071,28 @@ seatsvotes.plot(
   yaxis = FALSE,
   prop.line = FALSE
 )
+
+# Plotting the probabilities
 lines(
   x = k, 
   y = bday,  
   col = "black",
-  lwd=3
+  lwd = 3
 )
-  axis(side=1, las=2, at=seq(0,100,10), labels=F, lwd.ticks=0.4)
-  axis(side=1, las=2, at=seq(0,100,1), labels=F, lwd.ticks=0.2, tck=-0.01)
-  axis(side=1, at=seq(0,100,10), labels=seq(0,100,10), cex.axis=0.5, col.axis="gray50")
-    
-  axis(side=2, las=2, at=seq(0,1,0.1), labels=F, lwd.ticks=0.4)
-  axis(side=2, las=2, at=seq(0,1,0.01), labels=F, lwd.ticks=0.2, tck=-0.01)
-  axis(side=2, las=2, at=seq(0,1,0.1), labels=paste0(seq(0*100,1*100,10), "%"), cex.axis=0.5, col.axis="gray50")
-abline(v = k[23], lty=3)
-abline(v = k[47], lty=3)
-abline(h=0.5, lwd=2)
+
+# Customizing x-axis and y-axis
+axis(side = 1, las = 2, at = seq(0, 100, 10), labels = FALSE, lwd.ticks = 0.4)
+axis(side = 1, las = 2, at = seq(0, 100, 1), labels = FALSE, lwd.ticks = 0.2, tck = -0.01)
+axis(side = 1, at = seq(0, 100, 10), labels = seq(0, 100, 10), cex.axis = 0.5, col.axis = "gray50")
+
+axis(side = 2, las = 2, at = seq(0, 1, 0.1), labels = FALSE, lwd.ticks = 0.4)
+axis(side = 2, las = 2, at = seq(0, 1, 0.01), labels = FALSE, lwd.ticks = 0.2, tck = -0.01)
+axis(side = 2, las = 2, at = seq(0, 1, 0.1), labels = paste0(seq(0 * 100, 1 * 100, 10), "%"), cex.axis = 0.5, col.axis = "gray50")
+
+# Adding reference lines
+abline(v = k[23], lty = 3)  # Vertical line at 23 people
+abline(v = k[47], lty = 3)  # Vertical line at 47 people
+abline(h = 0.5, lwd = 2)    # Horizontal line at 50% probability
 ```
 
 
