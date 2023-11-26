@@ -1,5 +1,5 @@
 ---
-title: "Replication Code for Massive Election Fraud?: A Compendium of Statistically Fallacies in Claims about the 2020 Presidential Election"
+title: "Replication Code for Statistical Fallacies in Claims about ‘Massive and Widespread Fraud’ in the 2020 Presidential Election: Examining Claims Based on Aggregate Election Results"
 date: "`r format(Sys.time(), '%Y-%m-%d')`"
 author:
 - "Jonathan Cervas"
@@ -10,7 +10,9 @@ output:
     variant: gfm
 ---
 
-Accepted, Statistics and Public Policy
+**Accepted**, _Statistics and Public Policy_
+
+**In this file, you will find all the code necessary to recreate any table or figures and other data found in "Statistical Fallacies in Claims about ‘Massive and Widespread Fraud’ in the 2020 Presidential Election: Examining Claims Based on Aggregate Election Results".**
 
 ---
 
@@ -312,9 +314,11 @@ gop <- cnty$votes_gop
 totalvotes <- dem + gop
 ```
 
-## Figure 2 – Votes in each County
-A composite plot with two panels illustrating the distribution of Democratic and Republican votes in the 2020 US Presidential Election. The top panel is a bar plot, and the bottom panel is a cumulative line plot.
-```{r fig-2, echo=FALSE}
+```{r fig-1, fig.cap="Truth Social post by former President Donald Trump re the lengths he would be prepared to go to overturn the 2020 election results", echo=FALSE, out.width = '100%'}
+knitr::include_graphics(paste0("/Users/cervas/My Drive/GitHub/jcervas.github.io/2023/SPP/images/fig-1-1.png"))
+```
+
+```{r fig-2, fig.cap="Votes in each County", echo=FALSE}
 # Optional: Uncomment to save the plot as an SVG file
 # svglite::svglite(paste0(dir.figures,"/fig2.svg"), width = 8, height = 5)
 
@@ -421,9 +425,7 @@ head(
 )
 ```
 
-## Figure 3 - Histogram of the 2020 Presidential Election Results, by County
-This R code chunk is designed to create a two-panel histogram comparing unweighted and weighted distributions of the Democratic vote share in the 2020 Presidential election by county. It's a visualization to show how vote distribution varies when considering the total number of votes in each county. 
-```{r, fig-3, echo=FALSE}
+```{r, fig-3, fig.cap="Histogram of the 2020 Presidential Election Results, by County", echo=FALSE}
 # Setup for the histogram plot
 # svglite::svglite(paste0(dir.figures,"/fig3.svg"), width=8, height=5)  # Uncomment to save the plot as SVG file
 par(mfrow=c(2, 1), mar = c(1, 0.1, 1, 0.1))
@@ -461,10 +463,6 @@ mtext("More Democratic", side=1, line=0, adj=0.95)
 mtext("More Republican", side=1, line=0, adj=0.05)
 # dev.off()  # Uncomment to close the SVG device
 ```
-The code effectively creates two histograms:
-
-- Unweighted Histogram: Shows the distribution of counties based on their Democratic vote share, regardless of the number of votes in each county.
-- Weighted Histogram: Replicates each county's vote share a number of times equal to its total votes. This visualization emphasizes counties with more voters.
 
 ```{r D-R-counties, echo=FALSE}
 # Separating counties into Biden and Trump counties
@@ -483,7 +481,37 @@ county.2020.trump <- county.2020[county.2020$votes_dem < county.2020$votes_gop,]
 ## Identifying top ten counties where Trump received the most votes
 # county.2020[order(county.2020$votes_gop, decreasing=TRUE),][1:10,]
 ```
-## Table 2 – Popular Vote in Counties Carried by Each Candidate
+
+```{r tab-1, echo=FALSE}
+# Define the data
+types <- c("Arithmetic Fallacies", "Misinterpreting Statistical Significance", 
+           "Meretricious Probabilistic Reasoning", 
+           "Logically Invalid Arguments with a True Premise involving Historical Election Results Comparisons",
+           "Logically Valid Arguments with a False Premise involving Historical Election Results Comparisons",
+           "Logically Valid Arguments with False Statistical Premises Using Comparisons Based on Features or Components of the Same Presidential Election")
+
+examples <- list(
+  c("Cherry-picking the data", "Failing to weight units", 
+    "Changes in Support Among Demographic Subgroups", 
+    "Two-party vote share versus shares of total votes cast"),
+  c("False Causality", "Timing Mirage"),
+  c("Double Voting", "Benford’s Law", "Tip of the iceberg fallacy", "Straw man fallacy"),
+  c("Spoiled ballots"),
+  c("Presidential coattails", "Bellwether counties", "Other Cross-Election Comparisons"),
+  c("Split ticket voting versus straight ticket voting", 
+    "Comparison of differences involving samples with different means", 
+    "Matching design (split ticket voting versus straight ticket voting)", 
+    "Matching design (within-election comparisons of areas with and without fraud claims)")
+)
+
+# Create a data frame
+fallacies_df <- data.frame(Type = types, Examples = I(examples))
+
+# Display the data frame
+knitr::kable(fallacies_df, caption = "Statistical Fallacies Evaluated from the 2020 election")
+```
+
+
 ```{r tab-2, echo=FALSE}
 # Creating the data frame
 tab2 <- cbind.data.frame(
@@ -506,7 +534,8 @@ rownames(tab2) <- c("Biden Votes", "Trump Votes", "Difference Pro-Trump")
 colnames(tab2) <- c("Biden Counties", "Trump Counties")
 
 # Table 2 – Popular Vote in Counties Carried by Each Candidate
-tab2
+knitr::kable(tab2, caption = "Popular Vote in Counties Carried by Each Candidate")
+
 ```
 
 ```{r, statewide-vote, echo=FALSE, include=FALSE}
@@ -578,14 +607,9 @@ colnames(exit.2016) <- colnames(exit.2020) <- groups
 rownames(exit.2016) <- rownames(exit.2020) <- type.exit
 ```
 
-## Table 3 - 2016 and 2020 Exit Polls, by Race
-While Trump saw an increase in support from minority voters, both in absolute figures and in percentage terms, Biden's significant advances among White voters, a larger demographic, effectively offset Trump's gains among minorities. Additionally, despite Trump's relative increase among minority voters, Biden surpassed Clinton's absolute performance among these groups. This was due in part to the expanded pool of minority voters in 2020.
-```{r, tab-3}
+```{r, tab-3, echo=FALSE}
 # Exit poll data for 2016
-exit.2016
-
-# Exit poll data for 2020
-exit.2020
+knitr::kable(rbind(exit.2016,exit.2020), caption = "2016 and 2020 Exit Polls, by Race")
 ```
 
 ```{r, demo-election, echo=FALSE}
@@ -637,7 +661,6 @@ totalwhite20 <- rbind(
   all_votes_20)
 ```
 
-## Table 4 - Change in Non-Hispanic White Votes between 2016 and 2020
 ```{r, tab-4-setup, echo=FALSE}
 # Combining the data to create Table 4
 tab4 <- rbind(
@@ -670,9 +693,10 @@ colnames(tab4) <- c("2016", "2020", "Difference")
 rownames(tab4) <- c("Trump", "Clinton/Biden", "Other", "Non-Hispanic White Votes", "Minority Votes", "All Votes")
 ```
 
-```{r, tab-4}
+```{r, tab-4, echo=FALSE}
 # Table 4 - Change in Non-Hispanic White Votes between 2016 and 2020
-tab4
+knitr::kable(tab4, caption = "Change in Non-Hispanic White Votes between 2016 and 2020")
+
 ```
 
 ```{r, colors, echo=FALSE}
@@ -732,9 +756,6 @@ pop.sizes <- scaleSqrt(county.2020$total_votes, maxRadius=5, maxDomain=max(count
 pop.opacity <- scaleOpacitySqrt(abs(county.2020$per_point_diff), minOpacity=0.25, maxOpacity=0.75, maxDomain=max(abs(county.2020$per_point_diff)))
 ```
 
-# Create Maps
-
-The provided R code is for creating two types of maps based on the 2020 US Presidential Election data by county: a choropleth map (Figure 4) and a bubble plot (Figure 5). 
 ```{r, map-create, echo=FALSE}
 ## If we wanted to make a .png file
 # png(paste0("us2020.png"), 
@@ -744,8 +765,7 @@ The provided R code is for creating two types of maps based on the 2020 US Presi
 ## To make a *.svg file
 ```
 
-## Figure 4 - Choropleth Plot, 2020 Presidential Election by county
-```{r, fig-4, echo=FALSE}
+```{r, fig-4, fig.cap="Choropleth Plot, 2020 Presidential Election by county", echo=FALSE}
 # Optional: Uncomment to save the plot as an SVG file
 # svglite::svglite(paste0(dir.figures,"/fig4.svg"))
 
@@ -766,8 +786,7 @@ text(state_labels@data$X, state_labels@data$Y, labels=state_labels@data$label_te
 # dev.off()
 ```
 
-## Figure 5 – Bubble Plot, 2020 Presidential Election by county
-```{r, fig-5, echo=FALSE}
+```{r, fig-5, fig.cap="Bubble Plot, 2020 Presidential Election by county", echo=FALSE}
 # Optional: Uncomment to save the plot as an SVG file
 # svglite::svglite(paste0(dir.figures,"/fig5.svg"))
 
@@ -861,7 +880,6 @@ dev.off()
 # rgdal::writeOGR(counties.json.cart2, dir.gis, "counties.json.cart2", driver="ESRI Shapefile", overwrite_layer=TRUE)
 ```
 
-
 ```{r, ayy-reg, echo=FALSE}
 # Performing regression analysis as shown by Ayyadurai
 gop_reg_ayy <- lm(I(kent$GOP_Split - kent$GOP_Straight) ~ kent$GOP_Straight)
@@ -872,8 +890,7 @@ gop_reg <- lm(kent$GOP_Split ~ kent$GOP_Straight)
 dem_reg <- lm(kent$DEM_Split ~ kent$DEM_Straight)
 ```
 
-## Figure 6 – Kent County, Michigan 2020 election data plotted as Ayyadurai shows it.
-```{r fig-6, echo=FALSE}
+```{r fig-6, fig.cap="Kent County, Michigan 2020 election data plotted as Ayyadurai shows it", echo=FALSE}
 # Optional: Uncomment to save the plot as an SVG file
 # svglite::svglite(paste0(dir.figures,"/fig6.svg"), width = 8, height = 5)
 
@@ -947,8 +964,7 @@ title("Kent County, Michigan (2020 Election)", outer = TRUE, line = -3, cex.main
 # dev.off()
 ```
 
-## Figure 7 – Kent County, Michigan Precinct comparison between Trump Straight-ticket and Trump Split-Ticket Support
-```{r fig-7, echo=FALSE}
+```{r fig-7, fig.cap="Kent County, Michigan Precinct comparison between Trump Straight-ticket and Trump Split-Ticket Support", echo=FALSE}
 # Optional: Uncomment to save the plot as an SVG file
 # svglite::svglite(paste0(dir.figures,"/fig7.svg"), width = 8, height = 5)
 
