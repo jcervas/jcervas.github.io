@@ -15,6 +15,10 @@ Accepted, Statistics and Public Policy
 ---
 
 ```{r, setup, echo=FALSE}
+
+# Run markdown script
+# rmarkdown::render('/Users/cervas/My Drive/GitHub/jcervas.github.io/2023/SPP/readme.Rmd', output_format = 'all')
+
 # Clearing the workspace for a fresh start
 rm(list=ls(all=TRUE))
 
@@ -24,7 +28,7 @@ knitr::opts_chunk$set(
   fig.width = 8, 
   fig.height = 5,
   fig.path = 'images/',
-  dpi = 300,
+  dpi = 600,
   dev=c("png", "tiff")
 )
 ```
@@ -32,9 +36,8 @@ knitr::opts_chunk$set(
 
 ```{r, directories, echo=FALSE}
 # Defining directories for data management
-dir.download <- "/Users/cervas/Downloads"
-dir.git <- "/Users/cervas/My Drive/GitHub/Data Files"
-dir.online.git <- "https://raw.githubusercontent.com/jcervas/Data"
+dir.git <- "/Users/cervas/My Drive/GitHub/jcervas.github.io/2023/SPP/data"
+dir.online.git <- "https://raw.githubusercontent.com/jcervas/jcervas.github.io/2023/SPP/data"
 dir.paper <- "/Users/cervas/My Drive/GitHub/jcervas.github.io/2023/SPP"
 dir.data <- paste0(dir.paper, "/data")
 dir.figures <- paste0(dir.paper,"/figures")
@@ -54,7 +57,7 @@ source("https://raw.githubusercontent.com/jcervas/R-Functions/main/GERRYfunction
 years <- seq(1868, 2020, 4)
 ```
 
-```{r, data, echo=FALSE}
+```{r, load-data, echo=FALSE}
 # Function to safely read CSV from a URL
 safeReadCsv <- function(url) {
   tryCatch({
@@ -65,12 +68,6 @@ safeReadCsv <- function(url) {
   })
 }
 
-# Reading various election-related datasets
-fips <- safeReadCsv("https://raw.githubusercontent.com/jcervas/Data/master/fips.csv")
-# ... (repeat for other datasets)
-```
-
-```{r, load-data, echo=FALSE}
 # Custom function to safely read CSV from a URL
 safeReadCsv <- function(url) {
   tryCatch({
@@ -103,35 +100,37 @@ pres.county.2016 <- safeReadCsv("https://raw.githubusercontent.com/tonmcg/US_Cou
 pres.county.2020 <- safeReadCsv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv")
 
 # Read Kent County Election Data
-kent <- safeReadCsv("/Users/cervas/My Drive/GitHub/jcervas.github.io/2023/SPP/data/kent2020.csv")
+kent <- safeReadCsv(paste0(dir.data, "/kent2020.csv"))
 ```
 
 ```{r, pres-2020-county, echo=FALSE}
 # Read 2020 Presidential election data by county
 ## Source: https://observablehq.com/@charliesmart/dorling-cartogram
-county.2020 <- safeReadCsv("/Users/cervas/My Drive/GitHub/Data Files/GIS/NYT/2020/2020_county_results.csv")
+county.2020 <- safeReadCsv(paste0(dir.data, "/2020_county_results.csv"))
 
 if (!is.null(county.2020)) {
   county.2020$GEOID <- leadingZeroes(county.2020$GEOID, d=5)
   county.2020 <- county.2020[!is.na(county.2020$total_votes),]
-  write.csv(county.2020, "/Users/cervas/Downloads/county_2020.csv", row.names=F)
+  
+  # Optional: Uncomment to write data
+  # write.csv(county.2020, paste0(dir.data, "/county_2020.csv"), row.names=F)
 }
 ```
 
 ```{r, GIS-data, echo=FALSE, results = 'hide', warning=FALSE}
 # Reading US Census Bureau's County Shapefile
-counties.tiger <- rgdal::readOGR(paste0(dir.git, "/GIS/Tigerline/TIGER2020PL/counties/tl_2020pl_counties_simplified/tl_2020pl_counties_simplified.shp"))
+counties.tiger <- rgdal::readOGR(paste0(dir.git, "/tl_2020pl_counties_simplified.json"))
 
 # Reading US Census Bureau's County Cartographic Shapefile
-tiger.cart <- rgdal::readOGR(paste0(dir.git, "/GIS/Tigerline/TIGER2020PL/counties-cartographic/cb_2020_us_county_500k_simlified_projected.json"))
+tiger.cart <- rgdal::readOGR(paste0(dir.git, "/cb_2020_us_county_500k_simlified_projected.json"))
 ```
 
 ```{r NYTs-Shapefile, echo=FALSE, results = 'hide', warning=FALSE}
 # Reading NYTs County Shapefiles
-counties.shp <- rgdal::readOGR(paste0(dir.git, "/GIS/NYT/2020/counties-albers-med/counties.shp"))
-state_labels <- rgdal::readOGR(paste0(dir.git, "/GIS/NYT/2020/counties-albers-med/state_labels.shp"))
-states <- rgdal::readOGR(paste0(dir.git, "/GIS/NYT/2020/counties-albers-med/states.shp"))
-state_lines <- rgdal::readOGR(paste0(dir.git, "/GIS/NYT/2020/counties-albers-med/statelines.shp"))
+counties.json <- rgdal::readOGR(paste0(dir.git, "/counties.json"))
+state_labels <- rgdal::readOGR(paste0(dir.git, "/state_labels.json"))
+states <- rgdal::readOGR(paste0(dir.git, "/states.json"))
+state_lines <- rgdal::readOGR(paste0(dir.git, "/statelines.json"))
 
 ```
 
@@ -524,21 +523,21 @@ state.2020 <- aggregate(
 
 ```{r, GIS-data-combine, echo=FALSE, warning=FALSE, results = 'hide'}
 # Combining shapefile data with 2020 election data
-## For counties.shp
-counties.shp@data <- dplyr::left_join(counties.shp@data, county.2020, by=c("GEOID"))
+## For counties.json
+counties.json@data <- dplyr::left_join(counties.json@data, county.2020, by=c("GEOID"))
 counties.tiger@data <- dplyr::left_join(counties.tiger@data, county.2020, by=c("GEOID20"="GEOID"))
 
 # Optional: Uncomment to check the first few rows of the merged data
-# head(counties.shp@data)
+# head(counties.json@data)
 
 # Optional: Filtering out specific states (e.g., Alaska and Hawaii) if needed
-# counties.shp <- counties.shp[!counties.shp@data$ST %in% c("AK","HI"),]
+# counties.json <- counties.json[!counties.json@data$ST %in% c("AK","HI"),]
 
-# Writing the updated shapefile
-rgdal::writeOGR(counties.shp, dir.gis, "us2020", driver="ESRI Shapefile", overwrite_layer=TRUE)
+# Writing the updated shapefile (uncomment to write)
+# rgdal::writeOGR(counties.json, dir.gis, "us2020", driver="ESRI Shapefile", overwrite_layer=TRUE)
 
 # Note: Dissolving states into a national shapefile requires rmapshaper or similar package
-nation.shp <- rmapshaper::ms_dissolve(states)
+nation.json <- rmapshaper::ms_dissolve(states)
 ```
 
 ```{r, exit-polls, echo=FALSE}
@@ -691,10 +690,10 @@ colors.map <- c("#c93135","#1375b7")
 ```{r, choropleth, echo=FALSE}
 # Choropleth map setup
 pop.brks <- seq(0, 1, 0.5)
-counties.shp@data$col <- colors.map[findInterval(counties.shp@data$per_dem, vec = pop.brks)]
+counties.json@data$col <- colors.map[findInterval(counties.json@data$per_dem, vec = pop.brks)]
 
 # Calculate absolute margin
-absmargin <- abs(counties.shp@data$votes_dem - counties.shp@data$votes_gop)
+absmargin <- abs(counties.json@data$votes_dem - counties.json@data$votes_gop)
 
 # Function to calculate the square root scale for size (rScale)
 scaleSqrt <- function(value, maxRadius = 20, maxDomain = NA) {
@@ -751,9 +750,13 @@ The provided R code is for creating two types of maps based on the 2020 US Presi
 par(mfrow=c(1,1), mar = c(0.1, 0.1, 0.1, 0.1))
 
 # Plotting the choropleth map
-sp::plot(counties.shp, col=counties.shp@data$col, border="#ffffff", lwd=0.15)
+sp::plot(counties.json, col=counties.json@data$col, border="#ffffff", lwd=0.15)
 sp::plot(states, border="#ffffff", add=TRUE, lwd=1)
-sp::plot(nation.shp, col=NA, border="#777777", add=TRUE, lwd=1)
+
+# Overlaying national shapefile
+sp::plot(nation.json, col=NA, border="#000000", add=TRUE, lwd=1)
+
+# Adding state labels
 text(state_labels@data$X, state_labels@data$Y, labels=state_labels@data$label_text, cex=0.8)
 
 # Optional: Uncomment to close the SVG device
@@ -769,24 +772,21 @@ text(state_labels@data$X, state_labels@data$Y, labels=state_labels@data$label_te
 par(mfrow=c(1,1), mar = c(0.1, 0.1, 0.1, 0.1))
 
 # Plotting the base map for bubble plot
-sp::plot(counties.shp, border="#ffffff", col="#ffffff", lwd=0.15)
+sp::plot(states, col="#efefef", border="#ffffff", lwd=1)
 
 # Adding transparency to the colors
-counties.shp@data$col_trans <- ifelse(is.na(counties.shp@data$col), counties.shp@data$col, paste0(counties.shp@data$col, pop.opacity))
-
-# Plotting the states
-sp::plot(states, border="#999999", add=TRUE, lwd=1)
+counties.json@data$col_trans <- ifelse(is.na(counties.json@data$col), counties.json@data$col, paste0(counties.json@data$col, pop.opacity))
 
 # Adding the bubbles
-points(counties.shp@data$X, counties.shp@data$Y, 
+points(counties.json@data$X, counties.json@data$Y, 
        cex=pop.sizes, 
        col="#00000033", 
-       bg=counties.shp@data$col_trans, 
+       bg=counties.json@data$col_trans, 
        pch=21, 
        lwd=1)
 
 # Overlaying national shapefile
-sp::plot(nation.shp, col=NA, border="#777777", add=TRUE, lwd=1)
+sp::plot(nation.json, col=NA, border="#000000", add=TRUE, lwd=1)
 
 # Adding state labels
 text(state_labels@data$X, state_labels@data$Y, labels=state_labels@data$label_text, cex=0.8)
@@ -820,41 +820,42 @@ text(state_labels@data$X, state_labels@data$Y, labels=state_labels@data$label_te
 
 ```{r cartogram-setup, eval=FALSE, include=FALSE}
 # Preparing the data for cartogram creation
-counties.shp.cart.tmp <- counties.shp
-counties.shp.cart <- counties.shp.cart.tmp[!is.na(counties.shp.cart.tmp@data$total),]
-counties.shp.cart@data$margin <- abs(counties.shp.cart@data$votes_dem - counties.shp.cart@data$votes_gop)
+counties.json.cart.tmp <- counties.json
+counties.json.cart <- counties.json.cart.tmp[!is.na(counties.json.cart.tmp@data$total),]
+counties.json.cart@data$margin <- abs(counties.json.cart@data$votes_dem - counties.json.cart@data$votes_gop)
 
 # Creating a non-contiguous cartogram
-counties.shp.cart1 <- cartogram::cartogram_ncont(counties.shp.cart, "margin")
+counties.json.cart1 <- cartogram::cartogram_ncont(counties.json.cart, "margin")
 
 # Creating a contiguous cartogram
-counties.shp.cart2 <- cartogram::cartogram_cont(counties.shp.cart, "margin", itermax=3)
+counties.json.cart2 <- cartogram::cartogram_cont(counties.json.cart, "margin", itermax=3)
 # Optional: Save the cartogram as a shapefile
-# rgdal::writeOGR(counties.shp, dir.gis, "counties_shp_cart2", driver="ESRI Shapefile", overwrite_layer=TRUE)
+# rgdal::writeOGR(counties.json, dir.gis, "counties_shp_cart2", driver="ESRI Shapefile", overwrite_layer=TRUE)
 
 # Creating a Dorling cartogram
-counties.shp.dorling <- cartogram::cartogram_dorling(x=counties.shp, weight="margin")
+counties.json.dorling <- cartogram::cartogram_dorling(x=counties.json, weight="margin")
 ```
 
 ```{r cartogram-plot, eval=FALSE, include=FALSE}
 # Plotting and saving non-contiguous cartogram as SVG
 svglite::svglite(paste0(dir.figures,"/us2020_cart.svg"))
-sp::plot(counties.shp.cart1, border="#dddddd", col=counties.shp.cart1@data$col, lwd=0.15)
+sp::plot(counties.json.cart1, border="#dddddd", col=counties.json.cart1@data$col, lwd=0.15)
 dev.off()
 
 # Plotting and saving contiguous cartogram as SVG
 svglite::svglite(paste0(dir.figures,"us2020_cart2.svg"))
-sp::plot(counties.shp.cart2, border=counties.shp.cart2@data$gs.pop.blocks, col=counties.shp.cart2@data$col, lwd=0.15)
+sp::plot(counties.json.cart2, border=counties.json.cart2@data$gs.pop.blocks, col=counties.json.cart2@data$col, lwd=0.15)
 dev.off()
 
 # Plotting and saving Dorling cartogram as SVG
 svglite::svglite(paste0(dir.figures,"us2020_dorling.svg"))
-sp::plot(counties.shp.dorling, id=counties.shp.dorling@data$NAME, border=NA, col=counties.shp.dorling@data$col, lwd=0.15)
+sp::plot(counties.json.dorling, id=counties.json.dorling@data$NAME, border=NA, col=counties.json.dorling@data$col, lwd=0.15)
 dev.off()
 
 # Saving non-contiguous and contiguous cartograms as shapefiles
-rgdal::writeOGR(counties.shp.cart1, dir.gis, "counties.shp.cart1", driver="ESRI Shapefile", overwrite_layer=TRUE)
-rgdal::writeOGR(counties.shp.cart2, dir.gis, "counties.shp.cart2", driver="ESRI Shapefile", overwrite_layer=TRUE)
+# Optional: Save Cartograms
+# rgdal::writeOGR(counties.json.cart1, dir.gis, "counties.json.cart1", driver="ESRI Shapefile", overwrite_layer=TRUE)
+# rgdal::writeOGR(counties.json.cart2, dir.gis, "counties.json.cart2", driver="ESRI Shapefile", overwrite_layer=TRUE)
 ```
 
 
