@@ -96,8 +96,11 @@ pres <- safeReadCsv("https://raw.githubusercontent.com/jcervas/Data/master/Elect
 presCD <- safeReadCsv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/Presidential/Pres%20by%20CD/pres_cd_1952_2020.csv")
 
 # Reading County-level Presidential Election Results for 2016 and 2020
-pres.county.2016 <- safeReadCsv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2016_US_County_Level_Presidential_Results.csv")
-pres.county.2020 <- safeReadCsv("https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv")
+# Source: https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2016_US_County_Level_Presidential_Results.csv
+pres.county.2016 <- safeReadCsv(paste0(dir.git, "/2016_US_County_Level_Presidential_Results.csv"))
+
+# Source: https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-20/master/2020_US_County_Level_Presidential_Results.csv
+pres.county.2020 <- safeReadCsv(paste0(dir.git, "/2020_US_County_Level_Presidential_Results.csv"))
 
 # Read Kent County Election Data
 kent <- safeReadCsv(paste0(dir.data, "/kent2020.csv"))
