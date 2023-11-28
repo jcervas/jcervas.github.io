@@ -2,6 +2,60 @@
     {
         "author": [
         {
+            "family": "Grofman",
+            "given": "Bernard"
+        },
+        {
+            "family": "Cervas",
+            "given": "Jonathan"
+        }],
+        "title": "Statistical Fallacies in Claims about ‘Massive and Widespread Fraud’ in the 2020 Presidential Election: Examining Claims Based on Aggregate Election Results",
+        "volume": "",
+        "issue": "",
+        "type": "article-journal",
+        "journal": "Statistics and Public Policy",
+        "issue": "forthcoming",
+        "year": "2024",
+        "page": "",
+        "fulltext": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3794738",
+        "pdf": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3794738",
+        "bibtex": "",
+        "xml": ""
+    },    
+    {
+        "author": [
+        {
+            "family": "Cervas",
+            "given": "Jonathan"
+        },
+        {
+            "family": "Grofman",
+            "given": "Bernard"
+        },
+            {
+            "family": "Madsuda",
+            "given": "Scott"
+        },
+            {
+            "family": "Kawa",
+            "given": "Justine"
+        }],
+        "title": "Partisan Gerrymandering Cases in State Supreme Courts in the 2020s Redistricting Round",
+        "volume": "",
+        "issue": "",
+        "type": "article-journal",
+        "journal": "Albany Law Review",
+        "issue": "forthcoming",
+        "year": "2024",
+        "page": "",
+        "fulltext": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4617664",
+        "pdf": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4617664",
+        "bibtex": "",
+        "xml": ""
+    },
+    {
+        "author": [
+        {
             "family": "Cervas",
             "given": "Jonathan"
         },
@@ -18,7 +72,6 @@
         "issue": "2",
         "type": "article-journal",
         "journal": "The University of New Hampshire Law Review",
-        "issue": "forthcoming",
         "year": "2022-2023",
         "page": "421",
         "fulltext": "https://scholars.unh.edu/cgi/viewcontent.cgi?article=1454&context=unh_lr",
