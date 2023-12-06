@@ -30,7 +30,7 @@ knitr::opts_chunk$set(
   fig.width = 8, 
   fig.height = 5,
   fig.path = 'images/',
-  dpi = 600,
+  dpi = 3000,
   dev=c("png", "tiff")
 )
 ```
@@ -42,7 +42,7 @@ dir.git <- "/Users/cervas/My Drive/GitHub/jcervas.github.io/2023/SPP/data"
 dir.online.git <- "https://raw.githubusercontent.com/jcervas/jcervas.github.io/2023/SPP/data"
 dir.paper <- "/Users/cervas/My Drive/GitHub/jcervas.github.io/2023/SPP"
 dir.data <- paste0(dir.paper, "/data")
-dir.figures <- paste0(dir.paper,"/figures")
+dir.figures <- paste0(dir.paper,"/images")
 dir.gis <- paste0(dir.paper,"/GIS")
 ```
 
@@ -383,7 +383,7 @@ gop <- cnty$votes_gop
 totalvotes <- dem + gop  # Calculate the total votes
 
 # Creating and saving the stacked bar plot as an SVG file
-svglite::svglite(paste0(dir.figures, "/county-vote.svg"), width = 8, height = 3)
+# svglite::svglite(paste0(dir.figures, "/county-vote.svg"), width = 8, height = 3)
 par(mfrow=c(1, 1), mar = c(0.5, 4, 0.1, 0.1))
 barplot(
   rbind(dem, gop), 
@@ -412,7 +412,7 @@ legend(
   cex = 2,
   bty = "n"
 )
-dev.off()
+# dev.off()
 ```
 ```{r kent-sum, eval=FALSE, include=FALSE}
 # Creating a summary of Kent County, Michigan precinct data
@@ -788,7 +788,7 @@ text(state_labels@data$X, state_labels@data$Y, labels=state_labels@data$label_te
 
 ```{r, fig-5, fig.cap="Bubble Plot, 2020 Presidential Election by county", echo=FALSE}
 # Optional: Uncomment to save the plot as an SVG file
-# svglite::svglite(paste0(dir.figures,"/fig5.svg"))
+svglite::svglite(paste0(dir.figures,"/fig5.svg"))
 
 # Setting up the plot parameters
 par(mfrow=c(1,1), mar = c(0.1, 0.1, 0.1, 0.1))
@@ -813,8 +813,23 @@ sp::plot(nation.json, col=NA, border="#000000", add=TRUE, lwd=1)
 # Adding state labels
 text(state_labels@data$X, state_labels@data$Y, labels=state_labels@data$label_text, cex=0.8)
 
+# Adding legend
+circle.r <- scaleSqrt(c(100000,1000000,max(county.2020$total_votes)), maxRadius=5, maxDomain=max(county.2020$total_votes))
+
+# Get the current plot limits
+plot_limits <- par("usr")
+
+# Bottom left coordinates (with some offset)
+x_coord <- plot_limits[1] + 200000
+y_coord <- plot_limits[3] + 200000
+
+# Add a circle
+points(x_coord, y_coord, cex=circle.r[1])
+points(x_coord, y_coord, cex=circle.r[2])
+points(x_coord, y_coord, cex=circle.r[3])
+
 # Optional: Uncomment to close the SVG device
-# dev.off()
+dev.off()
 ```
 
 
