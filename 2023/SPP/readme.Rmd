@@ -30,7 +30,7 @@ knitr::opts_chunk$set(
   fig.width = 8, 
   fig.height = 5,
   fig.path = 'images/',
-  dpi = 3000,
+  dpi = 300,
   dev=c("png", "tiff")
 )
 ```
@@ -320,7 +320,7 @@ knitr::include_graphics(paste0("/Users/cervas/My Drive/GitHub/jcervas.github.io/
 
 ```{r fig-2, fig.cap="Votes in each County", echo=FALSE}
 # Optional: Uncomment to save the plot as an SVG file
-# svglite::svglite(paste0(dir.figures,"/fig2.svg"), width = 8, height = 5)
+svglite::svglite(paste0(dir.figures,"/fig2.svg"), width = 8, height = 5)
 
 # Setting up the plot layout
 par(mfrow=c(2,1), mar = c(3, 4, 0.1, 0.1))
@@ -373,7 +373,7 @@ abline(h=seq(0.25,0.75,0.25), lty=3, col="gray70")
 abline(v=quantile(1:length(gop_cumsum)), lty=3, col="gray70")
 
 # Optional: Uncomment to save the plot and close the SVG device
-# dev.off()
+dev.off()
 ```
 
 ```{r alt-bar-plot, eval=FALSE, include=FALSE}
@@ -383,7 +383,7 @@ gop <- cnty$votes_gop
 totalvotes <- dem + gop  # Calculate the total votes
 
 # Creating and saving the stacked bar plot as an SVG file
-# svglite::svglite(paste0(dir.figures, "/county-vote.svg"), width = 8, height = 3)
+svglite::svglite(paste0(dir.figures, "/county-vote.svg"), width = 8, height = 3)
 par(mfrow=c(1, 1), mar = c(0.5, 4, 0.1, 0.1))
 barplot(
   rbind(dem, gop), 
@@ -412,7 +412,7 @@ legend(
   cex = 2,
   bty = "n"
 )
-# dev.off()
+dev.off()
 ```
 ```{r kent-sum, eval=FALSE, include=FALSE}
 # Creating a summary of Kent County, Michigan precinct data
@@ -427,7 +427,7 @@ head(
 
 ```{r, fig-3, fig.cap="Histogram of the 2020 Presidential Election Results, by County", echo=FALSE}
 # Setup for the histogram plot
-# svglite::svglite(paste0(dir.figures,"/fig3.svg"), width=8, height=5)  # Uncomment to save the plot as SVG file
+svglite::svglite(paste0(dir.figures,"/fig3.svg"), width=8, height=5)  # Uncomment to save the plot as SVG file
 par(mfrow=c(2, 1), mar = c(1, 0.1, 1, 0.1))
 
 # Creating the unweighted histogram
@@ -461,7 +461,7 @@ segments(x0=0.5, y0=0, x1=0.5, y1=6000000, lty=1, lwd=2)
 axis(side=1, at=c(0, 0.5, 1), labels=c("0%", "50%", "100%"))
 mtext("More Democratic", side=1, line=0, adj=0.95)
 mtext("More Republican", side=1, line=0, adj=0.05)
-# dev.off()  # Uncomment to close the SVG device
+dev.off()  # Uncomment to close the SVG device
 ```
 
 ```{r D-R-counties, echo=FALSE}
@@ -767,7 +767,7 @@ pop.opacity <- scaleOpacitySqrt(abs(county.2020$per_point_diff), minOpacity=0.25
 
 ```{r, fig-4, fig.cap="Choropleth Plot, 2020 Presidential Election by county", echo=FALSE}
 # Optional: Uncomment to save the plot as an SVG file
-# svglite::svglite(paste0(dir.figures,"/fig4.svg"))
+svglite::svglite(paste0(dir.figures,"/fig4.svg"))
 
 # Setting up the plot parameters
 par(mfrow=c(1,1), mar = c(0.1, 0.1, 0.1, 0.1))
@@ -783,7 +783,7 @@ sp::plot(nation.json, col=NA, border="#000000", add=TRUE, lwd=1)
 text(state_labels@data$X, state_labels@data$Y, labels=state_labels@data$label_text, cex=0.8)
 
 # Optional: Uncomment to close the SVG device
-# dev.off()
+dev.off()
 ```
 
 ```{r, fig-5, fig.cap="Bubble Plot, 2020 Presidential Election by county", echo=FALSE}
@@ -907,7 +907,7 @@ dem_reg <- lm(kent$DEM_Split ~ kent$DEM_Straight)
 
 ```{r fig-6, fig.cap="Kent County, Michigan 2020 election data plotted as Ayyadurai shows it", echo=FALSE}
 # Optional: Uncomment to save the plot as an SVG file
-# svglite::svglite(paste0(dir.figures,"/fig6.svg"), width = 8, height = 5)
+svglite::svglite(paste0(dir.figures,"/fig6.svg"), width = 8, height = 5)
 
 # Setting up the plot layout
 par(mfrow = c(1, 2))
@@ -976,12 +976,12 @@ mtext("Split-Ticket (Biden) Minus\n Straight-Ticket (DEM)", side = 2, line = 1.2
 title("Kent County, Michigan (2020 Election)", outer = TRUE, line = -3, cex.main = 1.2)
 
 # Optional: Uncomment to save the plot and close the SVG device
-# dev.off()
+dev.off()
 ```
 
 ```{r fig-7, fig.cap="Kent County, Michigan Precinct comparison between Trump Straight-ticket and Trump Split-Ticket Support", echo=FALSE}
 # Optional: Uncomment to save the plot as an SVG file
-# svglite::svglite(paste0(dir.figures,"/fig7.svg"), width = 8, height = 5)
+svglite::svglite(paste0(dir.figures,"/fig7.svg"), width = 8, height = 5)
 
 # Setting up the plot layout
 par(mfrow=c(1, 2))
@@ -1027,7 +1027,7 @@ abline(lm(kent$DEM_Split ~ kent$DEM_Straight),
 title("Kent County, Michigan (2020 Election)", outer = TRUE, line = -1, cex.main = 1.2)
 
 # Optional: Uncomment to save the plot and close the SVG device
-# dev.off()
+dev.off()
 ```
 
 ```{r toy-example, eval=TRUE, include=FALSE}
