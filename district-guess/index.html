@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Name That Congressional District</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        #map {
+            height: 600px;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        input, button {
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #instructions {
+            margin-top: 10px;
+            font-size: 14px;
+            color: gray;
+            text-align: center;
+            max-width: 600px;
+        }
+        #result {
+            font-size: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Name That Congressional District</h1>
+    <div id="map"></div>
+    <input type="text" id="guessInput" placeholder="Enter your guess here" />
+    <div>
+        <button id="guessButton">Submit Guess</button>
+        <button id="skipButton">Skip</button>
+    </div>
+    <div id="score">Score: 0 out of 435</div>
+    <div id="progress">Progress: 0 out of 435</div>
+    <div id="instructions">
+        Enter your guess in the format "NY-02" or "SD-AT-LARGE".
+        The highest possible score is 435.
+        Enjoyed the game? Please consider making a <a href="https://x.com/RedistrictNet" target="_blank" rel="noopener noreferrer">donation here</a>.
+    </div>
+    <div id="result"></div>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="./script.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
