@@ -6,15 +6,16 @@ let guessedDistricts = new Set();
 let progressCount = 0;
 let map, tileLayer;
 let resetButton;
+let isClueShown = false;
 const elements = {
     score: document.getElementById("score"),
     progress: document.getElementById("progress"),
     result: document.getElementById("result"),
     guessInput: document.getElementById("guessInput"),
     guessButton: document.getElementById("guessButton"),
-    skipButton: document.getElementById("skipButton")
+    skipButton: document.getElementById("skipButton"),
+    clueButton: document.getElementById("clueButton")
 };
-
 async function loadDistricts() {
     try {
         const response = await fetch('./national_cong119_carto_boundary.json');
@@ -26,7 +27,6 @@ async function loadDistricts() {
         alert("Failed to load district data. Please refresh the page.");
     }
 }
-
 function initializeMap() {
     map = L.map('map').setView([37.8, -96], 4);
     tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -35,12 +35,10 @@ function initializeMap() {
         opacity: 0.01
     }).addTo(map);
 }
-
 function updateDisplay() {
     elements.score.textContent = `Score: ${score} out of ${totalDistricts}`;
     elements.progress.textContent = `Progress: ${progressCount} out of 435`;
 }
-
 function showNextDistrict() {
     map.eachLayer(layer => {
         if (layer !== tileLayer) map.removeLayer(layer);
@@ -61,8 +59,12 @@ function showNextDistrict() {
     }).addTo(map);
     map.fitBounds(geojsonLayer.getBounds());
     updateDisplay();
+    
+    // Reset map opacity
+    tileLayer.setOpacity(0.01);
+    isClueShown = false;
+    elements.clueButton.textContent = "Show Map Clue";
 }
-
 function checkGuess() {
     const userGuess = elements.guessInput.value.trim().toUpperCase();
     const correctDistrict = districts.features[currentDistrictIndex].properties.CONG119.toUpperCase();
@@ -76,16 +78,15 @@ function checkGuess() {
         alert("Wrong guess. Try again.");
     }
 }
-
 function skipDistrict() {
     showNextDistrict();
 }
-
 function showResult() {
     elements.result.textContent = `Game Over! Your final score: ${score} out of ${totalDistricts}.`;
     elements.result.style.display = "block";
     elements.guessButton.disabled = true;
     elements.skipButton.disabled = true;
+    elements.clueButton.disabled = true;
     
     if (!resetButton) {
         resetButton = document.createElement("button");
@@ -94,7 +95,6 @@ function showResult() {
         document.body.appendChild(resetButton);
     }
 }
-
 function resetGame() {
     score = 0;
     guessedDistricts.clear();
@@ -102,6 +102,7 @@ function resetGame() {
     elements.result.style.display = "none";
     elements.guessButton.disabled = false;
     elements.skipButton.disabled = false;
+    elements.clueButton.disabled = false;
     elements.guessInput.value = '';
     
     if (resetButton) {
@@ -111,10 +112,20 @@ function resetGame() {
     
     showNextDistrict();
 }
-
+function toggleMapClue() {
+    if (isClueShown) {
+        tileLayer.setOpacity(0.01);
+        elements.clueButton.textContent = "Show Map Clue";
+    } else {
+        tileLayer.setOpacity(1);
+        elements.clueButton.textContent = "Hide Map Clue";
+    }
+    isClueShown = !isClueShown;
+}
 window.addEventListener('load', loadDistricts);
 elements.guessButton.addEventListener('click', checkGuess);
 elements.skipButton.addEventListener('click', skipDistrict);
+elements.clueButton.addEventListener('click', toggleMapClue);
 elements.guessInput.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') checkGuess();
 });
