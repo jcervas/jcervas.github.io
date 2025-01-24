@@ -784,7 +784,7 @@ background-color: #000000;
         }
 
         .map_oc {
-            background: url(./images/cmu.svg);
+            background: url(../images/cmu.svg);
             background-size: 100%;
             padding-bottom: 50px;
             display: block;
