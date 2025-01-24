@@ -24,7 +24,7 @@ if (authors.length === 1) {
             ${obj.title ? `<span class="jc-title"><a href="${obj.pdf}">${obj.title}</a>.</span>` : ""}
             ${formattedAuthors ? `${formattedAuthors}` : ""}
             ${obj.year ? ` <span class="jc-year">${obj.year}</span>.` : ""}
-            ${obj.journal ? `<span class="jc-journal"> ${obj.journal}</span> ` : ""}
+            ${obj.journal ? `<span class="jc-journal"> ${obj.journalAbbreviation}</span> ` : ""}
             ${obj.volume ? `<span class="jc-volume">${obj.volume}</span>` : ""}
             ${obj.issue ? `<span class="jc-issue">${obj.issue}</span> ` : ""}
             ${obj.page ? `<span class="jc-pages">${obj.page}.</span> ` : ""}
