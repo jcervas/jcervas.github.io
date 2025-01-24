@@ -36,8 +36,8 @@ var projection = d3.geoAlbersUsa();
         .projection(projection)
 
 
-        d3.json("2019/states.json", function(json){
-          d3.csv("2019/cervas_trips_2019.csv", function(error, data){
+        d3.json("/2019/states.json", function(json){
+          d3.csv("/2019/cervas_trips_2019.csv", function(error, data){
             var states = topojson.feature(json, json.objects.states).features
 
             const mesh = topojson.mesh(json, json.objects["states"], function (a, b) {
