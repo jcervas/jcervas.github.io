@@ -503,7 +503,7 @@
         "language": "en",
         "license": "All rights reserved",
         "source": "DOI.org (Crossref)",
-        "title": "Population-Dependence of Cabinet Sizes",
+        "title": "(Working) Population-Dependence of Cabinet Sizes",
         "URL": "https://www.ssrn.com/abstract=3223745",
         "author": [
             {
@@ -736,15 +736,17 @@
     {
         "id": "http://zotero.org/users/10395840/items/I69E457D",
         "type": "article-journal",
-        "container-title": "SSRN Electronic Journal",
+        "container-title": "Albany Law Review",
         "DOI": "10.2139/ssrn.4617664",
         "ISSN": "1556-5068",
-        "journalAbbreviation": "SSRN Journal",
+        "journalAbbreviation": "Albany Law Review",
         "language": "en",
         "license": "All rights reserved",
+        "page": "1089--1145",
         "source": "DOI.org (Crossref)",
         "title": "Partisan Gerrymandering Cases in State Supreme Courts in the 2020s Redistricting Round",
-        "URL": "https://www.ssrn.com/abstract=4617664",
+        "URL": "https://www.albanylawreview.org/article/127846-partisan-gerrymandering-cases-in-state-supreme-courts-in-the-2020s-redistricting-round",
+        "volume": "87",
         "author": [
             {
                 "family": "Cervas",
@@ -775,7 +777,7 @@
         "issued": {
             "date-parts": [
                 [
-                    "2023"
+                    "2024"
                 ]
             ]
         }
