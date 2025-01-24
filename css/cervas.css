@@ -94,9 +94,9 @@ iframe {
     width: auto;
     height: 100%;
     position: fixed;
-    background: url(images/PAROADS.svg) no-repeat 50% 0;
+    background: url(/images/PAROADS.svg) no-repeat 50% 0;
     background-size: cover;
-    background-image: url(images/PAROADS.svg);
+    background-image: url(/images/PAROADS.svg);
 }
 
 #chart {
