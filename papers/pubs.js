@@ -21,7 +21,7 @@ if (authors.length === 1) {
         li.setAttribute("data-pub-id", obj.id);
         li.setAttribute("class", "item");
         li.innerHTML = `
-            ${obj.title ? `<span class="jc-title"><a href="${obj.pdf}">${obj.title}</a>.</span>` : ""}
+            ${obj.title ? `<span class="jc-title"><a href="${obj.URL}">${obj.title}</a>.</span>` : ""}
             ${formattedAuthors ? `${formattedAuthors}` : ""}
             ${obj.year ? ` <span class="jc-year">${obj.year}</span>.` : ""}
             ${obj.journal ? `<span class="jc-journal"> ${obj.journalAbbreviation}</span> ` : ""}
