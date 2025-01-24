@@ -637,7 +637,9 @@
             {
                 "family": "Kennedy",
                 "given": "Roderick"
-            },
+            }
+        ],
+        "contributor": [
             {
                 "literal": "Election Reformers Network"
             },
