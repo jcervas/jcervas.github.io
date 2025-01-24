@@ -33,26 +33,33 @@
                 </a></li>
             <!-- <a class="navbar-brand" href="#">Jonathan Cervas</a> -->
             <div id="headerContainer" class="afterLoad">
-                <div id="header">
-                    <div id="navigation" class="menu-homemain-container">
-                        <ul id="dropmenu" class="menu">
-                            <li id="menu-item-367" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-367"><a href="#about">About</a></li>
-                            <li id="menu-item-27" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-27"><a href="#cases">Redistricting Cases</a></li>
-                            <li id="menu-item-29" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-29"><a href="#pubs">Publications</a></li>
-                            <li id="menu-item-25" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-25"><a href="cv.pdf">CV</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <select id="selectMenu">
-                    <option value="" selected="selected">Menu</option>
-                    <option value="#about">About</option>
-                    <option value="#cases">Redistricting Cases</option>
-                    <option value="#pubs">Publications</option>
-                    <option value="#media">Media</option>
-                    <option value="https://www.polisci.uci.edu/~jcervas/cv.pdf">CV</option>
-                </select>
-                <!--end header-->
-            </div>
+    <div id="header">
+        <div id="navigation" class="menu-homemain-container" aria-label="Main Navigation">
+            <ul id="dropmenu" class="menu" role="menubar">
+                <li id="menu-item-367" role="menuitem">
+                    <a href="#about" aria-label="About section">About</a>
+                </li>
+                <li id="menu-item-27" role="menuitem">
+                    <a href="#cases" aria-label="Redistricting Cases section">Redistricting Cases</a>
+                </li>
+                <li id="menu-item-29" role="menuitem">
+                    <a href="#pubs" aria-label="Publications section">Publications</a>
+                </li>
+                <li id="menu-item-25" role="menuitem">
+                    <a href="https://www.polisci.uci.edu/~jcervas/cv.pdf" aria-label="Curriculum Vitae">CV</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <select id="selectMenu" aria-label="Navigation Menu" onchange="window.location.href=this.value">
+        <option value="" selected="selected">Menu</option>
+        <option value="#about">About</option>
+        <option value="#cases">Redistricting Cases</option>
+        <option value="#pubs">Publications</option>
+        <option value="#media">Media</option>
+        <option value="/cv.pdf">CV</option>
+    </select>
+</div>
         </div>
     </section>
     <section>
