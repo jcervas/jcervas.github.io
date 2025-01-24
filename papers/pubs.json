@@ -1,354 +1,781 @@
 [
     {
-        "author": [
-        {
-            "family": "Grofman",
-            "given": "Bernard"
-        },
-        {
-            "family": "Cervas",
-            "given": "Jonathan"
-        }],
-        "title": "Statistical Fallacies in Claims about ‘Massive and Widespread Fraud’ in the 2020 Presidential Election: Examining Claims Based on Aggregate Election Results",
-        "volume": "",
-        "issue": "",
+        "id": "http://zotero.org/users/10395840/items/BXCJV6HP",
         "type": "article-journal",
-        "journal": "Statistics and Public Policy",
-        "issue": "forthcoming",
-        "year": "2024",
-        "page": "",
-        "fulltext": "https://www.tandfonline.com/doi/full/10.1080/2330443X.2023.2289529",
-        "pdf": "https://www.tandfonline.com/doi/full/10.1080/2330443X.2023.2289529",
-        "bibtex": "",
-        "xml": ""
-    },    
-    {
-        "author": [
-        {
-            "family": "Cervas",
-            "given": "Jonathan"
-        },
-        {
-            "family": "Grofman",
-            "given": "Bernard"
-        },
-            {
-            "family": "Madsuda",
-            "given": "Scott"
-        },
-            {
-            "family": "Kawa",
-            "given": "Justine"
-        }],
-        "title": "Partisan Gerrymandering Cases in State Supreme Courts in the 2020s Redistricting Round",
-        "volume": "",
-        "issue": "",
-        "type": "article-journal",
-        "journal": "Albany Law Review",
-        "issue": "forthcoming",
-        "year": "2024",
-        "page": "",
-        "fulltext": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4617664",
-        "pdf": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4617664",
-        "bibtex": "",
-        "xml": ""
-    },
-    {
-        "author": [
-        {
-            "family": "Cervas",
-            "given": "Jonathan"
-        },
-        {
-            "family": "Grofman",
-            "given": "Bernard"
-        },
-            {
-            "family": "Madsuda",
-            "given": "Scott"
-        }],
-        "title": "The Role Of State Courts In Constraining Partisan Gerrymandering In Congressional Elections",
-        "volume": "21",
-        "issue": "2",
-        "type": "article-journal",
-        "journal": "The University of New Hampshire Law Review",
-        "year": "2022-2023",
-        "page": "421",
-        "fulltext": "https://scholars.unh.edu/cgi/viewcontent.cgi?article=1454&context=unh_lr",
-        "pdf": "https://scholars.unh.edu/cgi/viewcontent.cgi?article=1454&context=unh_lr",
-        "bibtex": "",
-        "xml": ""
-    },
-        {
-        "author": [
-        {
-            "family": "Cervas",
-            "given": "Jonathan"
-        },
-        {
-            "family": "Grofman",
-            "given": "Bernard"
-        }],
-        "title": "Comparing Partisan Bias in the 2020 Presidential Election With Partisan Bias in the Five Other Presidential Elections in the 21st Century Using Folded Seats-Votes Curves",
-        "volume": "52",
-        "type": "article-journal",
-        "journal": "Presidential Studies Quarterly",
-        "issue": "2",
-        "year": "2022",
-        "page": "429-425",
-        "fulltext": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3937648",
-        "pdf": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3937648",
-        "bibtex": "",
-        "xml": ""
-    },
-    {
-
-        "author": [
-        {
-            "family": "Chen",
-            "given": "Sandra J."
-        },
-        {
-            "family": "Wang",
-            "given": "Samaul"
-        },
-        {
-            "family": "Grofman",
-            "given": "Bernard"
-        },
-        {
-            "family": "Ober",
-            "given": "Richard F."
-        },
-        {
-            "family": "Barnes",
-            "given": "Kyle T."
-        },
-        {
-            "family": "Cervas",
-            "given": "Jonathan"
-        }],
-        "title": "Turning Communities Of Interest Into A Rigorous Standard For Fair Districting",
-        "volume": "18",
-        "type": "article-journal",
-        "journal": "Stanford Journal of Civil Rights and Civil Liberties",
-        "issue": "",
-        "year": "2022",
-        "page": "101-189",
-        "fulltext": "https://law.stanford.edu/publications/turning-communities-of-interest-into-a-rigorous-standard-for-fair-districting/",
-        "pdf": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3828800",
-        "bibtex": "",
-        "xml": ""
-    },
-    {
-
-        "author": [
-        {
-            "family": "Wang",
-            "given": "Samaul"
-        },
-        {
-            "family": "Cervas",
-            "given": "Jonathan"
-        },
-        {
-            "family": "Grofman",
-            "given": "Bernard"
-        },
-        {
-            "family": "Lipsitz",
-            "given": "Keena"
-        }],
-        "title": "A systems framework for remedying dysfunction in U.S. democracy",
-        "volume": "118",
-        "type": "article-journal",
-        "journal": "Proceedings of the National Academy of Science (PNAS)",
-        "issue": "50",
-        "year": "2021",
-        "page": "e2102154118",
-        "fulltext": "https://pnas.org/doi/full/10.1073/pnas.2102154118",
-        "pdf": "https://papers.ssrn.com/sol3/Delivery.cfm/SSRN_ID3902812_code3015390.pdf?abstractid=3800433&mirid=1&type=2",
-        "bibtex": "",
-        "xml": ""
-    },
-    {
-        "author": [
-        {
-            "family": "Cervas",
-            "given": "Jonathan"
-        },
-        {
-            "family": "Grofman",
-            "given": "Bernard"
-        }],
-        "title": "Why Donald Trump Should be a Fervent Advocate of Using Rank-Choice Voting in 2024",
-        "volume": "55",
-        "type": "article-journal",
-        "journal": "PS: Political Science and Politics",
-        "issue": "1",
-        "year": "2022",
-        "page": "1-6",
-        "fulltext": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3832051",
-        "pdf": "/2021/PS/rcv.pdf",
-        "bibtex": "/2021/PS/rcv.bib",
-        "xml": "/2021/PS/rcv.xml"
-    },
-
-    {
-        "author": [
-        {
-            "family": "Cervas",
-            "given": "Jonathan"
-        },
-        {
-            "family": "Grofman",
-            "given": "Bernard"
-        }],
-        "title": "The Unanticipated Effect of Covid-19 on House Apportionments",
-        "volume": "102",
-        "issue": "5",
-        "type": "article-journal",
-        "journal": "Social Science Quarterly",
-        "year": "2021",
-        "page": "2432-2434",
-        "fulltext": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3898284",
-        "pdf": "https://papers.ssrn.com/sol3/Delivery.cfm/SSRN_ID3898284_code3015390.pdf?abstractid=3898284&mirid=1&type=2",
-        "bibtex": "",
-        "xml": ""
-    },
-
-
-    {
-        "author": [
-        {
-            "family": "Cervas",
-            "given": "Jonathan"
-        },
-        {
-            "family": "Grofman",
-            "given": "Bernard"
-        }],
-        "title": "Legal, political science and economics approaches to measuring malapportionment: The U.S. House, the Senate and the Electoral College 1790-2010",
-        "volume": "101",
-        "issue": "6",
-        "type": "article-journal",
-        "journal": "Social Science Quarterly",
-        "year": "2020",
-        "page": "2238-2256",
-        "fulltext": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3558660",
-        "pdf": "http://jonathancervas.com/2020/SSQ/malapportionment.pdf",
-        "bibtex": "http://jonathancervas.com/2020/SSQ/malapportionment.bib",
-        "xml": "http://jonathancervas.com/2020/SSQ/malapportionment.xml"
-    },
-    {
-        "author": [
-        {
-            "family": "Grofman",
-            "given": "Bernard"
-        },
-        {
-            "family": "Cervas",
-            "given": "Jonathan"
-        }],
-        "title": "ZIP Codes as Geographic Bases of Representation",
-        "volume": "20",
-        "issue": "2",
-        "type": "article-journal",
-        "journal": "Election Law Journal",
-        "year": "2020",
-        "page": "215-223",
-        "fulltext": "https://www.liebertpub.com/doi/10.1089/elj.2020.0687",
-        "pdf": "http://jonathancervas.com/2020/zipcodes/ZIP.pdf",
-        "bibtex": "http://jonathancervas.com/2020/zipcodes/ZIP.bib",
-        "xml": "http://jonathancervas.com/2020/zipcodes/ZIP.xml",
-        "doi": "10.1089/elj.2020.0687"
-    },
-    {
-        "author": [
-        {
-            "family": "Cervas",
-            "given": "Jonathan"
-        },
-        {
-            "family": "Grofman",
-            "given": "Bernard"
-        }],
-        "title": "Tools for identifying partisan gerrymandering with an application to congressional districting in Pennsylvania",
-        "volume": "76",
-        "type": "article-journal",
-        "journal": "Political Geography",
-        "year": "2020",
-        "page": "102069",
-        "fulltext": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3248713",
-        "pdf": "http://jonathancervas.com/2020/polgeo/PALWV.pdf",
-        "bibtex": "http://jonathancervas.com/2020/polgeo/PALWV.bib",
-        "xml": "http://jonathancervas.com/2020/polgeo/PALWV.xml",
-        "ris": "http://jonathancervas.com/2020/polgeo/PALWV.ris"
-    },
-    {
-        "author": [
-        {
-            "family": "Cervas",
-            "given": "Jonathan"
-        },
-        {
-            "family": "Grofman",
-            "given": "Bernard"
-        }],
-        "title": "Are Presidential Inversions Inevitable? Comparing Eight Counterfactual Rules for Electing the U.S President",
-        "volume": "100",
-        "type": "article-journal",
-        "journal": "Social Science Quarterly",
+        "abstract": "In League of Women Voters et al. v. Commonwealth of Pennsylvania et al. (2018), henceforth abbreviated LWV, the Pennsylvania Supreme Court struck down that state’s congressional plan as an unconstitutional partisan gerrymander. It did so entirely on state law grounds after a three-judge federal court had rejected issuing a preliminary injunction against the plan. The aim of this essay is to examine the implications of LWV for future partisan gerrymandering litigation. In particular, we look toward the applicability of the Pennsylvania court’s approach to other potential partisan gerrymandering challenges brought under state law, especially those in the 12 states whose state constitutions have provisions essentially identical to the one relied upon by the Pennsylvania Supreme Court, and in states with similar provisions. We pay particular attention to how the court made use of the expert witness testimony in the case, relying on some of it, while rejecting or critiquing the applicability of other elements, since such a discussion can inform future litigation in state courts drawing on the LWV opinion for ideas. In our concluding discussion we contrast the criteria used to evaluate partisan gerrymandering by this court with those used by federal courts, and we look at how it may impact the decisions of legislators about line drawing in 2020.",
+        "container-title": "Election Law Journal: Rules, Politics, and Policy",
+        "DOI": "10.1089/elj.2018.0496",
+        "ISSN": "1533-1296, 1557-8062",
         "issue": "4",
-        "year": "2019",
-        "page": "1322–1342",
-        "fulltext": "https://cervasj.wixsite.com/website/post/are-presidential-inversions-inevitable",
-        "pdf": "/2019/SSQ/inversions.pdf",
-        "bibtex": "/2019/SSQ/inversions.bib",
-        "xml": "/2019/SSQ/inversions.xml"
-    },
-    {
-        "author": [
-        {
-            "family": "Grofman",
-            "given": "Bernard"
-        },
-        {
-            "family": "Cervas",
-            "given": "Jonathan"
-        }],
-        "title": "Can State Courts Cure Partisan Gerrymandering: Lessons from League of Women Voters v. PA",
+        "journalAbbreviation": "Election Law Journal: Rules, Politics, and Policy",
+        "language": "en",
+        "license": "All rights reserved",
+        "page": "264-285",
+        "source": "DOI.org (Crossref)",
+        "title": "Can State Courts Cure Partisan Gerrymandering: Lessons from <i>League of Women Voters v. Commonwealth of Pennsylvania</i> (2018)",
+        "title-short": "Can State Courts Cure Partisan Gerrymandering",
+        "URL": "https://www.liebertpub.com/doi/10.1089/elj.2018.0496",
         "volume": "17",
-        "type": "article-journal",
-        "journal": "Election Law Journal",
-        "issue": "4",
-        "year": "2018",
-        "page": "264–285",
-        "fulltext": "/2018/ELJ/CanStateCourtsCurePartisanGerrymandering.html",
-        "pdf": "/2018/ELJ/_2018__Can_State_Courts_Cure_Partisan_Gerrymandering.pdf",
-        "bibtex": "/2018/ELJ/_2018__Can_State_Courts_Cure_Partisan_Gerrymandering.bib",
-        "xml": "/2018/ELJ/_2018__Can_State_Courts_Cure_Partisan_Gerrymandering.xml"
+        "author": [
+            {
+                "family": "Grofman",
+                "given": "Bernard"
+            },
+            {
+                "family": "Cervas",
+                "given": "Jonathan R."
+            }
+        ],
+        "accessed": {
+            "date-parts": [
+                [
+                    "2022",
+                    10,
+                    18
+                ]
+            ]
+        },
+        "issued": {
+            "date-parts": [
+                [
+                    "2018",
+                    12
+                ]
+            ]
+        }
     },
     {
-        "author": [
-        {
-            "family": "Cervas",
-            "given": "Jonathan"
-        },
-        {
-            "family": "Grofman",
-            "given": "Bernard"
-        }],
-        "title": "Why noncompetitive states are so important for understanding the outcomes of competitive elections: the Electoral College 1868–2016",
-        "volume": "173",
+        "id": "http://zotero.org/users/10395840/items/AFR8L3CX",
         "type": "article-journal",
-        "journal": "Public Choice",
-        "issue": "3–4",
-        "year": "2017",
-        "page": "251–265",
-        "fulltext": "http://jonathancervas.com/2017/PC/noncompetitive.html",
-        "pdf": "http://jonathancervas.com/2017/PC/noncompetitiveelections.pdf",
-        "bibtex": "http://jonathancervas.com/2017/PC/noncompetitiveelections.bib",
-        "xml": "http://jonathancervas.com/2017/PC/noncompetitiveelections.xml"
+        "abstract": "In League of Women Voters v. Commonwealth of Pennsylvania (2018) the Pennsylvania Supreme Court struck down as a “severe and durable” partisan gerrymander the congressional map drawn by Republicans in 2011 and used in elections from 2012-2016. It did so entirely on state law grounds after a three-judge federal court had rejected issuing a preliminary injunction against the plan. After Pennsylvania failed to enact a lawful remedy plan of its own (due to total disagreement as to how to proceed between the newly elected Democratic governor and the still Republican-controlled legislature), the Court then ordered into place for the 2018 election a map of its own drawn for it by a court-appointed consultant. In a split court, the Court map was endorsed only by judges with Democratic affiliations. Here we compare the 2011 and 2018 congressional maps in terms of a variety of proposed metrics for detecting partisan gerrymandering. We also examine the remedy map proposed by a group of Republican legislators and that proposed by the Democratic governor. We conclude that the 2011 map was a blatant and undisguised pro-Republican gerrymander. Moreover, the remedy map proposed by Republican legislators was a covert pro-Republican gerrymander (what we refer to as a “stealth gerrymander”). The Democratic governor's proposed plan cannot be classified as a pro-Democratic gerrymander and indeed has, if anything, a slight pro-Republican tilt. The 2018 courtdrawn remedial map, by all measures, was not a gerrymander.",
+        "container-title": "Political Geography",
+        "DOI": "10.1016/j.polgeo.2019.102069",
+        "ISSN": "09626298",
+        "journalAbbreviation": "Political Geography",
+        "language": "en",
+        "license": "All rights reserved",
+        "page": "102069",
+        "source": "DOI.org (Crossref)",
+        "title": "Tools for identifying partisan gerrymandering with an application to congressional districting in Pennsylvania",
+        "URL": "https://linkinghub.elsevier.com/retrieve/pii/S0962629818303342",
+        "volume": "76",
+        "author": [
+            {
+                "family": "Cervas",
+                "given": "Jonathan R."
+            },
+            {
+                "family": "Grofman",
+                "given": "Bernard"
+            }
+        ],
+        "accessed": {
+            "date-parts": [
+                [
+                    "2022",
+                    10,
+                    18
+                ]
+            ]
+        },
+        "issued": {
+            "date-parts": [
+                [
+                    "2020",
+                    1
+                ]
+            ]
+        }
+    },
+    {
+        "id": "http://zotero.org/users/10395840/items/6DHVLC53",
+        "type": "article-journal",
+        "container-title": "Social Science Quarterly",
+        "DOI": "10.1111/ssqu.12871",
+        "ISSN": "0038-4941, 1540-6237",
+        "issue": "6",
+        "journalAbbreviation": "Social Science Quarterly",
+        "language": "en",
+        "license": "All rights reserved",
+        "page": "2238-2256",
+        "source": "DOI.org (Crossref)",
+        "title": "Legal, Political Science, and Economics Approaches to Measuring Malapportionment: The U.S. House, Senate, and Electoral College 1790–2010",
+        "title-short": "Legal, Political Science, and Economics Approaches to Measuring Malapportionment",
+        "URL": "https://onlinelibrary.wiley.com/doi/10.1111/ssqu.12871",
+        "volume": "101",
+        "author": [
+            {
+                "family": "Cervas",
+                "given": "Jonathan"
+            },
+            {
+                "family": "Grofman",
+                "given": "Bernard"
+            }
+        ],
+        "accessed": {
+            "date-parts": [
+                [
+                    "2022",
+                    10,
+                    18
+                ]
+            ]
+        },
+        "issued": {
+            "date-parts": [
+                [
+                    "2020",
+                    10
+                ]
+            ]
+        }
+    },
+    {
+        "id": "http://zotero.org/users/10395840/items/DY58UZM6",
+        "type": "article-journal",
+        "abstract": "Brams and Kilgour (Public Choice 170:99–113, 2017) begin their recent essay on the Electoral College (EC) by pointing out the obvious, but nonetheless regularly neglected fact that noncompetitive states may have a decisive impact on EC outcomes and shape the electoral strategies of the candidates in the competitive states, especially if there is asymmetry in the partisan balances in the non-competitive states. Their contribution is to offer combinatorics insights into the implications of such asymmetries in the form of three new indicators: Winningness, Vulnerability, and Fragility. They then explore the magnitude and effects of these three measures for the presidential elections of 2000, 2004, 2008 and 2012. The major contribution of this note is to extend their analyses of these measures to an additional 34 elections: every election in the modern two-party post-Civil War era from 1868 to 2016. We ﬁnd the Winningness measure to predict very well over the entire set of 38 presidential elections. Inspired by their work, we also offer a new and simpler metric for partisan asymmetries in noncompetitive states and show how it can predict the expected closeness of EC outcomes as well or better than the more complex combinatorics measures they propose.",
+        "container-title": "Public Choice",
+        "DOI": "10.1007/s11127-017-0474-4",
+        "ISSN": "0048-5829, 1573-7101",
+        "issue": "3-4",
+        "journalAbbreviation": "Public Choice",
+        "language": "en",
+        "license": "All rights reserved",
+        "page": "251-265",
+        "source": "DOI.org (Crossref)",
+        "title": "Why noncompetitive states are so important for understanding the outcomes of competitive elections: the Electoral College 1868–2016",
+        "title-short": "Why noncompetitive states are so important for understanding the outcomes of competitive elections",
+        "URL": "http://link.springer.com/10.1007/s11127-017-0474-4",
+        "volume": "173",
+        "author": [
+            {
+                "family": "Cervas",
+                "given": "Jonathan R."
+            },
+            {
+                "family": "Grofman",
+                "given": "Bernard"
+            }
+        ],
+        "accessed": {
+            "date-parts": [
+                [
+                    "2022",
+                    10,
+                    18
+                ]
+            ]
+        },
+        "issued": {
+            "date-parts": [
+                [
+                    "2017",
+                    12
+                ]
+            ]
+        }
+    },
+    {
+        "id": "http://zotero.org/users/10395840/items/4BZCZ5JX",
+        "type": "article-journal",
+        "abstract": "Democracy often fails to meet its ideals, and these failures may be made worse by electoral institutions. Unwanted outcomes include elite polarization, unresponsive representatives, and the ability of a faction of voters to gain power at the expense of the majority. Various reforms have been proposed to address these problems, but their effectiveness is difficult to predict against a backdrop of complex interactions. Here we outline a path for systems-level modeling to help understand and optimize repairs to US democracy. Following the tradition of engineering and biology, models of systems include mechanisms with dynamical properties that include nonlinearities and amplification (voting rules), positive feedback mechanisms (single-party control, gerrymandering), negative feedback (checks and balances), integration over time (lifetime judicial appointments), and low dimensionality (polarization). To illustrate a systems-level approach, we analyze three emergent phenomena: low dimensionality, elite polarization, and antimajoritarianism in legislatures. In each case, long-standing rules now contribute to undesirable outcomes as a consequence of changes in the political environment. Theoretical understanding at a general level will also help evaluate whether a proposed reform’s benefits will materialize and be lasting, especially as conditions change again. In this way, rigorous modeling may not only shape new lines of research but aid in the design of effective and lasting reform.",
+        "container-title": "Proceedings of the National Academy of Sciences",
+        "DOI": "10.1073/pnas.2102154118",
+        "ISSN": "0027-8424, 1091-6490",
+        "issue": "50",
+        "journalAbbreviation": "Proc. Natl. Acad. Sci. U.S.A.",
+        "language": "en",
+        "license": "All rights reserved",
+        "page": "e2102154118",
+        "source": "DOI.org (Crossref)",
+        "title": "A systems framework for remedying dysfunction in US democracy",
+        "URL": "https://pnas.org/doi/full/10.1073/pnas.2102154118",
+        "volume": "118",
+        "author": [
+            {
+                "family": "Wang",
+                "given": "Samuel S.-H."
+            },
+            {
+                "family": "Cervas",
+                "given": "Jonathan"
+            },
+            {
+                "family": "Grofman",
+                "given": "Bernard"
+            },
+            {
+                "family": "Lipsitz",
+                "given": "Keena"
+            }
+        ],
+        "accessed": {
+            "date-parts": [
+                [
+                    "2022",
+                    10,
+                    18
+                ]
+            ]
+        },
+        "issued": {
+            "date-parts": [
+                [
+                    "2021",
+                    12,
+                    14
+                ]
+            ]
+        }
+    },
+    {
+        "id": "http://zotero.org/users/10395840/items/LAVLLQFE",
+        "type": "article-journal",
+        "container-title": "Stanford Journal of Civil Rights & Civil Liberties",
+        "language": "en",
+        "license": "All rights reserved",
+        "page": "101",
+        "source": "Zotero",
+        "title": "Turning Communities of Interest Into a Rigorous Standard For Fair Districting",
+        "volume": "18",
+        "author": [
+            {
+                "family": "Chen",
+                "given": "Sandra J"
+            },
+            {
+                "family": "Wang",
+                "given": "Samuel S.-H."
+            },
+            {
+                "family": "Grofman",
+                "given": "Bernard"
+            },
+            {
+                "family": "Ober",
+                "given": "Richard F"
+            },
+            {
+                "family": "Barnes",
+                "given": "Kyle T"
+            },
+            {
+                "family": "Cervas",
+                "given": "Jonathan"
+            }
+        ],
+        "issued": {
+            "date-parts": [
+                [
+                    "2022"
+                ]
+            ]
+        }
+    },
+    {
+        "id": "http://zotero.org/users/10395840/items/6MXYJY3R",
+        "type": "article-journal",
+        "abstract": "It is well understood thateven small differences in population can have a disproportionate impact on representation in the U.S. House of Representatives after a decennial census because of the peculiarities of rounding rules that require integer allocations. While the COVID-19 pandemic can be held responsible for accelerating the trend toward the increased use of mail-in balloting, and it affected the ability of the census to collect inperson information, here we call attention to an unanticipated effect of the pandemic on the electoral process that, as far as we are aware, has never previously been identiﬁed. By rerunning the apportionment numbers for all states under the assumption that deaths from COVID-19 prior to the start of the Census had not occurred, we show that New York’s congressional delegation would not have lost a seat. New York was the only state whose House seat allocation was affected by disproportionate COVID-19 deaths.",
+        "container-title": "Social Science Quarterly",
+        "DOI": "10.1111/ssqu.13058",
+        "ISSN": "0038-4941, 1540-6237",
+        "issue": "5",
+        "journalAbbreviation": "Social Science Quarterly",
+        "language": "en",
+        "license": "All rights reserved",
+        "page": "2432-2434",
+        "source": "DOI.org (Crossref)",
+        "title": "The unanticipated effect of COVID‐19 on house apportionment",
+        "URL": "https://onlinelibrary.wiley.com/doi/10.1111/ssqu.13058",
+        "volume": "102",
+        "author": [
+            {
+                "family": "Cervas",
+                "given": "Jonathan"
+            },
+            {
+                "family": "Grofman",
+                "given": "Bernard"
+            }
+        ],
+        "accessed": {
+            "date-parts": [
+                [
+                    "2022",
+                    10,
+                    18
+                ]
+            ]
+        },
+        "issued": {
+            "date-parts": [
+                [
+                    "2021",
+                    9
+                ]
+            ]
+        }
+    },
+    {
+        "id": "http://zotero.org/users/10395840/items/ZLKS53HT",
+        "type": "article-journal",
+        "container-title": "Social Science Quarterly",
+        "DOI": "10.1111/ssqu.12634",
+        "ISSN": "0038-4941, 1540-6237",
+        "issue": "4",
+        "journalAbbreviation": "Social Science Quarterly",
+        "language": "en",
+        "license": "All rights reserved",
+        "page": "1322-1342",
+        "source": "DOI.org (Crossref)",
+        "title": "Are Presidential Inversions Inevitable? Comparing Eight Counterfactual Rules for Electing the U.S. President*",
+        "title-short": "Are Presidential Inversions Inevitable?",
+        "URL": "https://onlinelibrary.wiley.com/doi/10.1111/ssqu.12634",
+        "volume": "100",
+        "author": [
+            {
+                "family": "Cervas",
+                "given": "Jonathan R."
+            },
+            {
+                "family": "Grofman",
+                "given": "Bernard"
+            }
+        ],
+        "accessed": {
+            "date-parts": [
+                [
+                    "2022",
+                    10,
+                    18
+                ]
+            ]
+        },
+        "issued": {
+            "date-parts": [
+                [
+                    "2019",
+                    6
+                ]
+            ]
+        }
+    },
+    {
+        "id": "http://zotero.org/users/10395840/items/5JVVDN99",
+        "type": "article-journal",
+        "container-title": "Presidential Studies Quarterly",
+        "DOI": "10.1111/psq.12788",
+        "ISSN": "0360-4918, 1741-5705",
+        "issue": "2",
+        "journalAbbreviation": "Pres Stud Q",
+        "language": "en",
+        "license": "All rights reserved",
+        "page": "429-435",
+        "source": "DOI.org (Crossref)",
+        "title": "Using Folded Seats‐Votes Curves to Compare Partisan Bias in the 2020 Presidential Election with Partisan Bias in the Five Other Presidential Elections in the 21st Century",
+        "URL": "https://onlinelibrary.wiley.com/doi/10.1111/psq.12788",
+        "volume": "52",
+        "author": [
+            {
+                "family": "Cervas",
+                "given": "Jonathan"
+            },
+            {
+                "family": "Grofman",
+                "given": "Bernard"
+            }
+        ],
+        "accessed": {
+            "date-parts": [
+                [
+                    "2022",
+                    10,
+                    18
+                ]
+            ]
+        },
+        "issued": {
+            "date-parts": [
+                [
+                    "2022",
+                    6
+                ]
+            ]
+        }
+    },
+    {
+        "id": "http://zotero.org/users/10395840/items/X9YB99C9",
+        "type": "article-journal",
+        "abstract": "We consider the desirability of ZIP codes as the basis for configuring congressional districts. There are several issues. First, it is likely that voters lack knowledge of ZIP code boundaries. Second, ZIP codes may not coincide with existing political subunit boundaries, such as cities or counties whose non-fragmentation is legally important for redistricting. Thus, using ZIP codes would add yet another layer of complexity to districting. Third, ZIP codes do not perfectly coincide with larger census units, such as tracts, or even with smaller units such as census block-groups. Moreover, while districts can be drawn using ZIP codes that seem better in many respects than existing maps, the same is at least as true for line drawing using existing census geography and maintaining city and county boundaries to the greatest extent feasible. Fourth, we find the empirical evidence offered by Curiel and Steelman (2018) that ZIP code splits are a major aspect of the ability of voters to identify their legislator and engage in political communications with them to be less than fully convincing, though we applaud their efforts at data gathering and the care with which they have sought to control for potential confounding factors. We further commend them for their emphasis on the need to put operational content into the abstract and multivocal concept of community of interest, a concept which still is undertheorized, especially in the legal context.",
+        "container-title": "Election Law Journal: Rules, Politics, and Policy",
+        "DOI": "10.1089/elj.2020.0687",
+        "ISSN": "1533-1296, 1557-8062",
+        "issue": "2",
+        "journalAbbreviation": "Election Law Journal: Rules, Politics, and Policy",
+        "language": "en",
+        "license": "All rights reserved",
+        "page": "215-223",
+        "source": "DOI.org (Crossref)",
+        "title": "ZIP Codes as Geographic Bases of Representation",
+        "URL": "https://www.liebertpub.com/doi/10.1089/elj.2020.0687",
+        "volume": "20",
+        "author": [
+            {
+                "family": "Grofman",
+                "given": "Bernard"
+            },
+            {
+                "family": "Cervas",
+                "given": "Jonathan"
+            }
+        ],
+        "accessed": {
+            "date-parts": [
+                [
+                    "2022",
+                    10,
+                    18
+                ]
+            ]
+        },
+        "issued": {
+            "date-parts": [
+                [
+                    "2021",
+                    6,
+                    1
+                ]
+            ]
+        }
+    },
+    {
+        "id": "http://zotero.org/users/10395840/items/7JTQQDJI",
+        "type": "article-journal",
+        "abstract": "This article builds on work by Devine and Kopko (2021) and Lacy and Burden (1999) who estimated a probit model of candidate choice from nationally representative survey data to determine the second choice of third-party voters. Using this model on 2020 election data, we show that the Libertarian candidate Jo Jorgenson probably cost Donald Trump victory in at least two states: Arizona and Georgia. Additionally, the popular-vote margin enjoyed by Joe Biden could have been between 260,000 and 525,000 fewer votes, using conservative estimates. The motivation for this article is to provide contrary evidence for two main misconceptions. First, that third-party candidates are “spoiling” elections for the Democrats. Our evidence clearly shows that third parties have the potential to hurt either of the two main parties; however, in 2020, it was Donald Trump who was hurt the most, although not consequentially. Second, some reformers believe that ranked-choice voting benefits the Democrats; again, we show that—all else being equal—in the 2020 presidential election, it was the Republicans who would have benefited by the change in rules because the majority of third-party votes went to the Libertarian candidate, whose voters prefer Republicans over Democrats 60% to 32%.",
+        "container-title": "PS: Political Science & Politics",
+        "DOI": "10.1017/S1049096521001232",
+        "ISSN": "1049-0965, 1537-5935",
+        "issue": "1",
+        "journalAbbreviation": "APSC",
+        "language": "en",
+        "license": "All rights reserved",
+        "page": "1-6",
+        "source": "DOI.org (Crossref)",
+        "title": "Why Donald Trump Should Be a Fervent Advocate of Using Ranked-Choice Voting in 2024",
+        "URL": "https://www.cambridge.org/core/product/identifier/S1049096521001232/type/journal_article",
+        "volume": "55",
+        "author": [
+            {
+                "family": "Cervas",
+                "given": "Jonathan"
+            },
+            {
+                "family": "Grofman",
+                "given": "Bernard"
+            }
+        ],
+        "accessed": {
+            "date-parts": [
+                [
+                    "2022",
+                    10,
+                    18
+                ]
+            ]
+        },
+        "issued": {
+            "date-parts": [
+                [
+                    "2022",
+                    1
+                ]
+            ]
+        }
+    },
+    {
+        "id": "http://zotero.org/users/10395840/items/9R8BNRDS",
+        "type": "article-journal",
+        "container-title": "SSRN Electronic Journal",
+        "DOI": "10.2139/ssrn.3223745",
+        "ISSN": "1556-5068",
+        "journalAbbreviation": "SSRN Journal",
+        "language": "en",
+        "license": "All rights reserved",
+        "source": "DOI.org (Crossref)",
+        "title": "Population-Dependence of Cabinet Sizes",
+        "URL": "https://www.ssrn.com/abstract=3223745",
+        "author": [
+            {
+                "family": "Taagepera",
+                "given": "Rein"
+            },
+            {
+                "family": "Kaiser",
+                "given": "Brian"
+            },
+            {
+                "family": "Cervas",
+                "given": "Jonathan R."
+            }
+        ],
+        "accessed": {
+            "date-parts": [
+                [
+                    "2022",
+                    10,
+                    18
+                ]
+            ]
+        },
+        "issued": {
+            "date-parts": [
+                [
+                    "2018"
+                ]
+            ]
+        }
+    },
+    {
+        "id": "http://zotero.org/users/10395840/items/SH6B5WUU",
+        "type": "article-newspaper",
+        "container-title": "The Washington Post",
+        "ISSN": "0190-8286",
+        "language": "en-US",
+        "license": "All rights reserved",
+        "source": "www.washingtonpost.com",
+        "title": "The GOP scared Latinos from the census. Now that may cost the party red seats",
+        "URL": "https://www.washingtonpost.com/outlook/2021/05/01/hispanics-census-undercount-house-seats/",
+        "author": [
+            {
+                "family": "Wang",
+                "given": "Sam"
+            },
+            {
+                "family": "Cervas",
+                "given": "Jonathan"
+            }
+        ],
+        "accessed": {
+            "date-parts": [
+                [
+                    "2022",
+                    12,
+                    30
+                ]
+            ]
+        },
+        "issued": {
+            "date-parts": [
+                [
+                    "2021",
+                    5,
+                    1
+                ]
+            ]
+        }
+    },
+    {
+        "id": "http://zotero.org/users/10395840/items/8SD8N5P6",
+        "type": "report",
+        "event-place": "New York",
+        "language": "en",
+        "license": "All rights reserved",
+        "page": "24",
+        "publisher-place": "New York",
+        "source": "DOI.org (Crossref)",
+        "title": "Report of the Special Master: Harkenrider v. Hochul",
+        "title-short": "SM Report",
+        "URL": "http://jonathancervas.com/2022/NY/CERVAS-SM-NY-2022.pdf",
+        "author": [
+            {
+                "family": "Cervas",
+                "given": "Jonathan"
+            }
+        ],
+        "accessed": {
+            "date-parts": [
+                [
+                    "2023",
+                    1,
+                    6
+                ]
+            ]
+        },
+        "issued": {
+            "date-parts": [
+                [
+                    "2022",
+                    5,
+                    20
+                ]
+            ]
+        }
+    },
+    {
+        "id": "http://zotero.org/users/10395840/items/ZDMFT663",
+        "type": "article-journal",
+        "abstract": "On July 5, 2023, the Supreme Court of New Mexico held that partisan gerrymandering claims are justiciable under Article II, Section 18 of the New Mexico Constitution and provided the Court with holdings and standards to apply in evaluating Plaintiffs’ challenge to the State’s congressional plan (the “Enacted Plan”). In its order, the Supreme Court explicitly adopted the three-part test summarized in Justice Kagan’s dissenting opinion in Rucho v. Common Cause for adjudicating partisan gerrymandering claims under the New Mexico Constitution. Order at 3-4, Grisham, et al. v. Van Soelen, et al., No. S-1-SC-39481 (N.M. Sup. Ct., July 5, 2023) (“NMSC Order”) (citing 139 S. Ct. 2484, 2516 (2019)). Amici—foremost experts in the methods used to evaluate redistricting plans, redistricting experts with experience in mapmaking for over 100 state and local jurisdictions, and nonpartisan civic organizations and organizers—submit this brief to illustrate the types of evidentiary analyses that may be conducted to assess partisan gerrymandering claims and to discuss how the applicable legal frameworks apply to such claims. Amici file this brief in support of neither party and do not take a position on whether the Enacted Plan is a partisan gerrymander or whether any given part of the applicable three-part test is satisfied.",
+        "container-title": "State Of New Mexico County Of Lea Fifth Judicial District Court",
+        "language": "en",
+        "license": "All rights reserved",
+        "source": "Zotero",
+        "title": "Brief Of Amici Curiae Dr. Jonathan Cervas, Paul Mitchell, Dr. Samuel S.-h. Wang, Roderick Kennedy, Election Reformers Network, Common Cause New Mexico, And League Of Women Voters New Mexico In Support Of Neither Party",
+        "author": [
+            {
+                "family": "Cervas",
+                "given": "Jonathan"
+            },
+            {
+                "family": "Mitchell",
+                "given": "Paul"
+            },
+            {
+                "family": "Wang",
+                "given": "Samuel S.-H."
+            },
+            {
+                "family": "Kennedy",
+                "given": "Roderick"
+            },
+            {
+                "literal": "Election Reformers Network"
+            },
+            {
+                "literal": "Common Cause New Mexico"
+            },
+            {
+                "literal": "League of Women Voters New Mexico"
+            }
+        ]
+    },
+    {
+        "id": "http://zotero.org/users/10395840/items/I7AHZ4CA",
+        "type": "article-journal",
+        "container-title": "The University of New Hampshire Law Review",
+        "DOI": "10.2139/ssrn.4287305",
+        "ISSN": "1556-5068",
+        "issue": "2",
+        "journalAbbreviation": "U.N.H. L. Rev.",
+        "language": "en",
+        "license": "All rights reserved",
+        "page": "421-494",
+        "source": "DOI.org (Crossref)",
+        "title": "The Role Of State Courts In Constraining Partisan Gerrymandering In Congressional Elections",
+        "URL": "https://scholars.unh.edu/unh_lr/vol21/iss2/7/",
+        "volume": "21",
+        "author": [
+            {
+                "family": "Cervas",
+                "given": "Jonathan"
+            },
+            {
+                "family": "Grofman",
+                "given": "Bernard"
+            },
+            {
+                "family": "Matsuda",
+                "given": "Scott"
+            }
+        ],
+        "accessed": {
+            "date-parts": [
+                [
+                    "2023",
+                    8,
+                    31
+                ]
+            ]
+        },
+        "issued": {
+            "date-parts": [
+                [
+                    "2023",
+                    3,
+                    1
+                ]
+            ]
+        }
+    },
+    {
+        "id": "http://zotero.org/users/10395840/items/C24E6GDT",
+        "type": "article-journal",
+        "container-title": "Statistics and Public Policy",
+        "DOI": "10.1080/2330443X.2023.2289529",
+        "ISSN": "null",
+        "issue": "1",
+        "journalAbbreviation": "Statistics and Public Policy",
+        "license": "All rights reserved",
+        "note": "publisher: Taylor & Francis",
+        "page": "2289529",
+        "title": "Statistical Fallacies in Claims about “Massive and Widespread Fraud” in the 2020 Presidential Election: Examining Claims Based on Aggregate Election Results",
+        "URL": "https://doi.org/10.1080/2330443X.2023.2289529",
+        "volume": "11",
+        "author": [
+            {
+                "family": "Grofman",
+                "given": "Bernard"
+            },
+            {
+                "family": "Cervas",
+                "given": "Jonathan"
+            }
+        ],
+        "issued": {
+            "date-parts": [
+                [
+                    "2024",
+                    1,
+                    5
+                ]
+            ]
+        }
+    },
+    {
+        "id": "http://zotero.org/users/10395840/items/I69E457D",
+        "type": "article-journal",
+        "container-title": "SSRN Electronic Journal",
+        "DOI": "10.2139/ssrn.4617664",
+        "ISSN": "1556-5068",
+        "journalAbbreviation": "SSRN Journal",
+        "language": "en",
+        "license": "All rights reserved",
+        "source": "DOI.org (Crossref)",
+        "title": "Partisan Gerrymandering Cases in State Supreme Courts in the 2020s Redistricting Round",
+        "URL": "https://www.ssrn.com/abstract=4617664",
+        "author": [
+            {
+                "family": "Cervas",
+                "given": "Jonathan"
+            },
+            {
+                "family": "Grofman",
+                "given": "Bernard"
+            },
+            {
+                "family": "Matsuda",
+                "given": "Scott"
+            },
+            {
+                "family": "Kawa",
+                "given": "Justine"
+            }
+        ],
+        "accessed": {
+            "date-parts": [
+                [
+                    "2025",
+                    1,
+                    24
+                ]
+            ]
+        },
+        "issued": {
+            "date-parts": [
+                [
+                    "2023"
+                ]
+            ]
+        }
     }
 ]
