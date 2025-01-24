@@ -337,4 +337,14 @@ a#logo img {
     }
 }
 
-/* Remaining media queries and other styles from the original file would be included here */
+.container_first svg {
+    width: 100%;            /* This will scale the SVG width to its container */
+    max-width: 800px;       /* This sets a maximum width to prevent it from getting too large */
+    height: auto;           /* Maintain aspect ratio */
+}
+
+@media (max-width: 768px) {
+    .container_first svg {
+        max-width: 400px;    /* Smaller max width for mobile devices */
+    }
+}
