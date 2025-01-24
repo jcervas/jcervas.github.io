@@ -749,7 +749,12 @@ background-color: #000000;
         background-size: 200%;
         vertical-align: middle;
     }
-
+@media (max-width: 768px) {
+    .background-image {
+        background-size: contain; /* Or try auto */
+        background-position: top center; /* Change positioning if needed */
+    }
+}
     @media (max-width: 48rem) {
   .container_first {
     background-image: url(/images/PAROADS.svg), linear-gradient(to bottom, rgba(196, 18, 48, 1) 30%, rgba(196, 18, 48, .9) 100%);
