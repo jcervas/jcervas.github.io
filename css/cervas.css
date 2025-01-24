@@ -750,6 +750,14 @@ background-color: #000000;
         vertical-align: middle;
     }
 
+    @media (max-width: 48rem) {
+  .container_first {
+    background-image: url(/images/PAROADS.svg), linear-gradient(to bottom, rgba(196, 18, 48, 1) 30%, rgba(196, 18, 48, .9) 100%);
+    background-position: center;
+    background-size: 200%;
+  }
+}
+
     @media (min-width:48rem) {
         .content_min {
             display: table-row;
