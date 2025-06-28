@@ -39,22 +39,21 @@
             <!-- <a class="navbar-brand" href="#">Jonathan Cervas</a> -->
             <div id="headerContainer" class="afterLoad">
                 <div id="header">
-                    <nav id="navigation" class="menu-homemain-container" aria-label="Main Navigation">
-                        <ul id="dropmenu" class="menu" role="menubar">
-                            <li id="menu-item-1" role="menuitem">
-                                <a href="#about" aria-label="About section">About</a>
-                            </li>
-                            <li id="menu-item-2" role="menuitem">
-                                <a href="#cases" aria-label="Redistricting Cases section">Redistricting Cases</a>
-                            </li>
-                            <li id="menu-item-3" role="menuitem">
-                                <a href="#pubs" aria-label="Publications section">Publications</a>
-                            </li>
-                            <li id="menu-item-4" role="menuitem">
-                                <a href="cv.pdf" aria-label="Curriculum Vitae">CV</a>
-                            </li>
-                        </ul>
-                    </nav>
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+  <a class="navbar-brand" href="#">Jonathan Cervas</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNav"
+    aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="mainNav">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+      <li class="nav-item"><a class="nav-link" href="#cases">Redistricting Cases</a></li>
+      <li class="nav-item"><a class="nav-link" href="#pubs">Publications</a></li>
+      <li class="nav-item"><a class="nav-link" href="cv.pdf">CV</a></li>
+    </ul>
+  </div>
+</nav>
                 </div>
                 <!--     <select id="selectMenu" aria-label="Navigation Menu" onchange="window.location.href=this.value">
         <option value="" selected="selected">Menu</option>
@@ -113,7 +112,7 @@
         <div class="items">
             <div class="cards">
                 <div class="card-wide">
-                    <img alt="Headshot of Cervas" src="images/jc-10-11-2023.jpg">
+                    <img alt="Headshot of Cervas" src="images/jc-10-11-2023.jpg"  class="img-fluid">
                 </div>
                 <div class="card-wide">
                     <div class="cd-intro" style="padding: 20px; margin-left: 10%; text-align: left;">
@@ -199,7 +198,7 @@
         <div class="items">
             <div id="WI" class="card">
                 <div class="card-img">
-                    <img src="images/wi.png" alt="Map of Wisconsin, 2024 redistricting consultant">
+                    <img src="images/wi.png" alt="Map of Wisconsin, 2024 redistricting consultant"  class="img-fluid">
                 </div>
                 <h3>Wisconsin</h3>
                 <div class="sub">Clarke v. WEC (2024)</div>
@@ -217,7 +216,7 @@
             </div>
             <div id="NY" class="card">
                 <div class="card-img">
-                    <img src="images/ny.png" alt="2022 NY Special Master">
+                    <img src="images/ny.png" alt="2022 NY Special Master", class="img-fluid">
                 </div>
                 <h3>New York</h3>
                 <div class="sub">Harkenrider v. Hochul (2022)</div>
@@ -431,11 +430,6 @@
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
         crossorigin="anonymous"></script>
-    <script>
-        if (typeof jQuery === 'undefined') {
-            var script = document.createElement('script');
-            script.src = '/js/jquery-3.4.1.slim.min.js';
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"
         onerror="this.onerror=null;this.src='js/popper.min.js';"></script>
