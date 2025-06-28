@@ -578,7 +578,7 @@ a#logo img {
 }
 
 .container_first {
-    background-image: linear-gradient(to bottom, rgba(196, 18, 48, 1) 10%, rgba(196, 18, 48, .9) 100%), url(/images/PAROADS.svg);
+    background-image: linear-gradient(to bottom, rgba(196, 18, 48, .2) 10%, rgba(196, 18, 48, .9) 100%), url(/images/PAROADS.svg),linear-gradient(to bottom, rgba(196, 18, 48, .1) 10%, rgba(196, 18, 48, .2) 100%);
     background-position: center;
     background-size: 200%;
     vertical-align: middle;
