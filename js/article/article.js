@@ -45,7 +45,7 @@ for (var i = 0; i < fn.length; i++) {
 }
 
 for (var i = 0; i < fn.length; i++) {
-     fn[i].onclick = function() {
+     fn[i].onclick = function () {
           var id = this.childNodes[0].getAttribute("id")
           id = id.replace(/\D/g, '');
           if (this.childNodes.length > 1) {

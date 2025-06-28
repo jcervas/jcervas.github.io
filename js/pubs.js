@@ -36,7 +36,7 @@ function newEntry(data) {
             ${obj.issue ? `<span class="jc-issue">${obj.issue}</span>` : ""}
             ${obj.page ? `<span class="jc-pages">${obj.page}</span>` : ""}
         `;
-        
+
         // Append the new list item to the index
         newIndex.appendChild(li);
     }

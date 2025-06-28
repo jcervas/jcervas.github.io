@@ -2,22 +2,24 @@
 
 /* If the screen size is 601px or more, set the font-size of <div> to 80px */
 @media only screen and (min-width: 601px) {
-  .jc-article {
-    font-size: 20px;
-  }
-  .jc-main-content {
-    padding: 10px 50px;
-}
+    .jc-article {
+        font-size: 20px;
+    }
+
+    .jc-main-content {
+        padding: 10px 50px;
+    }
 }
 
 /* If the screen size is 600px or less, set the font-size of <div> to 30px */
 @media only screen and (max-width: 600px) {
-  .jc-article {
-    font-size: 12px;
-  }
-  .jc-main-content {
-    padding: 10px 5px;
-}
+    .jc-article {
+        font-size: 12px;
+    }
+
+    .jc-main-content {
+        padding: 10px 5px;
+    }
 }
 
 
@@ -36,12 +38,12 @@
 }
 
 .jc-article a {
-  text-decoration-line: none;
+    text-decoration-line: none;
     background-image: linear-gradient(to right, black 75%, transparent 75%);
-  background-position: 0 1.04em;
-  background-repeat: repeat-x;
-  background-size: 8px 3px;
-  color: #111;
+    background-position: 0 1.04em;
+    background-repeat: repeat-x;
+    background-size: 8px 3px;
+    color: #111;
 }
 
 .jc-article a:hover {
@@ -53,32 +55,40 @@
         color: #000;
         background: none;
     }
+
     nav,
     aside {
         display: none;
     }
+
     body,
     article {
         width: 100%;
         margin: 0;
         padding: 0;
     }
+
     cite {
         text-weight: italic;
     }
+
     cite em {
         text-weight: italic;
     }
+
     @page {
         margin: 2cm;
     }
+
     h2,
     h3 {
         page-break-after: avoid;
     }
+
     img {
         max-width: 95% !important;
     }
+
     ul,
     img {
         page-break-inside: avoid;
@@ -87,7 +97,7 @@
 
 @media print {
     ahref::after {
-        content: " ("attr(href) ")";
+        content: " (" attr(href) ")";
     }
 }
 
@@ -312,7 +322,7 @@
     border-left: 10px solid #ccc;
     margin: 1.5em 10px;
     padding: 0.5em 10px;
-    quotes: "\201C""\201D";
+    quotes: "\201C" "\201D";
 }
 
 .jc-article blockquote:before {

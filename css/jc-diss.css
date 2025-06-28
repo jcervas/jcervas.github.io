@@ -1,4 +1,5 @@
 @charset "UTF-8";
+
 .jc-article {
     margin: 0;
     padding: 0;
@@ -14,12 +15,12 @@
 }
 
 .jc-article a {
-  text-decoration-line: none;
+    text-decoration-line: none;
     background-image: linear-gradient(to right, black 75%, transparent 75%);
-  background-position: 0 1.04em;
-  background-repeat: repeat-x;
-  background-size: 8px 3px;
-  color: #111;
+    background-position: 0 1.04em;
+    background-repeat: repeat-x;
+    background-size: 8px 3px;
+    color: #111;
 }
 
 .jc-article a:hover {
@@ -31,32 +32,40 @@
         color: #000;
         background: none;
     }
+
     nav,
     aside {
         display: none;
     }
+
     body,
     article {
         width: 100%;
         margin: 0;
         padding: 0;
     }
+
     cite {
         text-weight: italic;
     }
+
     cite em {
         text-weight: italic;
     }
+
     @page {
         margin: 2cm;
     }
+
     h2,
     h3 {
         page-break-after: avoid;
     }
+
     img {
         max-width: 95% !important;
     }
+
     ul,
     img {
         page-break-inside: avoid;
@@ -65,7 +74,7 @@
 
 @media print {
     ahref::after {
-        content: " ("attr(href) ")";
+        content: " (" attr(href) ")";
     }
 }
 
@@ -292,38 +301,45 @@ text-shadow: 2px 2px 3px rgba(0,0,0,0.25);
     opacity: .05;
     overflow: hidden;
 }
+
 table {
-    border: 5px solid rgba(27,61,109,100);
+    border: 5px solid rgba(27, 61, 109, 100);
     width: 95%;
 }
 
 table thead tr:last-child th {
-    border-bottom: solid 5px rgba(27,61,109,100);  
+    border-bottom: solid 5px rgba(27, 61, 109, 100);
 }
 
 table th {
     background-color: rgba(247, 235, 95, 100);
-    color: rgba(0,100,164,100);
+    color: rgba(0, 100, 164, 100);
 }
+
 table td {
-    text-align:center;
-    vertical-align:middle;
-    border-bottom: dotted 0.5px rgba(128,128,128,0.5);
-    border-right: solid 0.5px rgba(128,128,128,0.5);
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: dotted 0.5px rgba(128, 128, 128, 0.5);
+    border-right: solid 0.5px rgba(128, 128, 128, 0.5);
 }
+
 table td:first-child {
-    font-weight:bold;
+    font-weight: bold;
 }
+
 table td:last-child {
     border-right: none;
 }
+
 table tr:last-child td {
     border-bottom: none;
 }
-table tr:first-child td{
-        /*border-top: solid 2px rgba(128,128,128,0.5);*/
+
+table tr:first-child td {
+    /*border-top: solid 2px rgba(128,128,128,0.5);*/
 
 }
+
 .jc-article .jc-main-content img {
     display: block;
     width: 100%;
@@ -353,7 +369,7 @@ table tr:first-child td{
     border-left: 10px solid #ccc;
     margin: 1.5em 10px;
     padding: 0.5em 10px;
-    quotes: "\201C""\201D";
+    quotes: "\201C" "\201D";
 }
 
 .jc-article blockquote:before {
