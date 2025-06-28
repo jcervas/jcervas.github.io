@@ -13,9 +13,8 @@ html {
 
 body {
     margin: 0;
-    font: 14px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     color: #2d2d2d;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     font-weight: 300;
     line-height: 1.25;
     text-align: left;
@@ -103,42 +102,6 @@ iframe {
     background-image: url(/images/PAROADS.svg);
 }
 
-#chart {
-    background-color: "";
-    stroke-width: 1;
-}
-
-. {
-    stroke: white;
-    stroke-width: 0.1;
-}
-
-.boundary {
-    fill: none;
-    stroke: #222426;
-    stroke-linejoin: round;
-    stroke-linecap: round;
-    vector-effect: non-scaling-stroke;
-}
-
-* {
-    box-sizing: border-box;
-}
-
-/* Style the counter cards */
-.second_title {
-    text-align: left;
-    box-sizing: border-box;
-    color: #2d2a26;
-    line-height: 3vw;
-    font-weight: 400;
-    font-size: 4vw;
-    font-family: avenir-lt-w01_85-heavy1475544, sans-serif;
-    opacity: 0.85;
-    letter-spacing: -.1vw;
-    padding: 12px;
-}
-
 .items {
     display: flex;
     flex-wrap: wrap;
@@ -162,7 +125,7 @@ iframe {
 }
 
 .card-wide img {
-    width: 100%
+    width: 100%;
 }
 
 /* Flexbox stuff */
@@ -206,7 +169,6 @@ iframe {
     margin-right: auto;
     width: 250px;
     max-width: 90%;
-    background-color: ;
     border: 10px solid #63676b;
     border-radius: 50%;
     box-sizing: border-box;
@@ -214,11 +176,6 @@ iframe {
     margin: 0 auto;
     overflow: hidden;
     position: relative;
-}
-
-.card .sub {
-    color: #6a6a6a;
-    font-style: italic;
     line-height: 0.9;
     font-weight: 400;
     font-size: 1.0rem;
@@ -475,228 +432,228 @@ a#logo img {
     text-transform: uppercase;
 }
 
-   .text_title {
-        padding-left: 10%;
-    }
+.text_title {
+    padding-left: 10%;
+}
 
-    .text_white {
-        color: #FFFFFF;
-    }
-
-
- .frosted-box {
-        width: 100%;
-        height: 100%;
-        position: relative;
-        background: inherit;
-        overflow: hidden;
-        z-index: 1;
-        display: flex;
-        background-color: rgba(255, 255, 255, 0.2);
-        mix-blend-mode: screen;
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        color: initial;
-        line-height: 5.25vw;
-        font-weight: 700;
-        font-size: 15vw;
-        opacity: 0.85;
-        letter-spacing: -1vw;
-    }
-
-    .frosted-box svg {
-        margin-top: 10px;
-        width: 66vw;
-        max-width: 666px;
-    }
+.text_white {
+    color: #FFFFFF;
+}
 
 
+.frosted-box {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: inherit;
+    overflow: hidden;
+    z-index: 1;
+    display: flex;
+    background-color: rgba(255, 255, 255, 0.2);
+    mix-blend-mode: screen;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    color: initial;
+    line-height: 5.25vw;
+    font-weight: 700;
+    font-size: 15vw;
+    opacity: 0.85;
+    letter-spacing: -1vw;
+}
 
-    .site-header__date {
-        display: block
-    }
-
-    @keyframes spin {
-        to {
-            transform: rotate(360deg);
-        }
-    }
-
-    .row::after {
-        content: "";
-        clear: both;
-        display: table;
-    }
-
-    [class*="col-"] {
-        float: left;
-        padding: 15px;
-    }
-
-    .gradiant-two {
-        background: linear-gradient(to top, rgba(255, 255, 255, 1.0) 0%, rgba(255, 255, 255, 0.7) 65%);
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        width: 100%;
-    }
-
-    .gradiant-background {
-        width: 100%;
-        padding: 50px 100px;
-        position: relative;
-        background-image: linear-gradient(135deg, rgba(238, 52, 65, 1) 0%, rgba(166, 30, 47, 1) 35%, rgba(139, 43, 44, 1) 100%);
-        z-index: 5;
-    }
-
-    .gradiant-background a {
-        color: whitesmoke;
-    }
-
-    .divider {
-        width: 100%;
-        position: relative;
-        /*padding-bottom: 15px;*/
-        height: 1.5vh;
-        /*background-color: #5C7691;*/
-        background-image: linear-gradient(135deg, rgba(238, 52, 65, 1) 0%, rgba(166, 30, 47, 1) 35%, rgba(139, 43, 44, 1) 100%);
-        z-index: 5;
-    }
-
-    .divider_end {
-        height: 0.5vh;
-        width: 100%;
-        background-color: #a61e2f;
-    }
-
-    .divider-uCal {
-        position: relative;
-        height: 60px;
-        background-image: url(https://www.universityofcalifornia.edu/sites/all/thvwes/university-of-california/assets/images/background.jpg?1533240812);
-        background-repeat: no-repeat;
-        background-color: #eef9ff;
-        background-position-x: 15%;
-    }
+.frosted-box svg {
+    margin-top: 10px;
+    width: 66vw;
+    max-width: 666px;
+}
 
 
-    .container_text {
-        background-color: rgba(0, 0, 0, 0.5);
-        color: #ffffff;
-    }
 
-    .column_one {
-        width: 50%;
-        float: left;
-        padding-right: 50px;
-    }
+.site-header__date {
+    display: block
+}
 
-    .column_two {
-        width: 50%;
-        float: left;
-    }
+@keyframes spin {
+.site-header__date {
+    display: block;
+}
+}
 
-    .pic_bio {
-        white-space: nowrap;
-        display: block;
-        margin: auto;
-        padding-left: 25px;
-        padding-right: 25px;
-        height: 100%;
-        vertical-align: middle;
-    }
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
+}
 
-    .col_padding {
-        padding-top: 85px;
-        padding-bottom: 85px;
-    }
+[class*="col-"] {
+    float: left;
+    padding: 15px;
+}
 
-    .text_bio {
-        width: calc(100% - 20%);
-        padding: 20px;
-        color: #000000;
-        text-indent: 50px;
-        letter-spacing: -.25px;
-        line-height: 1.25;
-        word-spacing: -1px;
-        display: flex;
-    }
+.gradiant-two {
+    background: linear-gradient(to top, rgba(255, 255, 255, 1.0) 0%, rgba(255, 255, 255, 0.7) 65%);
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
 
-    .footer {
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        background-color: #181818;
-        color: #fffff;
-        text-align: left;
-        z-index: 2000;
-        height: 3vh;
-        vertical-align: middle;
-    }
+.gradiant-background {
+    width: 100%;
+    padding: 50px 100px;
+    position: relative;
+    background-image: linear-gradient(135deg, rgba(238, 52, 65, 1) 0%, rgba(166, 30, 47, 1) 35%, rgba(139, 43, 44, 1) 100%);
+    z-index: 5;
+}
 
-    .footer_text {
-        padding-left: 150px;
-        color: #ffffff;
-        margin: 0 0;
-    }
+.gradiant-background a {
+    color: whitesmoke;
+}
 
-    .container_first {
-        background-image: url(/images/PAROADS.svg), linear-gradient(to bottom, rgba(196, 18, 48, 1) 30%, rgba(196, 18, 48, .9) 100%);
-        background-position: center;
-        background-size: 200%;
-        vertical-align: middle;
-    }
+.divider {
+    width: 100%;
+    position: relative;
+    /*padding-bottom: 15px;*/
+    height: 1.5vh;
+    /*background-color: #5C7691;*/
+    background-image: linear-gradient(135deg, rgba(238, 52, 65, 1) 0%, rgba(166, 30, 47, 1) 35%, rgba(139, 43, 44, 1) 100%);
+    z-index: 5;
+}
 
-        .picture_container {
-            display: inline-block;
-            /*background-image: linear-gradient(140deg, #00B9CA, rgba(0, 169, 198, 0) 25%),linear-gradient(to right, #5C7691 0%, #330867 100%);*/
-            padding: 10px;
-            height: 100%;
-            vertical-align: middle;
-        }
+.divider_end {
+    height: 0.5vh;
+    width: 100%;
+    background-color: #a61e2f;
+}
 
-        .picture_featured {
-            border: solid;
-            border-color: #5C7691;
-            /*border-color: #fff;*/
-            border-width: 10px;
-            -webkit-box-shadow: 10px 10px 13px -6px rgba(0, 0, 0, 0.85);
-            -moz-box-shadow: 10px 10px 13px -6px rgba(0, 0, 0, 0.85);
-            box-shadow: 10px 10px 13px -6px rgba(0, 0, 0, 0.85);
-        }
+.divider-uCal {
+    position: relative;
+    height: 60px;
+    background-image: url(https://www.universityofcalifornia.edu/sites/all/thvwes/university-of-california/assets/images/background.jpg?1533240812);
+    background-repeat: no-repeat;
+    background-color: #eef9ff;
+    background-position-x: 15%;
+}
 
-        .background_graphic {
-            align-content: center;
-            position: fixed;
-            filter: alpha(opacity=60);
-            z-index: -99;
-            margin-left: -1100px;
-            margin-top: -800px;
-            opacity: 0.40;
-        }
 
-        .map_footer {
-            background: url(/images/cmu.svg);
-            background-size: 100%;
-            padding-bottom: 50px;
-            display: block;
-            background-color: #312E33;
-        }
+.container_text {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+}
 
-        li .jc-highlight,
-        p .jc-highlight {
-            background-image: -webkit-gradient(linear, left top, right top, color-stop(50%, rgba(98, 98, 98, 0.09)), color-stop(50%, rgba(98, 98, 98, 0.09)));
-            background-image: linear-gradient(90deg, rgba(98, 98, 98, 0.09), rgba(98, 98, 98, 0.09) 0);
-            background-position: 0;
-            background-size: 200%;
-            -webkit-transition: all .8s;
-            transition: all .8s;
-            font-weight: 600;
-        }
+.column_one {
+    width: 50%;
+    float: left;
+    padding-right: 50px;
+}
 
-        li .jc-highlight.highlighted,
-        p .jc-highlight.highlighted {
-            background-position: -100%;
-        }
+.column_two {
+    width: 50%;
+    float: left;
+}
+
+.pic_bio {
+    white-space: nowrap;
+    display: block;
+    margin: auto;
+    padding-left: 25px;
+    padding-right: 25px;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.col_padding {
+    padding-top: 85px;
+    padding-bottom: 85px;
+}
+
+.text_bio {
+    width: calc(100% - 20%);
+    padding: 20px;
+    color: #000000;
+    text-indent: 50px;
+    letter-spacing: -.25px;
+    line-height: 1.25;
+    word-spacing: -1px;
+    display: flex;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #181818;
+    color: #fff;
+    text-align: left;
+    z-index: 2000;
+    height: 3vh;
+    vertical-align: middle;
+}
+
+.footer_text {
+    padding-left: 150px;
+    color: #ffffff;
+    margin: 0 0;
+}
+
+.container_first {
+    background-image: linear-gradient(to bottom, rgba(196, 18, 48, 1) 10%, rgba(196, 18, 48, .9) 100%), url(/images/PAROADS.svg);
+    background-position: center;
+    background-size: 200%;
+    vertical-align: middle;
+}
+
+.picture_container {
+    display: inline-block;
+    /*background-image: linear-gradient(140deg, #00B9CA, rgba(0, 169, 198, 0) 25%),linear-gradient(to right, #5C7691 0%, #330867 100%);*/
+    padding: 10px;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.picture_featured {
+    border: solid;
+    border-color: #5C7691;
+    /*border-color: #fff;*/
+    border-width: 10px;
+    -webkit-box-shadow: 10px 10px 13px -6px rgba(0, 0, 0, 0.85);
+    -moz-box-shadow: 10px 10px 13px -6px rgba(0, 0, 0, 0.85);
+    box-shadow: 10px 10px 13px -6px rgba(0, 0, 0, 0.85);
+}
+
+.background_graphic {
+    align-content: center;
+    position: fixed;
+    filter: alpha(opacity=60);
+    z-index: -99;
+    margin-left: -1100px;
+    margin-top: -800px;
+    opacity: 0.40;
+}
+
+.map_footer {
+    background: url(/images/cmu.svg);
+    background-size: 100%;
+    padding-bottom: 50px;
+    display: block;
+    background-color: #312E33;
+}
+
+li .jc-highlight,
+p .jc-highlight {
+    background-image: -webkit-gradient(linear, left top, right top, color-stop(50%, rgba(98, 98, 98, 0.09)), color-stop(50%, rgba(98, 98, 98, 0.09)));
+    background-image: linear-gradient(90deg, rgba(98, 98, 98, 0.09), rgba(98, 98, 98, 0.09) 0);
+    background-position: 0;
+    background-size: 200%;
+    -webkit-transition: all .8s;
+    transition: all .8s;
+    font-weight: 600;
+}
+
+li .jc-highlight.highlighted,
+p .jc-highlight.highlighted {
+    background-position: -100%;
+}
 
 
 .tg {
@@ -725,5 +682,5 @@ a#logo img {
 
 .tg .tg-0lax {
     text-align: left;
-    vertical-align: top
+    vertical-align: top;
 }
