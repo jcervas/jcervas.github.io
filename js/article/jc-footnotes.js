@@ -29,7 +29,7 @@ for (var i = 0; i < fn.length; i++) {
 
 
 for (var i = 0; i < f.length; i++) {
-     f[i].onclick = function() {
+     f[i].onclick = function () {
           var id = this.childNodes[0].getAttribute("id")
           id = id.replace(/\D/g, '');
           console.log(id);
