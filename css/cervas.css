@@ -152,7 +152,7 @@ iframe {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     /* this adds the "card" effect */
     flex: 0 0 auto;
-    padding: 16px;
+    padding: 12px;
     margin: 1%;
     text-align: center;
     background-color: #f1f1f1;
@@ -190,8 +190,15 @@ iframe {
   .card-img {
     display: none;
   }
+  .card-mobile {
+    display: block;
+  }
 }
-
+@media (min-width: 600px) {
+    .card-mobile {
+        display: none;
+    }
+}
 .card-link {
     width: 100%;
     height: 100%;
