@@ -194,14 +194,26 @@ iframe {
     display: block;
   }
 }
-@media (min-width: 600px) {
-    .card-mobile {
-        display: none;
-    }
-}
 .card-link {
     width: 100%;
     height: 100%;
+}
+
+.cases-condensed {
+    display: none;
+    padding: 16px;
+    background: #fff;
+    border-radius: 8px;
+    margin: 10px;
+    font-size: 1em;
+}
+@media (max-width: 600px) {
+    .items {
+        display: none !important;
+    }
+    .cases-condensed {
+        display: block;
+    }
 }
 
 .jc-nav {
