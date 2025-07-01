@@ -110,6 +110,10 @@ iframe {
     /*padding: 16px;*/
 }
 
+.items-descriptions {
+    display: flex;
+}
+
 .cards {
     display: flex;
     flex-wrap: wrap;
@@ -208,7 +212,7 @@ iframe {
     font-size: 1em;
 }
 @media (max-width: 600px) {
-    .items {
+    .items-descriptions {
         display: none !important;
     }
     .cases-condensed {
