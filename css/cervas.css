@@ -198,7 +198,9 @@ iframe {
 }
 
 .jc-nav {
+    /* position: fixed; */
     top: 0;
+    /* display: inline-block; */
     width: 100%;
     min-height: 25px;
     overflow: hidden;
@@ -255,6 +257,7 @@ body.iDivice #headerContainer {
     max-width: 900px;
     height: 45px;
     /*padding: 5px 0 0;*/
+    padding: auto;
 }
 
 a#logo {
@@ -425,250 +428,250 @@ a#logo img {
 
 
 .site-header__date {
-    .site-header__date {
-        color: #FFFFFF;
-        font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-        font-weight: 700;
-        background-color: #000;
-        font-size: .75rem;
-        height: 1.25rem;
-        letter-spacing: -.01em;
-        line-height: 1.25rem;
-        text-align: center;
-        text-transform: uppercase;
-        display: block;
-    }
+    color: #FFFFFF;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-weight: 700;
+    background-color: #000;
+    display: none;
+    font-size: .75rem;
+    height: 1.25rem;
+    letter-spacing: -.01em;
+    line-height: 1.25rem;
+    text-align: center;
+    text-transform: uppercase;
+}
 
-    .text_title {
-        padding-left: 10%;
-    }
+.text_title {
+    padding-left: 10%;
+}
 
-    .text_white {
-        color: #FFFFFF;
-    }
-
-
-    .frosted-box {
-        width: 100%;
-        height: 100%;
-        position: relative;
-        background: inherit;
-        overflow: hidden;
-        z-index: 1;
-        display: flex;
-        background-color: rgba(255, 255, 255, 0.2);
-        mix-blend-mode: screen;
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        color: initial;
-        line-height: 5.25vw;
-        font-weight: 700;
-        font-size: 15vw;
-        opacity: 0.85;
-        letter-spacing: -1vw;
-    }
-
-    .frosted-box svg {
-        margin-top: 10px;
-        width: 66vw;
-        max-width: 666px;
-    }
+.text_white {
+    color: #FFFFFF;
+}
 
 
+.frosted-box {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: inherit;
+    overflow: hidden;
+    z-index: 1;
+    display: flex;
+    background-color: rgba(255, 255, 255, 0.2);
+    mix-blend-mode: screen;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    color: initial;
+    line-height: 5.25vw;
+    font-weight: 700;
+    font-size: 15vw;
+    opacity: 0.85;
+    letter-spacing: -1vw;
+}
 
-    .site-header__date {
-
-        /* Removed duplicate .site-header__date rule; consolidated above */
-        .row::after {
-            content: "";
-            clear: both;
-            display: table;
-        }
-
-        [class*="col-"] {
-            float: left;
-            padding: 15px;
-        }
-
-        .gradient-two {
-            background: linear-gradient(to top, rgba(255, 255, 255, 1.0) 0%, rgba(255, 255, 255, 0.7) 65%);
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            width: 100%;
-        }
-
-        .divider {
-            width: 100%;
-            position: relative;
-            /*padding-bottom: 15px;*/
-            height: 1.5vh;
-            /*background-color: #5C7691;*/
-            background-image: linear-gradient(135deg, rgba(238, 52, 65, 1) 0%, rgba(166, 30, 47, 1) 35%, rgba(139, 43, 44, 1) 100%);
-            z-index: 5;
-        }
-
-        .divider_end {
-            height: 0.5vh;
-            width: 100%;
-            background-color: #a61e2f;
-        }
-
-        .divider-uCal {
-            position: relative;
-            height: 60px;
-            background-image: url(https://www.universityofcalifornia.edu/sites/all/thvwes/university-of-california/assets/images/background.jpg?1533240812);
-            background-repeat: no-repeat;
-            background-color: #eef9ff;
-            background-position-x: 15%;
-        }
+.frosted-box svg {
+    margin-top: 10px;
+    width: 66vw;
+    max-width: 666px;
+}
 
 
-        .container_text {
-            background-color: rgba(0, 0, 0, 0.5);
-            color: #ffffff;
-        }
 
-        .column_one {
-            width: 50%;
-            float: left;
-            padding-right: 50px;
-        }
+.site-header__date {
+    display: block
+}
 
-        .column_two {
-            width: 50%;
-            float: left;
-        }
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
+}
 
-        .pic_bio {
-            white-space: nowrap;
-            display: block;
-            margin: auto;
-            padding-left: 25px;
-            padding-right: 25px;
-            height: 100%;
-            vertical-align: middle;
-        }
+[class*="col-"] {
+    float: left;
+    padding: 15px;
+}
 
-        .col_padding {
-            padding-top: 85px;
-            padding-bottom: 85px;
-        }
+.gradient-two {
+    background: linear-gradient(to top, rgba(255, 255, 255, 1.0) 0%, rgba(255, 255, 255, 0.7) 65%);
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
 
-        .text_bio {
-            width: calc(100% - 20%);
-            padding: 20px;
-            color: #000000;
-            text-indent: 50px;
-            letter-spacing: -.25px;
-            line-height: 1.25;
-            word-spacing: -1px;
-            display: flex;
-        }
+.divider {
+    width: 100%;
+    position: relative;
+    /*padding-bottom: 15px;*/
+    height: 1.5vh;
+    /*background-color: #5C7691;*/
+    background-image: linear-gradient(135deg, rgba(238, 52, 65, 1) 0%, rgba(166, 30, 47, 1) 35%, rgba(139, 43, 44, 1) 100%);
+    z-index: 5;
+}
 
-        .footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: #181818;
-            color: #fff;
-            text-align: left;
-            z-index: 2000;
-            height: 3vh;
-            vertical-align: middle;
-        }
+.divider_end {
+    height: 0.5vh;
+    width: 100%;
+    background-color: #a61e2f;
+}
 
-        .footer_text {
-            padding-left: 150px;
-            color: #ffffff;
-            margin: 0 0;
-        }
-
-        .container_first {
-            background-image: linear-gradient(to bottom, rgba(196, 18, 48, .2) 10%, rgba(196, 18, 48, .9) 100%), url(/images/PAROADS.svg), linear-gradient(to bottom, rgba(196, 18, 48, .1) 10%, rgba(196, 18, 48, .2) 100%);
-            background-position: center;
-            background-size: 200%;
-            vertical-align: middle;
-        }
-
-        .picture_container {
-            display: inline-block;
-            /*background-image: linear-gradient(140deg, #00B9CA, rgba(0, 169, 198, 0) 25%),linear-gradient(to right, #5C7691 0%, #330867 100%);*/
-            padding: 10px;
-            height: 100%;
-            vertical-align: middle;
-        }
-
-        .picture_featured {
-            border: solid;
-            border-color: #5C7691;
-            /*border-color: #fff;*/
-            border-width: 10px;
-            -webkit-box-shadow: 10px 10px 13px -6px rgba(0, 0, 0, 0.85);
-            -moz-box-shadow: 10px 10px 13px -6px rgba(0, 0, 0, 0.85);
-            box-shadow: 10px 10px 13px -6px rgba(0, 0, 0, 0.85);
-        }
-
-        .background_graphic {
-            align-content: center;
-            position: fixed;
-            filter: alpha(opacity=60);
-            z-index: -99;
-            margin-left: -1100px;
-            margin-top: -800px;
-            opacity: 0.40;
-        }
-
-        .map_footer {
-            background: url(/images/cmu.svg);
-            background-size: 100%;
-            padding-bottom: 50px;
-            display: block;
-            background-color: #312E33;
-        }
-
-        li .jc-highlight,
-        p .jc-highlight {
-            background-image: -webkit-gradient(linear, left top, right top, color-stop(50%, rgba(98, 98, 98, 0.09)), color-stop(50%, rgba(98, 98, 98, 0.09)));
-            background-image: linear-gradient(90deg, rgba(98, 98, 98, 0.09), rgba(98, 98, 98, 0.09) 0);
-            background-position: 0;
-            background-size: 200%;
-            -webkit-transition: all .8s;
-            transition: all .8s;
-            font-weight: 600;
-        }
-
-        li .jc-highlight.highlighted,
-        p .jc-highlight.highlighted {
-            background-position: -100%;
-        }
+.divider-uCal {
+    position: relative;
+    height: 60px;
+    background-image: url(https://www.universityofcalifornia.edu/sites/all/thvwes/university-of-california/assets/images/background.jpg?1533240812);
+    background-repeat: no-repeat;
+    background-color: #eef9ff;
+    background-position-x: 15%;
+}
 
 
-        .tg {
-            border: none;
-            border-collapse: collapse;
-            border-spacing: 0;
-            color: #FFFFFF;
-        }
+.container_text {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+}
 
-        .tg td {
-            border-style: solid;
-            border-width: 0px;
-            overflow: hidden;
-            padding: 10px 5px;
-            word-break: normal;
-        }
+.column_one {
+    width: 50%;
+    float: left;
+    padding-right: 50px;
+}
 
-        .tg th {
-            border-style: solid;
-            border-width: 0px;
-            font-weight: normal;
-            overflow: hidden;
-            padding: 10px 5px;
-            word-break: normal;
-        }
+.column_two {
+    width: 50%;
+    float: left;
+}
 
-        .tg .tg-0lax {
-            text-align: left;
-            vertical-align: top;
-        }
+.pic_bio {
+    white-space: nowrap;
+    display: block;
+    margin: auto;
+    padding-left: 25px;
+    padding-right: 25px;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.col_padding {
+    padding-top: 85px;
+    padding-bottom: 85px;
+}
+
+.text_bio {
+    width: calc(100% - 20%);
+    padding: 20px;
+    color: #000000;
+    text-indent: 50px;
+    letter-spacing: -.25px;
+    line-height: 1.25;
+    word-spacing: -1px;
+    display: flex;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #181818;
+    color: #fff;
+    text-align: left;
+    z-index: 2000;
+    height: 3vh;
+    vertical-align: middle;
+}
+
+.footer_text {
+    padding-left: 150px;
+    color: #ffffff;
+    margin: 0 0;
+}
+
+.container_first {
+    background-image: linear-gradient(to bottom, rgba(196, 18, 48, .2) 10%, rgba(196, 18, 48, .9) 100%), url(/images/PAROADS.svg), linear-gradient(to bottom, rgba(196, 18, 48, .1) 10%, rgba(196, 18, 48, .2) 100%);
+    background-position: center;
+    background-size: 200%;
+    vertical-align: middle;
+}
+
+.picture_container {
+    display: inline-block;
+    /*background-image: linear-gradient(140deg, #00B9CA, rgba(0, 169, 198, 0) 25%),linear-gradient(to right, #5C7691 0%, #330867 100%);*/
+    padding: 10px;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.picture_featured {
+    border: solid;
+    border-color: #5C7691;
+    /*border-color: #fff;*/
+    border-width: 10px;
+    -webkit-box-shadow: 10px 10px 13px -6px rgba(0, 0, 0, 0.85);
+    -moz-box-shadow: 10px 10px 13px -6px rgba(0, 0, 0, 0.85);
+    box-shadow: 10px 10px 13px -6px rgba(0, 0, 0, 0.85);
+}
+
+.background_graphic {
+    align-content: center;
+    position: fixed;
+    filter: alpha(opacity=60);
+    z-index: -99;
+    margin-left: -1100px;
+    margin-top: -800px;
+    opacity: 0.40;
+}
+
+.map_footer {
+    background: url(/images/cmu.svg);
+    background-size: 100%;
+    padding-bottom: 50px;
+    display: block;
+    background-color: #312E33;
+}
+
+li .jc-highlight,
+p .jc-highlight {
+    background-image: -webkit-gradient(linear, left top, right top, color-stop(50%, rgba(98, 98, 98, 0.09)), color-stop(50%, rgba(98, 98, 98, 0.09)));
+    background-image: linear-gradient(90deg, rgba(98, 98, 98, 0.09), rgba(98, 98, 98, 0.09) 0);
+    background-position: 0;
+    background-size: 200%;
+    -webkit-transition: all .8s;
+    transition: all .8s;
+    font-weight: 600;
+}
+
+li .jc-highlight.highlighted,
+p .jc-highlight.highlighted {
+    background-position: -100%;
+}
+
+
+.tg {
+    border: none;
+    border-collapse: collapse;
+    border-spacing: 0;
+    color: #FFFFFF;
+}
+
+.tg td {
+    border-style: solid;
+    border-width: 0px;
+    overflow: hidden;
+    padding: 10px 5px;
+    word-break: normal;
+}
+
+.tg th {
+    border-style: solid;
+    border-width: 0px;
+    font-weight: normal;
+    overflow: hidden;
+    padding: 10px 5px;
+    word-break: normal;
+}
+
+.tg .tg-0lax {
+    text-align: left;
+    vertical-align: top;
+}
