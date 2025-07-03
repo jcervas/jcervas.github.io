@@ -187,12 +187,8 @@ blockquote {
 }
 
 ul.jc-item>li::before {
-    content: "&#8594; ";
+    content: "&rarr; ";
     text-indent: -10px;
-}
-
-.jc-title, .jc-title * {
-    color: #fff;
 }
 
 .jc-title a {
@@ -216,11 +212,11 @@ ul.jc-item>li::before {
     padding-top: 4px;
 }
 
-.jc-item {
+.jc-item, .jc-item * {
+    color: #fff;
     position: relative;
     padding-top: 1px;
 }
-
 
 @media print {
     ahref::after {
