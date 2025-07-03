@@ -172,10 +172,6 @@ blockquote {
     display: block
 }
 
-.jc-references-container {
-    padding: 20px 10px;
-}
-
 .jc-item li {
     display: list-item;
     list-style-type: none;
@@ -188,7 +184,6 @@ blockquote {
     font-weight: 300;
     text-indent: -10px;
     padding-left: 10px;
-    text-indent: -10px;
 }
 
 ul.jc-item>li::before {
