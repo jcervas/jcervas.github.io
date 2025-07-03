@@ -227,14 +227,13 @@ iframe {
 }
 
 .jc-nav {
-    /* position: fixed; */
+    position: fixed;
     top: 0;
-    /* display: inline-block; */
     width: 100%;
     min-height: 25px;
     overflow: hidden;
     color: #FFF;
-    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 700;
     background-color: #000;
     font-size: .75rem;
@@ -242,7 +241,7 @@ iframe {
     line-height: 1.25rem;
     vertical-align: baseline;
     text-transform: uppercase;
-    z-index: 9999;
+    z-index: 10;
 }
 
 .jc-nav svg {
@@ -265,7 +264,7 @@ iframe {
 #headerContainer {
     width: 100%;
     position: fixed;
-    top: 0;
+    top: 25px;
     left: 0;
     z-index: 200;
     background: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, .35)), to(rgba(0, 0, 0, 0)));
