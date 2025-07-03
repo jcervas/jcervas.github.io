@@ -191,13 +191,12 @@ ul.jc-item>li::before {
     text-indent: -10px;
 }
 
-.jc-title {
+.jc-title, .jc-title * {
     color: #fff;
 }
 
 .jc-title a {
     font-weight: 600;
-    color: #fff;
 }
 
 .jc-cite {
