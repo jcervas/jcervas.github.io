@@ -187,7 +187,7 @@ blockquote {
 }
 
 ul.jc-item>li::before {
-    content: "- ";
+    content: "&#8594; ";
     text-indent: -10px;
 }
 
@@ -197,6 +197,7 @@ ul.jc-item>li::before {
 
 .jc-title a {
     font-weight: 600;
+    color: #fff;
 }
 
 .jc-cite {
@@ -230,7 +231,8 @@ ul.jc-item>li::before {
 
 .jc-pdf::before {
     content: "[";
-    /*url(http://polisci.uci.edu/~jcervas/images/icon-pdf.svg) ;*/
+    /*url(http://polisci.uci.edu/~jcervas/images/icon-pdf.svg
+    ) ;*/
     /*padding-right: 5px;  create some space between the image and the content before it */
 }
 
