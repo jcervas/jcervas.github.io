@@ -37,8 +37,8 @@ a {
     font-weight: 600;
 }
 
-a:hover {
-    background-color: rgba(196, 18, 48, 0.09) !important;
+body a:hover {
+    background-color: rgba(196, 18, 48, 0.09);
 }
 
 iframe {
