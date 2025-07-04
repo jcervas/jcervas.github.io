@@ -37,8 +37,15 @@ a {
     font-weight: 600;
 }
 
+
 body a:hover {
     background-color: rgba(196, 18, 48, 0.09) !important;
+}
+
+a:hover {
+    background-image: linear-gradient(90deg, rgba(98, 98, 98, 0.09), rgba(98, 98, 98, 0.09) 0);
+    text-decoration: none;
+    transition: background-image .8s ease-in-out;
 }
 
 iframe {
