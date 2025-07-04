@@ -668,19 +668,21 @@ a#logo img {
     background-color: #312E33;
 }
 
-li .jc-highlight,
-p .jc-highlight {
-    background-image: -webkit-gradient(linear, left top, right top, color-stop(50%, rgba(98, 98, 98, 0.09)), color-stop(50%, rgba(98, 98, 98, 0.09)));
+.b,
+.b {
     background-image: linear-gradient(90deg, rgba(98, 98, 98, 0.09), rgba(98, 98, 98, 0.09) 0);
+    background-image: -webkit-gradient(linear, left top, right top, color-stop(50%, rgba(98, 98, 98, 0.09)), color-stop(50%, rgba(98, 98, 98, 0.09)));
     background-position: 0;
+    /* Set background-size to enable highlight animation effect */
     background-size: 200%;
     -webkit-transition: all .8s;
     transition: all .8s;
     font-weight: 600;
 }
 
-li .jc-highlight.highlighted,
-p .jc-highlight.highlighted {
+.b.highlighted,
+.b.highlighted {
+    /* Shift background to create highlight animation effect */
     background-position: -100%;
 }
 
