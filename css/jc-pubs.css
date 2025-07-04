@@ -218,6 +218,12 @@ ul.jc-item>li::before {
     padding-top: 1px;
 }
 
+.jc-item a:hover {
+    background-image: linear-gradient(90deg, rgba(98, 98, 98, 0.09), rgba(98, 98, 98, 0.09) 0);
+    text-decoration: none;
+    transition: all .8s ease-in-out;
+}
+
 @media print {
     ahref::after {
         content: " (" attr(href) ")";
