@@ -237,11 +237,21 @@ iframe {
     }
 }
 
-.jc-nav {
-    position: fixed;
+.jc-nav-overlay {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
     top: 0;
     width: 100%;
-    min-height: 25px;
+    height: 100%;
+}
+
+.jc-nav {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    /* min-height: 25px; */
     overflow: hidden;
     color: #FFF;
     font-family: 'Inter', sans-serif;
