@@ -631,7 +631,13 @@ a#logo img {
     background-position: center;
     background-size: 200%;
     vertical-align: middle;
-    padding: 16.6vh 3.5em;
+    padding: 16.6vh 0 16.6vh 0;
+}
+
+@media (max-width: 600px) {
+    .container_first {
+        padding: 8vh 0 8vh 0;
+    }
 }
 
 .picture_container {
