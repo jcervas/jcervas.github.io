@@ -18,7 +18,8 @@
         <section id="SITE-HEADER">
             <nav class="jc-nav navbar navbar-expand-sm navbar-dark" id="mainNav" style="background-color: #000;">
                 <!-- <a class="navbar-brand" href="#">Jonathan Cervas</a> -->
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavCollapse" aria-controls="mainNavCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavCollapse"
+                    aria-controls="mainNavCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="mainNavCollapse">
@@ -31,6 +32,16 @@
                 </div>
             </nav>
             <div class="jc-nav-overlay"></div>
+            <script>
+                function syncSpacer() {
+                    const header = document.querySelector('.jc-nav');
+                    const spacer = document.querySelector('.jc-nav-overlay');
+                    spacer.style.height = header.offsetHeight + 'px';
+                }
+
+                window.addEventListener('load', syncSpacer);
+                window.addEventListener('resize', syncSpacer);
+            </script>
         </section>
 
         <section>
