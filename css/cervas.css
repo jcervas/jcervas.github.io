@@ -494,27 +494,27 @@ a#logo img {
 }
 
 .frosted-box {
-    width: 100%;
-    height: 100%;
-    position: relative;
+    width: 200%;
+    /* height: 100%; */
+    /* position: relative; */
     background: inherit;
-    overflow: hidden;
+    /* overflow: hidden; */
     z-index: 1;
-    display: flex;
-    background-color: rgba(255, 255, 255, 0.2);
+    /* display: flex; */
+    background-color: rgba(255, 255, 255, 0.25);
     mix-blend-mode: screen;
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    color: initial;
-    line-height: 5.25vw;
-    font-weight: 700;
-    font-size: 15vw;
+    /* color: initial; */
+    /* line-height: 5.25vw; */
+    /* font-weight: 700; */
+    /* font-size: 15vw; */
     opacity: 0.85;
-    letter-spacing: -1vw;
+    /* letter-spacing: -1vw; */
 }
 
 .frosted-box svg {
-    margin-top: 4.5vw;
+    padding-top: 4.5vw;
     width: 66vw;
     max-width: 666px;
 }
@@ -631,6 +631,7 @@ a#logo img {
     background-position: center;
     background-size: 200%;
     vertical-align: middle;
+    padding: 16.6vh 3.5em;
 }
 
 .picture_container {
