@@ -172,25 +172,6 @@ blockquote {
     display: block
 }
 
-.jc-item li {
-    display: list-item;
-    list-style-type: none;
-    font-family: sans-serif;
-    margin-bottom: 1.5em;
-    max-width: 800px;
-    padding: 0 10px;
-    line-height: 1.3em;
-    font-size: 1em;
-    font-weight: 300;
-    text-indent: -10px;
-    padding-left: 10px;
-}
-
-ul.jc-item>li::before {
-    content: "→ ";
-    text-indent: -10px;
-}
-
 .jc-title a {
     font-weight: 600;
 }
@@ -206,17 +187,24 @@ ul.jc-item>li::before {
     color: #646f79;
 }
 
-
-.jc-section {
-    position: relative;
-    padding-top: 4px;
-}
-
 .jc-item, .jc-item * {
     color: #fff;
-    position: relative;
-    padding-top: 1px;
 }
+
+.jc-item li {
+    display: list-item;
+    list-style-type: decimal-leading-zero;  
+    margin-bottom: 1.5em;
+    font-size: 1em;
+    font-weight: 300;
+    text-indent: -2em;
+    padding-left: 2em;
+}
+
+/* ul.jc-item>li::before {
+    content: "→ ";
+    text-indent: -10px;
+} */
 
 @media print {
     ahref::after {
