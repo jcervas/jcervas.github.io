@@ -1,10 +1,22 @@
 function newEntry(data) {
+    // Sort data by year (descending), then title (alphabetically)
+    data.sort((a, b) => {
+        const yearA = a.issued?.["date-parts"]?.[0]?.[0] ?? 0;
+        const yearB = b.issued?.["date-parts"]?.[0]?.[0] ?? 0;
+
+        if (yearA !== yearB) {
+            return yearB - yearA; // Descending year
+        }
+
+        const titleA = a.title?.toLowerCase() ?? "";
+        const titleB = b.title?.toLowerCase() ?? "";
+        return titleA.localeCompare(titleB); // Alphabetical title
+    });
+
     const newIndex = document.createElement('ul');
     newIndex.classList.add('jc-item');
 
-    // Loop through each publication
     for (const obj of data) {
-        // Format authors
         const authors = obj.author.map(author => `${author.given} ${author.family}`);
         let formattedAuthors;
         if (authors.length === 1) {
@@ -17,16 +29,13 @@ function newEntry(data) {
             formattedAuthors = `${remainingAuthors.join(", ")}, ${lastTwoAuthors}`;
         }
 
-        // Get publication year from date-parts (handling cases when year is undefined)
-        const year = obj.issued && obj.issued["date-parts"] ? obj.issued["date-parts"][0][0] : null;
+        const year = obj.issued?.["date-parts"]?.[0]?.[0] ?? "";
 
-        // Create the list item and set attributes
         const li = document.createElement('li');
         li.setAttribute("id", `#pub${obj.id}`);
         li.setAttribute("data-pub-id", obj.id);
         li.setAttribute("class", "item");
 
-        // Build the inner HTML dynamically
         li.innerHTML = `
             ${obj.title ? `<span class="jc-title"><a href="${obj.URL}">${obj.title}</a></span>.` : ""}
             ${formattedAuthors ? `<span class="jc-authors">${formattedAuthors}</span>.` : ""}
@@ -37,7 +46,6 @@ function newEntry(data) {
             ${obj.page ? `<span class="jc-pages">${obj.page}</span>` : ""}
         `;
 
-        // Append the new list item to the index
         newIndex.appendChild(li);
     }
 
