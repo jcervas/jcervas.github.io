@@ -187,10 +187,6 @@ blockquote {
     color: #646f79;
 }
 
-.jc-item, .jc-item * {
-    color: #fff;
-}
-
 .jc-item li {
     display: list-item;
     list-style-type: decimal-leading-zero;  
