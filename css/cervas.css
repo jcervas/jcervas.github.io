@@ -6,10 +6,9 @@ html * {
 }
 body {
     margin: 0;
-    font-size: 0.9rem;
+    /* font-size: large; */
     color: #2d2d2d;
     font-weight: 300;
-    line-height: 1.25;
     text-align: left;
     background-position: center;
     background-repeat: no-repeat;
