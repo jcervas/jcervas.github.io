@@ -565,8 +565,15 @@ a#logo img {
 
 .jc-containter-alt {
     color:#ffffff;
-    background-image: linear-gradient(to bottom, rgba(238, 52, 65, 1) 10%, rgba(238, 52, 65, 0.8) 100%);
+    /* background-image: linear-gradient(to bottom, rgba(238, 52, 65, 1) 10%, rgba(238, 52, 65, 0.8) 100%); */
     /* background-color: #c41230;  */
+    background-image: linear-gradient(to bottom, rgba(196, 18, 48, .75) 10%, rgba(196, 18, 48, .75) 100%), url(/images/west-pa-roads.svg);
+    background-position: center;
+    background-size: 250%;
+    background-clip: content-box;
+    vertical-align: middle;
+    width: 100%;
+    padding: 5rem 0 4rem 0;
     height: 100%;
 }
 
@@ -583,6 +590,10 @@ line-height: 1.5;
 background-size: 100% .0625em;
 text-decoration: none;
 color: inherit;
+}
+
+.padding-zero {
+    padding: 0;
 }
 
 
