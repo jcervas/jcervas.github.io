@@ -23,10 +23,15 @@ section {
     box-sizing: border-box;
 }
 
+h2 {
+    padding: 10px 0 0 0;
+}
+
 .jc-container {
     background-color: #e0e0e0;
     position: relative;
     width: 100%;
+    height: 100%;
     margin: 0 auto;
     padding: 0 10px;
     max-width: 1200px;
@@ -259,10 +264,8 @@ iframe {
 
 .cases-condensed {
     display: none;
-    padding: 16px;
     background: #fff;
     border-radius: 8px;
-    margin: 10px;
     font-size: 1em;
 }
 
@@ -583,7 +586,7 @@ transition: background .4s ease,color .4s ease;
 color: inherit;
 background: linear-gradient(currentColor,currentColor) 0 100% / 0 .0625em no-repeat;
 padding-bottom: .0625em;
-line-height: 1.5;   
+/* line-height: 1.5;    */
 }
 
 .jc-containter-alt a:hover {
