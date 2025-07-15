@@ -91,7 +91,7 @@ table {
 .jc-overall-instructions {
     margin-bottom: 25px;
 }
-
+/* 
 button,
 input {
     padding: 5px 8px;
@@ -114,7 +114,7 @@ button.jc-submit:disabled,
 button.jc-submit.jc-disabled {
     background: #999;
     border-color: #999;
-}
+} */
 
 .jc-disabled {
     pointer-events: none;
@@ -172,6 +172,15 @@ blockquote {
     display: block
 }
 
+.jc-title {
+  margin-right: 1em; /* space between title and details */
+}
+
+.jc-title, .jc-details {
+    display: inline;
+    vertical-align: middle;
+}
+
 .jc-title a {
     font-weight: 600;
 }
@@ -190,7 +199,7 @@ blockquote {
 .jc-item li {
     display: list-item;
     list-style-type: decimal-leading-zero;  
-    margin-bottom: 1.5em;
+    /* margin-bottom: 1.25em; */
     font-size: 1em;
     font-weight: 300;
     text-indent: -2em;
