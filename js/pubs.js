@@ -38,12 +38,14 @@ function newEntry(data) {
 
         li.innerHTML = `
             ${obj.title ? `<span class="jc-title"><a href="${obj.URL}">${obj.title}</a>.</span>` : ""}
+            <p>
             ${formattedAuthors ? `<span class="jc-authors">${formattedAuthors}</span>.` : ""}
             ${year ? ` <span class="jc-year">${year}</span>.` : ""}
             ${obj.journalAbbreviation ? `<span class="jc-journal">${obj.journalAbbreviation}</span>` : ""}
             ${obj.volume ? `<span class="jc-volume">${obj.volume}</span>` : ""}
             ${obj.issue ? `<span class="jc-issue">${obj.issue}</span>` : ""}
             ${obj.page ? `<span class="jc-pages">${obj.page}</span>` : ""}
+            </p>
         `;
 
         newIndex.appendChild(li);

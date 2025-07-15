@@ -1,31 +1,4 @@
 @charset "UTF-8";
-@import url('https://rsms.me/inter/inter.css');
-
-/* html * {
-    font-family: "Open Sans","Helvetica",sans-serif;
-}
-body {
-    margin: 0;
-    /* font-size: large; */
-    color: #2d2d2d;
-    font-weight: 300;
-    text-align: left;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-}
-
-section {
-    width: 100%;
-}
-
-* {
-    box-sizing: border-box;
-}
-
-h2 {
-    padding: 10px 0 0 0;
-} */
 
 .jc-container {
     background-color: #e0e0e0;
@@ -581,9 +554,13 @@ a#logo img {
     background-clip: content-box;
     vertical-align: middle;
     width: 100%;
-    padding: 5rem 0 4rem 0;
-    height: 100%;
+    /* padding: 5rem 0 4rem 0; */
+    /* height: 100%; */
     margin-top: -2rem;
+}
+
+.jc-container-alt h2 {
+    color: #ffffff;
 }
 
 
