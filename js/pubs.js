@@ -37,7 +37,7 @@ function newEntry(data) {
         li.setAttribute("class", "item");
 
         li.innerHTML = `
-            ${obj.title ? `<span class="jc-title"><a href="${obj.URL}">${obj.title}</a></span>.` : ""}
+            ${obj.title ? `<span class="jc-title"><a href="${obj.URL}">${obj.title}</a>.</span>` : ""}
             ${formattedAuthors ? `<span class="jc-authors">${formattedAuthors}</span>.` : ""}
             ${year ? ` <span class="jc-year">${year}</span>.` : ""}
             ${obj.journalAbbreviation ? `<span class="jc-journal">${obj.journalAbbreviation}</span>` : ""}
