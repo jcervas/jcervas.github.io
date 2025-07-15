@@ -346,6 +346,11 @@ iframe {
     text-decoration: none;
 }
 
+.navbar-brand:hover {
+    fill: #C41230;
+    transition: fill 0.2s ease-in;
+}
+
 /*---------------------------------*/
 /*---------HEADER STUFF-----------*/
 /*-------------------------------*/
