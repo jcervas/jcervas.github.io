@@ -387,7 +387,7 @@ blockquote {
 
 blockquote:before {
     content: "";
-    background-image: url(/themes/custom/cmu_base/dist/assets/quote.svg);
+    background-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/quote.svg);
     background-repeat: no-repeat;
     width: 44px;
     height: 44px;
@@ -823,8 +823,8 @@ hr {
     position: absolute;
     bottom: .5%;
     left: 0;
-    -webkit-mask: url(/themes/custom/cmu_base/dist/assets/caret-down.svg) bottom / 1.25rem no-repeat;
-    mask: url(/themes/custom/cmu_base/dist/assets/caret-down.svg) bottom / 1.25rem no-repeat;
+    -webkit-mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg) bottom / 1.25rem no-repeat;
+    mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg) bottom / 1.25rem no-repeat;
 }
 
 .with-scroll.scrolled:after {
@@ -988,8 +988,8 @@ hr {
 
 :is(.flickity-prev-next-button, .flickity-control).previous:after {
     transform: rotate(180deg);
-    -webkit-mask-image: url("/themes/custom/cmu_base/dist/assets/arrow.svg");
-    mask-image: url("/themes/custom/cmu_base/dist/assets/arrow.svg");
+    -webkit-mask-image: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg");
+    mask-image: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg");
 }
 
 :is(.flickity-prev-next-button, .flickity-control).previous:hover:after {
@@ -1003,8 +1003,8 @@ hr {
 }
 
 :is(.flickity-prev-next-button, .flickity-control).next:after {
-    -webkit-mask-image: url("/themes/custom/cmu_base/dist/assets/arrow.svg");
-    mask-image: url("/themes/custom/cmu_base/dist/assets/arrow.svg");
+    -webkit-mask-image: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg");
+    mask-image: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg");
 }
 
 :is(.flickity-prev-next-button, .flickity-control):hover {
@@ -1071,7 +1071,7 @@ hr {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    background: url("/themes/custom/cmu_base/dist/assets/caret-down.svg") calc(100% - .75rem) / .75rem no-repeat;
+    background: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg") calc(100% - .75rem) / .75rem no-repeat;
     padding-right: 1.75rem;
 }
 
@@ -1129,8 +1129,8 @@ hr {
     background: currentColor;
     width: 75%;
     height: 75%;
-    -webkit-mask: url("/themes/custom/cmu_base/dist/assets/check.svg") center / contain no-repeat;
-    mask: url("/themes/custom/cmu_base/dist/assets/check.svg") center / contain no-repeat;
+    -webkit-mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/check.svg") center / contain no-repeat;
+    mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/check.svg") center / contain no-repeat;
 }
 
 .Form input[type="radio"] {
@@ -1154,8 +1154,8 @@ hr {
     background: currentColor;
     width: 75%;
     height: 75%;
-    -webkit-mask: url("/themes/custom/cmu_base/dist/assets/check.svg") center / contain no-repeat;
-    mask: url("/themes/custom/cmu_base/dist/assets/check.svg") center / contain no-repeat;
+    -webkit-mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/check.svg") center / contain no-repeat;
+    mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/check.svg") center / contain no-repeat;
 }
 
 .Form input[type="radio"] {
@@ -1199,7 +1199,7 @@ hr {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    background: url("/themes/custom/cmu_base/dist/assets/caret-down.svg") calc(100% - .75rem) / .75rem no-repeat;
+    background: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg") calc(100% - .75rem) / .75rem no-repeat;
     margin: 0;
     padding: .5em 1.75rem .5em .5rem;
     line-height: 1.5em;
@@ -2493,6 +2493,7 @@ html:has(.search-open) #main-content {
     align-items: center;
     width: 100%;
     display: grid;
+    height: 3rem;
 }
 
 @media (min-width:80em) {
@@ -2927,8 +2928,8 @@ html:has(.search-open) #main-content {
 }
 
 :is(.Header__search-toggle, .Header__menu-toggle)[aria-expanded="true"]:before {
-    -webkit-mask: url("/themes/custom/cmu_base/dist/assets/close.svg") center / 2rem no-repeat;
-    mask: url("/themes/custom/cmu_base/dist/assets/close.svg") center / 2rem no-repeat;
+    -webkit-mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/close.svg") center / 2rem no-repeat;
+    mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/close.svg") center / 2rem no-repeat;
 }
 
 @media (min-width:80em) {
@@ -2940,8 +2941,8 @@ html:has(.search-open) #main-content {
     }
 
     :is(.Header__search-toggle, .Header__menu-toggle)[aria-expanded="true"]:before {
-        -webkit-mask: url("/themes/custom/cmu_base/dist/assets/close.svg") center / 1.125rem no-repeat;
-        mask: url("/themes/custom/cmu_base/dist/assets/close.svg") center / 1.125rem no-repeat;
+        -webkit-mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/close.svg") center / 1.125rem no-repeat;
+        mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/close.svg") center / 1.125rem no-repeat;
     }
 
     :is(.Header__search-toggle, .Header__menu-toggle):hover:before {
@@ -2950,8 +2951,8 @@ html:has(.search-open) #main-content {
 }
 
 .Header__search-toggle:before {
-    -webkit-mask-image: url("/themes/custom/cmu_base/dist/assets/search.svg");
-    mask-image: url("/themes/custom/cmu_base/dist/assets/search.svg");
+    -webkit-mask-image: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/search.svg");
+    mask-image: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/search.svg");
 }
 
 @media (min-width:80em) {
@@ -2972,8 +2973,8 @@ html:has(.search-open) #main-content {
 }
 
 .Header__menu-toggle:before {
-    -webkit-mask-image: url("/themes/custom/cmu_base/dist/assets/menu.svg");
-    mask-image: url("/themes/custom/cmu_base/dist/assets/menu.svg");
+    -webkit-mask-image: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/menu.svg");
+    mask-image: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/menu.svg");
 }
 
 @media (min-width:80em) {
@@ -3060,8 +3061,8 @@ html:has(.search-open) #main-content {
     width: 2.5rem;
     height: 2.5rem;
     display: block;
-    -webkit-mask: url("/themes/custom/cmu_base/dist/assets/search.svg") center / 1.5rem no-repeat;
-    mask: url("/themes/custom/cmu_base/dist/assets/search.svg") center / 1.5rem no-repeat;
+    -webkit-mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/search.svg") center / 1.5rem no-repeat;
+    mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/search.svg") center / 1.5rem no-repeat;
 }
 
 .Header__heading {
@@ -3211,8 +3212,8 @@ html:has(.search-open) #main-content {
     flex-shrink: 0;
     width: .8125rem;
     height: .5625rem;
-    -webkit-mask: url("/themes/custom/cmu_base/dist/assets/caret-down.svg") center / contain no-repeat;
-    mask: url("/themes/custom/cmu_base/dist/assets/caret-down.svg") center / contain no-repeat;
+    -webkit-mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg") center / contain no-repeat;
+    mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg") center / contain no-repeat;
 }
 
 .Header__mega-toggle[aria-expanded="true"]:after {
@@ -3965,8 +3966,8 @@ html:has(.search-open) #main-content {
     width: 2rem;
     height: 2rem;
     display: block;
-    -webkit-mask: url("/themes/custom/cmu_base/dist/assets/caret-down.svg") center / 1rem no-repeat;
-    mask: url("/themes/custom/cmu_base/dist/assets/caret-down.svg") center / 1rem no-repeat;
+    -webkit-mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg") center / 1rem no-repeat;
+    mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg") center / 1rem no-repeat;
 }
 
 .Accordion__toggle:hover {
@@ -4026,8 +4027,8 @@ html:has(.search-open) #main-content {
     height: 8px;
     display: block;
     transform: rotate(-90deg);
-    -webkit-mask: url("/themes/custom/cmu_base/dist/assets/caret-down.svg") center / .8125rem no-repeat;
-    mask: url("/themes/custom/cmu_base/dist/assets/caret-down.svg") center / .8125rem no-repeat;
+    -webkit-mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg") center / .8125rem no-repeat;
+    mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg") center / .8125rem no-repeat;
 }
 
 .Accordion--minimal .Accordion__toggle:hover {
@@ -4131,8 +4132,8 @@ html:has(.search-open) #main-content {
     flex-shrink: 0;
     width: 24px;
     height: 24px;
-    -webkit-mask-image: url(/themes/custom/cmu_base/dist/assets/warning.svg);
-    mask-image: url(/themes/custom/cmu_base/dist/assets/warning.svg);
+    -webkit-mask-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/warning.svg);
+    mask-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/warning.svg);
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
 }
@@ -4173,8 +4174,8 @@ html:has(.search-open) #main-content {
 
 .Alert__close:before {
     color: var(--white);
-    -webkit-mask-image: url(/themes/custom/cmu_base/dist/assets/close.svg);
-    mask-image: url(/themes/custom/cmu_base/dist/assets/close.svg);
+    -webkit-mask-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/close.svg);
+    mask-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/close.svg);
 }
 
 .Alert__content {
@@ -4250,8 +4251,8 @@ html:has(.search-open) #main-content {
     width: 2rem;
     height: 2rem;
     display: block;
-    -webkit-mask: url("/themes/custom/cmu_base/dist/assets/close.svg") center / 1rem no-repeat;
-    mask: url("/themes/custom/cmu_base/dist/assets/close.svg") center / 1rem no-repeat;
+    -webkit-mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/close.svg") center / 1rem no-repeat;
+    mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/close.svg") center / 1rem no-repeat;
 }
 
 .Automodal__close:hover {
@@ -4422,8 +4423,8 @@ html:has(.search-open) #main-content {
     top: 0;
     left: 0;
     transform: rotate(-45deg);
-    -webkit-mask: url("/themes/custom/cmu_base/dist/assets/arrow.svg") center / 80% no-repeat;
-    mask: url("/themes/custom/cmu_base/dist/assets/arrow.svg") center / 80% no-repeat;
+    -webkit-mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg") center / 80% no-repeat;
+    mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg") center / 80% no-repeat;
 }
 
 :is(.Buttons--alt .Button, .Button--alt):hover {
@@ -5219,7 +5220,7 @@ html:has(.search-open) #main-content {
     font: var(--body);
     background-color: var(--white);
     color: var(--black);
-    background-image: url(/themes/custom/cmu_base/dist/assets/search.svg);
+    background-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/search.svg);
     background-position: right 2rem center;
     background-repeat: no-repeat;
     background-size: 23px;
@@ -5262,8 +5263,8 @@ html:has(.search-open) #main-content {
     width: 2rem;
     height: 2rem;
     display: block;
-    -webkit-mask: url("/themes/custom/cmu_base/dist/assets/caret-down.svg") center / 1rem no-repeat;
-    mask: url("/themes/custom/cmu_base/dist/assets/caret-down.svg") center / 1rem no-repeat;
+    -webkit-mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg") center / 1rem no-repeat;
+    mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg") center / 1rem no-repeat;
 }
 
 .Finder__filter-toggle[aria-expanded="true"]:after {
@@ -5350,7 +5351,7 @@ html:has(.search-open) #main-content {
 .Finder__checkbox:checked {
     background-color: var(--white);
     border: 1px solid var(--black);
-    background-image: url(/themes/custom/cmu_base/dist/assets/check.svg);
+    background-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/check.svg);
     background-position: center;
     background-repeat: no-repeat;
     background-size: 10px;
@@ -5413,8 +5414,8 @@ html:has(.search-open) #main-content {
 
 .Finder__remove:after {
     content: "";
-    -webkit-mask-image: url(/themes/custom/cmu_base/dist/assets/close.svg);
-    mask-image: url(/themes/custom/cmu_base/dist/assets/close.svg);
+    -webkit-mask-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/close.svg);
+    mask-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/close.svg);
     -webkit-mask-repeat: none;
     mask-repeat: none;
     background: currentColor;
@@ -5677,8 +5678,8 @@ html:has(.search-open) #main-content {
 
 [data-flexscroll-prev]:after {
     transform: rotate(180deg);
-    -webkit-mask-image: url("/themes/custom/cmu_base/dist/assets/arrow.svg");
-    mask-image: url("/themes/custom/cmu_base/dist/assets/arrow.svg");
+    -webkit-mask-image: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg");
+    mask-image: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg");
 }
 
 [data-flexscroll-prev]:hover:after {
@@ -5692,8 +5693,8 @@ html:has(.search-open) #main-content {
 }
 
 [data-flexscroll-next]:after {
-    -webkit-mask-image: url("/themes/custom/cmu_base/dist/assets/arrow.svg");
-    mask-image: url("/themes/custom/cmu_base/dist/assets/arrow.svg");
+    -webkit-mask-image: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg");
+    mask-image: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg");
 }
 
 [data-flexscroll-counter] {
@@ -6179,8 +6180,8 @@ html:has(.search-open) #main-content {
     background: var(--white);
     width: 50%;
     height: 50%;
-    -webkit-mask: url("/themes/custom/cmu_base/dist/assets/pause.svg") center / contain no-repeat;
-    mask: url("/themes/custom/cmu_base/dist/assets/pause.svg") center / contain no-repeat;
+    -webkit-mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/pause.svg") center / contain no-repeat;
+    mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/pause.svg") center / contain no-repeat;
 }
 
 .Hero__control:hover {
@@ -6188,8 +6189,8 @@ html:has(.search-open) #main-content {
 }
 
 .Hero__control--paused:before {
-    -webkit-mask-image: url("/themes/custom/cmu_base/dist/assets/play.svg");
-    mask-image: url("/themes/custom/cmu_base/dist/assets/play.svg");
+    -webkit-mask-image: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/play.svg");
+    mask-image: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/play.svg");
 }
 
 .Hero__posts {
@@ -6377,8 +6378,8 @@ html:has(.search-open) #main-content {
 
 .Image [href^="https://www.youtube.com"]:after {
     background: var(--white);
-    -webkit-mask: url("/themes/custom/cmu_base/dist/assets/play.svg") center / 1.75rem 1.75rem no-repeat;
-    mask: url("/themes/custom/cmu_base/dist/assets/play.svg") center / 1.75rem 1.75rem no-repeat;
+    -webkit-mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/play.svg") center / 1.75rem 1.75rem no-repeat;
+    mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/play.svg") center / 1.75rem 1.75rem no-repeat;
 }
 
 .Image [href^="https://www.youtube.com"]:hover:before {
@@ -6424,8 +6425,8 @@ html:has(.search-open) #main-content {
 
 .Image [href^="https://youtu.be"]:after {
     background: var(--white);
-    -webkit-mask: url("/themes/custom/cmu_base/dist/assets/play.svg") center / 1.75rem 1.75rem no-repeat;
-    mask: url("/themes/custom/cmu_base/dist/assets/play.svg") center / 1.75rem 1.75rem no-repeat;
+    -webkit-mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/play.svg") center / 1.75rem 1.75rem no-repeat;
+    mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/play.svg") center / 1.75rem 1.75rem no-repeat;
 }
 
 .Image [href^="https://youtu.be"]:hover:before {
@@ -6471,8 +6472,8 @@ html:has(.search-open) #main-content {
 
 .Image [href^="https://vimeo.com"]:after {
     background: var(--white);
-    -webkit-mask: url("/themes/custom/cmu_base/dist/assets/play.svg") center / 1.75rem 1.75rem no-repeat;
-    mask: url("/themes/custom/cmu_base/dist/assets/play.svg") center / 1.75rem 1.75rem no-repeat;
+    -webkit-mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/play.svg") center / 1.75rem 1.75rem no-repeat;
+    mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/play.svg") center / 1.75rem 1.75rem no-repeat;
 }
 
 .Image [href^="https://vimeo.com"]:hover:before {
@@ -6518,8 +6519,8 @@ html:has(.search-open) #main-content {
 
 .Image [href*="kaltura"]:after {
     background: var(--white);
-    -webkit-mask: url("/themes/custom/cmu_base/dist/assets/play.svg") center / 1.75rem 1.75rem no-repeat;
-    mask: url("/themes/custom/cmu_base/dist/assets/play.svg") center / 1.75rem 1.75rem no-repeat;
+    -webkit-mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/play.svg") center / 1.75rem 1.75rem no-repeat;
+    mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/play.svg") center / 1.75rem 1.75rem no-repeat;
 }
 
 .Image [href*="kaltura"]:hover:before {
@@ -7037,8 +7038,8 @@ html:has(.search-open) #main-content {
     height: 37px;
     display: block;
     transform: rotate(-45deg);
-    -webkit-mask: url("/themes/custom/cmu_base/dist/assets/arrow.svg") center / 80% no-repeat;
-    mask: url("/themes/custom/cmu_base/dist/assets/arrow.svg") center / 80% no-repeat;
+    -webkit-mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg") center / 80% no-repeat;
+    mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg") center / 80% no-repeat;
 }
 
 .RouterPanel--alt :is(.Router a) {
@@ -7586,8 +7587,8 @@ html:has(.search-open) #main-content {
     width: .8125rem;
     height: .5625rem;
     transform: rotate(-90deg);
-    -webkit-mask: url(/themes/custom/cmu_base/dist/assets/caret-down.svg) center / contain no-repeat;
-    mask: url(/themes/custom/cmu_base/dist/assets/caret-down.svg) center / contain no-repeat;
+    -webkit-mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg) center / contain no-repeat;
+    mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg) center / contain no-repeat;
 }
 
 .Subnav__subtoggle:hover:before {
@@ -7884,7 +7885,7 @@ html:has(.search-open) #main-content {
     .Testimonial__text:before {
         content: "";
         margin-bottom: var(--gap-sm);
-        background-image: url(/themes/custom/cmu_base/dist/assets/quote.svg);
+        background-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/quote.svg);
         background-repeat: no-repeat;
         width: 72px;
         height: 72px;
@@ -8190,8 +8191,8 @@ html:has(.search-open) #main-content {
         position: absolute;
         right: 0;
         transform: rotate(-90deg);
-        -webkit-mask: url(/themes/custom/cmu_base/dist/assets/caret-down.svg) bottom / 1.25rem no-repeat;
-        mask: url(/themes/custom/cmu_base/dist/assets/caret-down.svg) bottom / 1.25rem no-repeat;
+        -webkit-mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg) bottom / 1.25rem no-repeat;
+        mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg) bottom / 1.25rem no-repeat;
     }
 }
 
@@ -8588,8 +8589,8 @@ html:has(.search-open) #main-content {
     width: 20px;
     height: 20px;
     display: block;
-    -webkit-mask: url("/themes/custom/cmu_base/dist/assets/close.svg") center no-repeat;
-    mask: url("/themes/custom/cmu_base/dist/assets/close.svg") center no-repeat;
+    -webkit-mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/close.svg") center no-repeat;
+    mask: url("https://www.cmu.edu/themes/custom/cmu_base/dist/assets/close.svg") center no-repeat;
 }
 
 .Update__close:hover:before {
@@ -8775,116 +8776,116 @@ a.Widget__icon:hover svg {
 
 .Header__search-toggle:before,
 .Header__submit:before {
-    -webkit-mask-image: url(/themes/custom/cmu_base/dist/assets/search.svg);
-    mask-image: url(/themes/custom/cmu_base/dist/assets/search.svg);
+    -webkit-mask-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/search.svg);
+    mask-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/search.svg);
 }
 
 :is(.Header__search-toggle, .Header__menu-toggle)[aria-expanded="true"]:before {
-    -webkit-mask-image: url(/themes/custom/cmu_base/dist/assets/close.svg);
-    mask-image: url(/themes/custom/cmu_base/dist/assets/close.svg);
+    -webkit-mask-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/close.svg);
+    mask-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/close.svg);
 }
 
 .Header__menu-toggle:before {
-    -webkit-mask-image: url(/themes/custom/cmu_base/dist/assets/menu.svg);
-    mask-image: url(/themes/custom/cmu_base/dist/assets/menu.svg);
+    -webkit-mask-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/menu.svg);
+    mask-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/menu.svg);
 }
 
 :is(.Buttons--alt .Button, .Button--alt):after {
-    -webkit-mask: url(/themes/custom/cmu_base/dist/assets/arrow.svg) center / 80% no-repeat;
-    mask: url(/themes/custom/cmu_base/dist/assets/arrow.svg) center / 80% no-repeat;
+    -webkit-mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg) center / 80% no-repeat;
+    mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg) center / 80% no-repeat;
 }
 
 .Header__mega-toggle:after,
 .Subnav__subtoggle:before {
-    -webkit-mask: url(/themes/custom/cmu_base/dist/assets/caret-down.svg) center / contain no-repeat;
-    mask: url(/themes/custom/cmu_base/dist/assets/caret-down.svg) center / contain no-repeat;
+    -webkit-mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg) center / contain no-repeat;
+    mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg) center / contain no-repeat;
 }
 
 .Hero__control:before {
-    -webkit-mask: url(/themes/custom/cmu_base/dist/assets/pause.svg) center / contain no-repeat;
-    mask: url(/themes/custom/cmu_base/dist/assets/pause.svg) center / contain no-repeat;
+    -webkit-mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/pause.svg) center / contain no-repeat;
+    mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/pause.svg) center / contain no-repeat;
 }
 
 .Hero__control--paused:before {
-    -webkit-mask-image: url(/themes/custom/cmu_base/dist/assets/play.svg);
-    mask-image: url(/themes/custom/cmu_base/dist/assets/play.svg);
+    -webkit-mask-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/play.svg);
+    mask-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/play.svg);
 }
 
 .Update__close:before {
-    -webkit-mask: url(/themes/custom/cmu_base/dist/assets/close.svg) center no-repeat;
-    mask: url(/themes/custom/cmu_base/dist/assets/close.svg) center no-repeat;
+    -webkit-mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/close.svg) center no-repeat;
+    mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/close.svg) center no-repeat;
 }
 
 [data-flexscroll-prev]:after {
-    -webkit-mask-image: url(/themes/custom/cmu_base/dist/assets/arrow.svg);
-    mask-image: url(/themes/custom/cmu_base/dist/assets/arrow.svg);
+    -webkit-mask-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg);
+    mask-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg);
 }
 
 [data-flexscroll-next]:after {
-    -webkit-mask-image: url(/themes/custom/cmu_base/dist/assets/arrow.svg);
-    mask-image: url(/themes/custom/cmu_base/dist/assets/arrow.svg);
+    -webkit-mask-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg);
+    mask-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg);
 }
 
 .Image [href^="https://youtu.be"]:after,
 .Image [href^="https://www.youtube.com"]:after,
 .Image [href^="https://vimeo.com"]:after,
 .Image [href*="kaltura"]:after {
-    -webkit-mask: url(/themes/custom/cmu_base/dist/assets/play.svg) center / 1.75rem 1.75rem no-repeat;
-    mask: url(/themes/custom/cmu_base/dist/assets/play.svg) center / 1.75rem 1.75rem no-repeat;
+    -webkit-mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/play.svg) center / 1.75rem 1.75rem no-repeat;
+    mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/play.svg) center / 1.75rem 1.75rem no-repeat;
 }
 
 .Router a:after {
-    -webkit-mask: url(/themes/custom/cmu_base/dist/assets/arrow.svg) center / 80% no-repeat;
-    mask: url(/themes/custom/cmu_base/dist/assets/arrow.svg) center / 80% no-repeat;
+    -webkit-mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg) center / 80% no-repeat;
+    mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg) center / 80% no-repeat;
     min-width: 37px;
 }
 
 .Update__close:before {
-    -webkit-mask: url(/themes/custom/cmu_base/dist/assets/close.svg) center no-repeat;
-    mask: url(/themes/custom/cmu_base/dist/assets/close.svg) center no-repeat;
+    -webkit-mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/close.svg) center no-repeat;
+    mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/close.svg) center no-repeat;
 }
 
 .Accordion__toggle:before {
-    -webkit-mask: url(/themes/custom/cmu_base/dist/assets/caret-down.svg) center / 1rem no-repeat;
-    mask: url(/themes/custom/cmu_base/dist/assets/caret-down.svg) center / 1rem no-repeat;
+    -webkit-mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg) center / 1rem no-repeat;
+    mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg) center / 1rem no-repeat;
 }
 
 :is(.flickity-prev-next-button, .flickity-control).previous:after {
-    -webkit-mask-image: url(/themes/custom/cmu_base/dist/assets/arrow.svg);
-    mask-image: url(/themes/custom/cmu_base/dist/assets/arrow.svg);
+    -webkit-mask-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg);
+    mask-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg);
 }
 
 :is(.flickity-prev-next-button, .flickity-control).next:after {
-    -webkit-mask-image: url(/themes/custom/cmu_base/dist/assets/arrow.svg);
-    mask-image: url(/themes/custom/cmu_base/dist/assets/arrow.svg);
+    -webkit-mask-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg);
+    mask-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/arrow.svg);
 }
 
 .Form select {
-    background: url(/themes/custom/cmu_base/dist/assets/caret-down.svg) calc(100% - .75rem) / .75rem no-repeat;
+    background: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg) calc(100% - .75rem) / .75rem no-repeat;
 }
 
 .Form input[type="checkbox"]:checked:before {
-    -webkit-mask: url(/themes/custom/cmu_base/dist/assets/check.svg) center / contain no-repeat;
-    mask: url(/themes/custom/cmu_base/dist/assets/check.svg) center / contain no-repeat;
+    -webkit-mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/check.svg) center / contain no-repeat;
+    mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/check.svg) center / contain no-repeat;
 }
 
 .Finder__filter-toggle:after {
-    -webkit-mask: url(/themes/custom/cmu_base/dist/assets/caret-down.svg) center / 1rem no-repeat;
-    mask: url(/themes/custom/cmu_base/dist/assets/caret-down.svg) center / 1rem no-repeat;
+    -webkit-mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg) center / 1rem no-repeat;
+    mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg) center / 1rem no-repeat;
 }
 
 .Finder__checkbox:checked {
-    background-image: url(/themes/custom/cmu_base/dist/assets/check.svg);
+    background-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/check.svg);
 }
 
 .Accordion--minimal .Accordion__toggle:before {
-    -webkit-mask: url(/themes/custom/cmu_base/dist/assets/caret-down.svg) center / .8125rem no-repeat;
-    mask: url(/themes/custom/cmu_base/dist/assets/caret-down.svg) center / .8125rem no-repeat;
+    -webkit-mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg) center / .8125rem no-repeat;
+    mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg) center / .8125rem no-repeat;
 }
 
 .Automodal__close:before {
-    -webkit-mask: url(/themes/custom/cmu_base/dist/assets/close.svg) center / 1rem no-repeat;
-    mask: url(/themes/custom/cmu_base/dist/assets/close.svg) center / 1rem no-repeat;
+    -webkit-mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/close.svg) center / 1rem no-repeat;
+    mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/close.svg) center / 1rem no-repeat;
 }
 
 .paragraph--type--video-embed {
@@ -9243,8 +9244,8 @@ button.hide {
     width: 42px;
     height: 40px;
     display: block;
-    -webkit-mask: url(/themes/custom/cmu_base/dist/assets/search.svg) center / 1.5rem no-repeat;
-    mask: url(/themes/custom/cmu_base/dist/assets/search.svg) center / 1.5rem no-repeat;
+    -webkit-mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/search.svg) center / 1.5rem no-repeat;
+    mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/search.svg) center / 1.5rem no-repeat;
     border: 1px solid var(--carnegie-red);
 }
 
@@ -9678,8 +9679,8 @@ button.Automodal__close:focus {
     position: absolute;
     top: calc(50% - 2.5rem);
     left: calc(50% - 2.5rem);
-    -webkit-mask: url(/themes/custom/cmu_base/dist/assets/play.svg) center / 1.75rem 1.75rem no-repeat;
-    mask: url(/themes/custom/cmu_base/dist/assets/play.svg) center / 1.75rem 1.75rem no-repeat;
+    -webkit-mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/play.svg) center / 1.75rem 1.75rem no-repeat;
+    mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/play.svg) center / 1.75rem 1.75rem no-repeat;
     background: var(--white);
 }
 
@@ -9760,7 +9761,7 @@ figure figcaption {
 
 @media (min-width:48em) {
     .Testimonial__text:before {
-        background-image: url(/themes/custom/cmu_base/dist/assets/quote.svg);
+        background-image: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/quote.svg);
     }
 
     .Hero--faculty .Common picture {
@@ -9833,6 +9834,6 @@ figure figcaption {
 
 @media (max-width:calc(63.999em - 0.001px)) {
     .TimelineCarousel [data-flexscroll] .flexscroll-area:before {
-        mask: url(/themes/custom/cmu_base/dist/assets/caret-down.svg) bottom / 1.25rem no-repeat
+        mask: url(https://www.cmu.edu/themes/custom/cmu_base/dist/assets/caret-down.svg) bottom / 1.25rem no-repeat
     }
 }
