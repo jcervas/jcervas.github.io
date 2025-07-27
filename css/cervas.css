@@ -614,8 +614,7 @@ color: inherit;
 }
 
 .frosted-box {
-    width: 100%;
-    padding-left: 1rem;
+    padding: 1rem;
     background: inherit;
     z-index: 1;
     background-color: rgba(255, 255, 255, 0.25);
@@ -624,6 +623,7 @@ color: inherit;
     -webkit-backdrop-filter: blur(15px);
     opacity: 0.85;
 }
+
 
 .glass {
   position: relative;
