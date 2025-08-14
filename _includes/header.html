@@ -1,0 +1,44 @@
+<header role="banner" class="Header">
+  <div class="Header__utility">
+    <nav class="block block-menu navigation menu--utility" aria-labelledby="block-cmu-base-utility-menu">
+      <h2 class="visually-hidden" id="block-cmu-base-utility-menu">Utility</h2>
+      <ul class="Header__audience">
+        <li class="menu-item"><a class="menu-item link-underline-swipe" href="https://www.cmu.edu/cmist/">CMIST</a></li>
+        <li class="menu-item"><a class="menu-item link-underline-swipe" href="https://davesredistricting.org">Dave's Redistricting</a></li>
+        <li class="menu-item"><a class="menu-item link-underline-swipe" href="#">Students</a></li>
+        <li class="menu-item"><a class="menu-item link-underline-swipe" href="mailto:cervas@cmu.edu">Email</a></li>
+      </ul>
+    </nav>
+
+    <nav class="block block-menu navigation menu--actions-menu" aria-labelledby="block-cmu-base-actionsmenu-menu">
+      <h2 class="visually-hidden" id="block-cmu-base-actionsmenu-menu">Actions Menu</h2>
+      <ul class="Header__actions">
+        <li class="menu-item"><a class="menu-item Button" href="{{ '/cv.pdf' | relative_url }}">CV</a></li>
+        <li class="menu-item"><a class="menu-item Button" href="https://www.cmu.edu/engage/give/">Give</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="Header__primary">
+    <div class="Header__logo-wrapper jc-logo">
+      <a href="{{ '/' | relative_url }}" rel="home" aria-label="Carnegie Mellon University" class="Header__logo">
+        <!-- your existing SVG logo(s) -->
+        <!-- keep the large logo block from index.html here -->
+      </a>
+    </div>
+
+    <div id="main-menu-nav" class="contents">
+      <button class="Header__menu-toggle" aria-label="Toggle menu" aria-expanded="false"></button>
+      <nav id="block-cmu-base-main-menu" class="Header__menu menu--main" aria-labelledby="block-cmu-base-main-menu-menu">
+        <h2 class="visually-hidden" id="block-cmu-base-main-menu-menu">Main navigation</h2>
+        <ul class="Header__nav">
+          <li class="menu-item"><a href="{{ '/about'    | relative_url }}" class="link-underline-swipe">About</a></li>
+          <li class="menu-item"><a href="{{ '/pubs'     | relative_url }}" class="link-underline-swipe">Publications</a></li>
+          <li class="menu-item"><a href="{{ '/cases'    | relative_url }}" class="link-underline-swipe">Redistricting</a></li>
+          <li class="menu-item"><a href="{{ '/teaching' | relative_url }}" class="link-underline-swipe">Teaching</a></li>
+          <li class="menu-item"><a href="{{ '/contact'  | relative_url }}" class="link-underline-swipe">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
