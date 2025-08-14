@@ -1,3 +1,57 @@
 <footer class="site-footer">
   <small>© {{ site.time | date: "%Y" }} {{ site.title }}</small>
+
+<div class="footer">
+    <div class="divider_end"></div>
+    <p class="footer_text">JONATHAN ROBERT CERVAS</p>
+</div>
+
+<script src="/js/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="/js/pubs.js"></script>
+<script src="/trips/trips2019.js"></script>
+<script src="/js/word-change.js"></script>
+<script src="/js/script.js?v=10.5.1" type="module"></script>
+<!-- Resource jQuery -->
+<!--
+        Inline script to obfuscate the email address and reduce the risk of email harvesting by bots.
+        This script dynamically inserts the email address into the page after DOM content is loaded.
+    -->
+<script>
+    // Email obfuscation: This script dynamically constructs and inserts the email address into the page after the DOM is loaded,
+    // helping to prevent email harvesting by bots that scrape static HTML for email addresses.
+    document.addEventListener("DOMContentLoaded", function () {
+        var user = "cervas";
+        var domain = "cmu.edu";
+        var email = user + "@" + domain;
+        var emailSpan = document.getElementById("email");
+        if (emailSpan) {
+            emailSpan.innerHTML = '<a href="mailto:' + email + '">' + email + "</a>";
+        }
+    });
+</script>
+
+<script type="text/javascript" id="gtm-scroll-tracking"
+    charset="">(function (f, l, e) {
+            function n() { if (!f.querySelector || !f.body.getBoundingClientRect) return !1; e.dataLayerName = e.dataLayerName || "dataLayer"; e.distances = e.distances || {}; r(); p(l, "scroll", y(r, 500)) } function t(a, d, b, c, h) { var k; for (k = 0; k < d.length; k++) { var g = parseInt(d[k], 10), m = "%" !== b ? g + h : g / 100 * c + h; g += b; m <= c + h && (a[g] = m) } return a } function u(a, d) { a = parseInt(a, 10); d /= a; var b = [], c; for (c = 1; c < d + 1; c++)b.push(c * a); return b } function r() {
+                var a = v(e.bottom), d = v(e.top), b = f.body, c = f.documentElement; b = Math.max(b.scrollHeight,
+                    b.offsetHeight, c.clientHeight, c.scrollHeight, c.offsetHeight); d && (b -= d); a && (b = a - (d || 0)); a = b - 5; d = d || 0; b = {}; c = []; var h = []; if (e.distances.percentages && (e.distances.percentages.each && (c = c.concat(e.distances.percentages.each)), e.distances.percentages.every)) { var k = u(e.distances.percentages.every, 100); c = c.concat(k) } e.distances.pixels && (e.distances.pixels.each && (h = h.concat(e.distances.pixels.each)), e.distances.pixels.every && (k = u(e.distances.pixels.every, a), h = h.concat(k))); b = t(b, c, "%", a, d); a = b = t(b, h, "px",
+                        a, d); d = void 0 !== l.pageXOffset; b = "CSS1Compat" === (f.compatMode || ""); d = d ? l.pageYOffset : b ? f.documentElement.scrollTop : f.body.scrollTop; d = parseInt(d, 10); b = parseInt; c = "CSS1Compat" === f.compatMode ? f.documentElement : f.body; c = c.clientHeight; d += b(c, 10); for (var g in a) if (d > a[g] && !w[g]) if (w[g] = !0, b = g, c = l.GoogleAnalyticsObject, "undefined" === typeof l[e.dataLayerName] || e.forceSyntax) if ("function" === typeof l[c] && "function" === typeof l[c].getAll && 2 !== e.forceSyntax) l[c]("send", "event", e.category, b, e.label, { nonInteraction: 1 });
+                        else "undefined" !== typeof l._gaq && 1 !== e.forceSyntax && l._gaq.push(["_trackEvent", e.category, b, e.label, 0, !0]); else l[e.dataLayerName].push({ event: "scrollTracking", attributes: { distance: b, label: e.label } })
+            } function v(a) { if ("number" === typeof a || parseInt(a, 10)) return parseInt(a, 10); try { var d = 1 === a.nodeType ? a : f.querySelector(a), b = f.body.getBoundingClientRect().top, c = Math.floor(d.getBoundingClientRect().top - b); return c } catch (h) { } } function y(a, d) {
+                var b, c, h, k = null, g = 0, m = function () {
+                    g = new Date; k = null; h = a.apply(b,
+                        c)
+                }; return function () { var q = new Date; g || (g = q); var x = d - (q - g); b = this; c = arguments; 0 >= x ? (clearTimeout(k), k = null, g = q, h = a.apply(b, c)) : k || (k = setTimeout(m, x)); return h }
+            } function p(a, d, b) { if (a.addEventListener) a.addEventListener(d, b); else if (a.attachEvent) a.attachEvent("on" + d, function (c) { b.call(a, c) }); else if ("undefined" === typeof a["on" + d] || null === a["on" + d]) a["on" + d] = function (c) { b.call(a, c) } } var w = {}; "loading" !== f.readyState ? n() : f.addEventListener ? p(f, "DOMContentLoaded", n) : p(l, "load", n)
+        })(document, window,
+            { forceSyntax: !1, dataLayerName: !1, distances: { percentages: { each: [10, 90], every: 25 }, pixels: { each: [], every: null } }, top: null, bottom: null, category: "Scroll Tracking", label: document.location.pathname });</script>
+</div>
+
 </footer>
