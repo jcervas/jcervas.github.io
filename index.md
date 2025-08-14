@@ -26,7 +26,8 @@ title: Home
                 </g>
             </svg> -->
         <div class="jc-wordmark">
-            <?xml version="1.0" encoding="UTF-8"?><svg id="two-line" xmlns="http://www.w3.org/2000/svg"
+            <?xml version="1.0" encoding="UTF-8"?>
+            <svg id="two-line" xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 1366 453.5">
                 <g>
                     <path
@@ -59,7 +60,6 @@ title: Home
                         d="M916.61,280.29c-12.87-15.2-38.33-18.29-55.54-9.31-12.48,5.37-15.11,24.6-3.66,32.19,18.67,12.91,46.67,13.82,66.37,26.55,36.23,19.58,32.51,79.21,.91,101.92-38.12,27.12-96.87,22.57-131.06-9.76l33.87-37.23c27.18,38.47,98.2,16.23,66.98-17.55-18.77-13.82-47.44-15.36-67.59-28.23-36.87-19.41-32.83-76.45-1.07-99.18,35.02-25.58,90.41-23.76,123.43,4.88l-32.65,35.7Z" />
                 </g>
             </svg>
-
         </div>
         <div id="trigger-div">
             <!-- When this scrolls past, SVG appears -->
@@ -67,10 +67,7 @@ title: Home
     </div>
 
 </div>
-
-
     <div class="site-header__date">Carnegie Mellon University</div>
-
     <section class="gradient-two">
         <div class="items">
             <div class="cards">
@@ -115,7 +112,6 @@ title: Home
                                 Journal</span>, and <span class="jc-highlight highlighted">Political
                                 Geography</span>.
                         </p>
-
                         <p>
                             Dr. Cervas has advised redistricting processes in Pennsylvania, New York, and
                             Wisconsin,
@@ -125,7 +121,6 @@ title: Home
                             expertise includes
                             political geography and statistical modeling.
                         </p>
-
                         <p>
                             At CMU, he teaches <span class="jc-highlight highlighted">American
                                 government</span>, <span class="jc-highlight highlighted">representation</span>,
@@ -139,7 +134,6 @@ title: Home
     </section>
     <!-- <div class="divider"></div> -->
     <section class="jc-container-alt">
-
         <div id="pubs" class="container jc-publications">
             <h2>Publications</h2>
             <div id="journal"></div>
@@ -152,7 +146,6 @@ title: Home
         <div id="cases" class="Section__header flush">
             <h2 id="h2">Redistricting</h2>
         </div>
-
         <div class="items items-descriptions">
             <div id="WI" class="card">
                 <div class="card-img">
@@ -286,7 +279,6 @@ title: Home
                     majority for the first time in American history.
                 </p>
             </div>
-
             <div id="VA" class="card">
                 <div class="card-link">
                     <div class="card-img">
@@ -301,7 +293,6 @@ title: Home
                     </p>
                 </div>
             </div>
-
             <div id="TN" class="card">
                 <div class="card-img">
                     <img src="images/tn.png" alt="Tennessee" />
@@ -316,7 +307,6 @@ title: Home
                         href="/2022/TN/tn5.pdf">5</a>.
                 </p>
             </div>
-
             <div id="NM" class="card">
                 <div class="card-img">
                     <img src="images/nm.png" alt="New Mexico" />
@@ -326,7 +316,6 @@ title: Home
                 <p>I wrote an amicus brief in support of neither party: <a href="/2023/NM/NM-amicus.pdf">Amicus
                         Brief</a></p>
             </div>
-
             <div id="Nassau" class="card">
                 <div class="card-img">
                     <img src="images/nassau.png"
@@ -360,7 +349,6 @@ title: Home
                 </p>
             </div>
         </div>
-
         <div class="cases-condensed container">
             <ul>
                 <li><b>Wisconsin:</b> Clarke v. WEC (2024)</li>
