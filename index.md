@@ -69,7 +69,6 @@ title: Home
 </div>
 
 
-<main class="main">
     <div class="site-header__date">Carnegie Mellon University</div>
 
     <section class="gradient-two">
@@ -391,33 +390,4 @@ title: Home
             </div>
         </div>
     </section>
-    <!-- <div class="divider"></div> -->
-    <!-- <section id="contact" style="padding-top: 0px;" class="map_footer">
-            <div class="divider"></div>
-            <p class="second_title text_white">CONTACT JONATHAN</p>
-            <div class="container" style="padding: 25px;">
-                <table class="tg">
-                    <thead>
-                        <tr>
-                            <th class="tg-0lax">Email:</th>
-                            <th class="tg-0lax"><span id="email"></span></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="tg-0lax">Address:</td>
-                            <td class="tg-0lax">
-                                5000 Forbes Ave.<br />
-                                Pittsburgh, PA 15213<br />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="tg-0lax">Office:</td>
-                            <td class="tg-0lax">374 Posner Hall</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section> -->
-
-</main>
+    
