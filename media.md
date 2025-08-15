@@ -3,8 +3,9 @@ layout: subpage
 title: "Media Appearances
 ---
 
-
+<div class="Section__header flush">
 # Media Appearances
+</div>
 
 New York Times, May 28, 2022. **How a Mapmaker Became New York’s Most Unexpected Power Broker** -
 *Jonathan Cervas, a former bartender from Las Vegas, radically redrew New York’s House district lines, forcing some Democratic incumbents to scramble for new seats.* https://www.nytimes.com/2022/05/28/nyregion/jonathan-cervas-redistricting-maps-ny.html
