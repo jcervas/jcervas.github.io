@@ -1,6 +1,6 @@
 ---
 layout: subpage
-title: "About
+title: "About"
 ---
 
 <div class="Section__header flush">
