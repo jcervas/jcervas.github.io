@@ -16,11 +16,11 @@ layout: default
   </nav>
 
   <!-- Random hero image -->
-  {% assign images = "hero1.jpg,hero2.jpg,hero3.jpg" | split: "," %}
-  {% assign random_index = site.time | date: "%s" | modulo: images.size %}
-  <div class="hero">
+<!--   {% assign images = "hero1.jpg,hero2.jpg,hero3.jpg" | split: "," %}
+  {% assign random_index = site.time | date: "%s" | modulo: images.size %} -->
+<!--   <div class="hero">
     <img src="{{ '/images/' | append: images[random_index] | relative_url }}" alt="" />
-  </div>
+  </div> -->
 
   <!-- Page content -->
   {{ content }}
