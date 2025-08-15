@@ -17,7 +17,7 @@ layout: default
   {% assign images = "09-28-2023-cervas-class-stock-photos_002.png,09-28-2023-cervas-class-stock-photos_011.png,09-28-2023-cervas-class-stock-photos_013.png,09-28-2023-cervas-class-stock-photos_014.png,09-28-2023-cervas-class-stock-photos_016.png,A Team I.png" | split: "," %}
   {% assign random_index = site.time | date: "%s" | modulo: images.size %}
   <div class="hero">
-    <img src="{{ '/assets/photos' | append: images[random_index] | relative_url }}" alt="" />
+    <img src="{{ '/assets/photos/' | append: images[random_index] | relative_url }}" alt="" />
   </div>
 
 <div class="Section__main flush">
