@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Peer Review Referee Report — Policy Proposal</title>
+<style>
+  :root { --fg:#111; --muted:#666; --line:#ddd; --bg:#fff; }
+  html, body { background: var(--bg); color: var(--fg); }
+  body { font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+         line-height:1.4; margin:1.5rem; max-width:900px; }
+  header h1 { margin:0 0 .5rem 0; font-size:1.6rem; }
+  .meta { display:grid; grid-template-columns:1fr 1fr; gap:.75rem 1rem; margin:.75rem 0 1rem; }
+  label { font-weight:600; font-size:.95rem; }
+  input[type="text"], input[type="date"], input[type="number"], textarea {
+    width:100%; border:1px solid var(--line); border-radius:6px; padding:.55rem .6rem;
+    font:inherit; background:#fafafa;
+  }
+  textarea { min-height:120px; resize:vertical; }
+  section { border-top:1px solid var(--line); padding-top:1rem; margin-top:1rem; }
+  section h2 { font-size:1.15rem; margin:0 0 .5rem 0; }
+  .hint { color:var(--muted); font-size:.92rem; margin:.25rem 0 .5rem; }
+  ol, ul { margin:.25rem 0 .5rem 1.2rem; }
+  .gradebox { display:grid; grid-template-columns:160px 1fr; gap:.75rem; align-items:center; }
+  .small { font-size:.9rem; color:var(--muted); }
+  .actions { display:flex; gap:.75rem; margin-top:1rem; }
+  button, .btn {
+    appearance:none; border:1px solid var(--line); border-radius:8px; padding:.55rem .9rem;
+    background:#f5f5f5; cursor:pointer; font:inherit;
+  }
+  .btn-primary { background:#111; color:#fff; border-color:#111; }
+  .sr-only { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }
+  @media print { body { margin:0.5in; } textarea { min-height:90px; } a { color:inherit; } .actions{display:none;} }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Peer Review Referee Report — Policy Proposal</h1>
+  <p class="small">
+    Assignment: <em>Policy Proposals</em> (Due <strong>December 5</strong>). Target length of proposals: 2–4 single‑spaced pages (visualizations excluded).
+    Reviewers: read two peers’ proposals and complete this report. Your feedback is graded for thoughtfulness, specificity, and constructiveness.
+  </p>
+</header>
+
+<!-- Replace the action URL with your Formspree endpoint -->
+<form action="https://formspree.io/f/mvgqyyky" method="POST" accept-charset="UTF-8">
+  <!-- Formspree options -->
+  <input type="hidden" name="_subject" value="Peer Review Submission — Policy Proposal" />
+  <input type="hidden" name="_redirect" value="https://jonathancervas.com/teaching/thanks" />
+  <!-- Simple honeypot for spam bots -->
+  <label class="sr-only">Leave this field empty<input type="text" name="_gotcha"></label>
+
+  <div class="meta">
+    <div>
+      <label for="reviewer">Reviewer Name*</label>
+      <input id="reviewer" name="reviewer" type="text" placeholder="Your name" required />
+    </div>
+    <div>
+      <label for="author">Author Name*</label>
+      <input id="author" name="author" type="text" placeholder="Author's name" required />
+    </div>
+    <div>
+      <label for="title">Title of Proposal*</label>
+      <input id="title" name="proposal_title" type="text" placeholder="Proposal title" required />
+    </div>
+    <div>
+      <label for="date">Date*</label>
+      <input id="date" name="date" type="date" required />
+    </div>
+  </div>
+
+  <section id="summary">
+    <h2>1. Summary of the Proposal</h2>
+    <p class="hint">Briefly (3–5 sentences) describe the policy problem, the recommended policy, and the core evidence/historical analysis used.</p>
+    <textarea name="summary" placeholder="Enter your concise summary here." required></textarea>
+  </section>
+
+  <section id="strengths">
+    <h2>2. Strengths</h2>
+    <p class="hint">List at least three notable strengths (e.g., clear writing, appropriate data, strong historical context, originality, good visualizations).</p>
+    <ol>
+      <li><textarea name="strengths[]" placeholder="Strength #1" required></textarea></li>
+      <li><textarea name="strengths[]" placeholder="Strength #2" required></textarea></li>
+      <li><textarea name="strengths[]" placeholder="Strength #3" required></textarea></li>
+    </ol>
+  </section>
+
+  <section id="improvements">
+    <h2>3. Areas for Improvement</h2>
+    <p class="hint">Identify at least three specific, actionable improvements. Pair each issue with a constructive suggestion.</p>
+    <ol>
+      <li><textarea name="improvements[]" placeholder="Issue + suggested fix #1" required></textarea></li>
+      <li><textarea name="improvements[]" placeholder="Issue + suggested fix #2" required></textarea></li>
+      <li><textarea name="improvements[]" placeholder="Issue + suggested fix #3" required></textarea></li>
+    </ol>
+  </section>
+
+  <section id="evidence">
+    <h2>4. Evidence and Historical Analysis</h2>
+    <ul class="hint">
+      <li>Is the data relevant, sufficient, and clearly presented?</li>
+      <li>Is the historical context accurate and well‑integrated?</li>
+      <li>Are visualizations informative, labeled, and reproducible?</li>
+      <li>Are limitations, assumptions, and uncertainty discussed?</li>
+    </ul>
+    <textarea name="evidence_analysis" placeholder="Comment on data quality, methods, historical accuracy, and use of visuals." required></textarea>
+  </section>
+
+  <section id="organization">
+    <h2>5. Organization and Clarity</h2>
+    <ul class="hint">
+      <li>Is the argument logically structured and easy to follow?</li>
+      <li>Are transitions, headings, and signposting effective?</li>
+      <li>Is the writing concise and mostly error‑free?</li>
+    </ul>
+    <textarea name="organization_clarity" placeholder="Comment on structure, flow, readability, and style." required></textarea>
+  </section>
+
+  <section id="assessment">
+    <h2>6. Overall Assessment</h2>
+    <p class="hint">Provide a brief overall verdict. Consider persuasiveness, feasibility, and policy relevance.</p>
+    <textarea name="overall_assessment" placeholder="Summarize your overall impression and the proposal’s likely impact." required></textarea>
+  </section>
+
+  <section id="grade">
+    <h2>7. Suggested Grade</h2>
+    <div class="gradebox">
+      <label for="score">Numerical Grade (0–100)*</label>
+      <input id="score" name="grade_score" type="number" min="0" max="100" step="1" placeholder="e.g., 92" required />
+      <label for="justification">Justification*</label>
+      <textarea id="justification" name="grade_justification" placeholder="Briefly justify your suggested grade with reference to specific strengths and weaknesses." required></textarea>
+    </div>
+    <p class="small">
+      The instructor will average peer grades and may adjust final grades. If you believe your own grade should differ, you may request an evaluation before the end of the semester; note the instructor may <strong>lower</strong> grades at their discretion.
+    </p>
+  </section>
+
+  <section id="confidential">
+    <h2>8. Confidential Comments to Instructor (Optional)</h2>
+    <p class="hint">Optional remarks for the instructor that will not be shared with the author.</p>
+    <textarea name="confidential_comments" placeholder="Private comments to instructor (optional)."></textarea>
+  </section>
+
+  <div class="actions">
+    <button type="submit" class="btn btn-primary">Submit Review</button>
+    <button type="button" class="btn" onclick="window.print()">Save as PDF</button>
+  </div>
+</form>
+
+</body>
+</html>
