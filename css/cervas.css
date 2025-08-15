@@ -21,6 +21,21 @@ a:hover {
     line-height: 23.625px;
 }
 
+.breadcrumb {
+  font-size: 0.9rem;
+  margin: 1rem 0;
+}
+.breadcrumb a {
+  text-decoration: none;
+  color: var(--link-color);
+}
+.hero img {
+  width: 100%;
+  height: auto;
+  margin-bottom: 1.5rem;
+}
+
+
 .jc-container {
     background-color: #e0e0e0;
     position: relative;
