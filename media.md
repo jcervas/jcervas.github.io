@@ -1,16 +1,13 @@
 ---
 layout: subpage
-title: "Media Appearances"
-parent:
-  title: "Media Appearances"
-  url: /media/
+title: "Media Appearances
 ---
 
 
 # Media Appearances
 
-New York Times Profile, May 28, 2022. **How a Mapmaker Became New York’s Most Unexpected Power Broker** -
-*Jonathan Cervas, a former bartender from Las Vegas, radically redrew New York’s House district lines, forcing some Democratic incumbents to scramble for new seats.**  https://www.nytimes.com/2022/05/28/nyregion/jonathan-cervas-redistricting-maps-ny.html
+New York Times, May 28, 2022. **How a Mapmaker Became New York’s Most Unexpected Power Broker** -
+*Jonathan Cervas, a former bartender from Las Vegas, radically redrew New York’s House district lines, forcing some Democratic incumbents to scramble for new seats.* https://www.nytimes.com/2022/05/28/nyregion/jonathan-cervas-redistricting-maps-ny.html
 
 Milwaukee Journal Sentinel, January 2, 2024. **What to know about Bernard Grofman and Jonathan Cervas, Wisconsin's new map consultants** - *What will Wisconsin's new legislative maps look like? That decision could come down to two people: Bernard Grofman and Jonathan Cervas.* https://www.jsonline.com/story/news/politics/2024/01/02/wisconsins-new-maps-could-come-down-to-two-experts-who-are-they/72048291007/
 
@@ -24,3 +21,7 @@ Milwaukee Journal Sentinel, January 2, 2024. **What to know about Bernard Grofma
 
 - August 8, 2025 - **GOP power grab puts voting rights advocates in a bind** *Salon*, https://www.salon.com/2025/08/08/gop-power-grab-puts-anti-gerrymandering-advocates-in-a-bind/ 
 
+
+## 2022
+
+- May 09, 2022 - **New York’s Redistricting Master Holds Key to Congressional Power**, *Bloomberg Government* - *Court-appointed expert has worked as redistricting consultant; Cervas a “reasonable choice,” Common Cause New York says*

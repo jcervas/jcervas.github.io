@@ -1,9 +1,6 @@
 ---
 layout: subpage
-title: "About"
-parent:
-  title: "About"
-  url: /about/
+title: "About
 ---
 
 # About Jonathan Cervas
