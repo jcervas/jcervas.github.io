@@ -1,7 +1,11 @@
 ---
-layout: default
-title: Media Appearances
+layout: subpage
+title: "Media Appearances"
+parent:
+  title: "Media Appearances"
+  url: /media/
 ---
+
 
 # Media Appearances
 
