@@ -1,6 +1,6 @@
 ---
 layout: subpage
-title: "Media Appearances
+title: "Media Appearances"
 ---
 
 <div class="Section__header flush">
