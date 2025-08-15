@@ -1,11 +1,8 @@
+---
+layout: default
+---
 
-{% include header.html %}
-
-
-
-
-
-<main id="main-content">
+<main id="main-content" class="subpage">
 
   <!-- Breadcrumb -->
   <nav class="Breadcrumbs">
@@ -16,17 +13,15 @@
     &nbsp;›&nbsp; {{ page.title }}
   </nav>
 
-      <!-- Random hero image -->
-<!--   {% assign images = "hero1.jpg,hero2.jpg,hero3.jpg" | split: "," %}
-  {% assign random_index = site.time | date: "%s" | modulo: images.size %} -->
+  <!-- Random hero image -->
+  <!-- {% assign images = "hero1.jpg,hero2.jpg,hero3.jpg" | split: "," %} -->
+  <!-- {% assign random_index = site.time | date: "%s" | modulo: images.size %} -->
 <!--   <div class="hero">
     <img src="{{ '/images/' | append: images[random_index] | relative_url }}" alt="" />
   </div> -->
 
-  
+<div class="Section__main flush">
   <!-- Page content -->
   {{ content }}
-
+</div>
 </main>
-
-{% include footer.html %}
