@@ -949,8 +949,8 @@ function handleScroll() {
   const scrollPosition = window.scrollY || window.pageYOffset;
   if (scrollPosition >= 50) {
     header.setAttribute("data-sticky", "true");
-  } else {
-    header.removeAttribute("data-sticky");
+  // } else {
+  //   header.removeAttribute("data-sticky");
   }
 }
 function initializeHeaders() {
