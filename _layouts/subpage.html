@@ -1,7 +1,13 @@
 
 {% include header.html %}
 
-<!-- Breadcrumb -->
+
+
+
+
+<main id="main-content">
+
+  <!-- Breadcrumb -->
   <nav class="Breadcrumbs">
     <a href="{{ '/' | relative_url }}">Home</a>
     {% if page.parent %}
@@ -10,14 +16,14 @@
     &nbsp;›&nbsp; {{ page.title }}
   </nav>
 
-    <!-- Random hero image -->
+      <!-- Random hero image -->
 <!--   {% assign images = "hero1.jpg,hero2.jpg,hero3.jpg" | split: "," %}
   {% assign random_index = site.time | date: "%s" | modulo: images.size %} -->
 <!--   <div class="hero">
     <img src="{{ '/images/' | append: images[random_index] | relative_url }}" alt="" />
   </div> -->
 
-<main id="main-content">
+  
   <!-- Page content -->
   {{ content }}
 
