@@ -4,6 +4,13 @@ layout: default
 
 <main id="main-content" class="subpage">
 
+  <!-- Random hero image -->
+  {% assign images = "photo1.jpg,photo2.jpg,photo3.jpg,photo4.jpg" | split: "," %}
+  {% assign random_index = site.time | date: "%s" | modulo: images.size %}
+  <div class="Hero__wrapper">
+    <img src="{{ '/assets/photos/' | append: images[random_index] | relative_url }}" alt="" />
+  </div>
+
   <!-- Breadcrumb -->
   <nav class="Breadcrumbs">
     <a href="{{ '/' | relative_url }}">Home</a>
@@ -13,16 +20,15 @@ layout: default
     &nbsp;›&nbsp; {{ page.title }}
   </nav>
 
-  <!-- Random hero image -->
-  {% assign images = "photo1.jpg,photo2.jpg,photo3.jpg,photo4.jpg" | split: "," %}
-  {% assign random_index = site.time | date: "%s" | modulo: images.size %}
-  <div class="Hero__wrapper">
-    <img src="{{ '/assets/photos/' | append: images[random_index] | relative_url }}" alt="" />
-  </div>
+
+  <div class="paragraph paragraph--type--latest-news paragraph--view-mode--default Section Section--gray Section--bg-split-alt">
+    <div class="Section__main flush">
 <div class="Common flush">
 <div class="Section__main flush">
   <!-- Page content -->
   {{ content }}
+</div>
+</div>
 </div>
 </div>
 </main>
