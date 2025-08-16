@@ -10,7 +10,7 @@ title: "Media Appearances"
 <div class="grid column2 grey boxes js-list">
 
   <div>
-    <h2>New York Times</h2>
+    <h2><span>New York Times</span></h2>
     <p class="p1">
       Jonathan Cervas, a Pittsburgh-born postdoctoral fellow and independent redistricting expert, was appointed as special master to redraw New York’s congressional and state senate maps after the Democratic-drawn maps were struck down as unconstitutional. His maps, praised by Republicans and anti-gerrymandering groups but criticized by Democrats, have upended the political landscape by forcing tough primaries and reshaping minority representation in New York City. Though thrust into the spotlight, Cervas insists he was simply applying the law and serving democracy, not politics.
     </p>
@@ -22,7 +22,7 @@ title: "Media Appearances"
   </div>
 
   <div>
-    <h2>Pittsburgh Post-Gazette</h2>
+    <h2><span>Pittsburgh Post-Gazette</span></h2>
     <p class="p1">
       Jonathan Cervas, a postdoctoral fellow at Carnegie Mellon, has quickly risen to prominence as a redistricting specialist, playing key roles in both Pennsylvania’s legislative maps and New York’s high-stakes congressional and state senate redrawing. Trained under noted scholar Bernard Grofman, Cervas emphasizes fairness, neutrality, and voter empowerment, viewing redistricting as both art and science in balancing competing democratic values. Though criticized by some politicians, he sees his work as vital to protecting undiluted votes and strengthening democracy at a moment when gerrymandering and partisan manipulation threaten it.
     </p>
@@ -34,7 +34,7 @@ title: "Media Appearances"
   </div>
 
   <div>
-    <h2>Milwaukee Journal Sentinel</h2>
+    <h2><span>Milwaukee Journal Sentinel</span></h2>
     <p class="p1">
       Bernard Grofman, a UC-Irvine political scientist, and Jonathan Cervas, a Carnegie Mellon postdoctoral fellow and redistricting expert, were appointed by the Wisconsin Supreme Court to review and possibly redraw the state’s legislative maps. Both are regarded as nonpartisan specialists with extensive experience in redistricting cases across the country, including Virginia, Pennsylvania, and New York. Tasked with ensuring population equality, compliance with the Voting Rights Act, and neutrality regarding partisan advantage, they could recommend adjustments to submitted proposals—or create their own maps—though their role has sparked criticism from some justices who argue the decision hands too much power to unelected outsiders.
     </p>
