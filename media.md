@@ -69,67 +69,80 @@ title: "Media Appearances"
 
 ### 2024–2025
 
-- **Aug 8, 2025** — [GOP power grab puts voting rights advocates in a bind](https://www.salon.com/2025/08/08/gop-power-grab-puts-anti-gerrymandering-advocates-in-a-bind/)  
-  *Salon*
-- **Aug 5, 2025** — [California, New York signal they’re moving forward with redistricting](https://thehill.com/homenews/campaign/5437566-california-new-york-redistricting/)  
-  *The Hill*
-- **Jul 15, 2025** — [Texas is weighing a new plan for redistricting as part of a special summer session](https://www.wbur.org/hereandnow/2025/07/15/texas-redistricting)  
-  *Here and Now, NPR*
-- **Mar 6, 2025** — [PG Politics: What to make of Pittsburgh mayoral candidates’ comments on campaign donations](https://www.post-gazette.com/news/politics-local/2025/03/06/pittsburgh-mayor-gainey-oconnor-donors/stories/202503060093)  
-  *Pittsburgh Post-Gazette*
+- **Aug 8, 2025** — Salon: [GOP power grab puts voting rights advocates in a bind](https://www.salon.com/2025/08/08/gop-power-grab-puts-anti-gerrymandering-advocates-in-a-bind/)  
+
+- **Aug 5, 2025** — The Hill: [California, New York signal they’re moving forward with redistricting](https://thehill.com/homenews/campaign/5437566-california-new-york-redistricting/)  
+  
+- **Jul 15, 2025** — Here and Now, NPR: [Texas is weighing a new plan for redistricting as part of a special summer session](https://www.wbur.org/hereandnow/2025/07/15/texas-redistricting)  
+
+- **Mar 20, 2025** - Pittsburgh Post-Gazette: [PG Politics: What 2021 turnout in the race for Pittsburgh mayor could tell us about the 2025 primary](https://www.post-gazette.com/news/politics-local/2025/03/20/pittsburgh-mayor-primary-voter-turnout/stories/202503190073?cid=search)
+  
+- **Mar 6, 2025** — Pittsburgh Post-Gazette: [PG Politics: What to make of Pittsburgh mayoral candidates’ comments on campaign donations](https://www.post-gazette.com/news/politics-local/2025/03/06/pittsburgh-mayor-gainey-oconnor-donors/stories/202503060093)  
+  
+- **Sep 19, 2024** - Pittsburgh Post-Gazette: [Curiosity and controversy: The political mood on college campuses in Pittsburgh](https://www.post-gazette.com/news/election-2024/2024/09/19/pittsburgh-college-voters-pitt-carnegie-mellon-duquesne/stories/202409170220?cid=search)
 - **Dec 10, 2024** — CMU feature: “Across Political Divides: Jonathan Cervas Bridges Ideological Differences with Discussions and Data.”  
-  *Carnegie Mellon University*
+- **Oct 6, 2024** - Pittsburgh Post-Gazette: [How to avoid getting misled by political polls](https://www.post-gazette.com/news/election-2024/2024/10/06/political-polling-stories-margin-or-error-candidate-leads/stories/202410040076?cid=search)
 - **Jun 24, 2024** — PBS Wisconsin: “Wisconsin taxpayers to pay half of redistricting consultant costs.” (context on the court appointing Grofman & Cervas and cost-sharing order)  
-  *PBS Wisconsin*
+
 - **Feb 9, 2024** — WPR: “Wisconsin Republicans seek to subpoena Supreme Court redistricting consultants.” (names you and Bernard Grofman; details the pushback to your Feb. 1 report)  
-  *WPR*
+
 - **Feb 1, 2024** — PBS Wisconsin: “Redistricting experts tell Wisconsin Supreme Court that Republican district map proposals are gerrymanders.” (coverage of your consultants’ report)  
   *PBS Wisconsin*
 - **Feb 1, 2024** — AP News: “Redistricting experts submit $128K bill for review of Wisconsin legislative maps.” (follow-up on the consultants’ work and billing)  
-  *AP News*
+
 - **Jan 4, 2024** — WPR: “Consultants hired to oversee Wisconsin redistricting could get up to $100K apiece.” (announces your contract, rate, and timeline)  
-  *WPR*
+
 - **Jan 2024** — CMU story: “Redrawing Lines: Jonathan Cervas Evaluates Wisconsin’s Legislative Maps.” (profiles your role and prior court work)  
-  *Carnegie Mellon University*
+
 - **Dec 22, 2023** — WPR: “Wisconsin Supreme Court overturns Republican-drawn legislative maps.” (explains the ruling that led to hiring you as a consultant)  
-  *WPR*
+
+### 2023
+- **May 14, 2023** - Pittsburgh Post-Gazette: [The race for Allegheny County executive ‘is really Sara’s to lose’](https://www.post-gazette.com/news/politics-local/2023/05/14/sara-innamorato-2023-allegheny-county-executive-race/stories/202305140104?cid=search)
+- **Feb 1, 2023** - Pittsburgh Post-Gazette: [The 2023 primary elections will test the strength of Pittsburgh-area progressives](https://www.post-gazette.com/news/politics-local/2023/02/01/pittsburgh-allegheny-county-2023-primary-elections-voters/stories/202301310119?cid=search)
+
+- **** - Pittsburgh Post-Gazette: [Strange bedfellows: Primary loss forces Zappala to forge unconventional alliances](https://www.post-gazette.com/news/politics-local/2023/08/18/district-attorney-race-zappala-dugan-election-republican-democrat-forward/stories/202308180104?cid=search)
 
 ### 2022 (New York Special Master & Aftermath)
 
-- **Sep 4, 2022** — [Jonathan Cervas’ quest to make government represent the voters.](https://www.post-gazette.com/news/politics-state/2022/09/04/jonathan-cervas-carnegie-mellon-census-redistricting-pa-legislative-districts/stories/202208310151)  
-  *Pittsburgh Post-Gazette*
-- **Jul 19, 2022** — [The Man Behind New York’s Controversial Congressional Map.](https://washingtonmonthly.com/2022/07/19/the-man-behind-new-yorks-controversial-congressional-map/)  
-  *Washington Monthly*
-- **Jun 3, 2022** — [State to pay $147,000 for ‘special master’ and team’s political maps.](https://www.timesunion.com/state/article/State-to-pay-147-000-for-special-master-and-17213013.php)  
-  *Albany Times Union*
-- **May 21, 2022** — [Final New York District Maps Cement a Chaotic 2022 Election Season.](https://www.thecity.nyc/politics/2022/5/21/23136032/final-new-york-district-maps-chaotic-election-season)  
-  *THE CITY*
-- **May 21, 2022** — [Final congressional and senate district maps set.](https://politicsny.com/2022/05/21/final-congressional-and-senate-district-maps-set/)  
-  *PoliticsNY*
-- **May 17, 2022** — [New York’s Gerrymander Boomerang: Democrats usually cheer when courts draw maps, but not this time.](https://www.wsj.com/opinion/new-yorks-gerrymander-boomerang-albany-special-master-redistricting-map-jonathan-cervas-democrats-11652818602?gaa_at=eafs&gaa_n=ASWzDAh81aGzJi63W9EFdYXLWz4c-pqaqbMXhzRyOV-LcjXixINV6rKWv87c&gaa_ts=689feb48&gaa_sig=Rl2FEKSnAH77MRCvbz_tzV9rKV3BlrVlIPeT5wPiSj6vR7NkfEhKcAvvsn9iWgSwrMepusNfwlFuUeYOrieMPQ%3D%3D)  
-  *Wall Street Journal*
-- **May 16, 2022** — [Special Master Carves Up New York’s Congressional and State Senate Seats With New Maps.](https://www.thecity.nyc/politics/2022/5/16/23100628/special-master-carves-up-new-york-congressional-state-senate-seats-new-maps)  
-  *THE CITY*
-- **May 16, 2022** — [New congressional maps shake up New York politics.](https://www.ny1.com/nyc/all-boroughs/politics/2022/05/16/new-congressional-maps-shake-up-new-york-politics)  
-  *NY1*
-- **May 9, 2022** — [New York’s Redistricting Master Holds Key to Congressional Power.](https://about.bgov.com/insights/news/new-yorks-redistricting-master-holds-key-to-congressional-power/)  
-  *Bloomberg Government*
-- **Apr 29, 2022** — [Special master has to act fast on new legislative maps.](https://www.ny1.com/nyc/all-boroughs/politics/2022/04/29/special-master-has-to-act-fast-on-new-legislative-maps)  
-  *NY1*
-- **Apr 28, 2022** — [Who is the man tasked with redrawing New York’s new district lines?](https://www.cityandstateny.com/politics/2022/04/who-man-tasked-redrawing-new-yorks-new-district-lines/365858/)  
-  *City & State New York*
-- **May 21, 2022** — [Have I Been Redistricted?](https://www.thecity.nyc/politics/2022/5/21/23136032/final-new-york-district-maps-chaotic-election-season) (explains that the 2022 NY congressional & senate districts were created by a court-appointed special master—i.e., you)  
-  *THE CITY*
+- **Sep 4, 2022** — Pittsburgh Post-Gazette: [Jonathan Cervas’ quest to make government represent the voters.](https://www.post-gazette.com/news/politics-state/2022/09/04/jonathan-cervas-carnegie-mellon-census-redistricting-pa-legislative-districts/stories/202208310151)  
+  
+- **Jul 19, 2022** — Washington Monthly: [The Man Behind New York’s Controversial Congressional Map.](https://washingtonmonthly.com/2022/07/19/the-man-behind-new-yorks-controversial-congressional-map/)  
+  
+- **Jun 3, 2022** — Albany Times Union: [State to pay $147,000 for ‘special master’ and team’s political maps.](https://www.timesunion.com/state/article/State-to-pay-147-000-for-special-master-and-17213013.php)  
+  
+- **May 21, 2022** — THE CITY: [Final New York District Maps Cement a Chaotic 2022 Election Season.](https://www.thecity.nyc/politics/2022/5/21/23136032/final-new-york-district-maps-chaotic-election-season)  
+  
+- **May 21, 2022** — PoliticsNY: [Final congressional and senate district maps set.](https://politicsny.com/2022/05/21/final-congressional-and-senate-district-maps-set/)  
+  
+- **May 17, 2022** — Wall Street Journal: [New York’s Gerrymander Boomerang: Democrats usually cheer when courts draw maps, but not this time.](https://www.wsj.com/opinion/new-yorks-gerrymander-boomerang-albany-special-master-redistricting-map-jonathan-cervas-democrats-11652818602?gaa_at=eafs&gaa_n=ASWzDAh81aGzJi63W9EFdYXLWz4c-pqaqbMXhzRyOV-LcjXixINV6rKWv87c&gaa_ts=689feb48&gaa_sig=Rl2FEKSnAH77MRCvbz_tzV9rKV3BlrVlIPeT5wPiSj6vR7NkfEhKcAvvsn9iWgSwrMepusNfwlFuUeYOrieMPQ%3D%3D)  
+  
+- **May 16, 2022** — THE CITY: [Special Master Carves Up New York’s Congressional and State Senate Seats With New Maps.](https://www.thecity.nyc/politics/2022/5/16/23100628/special-master-carves-up-new-york-congressional-state-senate-seats-new-maps)  
+  
+- **May 16, 2022** — NY1: [New congressional maps shake up New York politics.](https://www.ny1.com/nyc/all-boroughs/politics/2022/05/16/new-congressional-maps-shake-up-new-york-politics)  
+  
+- **May 9, 2022** — Bloomberg Government: [New York’s Redistricting Master Holds Key to Congressional Power.](https://about.bgov.com/insights/news/new-yorks-redistricting-master-holds-key-to-congressional-power/)  
+  
+- **Apr 29, 2022** — NY1: [Special master has to act fast on new legislative maps.](https://www.ny1.com/nyc/all-boroughs/politics/2022/04/29/special-master-has-to-act-fast-on-new-legislative-maps)  
+  
+- **Apr 28, 2022** — City & State New York:[Who is the man tasked with redrawing New York’s new district lines?](https://www.cityandstateny.com/politics/2022/04/who-man-tasked-redrawing-new-yorks-new-district-lines/365858/)  
+  
+- **May 21, 2022** — THE CITY: [Have I Been Redistricted?](https://www.thecity.nyc/politics/2022/5/21/23136032/final-new-york-district-maps-chaotic-election-season) (explains that the 2022 NY congressional & senate districts were created by a court-appointed special master—i.e., you)  
+  
 
-### 2021 (Pennsylvania)
+### 2021
 
-- **Jul 13, 2021** — [Appointment of Dr. Jonathan R. Cervas as mapping consultant.](https://www.redistricting.state.pa.us/Resources/GIS/2021-07-13%20LRC%20Appointment%20of%20Dr%20Jonathan%20R%20Cervas.pdf)  
-  *Pennsylvania LRC (official site)*
-- **Aug 2021** — [Pa. redistricting is poised to be transparent. Will it be fair?](https://www.penncapital-star.com/government-politics/pa-redistricting-is-poised-to-be-transparent-will-it-be-fair/)  
-  *Pennsylvania Capital-Star*
+- **Oct 28l, 2021** - Pittsburgh Post-Gazette: [Despite transparency vows, much of Pa.’s redistricting still takes place behind closed doors](https://www.post-gazette.com/news/politics-state/2021/10/28/pennsylvania-congressional-redistricting-2021-nordenberg-pa-transparency/stories/202110280118?cid=search)
+
+- **Jul 13, 2021** — Pennsylvania LRC (official site); [Appointment of Dr. Jonathan R. Cervas as mapping consultant.](https://www.redistricting.state.pa.us/Resources/GIS/2021-07-13%20LRC%20Appointment%20of%20Dr%20Jonathan%20R%20Cervas.pdf)  
+  
+- **Aug 2021** — Pennsylvania Capital-Star: [Pa. redistricting is poised to be transparent. Will it be fair?](https://www.penncapital-star.com/government-politics/pa-redistricting-is-poised-to-be-transparent-will-it-be-fair/)  
+  
 
 ### University/Institution Coverage
 
-- **Apr 21, 2022** — [Meet the scholar redistricting New York: UCI alumnus Jonathan Cervas named special master.](https://www.socsci.uci.edu/newsevents/news/2022/2022-04-21-cervas.php)  
-  *UC Irvine Social Sciences*
+- **Apr 21, 2022** — UC Irvine Social Sciences: [Meet the scholar redistricting New York: UCI alumnus Jonathan Cervas named special master.](https://www.socsci.uci.edu/newsevents/news/2022/2022-04-21-cervas.php)  
+  
 
+### 2020
+
+- **Oct 25, 2020** - Pittsburgh Post-Gazette: [In race between Conor Lamb and Sean Parnell, a referendum on a moderate Democrat in Trump's Washington](https://www.post-gazette.com/news/politics-nation/2020/10/25/Conor-Lamb-Sean-Parnell-17th-Congressional-District-Trump-Pelosi/stories/202010250003?cid=search)
