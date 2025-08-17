@@ -7,7 +7,7 @@ title: "Media Appearances"
   <h2 class="h2">Media Appearances</h2>
 </div>
 
-<div class="grid column2 grey boxes js-list">
+<div>
 
   <div class="card">
     <h3><span>How a Mapmaker Became New York’s Most Unexpected Power Broker</span></h3>
@@ -49,7 +49,7 @@ title: "Media Appearances"
   </div>
 
   <div class="card">
-    <h3><span>"Who is the man tasked with redrawing New York’s new district lines?"</span></h3>
+    <h3><span>Who is the man tasked with redrawing New York’s new district lines?</span></h3>
     <div class="sub">City & State New York</div>
     <p class="p1">
       Jonathan Cervas, a Carnegie Mellon postdoctoral fellow and redistricting expert, was appointed by a New York court as special master to redraw the state’s congressional and senate maps after the previous ones were struck down. Though not widely known, he brings extensive experience from redistricting work in Pennsylvania, Utah, Virginia, and Georgia, where he earned praise for fairness and technical skill. This marks his first time leading the process solo, and his academic background in political science and mapping technology underscores his reputation as a nonpartisan specialist focused on strengthening democracy.
