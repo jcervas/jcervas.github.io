@@ -7,7 +7,7 @@ title: "Media Appearances"
   <h2 class="h2">Media Appearances</h2>
 </div>
 
-<div>
+<div class="items items-descriptions">
 
   <div class="card">
     <h3><span>How a Mapmaker Became New York’s Most Unexpected Power Broker</span></h3>
