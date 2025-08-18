@@ -17,14 +17,7 @@ layout: default
             </div>
         </div>
     </div>
-    <!-- Breadcrumb -->
-    <nav class="Breadcrumbs">
-        <a href="{{ '/' | relative_url }}">Home</a>
-        {% if page.parent %}
-        &nbsp;›&nbsp; <a href="{{ page.parent.url | relative_url }}">{{ page.parent.title }}</a>
-        {% endif %}
-        &nbsp;›&nbsp; {{ page.title }}
-    </nav>
+    {% include breadcrumbs.html %}
     <div class="paragraph paragraph--type--latest-news paragraph--view-mode--default Section">
         <div class="Section__main flush">
             <div class="Common flush">
