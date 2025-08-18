@@ -1,0 +1,15 @@
+    <!-- Random hero image -->
+    {% assign images = "photo1.jpg,photo2.jpg,photo3.jpg,photo4.jpg,photo5.jpg,photo6.jpg,photo7.jpg" | split: "," %}
+    {% assign random_index = site.time | date: "%s" | modulo: images.size %}
+    <div class="paragraph paragraph--type--homepage-hero paragraph--view-mode--default Hero Hero--home Hero--tall theme-dark">
+        <div class="Hero__wrapper">
+            <div class="Hero__wrapper">
+                <div class="Hero__background">
+                    <picture>
+                        <img loading="lazy" srcset="{{ '/assets/photos/' | append: images[random_index] | relative_url }}" sizes="(min-width: 768px) 2200px, (min-width: 320px) 768px, 100vw" width="1920" height="1080" src="{{ '/assets/photos/' | append: images[random_index] | relative_url }}" alt="Cervas at work">
+                        <!-- <img loading="lazy" src="{{ '/assets/photos/' | append: images[random_index] | relative_url }}" alt="" /> -->
+                    </picture>
+                </div>
+            </div>
+        </div>
+    </div>
