@@ -1,7 +1,7 @@
 <!-- Random hero image -->
 {% assign images = "photo1.jpg,photo2.jpg,photo3.jpg,photo4.jpg,photo5.jpg,photo6.jpg,photo7.jpg" | split: "," %}
 {% assign random_index = site.time | date: "%s" | modulo: images.size %}
-<div class="paragraph paragraph--type--homepage-hero paragraph--view-mode--default Hero Hero--home Hero--tall theme-dark">
+<div class="paragraph paragraph--type--homepage-hero paragraph--view-mode--default Hero Hero--home theme-dark">
     <div class="Hero__wrapper">
         <div class="Hero__wrapper">
             <div class="Hero__background">
