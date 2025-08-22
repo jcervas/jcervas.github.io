@@ -69,6 +69,9 @@ title: "Media Appearances"
 
 ### 2024–2025
 
+- **Aug 21, 2025** - The Texas Tribune: [Lawmakers are debating GOP congressional maps. What does redistricting mean for Texans?](https://www.texastribune.org/2025/08/21/texas-redistricting-congressional-map-texans/)
+  - *With so many different communities across Texas — and so many possible ways to draw boundaries between them — Cervas said there’s no one way to perfectly draw the state’s 38 congressional districts. Even attempting to draw more uniform districts could be flawed because “communities don't always line up perfectly in squares and grids,” he said.*<br>*But partisan gerrymandering hurts representation, Cervas argued, while striving to create politically neutral districts built around a community’s needs and composition tends to create more electoral competition. The latter gives voters more of a say over who represents them and their concerns, he said.*<br>*“Democracy relies on people having the ability to make choices about who represents them,” he said. “And when we gerrymander, we lose that ability, and it doesn't matter whether it's Democrats or Republicans or African Americans or Hispanics or even if it's white voters, it doesn't matter who is the one on the losing end. It's bad for democracy.”*
+
 - **Aug 8, 2025** — Salon: [GOP power grab puts voting rights advocates in a bind](https://www.salon.com/2025/08/08/gop-power-grab-puts-anti-gerrymandering-advocates-in-a-bind/)  
 
 - **Aug 5, 2025** — The Hill: [California, New York signal they’re moving forward with redistricting](https://thehill.com/homenews/campaign/5437566-california-new-york-redistricting/)  
