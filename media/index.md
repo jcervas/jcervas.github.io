@@ -3,6 +3,7 @@ layout: subpage
 title: "Media Appearances"
 ---
 
+<section class="paragraph paragraph--type--two-up-panel paragraph--view-mode--default Section Section--white">
 <div class="Section__header flush">
   <h2 class="h2">Media Appearances</h2>
 </div>
@@ -149,3 +150,5 @@ title: "Media Appearances"
 ### 2020
 
 - **Oct 25, 2020** - Pittsburgh Post-Gazette: [In race between Conor Lamb and Sean Parnell, a referendum on a moderate Democrat in Trump's Washington](https://www.post-gazette.com/news/politics-nation/2020/10/25/Conor-Lamb-Sean-Parnell-17th-Congressional-District-Trump-Pelosi/stories/202010250003?cid=search)
+
+</section>
