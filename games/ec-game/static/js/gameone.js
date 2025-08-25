@@ -72,15 +72,22 @@ async function getMeans() {
   return null;
 }
 
-  async function loadStats() {
-    // 1. Count participants
-    const { data: count, error: err1 } = await sb.rpc("get_participant_count");
-    if (!err1) {
-      document.querySelectorAll(".participant-count").forEach(el => {
-        el.textContent = count + " participants";
-      });
-    }
+async function loadStats() {
+  // Call the RPC
+  const { data, error } = await sb.rpc("get_participant_count");
+  if (error) {
+    console.error("Error fetching count:", error);
+    return;
   }
+
+  // data is just the number itself
+  console.log("Participant count:", data);
+
+  document.querySelectorAll(".participant-count").forEach(el => {
+    el.textContent = data + " participants";
+  });
+}
+
 
 // D3 chart for means
 function renderMeanChart(means) {
