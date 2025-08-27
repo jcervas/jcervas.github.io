@@ -199,6 +199,28 @@ h2.jc-title {
 
 }
 
-.modal {
-  display: none; /* Hidden by default */
-}
+
+/* Post-game modal */
+.modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.6); z-index: 9999; }
+.modal.show { display: flex; }
+.pg-panel { background: #fff; width: min(960px, 95vw); min-height: 70vh; border-radius: 16px; position: relative; padding: 24px 24px 80px; box-shadow: 0 20px 60px rgba(0,0,0,.25); }
+.pg-close { position: absolute; top: 12px; right: 12px; font-size: 28px; line-height: 1; border: none; background: transparent; cursor: pointer; }
+.pg-close-bottom { position: absolute; right: 24px; bottom: 24px; border: none; background: #16212B; color: #fff; padding: 10px 16px; border-radius: 10px; cursor: pointer; }
+.pg-step { display: none; }
+.pg-step.active { display: block; }
+.pg-result-title { margin-bottom: .5rem; }
+.pg-summary { margin: .25rem 0 1rem; font-size: 1.1rem; }
+.pg-score { display: flex; gap: 24px; margin-bottom: .75rem; }
+.pg-winlist { margin-bottom: 1rem; line-height: 1.4; }
+.pg-next { position: absolute; right: 24px; bottom: 24px; border: none; background: #16212B; color: #fff; padding: 10px 16px; border-radius: 10px; cursor: pointer; }
+.pg-note { color: #666; margin-top: .5rem; }
+
+/* spinner */
+.pg-spinner { width: 56px; height: 56px; border: 6px solid #e6e6e6; border-top-color: #16212B; border-radius: 50%; margin: 28px auto; animation: pgspin 1s linear infinite; }
+@keyframes pgspin { to { transform: rotate(360deg); } }
+
+/* chart legend */
+.pg-legend { margin-top: 8px; font-size: .95rem; color: #333; display: flex; align-items: center; gap: 16px; }
+.pg-key { display: inline-block; width: 18px; height: 12px; vertical-align: middle; border-radius: 2px; }
+.pg-key--avg { background: #a5b4fc; }   /* bar color */
+.pg-key--you { background: #111827; }  /* dot color */
