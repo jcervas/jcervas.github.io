@@ -13,8 +13,10 @@
 
 <body>
     <nav class="navbar">
-        <li><a href="#" class="nav-link selected">Game One</a></li>
-        <!-- <a href="gametwo" class="nav-link">Game Two</a> -->
+        <ul>
+            <li><a href="#" class="nav-link selected">Game One</a></li>
+            <!-- <a href="gametwo" class="nav-link">Game Two</a> -->
+        </ul>
     </nav>
     <div class="jc-header">
         <h1 class="jc-title">Electoral College Game</h1>
@@ -100,63 +102,55 @@
                     <div class="jc-input-notice jc-totalHighWarning-jc-warning jc-hidden">Please adjust your allocation so it doesn't exceed $100.</div>
                     <div class="jc-input-notice jc-totalLowWarning-jc-warning jc-hidden">You have not allocated all $100!</div>
                 </div>
-               
-               <div id="postGame" class="modal">
-  <div class="pg-panel">
-    <button class="pg-close" aria-label="Close">&times;</button>
-
-    <!-- Step controls -->
-    <div class="pg-steps">
-      <div class="pg-step pg-step--loading active" data-step="loading" role="dialog" aria-live="polite">
-        <h2>Calculating your results…</h2>
-        <div class="pg-spinner" aria-hidden="true"></div>
-        <p class="pg-note">Contacting the server and simulating your head-to-head match.</p>
-      </div>
-
-      <div class="pg-step pg-step--result" data-step="result" role="dialog">
-        <h2 class="pg-result-title">Your Result</h2>
-        <p id="pg-result-summary" class="pg-summary"></p>
-        <div class="pg-score">
-          <div><strong>You</strong>: <span id="pg-ec-you">0</span> EC</div>
-          <div><strong>Opponent</strong>: <span id="pg-ec-opp">0</span> EC</div>
-        </div>
-        <div class="pg-winlist">
-          <div>You won: <span id="pg-states-you">—</span></div>
-          <div>Opponent won: <span id="pg-states-opp">—</span></div>
-        </div>
-        <button class="pg-next">Next: Compare to Everyone</button>
-      </div>
-
-      <div class="pg-step pg-step--chart" data-step="chart" role="dialog">
-        <h2>How your allocation compares to the average</h2>
-        <p class="pg-note">Bars show the average allocation across all participants. ● marks your allocation.</p>
-        <div id="pg-chart" class="dataviz" style="height:320px;"></div>
-        <div class="pg-legend">
-          <span class="pg-key pg-key--avg"></span> Average &nbsp;&nbsp;
-          <span class="pg-key pg-key--you"></span> Your allocation
-        </div>
-        <button class="pg-next">Next: Background</button>
-      </div>
-
-      <div class="pg-step pg-step--background" data-step="background" role="dialog">
-        <h2>Picking a Winning Coalition</h2>
-        <!-- your existing background text was here; preserved -->
-        <div class="jc-instructions-panel pg-bgtext">
-          <!-- keep exactly what you had inside your old modal (p tags/links) -->
-          <!-- (paste your paragraphs here or leave as-is if you moved this block) -->
-        </div>
-        <button class="pg-close-bottom">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
+                <div id="postGame" class="modal">
+                    <div class="pg-panel">
+                        <button class="pg-close" aria-label="Close">&times;</button>
+                        <!-- Step controls -->
+                        <div class="pg-steps">
+                            <div class="pg-step pg-step--loading active" data-step="loading" role="dialog" aria-live="polite">
+                                <h2>Calculating your results…</h2>
+                                <div class="pg-spinner" aria-hidden="true"></div>
+                                <p class="pg-note">Contacting the server and simulating your head-to-head match.</p>
+                            </div>
+                            <div class="pg-step pg-step--result" data-step="result" role="dialog">
+                                <h2 class="pg-result-title">Your Result</h2>
+                                <p id="pg-result-summary" class="pg-summary"></p>
+                                <div class="pg-score">
+                                    <div><strong>You</strong>: <span id="pg-ec-you">0</span> EC</div>
+                                    <div><strong>Opponent</strong>: <span id="pg-ec-opp">0</span> EC</div>
+                                </div>
+                                <div class="pg-winlist">
+                                    <div>You won: <span id="pg-states-you">—</span></div>
+                                    <div>Opponent won: <span id="pg-states-opp">—</span></div>
+                                </div>
+                                <button class="pg-next">Next: Compare to Everyone</button>
+                            </div>
+                            <div class="pg-step pg-step--chart" data-step="chart" role="dialog">
+                                <h2>How your allocation compares to the average</h2>
+                                <p class="pg-note">Bars show the average allocation across all participants. ● marks your allocation.</p>
+                                <div id="pg-chart" class="dataviz" style="height:320px;"></div>
+                                <div class="pg-legend">
+                                    <span class="pg-key pg-key--avg"></span> Average &nbsp;&nbsp;
+                                    <span class="pg-key pg-key--you"></span> Your allocation
+                                </div>
+                                <button class="pg-next">Next: Background</button>
+                            </div>
+                            <div class="pg-step pg-step--background" data-step="background" role="dialog">
+                                <h2>Picking a Winning Coalition</h2>
+                                <!-- your existing background text was here; preserved -->
+                                <div class="jc-instructions-panel pg-bgtext">
+                                    <!-- keep exactly what you had inside your old modal (p tags/links) -->
+                                    <!-- (paste your paragraphs here or leave as-is if you moved this block) -->
+                                </div>
+                                <button class="pg-close-bottom">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <!-- Supabase client -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="static/js/gameone.js"></script>
-
 </body>
