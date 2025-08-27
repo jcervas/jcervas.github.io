@@ -223,17 +223,6 @@ function renderResultChart(youEC, oppEC) {
             } [outcome.verdict];
             document.getElementById("pg-result-summary").textContent = summary;
 
-            document.getElementById("pg-ec-you").textContent = outcome.youEC;
-            document.getElementById("pg-ec-opp").textContent = outcome.oppEC;
-            document.getElementById("pg-states-you").textContent = outcome.youStates.join(", ") || "—";
-            document.getElementById("pg-states-opp").textContent = outcome.oppStates.join(", ") || "—";
-            const summary = {
-                win: `You WIN! ${outcome.youEC}–${outcome.oppEC} electoral votes.`,
-                lose: `You LOSE. ${outcome.youEC}–${outcome.oppEC} electoral votes.`,
-                tie: `It's a TIE at ${outcome.youEC}–${outcome.oppEC}.`
-            } [outcome.verdict];
-            document.getElementById("pg-result-summary").textContent = summary;
-
             const modal = document.getElementById("postGame");
             const nextButtons = modal.querySelectorAll(".pg-step--result .pg-next, .pg-step--chart .pg-next");
             let nextHandlerChart, nextHandlerBg;
