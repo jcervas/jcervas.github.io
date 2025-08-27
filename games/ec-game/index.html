@@ -2,165 +2,160 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" type="text/css" href="static/styles/all.css">
-  <script src="https://d3js.org/d3.v5.min.js"></script>
-  <title>Electoral College Game</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="static/styles/all.css">
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <title>Electoral College Game</title>
 </head>
 
 <body>
-  <nav class="navbar">
-    <ul>
-      <li><a href="#" class="nav-link selected">Game One</a></li>
-      <!-- <li><a href="gametwo" class="nav-link">Game Two</a></li> -->
-    </ul>
-  </nav>
-
-  <div class="jc-header">
-    <h1 class="jc-title">Electoral College Game</h1>
-  </div>
-
-  <div class="jc-graphic">
-    <div class="jc-top-section">
-      <div class="jc-select-container"></div>
-      <div class="jc-instructions-panel">
-        <p>Your mission is to out-campaign your opponent, who is competing against you to be President.</p>
-        <p>Imagine that there are seven competitive states in the <span class="jc-highlight highlighted">NOTUSISTAN</span> Electoral College used for its presidential elections, operating under the same winner-take-all, weighted voting rules as in the US Electoral College.</p>
-        <p>Each player has <span class="jc-highlight highlighted">$100</span> to spend across the seven states, in increments of <span class="jc-highlight highlighted">$1</span>. By directing resources to states, you get a competitive advantage. <span class="jc-highlight highlighted">The initial vote share</span> for each state is 50%. For every $1 additional spent in a state, you gain +1% vote share; for every $1 spent by your opponent, you lose 1%. Whoever spends the most in a state wins its electoral votes.</p>
-        <p>For example, <em>State <span class="jc-state-1"></span></em> has <span class="jc-ev-1"></span> electoral votes. If you allocate $<span class="jc-option-1"></span> and your opponent allocated $<span class="jc-answer-1"></span>, you win all <span class="jc-ev-1"></span> of <em>State <span class="jc-state-1a"></span>'s</em> EC votes. If instead you allocated $<span class="jc-option-2"></span> to <em>State <span class="jc-state-2"></span></em>, your opponent would win <span class="jc-ev-2"></span> EC votes by allocating anything between $<span class="jc-answer-3"></span> and $100.</p>
-        <p>The seven states have electors shown in the second column. There are 139 EC votes in total; <span class="jc-highlight highlighted">70 are needed to win</span>.</p>
-        <p><span class="jc-highlight highlighted">Ties</span> in each state are decided by coin toss. You may allocate nothing to a state or the full $100 to one state.</p>
-        <p>You compete against one other person, randomly selected from our database of <span class="jc-highlight highlighted participant-count">loading…</span>. You win only if you exceed 70 EC votes.</p>
-        <p>When you’re ready, <span class="jc-highlight highlighted">enter your state spending totals below</span>. You can make changes until you submit. After playing once, refresh the page to play again.</p>
-
-        <div id="jc-input">
-          <table>
-            <tr>
-              <th scope="col">State</th>
-              <th scope="col">EC Votes</th>
-              <th scope="col">Initial Vote Share</th>
-              <th scope="col">Allocation</th>
-            </tr>
-            <tr>
-              <th scope="row">A</th>
-              <td>3</td>
-              <td>50%</td>
-              <td><input id="jc-user-submit-inputA" type="number" min="0" max="100" step="1" inputmode="numeric" pattern="[0-9]*" class="nytint-textinput jc-num" onclick="this.select()" autofocus></td>
-            </tr>
-            <tr>
-              <th scope="row">B</th>
-              <td>5</td>
-              <td>50%</td>
-              <td><input id="jc-user-submit-inputB" type="number" min="0" max="100" step="1" inputmode="numeric" pattern="[0-9]*" class="nytint-textinput jc-num" onclick="this.select()"></td>
-            </tr>
-            <tr>
-              <th scope="row">C</th>
-              <td>8</td>
-              <td>50%</td>
-              <td><input id="jc-user-submit-inputC" type="number" min="0" max="100" step="1" inputmode="numeric" pattern="[0-9]*" class="nytint-textinput jc-num" onclick="this.select()"></td>
-            </tr>
-            <tr>
-              <th scope="row">D</th>
-              <td>13</td>
-              <td>50%</td>
-              <td><input id="jc-user-submit-inputD" type="number" min="0" max="100" step="1" inputmode="numeric" pattern="[0-9]*" class="nytint-textinput jc-num" onclick="this.select()"></td>
-            </tr>
-            <tr>
-              <th scope="row">E</th>
-              <td>21</td>
-              <td>50%</td>
-              <td><input id="jc-user-submit-inputE" type="number" min="0" max="100" step="1" inputmode="numeric" pattern="[0-9]*" class="nytint-textinput jc-num" onclick="this.select()"></td>
-            </tr>
-            <tr>
-              <th scope="row">F</th>
-              <td>34</td>
-              <td>50%</td>
-              <td><input id="jc-user-submit-inputF" type="number" min="0" max="100" step="1" inputmode="numeric" pattern="[0-9]*" class="nytint-textinput jc-num" onclick="this.select()"></td>
-            </tr>
-            <tr>
-              <th scope="row">G</th>
-              <td>55</td>
-              <td>50%</td>
-              <td><input id="jc-user-submit-inputG" type="number" min="0" max="100" step="1" inputmode="numeric" pattern="[0-9]*" class="nytint-textinput jc-num" onclick="this.select()"></td>
-            </tr>
-            <tr>
-              <th scope="row" colspan="3"></th>
-              <td><div>Amount Remaining: $<span id="jc-total-allocated">100</span></div></td>
-            </tr>
-          </table>
-
-          <button type="button" class="jc-submit">Submit</button>
-
-          <div class="jc-input-notice jc-out-of-bounds-warning jc-hidden">Please enter a number between 0 and 100.</div>
-          <div class="jc-input-notice jc-totalHighWarning-jc-warning jc-hidden">Please adjust your allocation so it doesn't exceed $100.</div>
-          <div class="jc-input-notice jc-totalLowWarning-jc-warning jc-hidden">You have not allocated all $100!</div>
-        </div>
-
-        <!-- Modal for post-game -->
-        <div id="postGame" class="modal">
-          <div class="pg-panel">
-            <button class="pg-close" aria-label="Close">&times;</button>
-            <div class="pg-steps">
-              <div class="pg-step pg-step--loading active" data-step="loading" role="dialog" aria-live="polite">
-                <h2>Calculating your results…</h2>
-                <div class="pg-spinner" aria-hidden="true"></div>
-                <p class="pg-note">Contacting the server and simulating your head-to-head match.</p>
-              </div>
-              <div class="pg-step pg-step--result" data-step="result" role="dialog">
-  <h2 class="pg-result-title">Your Result</h2>
-  <p id="pg-result-summary" class="pg-summary"></p>
-
-  <div id="pg-result-chart" style="height:200px;"></div>
-
-  <div class="pg-score">
-    <div><strong>You</strong>: <span id="pg-ec-you">0</span> EC</div>
-    <div><strong>Opponent</strong>: <span id="pg-ec-opp">0</span> EC</div>
-  </div>
-
-  <div class="pg-winlist">
-    <div>You won: <span id="pg-states-you">—</span></div>
-    <div>Opponent won: <span id="pg-states-opp">—</span></div>
-  </div>
-
-  <button class="pg-next">Next: Compare to Everyone</button>
-</div>
-
-
-              <div class="pg-step pg-step--chart" data-step="chart" role="dialog">
-                <h2>How your allocation compares to the average</h2>
-                <p class="pg-note">Bars show the average allocation across all participants. ● marks your allocation.</p>
-                <div id="pg-chart" class="dataviz" style="height:320px;"></div>
-                <div class="pg-legend">
-                  <span class="pg-key pg-key--avg"></span> Average &nbsp;&nbsp;
-                  <span class="pg-key pg-key--you"></span> Your allocation
-                </div>
-                <button class="pg-next">Next: Background</button>
-              </div>
-              <div class="pg-step pg-step--strategy" data-step="strategy" role="dialog">
-  <h2>How to Win the Game</h2>
-  <p>Notice that not all states are equal: winning larger states with many electoral votes can outweigh smaller states.</p>
-  <p>Think about the trade-offs: concentrating resources in a few big states versus spreading them to win multiple smaller states.</p>
-  <button class="pg-next">Next: Background</button>
-</div>
-
-              <div class="pg-step pg-step--background" data-step="background" role="dialog">
-                <h2>Picking a Winning Coalition</h2>
-                <div class="jc-instructions-panel pg-bgtext">
-                  <!-- TODO: paste your long-form Electoral College background text here -->
-                </div>
-                <button class="pg-close-bottom">Close</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
+    <nav class="navbar">
+        <ul>
+            <li><a href="#" class="nav-link selected">Game One</a></li>
+            <!-- <li><a href="gametwo" class="nav-link">Game Two</a></li> -->
+        </ul>
+    </nav>
+    <div class="jc-header">
+        <h1 class="jc-title">Electoral College Game</h1>
     </div>
-  </div>
-
-  <!-- Supabase client + game logic -->
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="static/js/gameone.js"></script>
+    <div class="jc-graphic">
+        <div class="jc-top-section">
+            <div class="jc-select-container"></div>
+            <div class="jc-instructions-panel">
+                <p>Your mission is to out-campaign your opponent, who is competing against you to be President.</p>
+                <p>Imagine that there are seven competitive states in the <span class="jc-highlight highlighted">NOTUSISTAN</span> Electoral College used for its presidential elections, operating under the same winner-take-all, weighted voting rules as in the US Electoral College.</p>
+                <p>Each player has <span class="jc-highlight highlighted">$100</span> to spend across the seven states, in increments of <span class="jc-highlight highlighted">$1</span>. By directing resources to states, you get a competitive advantage. <span class="jc-highlight highlighted">The initial vote share</span> for each state is 50%. For every $1 additional spent in a state, you gain +1% vote share; for every $1 spent by your opponent, you lose 1%. Whoever spends the most in a state wins its electoral votes.</p>
+                <p>For example, <em>State <span class="jc-state-1"></span></em> has <span class="jc-ev-1"></span> electoral votes. If you allocate $<span class="jc-option-1"></span> and your opponent allocated $<span class="jc-answer-1"></span>, you win all <span class="jc-ev-1"></span> of <em>State <span class="jc-state-1a"></span>'s</em> EC votes. If instead you allocated $<span class="jc-option-2"></span> to <em>State <span class="jc-state-2"></span></em>, your opponent would win <span class="jc-ev-2"></span> EC votes by allocating anything between $<span class="jc-answer-3"></span> and $100.</p>
+                <p>The seven states have electors shown in the second column. There are 139 EC votes in total; <span class="jc-highlight highlighted">70 are needed to win</span>.</p>
+                <p><span class="jc-highlight highlighted">Ties</span> in each state are decided by coin toss. You may allocate nothing to a state or the full $100 to one state.</p>
+                <p>You compete against one other person, randomly selected from our database of <span class="jc-highlight highlighted participant-count">loading…</span>. You win only if you exceed 70 EC votes.</p>
+                <p>When you’re ready, <span class="jc-highlight highlighted">enter your state spending totals below</span>. You can make changes until you submit. After playing once, refresh the page to play again.</p>
+                <div id="jc-input">
+                    <table>
+                        <tr>
+                            <th scope="col">State</th>
+                            <th scope="col">EC Votes</th>
+                            <th scope="col">Initial Vote Share</th>
+                            <th scope="col">Allocation</th>
+                        </tr>
+                        <tr>
+                            <th scope="row">A</th>
+                            <td>3</td>
+                            <td>50%</td>
+                            <td><input id="jc-user-submit-inputA" type="number" min="0" max="100" step="1" inputmode="numeric" pattern="[0-9]*" class="nytint-textinput jc-num" onclick="this.select()" autofocus></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">B</th>
+                            <td>5</td>
+                            <td>50%</td>
+                            <td><input id="jc-user-submit-inputB" type="number" min="0" max="100" step="1" inputmode="numeric" pattern="[0-9]*" class="nytint-textinput jc-num" onclick="this.select()"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">C</th>
+                            <td>8</td>
+                            <td>50%</td>
+                            <td><input id="jc-user-submit-inputC" type="number" min="0" max="100" step="1" inputmode="numeric" pattern="[0-9]*" class="nytint-textinput jc-num" onclick="this.select()"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">D</th>
+                            <td>13</td>
+                            <td>50%</td>
+                            <td><input id="jc-user-submit-inputD" type="number" min="0" max="100" step="1" inputmode="numeric" pattern="[0-9]*" class="nytint-textinput jc-num" onclick="this.select()"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">E</th>
+                            <td>21</td>
+                            <td>50%</td>
+                            <td><input id="jc-user-submit-inputE" type="number" min="0" max="100" step="1" inputmode="numeric" pattern="[0-9]*" class="nytint-textinput jc-num" onclick="this.select()"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">F</th>
+                            <td>34</td>
+                            <td>50%</td>
+                            <td><input id="jc-user-submit-inputF" type="number" min="0" max="100" step="1" inputmode="numeric" pattern="[0-9]*" class="nytint-textinput jc-num" onclick="this.select()"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">G</th>
+                            <td>55</td>
+                            <td>50%</td>
+                            <td><input id="jc-user-submit-inputG" type="number" min="0" max="100" step="1" inputmode="numeric" pattern="[0-9]*" class="nytint-textinput jc-num" onclick="this.select()"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" colspan="3"></th>
+                            <td>
+                                <div>Amount Remaining: $<span id="jc-total-allocated">100</span></div>
+                            </td>
+                        </tr>
+                    </table>
+                    <button type="button" class="jc-submit">Submit</button>
+                    <div class="jc-input-notice jc-out-of-bounds-warning jc-hidden">Please enter a number between 0 and 100.</div>
+                    <div class="jc-input-notice jc-totalHighWarning-jc-warning jc-hidden">Please adjust your allocation so it doesn't exceed $100.</div>
+                    <div class="jc-input-notice jc-totalLowWarning-jc-warning jc-hidden">You have not allocated all $100!</div>
+                </div>
+                <!-- Modal for post-game -->
+                <div id="postGame" class="modal">
+                    <div class="pg-panel">
+                        <button class="pg-close" aria-label="Close">&times;</button>
+                        <div class="pg-steps">
+                            <div class="pg-step pg-step--loading active" data-step="loading" role="dialog" aria-live="polite">
+                                <h2>Calculating your results…</h2>
+                                <div class="pg-spinner" aria-hidden="true"></div>
+                                <p class="pg-note">Contacting the server and simulating your head-to-head match.</p>
+                            </div>
+                            <div class="pg-step pg-step--result" data-step="result" role="dialog">
+                                <h2 class="pg-result-title">Your Result</h2>
+                                <p id="pg-result-summary" class="pg-summary"></p>
+                                <div id="pg-result-chart" style="height:200px;"></div>
+                                <div id="pg-state-comparison" style="height:260px;"></div>
+                                <div class="pg-score">
+                                    <div><strong>You</strong>: <span id="pg-ec-you">0</span> EC</div>
+                                    <div><strong>Opponent</strong>: <span id="pg-ec-opp">0</span> EC</div>
+                                </div>
+                                <div class="pg-winlist">
+                                    <div>You won: <span id="pg-states-you">—</span></div>
+                                    <div>Opponent won: <span id="pg-states-opp">—</span></div>
+                                </div>
+                                <button class="pg-next">Next: Compare to Everyone</button>
+                            </div>
+                            <div class="pg-step pg-step--tournament" data-step="tournament" role="dialog">
+                                <h2>Tournament Results</h2>
+                                <p class="pg-note">Your allocation plays against all other contestants.</p>
+                                <div id="pg-tournament-chart" style="height:300px;"></div>
+                                <button class="pg-next">Next: Background</button>
+                            </div>
+                            <div class="pg-step pg-step--chart" data-step="chart" role="dialog">
+                                <h2>How your allocation compares to the average</h2>
+                                <p class="pg-note">Bars show the average allocation across all participants. ● marks your allocation.</p>
+                                <div id="pg-chart" class="dataviz" style="height:320px;"></div>
+                                <div class="pg-legend">
+                                    <span class="pg-key pg-key--avg"></span> Average &nbsp;&nbsp;
+                                    <span class="pg-key pg-key--you"></span> Your allocation
+                                </div>
+                                <button class="pg-next">Next: Background</button>
+                            </div>
+                            <div class="pg-step pg-step--strategy" data-step="strategy" role="dialog">
+                                <h2>How to Win the Game</h2>
+                                <p>Notice that not all states are equal: winning larger states with many electoral votes can outweigh smaller states.</p>
+                                <p>Think about the trade-offs: concentrating resources in a few big states versus spreading them to win multiple smaller states.</p>
+                                <button class="pg-next">Next: Background</button>
+                            </div>
+                            <div class="pg-step pg-step--background" data-step="background" role="dialog">
+                                <h2>Picking a Winning Coalition</h2>
+                                <div class="jc-instructions-panel pg-bgtext">
+                                    <!-- TODO: paste your long-form Electoral College background text here -->
+                                </div>
+                                <button class="pg-close-bottom">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Supabase client + game logic -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="static/js/gameone.js"></script>
 </body>
+
 </html>
