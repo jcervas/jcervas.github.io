@@ -1,4 +1,4 @@
-// gameone.js — Supabase + modal flow with corrected step navigation
+// gameone.js — Supabase + modal flow with write + read
 
 // --- Supabase client setup ---
 const SUPABASE_URL = 'https://renowzxywrnuomxzsydn.supabase.co';
@@ -54,6 +54,18 @@ async function loadStats(){
   } catch(e){ console.error("Count failed:", e); }
 }
 document.addEventListener("DOMContentLoaded", loadStats);
+
+// --- Save plays ---
+async function savePlay(values){
+  try {
+    const payload = {
+      a: values[0], b: values[1], c: values[2], d: values[3],
+      e: values[4], f: values[5], g: values[6]
+    };
+    const { error } = await sb.from("responses").insert([payload]);
+    if (error) console.error("Insert error:", error);
+  } catch(e){ console.error("Save failed:", e); }
+}
 
 // --- Modal helpers ---
 function pgShow(stepName){
@@ -135,6 +147,9 @@ function renderResultChart(youEC,oppEC){
     if(sum(player)!==100){alert("Please allocate exactly $100.");return;}
     pgShow("loading");
     try{
+      // ✅ Save this play
+      await savePlay(player);
+
       const opponent=await getOpponent();
       const outcome=computeResult(player,opponent);
       renderResultChart(outcome.youEC,outcome.oppEC);
