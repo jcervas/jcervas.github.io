@@ -73,22 +73,18 @@ async function getMeans() {
 }
 
 async function loadStats() {
-  // Call the RPC
-  const { data, error } = await sb.rpc("get_participant_count");
-  if (error) {
-    console.error("Error fetching count:", error);
-    return;
+  try {
+    const { data, error } = await sb.rpc("get_participant_count");
+    if (error) throw error;
+    document.querySelectorAll(".participant-count").forEach(el => {
+      el.textContent = data + " participants";
+    });
+  } catch (e) {
+    console.error("Count failed:", e);
   }
-
-  // data is just the number itself
-  console.log("Participant count:", data);
-
-  document.querySelectorAll(".participant-count").forEach(el => {
-    el.textContent = data + " participants";
-  });
 }
+document.addEventListener("DOMContentLoaded", loadStats);
 
-grant execute on function public.get_participant_count() to anon;
 
 
 // D3 chart for means
@@ -554,16 +550,29 @@ function computeResult(player, opp){
 }
 
 // RPCs
-async function getRandomOpponent(){
+async function getOpponent() {
   const { data, error } = await sb.rpc("get_random_participant");
   if (error) throw error;
-  return data && data[0];
+  return Array.isArray(data) && data[0] ? data[0] : null;
 }
-async function getMeans(){
+
+async function getMeans() {
   const { data, error } = await sb.rpc("get_mean_allocations");
   if (error) throw error;
-  return data && data[0]; // {a:…, b:…}
+  return Array.isArray(data) && data[0] ? data[0] : null;
 }
+
+window._testRPCs = async function(){
+  console.log("Testing RPCs…");
+  console.log("URL:", SUPABASE_URL);
+  const c = await sb.rpc("get_participant_count");
+  console.log("count:", c);
+  const r = await sb.rpc("get_random_participant");
+  console.log("random:", r);
+  const m = await sb.rpc("get_mean_allocations");
+  console.log("means:", m);
+};
+
 
 // D3 chart: bars = mean, dots = player, axes + labels
 function renderMeansChart(means, player){
