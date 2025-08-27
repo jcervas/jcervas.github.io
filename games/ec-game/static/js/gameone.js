@@ -100,9 +100,13 @@ function computeResult(player, opp) {
         else if (p < o) winner = "opp";
         else winner = coinFlip() ? "you" : "opp";
 
-        if (winner === "you") { youEC += EC[i];
-            youStates.push(s); } else { oppEC += EC[i];
-            oppStates.push(s); }
+        if (winner === "you") {
+            youEC += EC[i];
+            youStates.push(s);
+        } else {
+            oppEC += EC[i];
+            oppStates.push(s);
+        }
     });
     let verdict = (youEC > oppEC) ? "win" : (youEC < oppEC) ? "lose" : "tie";
     return { youEC, oppEC, youStates, oppStates, verdict };
@@ -229,17 +233,12 @@ function renderResultChart(youEC, oppEC) {
 
             setTimeout(() => pgShow("result"), 600);
 
-            nextButtons[0] ? .removeEventListener("click", nextHandlerChart);
-            nextHandlerChart = async () => {
-                pgShow("chart");
-                const means = await getMeans();
-                renderMeansChart(means, player);
-            };
-            nextButtons[0] ? .addEventListener("click", nextHandlerChart);
+            nextButtons[0]?.removeEventListener("click", nextHandlerChart);
+            nextButtons[0]?.addEventListener("click", nextHandlerChart);
 
-            nextButtons[1] ? .removeEventListener("click", nextHandlerBg);
-            nextHandlerBg = () => pgShow("background");
-            nextButtons[1] ? .addEventListener("click", nextHandlerBg);
+            nextButtons[1]?.removeEventListener("click", nextHandlerBg);
+            nextButtons[1]?.addEventListener("click", nextHandlerBg);
+
 
         } catch (e) {
             console.error(e);
