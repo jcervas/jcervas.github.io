@@ -690,71 +690,70 @@ function renderMeansChart(means, player){
 
 
 
-
-// --- define the functions your inputs call ---
-function myFunct() {
-  updateRemainingAndButton();
-}
-// Optional: if your HTML still references checkDecimal(), keep a no-op to avoid errors.
-function checkDecimal() { /* no-op; using type=number step=1 already */ }
-
-// --- initialize on load ---
-document.addEventListener("DOMContentLoaded", () => {
-  // start with a clean state
-  updateRemainingAndButton();
-
-  // also bind input listeners without relying on inline HTML attributes
-  document.querySelectorAll(".jc-num").forEach(inp => {
-    inp.addEventListener("input", updateRemainingAndButton);
-    inp.addEventListener("blur", updateRemainingAndButton);
-  });
-});
-
-
 // --- read values & update UI ---
 function readAllocations() {
   const ids = ["A","B","C","D","E","F","G"];
-  return ids.map(id => Math.trunc(+document.getElementById("jc-user-submit-input"+id).value || 0));
+  return ids.map(id => Math.trunc(+document.getElementById("jc-user-submit-input" + id).value || 0));
 }
+
 function updateRemainingAndButton() {
   const vals = readAllocations();
-  const total = vals.reduce((a,b)=>a+b, 0);
+  const total = vals.reduce((a,b) => a+b, 0);
+
+  // Update Remaining
   const remainingEl = document.getElementById("jc-total-allocated");
   if (remainingEl) remainingEl.textContent = 100 - total;
 
+  // Toggle button enabled
   const btn = document.querySelector(".jc-submit");
   if (!btn) return;
-  if (total === 100) { btn.classList.remove("jc-disabled"); btn.disabled = false; }
-  else { btn.classList.add("jc-disabled"); btn.disabled = true; }
+  if (total === 100) {
+    btn.classList.remove("jc-disabled");
+    btn.disabled = false;
+  } else {
+    btn.classList.add("jc-disabled");
+    btn.disabled = true;
+  }
 }
 
 // --- stubs for inline handlers in your HTML ---
-function myFunct(){ updateRemainingAndButton(); }
+function myFunct() {
+  updateRemainingAndButton();
+}
+function checkDecimal() {
+  // no-op; type=number step=1 already enforces integers
+}
 
-// --- modal helpers (match your markup/CSS) ---
-function pgShow(step){ 
+// --- modal helpers ---
+function pgShow(step) { 
   const m = document.getElementById("postGame");
   if (!m) return;
   m.classList.add("show");
-  m.querySelectorAll(".pg-step").forEach(s=>s.classList.remove("active"));
-  const target = m.querySelector(".pg-step--"+step);
+  m.querySelectorAll(".pg-step").forEach(s => s.classList.remove("active"));
+  const target = m.querySelector(".pg-step--" + step);
   if (target) target.classList.add("active");
 }
-function pgHide(){ document.getElementById("postGame")?.classList.remove("show"); }
+
+function pgHide() {
+  const m = document.getElementById("postGame");
+  if (m) m.classList.remove("show");
+}
 
 // --- init ---
 document.addEventListener("DOMContentLoaded", () => {
   updateRemainingAndButton();
+
   document.querySelectorAll(".jc-num").forEach(inp => {
     inp.addEventListener("input", updateRemainingAndButton);
     inp.addEventListener("blur", updateRemainingAndButton);
   });
+
   const modal = document.getElementById("postGame");
-  modal?.addEventListener("click", (e)=>{
-    if (e.target.classList.contains("pg-close") || e.target.classList.contains("pg-close-bottom")) pgHide();
-  });
+  if (modal) {
+    modal.addEventListener("click", (e) => {
+      if (e.target.classList.contains("pg-close") || e.target.classList.contains("pg-close-bottom")) {
+        pgHide();
+      }
+    });
+  }
 });
-
-// Example: when you’re ready to show results flow, call:
-// pgShow("loading"); // later -> pgShow("result"); then -> pgShow("chart"); then -> pgShow("background");
-
