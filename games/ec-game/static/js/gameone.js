@@ -507,3 +507,175 @@ function showAnswer() {
 
 $("html, body").animate({ scrollTop: 0 }, 0);
 
+
+// --- constants from your table ---
+const STATES = ["A","B","C","D","E","F","G"];
+const EC = [3,5,8,13,21,34,55];
+
+// Utilities
+function readPlayerAllocations() {
+  return STATES.map(id => Math.trunc(+document.getElementById("jc-user-submit-input"+id).value || 0));
+}
+function sum(arr){ return arr.reduce((a,b)=>a+b,0); }
+function coinFlip(){ return Math.random() < 0.5; }
+
+// Modal helpers
+function pgShow(stepName){
+  const modal = document.getElementById("postGame");
+  modal.classList.add("show");
+  modal.querySelectorAll(".pg-step").forEach(s => s.classList.remove("active"));
+  modal.querySelector(`.pg-step--${stepName}`).classList.add("active");
+}
+function pgHide(){ document.getElementById("postGame").classList.remove("show"); }
+
+// Wire modal close buttons
+(function(){
+  const modal = document.getElementById("postGame");
+  modal.addEventListener("click", (e)=>{
+    if (e.target.classList.contains("pg-close") || e.target.classList.contains("pg-close-bottom")) pgHide();
+  });
+})();
+
+// Compute head-to-head EC totals vs opponent allocations object {a..g}
+function computeResult(player, opp){
+  let youEC = 0, oppEC = 0, youStates=[], oppStates=[];
+  STATES.forEach((s, i)=>{
+    const p = player[i], o = opp[s.toLowerCase()];
+    let winner = null;
+    if (p > o) winner = "you";
+    else if (p < o) winner = "opp";
+    else winner = coinFlip() ? "you" : "opp";
+
+    if (winner === "you") { youEC += EC[i]; youStates.push(s); }
+    else { oppEC += EC[i]; oppStates.push(s); }
+  });
+  let verdict = (youEC>oppEC)?"win":(youEC<oppEC)?"lose":"tie";
+  return { youEC, oppEC, youStates, oppStates, verdict };
+}
+
+// RPCs
+async function getRandomOpponent(){
+  const { data, error } = await sb.rpc("get_random_participant");
+  if (error) throw error;
+  return data && data[0];
+}
+async function getMeans(){
+  const { data, error } = await sb.rpc("get_mean_allocations");
+  if (error) throw error;
+  return data && data[0]; // {a:…, b:…}
+}
+
+// D3 chart: bars = mean, dots = player, axes + labels
+function renderMeansChart(means, player){
+  const data = STATES.map((s,i)=>({
+    state:s,
+    mean:+means[s.toLowerCase()],
+    you:+player[i]
+  }));
+
+  const container = d3.select("#pg-chart").html("");
+  const W = 760, H = 280, M = {t:20,r:16,b:40,l:40};
+  const svg = container.append("svg").attr("width", W).attr("height", H);
+  const x = d3.scaleBand().domain(STATES).range([M.l, W-M.r]).padding(0.2);
+  const y = d3.scaleLinear().domain([0, d3.max(data, d=>Math.max(d.mean,d.you))||100]).nice().range([H-M.b, M.t]);
+
+  // Bars (means)
+  svg.selectAll(".bar").data(data).enter().append("rect")
+    .attr("class","bar")
+    .attr("x", d=>x(d.state)).attr("y", d=>y(d.mean))
+    .attr("width", x.bandwidth())
+    .attr("height", d=>y(0)-y(d.mean))
+    .attr("fill", "#a5b4fc");
+
+  // Dots (you)
+  svg.selectAll(".dot").data(data).enter().append("circle")
+    .attr("class","dot")
+    .attr("cx", d=>x(d.state)+x.bandwidth()/2)
+    .attr("cy", d=>y(d.you))
+    .attr("r", 5)
+    .attr("fill", "#111827");
+
+  // Labels for your dot (optional compact)
+  svg.selectAll(".dot-label").data(data).enter().append("text")
+    .attr("class","dot-label")
+    .attr("x", d=>x(d.state)+x.bandwidth()/2)
+    .attr("y", d=>y(d.you)-8)
+    .attr("text-anchor","middle")
+    .attr("font-size","10px")
+    .attr("fill","#111827")
+    .text(d=>d.you);
+
+  // Axes
+  const axX = d3.axisBottom(x);
+  const axY = d3.axisLeft(y).ticks(5);
+  svg.append("g").attr("transform",`translate(0,${H-M.b})`).call(axX);
+  svg.append("g").attr("transform",`translate(${M.l},0)`).call(axY);
+
+  // Title + subtitle
+  svg.append("text").attr("x", W/2).attr("y", M.t).attr("text-anchor","middle")
+    .attr("font-weight","600").text("Average vs. Your Allocation");
+  svg.append("text").attr("x", W/2).attr("y", M.t+16).attr("text-anchor","middle")
+    .attr("fill","#555").attr("font-size","12px")
+    .text("Bars: average across all participants; Dots: your choices");
+}
+
+// Hook submit button to full flow
+(function(){
+  const btn = document.querySelector(".jc-submit");
+  if (!btn) return;
+
+  btn.addEventListener("click", async () => {
+    const player = readPlayerAllocations();
+    if (sum(player) !== 100) { alert("Please allocate exactly $100."); return; }
+
+    // Show loading modal immediately
+    pgShow("loading");
+
+    try {
+      // fetch opponent, compute result
+      const opponent = await getRandomOpponent();
+      const outcome = computeResult(player, opponent);
+
+      // Fill result step
+      document.getElementById("pg-ec-you").textContent = outcome.youEC;
+      document.getElementById("pg-ec-opp").textContent = outcome.oppEC;
+      document.getElementById("pg-states-you").textContent = outcome.youStates.join(", ") || "—";
+      document.getElementById("pg-states-opp").textContent = outcome.oppStates.join(", ") || "—";
+      const summary = {
+        win:  `You WIN! ${outcome.youEC}–${outcome.oppEC} electoral votes.`,
+        lose: `You LOSE. ${outcome.youEC}–${outcome.oppEC} electoral votes.`,
+        tie:  `It's a TIE at ${outcome.youEC}–${outcome.oppEC}.`
+      }[outcome.verdict];
+      document.getElementById("pg-result-summary").textContent = summary;
+
+      // Step nav
+      const modal = document.getElementById("postGame");
+      const nextButtons = modal.querySelectorAll(".pg-step--result .pg-next, .pg-step--chart .pg-next");
+      let nextHandlerChart, nextHandlerBg;
+
+      // Move to result after a short pause so loading feels real
+      setTimeout(()=> pgShow("result"), 600);
+
+      // When user clicks Next on result -> chart
+      nextButtons[0]?.removeEventListener("click", nextHandlerChart);
+      nextHandlerChart = async ()=>{
+        pgShow("chart");
+        // fetch means and render chart
+        const means = await getMeans();
+        renderMeansChart(means, player);
+      };
+      nextButtons[0]?.addEventListener("click", nextHandlerChart);
+
+      // When user clicks Next on chart -> background
+      nextButtons[1]?.removeEventListener("click", nextHandlerBg);
+      nextHandlerBg = ()=> pgShow("background");
+      nextButtons[1]?.addEventListener("click", nextHandlerBg);
+
+    } catch (e){
+      console.error(e);
+      alert("Sorry, we couldn’t complete the simulation.");
+      pgHide();
+    }
+  });
+})();
+
