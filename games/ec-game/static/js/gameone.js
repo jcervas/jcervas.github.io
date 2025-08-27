@@ -88,6 +88,8 @@ async function loadStats() {
   });
 }
 
+grant execute on function public.get_participant_count() to anon;
+
 
 // D3 chart for means
 function renderMeanChart(means) {
@@ -502,38 +504,6 @@ function showAnswer() {
     
     var win_threshold = 70;
     var arr = new Array();
-
-    $.getJSON('/get_all_games', function(data) {
-        console.log('Got games! ', console.log(data));
-        var n_games = data.length;
-        var n_wins = 0;
-        for(let game_idx = 0; game_idx<n_games; game_idx++){
-            var user_votes = userVotes(Object.values(userData), Object.values(data[game_idx]));
-            arr.push(user_votes);
-            n_wins += user_votes >= win_threshold;
-        }
-        console.log("n_wins: " + n_wins);
-        console.log("n_games: " + n_games); 
-        var result = 'You won against ' + parseFloat(100 * n_wins/n_games).toFixed(2) + '% of players in the database!';
-        console.log(result);
-        var element = document.getElementById("postGame-text-id");
-        element.innerHTML = result;
-        make_histogram(arr);
-        var postGameDiv = document.getElementById("postGame");
-        postGameDiv.style.display = "inline";
-        // Scroll down to the div with the 
-        $('html,body').animate({scrollTop: $("#postGame-text-id").offset().top - 10},'slow');
-    });
-
-    
-    $.ajax('/write_game', {
-        data : JSON.stringify(userData),
-        contentType : 'application/json',
-        type : 'POST',
-        success: function() { console.log("Wrote to BE"); },
-        failure: function() { console.log("Failed to write to BE"); }
-    })
-};
 
 $("html, body").animate({ scrollTop: 0 }, 0);
 
