@@ -110,9 +110,22 @@
               <div class="pg-step pg-step--result" data-step="result" role="dialog">
   <h2 class="pg-result-title">Your Result</h2>
   <p id="pg-result-summary" class="pg-summary"></p>
+
   <div id="pg-result-chart" style="height:200px;"></div>
+
+  <div class="pg-score">
+    <div><strong>You</strong>: <span id="pg-ec-you">0</span> EC</div>
+    <div><strong>Opponent</strong>: <span id="pg-ec-opp">0</span> EC</div>
+  </div>
+
+  <div class="pg-winlist">
+    <div>You won: <span id="pg-states-you">—</span></div>
+    <div>Opponent won: <span id="pg-states-opp">—</span></div>
+  </div>
+
   <button class="pg-next">Next: Compare to Everyone</button>
 </div>
+
 
               <div class="pg-step pg-step--chart" data-step="chart" role="dialog">
                 <h2>How your allocation compares to the average</h2>
@@ -124,6 +137,13 @@
                 </div>
                 <button class="pg-next">Next: Background</button>
               </div>
+              <div class="pg-step pg-step--strategy" data-step="strategy" role="dialog">
+  <h2>How to Win the Game</h2>
+  <p>Notice that not all states are equal: winning larger states with many electoral votes can outweigh smaller states.</p>
+  <p>Think about the trade-offs: concentrating resources in a few big states versus spreading them to win multiple smaller states.</p>
+  <button class="pg-next">Next: Background</button>
+</div>
+
               <div class="pg-step pg-step--background" data-step="background" role="dialog">
                 <h2>Picking a Winning Coalition</h2>
                 <div class="jc-instructions-panel pg-bgtext">
