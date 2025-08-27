@@ -32,12 +32,7 @@ nav {
   cursor: default;
 }
 
-.jc-input-notice {
-  font-size: 1.1em;
-  font-weight: 400;
-  margin-top: 9px;
-  color: #AA66D3;
-}
+
 #jc-input {
   margin-top: 30px;
   /* height: 60px; */
