@@ -689,29 +689,7 @@ function renderMeansChart(means, player){
 })();
 
 
-// --- helper to read values & update "Amount Remaining" ---
-function readAllocations() {
-  const ids = ["A","B","C","D","E","F","G"];
-  return ids.map(id => Math.trunc(+document.getElementById("jc-user-submit-input"+id).value || 0));
-}
-function updateRemainingAndButton() {
-  const values = readAllocations();
-  const total = values.reduce((a,b)=>a+b,0);
-  // Update remaining UI
-  const remEl = document.getElementById("jc-total-allocated");
-  if (remEl) remEl.textContent = 100 - total;
 
-  // Enable/disable submit button
-  const btn = document.querySelector(".jc-submit");
-  if (!btn) return;
-  if (total === 100) {
-    btn.classList.remove("jc-disabled");
-    btn.disabled = false;          // in case you also use the disabled attribute
-  } else {
-    btn.classList.add("jc-disabled");
-    btn.disabled = true;
-  }
-}
 
 // --- define the functions your inputs call ---
 function myFunct() {
