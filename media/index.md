@@ -46,7 +46,7 @@ title: "Media"
 
   <div id="paragraph-38" class="paragraph paragraph--type--up-panel-card paragraph--view-mode--default Panel__item Common flush" data-animate="true" data-animation="fade-in-up">
     <article class="media media--type-image media--view-mode-default">
-        <img loading="lazy" src="https://www.jonathancervas.com/assets/photos/photo6.jpg" width="750" height="500" alt="Jonathan Cervas at Carnegie Mellon University">
+        <img loading="lazy" src="https://jonathancervas.com/assets/photos/photo6.jpg" width="750" height="500" alt="Jonathan Cervas at Carnegie Mellon University">
     </article>
     <h4><a href="https://www.nytimes.com/2022/05/28/nyregion/jonathan-cervas-redistricting-maps-ny.html?unlocked_article_code=1.ek8.vcQB.1MWKUMJCGO5R&smid=url-share" target="_blank">How a Mapmaker Became New York’s Most Unexpected Power Broker</a></h4>
     <p>Jonathan Cervas, a Pittsburgh-born postdoctoral fellow and independent redistricting expert, was appointed as special master to redraw New York’s congressional and state senate maps after the Democratic-drawn maps were struck down as unconstitutional. His maps, praised by Republicans and anti-gerrymandering groups but criticized by Democrats, have upended the political landscape by forcing tough primaries and reshaping minority representation in New York City. Though thrust into the spotlight, Cervas insists he was simply applying the law and serving democracy, not politics.</p>
@@ -54,7 +54,7 @@ title: "Media"
 
 <div id="paragraph-38" class="paragraph paragraph--type--up-panel-card paragraph--view-mode--default Panel__item Common flush" data-animate="true" data-animation="fade-in-up">
     <article class="media media--type-image media--view-mode-default">
-        <img loading="lazy" src="https://www.jonathancervas.com/assets/photos/cervas-vert-2.jpg" width="750" height="500" alt="Jonathan Cervas at Wrightman Park, Pittsburgh, PA">
+        <img loading="lazy" src="https://jonathancervas.com/assets/photos/cervas-vert-2.jpg" width="750" height="500" alt="Jonathan Cervas at Wrightman Park, Pittsburgh, PA">
     </article>
     <h4><a href="https://www.post-gazette.com/news/politics-state/2022/09/04/jonathan-cervas-carnegie-mellon-census-redistricting-pa-legislative-districts/stories/202208310151" target="_blank">Jonathan Cervas’ quest to make government represent the voters</a></h4>
     <p>Jonathan Cervas, a postdoctoral fellow at Carnegie Mellon, has quickly risen to prominence as a redistricting specialist, playing key roles in both Pennsylvania’s legislative maps and New York’s high-stakes congressional and state senate redrawing. Trained under noted scholar Bernard Grofman, Cervas emphasizes fairness, neutrality, and voter empowerment, viewing redistricting as both art and science in balancing competing democratic values. Though criticized by some politicians, he sees his work as vital to protecting undiluted votes and strengthening democracy at a moment when gerrymandering and partisan manipulation threaten it.</p>
@@ -62,13 +62,13 @@ title: "Media"
 
 </div>
 </div>
+</section>
 
 
 
 
 
-
-  <div class="card">
+  <div class="">
     <h3><span>What to know about Bernard Grofman and Jonathan Cervas, Wisconsin's new map consultants</span></h3>
     <div class="sub">Milwaukee Journal Sentinel</div>
     <p class="p1">
@@ -81,7 +81,7 @@ title: "Media"
     </p>
   </div>
 
-  <div class="card">
+  <div class="">
     <h3><span>Who is the man tasked with redrawing New York’s new district lines?</span></h3>
     <div class="sub">City & State New York</div>
     <p class="p1">
@@ -95,7 +95,7 @@ title: "Media"
   </div>
 </div>
 
-</section>
+
 
 <h2 class="grid__box__eyebrow text-align-center">Media Mentions</h2>
 
