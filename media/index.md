@@ -7,18 +7,45 @@ title: "Media Appearances"
   <h2 class="h2">Media Appearances</h2>
 </div>
 
+<details class="details" open="">
+  <summary class="details__summary">Media Inquiries</summary>
+  <div class="grid grid--column-3">
+    <div>
+      <address class="cmu-address">
+        <strong style="display: block">  
+          <div class="visually-hidden">Name</div>
+        Jonathan Cervas</strong>
+        <div>
+          <div class="visually-hidden">Title</div>
+        Assistant Teaching Professor
+      </div>
+      <div>
+        <a target="_blank" class="icon-wrapper" href="mailto:jcervas@andrew.cmu.edu"><svg class="icon-wrapper__icon icons--email"><use xlink:href="https://www.cmu.edu/news/themes/cmu2019/images/sprite.svg#icon--email"></use></svg>Email</a>
+      </div>
+      <div>
+        <div class="visually-hidden">Phone</div>
+        <a class="icon-wrapper" href="tel:412-268-4519"><svg class="icon-wrapper__icon icons--phone"><use xlink:href="https://www.cmu.edu/news/themes/cmu2019/images/sprite.svg#icon--phone"></use>
+        </svg>
+      412-268-4519
+    </a>
+  </div>
+</address>
+</div>
+</div>
+</details>
+
 <div class="items items-descriptions">
 
   <div class="card">
     <h3><span>How a Mapmaker Became New York’s Most Unexpected Power Broker</span></h3>
     <div class="sub">The New York Times</div>
     <p class="p1">
-      Jonathan Cervas, a Pittsburgh-born postdoctoral fellow and independent redistricting expert, was appointed as special master to redraw New York’s congressional and state senate maps after the Democratic-drawn maps were struck down as unconstitutional. His maps, praised by Republicans and anti-gerrymandering groups but criticized by Democrats, have upended the political landscape by forcing tough primaries and reshaping minority representation in New York City. Though thrust into the spotlight, Cervas insists he was simply applying the law and serving democracy, not politics.
+ Jonathan Cervas, a Pittsburgh-born postdoctoral fellow and independent redistricting expert, was appointed as special master to redraw New York’s congressional and state senate maps after the Democratic-drawn maps were struck down as unconstitutional. His maps, praised by Republicans and anti-gerrymandering groups but criticized by Democrats, have upended the political landscape by forcing tough primaries and reshaping minority representation in New York City. Though thrust into the spotlight, Cervas insists he was simply applying the law and serving democracy, not politics.
     </p>
     <p class="p1">
-      <a class="cta" href="https://www.nytimes.com/2022/05/28/nyregion/jonathan-cervas-redistricting-maps-ny.html?unlocked_article_code=1.ek8.vcQB.1MWKUMJCGO5R&smid=url-share">
-        Read me at The New York Times.
-      </a>
+ <a class="cta" href="https://www.nytimes.com/2022/05/28/nyregion/jonathan-cervas-redistricting-maps-ny.html?unlocked_article_code=1.ek8.vcQB.1MWKUMJCGO5R&smid=url-share">
+   Read me at The New York Times.
+ </a>
     </p>
   </div>
 
@@ -26,12 +53,12 @@ title: "Media Appearances"
     <h3><span>Jonathan Cervas’ quest to make government represent the voters</span></h3>
     <div class="sub">Pittsburgh Post-Gazette</div>
     <p class="p1">
-      Jonathan Cervas, a postdoctoral fellow at Carnegie Mellon, has quickly risen to prominence as a redistricting specialist, playing key roles in both Pennsylvania’s legislative maps and New York’s high-stakes congressional and state senate redrawing. Trained under noted scholar Bernard Grofman, Cervas emphasizes fairness, neutrality, and voter empowerment, viewing redistricting as both art and science in balancing competing democratic values. Though criticized by some politicians, he sees his work as vital to protecting undiluted votes and strengthening democracy at a moment when gerrymandering and partisan manipulation threaten it.
+ Jonathan Cervas, a postdoctoral fellow at Carnegie Mellon, has quickly risen to prominence as a redistricting specialist, playing key roles in both Pennsylvania’s legislative maps and New York’s high-stakes congressional and state senate redrawing. Trained under noted scholar Bernard Grofman, Cervas emphasizes fairness, neutrality, and voter empowerment, viewing redistricting as both art and science in balancing competing democratic values. Though criticized by some politicians, he sees his work as vital to protecting undiluted votes and strengthening democracy at a moment when gerrymandering and partisan manipulation threaten it.
     </p>
     <p class="p1">
-      <a class="cta" href="https://www.post-gazette.com/news/politics-state/2022/09/04/jonathan-cervas-carnegie-mellon-census-redistricting-pa-legislative-districts/stories/202208310151">
-        Read more at the Pittsburgh Post-Gazette.
-      </a>
+ <a class="cta" href="https://www.post-gazette.com/news/politics-state/2022/09/04/jonathan-cervas-carnegie-mellon-census-redistricting-pa-legislative-districts/stories/202208310151">
+   Read more at the Pittsburgh Post-Gazette.
+ </a>
     </p>
   </div>
 
@@ -39,12 +66,12 @@ title: "Media Appearances"
     <h3><span>What to know about Bernard Grofman and Jonathan Cervas, Wisconsin's new map consultants</span></h3>
     <div class="sub">Milwaukee Journal Sentinel</div>
     <p class="p1">
-      Bernard Grofman, a UC-Irvine political scientist, and Jonathan Cervas, a Carnegie Mellon postdoctoral fellow and redistricting expert, were appointed by the Wisconsin Supreme Court to review and possibly redraw the state’s legislative maps. Both are regarded as nonpartisan specialists with extensive experience in redistricting cases across the country, including Virginia, Pennsylvania, and New York. Tasked with ensuring population equality, compliance with the Voting Rights Act, and neutrality regarding partisan advantage, they could recommend adjustments to submitted proposals—or create their own maps—though their role has sparked criticism from some justices who argue the decision hands too much power to unelected outsiders.
+ Bernard Grofman, a UC-Irvine political scientist, and Jonathan Cervas, a Carnegie Mellon postdoctoral fellow and redistricting expert, were appointed by the Wisconsin Supreme Court to review and possibly redraw the state’s legislative maps. Both are regarded as nonpartisan specialists with extensive experience in redistricting cases across the country, including Virginia, Pennsylvania, and New York. Tasked with ensuring population equality, compliance with the Voting Rights Act, and neutrality regarding partisan advantage, they could recommend adjustments to submitted proposals—or create their own maps—though their role has sparked criticism from some justices who argue the decision hands too much power to unelected outsiders.
     </p>
     <p class="p1">
-      <a class="cta" href="https://www.jsonline.com/story/news/politics/2024/01/02/wisconsins-new-maps-could-come-down-to-two-experts-who-are-they/72048291007/">
-        Read more at the Milwaukee Journal Sentinel
-      </a>
+ <a class="cta" href="https://www.jsonline.com/story/news/politics/2024/01/02/wisconsins-new-maps-could-come-down-to-two-experts-who-are-they/72048291007/">
+   Read more at the Milwaukee Journal Sentinel
+ </a>
     </p>
   </div>
 
@@ -52,12 +79,12 @@ title: "Media Appearances"
     <h3><span>Who is the man tasked with redrawing New York’s new district lines?</span></h3>
     <div class="sub">City & State New York</div>
     <p class="p1">
-      Jonathan Cervas, a Carnegie Mellon postdoctoral fellow and redistricting expert, was appointed by a New York court as special master to redraw the state’s congressional and senate maps after the previous ones were struck down. Though not widely known, he brings extensive experience from redistricting work in Pennsylvania, Utah, Virginia, and Georgia, where he earned praise for fairness and technical skill. This marks his first time leading the process solo, and his academic background in political science and mapping technology underscores his reputation as a nonpartisan specialist focused on strengthening democracy.
+ Jonathan Cervas, a Carnegie Mellon postdoctoral fellow and redistricting expert, was appointed by a New York court as special master to redraw the state’s congressional and senate maps after the previous ones were struck down. Though not widely known, he brings extensive experience from redistricting work in Pennsylvania, Utah, Virginia, and Georgia, where he earned praise for fairness and technical skill. This marks his first time leading the process solo, and his academic background in political science and mapping technology underscores his reputation as a nonpartisan specialist focused on strengthening democracy.
     </p>
     <p class="p1">
-      <a class="cta" href="https://www.jsonline.com/story/news/politics/2024/01/02/wisconsins-new-maps-could-come-down-to-two-experts-who-are-they/72048291007/">
-        Read more at City & State New York
-      </a>
+ <a class="cta" href="https://www.jsonline.com/story/news/politics/2024/01/02/wisconsins-new-maps-could-come-down-to-two-experts-who-are-they/72048291007/">
+   Read more at City & State New York
+ </a>
     </p>
   </div>
 
