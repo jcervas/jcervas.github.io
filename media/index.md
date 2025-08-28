@@ -7,7 +7,7 @@ title: "Media"
   <h2 class="h2">Media</h2>
 </div>
 
-<link rel="stylesheet" media="all" href="https://www.cmu.edu/news/themes/cmu2019/dist/css/main.css?t1nrtl">
+<!-- <link rel="stylesheet" media="all" href="https://www.cmu.edu/news/themes/cmu2019/dist/css/main.css?t1nrtl">
 
 <details class="details">
   <summary class="details__summary">Media Inquiries</summary>
@@ -34,7 +34,7 @@ title: "Media"
 </address>
 </div>
 </div>
-</details>
+</details> -->
 
 <h2 class="grid__box__eyebrow text-align-center">Featured &amp; Media</h2>
 
