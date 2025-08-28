@@ -1,10 +1,10 @@
 ---
 layout: subpage
-title: "Media Appearances"
+title: "Media"
 ---
 
 <div class="Section__header flush">
-  <h2 class="h2">Media Appearances</h2>
+  <h2 class="h2">Media</h2>
 </div>
 
 <details class="details" open="">
@@ -33,6 +33,8 @@ title: "Media Appearances"
 </div>
 </div>
 </details>
+
+<h2 class="grid__box__eyebrow text-align-center">Featured &amp; Media</h2>
 
 <div class="items items-descriptions">
 
@@ -87,14 +89,12 @@ title: "Media Appearances"
  </a>
     </p>
   </div>
-
-  
-
 </div>
 
-## Media Mentions & Features
+<h2 class="grid__box__eyebrow text-align-center">Media Mentions</h2>
 
-### 2024–2025
+
+## 2024–2025
 
 - **Aug 21, 2025** - The Texas Tribune: [Lawmakers are debating GOP congressional maps. What does redistricting mean for Texans?](https://www.texastribune.org/2025/08/21/texas-redistricting-congressional-map-texans/)
   - *With so many different communities across Texas — and so many possible ways to draw boundaries between them — Cervas said there’s no one way to perfectly draw the state’s 38 congressional districts. Even attempting to draw more uniform districts could be flawed because “communities don't always line up perfectly in squares and grids,” he said.*<br>*But partisan gerrymandering hurts representation, Cervas argued, while striving to create politically neutral districts built around a community’s needs and composition tends to create more electoral competition. The latter gives voters more of a say over who represents them and their concerns, he said.*<br>*“Democracy relies on people having the ability to make choices about who represents them,” he said. “And when we gerrymander, we lose that ability, and it doesn't matter whether it's Democrats or Republicans or African Americans or Hispanics or even if it's white voters, it doesn't matter who is the one on the losing end. It's bad for democracy.”*
@@ -126,13 +126,13 @@ title: "Media Appearances"
 
 - **Dec 22, 2023** — WPR: “Wisconsin Supreme Court overturns Republican-drawn legislative maps.” (explains the ruling that led to hiring you as a consultant)  
 
-### 2023
+## 2023
 - **May 14, 2023** - Pittsburgh Post-Gazette: [The race for Allegheny County executive ‘is really Sara’s to lose’](https://www.post-gazette.com/news/politics-local/2023/05/14/sara-innamorato-2023-allegheny-county-executive-race/stories/202305140104?cid=search)
 - **Feb 1, 2023** - Pittsburgh Post-Gazette: [The 2023 primary elections will test the strength of Pittsburgh-area progressives](https://www.post-gazette.com/news/politics-local/2023/02/01/pittsburgh-allegheny-county-2023-primary-elections-voters/stories/202301310119?cid=search)
 
 - **** - Pittsburgh Post-Gazette: [Strange bedfellows: Primary loss forces Zappala to forge unconventional alliances](https://www.post-gazette.com/news/politics-local/2023/08/18/district-attorney-race-zappala-dugan-election-republican-democrat-forward/stories/202308180104?cid=search)
 
-### 2022 (New York Special Master & Aftermath)
+## 2022 (New York Special Master & Aftermath)
 
 - **Sep 4, 2022** — Pittsburgh Post-Gazette: [Jonathan Cervas’ quest to make government represent the voters.](https://www.post-gazette.com/news/politics-state/2022/09/04/jonathan-cervas-carnegie-mellon-census-redistricting-pa-legislative-districts/stories/202208310151)  
   
@@ -159,7 +159,7 @@ title: "Media Appearances"
 - **May 21, 2022** — THE CITY: [Have I Been Redistricted?](https://www.thecity.nyc/politics/2022/5/21/23136032/final-new-york-district-maps-chaotic-election-season) (explains that the 2022 NY congressional & senate districts were created by a court-appointed special master—i.e., you)  
   
 
-### 2021
+## 2021
 
 - **Oct 28l, 2021** - Pittsburgh Post-Gazette: [Despite transparency vows, much of Pa.’s redistricting still takes place behind closed doors](https://www.post-gazette.com/news/politics-state/2021/10/28/pennsylvania-congressional-redistricting-2021-nordenberg-pa-transparency/stories/202110280118?cid=search)
 
@@ -168,11 +168,11 @@ title: "Media Appearances"
 - **Aug 2021** — Pennsylvania Capital-Star: [Pa. redistricting is poised to be transparent. Will it be fair?](https://www.penncapital-star.com/government-politics/pa-redistricting-is-poised-to-be-transparent-will-it-be-fair/)  
   
 
-### University/Institution Coverage
+## 2020
+
+- **Oct 25, 2020** - Pittsburgh Post-Gazette: [In race between Conor Lamb and Sean Parnell, a referendum on a moderate Democrat in Trump's Washington](https://www.post-gazette.com/news/politics-nation/2020/10/25/Conor-Lamb-Sean-Parnell-17th-Congressional-District-Trump-Pelosi/stories/202010250003?cid=search) 
+- 
+
+<h2 class="grid__box__eyebrow text-align-center">University &amp; Institution Coverage</h2>
 
 - **Apr 21, 2022** — UC Irvine Social Sciences: [Meet the scholar redistricting New York: UCI alumnus Jonathan Cervas named special master.](https://www.socsci.uci.edu/newsevents/news/2022/2022-04-21-cervas.php)  
-  
-
-### 2020
-
-- **Oct 25, 2020** - Pittsburgh Post-Gazette: [In race between Conor Lamb and Sean Parnell, a referendum on a moderate Democrat in Trump's Washington](https://www.post-gazette.com/news/politics-nation/2020/10/25/Conor-Lamb-Sean-Parnell-17th-Congressional-District-Trump-Pelosi/stories/202010250003?cid=search)
