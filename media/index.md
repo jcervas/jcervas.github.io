@@ -90,15 +90,12 @@ title: "Media"
     </p>
   </div>
 
-
-
-
 <h2 class="grid__box__eyebrow text-align-center">Media Mentions</h2>
 
 
 ## 2024–2025
 
-- **Aug 23, 2025*** - Straight Arrow News: [Texas’ new congressional map heads to Gov. Abbott’s desk](https://san.com/cc/texas-new-congressional-map-heads-to-gov-abbotts-desk/)
+- **Aug 23, 2025** - Straight Arrow News: [Texas’ new congressional map heads to Gov. Abbott’s desk](https://san.com/cc/texas-new-congressional-map-heads-to-gov-abbotts-desk/)
   - *Straight Arrow News spoke with Jonathan Cervas, an assistant teaching professor at Carnegie Mellon University and contributor to Princeton’s Gerrymandering Project, about the impact of Texas’ new congressional map. “In addition to a potential violation of the Voting Rights Act, this might be viewed in federal court as an intentional act to decrease minority representation, which would be a violation of the 14th Amendment,” Cervas said.*
   - *Cervas, meanwhile, described the new map as “perhaps the most biased map in modern American history.” He added that nearly half of Texas voters have a “diluted vote,” meaning their vote is useless against the majority party. “Nearly 100% of the population growth in Texas has come from minority populations,” Cervas said. “After the 2020 census, Texas got two additional congressional districts. Both of those districts were drawn so that white voters were able to elect candidates of their choice. This new map appears to have eroded representation for these voters, making it more difficult for people of color to elect candidates of their choice.*
 
