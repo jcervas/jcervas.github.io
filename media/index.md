@@ -7,7 +7,9 @@ title: "Media"
   <h2 class="h2">Media</h2>
 </div>
 
-<details class="details" open="">
+<link rel="stylesheet" media="all" href="/news/themes/cmu2019/dist/css/main.css?t1nrtl">
+
+<details class="details">
   <summary class="details__summary">Media Inquiries</summary>
   <div class="grid grid--column-3">
     <div>
