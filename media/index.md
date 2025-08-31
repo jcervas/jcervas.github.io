@@ -4,10 +4,8 @@ title: "Media"
 subtitle: "News coverage and mentions"
 ---
 
-## Media
-
 <!-- Optional collapsible contact section (allowed HTML in Markdown) -->
-<!--
+
 <details>
   <summary><strong>Media Inquiries</strong></summary>
 
@@ -15,7 +13,7 @@ subtitle: "News coverage and mentions"
 Assistant Teaching Professor  
 [Email](mailto:jcervas@andrew.cmu.edu) · [412-268-4519](tel:412-268-4519)
 </details>
--->
+
 
 ## Featured & Media
 
