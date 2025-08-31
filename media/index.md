@@ -9,9 +9,12 @@ subtitle: "News coverage and mentions"
 <details>
   <summary><strong>Media Inquiries</strong></summary>
 
-**Jonathan Cervas**  
-Assistant Teaching Professor  
-[Email](mailto:jcervas@andrew.cmu.edu) · [412-268-4519](tel:412-268-4519)
+<address>
+  <strong>Jonathan Cervas</strong><br>
+  Assistant Teaching Professor<br>
+  <a href="mailto:jcervas@andrew.cmu.edu">Email</a> · 
+  <a href="tel:4122684519">412-268-4519</a>
+</address>
 </details>
 
 
