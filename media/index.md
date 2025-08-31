@@ -1,6 +1,7 @@
 ---
 layout: subpage
 title: "Media"
+subtitle: "News coverage and mentions"
 ---
 
 ## Media
