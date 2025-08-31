@@ -1,24 +1,3 @@
-<!-- Random hero image -->
-<!-- {% assign images = "cervas-horiz-1.jpg,photo1.jpeg,photo2.jpeg,photo3.jpeg,photo4.jpeg,photo5.jpeg,photo6.jpeg,photo7.jpeg" | split: "," %}
-{% assign random_index = site.time | date: "%s" | modulo: images.size %}
-<div class="paragraph paragraph--type--homepage-hero paragraph--view-mode--default Hero Hero--home theme-dark">
-    <div class="Hero__wrapper">
-        <div class="Hero__wrapper">
-            <div class="Hero__background">
-                <picture>
-                    <img loading="lazy" srcset="{{ '/assets/photos/' | append: images[random_index] | relative_url }}" sizes="(min-width: 768px) 2200px, (min-width: 320px) 768px, 100vw" width="1920" height="1080" src="{{ '/assets/photos/' | append: images[random_index] | relative_url }}" alt="Cervas at work">
-                </picture>
-            </div>
-            <div class="Hero__main-content Common flush" data-animate="true" data-animation="fade-in-up">
-                <h1>{{% page.title %}}</h1>
-            </div>
-        </div>
-    </div>
-</div> -->
-
-
-
-
 <div class="paragraph paragraph--type--homepage-hero paragraph--view-mode--default Hero Hero--home theme-dark">
     <div class="Hero__wrapper">
         <div class="Hero__wrapper">
@@ -26,7 +5,7 @@
                 <div id="random-image"></div>
             </div>
             <div class="Hero__main-content Common flush" data-animate="true" data-animation="fade-in-up">
-                <h1>{{% page.title %}}</h1>
+                <h1>{{ page.title }}</h1>
             </div>
         </div>
     </div>
