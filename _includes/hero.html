@@ -38,7 +38,7 @@
   // Jekyll will expand this list when building the site
   const images = [
     {% for file in site.static_files %}
-      {% if file.path contains '/assets/images/media/' %}
+      {% if file.path contains '/assets/images/hero/' %}
         "{{ file.path }}"{% unless forloop.last %},{% endunless %}
       {% endif %}
     {% endfor %}
