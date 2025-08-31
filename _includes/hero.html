@@ -1,5 +1,5 @@
 <!-- Random hero image -->
-{% assign images = "cervas-horiz-1.jpg,photo1.jpeg,photo2.jpeg,photo3.jpeg,photo4.jpeg,photo5.jpeg,photo6.jpeg,photo7.jpeg" | split: "," %}
+<!-- {% assign images = "cervas-horiz-1.jpg,photo1.jpeg,photo2.jpeg,photo3.jpeg,photo4.jpeg,photo5.jpeg,photo6.jpeg,photo7.jpeg" | split: "," %}
 {% assign random_index = site.time | date: "%s" | modulo: images.size %}
 <div class="paragraph paragraph--type--homepage-hero paragraph--view-mode--default Hero Hero--home theme-dark">
     <div class="Hero__wrapper">
@@ -14,4 +14,40 @@
             </div>
         </div>
     </div>
+</div> -->
+
+
+
+
+<div class="paragraph paragraph--type--homepage-hero paragraph--view-mode--default Hero Hero--home theme-dark">
+    <div class="Hero__wrapper">
+        <div class="Hero__wrapper">
+            <div class="Hero__background">
+                <div id="random-image"></div>
+            </div>
+            <div class="Hero__main-content Common flush" data-animate="true" data-animation="fade-in-up">
+                <h1>{{% page.title %}}</h1>
+            </div>
+        </div>
+    </div>
 </div>
+
+
+
+<script>
+  // Jekyll will expand this list when building the site
+  const images = [
+    {% for file in site.static_files %}
+      {% if file.path contains '/assets/images/media/' %}
+        "{{ file.path }}"{% unless forloop.last %},{% endunless %}
+      {% endif %}
+    {% endfor %}
+  ];
+
+  // Pick a random image per page load
+  const randomIndex = Math.floor(Math.random() * images.length);
+  const img = document.createElement("img");
+  img.src = images[randomIndex];
+  img.alt = "Random featured image";
+  document.getElementById("random-image").appendChild(img);
+</script>
