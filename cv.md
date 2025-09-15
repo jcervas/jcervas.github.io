@@ -63,22 +63,11 @@
   </a>
   &nbsp;•&nbsp;
 
-  <!-- Google Scholar (book icon) -->
-  <a href="https://scholar.google.com/scholar?hl=en&q=Jonathan+R.+Cervas"
-     title="Google Scholar: Jonathan R. Cervas" style="text-decoration:none;">
-    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-         viewBox="0 0 24 24" fill="none" stroke="currentColor"
-         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-         style="vertical-align:text-bottom;margin-right:4px;">
-      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-      <path d="M4 4v15.5"></path>
-      <path d="M6.5 17A2.5 2.5 0 0 0 9 19.5V4A2 2 0 0 0 7 2H4"></path>
-    </svg>
-    Jonathan R. Cervas
-  </a>
-</p>
+  <!-- Google Scholar  -->
+  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><a href="https://scholar.google.com/scholar?hl=en&q=Jonathan+R.+Cervas"
+     title="Google Scholar: Jonathan R. Cervas" style="text-decoration:none;"></a><path d="M5.242 13.769L0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269zM12 10a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/></svg>
 
-<hr />
+
 
 ---
 
