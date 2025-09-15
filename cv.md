@@ -1,6 +1,6 @@
-# Curriculum Vitae
+# Jonathan Cervas
 
-**Jonathan Cervas**  
+**Curriculum Vitae**  
 *Revised September 2025*  
 
 ---
