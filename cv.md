@@ -1,7 +1,20 @@
-# Jonathan Cervas
+# Jonathan Robert Cervas
 
-**Curriculum Vitae**  
-*Revised September 2025*  
+Carnegie Mellon University  
+5000 Forbes Avenue  
+Posner Hall 374  
+Pittsburgh, PA 15213  
+
+📧 Email: [cervas@cmu.edu](mailto:cervas@cmu.edu)  
+🌐 Website: [jonathancervas.com](http://jonathancervas.com)  
+🐦 Twitter: [@cervasj](https://twitter.com/cervasj)  
+💻 GitHub: [jcervas](https://github.com/jcervas)  
+📚 Google Scholar: [Jonathan R. Cervas](https://scholar.google.com/scholar?hl=en&q=Jonathan+R.+Cervas)  
+
+---
+
+# Curriculum Vitae
+**Revised August 2024**
 
 ---
 
