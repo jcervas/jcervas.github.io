@@ -12,16 +12,17 @@
   <!-- Email -->
   <a href="mailto:cervas@cmu.edu" title="Email" style="text-decoration:none;">
     cervas@cmu.edu
-  </a>
+  </a>  
+  
   <!-- Website -->
   <a href="http://jonathancervas.com" title="Website" style="text-decoration:none;">
     jonathancervas.com
-  </a>
+  </a>  
 
   <!-- GitHub (generic code icon) -->
   <a href="https://github.com/jcervas" title="GitHub: jcervas" style="text-decoration:none;">
     jcervas
-  </a>
+  </a>  
 
   <!-- Google Scholar  -->
   <a href="https://scholar.google.com/scholar?hl=en&q=Jonathan+R.+Cervas"
