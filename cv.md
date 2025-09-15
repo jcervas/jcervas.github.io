@@ -1,15 +1,84 @@
-# Jonathan Robert Cervas
+<!-- Header -->
+<h1>Jonathan Robert Cervas</h1>
 
-Carnegie Mellon University  
-5000 Forbes Avenue  
-Posner Hall 374  
-Pittsburgh, PA 15213  
+<p>
+  Carnegie Mellon University<br>
+  5000 Forbes Avenue<br>
+  Posner Hall 374<br>
+  Pittsburgh, PA 15213
+</p>
 
-📧 Email: [cervas@cmu.edu](mailto:cervas@cmu.edu)  
-🌐 Website: [jonathancervas.com](http://jonathancervas.com)  
-🐦 Twitter: [@cervasj](https://twitter.com/cervasj)  
-💻 GitHub: [jcervas](https://github.com/jcervas)  
-📚 Google Scholar: [Jonathan R. Cervas](https://scholar.google.com/scholar?hl=en&q=Jonathan+R.+Cervas)  
+<p>
+  <!-- Email -->
+  <a href="mailto:cervas@cmu.edu" title="Email" style="text-decoration:none;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+         style="vertical-align:text-bottom;margin-right:4px;">
+      <path d="M4 4h16v16H4z"></path>
+      <path d="M22 6l-10 7L2 6"></path>
+    </svg>
+    cervas@cmu.edu
+  </a>
+  &nbsp;•&nbsp;
+
+  <!-- Website -->
+  <a href="http://jonathancervas.com" title="Website" style="text-decoration:none;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+         style="vertical-align:text-bottom;margin-right:4px;">
+      <circle cx="12" cy="12" r="10"></circle>
+      <path d="M2 12h20"></path>
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+    </svg>
+    jonathancervas.com
+  </a>
+  &nbsp;•&nbsp;
+
+  <!-- Twitter handle (brand-neutral icon) -->
+  <a href="https://twitter.com/cervasj" title="Twitter: @cervasj" style="text-decoration:none;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+         style="vertical-align:text-bottom;margin-right:4px;">
+      <circle cx="12" cy="12" r="10"></circle>
+      <path d="M8 12h8"></path>
+      <path d="M12 8v8"></path>
+    </svg>
+    @cervasj
+  </a>
+  &nbsp;•&nbsp;
+
+  <!-- GitHub (generic code icon) -->
+  <a href="https://github.com/jcervas" title="GitHub: jcervas" style="text-decoration:none;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+         style="vertical-align:text-bottom;margin-right:4px;">
+      <path d="M16 18l6-6-6-6"></path>
+      <path d="M8 6l-6 6 6 6"></path>
+    </svg>
+    jcervas
+  </a>
+  &nbsp;•&nbsp;
+
+  <!-- Google Scholar (book icon) -->
+  <a href="https://scholar.google.com/scholar?hl=en&q=Jonathan+R.+Cervas"
+     title="Google Scholar: Jonathan R. Cervas" style="text-decoration:none;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+         style="vertical-align:text-bottom;margin-right:4px;">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+      <path d="M4 4v15.5"></path>
+      <path d="M6.5 17A2.5 2.5 0 0 0 9 19.5V4A2 2 0 0 0 7 2H4"></path>
+    </svg>
+    Jonathan R. Cervas
+  </a>
+</p>
+
+<hr />
 
 ---
 
