@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 <!-- Header -->
 <h1>Jonathan Robert Cervas</h1>
 
@@ -27,6 +28,14 @@
   <!-- Google Scholar  -->
   <a href="https://scholar.google.com/scholar?hl=en&q=Jonathan+R.+Cervas"
      title="Google Scholar: Jonathan R. Cervas" style="text-decoration:none;"></a>
+=======
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+# Jonathan Robert Cervas
+>>>>>>> Stashed changes
 
 
 
