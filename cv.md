@@ -11,24 +11,23 @@
 
 <p>
   <!-- Email -->
-  <a href="mailto:cervas@cmu.edu" title="Email" style="text-decoration:none;">
+  <a href="mailto:cervas@cmu.edu">
     cervas@cmu.edu
   </a>    
 </p>
   
   <!-- Website -->
-  <a href="http://jonathancervas.com" title="Website" style="text-decoration:none;">
+  <a href="http://jonathancervas.com">
     jonathancervas.com
   </a>    
 
   <!-- GitHub (generic code icon) -->
-  <a href="https://github.com/jcervas" title="GitHub: jcervas" style="text-decoration:none;">
+  <a href="https://github.com/jcervas">
     jcervas
   </a>    
 
   <!-- Google Scholar  -->
-  <a href="https://scholar.google.com/scholar?hl=en&q=Jonathan+R.+Cervas"
-     title="Google Scholar: Jonathan R. Cervas" style="text-decoration:none;"></a>  
+  <a href="https://scholar.google.com/scholar?hl=en&q=Jonathan+R.+Cervas"></a>  
 </p>
 
 ---
