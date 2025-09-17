@@ -1,7 +1,8 @@
 
 <!-- Header -->
 # Jonathan Robert Cervas
-
+**Curriculum Vitae**
+*Revised September 2025*
 
   Carnegie Mellon University  
   5000 Forbes Avenue  
@@ -16,8 +17,7 @@
 
 ---
 
-## Curriculum Vitae
-**Revised September 2025**
+
 
 ---
 
