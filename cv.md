@@ -14,11 +14,6 @@
 > [Github: jcervas](https://github.com/jcervas)  
 > [Google Scholar: Jonathan Cervas](https://scholar.google.com/citations?user=ZFLIcZ0AAAAJ&hl=en&inst=3203679203499159833&oi=ao)  
 
-
----
-
-
-
 ---
 
 ## Employment
