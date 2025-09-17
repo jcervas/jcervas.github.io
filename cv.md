@@ -28,7 +28,7 @@
   <!-- Google Scholar  -->
   <a href="https://scholar.google.com/scholar?hl=en&q=Jonathan+R.+Cervas"
      title="Google Scholar: Jonathan R. Cervas" style="text-decoration:none;"></a>  
-
+</p>
 
 ---
 
