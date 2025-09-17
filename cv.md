@@ -1,13 +1,13 @@
-<<<<<<< Updated upstream
-<!-- Header -->
-<h1>Jonathan Robert Cervas</h1>
 
-<p>
-  Carnegie Mellon University<br>
-  5000 Forbes Avenue<br>
-  Posner Hall 374<br>
-  Pittsburgh, PA 15213
-</p>
+<!-- Header -->
+# Jonathan Robert Cervas
+
+
+  Carnegie Mellon University  
+  5000 Forbes Avenue  
+  Posner Hall 374   
+  Pittsburgh, PA 15213  
+
 
 <p>
   <!-- Email -->
@@ -28,15 +28,6 @@
   <!-- Google Scholar  -->
   <a href="https://scholar.google.com/scholar?hl=en&q=Jonathan+R.+Cervas"
      title="Google Scholar: Jonathan R. Cervas" style="text-decoration:none;"></a>
-=======
----
-output:
-  pdf_document: default
-  html_document: default
----
-# Jonathan Robert Cervas
->>>>>>> Stashed changes
-
 
 
 ---
