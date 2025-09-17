@@ -14,6 +14,7 @@
   <a href="mailto:cervas@cmu.edu" title="Email" style="text-decoration:none;">
     cervas@cmu.edu
   </a>    
+</p>
   
   <!-- Website -->
   <a href="http://jonathancervas.com" title="Website" style="text-decoration:none;">
