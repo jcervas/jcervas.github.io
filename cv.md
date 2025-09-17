@@ -8,27 +8,11 @@
   Posner Hall 374   
   Pittsburgh, PA 15213  
 
+> [Email: cervas@cmu.edu](mailto:cervas@cmu.edu)  
+> [Website: jonathancervas.com](http://jonathancervas.com)  
+> [Github: jcervas](https://github.com/jcervas)  
+> [Google Scholar: Jonathan Cervas](https://scholar.google.com/citations?user=ZFLIcZ0AAAAJ&hl=en&inst=3203679203499159833&oi=ao)  
 
-<p>
-  <!-- Email -->
-  <a href="mailto:cervas@cmu.edu">
-    cervas@cmu.edu
-  </a>    
-</p>
-  
-  <!-- Website -->
-  <a href="http://jonathancervas.com">
-    jonathancervas.com
-  </a>    
-
-  <!-- GitHub (generic code icon) -->
-  <a href="https://github.com/jcervas">
-    jcervas
-  </a>    
-
-  <!-- Google Scholar  -->
-  <a href="https://scholar.google.com/scholar?hl=en&q=Jonathan+R.+Cervas"></a>  
-</p>
 
 ---
 
