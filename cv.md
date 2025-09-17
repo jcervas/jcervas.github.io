@@ -82,23 +82,31 @@
 ---
 
 ## Other Publications
-- *Report of the Court-Appointed Co-Consultants in re Clarke v. Wisconsin Elections Commission* (2024). [Read Online](https://jonathancervas.com/2024/WI/Grofman-Cervas-Consultant.pdf)  
-- *Partisan Gerrymandering.* In R.M. Jong-A-Pin (ed.), 2023.  
-- *Memo in Support of Grofman/Cervas/Griggy Remedial Proposals.* U.S. District Court, N.D. Alabama, 2023. [Read Online](http://jonathancervas.com/2023/AL/memo.pdf)  
-- *Amicus Brief in Support of Neither Party.* State of New Mexico (2023). [Read Online](https://jonathancervas.com/2023/NM/NM-amicus.pdf)  
-- *Report of the Special Master (Harkinrider v. Hochel)* (2022). [Read Online](http://jonathancervas.com/2022/NY/CERVAS-SM-NY-2022.pdf)  
-- *Fracking: A Contiguity-Related Redistricting Metric.* Election Law Blog (2021). [Read Online](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3918044)  
-- … *(continue list as in CV)*  
 
----
+### 2024
+- *Report of the Court-Appointed Co-Consultants in re Clarke v. Wisconsin Elections Commission* (Case Number 2023Ap1399-Oa, 2023 Wi 79). [Read Online]  
 
-## In Progress
-- *Book Manuscript – Electoral College*  
-- *Can State Courts Constrain Partisan Gerrymandering in Congressional Elections?* (accepted, NH Law Review)  
-- *Recent Approaches to the Definition and Measurement of Compactness.* [Read Draft](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3919249)  
-- *Fracking: A Contiguity-Related Redistricting Metric.* [Read Draft](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3877631)  
-- *Fallacies in Statistically-Based Claims about Massive Election Fraud in 2020.* [Read Draft](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3794738)  
-- … *(continue all entries from CV)*  
+### 2023
+- *Partisan Gerrymandering.* Eds., R.M. Jong-A-Pin.  
+- *Memo in Support of Grofman/Cervas/Griggy Remedial Proposals.* U.S. District Court for the Northern District of Alabama, Southern Division. [Read Online]  
+- *Brief Of Amici Curiae Dr. Jonathan Cervas, Paul Mitchell, Dr. Samuel S.-H. Wang, Roderick Kennedy, Election Reformers Network, Common Cause New Mexico, and League Of Women Voters New Mexico In Support Of Neither Party.* State of New Mexico, County of Lea, Fifth Judicial District Court. Cervas, Jonathan et al. [Read Online]  
+
+### 2022
+- *Report of the Special Master (Harkinrider v. Hochel).* **Jonathan Cervas**. [Read Online]  
+
+### 2021
+- *Fracking: A Contiguity-Related Redistricting Metric.* **Jonathan Cervas** and Bernard Grofman. *Election Law Blog*. [Read Online]  
+- *Trump the Wrestler and the 2024 Grudge Match.* Bernard Grofman and **Jonathan Cervas**. [Read Online]  
+- *The GOP Scared Latinos from the Census. Now That May Cost the Party Red Seats.* Sam Wang and **Jonathan Cervas**. *Washington Post*. [Read Online]  
+- *Great Lobster and a More Equitable Voting System Exists in Maine.* Anjali Akula, **Jonathan Cervas**, and Elsie Goren. *Medium.com “3Streams”*. [Read Online]  
+
+### 2020
+- *Amicus Curiae with Princeton Electoral Innovation Lab.* [Read Online]  
+- *How Likely is Trump to Lose the Popular Vote but Win the Electoral College?* **Jonathan Cervas** and Bernard Grofman. *Medium.com “3Streams”*. [Read Online]  
+- *These Are the Political Consequences of Excluding Undocumented Immigrants from Apportionment.* Angela Ocampo and **Jonathan Cervas**. *Medium.com “3Streams”*. [Read Online]  
+
+### 2018
+- *Pennsylvania Has to Draw New Congressional Districts but Getting Rid of Gerrymandering Will Be Harder Than You Think.* Bernard Grofman and **Jonathan Cervas**. *The Washington Post*. [Read Online]  
 
 ---
 
@@ -126,11 +134,53 @@
 ---
 
 ## Invited Talks
-- *Disinformation and the Fight for Democracy*, University of Pittsburgh, July 15, 2025  
-- *Partisan & Racial Gerrymandering and the VRA*, New York Law School, Feb 19, 2025  
-- *NY Redistricting Conference: What Happened and What’s Next?* Keynote, New York Law School, June 18, 2024. [Remarks](http://jonathancervas.com/2024/NYLS/CERVAS-Keynote-Address.pdf)  
-- *When Third Parties Matter*, Niskanen Center, May 29, 2024. [Website](https://www.niskanencenter.org/when-third-parties-matter/)  
-- … *(continue full list from CV)*  
+
+### 2025
+- *Disinformation and the Fight for Democracy* — University of Pittsburgh, Hosted by Ralph L. Bangs, July 15, 2025.  
+- *Partisan & Racial Gerrymandering and the Voting Rights Act* — New York Law School, Hosted by Jeff Wice, February 19, 2025.  
+- *Gerrymandering and the Voting Rights Act: A Threat to Democracy?* — University of Pittsburgh, Hosted by Ralph L. Bangs, February 11, 2025.  
+- *Build a 2030 Redistricting Checklist* — National Conference of State Legislatures, NCSL Annual Summit, Louisville, KY, August 7, 2024.  
+- *NY Redistricting Conference: What Happened and What’s Next?* — Keynote Speaker, New York Law School, June 18, 2024. [Website] [Keynote Remarks]  
+
+### 2024
+- *When Third Parties Matter* — Niskanen Center, Hosted by Matt Grossman, May 29, 2024. [Website]  
+- *Elections and Voting* — Sacramento State University, Hosted by Hallee Caron, March 25, 2024.  
+- *Elections Redistricting and Voting Rights* — New York Law School, Hosted by Jeff Wice, February 21, 2024.  
+- *The Issues Shaping Attitudes Around the Election* — New York University School of Journalism, Hosted by Eliza Griswold and SpotlightPA, February 19, 2024.  
+
+### 2023
+- *Redistricting* — Carnegie Mellon University Osher Class, Hosted by Randy Weinberg, October 23, 2023.  
+- *Power to the People* at “A Path Towards Equality” — Hosted by SpotlightPA, October 11, 2023. [Website]  
+- *Elections Redistricting and Voting Rights* — New York Law School, Hosted by Jeff Wice, October 4, 2023.  
+- *Federal Appellate Advocacy* — University of Pittsburgh School of Law, Hosted by Hon. D. Michael Fisher, September 26, 2023.  
+- *Pennsylvania Redistricting: Lessons Learned and Next Steps for Reform* — Hosted by Common Cause PA, League of Women Voters PA, NAACP PA, Committee of Seventy, FairDistricts PA, and Pennsylvania Voice, May 31, 2023.  
+- *Voting Rights and Election Law* — Touro Law School, Hosted by Judge Phil Solages, May 4, 2023.  
+- *Remapping Democracy: Redistricting, Race, and Fair Elections in a Changing Legal Environment* — Government Law Review at Albany Law School, March 6, 2023. [Website]  
+
+### 2022
+- *Representation, Race, Redistricting* — CUNY Graduate School, Hosted by Keena Lipsitz and John Mollenkopf, November 17, 2022.  
+- *Voting Rights and Redistricting: Reshaping American Democracy* — New York Law School, Hosted by Jeff Wice, October 20, 2022.  
+- *Democracy Threatened: Will Your Vote Count?* — Great Issues Forum at Redeemer, October 12, 2022.  
+- *Contemporary Issues in Election Law* — New Hampshire Law School, Hosted by Kyle Kopko, October 7, 2022. [Website]  
+- *Voting Rights and Election Law* — Hofstra Law School, Hosted by Judge Phil Solages, September 12, 2022.  
+- *Measuring Compactness* — Pennsylvania Redistricting with Geographers: Communities of Interest Criteria and Beyond, American Association of Geographers. [Slides]  
+
+### 2021
+- *Voting Rights and Elections* — University of Texas at Austin, Hosted by Beto O’Rourke, Spring 2021.  
+- *Tools for Identifying a Partisan Gerrymander* — Princeton University Wintersession.  
+
+### 2019
+- *2019 NCSL Capitol Forum (Legislative Options for Redistricting Post-conference)* — National Conference of State Legislatures.  
+- *Redrawing the Virginia Legislative Map: The Bethune-Hill Racial Gerrymandering Case* — Princeton University.  
+
+### 2018
+- *Triple Play: Election 2018, Census 2020, and Redistricting 2021* — University of Houston, Hobby School.  
+
+### 2016
+- *Representation of Non-Eligible Resident Populations in Legislative Bodies* — Center for the Study of Democracy Graduate Student Conference, UC Irvine.  
+
+### 2015
+- *Asymmetry in State Grant Distribution: Why Proximity to the State Capital Matters* — Western Political Science Association, San Diego, California.  
 
 ---
 
