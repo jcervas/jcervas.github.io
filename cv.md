@@ -1,7 +1,7 @@
 
 <!-- Header -->
 # Jonathan Robert Cervas
-**Curriculum Vitae**
+**Curriculum Vitae**  
 *Revised September 2025*
 
   Carnegie Mellon University  
