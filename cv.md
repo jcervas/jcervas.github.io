@@ -43,6 +43,9 @@
 
 ## Publications
 
+### 2025
+- *Partisan Gerrymandering.* Eds., R.M. Jong-A-Pin. *Elgar Encyclopedia of Public Choice*. [Read Online (coming soon)](https://www.e-elgar.com/shop/usd/elgar-encyclopedia-of-public-choice-9781802207743.html?srsltid=AfmBOoqE_Ar_1jS0uMy6_vOiStQPLn9sWieYG5mt-I1SHPCpx8w5UYDy)]  
+
 ### 2024
 - *Statistical Fallacies in Claims about ‘Massive and Widespread Fraud’ in the 2020 Presidential Election.* Bernard Grofman and **Jonathan Cervas**. *Statistics and Public Policy*, 11(1). [Read Online](https://www.tandfonline.com/doi/full/10.1080/2330443X.2023.2289529)  
 
@@ -83,11 +86,13 @@
 
 ## Other Publications
 
+### 2025
+- 
+
 ### 2024
 - *Report of the Court-Appointed Co-Consultants in re Clarke v. Wisconsin Elections Commission* (Case Number 2023Ap1399-Oa, 2023 Wi 79). [Read Online]  
 
 ### 2023
-- *Partisan Gerrymandering.* Eds., R.M. Jong-A-Pin.  
 - *Memo in Support of Grofman/Cervas/Griggy Remedial Proposals.* U.S. District Court for the Northern District of Alabama, Southern Division. [Read Online]  
 - *Brief Of Amici Curiae Dr. Jonathan Cervas, Paul Mitchell, Dr. Samuel S.-H. Wang, Roderick Kennedy, Election Reformers Network, Common Cause New Mexico, and League Of Women Voters New Mexico In Support Of Neither Party.* State of New Mexico, County of Lea, Fifth Judicial District Court. Cervas, Jonathan et al. [Read Online]  
 
@@ -136,7 +141,8 @@
 ## Invited Talks
 
 ### 2025
-- *Disinformation and the Fight for Democracy* — University of Pittsburgh, Hosted by Ralph L. Bangs, July 15, 2025.  
+- *Mid-decade Redistricting* — New York Law School, Hosted by Jeff Wice, September 17, 2025.  
+-  *Disinformation and the Fight for Democracy* — University of Pittsburgh, Hosted by Ralph L. Bangs, July 15, 2025.  
 - *Partisan & Racial Gerrymandering and the Voting Rights Act* — New York Law School, Hosted by Jeff Wice, February 19, 2025.  
 - *Gerrymandering and the Voting Rights Act: A Threat to Democracy?* — University of Pittsburgh, Hosted by Ralph L. Bangs, February 11, 2025.  
 - *Build a 2030 Redistricting Checklist* — National Conference of State Legislatures, NCSL Annual Summit, Louisville, KY, August 7, 2024.  
