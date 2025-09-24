@@ -141,6 +141,7 @@
 ## Invited Talks
 
 ### 2025
+- **What’s the Story with Redistricting?** - Heinz School of Public Policy, Policy and Politics Group, September 24, 2025.  
 - *Mid-decade Redistricting* — New York Law School, Hosted by Jeff Wice, September 17, 2025.  
 -  *Disinformation and the Fight for Democracy* — University of Pittsburgh, Hosted by Ralph L. Bangs, July 15, 2025.  
 - *Partisan & Racial Gerrymandering and the Voting Rights Act* — New York Law School, Hosted by Jeff Wice, February 19, 2025.  
