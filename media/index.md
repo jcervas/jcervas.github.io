@@ -59,6 +59,9 @@ Jonathan Cervas, a Carnegie Mellon postdoctoral fellow and redistricting expert,
 
 ### 2024–2025
 
+- ** Oct 7, 2025** - *AP*: [Democrats could have a slight shot at flipping a US House seat in Utah under a new congressional map](https://apnews.com/article/utah-congressional-map-redistricting-democrats-5247fd0d90b5414fbfb393b3ff4e0bdd), by Hannah Schoenbaum
+  *Jonathan Cervas, a redistricting expert at Carnegie Mellon University, ran data from past elections in Utah against the redrawn map and found that Democrats would lose every time. That indicates that the map is uncompetitive, he said.*  
+  *“Although it’s not as competitive as I think the plaintiffs would want, I think it’s far better than the map that currently exists — a stark improvement,” Cervas said.* 
 - **Oct 1, 2025** - *City & State PA*: [What America’s ongoing redistricting war could mean for Pennsylvania
 Pennsylvania is unlikely to redraw congressional maps mid-decade, but that doesn’t negate the need for redistricting reforms, advocates say.](https://www.cityandstatepa.com/politics/2025/10/what-americas-ongoing-redistricting-war-could-mean-pennsylvania/408527/?oref=cspa-homepage-river)
   *“There’s one special reason why there’s not going to be anything in Pennsylvania, and that’s because Pennsylvania is one of only, I think, two states in the country that has a divided government,” said Jonathan Cervas, a professor at Carnegie Mellon University who specializes in redistricting and voting rights. “There’s been a stalemate on even passing the basic state budget. So the idea that we would have an agreement from both branches of the legislature and the governor on a new redistricting plan seems very unlikely – exceedingly unlikely.”*  
