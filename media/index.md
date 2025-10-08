@@ -70,37 +70,32 @@ Jonathan Cervas, a Carnegie Mellon postdoctoral fellow and redistricting expert,
   *Cervas described the new map as “perhaps the most biased map in modern American history.” … “Nearly 100% of the population growth in Texas has come from minority populations,” Cervas said…*
 
 - **Aug 21, 2025** — *The Texas Tribune*: [Lawmakers are debating GOP congressional maps. What does redistricting mean for Texans?](https://www.texastribune.org/2025/08/21/texas-redistricting-congressional-map-texans/)
-
 - **Aug 8, 2025** — *Salon*: [GOP power grab puts voting rights advocates in a bind](https://www.salon.com/2025/08/08/gop-power-grab-puts-anti-gerrymandering-advocates-in-a-bind/)
-
 - **Aug 5, 2025** — *The Hill*: [California, New York signal they’re moving forward with redistricting](https://thehill.com/homenews/campaign/5437566-california-new-york-redistricting/)
-
 - **Jul 15, 2025** — *Here & Now, NPR*: [Texas is weighing a new plan for redistricting as part of a special summer session](https://www.wbur.org/hereandnow/2025/07/15/texas-redistricting)
-
 - **Mar 20, 2025** — *Pittsburgh Post-Gazette*: [PG Politics: What 2021 turnout…](https://www.post-gazette.com/news/politics-local/2025/03/20/pittsburgh-mayor-primary-voter-turnout/stories/202503190073?cid=search)
-
 - **Mar 6, 2025** — *Pittsburgh Post-Gazette*: [PG Politics: What to make of…](https://www.post-gazette.com/news/politics-local/2025/03/06/pittsburgh-mayor-gainey-oconnor-donors/stories/202503060093)
 
+### 2024
+
 - **Sep 19, 2024** — *Pittsburgh Post-Gazette*: [Curiosity and controversy…](https://www.post-gazette.com/news/election-2024/2024/09/19/pittsburgh-college-voters-pitt-carnegie-mellon-duquesne/stories/202409170220?cid=search)
-
-- **Dec 10, 2024** — CMU feature: *Across Political Divides…*
-
+- **Dec 10, 2024** — CMU feature: [Across Political Divides: Jonathan Cervas Bridges Ideological Differences with Discussions and Data](https://www.cmu.edu/cmist/news-events/news/2024/december/across-political-divides-jonathan-cervas-bridges-ideological-differences.html)
 - **Oct 6, 2024** — *Pittsburgh Post-Gazette*: [How to avoid getting misled by political polls](https://www.post-gazette.com/news/election-2024/2024/10/06/political-polling-stories-margin-or-error-candidate-leads/stories/202410040076?cid=search)
-
 - **Jun 24, 2024** — *PBS Wisconsin*: Wisconsin taxpayers to pay half of redistricting consultant costs.
-
 - **Feb 9, 2024** — *WPR*: Wisconsin Republicans seek to subpoena Supreme Court redistricting consultants.
-
 - **Feb 1, 2024** — *PBS Wisconsin*: Redistricting experts tell Wisconsin Supreme Court that Republican district map proposals are gerrymanders.  
 - **Feb 1, 2024** — *AP News*: Redistricting experts submit $128K bill for review of Wisconsin legislative maps.  
 - **Jan 4, 2024** — *WPR*: Consultants hired to oversee Wisconsin redistricting could get up to $100K apiece.  
-- **Jan 2024** — CMU story: Redrawing Lines…  
-- **Dec 22, 2023** — *WPR*: Wisconsin Supreme Court overturns Republican-drawn legislative maps.
+- **Jan 23, 2024** — CMU story: [Redrawing Lines: Jonathan Cervas Evaluates Wisconsin's Legislative Maps](https://www.cmu.edu/cmist/news-events/news/2024/january/redrawing-lines-jonathan-cervas-evaluates-wisconsins-legislative-maps.html)  
+
 
 ### 2023
+
+- **Dec 22, 2023** — *WPR*: Wisconsin Supreme Court overturns Republican-drawn legislative maps.
+- **Aug 18, 2023** — *Pittsburgh Post-Gazette*: [Strange bedfellows…](https://www.post-gazette.com/news/politics-local/2023/08/18/district-attorney-race-zappala-dugan-election-republican-democrat-forward/stories/202308180104?cid=search)
 - **May 14, 2023** — *Pittsburgh Post-Gazette*: [The race for Allegheny County executive…](https://www.post-gazette.com/news/politics-local/2023/05/14/sara-innamorato-2023-allegheny-county-executive-race/stories/202305140104?cid=search)
 - **Feb 1, 2023** — *Pittsburgh Post-Gazette*: [The 2023 primary elections…](https://www.post-gazette.com/news/politics-local/2023/02/01/pittsburgh-allegheny-county-2023-primary-elections-voters/stories/202301310119?cid=search)
-- **Aug 18, 2023** — *Pittsburgh Post-Gazette*: [Strange bedfellows…](https://www.post-gazette.com/news/politics-local/2023/08/18/district-attorney-race-zappala-dugan-election-republican-democrat-forward/stories/202308180104?cid=search)
+
 
 ### 2022 (New York Special Master & Aftermath)
 - **Sep 4, 2022** — *Pittsburgh Post-Gazette*: [Jonathan Cervas’ quest to make government represent the voters.](https://www.post-gazette.com/news/politics-state/2022/09/04/jonathan-cervas-carnegie-mellon-census-redistricting-pa-legislative-districts/stories/202208310151)  
