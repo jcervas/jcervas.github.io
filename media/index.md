@@ -114,6 +114,8 @@ Jonathan Cervas, a Carnegie Mellon postdoctoral fellow and redistricting expert,
 - **May 9, 2022** — *Bloomberg Government*: [New York’s Redistricting Master Holds Key…](https://about.bgov.com/insights/news/new-yorks-redistricting-master-holds-key-to-congressional-power/)  
 - **Apr 29, 2022** — *NY1*: [Special master has to act fast…](https://www.ny1.com/nyc/all-boroughs/politics/2022/04/29/special-master-has-to-act-fast-on-new-legislative-maps)  
 - **Apr 28, 2022** — *City & State New York*: [Who is the man tasked with redrawing New York’s new district lines?](https://www.cityandstateny.com/politics/2022/04/who-man-tasked-redrawing-new-yorks-new-district-lines/365858/)
+- **Apr 28, 2022** - *New York Post*: [Control of Congress could hinge on this redistricting ‘special master’ in NY](https://nypost.com/2022/04/28/control-of-congress-could-hinge-on-this-redistricting-special-master-in-ny/)
+  - *“I am thrilled to assist the New York courts in delivering constitutional maps that will provide equal representation for all New York residents for the next decade,” Cervas said in a brief statement to The Post.*
 
 ### 2021
 - **Oct 28, 2021** — *Pittsburgh Post-Gazette*: [Despite transparency vows…](https://www.post-gazette.com/news/politics-state/2021/10/28/pennsylvania-congressional-redistricting-2021-nordenberg-pa-transparency/stories/202110280118?cid=search)  
