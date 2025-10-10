@@ -97,11 +97,13 @@ Jonathan Cervas, a Carnegie Mellon postdoctoral fellow and redistricting expert,
 - **Feb 1, 2023** — *Pittsburgh Post-Gazette*: [The 2023 primary elections…](https://www.post-gazette.com/news/politics-local/2023/02/01/pittsburgh-allegheny-county-2023-primary-elections-voters/stories/202301310119?cid=search)
 
 
-### 2022 (New York Special Master & Aftermath)
+### 2022
+
 - **Sep 4, 2022** — *Pittsburgh Post-Gazette*: [Jonathan Cervas’ quest to make government represent the voters.](https://www.post-gazette.com/news/politics-state/2022/09/04/jonathan-cervas-carnegie-mellon-census-redistricting-pa-legislative-districts/stories/202208310151)  
 - **Jul 19, 2022** — *Washington Monthly*: [The Man Behind New York’s Controversial Congressional Map.](https://washingtonmonthly.com/2022/07/19/the-man-behind-new-yorks-controversial-congressional-map/)  
 - **Jun 3, 2022** — *Albany Times Union*: [State to pay $147,000…](https://www.timesunion.com/state/article/State-to-pay-147-000-for-special-master-and-17213013.php)  
-- **May 21, 2022** — *THE CITY*: [Final New York District Maps…](https://www.thecity.nyc/politics/2022/5/21/23136032/final-new-york-district-maps-chaotic-election-season)  
+- **May 29, 2022** - **The Hill**: *Opinion*: [Gerrymandering, a legal form of vote stealing, more entrenched now than ever](https://thehill.com/opinion/campaign/3505157-gerrymandering-a-legal-form-of-vote-stealing-more-entrenched-now-than-ever/)
+-  **May 21, 2022** — *THE CITY*: [Final New York District Maps…](https://www.thecity.nyc/politics/2022/5/21/23136032/final-new-york-district-maps-chaotic-election-season)  
 - **May 21, 2022** — *PoliticsNY*: [Final congressional and senate district maps set.](https://politicsny.com/2022/05/21/final-congressional-and-senate-district-maps-set/)  
 - **May 17, 2022** — *Wall Street Journal*: [New York’s Gerrymander Boomerang…](https://www.wsj.com/opinion/new-yorks-gerrymander-boomerang-albany-special-master-redistricting-map-jonathan-cervas-democrats-11652818602)  
 - **May 16, 2022** — *THE CITY*: [Special Master Carves Up…](https://www.thecity.nyc/politics/2022/5/16/23100628/special-master-carves-up-new-york-congressional-state-senate-seats-new-maps)  
