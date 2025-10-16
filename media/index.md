@@ -59,7 +59,7 @@ Jonathan Cervas, a Carnegie Mellon postdoctoral fellow and redistricting expert,
 
 ### 2024–2025
 
-- **Oct 16, 2025** - *AP*: [Supreme Court case could lead to loss of Black representation in Congress, but the scope is unknown](https://abcnews.go.com/US/wireStory/supreme-court-case-lead-loss-black-representation-congress-126566427)
+- **Oct 16, 2025** - *AP*: [Supreme Court case could lead to loss of Black representation in Congress, but the scope is unknown](https://apnews.com/article/supreme-court-voting-rights-congress-black-districts-e3c2d1077f97800bfc3a1708c812a7e1), by Matt Brown, Gary Fields, and Nicholas Riccardi
   - *Even without the Voting Rights Act, Cervas said, there is no way for Republicans to make that Memphis seat red. If they scattered the city's voters among neighboring GOP-heavy districts, they might make those competitive.
   - *He said some other GOP-controlled states, such as Missouri and South Carolina, are in similar binds with their lone, heavily Democratic seats that were drawn to comply with the voting law. Others, like Georgia, are so politically competitive that it’s likely Republicans couldn't erase a Democratic seat in one part of the state without jeopardizing one of their own.**
   - *Still other GOP-controlled states, such as Mississippi, may have an easier time eliminating their lone Democratic, Voting Rights Act-mandated seat. And in larger states such as North Carolina and Florida, Republicans would have a freer hand to redraw the maps to favor their party without having to preserve majority-minority seats held by Democrats.*
