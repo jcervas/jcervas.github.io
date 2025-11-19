@@ -59,6 +59,9 @@ Jonathan Cervas, a Carnegie Mellon postdoctoral fellow and redistricting expert,
 
 ### 2024–2025
 
+- **November 19, 2025** - *AP*: [Why Trump’s plan to help GOP keep control of the House could backfire](https://apnews.com/article/trump-redistricting-gerrymandering-congress-texas-california-2c5587f38df6428953c15ed43d631e53), by Nicholas Riccardi
+  - *Incumbents also don’t like losing voters who have supported them or getting wholly new communities drawn into their districts, said Jonathan Cervas, who teaches redistricting at Carnegie Mellon University and has drawn new maps for courts.*
+  - *Cervas said that’s why it was striking to watch Trump push Republicans to dive into mid-decade redistricting. “The idea they’d go along to get along is basically crazy,” he said.*
 - **Oct 16, 2025** - *AP*: [Supreme Court case could lead to loss of Black representation in Congress, but the scope is unknown](https://apnews.com/article/supreme-court-voting-rights-congress-black-districts-e3c2d1077f97800bfc3a1708c812a7e1), by Matt Brown, Gary Fields, and Nicholas Riccardi
   - *Even without the Voting Rights Act, Cervas said, there is no way for Republicans to make that Memphis seat red. If they scattered the city's voters among neighboring GOP-heavy districts, they might make those competitive.
   - *He said some other GOP-controlled states, such as Missouri and South Carolina, are in similar binds with their lone, heavily Democratic seats that were drawn to comply with the voting law. Others, like Georgia, are so politically competitive that it’s likely Republicans couldn't erase a Democratic seat in one part of the state without jeopardizing one of their own.**
