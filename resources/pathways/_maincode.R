@@ -1,0 +1,6 @@
+a <- cbind.data.frame(code=election.dta$meta$state$st, dem= round(electiondata[[38]]$pctdem,2), rep=round(1-electiondata[[38]]$pctdem,2), fips=election.dta$meta$state$fips, abbreviation=election.dta$meta$state$st, votes=electiondata[[38]]$ecvotes, name=electiondata[[38]]$state)
+a[,2] <- ifelse(a[,2]>.55, 1, ifelse(a[,2]<.45, 0, a[,2]))
+a[,3] <- ifelse(a[,3]>.55, 1,ifelse(a[,3]<.45, 0, a[,3]))
+# a[,3] <- ifelse(a[,3]<.6 & a[,3]>.55,.65,ifelse(a[,3]>.4 & a[,3]<.45,.35, a[,3]))
+# a[,2] <- ifelse(a[,2]<.6 & a[,2]>.55,.65,ifelse(a[,2]>.4 & a[,2]<.45,.35, a[,2]))
+write.csv(a, "/Users/cervas/Google Drive/Projects/Paths to Victory/states.csv", row.names=F)
