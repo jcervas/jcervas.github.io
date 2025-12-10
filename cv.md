@@ -44,7 +44,7 @@
 ## Publications
 
 ### 2025
-- *Partisan Gerrymandering.* Eds., R.M. Jong-A-Pin. *Elgar Encyclopedia of Public Choice*. [Read Online (coming soon)](https://www.e-elgar.com/shop/usd/elgar-encyclopedia-of-public-choice-9781802207743.html?srsltid=AfmBOoqE_Ar_1jS0uMy6_vOiStQPLn9sWieYG5mt-I1SHPCpx8w5UYDy)]  
+- *Partisan Gerrymandering.* Bernard Grofman & Jonathan Cervas, Partisan Gerrymandering, in Elgar Encyclopedia of Public Choice 476 (Richard Jong-A-Pin & Christian Bjørnskov eds., 2025), https://www.elgaronline.com/view/book/9781802207750/chapter68.xml. [Read Online](https://www.elgaronline.com/view/book/9781802207750/chapter68.xml)]  
 
 ### 2024
 - *Statistical Fallacies in Claims about ‘Massive and Widespread Fraud’ in the 2020 Presidential Election.* Bernard Grofman and **Jonathan Cervas**. *Statistics and Public Policy*, 11(1). [Read Online](https://www.tandfonline.com/doi/full/10.1080/2330443X.2023.2289529)  
