@@ -59,7 +59,8 @@ Jonathan Cervas, a Carnegie Mellon postdoctoral fellow and redistricting expert,
 
 ### 2024–2025
 
-- **December 04, 2024** - *Dan Abrams (((SiriusXM)))*: [Gerrymandering Backfire? National Expert Declares Democrats Actually Winning Redistrict War](https://youtu.be/s8_8gIXqREo?si=wlrYysOzTRBiBkGi) 
+- **December 11, 2025** - *VOTEBEAT*: [A big question looming over future redistricting: Who should count? A Republican push to exclude all or some noncitizens raises important questions about political power and representation, especially in Texas.](https://projects.votebeat.org/2025/redistricting-noncitizens-who-counts-census-citizenship-question-apportionment/), by Natalia Contreras
+- **December 04, 2025** - *Dan Abrams (((SiriusXM)))*: [Gerrymandering Backfire? National Expert Declares Democrats Actually Winning Redistrict War](https://youtu.be/s8_8gIXqREo?si=wlrYysOzTRBiBkGi) 
 -  **November 30, 2025** - *ABC News*: [Republicans started the redistricting war, but will they win it?](https://abcnews.go.com/Politics/republicans-started-redistricting-war-win/story?id=127962734), by Benjamin Siegel
   - *Cervas also criticized both parties for revisiting maps for political gain in ways that could leave voters with fewer competitive districts in which to cast votes. "The people are losing. Every time we gerrymander for partisan gain, voters are worse off," he added. "A minus plus a minus is a bigger minus."*
 -  **November 19, 2025** - *AP*: [Why Trump’s plan to help GOP keep control of the House could backfire](https://apnews.com/article/trump-redistricting-gerrymandering-congress-texas-california-2c5587f38df6428953c15ed43d631e53), by Nicholas Riccardi
