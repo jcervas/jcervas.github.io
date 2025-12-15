@@ -7,7 +7,7 @@ title: "About"
 <h2 class="h2">About Jonathan Cervas</h2>
 </div>
 
-I am **Jonathan Cervas**, Assistant Teaching Professor in the Institute for Strategy and Technology (Political Science) at Carnegie Mellon University, where I teach graduate and undergraduate courses on American politics, research methods, representation, and voting rights. I am also a Research Associate with the Electoral Innovation Lab at Princeton University and a contributor to the non-partisan Princeton Gerrymandering Project.
+I am **Jonathan Cervas**, Assistant Teaching Professor in the Institute for Strategy and Technology (Political Science) at Carnegie Mellon University, where I teach graduate and undergraduate courses on American politics, research methods, representation, and voting rights. I am also a contributor with the Electoral Innovation Lab at Princeton University and to the non-partisan Princeton Gerrymandering Project.
 
 My research and professional work focus on political institutions, elections, redistricting, and voting rules. I have published eleven peer-reviewed articles in leading journals across political science, geography, economics, and law, including *Proceedings of the National Academy of Sciences*, *Political Geography*, *Social Science Quarterly*, *Public Choice*, and the *Election Law Journal*. I have presented invited talks at Princeton University, the University of Houston, Albany Law School, the National Conference of State Legislatures, and numerous other venues. I also serve as a referee for major journals in my field.
 
