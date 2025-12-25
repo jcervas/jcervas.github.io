@@ -2,7 +2,7 @@
 <!-- Header -->
 # Jonathan Robert Cervas
 **Curriculum Vitae**  
-*Revised September 2025*
+*Revised December 2025*
 
   Carnegie Mellon University  
   5000 Forbes Avenue  
@@ -86,9 +86,6 @@
 
 ## Other Publications
 
-### 2025
-- 
-
 ### 2024
 - *Report of the Court-Appointed Co-Consultants in re Clarke v. Wisconsin Elections Commission* (Case Number 2023Ap1399-Oa, 2023 Wi 79). [Read Online]  
 
@@ -141,7 +138,7 @@
 ## Invited Talks
 
 ### 2025
-- **What’s the Story with Redistricting?** - Heinz School of Public Policy, Policy and Politics Group, September 24, 2025.  
+- What’s the Story with Redistricting? - Heinz School of Public Policy, Policy and Politics Group, September 24, 2025.  
 - *Mid-decade Redistricting* — New York Law School, Hosted by Jeff Wice, September 17, 2025.  
 -  *Disinformation and the Fight for Democracy* — University of Pittsburgh, Hosted by Ralph L. Bangs, July 15, 2025.  
 - *Partisan & Racial Gerrymandering and the Voting Rights Act* — New York Law School, Hosted by Jeff Wice, February 19, 2025.  
