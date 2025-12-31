@@ -125,26 +125,25 @@ Jonathan Cervas, a Carnegie Mellon postdoctoral fellow and redistricting expert,
 - **Apr 28, 2022** - *New York Post*: [Control of Congress could hinge on this redistricting ‘special master’ in NY](https://nypost.com/2022/04/28/control-of-congress-could-hinge-on-this-redistricting-special-master-in-ny/)
   - *“I am thrilled to assist the New York courts in delivering constitutional maps that will provide equal representation for all New York residents for the next decade,” Cervas said in a brief statement to The Post.*
   - **April 27, 2022** - *The New York Times*: [Democrats Lose Control of N.Y. Election Maps, as Top Court Rejects Appeal](https://www.nytimes.com/2022/04/27/nyregion/redistricting-congress-gerrymander-ny.html?unlocked_article_code=1.AlA.I3nT.5Nuj-BFaIAVI&smid=url-share), by Nicholas Fandos
-    - Justice McAllister has already appointed Jonathan Cervas, a postdoctoral fellow at Carnegie Mellon University, as special master to draw the congressional and State Senate lines by late May.
+    - *Justice McAllister has already appointed Jonathan Cervas, a postdoctoral fellow at Carnegie Mellon University, as special master to draw the congressional and State Senate lines by late May.*
 
 ### 2021
 - **Oct 28, 2021** — *Pittsburgh Post-Gazette*: [Despite transparency vows…](https://www.post-gazette.com/news/politics-state/2021/10/28/pennsylvania-congressional-redistricting-2021-nordenberg-pa-transparency/stories/202110280118?cid=search)  
 - **Jul 13, 2021** — *Pennsylvania LRC (official)*: [Appointment of Dr. Jonathan R. Cervas as mapping consultant.](https://www.redistricting.state.pa.us/Resources/GIS/2021-07-13%20LRC%20Appointment%20of%20Dr%20Jonathan%20R%20Cervas.pdf)  
-- **Aug 2021** — *Pennsylvania Capital-Star*: [Pa. redistricting is poised to be transparent…](https://www.penncapital-star.com/government-politics/pa-redistricting-is-poised-to-be-transparent-will-it-be-fair/)
+- **Aug 2021** — *Pennsylvania Capital-Star*: [Pa. redistricting is poised to be transparent…](https://www.penncapital-star.com/government-politics/pa-redistricting-is-poised-to-be-transparent-will-it-be-fair/)  
+- **Aug. 11, 2021** - *The New York Times*: [Let the Gerrymandering (and the Legal Battles) Begin](https://www.nytimes.com/2021/08/11/us/politics/census-redistricting-data-gerrymandering.html?unlocked_article_code=1.AlA.8Xku.RrDn88w-eml6&smid=url-share), by Nick Corasaniti   
+  - *“I am up late at night often, unable to sleep, pondering how bad or how aggressive some of those states might be in undoing the protections that were granted from Section 5 that no longer are in effect,” said Jonathan Cervas, a postdoctoral fellow at Carnegie Mellon University who studies gerrymandering. “And I can imagine that a particularly aggressive legislature, where it benefits them, may not draw minority districts.”*  
+  - *While diluting the votes of minority communities remains illegal, Mr. Cervas said that without preclearance, such tactics could be used anyway, and that the resulting legal challenges were increasingly unlikely to be resolved in time to affect the 2022 elections.* 
+-  **Jan 31, 2021** - *The New York Times*: [House Mapping Is Next Conflict In Power Battle (Also found under the headline "The Gerrymander Battles Loom, as G.O.P. Looks to
+Press Its Advantage")](https://www.nytimes.com/2021/01/31/us/politics/gerrymander-census-democrats-republicans.html?unlocked_article_code=1.AlA.cQN8.nclCLq7E4YjT&smid=url-share), by Reid J. Epstein and Nick Corasaniti  
+  - *"Some election experts argued that Republicans were so successful at drawing gerrymandered maps 10 years ago that it would be difficult for them to add to their advantage now.*   
+  - *“The Democrats were able to win the House in 2018 despite the fact that there were some very gerrymandered states,” said Jonathan Cervas, a postdoctoral fellow at Carnegie Mellon University who studies gerrymandering."*  
 
 ### 2020
 - **Oct 25, 2020** — *Pittsburgh Post-Gazette*: [In race between Conor Lamb and Sean Parnell…](https://www.post-gazette.com/news/politics-nation/2020/10/25/Conor-Lamb-Sean-Parnell-17th-Congressional-District-Trump-Pelosi/stories/202010250003?cid=search)
 
 ## University & Institution Coverage
+
 - **Apr 21, 2022** — *UC Irvine Social Sciences*: [Meet the scholar redistricting New York: UCI alumnus Jonathan Cervas named special master.](https://www.socsci.uci.edu/newsevents/news/2022/2022-04-21-cervas.php)
 
-### 2021
 
-- **Aug. 11, 2021** - *The New York Times*: [Let the Gerrymandering (and the Legal Battles) Begin](https://www.nytimes.com/2021/08/11/us/politics/census-redistricting-data-gerrymandering.html?unlocked_article_code=1.AlA.8Xku.RrDn88w-eml6&smid=url-share), by Nick Corasaniti   
-  - “I am up late at night often, unable to sleep, pondering how bad or how aggressive some of those states might be in undoing the protections that were granted from Section 5 that no longer are in effect,” said Jonathan Cervas, a postdoctoral fellow at Carnegie Mellon University who studies gerrymandering. “And I can imagine that a particularly aggressive legislature, where it benefits them, may not draw minority districts.”  
-  - While diluting the votes of minority communities remains illegal, Mr. Cervas said that without preclearance, such tactics could be used anyway, and that the resulting legal challenges were increasingly unlikely to be resolved in time to affect the 2022 elections. 
--  **Jan 31, 2021** - *The New York Times*: [House Mapping Is Next Conflict In Power Battle (Also found under the headline "The Gerrymander Battles Loom, as G.O.P. Looks to
-Press Its Advantage")](https://www.nytimes.com/2021/01/31/us/politics/gerrymander-census-democrats-republicans.html?unlocked_article_code=1.AlA.cQN8.nclCLq7E4YjT&smid=url-share), by Reid J. Epstein and Nick Corasaniti  
-  - "Some election experts argued that Republicans were so successful at drawing gerrymandered maps 10 years ago that it would be difficult for them to add to their advantage now.   
-  - “The Democrats were able to win the House in 2018 despite the fact that there were some very gerrymandered states,” said Jonathan Cervas, a postdoctoral fellow at Carnegie Mellon University who studies gerrymandering."
-  
