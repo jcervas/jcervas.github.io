@@ -13,7 +13,7 @@ subtitle: "News coverage and mentions"
   <strong>Jonathan Cervas</strong><br>
   Assistant Teaching Professor<br>
   <a href="mailto:jcervas@andrew.cmu.edu">Email</a> · 
-  <a href="tel:4122684519">412-268-4519</a>
+  <a href="tel:7022346075">702-234-6075</a>
 </address>
 </details>
 
@@ -41,7 +41,7 @@ Jonathan Cervas, a postdoctoral fellow at Carnegie Mellon, has quickly risen to 
 **What to know about Bernard Grofman and Jonathan Cervas, Wisconsin's new map consultants**
 *Milwaukee Journal Sentinel*
 
-Bernard Grofman, a UC-Irvine political scientist, and Jonathan Cervas, a Carnegie Mellon postdoctoral fellow and redistricting expert, were appointed by the Wisconsin Supreme Court to review and possibly redraw the state’s legislative maps. Both are regarded as nonpartisan specialists with extensive experience in redistricting cases across the country, including Virginia, Pennsylvania, and New York. Tasked with ensuring population equality, compliance with the Voting Rights Act, and neutrality regarding partisan advantage, they could recommend adjustments to submitted proposals—or create their own maps—though their role has sparked criticism from some justices who argue the decision hands too much power to unelected outsiders.
+Bernard Grofman, a UC-Irvine political scientist, and Jonathan Cervas, a Carnegie Mellon postdoctoral fellow and redistricting expert, were appointed by the Wisconsin Supreme Court to review and possibly redraw the state’s legislative maps. Both are regarded as nonpartisan specialists with extensive experience in redistricting cases across the country, including Virginia, Pennsylvania, and New York. Tasked with ensuring population equality, compliance with the Voting Rights Act, and neutrality regarding partisan advantage, they could recommend adjustments to submitted proposals-or create their own maps—though their role has sparked criticism from some justices who argue the decision hands too much power to unelected outsiders.
 
 [Read more at the *Milwaukee Journal Sentinel*](https://www.jsonline.com/story/news/politics/2024/01/02/wisconsins-new-maps-could-come-down-to-two-experts-who-are-they/72048291007/)
 
@@ -52,12 +52,26 @@ Bernard Grofman, a UC-Irvine political scientist, and Jonathan Cervas, a Carnegi
 
 Jonathan Cervas, a Carnegie Mellon postdoctoral fellow and redistricting expert, was appointed by a New York court as special master to redraw the state’s congressional and senate maps after the previous ones were struck down. Though not widely known, he brings extensive experience from redistricting work in Pennsylvania, Utah, Virginia, and Georgia, where he earned praise for fairness and technical skill. This marks his first time leading the process solo, and his academic background in political science and mapping technology underscores his reputation as a nonpartisan specialist focused on strengthening democracy.
 
-<!-- NOTE: The link below points to jsonline.com in your original; if that's unintentional, replace with the correct City & State URL -->
-[Read more at *City & State New York*](https://www.jsonline.com/story/news/politics/2024/01/02/wisconsins-new-maps-could-come-down-to-two-experts-who-are-they/72048291007/)
+[Read more at *City & State New York*](https://www.cityandstateny.com/politics/2022/04/who-man-tasked-redrawing-new-yorks-new-district-lines/366253/)
+
+---
+
+**New York’s Redistricting Master Holds Key to Congressional Power**  
+*Bloomberg Government*  
+
+Jonathan Cervas was appointed by a New York court as special master to redraw the state’s congressional and state Senate district lines after the Democratic-drawn maps were struck down. With a tight deadline and high national stakes-since New York’s maps could influence control of the U.S. House-Cervas is tasked with producing constitutionally sound, ostensibly neutral districts that will last a decade. Drawing on his background working on redistricting cases in several states under renowned expert Bernard Grofman, Cervas is widely described by scholars, advocates, and attorneys as nonpartisan, technically skilled, and attentive to legal constraints and public input. While his past work has not satisfied all political actors, observers largely expect him to act as an “honest broker,” consistent with the broader pattern of court-appointed special masters producing relatively fair maps.
+
+[Read more at *Bloomberg Government*](https://about.bgov.com/insights/news/new-yorks-redistricting-master-holds-key-to-congressional-power/)
+
+---
+
 
 ## Media Mentions
 
-### 2024–2025
+*This list is updated continuously and may include scheduled or forthcoming media coverage.*
+
+
+### 2025
 
 - **December 11, 2025** - *VOTEBEAT*: [A big question looming over future redistricting: Who should count? A Republican push to exclude all or some noncitizens raises important questions about political power and representation, especially in Texas.](https://projects.votebeat.org/2025/redistricting-noncitizens-who-counts-census-citizenship-question-apportionment/), by Natalia Contreras
 - **December 04, 2025** - *Dan Abrams (((SiriusXM)))*: [Gerrymandering Backfire? National Expert Declares Democrats Actually Winning Redistrict War](https://youtu.be/s8_8gIXqREo?si=wlrYysOzTRBiBkGi) 
@@ -72,65 +86,65 @@ Jonathan Cervas, a Carnegie Mellon postdoctoral fellow and redistricting expert,
   - *Still other GOP-controlled states, such as Mississippi, may have an easier time eliminating their lone Democratic, Voting Rights Act-mandated seat. And in larger states such as North Carolina and Florida, Republicans would have a freer hand to redraw the maps to favor their party without having to preserve majority-minority seats held by Democrats.*
 - **Oct 7, 2025** - *AP*: [Democrats could have a slight shot at flipping a US House seat in Utah under a new congressional map](https://apnews.com/article/utah-congressional-map-redistricting-democrats-5247fd0d90b5414fbfb393b3ff4e0bdd), by Hannah Schoenbaum  
   - *Jonathan Cervas, a redistricting expert at Carnegie Mellon University, ran data from past elections in Utah against the redrawn map and found that Democrats would lose every time. That indicates that the map is uncompetitive, he said.*  
-  *“Although it’s not as competitive as I think the plaintiffs would want, I think it’s far better than the map that currently exists — a stark improvement,” Cervas said.* 
+  *“Although it’s not as competitive as I think the plaintiffs would want, I think it’s far better than the map that currently exists - a stark improvement,” Cervas said.* 
 - **Oct 1, 2025** - *City & State PA*: [What America’s ongoing redistricting war could mean for Pennsylvania Pennsylvania is unlikely to redraw congressional maps mid-decade, but that doesn’t negate the need for redistricting reforms, advocates say.](https://www.cityandstatepa.com/politics/2025/10/what-americas-ongoing-redistricting-war-could-mean-pennsylvania/408527/?oref=cspa-homepage-river) 
   - *“There’s one special reason why there’s not going to be anything in Pennsylvania, and that’s because Pennsylvania is one of only, I think, two states in the country that has a divided government,” said Jonathan Cervas, a professor at Carnegie Mellon University who specializes in redistricting and voting rights. “There’s been a stalemate on even passing the basic state budget. So the idea that we would have an agreement from both branches of the legislature and the governor on a new redistricting plan seems very unlikely – exceedingly unlikely.”*  
   - *“You could imagine that maybe Republicans pick up a couple of seats in the House, and they're running a formidable candidate for governor, Stacy Garrity. She could win, and then they would have a united government,” Cervas said. He added that such a dynamic in Harrisburg could change the appetite for exploring the possibility of a new map in the middle of the decade. However, that scenario wouldn’t be feasible until after the 2026 midterms, and redrawing congressional districts before then would do little to help vulnerable incumbents.*
-- **Aug 23, 2025** — *Straight Arrow News*: [Texas’ new congressional map heads to Gov. Abbott’s desk](https://san.com/cc/texas-new-congressional-map-heads-to-gov-abbotts-desk/)  
+- **Aug 23, 2025** - *Straight Arrow News*: [Texas’ new congressional map heads to Gov. Abbott’s desk](https://san.com/cc/texas-new-congressional-map-heads-to-gov-abbotts-desk/)  
   - *“In addition to a potential violation of the Voting Rights Act, this might be viewed in federal court as an intentional act to decrease minority representation, which would be a violation of the 14th Amendment,” Cervas said.*  
   - *Cervas described the new map as “perhaps the most biased map in modern American history.” … “Nearly 100% of the population growth in Texas has come from minority populations,” Cervas said…*
 
-- **Aug 21, 2025** — *The Texas Tribune*: [Lawmakers are debating GOP congressional maps. What does redistricting mean for Texans?](https://www.texastribune.org/2025/08/21/texas-redistricting-congressional-map-texans/)
-- **Aug 8, 2025** — *Salon*: [GOP power grab puts voting rights advocates in a bind](https://www.salon.com/2025/08/08/gop-power-grab-puts-anti-gerrymandering-advocates-in-a-bind/)
-- **Aug 5, 2025** — *The Hill*: [California, New York signal they’re moving forward with redistricting](https://thehill.com/homenews/campaign/5437566-california-new-york-redistricting/)
-- **Jul 15, 2025** — *Here & Now, NPR*: [Texas is weighing a new plan for redistricting as part of a special summer session](https://www.wbur.org/hereandnow/2025/07/15/texas-redistricting)
-- **Mar 20, 2025** — *Pittsburgh Post-Gazette*: [PG Politics: What 2021 turnout…](https://www.post-gazette.com/news/politics-local/2025/03/20/pittsburgh-mayor-primary-voter-turnout/stories/202503190073?cid=search)
-- **Mar 6, 2025** — *Pittsburgh Post-Gazette*: [PG Politics: What to make of…](https://www.post-gazette.com/news/politics-local/2025/03/06/pittsburgh-mayor-gainey-oconnor-donors/stories/202503060093)
+- **Aug 21, 2025** - *The Texas Tribune*: [Lawmakers are debating GOP congressional maps. What does redistricting mean for Texans?](https://www.texastribune.org/2025/08/21/texas-redistricting-congressional-map-texans/)
+- **Aug 8, 2025** - *Salon*: [GOP power grab puts voting rights advocates in a bind](https://www.salon.com/2025/08/08/gop-power-grab-puts-anti-gerrymandering-advocates-in-a-bind/)
+- **Aug 5, 2025** - *The Hill*: [California, New York signal they’re moving forward with redistricting](https://thehill.com/homenews/campaign/5437566-california-new-york-redistricting/)
+- **Jul 15, 2025** - *Here & Now, NPR*: [Texas is weighing a new plan for redistricting as part of a special summer session](https://www.wbur.org/hereandnow/2025/07/15/texas-redistricting)
+- **Mar 20, 2025** - *Pittsburgh Post-Gazette*: [PG Politics: What 2021 turnout…](https://www.post-gazette.com/news/politics-local/2025/03/20/pittsburgh-mayor-primary-voter-turnout/stories/202503190073?cid=search)
+- **Mar 6, 2025** - *Pittsburgh Post-Gazette*: [PG Politics: What to make of…](https://www.post-gazette.com/news/politics-local/2025/03/06/pittsburgh-mayor-gainey-oconnor-donors/stories/202503060093)
 
 ### 2024
 
-- **Sep 19, 2024** — *Pittsburgh Post-Gazette*: [Curiosity and controversy…](https://www.post-gazette.com/news/election-2024/2024/09/19/pittsburgh-college-voters-pitt-carnegie-mellon-duquesne/stories/202409170220?cid=search)
-- **Dec 10, 2024** — CMU feature: [Across Political Divides: Jonathan Cervas Bridges Ideological Differences with Discussions and Data](https://www.cmu.edu/cmist/news-events/news/2024/december/across-political-divides-jonathan-cervas-bridges-ideological-differences.html)
-- **Oct 6, 2024** — *Pittsburgh Post-Gazette*: [How to avoid getting misled by political polls](https://www.post-gazette.com/news/election-2024/2024/10/06/political-polling-stories-margin-or-error-candidate-leads/stories/202410040076?cid=search)
-- **Jun 24, 2024** — *PBS Wisconsin*: Wisconsin taxpayers to pay half of redistricting consultant costs.
-- **Feb 9, 2024** — *WPR*: Wisconsin Republicans seek to subpoena Supreme Court redistricting consultants.
-- **Feb 1, 2024** — *PBS Wisconsin*: Redistricting experts tell Wisconsin Supreme Court that Republican district map proposals are gerrymanders.  
-- **Feb 1, 2024** — *AP News*: Redistricting experts submit $128K bill for review of Wisconsin legislative maps.  
-- **Jan 4, 2024** — *WPR*: Consultants hired to oversee Wisconsin redistricting could get up to $100K apiece.  
-- **Jan 23, 2024** — CMU story: [Redrawing Lines: Jonathan Cervas Evaluates Wisconsin's Legislative Maps](https://www.cmu.edu/cmist/news-events/news/2024/january/redrawing-lines-jonathan-cervas-evaluates-wisconsins-legislative-maps.html)  
+- **Sep 19, 2024** - *Pittsburgh Post-Gazette*: [Curiosity and controversy…](https://www.post-gazette.com/news/election-2024/2024/09/19/pittsburgh-college-voters-pitt-carnegie-mellon-duquesne/stories/202409170220?cid=search)
+- **Dec 10, 2024** - CMU feature: [Across Political Divides: Jonathan Cervas Bridges Ideological Differences with Discussions and Data](https://www.cmu.edu/cmist/news-events/news/2024/december/across-political-divides-jonathan-cervas-bridges-ideological-differences.html)
+- **Oct 6, 2024** - *Pittsburgh Post-Gazette*: [How to avoid getting misled by political polls](https://www.post-gazette.com/news/election-2024/2024/10/06/political-polling-stories-margin-or-error-candidate-leads/stories/202410040076?cid=search)
+- **Jun 24, 2024** - *PBS Wisconsin*: [Wisconsin taxpayers to pay half of redistricting consultant costs.](https://pbswisconsin.org/news-item/wisconsin-taxpayers-to-pay-half-of-redistricting-consultant-costs/)
+- **Feb 9, 2024** - *WPR*: [Wisconsin Republicans seek to subpoena Supreme Court redistricting consultants.](https://www.wpr.org/news/wisconsin-republicans-seek-to-subpoena-supreme-court-redistricting-consultants)
+- **Feb 1, 2024** - *PBS Wisconsin*: [Redistricting experts tell Wisconsin Supreme Court that Republican district map proposals are gerrymanders.](https://pbswisconsin.org/news-item/redistricting-experts-tell-wisconsin-supreme-court-that-republican-district-map-proposals-are-gerrymanders/)  
+- **Feb 1, 2024** - *AP News*: [Redistricting experts submit $128K bill for review of Wisconsin legislative maps](https://apnews.com/article/wisconsin-redistricting-consultant-fee-9a9ef7b77cd058e1251edea330b89191.)  
+- **Jan 4, 2024** - *WPR*: [Consultants hired to oversee Wisconsin redistricting could get up to $100K apiece.](https://www.wpr.org/justice/consultants-hired-wisconsin-redistricting-maps-100k)  
+- **Jan 23, 2024** - CMU story: [Redrawing Lines: Jonathan Cervas Evaluates Wisconsin's Legislative Maps](https://www.cmu.edu/cmist/news-events/news/2024/january/redrawing-lines-jonathan-cervas-evaluates-wisconsins-legislative-maps.html)  
 
 
 ### 2023
 
-- **Dec 22, 2023** — *WPR*: Wisconsin Supreme Court overturns Republican-drawn legislative maps.
-- **Aug 18, 2023** — *Pittsburgh Post-Gazette*: [Strange bedfellows…](https://www.post-gazette.com/news/politics-local/2023/08/18/district-attorney-race-zappala-dugan-election-republican-democrat-forward/stories/202308180104?cid=search)
-- **May 14, 2023** — *Pittsburgh Post-Gazette*: [The race for Allegheny County executive…](https://www.post-gazette.com/news/politics-local/2023/05/14/sara-innamorato-2023-allegheny-county-executive-race/stories/202305140104?cid=search)
-- **Feb 1, 2023** — *Pittsburgh Post-Gazette*: [The 2023 primary elections…](https://www.post-gazette.com/news/politics-local/2023/02/01/pittsburgh-allegheny-county-2023-primary-elections-voters/stories/202301310119?cid=search)
+- **Dec 22, 2023** - *WPR*: Wisconsin Supreme Court overturns Republican-drawn legislative maps.
+- **Aug 18, 2023** - *Pittsburgh Post-Gazette*: [Strange bedfellows…](https://www.post-gazette.com/news/politics-local/2023/08/18/district-attorney-race-zappala-dugan-election-republican-democrat-forward/stories/202308180104?cid=search)
+- **May 14, 2023** - *Pittsburgh Post-Gazette*: [The race for Allegheny County executive…](https://www.post-gazette.com/news/politics-local/2023/05/14/sara-innamorato-2023-allegheny-county-executive-race/stories/202305140104?cid=search)
+- **Feb 1, 2023** - *Pittsburgh Post-Gazette*: [The 2023 primary elections…](https://www.post-gazette.com/news/politics-local/2023/02/01/pittsburgh-allegheny-county-2023-primary-elections-voters/stories/202301310119?cid=search)
 
 
 ### 2022
 
-- **Sep 4, 2022** — *Pittsburgh Post-Gazette*: [Jonathan Cervas’ quest to make government represent the voters.](https://www.post-gazette.com/news/politics-state/2022/09/04/jonathan-cervas-carnegie-mellon-census-redistricting-pa-legislative-districts/stories/202208310151)  
-- **Jul 19, 2022** — *Washington Monthly*: [The Man Behind New York’s Controversial Congressional Map.](https://washingtonmonthly.com/2022/07/19/the-man-behind-new-yorks-controversial-congressional-map/)  
-- **Jun 3, 2022** — *Albany Times Union*: [State to pay $147,000…](https://www.timesunion.com/state/article/State-to-pay-147-000-for-special-master-and-17213013.php)  
+- **Sep 4, 2022** - *Pittsburgh Post-Gazette*: [Jonathan Cervas’ quest to make government represent the voters.](https://www.post-gazette.com/news/politics-state/2022/09/04/jonathan-cervas-carnegie-mellon-census-redistricting-pa-legislative-districts/stories/202208310151)  
+- **Jul 19, 2022** - *Washington Monthly*: [The Man Behind New York’s Controversial Congressional Map.](https://washingtonmonthly.com/2022/07/19/the-man-behind-new-yorks-controversial-congressional-map/)  
+- **Jun 3, 2022** - *Albany Times Union*: [State to pay $147,000…](https://www.timesunion.com/state/article/State-to-pay-147-000-for-special-master-and-17213013.php)  
 - **May 29, 2022** - **The Hill**: *Opinion*: [Gerrymandering, a legal form of vote stealing, more entrenched now than ever](https://thehill.com/opinion/campaign/3505157-gerrymandering-a-legal-form-of-vote-stealing-more-entrenched-now-than-ever/)
--  **May 21, 2022** — *THE CITY*: [Final New York District Maps…](https://www.thecity.nyc/politics/2022/5/21/23136032/final-new-york-district-maps-chaotic-election-season)  
-- **May 21, 2022** — *PoliticsNY*: [Final congressional and senate district maps set.](https://politicsny.com/2022/05/21/final-congressional-and-senate-district-maps-set/)  
-- **May 17, 2022** — *Wall Street Journal*: [New York’s Gerrymander Boomerang…](https://www.wsj.com/opinion/new-yorks-gerrymander-boomerang-albany-special-master-redistricting-map-jonathan-cervas-democrats-11652818602)  
-- **May 16, 2022** — *THE CITY*: [Special Master Carves Up…](https://www.thecity.nyc/politics/2022/5/16/23100628/special-master-carves-up-new-york-congressional-state-senate-seats-new-maps)  
-- **May 16, 2022** — *NY1*: [New congressional maps shake up New York politics.](https://www.ny1.com/nyc/all-boroughs/politics/2022/05/16/new-congressional-maps-shake-up-new-york-politics)  
-- **May 9, 2022** — *Bloomberg Government*: [New York’s Redistricting Master Holds Key…](https://about.bgov.com/insights/news/new-yorks-redistricting-master-holds-key-to-congressional-power/)  
-- **Apr 29, 2022** — *NY1*: [Special master has to act fast…](https://www.ny1.com/nyc/all-boroughs/politics/2022/04/29/special-master-has-to-act-fast-on-new-legislative-maps)  
-- **Apr 28, 2022** — *City & State New York*: [Who is the man tasked with redrawing New York’s new district lines?](https://www.cityandstateny.com/politics/2022/04/who-man-tasked-redrawing-new-yorks-new-district-lines/365858/)
+-  **May 21, 2022** - *THE CITY*: [Final New York District Maps…](https://www.thecity.nyc/politics/2022/5/21/23136032/final-new-york-district-maps-chaotic-election-season)  
+- **May 21, 2022** - *PoliticsNY*: [Final congressional and senate district maps set.](https://politicsny.com/2022/05/21/final-congressional-and-senate-district-maps-set/)  
+- **May 17, 2022** - *Wall Street Journal*: [New York’s Gerrymander Boomerang…](https://www.wsj.com/opinion/new-yorks-gerrymander-boomerang-albany-special-master-redistricting-map-jonathan-cervas-democrats-11652818602)  
+- **May 16, 2022** - *THE CITY*: [Special Master Carves Up…](https://www.thecity.nyc/politics/2022/5/16/23100628/special-master-carves-up-new-york-congressional-state-senate-seats-new-maps)  
+- **May 16, 2022** - *NY1*: [New congressional maps shake up New York politics.](https://www.ny1.com/nyc/all-boroughs/politics/2022/05/16/new-congressional-maps-shake-up-new-york-politics)  
+- **May 9, 2022** - *Bloomberg Government*: [New York’s Redistricting Master Holds Key…](https://about.bgov.com/insights/news/new-yorks-redistricting-master-holds-key-to-congressional-power/)  
+- **Apr 29, 2022** - *NY1*: [Special master has to act fast…](https://www.ny1.com/nyc/all-boroughs/politics/2022/04/29/special-master-has-to-act-fast-on-new-legislative-maps)  
+- **Apr 28, 2022** - *City & State New York*: [Who is the man tasked with redrawing New York’s new district lines?](https://www.cityandstateny.com/politics/2022/04/who-man-tasked-redrawing-new-yorks-new-district-lines/365858/)
 - **Apr 28, 2022** - *New York Post*: [Control of Congress could hinge on this redistricting ‘special master’ in NY](https://nypost.com/2022/04/28/control-of-congress-could-hinge-on-this-redistricting-special-master-in-ny/)
   - *“I am thrilled to assist the New York courts in delivering constitutional maps that will provide equal representation for all New York residents for the next decade,” Cervas said in a brief statement to The Post.*
   - **April 27, 2022** - *The New York Times*: [Democrats Lose Control of N.Y. Election Maps, as Top Court Rejects Appeal](https://www.nytimes.com/2022/04/27/nyregion/redistricting-congress-gerrymander-ny.html?unlocked_article_code=1.AlA.I3nT.5Nuj-BFaIAVI&smid=url-share), by Nicholas Fandos
     - *Justice McAllister has already appointed Jonathan Cervas, a postdoctoral fellow at Carnegie Mellon University, as special master to draw the congressional and State Senate lines by late May.*
 
 ### 2021
-- **Oct 28, 2021** — *Pittsburgh Post-Gazette*: [Despite transparency vows…](https://www.post-gazette.com/news/politics-state/2021/10/28/pennsylvania-congressional-redistricting-2021-nordenberg-pa-transparency/stories/202110280118?cid=search)  
-- **Jul 13, 2021** — *Pennsylvania LRC (official)*: [Appointment of Dr. Jonathan R. Cervas as mapping consultant.](https://www.redistricting.state.pa.us/Resources/GIS/2021-07-13%20LRC%20Appointment%20of%20Dr%20Jonathan%20R%20Cervas.pdf)  
-- **Aug 2021** — *Pennsylvania Capital-Star*: [Pa. redistricting is poised to be transparent…](https://www.penncapital-star.com/government-politics/pa-redistricting-is-poised-to-be-transparent-will-it-be-fair/)  
+- **Oct 28, 2021** - *Pittsburgh Post-Gazette*: [Despite transparency vows…](https://www.post-gazette.com/news/politics-state/2021/10/28/pennsylvania-congressional-redistricting-2021-nordenberg-pa-transparency/stories/202110280118?cid=search)  
+- **Jul 13, 2021** - *Pennsylvania LRC (official)*: [Appointment of Dr. Jonathan R. Cervas as mapping consultant.](https://www.redistricting.state.pa.us/Resources/GIS/2021-07-13%20LRC%20Appointment%20of%20Dr%20Jonathan%20R%20Cervas.pdf)  
+- **Aug 2021** - *Pennsylvania Capital-Star*: [Pa. redistricting is poised to be transparent…](https://www.penncapital-star.com/government-politics/pa-redistricting-is-poised-to-be-transparent-will-it-be-fair/)  
 - **Aug. 11, 2021** - *The New York Times*: [Let the Gerrymandering (and the Legal Battles) Begin](https://www.nytimes.com/2021/08/11/us/politics/census-redistricting-data-gerrymandering.html?unlocked_article_code=1.AlA.8Xku.RrDn88w-eml6&smid=url-share), by Nick Corasaniti   
   - *“I am up late at night often, unable to sleep, pondering how bad or how aggressive some of those states might be in undoing the protections that were granted from Section 5 that no longer are in effect,” said Jonathan Cervas, a postdoctoral fellow at Carnegie Mellon University who studies gerrymandering. “And I can imagine that a particularly aggressive legislature, where it benefits them, may not draw minority districts.”*  
   - *While diluting the votes of minority communities remains illegal, Mr. Cervas said that without preclearance, such tactics could be used anyway, and that the resulting legal challenges were increasingly unlikely to be resolved in time to affect the 2022 elections.* 
@@ -140,10 +154,10 @@ Press Its Advantage")](https://www.nytimes.com/2021/01/31/us/politics/gerrymande
   - *“The Democrats were able to win the House in 2018 despite the fact that there were some very gerrymandered states,” said Jonathan Cervas, a postdoctoral fellow at Carnegie Mellon University who studies gerrymandering."*  
 
 ### 2020
-- **Oct 25, 2020** — *Pittsburgh Post-Gazette*: [In race between Conor Lamb and Sean Parnell…](https://www.post-gazette.com/news/politics-nation/2020/10/25/Conor-Lamb-Sean-Parnell-17th-Congressional-District-Trump-Pelosi/stories/202010250003?cid=search)
+- **Oct 25, 2020** - *Pittsburgh Post-Gazette*: [In race between Conor Lamb and Sean Parnell…](https://www.post-gazette.com/news/politics-nation/2020/10/25/Conor-Lamb-Sean-Parnell-17th-Congressional-District-Trump-Pelosi/stories/202010250003?cid=search)
 
 ## University & Institution Coverage
 
-- **Apr 21, 2022** — *UC Irvine Social Sciences*: [Meet the scholar redistricting New York: UCI alumnus Jonathan Cervas named special master.](https://www.socsci.uci.edu/newsevents/news/2022/2022-04-21-cervas.php)
+- **Apr 21, 2022** - *UC Irvine Social Sciences*: [Meet the scholar redistricting New York: UCI alumnus Jonathan Cervas named special master.](https://www.socsci.uci.edu/newsevents/news/2022/2022-04-21-cervas.php)
 
 
