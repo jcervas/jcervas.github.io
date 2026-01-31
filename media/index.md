@@ -72,6 +72,7 @@ Jonathan Cervas was appointed by a New York court as special master to redraw th
 
 ###
 
+-  **January 30, 2026** - *Harlem World*: [Coastal Power Shift: New York, California Set To Lose Six Congressional Seats Post‑2030](https://www.harlemworldmagazine.com/coastal-power-shift-new-york-california-set-to-lose-six-congressional-seats-post-2030/)
 -  **January 29, 2026** - *Deseret News* [How population growth is quietly redrawing America’s political map](https://www.deseret.com/politics/2026/01/29/census-bureau-population-data-shows-republican-states-gaining-electoral-college-votes-after-2030/), by Brigham Tomco
 - **January 28, 2026** -  *Politico*: [Democrats could face an uphill Electoral College after 2030, new projections show](https://www.politico.com/news/2026/01/28/2030-electoral-college-projections-00750488), by Andrew Howard
 - **January 28, 2026** - *Fox News*: [Bombshell Census projections show Republicans could win White House without Rust Belt ‘Blue Wall’](https://www.foxnews.com/politics/bombshell-census-projections-show-republicans-could-win-white-house-without-rust-belt-blue-wall.print), by Paul Steinhauser
