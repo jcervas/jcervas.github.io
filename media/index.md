@@ -40,7 +40,7 @@ Jonathan Cervas, a postdoctoral fellow at Carnegie Mellon, has quickly risen to 
 
 **Coverage by the New York Daily News**
 *New York Daily News*
-- Editorials
+- **Editorials**
   - [What democracy looks like: New lines for Congress and state Senate are far superior](https://www.nydailynews.com/2022/05/17/what-democracy-looks-like-new-lines-for-congress-and-state-senate-are-far-superior/), By NEW YORK DAILY NEWS EDITORIAL BOARD and NEW YORK DAILY NEWS. May 17, 2022.
   -  [Draw a line, judges: A five-jurist appellate panel must strike down hyperpartisan maps](https://www.nydailynews.com/2022/04/20/draw-a-line-judges-a-five-jurist-appellate-panel-must-strike-down-hyperpartisan-maps/?clearUserState=true, By NEW YORK DAILY NEWS EDITORIAL BOARD and NEW YORK DAILY NEWS. April 20, 2022
   -  [Power to the voters: Newly drawn districts are a boon to New Yorkers](https://www.nydailynews.com/2022/05/19/power-to-the-voters-newly-drawn-districts-are-a-boon-to-new-yorkers/), By NEW YORK DAILY NEWS EDITORIAL BOARD and NEW YORK DAILY NEWS. May 19, 2022.
@@ -58,7 +58,7 @@ Jonathan Cervas, a postdoctoral fellow at Carnegie Mellon, has quickly risen to 
   -  [N.Y. must skip the Texas two-step: Don’t fool with mid-decade redistricting](https://www.nydailynews.com/2025/08/04/n-y-must-skip-the-texas-two-step/), By NEW YORK DAILY NEWS EDITORIAL BOARD. August 4, 2025.
   -  [No redistricting for Staten Island: Leave the current lines in place](https://www.nydailynews.com/2026/01/23/no-redistricting-for-staten-island/), By NEW YORK DAILY NEWS EDITORIAL BOARD. January 23, 2026.
   -  [Don’t mess with N.Y.’s elections: U.S. Supreme Court has to end congressional redistricting](https://www.nydailynews.com/2026/02/23/dont-mess-with-n-y-s-elections/), By NEW YORK DAILY NEWS EDITORIAL BOARD. February 23, 2026.
-- Others
+- **Others**
   - [New York’s redrawn congressional maps spark interest among state lawmakers](https://www.nydailynews.com/2022/05/17/new-yorks-redrawn-congressional-maps-spark-interest-among-state-lawmakers/), By DENIS SLATTERY. May 17, 2022.
   - [New York GOP politicians cheer court for tossing Democratic-friendly redistricting map](https://www.nydailynews.com/2022/04/28/new-york-gop-politicians-cheer-court-for-tossing-democratic-friendly-redistricting-map/), By DAVE GOLDINER. April 28, 2022.
   - [The Court of Appeals tossed New York’s congressional maps and threw the primary season into turmoil. What’s next?](https://www.nydailynews.com/2022/04/28/the-court-of-appeals-tossed-new-yorks-congressional-maps-and-threw-the-primary-season-into-turmoil-whats-next/), By DENIS SLATTERY. April 28, 2022.
