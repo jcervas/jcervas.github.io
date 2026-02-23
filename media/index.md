@@ -38,6 +38,44 @@ Jonathan Cervas, a postdoctoral fellow at Carnegie Mellon, has quickly risen to 
 
 ---
 
+**Coverage by the New York Daily News**
+*New York Daily News*
+- Editorials
+  - [What democracy looks like: New lines for Congress and state Senate are far superior](https://www.nydailynews.com/2022/05/17/what-democracy-looks-like-new-lines-for-congress-and-state-senate-are-far-superior/), By NEW YORK DAILY NEWS EDITORIAL BOARD and NEW YORK DAILY NEWS. May 17, 2022.
+  -  [Draw a line, judges: A five-jurist appellate panel must strike down hyperpartisan maps](https://www.nydailynews.com/2022/04/20/draw-a-line-judges-a-five-jurist-appellate-panel-must-strike-down-hyperpartisan-maps/?clearUserState=true, By NEW YORK DAILY NEWS EDITORIAL BOARD and NEW YORK DAILY NEWS. April 20, 2022
+  -  [Power to the voters: Newly drawn districts are a boon to New Yorkers](https://www.nydailynews.com/2022/05/19/power-to-the-voters-newly-drawn-districts-are-a-boon-to-new-yorkers/), By NEW YORK DAILY NEWS EDITORIAL BOARD and NEW YORK DAILY NEWS. May 19, 2022.
+  -  [Mapping a fair election: The new congressional and state Senate districts enhance democracy](https://www.nydailynews.com/2022/05/22/mapping-a-fair-election-the-new-congressional-and-state-senate-districts-enhance-democracy/), By NEW YORK DAILY NEWS EDITORIAL BOARD and NEW YORK DAILY NEWS. May 22, 2022.
+  -  [Love the Constitution, not politics: Justice Larry Love must void the Assembly maps pronto](https://www.nydailynews.com/2022/05/23/love-the-constitution-not-politics-justice-larry-love-must-void-the-assembly-maps-pronto/), By NEW YORK DAILY NEWS EDITORIAL BOARD and NEW YORK DAILY NEWS. May 23, 2022.
+  -  [Draw new lines now: The courts must finish the job and order redrawn state Assembly maps](https://www.nydailynews.com/2022/06/08/draw-new-lines-now-the-courts-must-finish-the-job-and-order-redrawn-state-assembly-maps/), By NEW YORK DAILY NEWS EDITORIAL BOARD and NEW YORK DAILY NEWS. June 8, 2022.
+  -  [N.Y.’s unconstitutional Assembly: Albany’s brazen ploy against the voters and the law](https://www.nydailynews.com/2022/06/15/nys-unconstitutional-assembly-albanys-brazen-ploy-against-the-voters-and-the-law/), By NEW YORK DAILY NEWS EDITORIAL BOARD and NEW YORK DAILY NEWS. June 15, 2022.
+  -  [Drawing the Assembly lines: It’s a job for the courts, not a disbanded ‘independent’ commission](https://www.nydailynews.com/2022/09/16/drawing-the-assembly-lines-its-a-job-for-the-courts-not-a-disbanded-independent-commission/), By NEW YORK DAILY NEWS EDITORIAL BOARD and NEW YORK DAILY NEWS. September 16, 2022.
+  -  [Tripping on the lines: New York’s overreaching Democratic redistricters have only themselves to blame for Tuesday’s results](https://www.nydailynews.com/2022/11/11/tripping-on-the-lines-new-yorks-overreaching-democratic-redistricters-have-only-themselves-to-blame-for-tuesdays-results/), By NEW YORK DAILY NEWS EDITORIAL BOARD and NEW YORK DAILY NEWS. November 11, 2022.
+  -  [Leave the maps alone: The N.Y. Court of Appeals should be hands off on redistricting](https://www.nydailynews.com/2023/11/15/leave-the-maps-alone-the-n-y-court-of-appeals-should-be-hands-off-on-redistricting/), By NEW YORK DAILY NEWS EDITORIAL BOARD. November 15, 2023.
+  -  [Leave the maps alone: N.Y. congressional districts should stay about the same](https://www.nydailynews.com/2024/02/16/leave-the-maps-alone-n-y-congressional-districts-should-stay-about-the-same/), By NEW YORK DAILY NEWS EDITORIAL BOARD. February 16, 2024.
+  -  [Redistricting’s final chapter: The Dems fought a damaging and costly fight for nothing](https://www.nydailynews.com/2024/02/29/redistrictings-final-chapter-the-dems-fought-a-damaging-and-costly-fight-for-nothing/), By NEW YORK DAILY NEWS EDITORIAL BOARD. February 29, 2024.
+  -  [The fairest in the land: New York has the most competitive House districts in America](https://www.nydailynews.com/2024/10/01/the-fairest-in-the-land-new-york-has-the-most-competitive-house-districts-in-america/), By NEW YORK DAILY NEWS EDITORIAL BOARD. October 1, 2024.
+  -  [Fair lines, fair elections: Flipped results with repeat candidates makes the case](https://www.nydailynews.com/2024/11/11/fair-lines-fair-elections-flipped-results-with-repeat-candidates-makes-the-case/), By NEW YORK DAILY NEWS EDITORIAL BOARD. November 11, 2024.
+  -  [N.Y. must skip the Texas two-step: Don’t fool with mid-decade redistricting](https://www.nydailynews.com/2025/08/04/n-y-must-skip-the-texas-two-step/), By NEW YORK DAILY NEWS EDITORIAL BOARD. August 4, 2025.
+  -  [No redistricting for Staten Island: Leave the current lines in place](https://www.nydailynews.com/2026/01/23/no-redistricting-for-staten-island/), By NEW YORK DAILY NEWS EDITORIAL BOARD. January 23, 2026.
+  -  [Don’t mess with N.Y.’s elections: U.S. Supreme Court has to end congressional redistricting](https://www.nydailynews.com/2026/02/23/dont-mess-with-n-y-s-elections/), By NEW YORK DAILY NEWS EDITORIAL BOARD. February 23, 2026.
+- Others
+  - [New York’s redrawn congressional maps spark interest among state lawmakers](https://www.nydailynews.com/2022/05/17/new-yorks-redrawn-congressional-maps-spark-interest-among-state-lawmakers/), By DENIS SLATTERY. May 17, 2022.
+  - [New York GOP politicians cheer court for tossing Democratic-friendly redistricting map](https://www.nydailynews.com/2022/04/28/new-york-gop-politicians-cheer-court-for-tossing-democratic-friendly-redistricting-map/), By DAVE GOLDINER. April 28, 2022.
+  - [The Court of Appeals tossed New York’s congressional maps and threw the primary season into turmoil. What’s next?](https://www.nydailynews.com/2022/04/28/the-court-of-appeals-tossed-new-yorks-congressional-maps-and-threw-the-primary-season-into-turmoil-whats-next/), By DENIS SLATTERY. April 28, 2022.
+  - [New lawsuit to call on courts to also toss New York’s Democratic-drawn Assembly districts](https://www.nydailynews.com/2022/04/29/exclusive-new-lawsuit-to-call-on-courts-to-also-toss-new-yorks-democratic-drawn-assembly-districts/), By DENIS SLATTERY. April 29, 2022.
+  - [N.Y. state senate and congressional primaries move to August 23](https://www.nydailynews.com/2022/04/29/ny-state-senate-and-congressional-primaries-move-to-august-23/), By DENIS SLATTERY. April 29, 2022.
+  - [Judge to review additional legal challenge against New York’s Dem-drawn Assembly maps](https://www.nydailynews.com/2022/05/02/judge-to-review-additional-legal-challenge-against-new-yorks-dem-drawn-assembly-maps/),B y DENIS SLATTERY and MOLLY CRANE-NEWMAN. May 2, 2022.
+  - [N.Y. voters, lawyers make final arguments as ‘special master’ set to redraw state election maps](https://www.nydailynews.com/2022/05/06/ny-voters-lawyers-make-final-arguments-as-special-master-set-to-redraw-state-election-maps/), By DENIS SLATTERY. May 6, 2022.
+  - [New York Assembly map upheld for 2022 elections, faring better than congressional map](https://www.nydailynews.com/2022/05/11/new-york-assembly-map-upheld-for-2022-elections-faring-better-than-congressional-map/), By TIM BALK. May 11, 2022.
+  - [Map mayhem for New York Democrats as new congressional and state Senate boundaries revealed](https://www.nydailynews.com/2022/05/16/map-mayhem-for-new-york-democrats-as-new-congressional-and-state-senate-boundaries-revealed/), By DENIS SLATTERY. May 16, 2022.
+  - [New York should be angry about these new congressional maps](https://www.nydailynews.com/2022/05/17/new-york-should-be-angry-about-these-new-congressional-maps/), By SHANNON POWELL and TOM WATSON. May 17, 2022.
+  - [New York’s redrawn congressional maps spark interest among state lawmakers](https://www.nydailynews.com/2022/05/17/new-yorks-redrawn-congressional-maps-spark-interest-among-state-lawmakers/), By DENIS SLATTERY. May 17, 2022.
+  - [Former NYC Mayor Bill de Blasio poised to run for Congress, announces exploratory committee](https://www.nydailynews.com/2022/05/18/former-nyc-mayor-bill-de-blasio-poised-to-run-for-congress-announces-exploratory-committee/), By CHRIS SOMMERFELDT | New York Daily News and MICHAEL GARTLAND. May 18, 2022.
+  - [New York congressional and state Senate maps finalized by upstate court](https://www.nydailynews.com/2022/05/21/new-york-congressional-and-state-senate-maps-finalized-by-upstate-court/), By DENIS SLATTERY. May 21, 2022.
+  - [Redrawn congressional lines dividing Democrats, ‘earthquake’ for New York politics](https://www.nydailynews.com/2022/05/21/redrawn-congressional-lines-dividing-democrats-earthquake-for-new-york-politics/), By DENIS SLATTERY and MICHAEL MCAULIFF. May 21, 2022.
+
+---
+
 **What to know about Bernard Grofman and Jonathan Cervas, Wisconsin's new map consultants**
 *Milwaukee Journal Sentinel*
 
