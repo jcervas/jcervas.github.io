@@ -41,6 +41,7 @@ Jonathan Cervas, a postdoctoral fellow at Carnegie Mellon, has quickly risen to 
 **Coverage by the New York Daily News**
 *New York Daily News*
 - **Editorials**
+  - [A Supreme Court win for a fair map: The Staten Island congressional district stays in place](https://www.nydailynews.com/2026/03/09/a-supreme-court-win-for-a-fair-map/), By NEW YORK DAILY NEWS EDITORIAL BOARD. March 9, 2026.
   - [What democracy looks like: New lines for Congress and state Senate are far superior](https://www.nydailynews.com/2022/05/17/what-democracy-looks-like-new-lines-for-congress-and-state-senate-are-far-superior/), By NEW YORK DAILY NEWS EDITORIAL BOARD and NEW YORK DAILY NEWS. May 17, 2022.
   -  [Draw a line, judges: A five-jurist appellate panel must strike down hyperpartisan maps](https://www.nydailynews.com/2022/04/20/draw-a-line-judges-a-five-jurist-appellate-panel-must-strike-down-hyperpartisan-maps/?clearUserState=true), By NEW YORK DAILY NEWS EDITORIAL BOARD and NEW YORK DAILY NEWS. April 20, 2022
   -  [Power to the voters: Newly drawn districts are a boon to New Yorkers](https://www.nydailynews.com/2022/05/19/power-to-the-voters-newly-drawn-districts-are-a-boon-to-new-yorkers/), By NEW YORK DAILY NEWS EDITORIAL BOARD and NEW YORK DAILY NEWS. May 19, 2022.
