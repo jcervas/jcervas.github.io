@@ -1,8 +1,21 @@
+---
+title: "JONATHAN ROBERT CERVAS"
+output:
+  pdf_document:
+    keep_tex: false
+    latex_engine: pdflatex
+  html_document:
+    theme: yeti
+    highlight: textmate
+  md_document:
+    variant: gf
+---
 <!-- pandoc '/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/GitHub/jcervas.github.io/cv.md' --pdf-engine=xelatex -o '/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/GitHub/jcervas.github.io/cv.pdf' -->
+
+<!-- rmarkdown::render('/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/GitHub/jcervas.github.io/cv.md', output_format = 'all') -->
 <!-- Header -->
-# Jonathan Robert Cervas
-**Curriculum Vitae**  
-*Revised December 2025*
+
+*Revised March 2026*
 
   Carnegie Mellon University  
   5000 Forbes Avenue  
@@ -14,26 +27,33 @@
 > [Github: jcervas](https://github.com/jcervas)  
 > [Google Scholar: Jonathan Cervas](https://scholar.google.com/citations?user=ZFLIcZ0AAAAJ&hl=en&inst=3203679203499159833&oi=ao)  
 
+
 ---
 
-## Employment
+## EMPLOYMENT
+
 **Carnegie Mellon University**  
-- *Assistant Teaching Professor* — 2024–Present  
-- *Post-Doctoral Fellow* — 2020–2024  
+
+  >  *Assistant Teaching Professor* — 2024–Present  
+  >  *Post-Doctoral Fellow* — 2020–2024  
 
 ---
 
-## Education
-**University of California, Irvine**  
-- **Ph.D., Political Science**, August 2020  
-  - Dissertation Committee: Bernard Grofman (Chair), Michael Tesler, Carole Uhlaner  
-  - Dissertation: *A Quantitative Assessment of the U.S. Electoral College, 1790–2020*  
-  - Fields: American Politics, Political Methodology, Comparative Politics  
+## EDUCATION
 
-- **M.A., Political Science**, December 2018  
+**University of California, Irvine**  
+
+>  **Ph.D., Political Science**, 2020  
+
+  >  Dissertation Committee: Bernard Grofman (Chair), Michael Tesler, Carole Uhlaner  
+  >  Dissertation: *A Quantitative Assessment of the U.S. Electoral College, 1790–2020*  
+  >  Fields: American Politics, Political Methodology, Comparative Politics  
+  >  
+>  **M.A., Political Science**, December 2018  
 
 **University of Nevada, Las Vegas**  
-- **B.A., Political Science**, 2007  
+
+>  **B.A., Political Science**, 2007  
 
 ### Additional Training
 - Workshop on Research Design for Causal Inference, **Northwestern University**, 2017  
@@ -41,10 +61,32 @@
 
 ---
 
-## Publications
+## TEACHING EXPERIENCE
+
+### Courses
+  * *Representation and Voting Rights* - 84-352/652 - (Spring 2021, Spring 2022, Spring 2023, Spring 2024, Spring 2026)
+    * Dietrich General Education, *Perspectives on Justice and Injustice* 
+  * *Introduction to US Constitutional Law* - 84-120 - (Spring 2026)
+    * Dietrich General Education, *Humanities* 
+  * *American Political Divides and Great Debates* - 84-309/609 - (Fall 2024, Fall 2025)
+    * Dietrich General Education, *Perspectives on Justice and Injustice* 
+    * Eberly Center Consultation on Course Design and Early Semester Feedback (Patrick Welsh, 2024, 2025)
+  * *Democracy's Data: Analytics and Insights into American Elections* - 84-355/655 - (Fall 2024, Fall 2025)
+    * Dietrich General Education, *Contextual Thinking* 
+  * *Regression Analysis for Political Science II* - 84-702 - (Spring 2023, Spring 2024)
+    * Dietrich General Education, *Scientific Inquiry* 
+  * *American Politics Graduate Seminar/Advanced Topics in American Politics* - 84-421/721 - (Fall 2020, Fall 2021, Fall 2022, Fall 2023)
+  
+### Grants
+
+  * *Generative AI Teaching as Research Initiative: GAITAR@Scale* - American Political Divides and Great Debates (April 2025) - $3,000
+
+---
+
+## PUBLICATIONS
 
 ### 2025
-- *Partisan Gerrymandering.* Bernard Grofman & Jonathan Cervas, Partisan Gerrymandering, in Elgar Encyclopedia of Public Choice 476 (Richard Jong-A-Pin & Christian Bjørnskov eds., 2025), https://www.elgaronline.com/view/book/9781802207750/chapter68.xml. [Read Online](https://www.elgaronline.com/view/book/9781802207750/chapter68.xml)]  
+- *Partisan Gerrymandering.* Bernard Grofman & Jonathan Cervas, Partisan Gerrymandering, in Elgar Encyclopedia of Public Choice 476 (Richard Jong-A-Pin & Christian Bjørnskov eds., 2025) [Read Online](https://www.elgaronline.com/view/book/9781802207750/chapter68.xml)  
 
 ### 2024
 - *Statistical Fallacies in Claims about ‘Massive and Widespread Fraud’ in the 2020 Presidential Election.* Bernard Grofman and **Jonathan Cervas**. *Statistics and Public Policy*, 11(1). [Read Online](https://www.tandfonline.com/doi/full/10.1080/2330443X.2023.2289529)  
@@ -84,35 +126,35 @@
 
 ---
 
-## Other Publications
+## OTHER PUBLICATIONS
 
 ### 2024
-- *Report of the Court-Appointed Co-Consultants in re Clarke v. Wisconsin Elections Commission* (Case Number 2023Ap1399-Oa, 2023 Wi 79). [Read Online]  
+- *Report of the Court-Appointed Co-Consultants in re Clarke v. Wisconsin Elections Commission* (Case Number 2023Ap1399-Oa, 2023 Wi 79). [Read Online](https://jonathancervas.com/2024/WI/Grofman-Cervas-Consultant.pdf)  
 
 ### 2023
-- *Memo in Support of Grofman/Cervas/Griggy Remedial Proposals.* U.S. District Court for the Northern District of Alabama, Southern Division. [Read Online]  
-- *Brief Of Amici Curiae Dr. Jonathan Cervas, Paul Mitchell, Dr. Samuel S.-H. Wang, Roderick Kennedy, Election Reformers Network, Common Cause New Mexico, and League Of Women Voters New Mexico In Support Of Neither Party.* State of New Mexico, County of Lea, Fifth Judicial District Court. Cervas, Jonathan et al. [Read Online]  
+- *Memo in Support of Grofman/Cervas/Griggy Remedial Proposals.* U.S. District Court for the Northern District of Alabama, Southern Division. [Read Online](https://jonathancervas.com/2023/AL/memo.pdf)  
+- *Brief Of Amici Curiae Dr. Jonathan Cervas, Paul Mitchell, Dr. Samuel S.-H. Wang, Roderick Kennedy, Election Reformers Network, Common Cause New Mexico, and League Of Women Voters New Mexico In Support Of Neither Party.* State of New Mexico, County of Lea, Fifth Judicial District Court. Cervas, Jonathan et al. [Read Online](https://jonathancervas.com/2023/NM/NM-amicus.pdf)  
 
 ### 2022
-- *Report of the Special Master (Harkinrider v. Hochel).* **Jonathan Cervas**. [Read Online]  
+- *Report of the Special Master (Harkinrider v. Hochel).* **Jonathan Cervas**. [Read Online](https://jonathancervas.com/2022/NY/CERVAS-SM-NY-2022.pdf)  
 
 ### 2021
-- *Fracking: A Contiguity-Related Redistricting Metric.* **Jonathan Cervas** and Bernard Grofman. *Election Law Blog*. [Read Online]  
-- *Trump the Wrestler and the 2024 Grudge Match.* Bernard Grofman and **Jonathan Cervas**. [Read Online]  
-- *The GOP Scared Latinos from the Census. Now That May Cost the Party Red Seats.* Sam Wang and **Jonathan Cervas**. *Washington Post*. [Read Online]  
-- *Great Lobster and a More Equitable Voting System Exists in Maine.* Anjali Akula, **Jonathan Cervas**, and Elsie Goren. *Medium.com “3Streams”*. [Read Online]  
+- *Fracking: A Contiguity-Related Redistricting Metric.* **Jonathan Cervas** and Bernard Grofman. *Election Law Blog*. [Read Online](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3918044)  
+- *Trump the Wrestler and the 2024 Grudge Match.* Bernard Grofman and **Jonathan Cervas**. [Read Online](https://scholar.google.com/scholar?oi=bibs&cluster=18401211417413276692&btnI=1&hl=en)  
+- *The GOP Scared Latinos from the Census. Now That May Cost the Party Red Seats.* Sam Wang and **Jonathan Cervas**. *Washington Post*. [Read Online](https://www.washingtonpost.com/outlook/2021/05/01/hispanics-census-undercount-house-seats/)  
+- *Great Lobster and a More Equitable Voting System Exists in Maine.* Anjali Akula, **Jonathan Cervas**, and Elsie Goren. *Medium.com “3Streams”*. [Read Online](https://medium.com/3streams/a-more-equitable-voting-system-in-maine-ranked-choice-voting-864cb3367468)  
 
 ### 2020
 - *Amicus Curiae with Princeton Electoral Innovation Lab.* [Read Online]  
-- *How Likely is Trump to Lose the Popular Vote but Win the Electoral College?* **Jonathan Cervas** and Bernard Grofman. *Medium.com “3Streams”*. [Read Online]  
-- *These Are the Political Consequences of Excluding Undocumented Immigrants from Apportionment.* Angela Ocampo and **Jonathan Cervas**. *Medium.com “3Streams”*. [Read Online]  
+- *How Likely is Trump to Lose the Popular Vote but Win the Electoral College?* **Jonathan Cervas** and Bernard Grofman. *Medium.com “3Streams”*. [Read Online](https://medium.com/3streams/how-likely-is-trump-to-lose-the-popular-vote-but-win-the-electoral-college-cf5eeb90fc74)  
+- *These Are the Political Consequences of Excluding Undocumented Immigrants from Apportionment.* Angela Ocampo and **Jonathan Cervas**. *Medium.com “3Streams”*. [Read Online](https://medium.com/3streams/political-consequences-of-excluding-undocumented-immigrants-from-apportionment-eccdd098219d)  
 
 ### 2018
-- *Pennsylvania Has to Draw New Congressional Districts but Getting Rid of Gerrymandering Will Be Harder Than You Think.* Bernard Grofman and **Jonathan Cervas**. *The Washington Post*. [Read Online]  
+- *Pennsylvania Has to Draw New Congressional Districts but Getting Rid of Gerrymandering Will Be Harder Than You Think.* Bernard Grofman and **Jonathan Cervas**. *The Washington Post*. [Read Online](https://www.washingtonpost.com/news/monkey-cage/wp/2018/02/09/now-pennsylvania-has-to-draw-new-house-districts-but-getting-rid-of-gerrymandering-is-harder-than-you-think/)  
 
 ---
 
-## Work Experience
+## PROFESSIONAL EXPERIENCE
 **Special Master**  
 - *Harkenrider v. Hochul* (2022), New York Congressional and Senate Districts. [Court Opinion](https://iapps.courts.state.ny.us/nyscef/ViewDocument?docIndex=uDfPP48y36fJVIV/tA1CDg==)  
 
@@ -126,6 +168,8 @@
 - *Navajo Nation v. San Juan County, UT*, 2017. [Court Opinion](https://www.ca10.uscourts.gov/opinions/18/18-4005.pdf)  
 
 **Expert Witness**  
+- *Driver v. Houston County* Civil Action No. 5:25-cv-25. 
+- *Wise v. State of Missouri* (2026) Case No. 2516-CV29597. 
 - *New York Communities for Change v. County of Nassau* (2024).  
 - *Moore v. Lee*, Tennessee Chancery Court (2022). Reports [1](http://jonathancervas.com/2022/TN/tn1.pdf), [2](http://jonathancervas.com/2022/TN/tn2.pdf), [3](http://jonathancervas.com/2022/TN/tn3.pdf), [4](http://jonathancervas.com/2022/TN/tn4.pdf), [5](http://jonathancervas.com/2022/TN/tn5.pdf).  
 
@@ -135,10 +179,11 @@
 
 ---
 
-## Invited Talks
+## TALKS (Invited and Conference)
 
 ### 2026
-- Mid-Decade Redistricting - New York Law School, Hosted by Judge Michelle Childs. February 3, 2026. 
+- *An Experiment on Optimal Campaigning Using a Simplified Seven State Electoral College* - Public Choice Society Annual Conference, San Antonio, Texas. March 14, 2026.
+- *Mid-Decade Redistricting* - New York Law School, Hosted by Judge Michelle Childs. February 3, 2026. 
 
 ### 2025
 - *What’s the Story with Redistricting?* - Heinz School of Public Policy, Policy and Politics Group, September 24, 2025.  
@@ -191,20 +236,21 @@
 
 ---
 
-## Service to the University
+## SERVICE TO THE UNIVERSITY
+- Constitution Day, Committee Member (2026)  
 - Democracy Day, Co-Chair (2025)  
 - Faculty Senate, CMIST Representative (2025)  
 - Democracy Day, Committee Member (2024)  
-- *Bridging the Divide: Understanding and Addressing Political Polarization in America* (2024). [Website](https://www.heinz.cmu.edu/media/2024/November/cmu-community-engages-on-election-issues-through-deeper-conversations)  
+- Deeper Conversations, Speaker (2024): *Bridging the Divide: Understanding and Addressing Political Polarization in America* [Website](https://www.heinz.cmu.edu/media/2024/November/cmu-community-engages-on-election-issues-through-deeper-conversations)  
 
 ---
 
-## Service to the Discipline
+## SERVICE TO THE DISCIPLINE
 Referee: *American Journal of Political Science, Political Geography, Election Law Journal, Public Choice, Political Research Quarterly*  
 
 ---
 
-## References
+## REFERENCES
 **Bernard Grofman**, UC Irvine  
 Distinguished Professor of Political Science  
 Fellow, American Academy of Arts and Sciences  
