@@ -192,30 +192,30 @@ output:
 - *Partisan & Racial Gerrymandering and the Voting Rights Act* — New York Law School, Hosted by Jeff Wice, February 19, 2025.  
 - *Gerrymandering and the Voting Rights Act: A Threat to Democracy?* — University of Pittsburgh, Hosted by Ralph L. Bangs, February 11, 2025.  
 - *Build a 2030 Redistricting Checklist* — National Conference of State Legislatures, NCSL Annual Summit, Louisville, KY, August 7, 2024.  
-- *NY Redistricting Conference: What Happened and What’s Next?* — Keynote Speaker, New York Law School, June 18, 2024. [Website] [Keynote Remarks]  
+- *NY Redistricting Conference: What Happened and What’s Next?* — Keynote Speaker, New York Law School, June 18, 2024. [Website](https://services.nycbar.org/EventDetail?EventKey=ELEC091322) [Keynote Remarks](https://youtu.be/w58d3XdrvjM?si=NGhCcsWxeu13AwTx&t=532)  
 
 ### 2024
-- *When Third Parties Matter* — Niskanen Center, Hosted by Matt Grossman, May 29, 2024. [Website]  
+- *When Third Parties Matter* — Niskanen Center, Hosted by Matt Grossman, May 29, 2024. [Website](https://www.niskanencenter.org/when-third-parties-matter/)  
 - *Elections and Voting* — Sacramento State University, Hosted by Hallee Caron, March 25, 2024.  
 - *Elections Redistricting and Voting Rights* — New York Law School, Hosted by Jeff Wice, February 21, 2024.  
 - *The Issues Shaping Attitudes Around the Election* — New York University School of Journalism, Hosted by Eliza Griswold and SpotlightPA, February 19, 2024.  
 
 ### 2023
 - *Redistricting* — Carnegie Mellon University Osher Class, Hosted by Randy Weinberg, October 23, 2023.  
-- *Power to the People* at “A Path Towards Equality” — Hosted by SpotlightPA, October 11, 2023. [Website]  
+- *Power to the People* at “A Path Towards Equality” — Hosted by SpotlightPA, October 11, 2023. [Website](https://www.spotlightpa.org/news/2023/10/pennsylvania-government-equity-representation-harrisburg-summit/)  
 - *Elections Redistricting and Voting Rights* — New York Law School, Hosted by Jeff Wice, October 4, 2023.  
 - *Federal Appellate Advocacy* — University of Pittsburgh School of Law, Hosted by Hon. D. Michael Fisher, September 26, 2023.  
 - *Pennsylvania Redistricting: Lessons Learned and Next Steps for Reform* — Hosted by Common Cause PA, League of Women Voters PA, NAACP PA, Committee of Seventy, FairDistricts PA, and Pennsylvania Voice, May 31, 2023.  
 - *Voting Rights and Election Law* — Touro Law School, Hosted by Judge Phil Solages, May 4, 2023.  
-- *Remapping Democracy: Redistricting, Race, and Fair Elections in a Changing Legal Environment* — Government Law Review at Albany Law School, March 6, 2023. [Website]  
+- *Remapping Democracy: Redistricting, Race, and Fair Elections in a Changing Legal Environment* — Government Law Review at Albany Law School, March 6, 2023. [Website](https://www.albanylaw.edu/news/government-law-review-2023-spring-symposium-explores-remapping-democracy-redistricting-race)  
 
 ### 2022
 - *Representation, Race, Redistricting* — CUNY Graduate School, Hosted by Keena Lipsitz and John Mollenkopf, November 17, 2022.  
 - *Voting Rights and Redistricting: Reshaping American Democracy* — New York Law School, Hosted by Jeff Wice, October 20, 2022.  
 - *Democracy Threatened: Will Your Vote Count?* — Great Issues Forum at Redeemer, October 12, 2022.  
-- *Contemporary Issues in Election Law* — New Hampshire Law School, Hosted by Kyle Kopko, October 7, 2022. [Website]  
+- *Contemporary Issues in Election Law* — New Hampshire Law School, Hosted by Kyle Kopko, October 7, 2022. [Website](https://law.unh.edu/blog/2022/09/unh-franklin-pierce-hosts-government-officials-civic-leaders-renowned-scholars-annual-unh-law-review)  
 - *Voting Rights and Election Law* — Hofstra Law School, Hosted by Judge Phil Solages, September 12, 2022.  
-- *Measuring Compactness* — Pennsylvania Redistricting with Geographers: Communities of Interest Criteria and Beyond, American Association of Geographers. [Slides]  
+- *Measuring Compactness* — Pennsylvania Redistricting with Geographers: Communities of Interest Criteria and Beyond, American Association of Geographers.  
 
 ### 2021
 - *Voting Rights and Elections* — University of Texas at Austin, Hosted by Beto O’Rourke, Spring 2021.  
