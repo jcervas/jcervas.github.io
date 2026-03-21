@@ -56,6 +56,7 @@ output:
 >  **B.A., Political Science**, 2007  
 
 ### Additional Training
+
 - Workshop on Research Design for Causal Inference, **Northwestern University**, 2017  
 - Inter-university Consortium for Political and Social Research (ICPSR), **University of Michigan**, 2016  
 
@@ -86,7 +87,7 @@ output:
 ## PUBLICATIONS
 
 ### 2025
-- *Partisan Gerrymandering.* Bernard Grofman & Jonathan Cervas, Partisan Gerrymandering, in Elgar Encyclopedia of Public Choice 476 (Richard Jong-A-Pin & Christian Bjørnskov eds., 2025) [Read Online](https://www.elgaronline.com/view/book/9781802207750/chapter68.xml)  
+- *Partisan Gerrymandering.* Bernard Grofman and **Jonathan Cervas**, Partisan Gerrymandering, in Elgar Encyclopedia of Public Choice 476 (Richard Jong-A-Pin & Christian Bjørnskov eds., 2025) [Read Online](https://www.elgaronline.com/view/book/9781802207750/chapter68.xml)  
 
 ### 2024
 - *Statistical Fallacies in Claims about ‘Massive and Widespread Fraud’ in the 2020 Presidential Election.* Bernard Grofman and **Jonathan Cervas**. *Statistics and Public Policy*, 11(1). [Read Online](https://www.tandfonline.com/doi/full/10.1080/2330443X.2023.2289529)  
@@ -99,7 +100,7 @@ output:
 ### 2022
 - *Using Folded Seats-Votes Curves to Compare Partisan Bias in the 2020 Presidential Election with Other 21st Century Elections.* **Jonathan Cervas** and Bernard Grofman. *Presidential Studies Quarterly*. [Read Online](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4060327)  
 
-- *Turning Communities of Interest into a Rigorous Standard for Fair Districting.* Wang, Chen, Ober, Grofman, Barnes, and **Cervas**. *Stanford J. of Civil Rights & Civil Liberties*, 18, 101. [Read Online](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3828800)  
+- *Turning Communities of Interest into a Rigorous Standard for Fair Districting.* Sam Wang, Sandra Chen, Richard Ober, Bernard Grofman, Kyle Barnes, and **Jonathan Cervas**. *Stanford J. of Civil Rights & Civil Liberties*, 18, 101. [Read Online](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3828800)  
 
 - *Why Donald Trump Should be a Fervent Advocate of Using Rank-Choice Voting in 2024.* **Jonathan Cervas** and Bernard Grofman. *PS: Political Science & Politics*, 55(1). [Read Online](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3832051)  
 
@@ -109,20 +110,20 @@ output:
 - *The Unanticipated Effect of Covid-19 on House Apportionments.* **Jonathan Cervas** and Bernard Grofman. *Social Science Quarterly*, 102(5), 2432-2434. [Read Online](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3898284)  
 
 ### 2020
-- *ZIP Codes as Geographic Bases of Representation.* Grofman and **Cervas**. *Election Law Journal.* [Read Online](http://jonathancervas.com/2020/zipcodes/ZIP.pdf)  
+- *ZIP Codes as Geographic Bases of Representation.* Bernard Grofman and **Jonathan Cervas**. *Election Law Journal.* [Read Online](http://jonathancervas.com/2020/zipcodes/ZIP.pdf)  
 
-- *Legal, Political Science and Economics Approaches to Measuring Malapportionment.* **Jonathan Cervas** and Grofman. *Social Science Quarterly*, 101(6), 2238-2256. [Read Online](http://jonathancervas.com/2020/SSQ/malapportionment.pdf)  
+- *Legal, Political Science and Economics Approaches to Measuring Malapportionment.* **Jonathan Cervas** and Bernard Grofman. *Social Science Quarterly*, 101(6), 2238-2256. [Read Online](http://jonathancervas.com/2020/SSQ/malapportionment.pdf)  
 
-- *Tools for Identifying Partisan Gerrymandering: Pennsylvania Case Study.* **Jonathan Cervas** and Grofman. *Political Geography*, 76: 102069. [Read Online](http://polisci.uci.edu/~jcervas/papers/2020/PALWV_PG.pdf)  
+- *Tools for Identifying Partisan Gerrymandering: Pennsylvania Case Study.* **Jonathan Cervas** and Bernard Grofman. *Political Geography*, 76: 102069. [Read Online](http://polisci.uci.edu/~jcervas/papers/2020/PALWV_PG.pdf)  
 
 ### 2019
-- *Are Presidential Inversions Inevitable?* **Jonathan Cervas** and Grofman. *Social Science Quarterly*, 100(4), 1322-1342. [Read Online](http://jonathancervas.com/2019/SSQ/inversions.pdf)  
+- *Are Presidential Inversions Inevitable?* **Jonathan Cervas** and Bernard Grofman. *Social Science Quarterly*, 100(4), 1322-1342. [Read Online](http://jonathancervas.com/2019/SSQ/inversions.pdf)  
 
 ### 2018
-- *Can State Courts Cure Partisan Gerrymandering? Lessons from League of Women Voters v. Pennsylvania.* Grofman and **Cervas**. *Election Law Journal*, 17(4), 264–285. [Read Online](http://jonathancervas.com/2018/ELJ/_2018__Can_State_Courts_Cure_Partisan_Gerrymandering.pdf)  
+- *Can State Courts Cure Partisan Gerrymandering? Lessons from League of Women Voters v. Pennsylvania.* Bernard Grofman and **Jonathan Cervas**. *Election Law Journal*, 17(4), 264–285. [Read Online](http://jonathancervas.com/2018/ELJ/_2018__Can_State_Courts_Cure_Partisan_Gerrymandering.pdf)  
 
 ### 2017
-- *Why Noncompetitive States Matter: The Electoral College 1868–2016.* **Jonathan Cervas** and Grofman. *Public Choice*, 173(3–4), 251–265. [Read Online](http://jonathancervas.com/2017/PC/noncompetitiveelections.pdf)  
+- *Why Noncompetitive States Matter: The Electoral College 1868–2016.* **Jonathan Cervas** and Bernard Grofman. *Public Choice*, 173(3–4), 251–265. [Read Online](http://jonathancervas.com/2017/PC/noncompetitiveelections.pdf)  
 
 ---
 
