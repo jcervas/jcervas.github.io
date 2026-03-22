@@ -1,70 +1,48 @@
 ---
-title: "JONATHAN ROBERT CERVAS"
-output:
-  pdf_document:
-    keep_tex: false
-    latex_engine: pdflatex
-  html_document:
-    theme: yeti
-    highlight: textmate
-  md_document:
-    variant: gf
+title: "Jonathan Robert Cervas"
 ---
-<!-- pandoc '/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/GitHub/jcervas.github.io/cv.md' --pdf-engine=xelatex -o '/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/GitHub/jcervas.github.io/cv.pdf' -->
+  
+<!-- Terminal
 
-<!-- rmarkdown::render('/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/GitHub/jcervas.github.io/cv.md', output_format = 'all') -->
-<!-- Header -->
+chmod +x cv_build.sh
+./cv_build.sh
 
-*Revised March 2026*
-
-  Carnegie Mellon University  
-  5000 Forbes Avenue  
-  Posner Hall 374   
-  Pittsburgh, PA 15213  
-
-> [Email: cervas@cmu.edu](mailto:cervas@cmu.edu)  
-> [Website: jonathancervas.com](http://jonathancervas.com)  
-> [Github: jcervas](https://github.com/jcervas)  
-> [Google Scholar: Jonathan Cervas](https://scholar.google.com/citations?user=ZFLIcZ0AAAAJ&hl=en&inst=3203679203499159833&oi=ao)  
+ -->
 
 
----
 
 ## EMPLOYMENT
 
 **Carnegie Mellon University**  
 
-  >  *Assistant Teaching Professor* — 2024–Present  
-  >  *Post-Doctoral Fellow* — 2020–2024  
+  *Assistant Teaching Professor* — 2024–Present  
+  *Post-Doctoral Fellow* — 2020–2024  
 
----
 
 ## EDUCATION
 
-**University of California, Irvine**  
+### University of California, Irvine
 
->  **Ph.D., Political Science**, 2020  
+#### Ph.D., Political Science, 2020
+  Dissertation Committee: Bernard Grofman (Chair), Michael Tesler, Carole Uhlaner  
+  Dissertation: *A Quantitative Assessment of the U.S. Electoral College, 1790–2020*  
+  Fields: American Politics, Political Methodology, Comparative Politics
+  
+#### M.A., Political Science, December 2018
 
-  >  Dissertation Committee: Bernard Grofman (Chair), Michael Tesler, Carole Uhlaner  
-  >  Dissertation: *A Quantitative Assessment of the U.S. Electoral College, 1790–2020*  
-  >  Fields: American Politics, Political Methodology, Comparative Politics  
-  >  
->  **M.A., Political Science**, December 2018  
+### University of Nevada, Las Vegas
 
-**University of Nevada, Las Vegas**  
-
->  **B.A., Political Science**, 2007  
+#### B.A., Political Science, 2007
 
 ### Additional Training
+  Workshop on Research Design for Causal Inference, **Northwestern University**, 2017  
+  Inter-university Consortium for Political and Social Research (ICPSR), **University of Michigan**, 2016  
 
-- Workshop on Research Design for Causal Inference, **Northwestern University**, 2017  
-- Inter-university Consortium for Political and Social Research (ICPSR), **University of Michigan**, 2016  
-
----
 
 ## TEACHING EXPERIENCE
 
 ### Courses
+
   * *Representation and Voting Rights* - 84-352/652 - (Spring 2021, Spring 2022, Spring 2023, Spring 2024, Spring 2026)
     * Dietrich General Education, *Perspectives on Justice and Injustice* 
   * *Introduction to US Constitutional Law* - 84-120 - (Spring 2026)
@@ -82,7 +60,6 @@ output:
 
   * *Generative AI Teaching as Research Initiative: GAITAR@Scale* - American Political Divides and Great Debates (April 2025) - $3,000
 
----
 
 ## PUBLICATIONS
 
@@ -125,7 +102,6 @@ output:
 ### 2017
 - *Why Noncompetitive States Matter: The Electoral College 1868–2016.* **Jonathan Cervas** and Bernard Grofman. *Public Choice*, 173(3–4), 251–265. [Read Online](http://jonathancervas.com/2017/PC/noncompetitiveelections.pdf)  
 
----
 
 ## OTHER PUBLICATIONS
 
@@ -146,39 +122,37 @@ output:
 - *Great Lobster and a More Equitable Voting System Exists in Maine.* Anjali Akula, **Jonathan Cervas**, and Elsie Goren. *Medium.com “3Streams”*. [Read Online](https://medium.com/3streams/a-more-equitable-voting-system-in-maine-ranked-choice-voting-864cb3367468)  
 
 ### 2020
-- *Amicus Curiae with Princeton Electoral Innovation Lab.* [Read Online]  
-- *How Likely is Trump to Lose the Popular Vote but Win the Electoral College?* **Jonathan Cervas** and Bernard Grofman. *Medium.com “3Streams”*. [Read Online](https://medium.com/3streams/how-likely-is-trump-to-lose-the-popular-vote-but-win-the-electoral-college-cf5eeb90fc74)  
-- *These Are the Political Consequences of Excluding Undocumented Immigrants from Apportionment.* Angela Ocampo and **Jonathan Cervas**. *Medium.com “3Streams”*. [Read Online](https://medium.com/3streams/political-consequences-of-excluding-undocumented-immigrants-from-apportionment-eccdd098219d)  
+- *Amicus Curiae with Princeton Electoral Innovation Lab.* [Read Online](https://jonathancervas.com/2020/maine.pdf)
+- *How Likely is Trump to Lose the Popular Vote but Win the Electoral College?* **Jonathan Cervas** and Bernard Grofman. *Medium.com “3Streams”*. [Read Online](https://medium.com/3streams/how-likely-is-trump-to-lose-the-popular-vote-but-win-the-electoral-college-cf5eeb90fc74)
+- *These Are the Political Consequences of Excluding Undocumented Immigrants from Apportionment.* Angela Ocampo and **Jonathan Cervas**. *Medium.com “3Streams”*. [Read Online](https://medium.com/3streams/political-consequences-of-excluding-undocumented-immigrants-from-apportionment-eccdd098219d)
 
 ### 2018
-- *Pennsylvania Has to Draw New Congressional Districts but Getting Rid of Gerrymandering Will Be Harder Than You Think.* Bernard Grofman and **Jonathan Cervas**. *The Washington Post*. [Read Online](https://www.washingtonpost.com/news/monkey-cage/wp/2018/02/09/now-pennsylvania-has-to-draw-new-house-districts-but-getting-rid-of-gerrymandering-is-harder-than-you-think/)  
+- *Pennsylvania Has to Draw New Congressional Districts but Getting Rid of Gerrymandering Will Be Harder Than You Think.* Bernard Grofman and **Jonathan Cervas**. *The Washington Post*. [Read Online](https://www.washingtonpost.com/news/monkey-cage/wp/2018/02/09/now-pennsylvania-has-to-draw-new-house-districts-but-getting-rid-of-gerrymandering-is-harder-than-you-think/)
 
----
 
 ## PROFESSIONAL EXPERIENCE
-**Special Master**  
-- *Harkenrider v. Hochul* (2022), New York Congressional and Senate Districts. [Court Opinion](https://iapps.courts.state.ny.us/nyscef/ViewDocument?docIndex=uDfPP48y36fJVIV/tA1CDg==)  
+**Special Master**
+- *Harkenrider v. Hochul* (2022), New York Congressional and Senate Districts. [Court Opinion](https://iapps.courts.state.ny.us/nyscef/ViewDocument?docIndex=uDfPP48y36fJVIV/tA1CDg==)
 
-**Court/Legislative Consultant**  
-- Wisconsin Supreme Court (*Clarke v. Wisconsin Elections Commission*), 2023–2024.  
-- Pennsylvania Reapportionment Commission, 2021–2022.  
+**Court/Legislative Consultant**
+- Wisconsin Supreme Court (*Clarke v. Wisconsin Elections Commission*), 2023–2024.
+- Pennsylvania Reapportionment Commission, 2021–2022.
 
-**Assistant to the Special Master**  
-- *Wright v. Sumter County Board of Elections*, 2019–2020. [Court Opinion](https://www.acluga.org/sites/default/files/field_documents/sumter_county_ruling.pdf)  
-- *Bethune-Hill v. Virginia State Board of Elections*, 2018–2019. [Court Opinion](https://www.brennancenter.org/sites/default/files/legal-work/2019-02-14-361-Memorandum%20Opinion.pdf)  
-- *Navajo Nation v. San Juan County, UT*, 2017. [Court Opinion](https://www.ca10.uscourts.gov/opinions/18/18-4005.pdf)  
+**Assistant to the Special Master**
+- *Wright v. Sumter County Board of Elections*, 2019–2020. [Court Opinion](https://www.acluga.org/sites/default/files/field_documents/sumter_county_ruling.pdf)
+- *Bethune-Hill v. Virginia State Board of Elections*, 2018–2019. [Court Opinion](https://www.brennancenter.org/sites/default/files/legal-work/2019-02-14-361-Memorandum%20Opinion.pdf)
+- *Navajo Nation v. San Juan County, UT*, 2017. [Court Opinion](https://www.ca10.uscourts.gov/opinions/18/18-4005.pdf)
 
-**Expert Witness**  
+**Expert Witness**
 - *Driver v. Houston County* Civil Action No. 5:25-cv-25. 
 - *Wise v. State of Missouri* (2026) Case No. 2516-CV29597. 
-- *New York Communities for Change v. County of Nassau* (2024).  
-- *Moore v. Lee*, Tennessee Chancery Court (2022). Reports [1](http://jonathancervas.com/2022/TN/tn1.pdf), [2](http://jonathancervas.com/2022/TN/tn2.pdf), [3](http://jonathancervas.com/2022/TN/tn3.pdf), [4](http://jonathancervas.com/2022/TN/tn4.pdf), [5](http://jonathancervas.com/2022/TN/tn5.pdf).  
+- *New York Communities for Change v. County of Nassau* (2024).
+- *Moore v. Lee*, Tennessee Chancery Court (2022). Reports [1](http://jonathancervas.com/2022/TN/tn1.pdf), [2](http://jonathancervas.com/2022/TN/tn2.pdf), [3](http://jonathancervas.com/2022/TN/tn3.pdf), [4](http://jonathancervas.com/2022/TN/tn4.pdf), [5](http://jonathancervas.com/2022/TN/tn5.pdf).
 
-**Consultant**  
-- Town of Newburgh, NY (2024)  
-- Town of Cheektowaga, NY (2024)  
+**Consultant**
+- Town of Newburgh, NY (2024)
+- Town of Cheektowaga, NY (2024)
 
----
 
 ## TALKS (Invited and Conference)
 
@@ -187,87 +161,84 @@ output:
 - *Mid-Decade Redistricting* - New York Law School, Hosted by Judge Michelle Childs. February 3, 2026. 
 
 ### 2025
-- *What’s the Story with Redistricting?* - Heinz School of Public Policy, Policy and Politics Group, September 24, 2025.  
-- *Mid-decade Redistricting* — New York Law School, Hosted by Jeff Wice, September 17, 2025.  
--  *Disinformation and the Fight for Democracy* — University of Pittsburgh, Hosted by Ralph L. Bangs, July 15, 2025.  
-- *Partisan & Racial Gerrymandering and the Voting Rights Act* — New York Law School, Hosted by Jeff Wice, February 19, 2025.  
-- *Gerrymandering and the Voting Rights Act: A Threat to Democracy?* — University of Pittsburgh, Hosted by Ralph L. Bangs, February 11, 2025.  
-- *Build a 2030 Redistricting Checklist* — National Conference of State Legislatures, NCSL Annual Summit, Louisville, KY, August 7, 2024.  
-- *NY Redistricting Conference: What Happened and What’s Next?* — Keynote Speaker, New York Law School, June 18, 2024. [Website](https://services.nycbar.org/EventDetail?EventKey=ELEC091322) [Keynote Remarks](https://youtu.be/w58d3XdrvjM?si=NGhCcsWxeu13AwTx&t=532)  
+- *What’s the Story with Redistricting?* - Heinz School of Public Policy, Policy and Politics Group, September 24, 2025.
+- *Mid-decade Redistricting* — New York Law School, Hosted by Jeff Wice, September 17, 2025.
+-  *Disinformation and the Fight for Democracy* — University of Pittsburgh, Hosted by Ralph L. Bangs, July 15, 2025.
+- *Partisan & Racial Gerrymandering and the Voting Rights Act* — New York Law School, Hosted by Jeff Wice, February 19, 2025.
+- *Gerrymandering and the Voting Rights Act: A Threat to Democracy?* — University of Pittsburgh, Hosted by Ralph L. Bangs, February 11, 2025.
+- *Build a 2030 Redistricting Checklist* — National Conference of State Legislatures, NCSL Annual Summit, Louisville, KY, August 7, 2024.
+- *NY Redistricting Conference: What Happened and What’s Next?* — Keynote Speaker, New York Law School, June 18, 2024. [Website](https://services.nycbar.org/EventDetail?EventKey=ELEC091322) [Keynote Remarks](https://youtu.be/w58d3XdrvjM?si=NGhCcsWxeu13AwTx&t=532)
 
 ### 2024
-- *When Third Parties Matter* — Niskanen Center, Hosted by Matt Grossman, May 29, 2024. [Website](https://www.niskanencenter.org/when-third-parties-matter/)  
-- *Elections and Voting* — Sacramento State University, Hosted by Hallee Caron, March 25, 2024.  
-- *Elections Redistricting and Voting Rights* — New York Law School, Hosted by Jeff Wice, February 21, 2024.  
-- *The Issues Shaping Attitudes Around the Election* — New York University School of Journalism, Hosted by Eliza Griswold and SpotlightPA, February 19, 2024.  
+- *When Third Parties Matter* — Niskanen Center, Hosted by Matt Grossman, May 29, 2024. [Website](https://www.niskanencenter.org/when-third-parties-matter/)
+- *Elections and Voting* — Sacramento State University, Hosted by Hallee Caron, March 25, 2024.
+- *Elections Redistricting and Voting Rights* — New York Law School, Hosted by Jeff Wice, February 21, 2024.
+- *The Issues Shaping Attitudes Around the Election* — New York University School of Journalism, Hosted by Eliza Griswold and SpotlightPA, February 19, 2024.
 
 ### 2023
-- *Redistricting* — Carnegie Mellon University Osher Class, Hosted by Randy Weinberg, October 23, 2023.  
-- *Power to the People* at “A Path Towards Equality” — Hosted by SpotlightPA, October 11, 2023. [Website](https://www.spotlightpa.org/news/2023/10/pennsylvania-government-equity-representation-harrisburg-summit/)  
-- *Elections Redistricting and Voting Rights* — New York Law School, Hosted by Jeff Wice, October 4, 2023.  
-- *Federal Appellate Advocacy* — University of Pittsburgh School of Law, Hosted by Hon. D. Michael Fisher, September 26, 2023.  
-- *Pennsylvania Redistricting: Lessons Learned and Next Steps for Reform* — Hosted by Common Cause PA, League of Women Voters PA, NAACP PA, Committee of Seventy, FairDistricts PA, and Pennsylvania Voice, May 31, 2023.  
-- *Voting Rights and Election Law* — Touro Law School, Hosted by Judge Phil Solages, May 4, 2023.  
+- *Redistricting* — Carnegie Mellon University Osher Class, Hosted by Randy Weinberg, October 23, 2023.
+- *Power to the People* at “A Path Towards Equality” — Hosted by SpotlightPA, October 11, 2023. [Website](https://www.spotlightpa.org/news/2023/10/pennsylvania-government-equity-representation-harrisburg-summit/)
+- *Elections Redistricting and Voting Rights* — New York Law School, Hosted by Jeff Wice, October 4, 2023.
+- *Federal Appellate Advocacy* — University of Pittsburgh School of Law, Hosted by Hon. D. Michael Fisher, September 26, 2023.
+- *Pennsylvania Redistricting: Lessons Learned and Next Steps for Reform* — Hosted by Common Cause PA, League of Women Voters PA, NAACP PA, Committee of Seventy, FairDistricts PA, and Pennsylvania Voice, May 31, 2023.
+- *Voting Rights and Election Law* — Touro Law School, Hosted by Judge Phil Solages, May 4, 2023.
 - *Remapping Democracy: Redistricting, Race, and Fair Elections in a Changing Legal Environment* — Government Law Review at Albany Law School, March 6, 2023. [Website](https://www.albanylaw.edu/news/government-law-review-2023-spring-symposium-explores-remapping-democracy-redistricting-race)  
 
 ### 2022
-- *Representation, Race, Redistricting* — CUNY Graduate School, Hosted by Keena Lipsitz and John Mollenkopf, November 17, 2022.  
-- *Voting Rights and Redistricting: Reshaping American Democracy* — New York Law School, Hosted by Jeff Wice, October 20, 2022.  
-- *Democracy Threatened: Will Your Vote Count?* — Great Issues Forum at Redeemer, October 12, 2022.  
-- *Contemporary Issues in Election Law* — New Hampshire Law School, Hosted by Kyle Kopko, October 7, 2022. [Website](https://law.unh.edu/blog/2022/09/unh-franklin-pierce-hosts-government-officials-civic-leaders-renowned-scholars-annual-unh-law-review)  
-- *Voting Rights and Election Law* — Hofstra Law School, Hosted by Judge Phil Solages, September 12, 2022.  
-- *Measuring Compactness* — Pennsylvania Redistricting with Geographers: Communities of Interest Criteria and Beyond, American Association of Geographers.  
+- *Representation, Race, Redistricting* — CUNY Graduate School, Hosted by Keena Lipsitz and John Mollenkopf, November 17, 2022.
+- *Voting Rights and Redistricting: Reshaping American Democracy* — New York Law School, Hosted by Jeff Wice, October 20, 2022.
+- *Democracy Threatened: Will Your Vote Count?* — Great Issues Forum at Redeemer, October 12, 2022.
+- *Contemporary Issues in Election Law* — New Hampshire Law School, Hosted by Kyle Kopko, October 7, 2022. [Website](https://law.unh.edu/blog/2022/09/unh-franklin-pierce-hosts-government-officials-civic-leaders-renowned-scholars-annual-unh-law-review)
+- *Voting Rights and Election Law* — Hofstra Law School, Hosted by Judge Phil Solages, September 12, 2022.
+- *Measuring Compactness* — Pennsylvania Redistricting with Geographers: Communities of Interest Criteria and Beyond, American Association of Geographers.
 
 ### 2021
-- *Voting Rights and Elections* — University of Texas at Austin, Hosted by Beto O’Rourke, Spring 2021.  
-- *Tools for Identifying a Partisan Gerrymander* — Princeton University Wintersession.  
+- *Voting Rights and Elections* — University of Texas at Austin, Hosted by Beto O’Rourke, Spring 2021.
+- *Tools for Identifying a Partisan Gerrymander* — Princeton University Wintersession.
 
 ### 2019
-- *2019 NCSL Capitol Forum (Legislative Options for Redistricting Post-conference)* — National Conference of State Legislatures.  
-- *Redrawing the Virginia Legislative Map: The Bethune-Hill Racial Gerrymandering Case* — Princeton University.  
+- *2019 NCSL Capitol Forum (Legislative Options for Redistricting Post-conference)* — National Conference of State Legislatures.
+- *Redrawing the Virginia Legislative Map: The Bethune-Hill Racial Gerrymandering Case* — Princeton University.
 
 ### 2018
-- *Triple Play: Election 2018, Census 2020, and Redistricting 2021* — University of Houston, Hobby School.  
+- *Triple Play: Election 2018, Census 2020, and Redistricting 2021* — University of Houston, Hobby School.
 
 ### 2016
-- *Representation of Non-Eligible Resident Populations in Legislative Bodies* — Center for the Study of Democracy Graduate Student Conference, UC Irvine.  
+- *Representation of Non-Eligible Resident Populations in Legislative Bodies* — Center for the Study of Democracy Graduate Student Conference, UC Irvine.
 
 ### 2015
-- *Asymmetry in State Grant Distribution: Why Proximity to the State Capital Matters* — Western Political Science Association, San Diego, California.  
+- *Asymmetry in State Grant Distribution: Why Proximity to the State Capital Matters* — Western Political Science Association, San Diego, California.
 
----
 
 ## SERVICE TO THE UNIVERSITY
-- Constitution Day, Committee Member (2026)  
-- Democracy Day, Co-Chair (2025)  
-- Faculty Senate, CMIST Representative (2025)  
-- Democracy Day, Committee Member (2024)  
-- Deeper Conversations, Speaker (2024): *Bridging the Divide: Understanding and Addressing Political Polarization in America* [Website](https://www.heinz.cmu.edu/media/2024/November/cmu-community-engages-on-election-issues-through-deeper-conversations)  
+- Constitution Day, Committee Member (2026)
+- Democracy Day, Co-Chair (2025)
+- Faculty Senate, CMIST Representative (2025)
+- Democracy Day, Committee Member (2024)
+- Deeper Conversations, Speaker (2024): *Bridging the Divide: Understanding and Addressing Political Polarization in America* [Website](https://www.heinz.cmu.edu/media/2024/November/cmu-community-engages-on-election-issues-through-deeper-conversations)
 
----
 
 ## SERVICE TO THE DISCIPLINE
-Referee: *American Journal of Political Science, Political Geography, Election Law Journal, Public Choice, Political Research Quarterly*  
+Referee: *American Journal of Political Science, Political Geography, Election Law Journal, Public Choice, Political Research Quarterly*
 
----
 
 ## REFERENCES
-**Bernard Grofman**, UC Irvine  
-Distinguished Professor of Political Science  
-Fellow, American Academy of Arts and Sciences  
-Email: [bgrofman@uci.edu](mailto:bgrofman@uci.edu)  
+### Bernard Grofman, UC Irvine  
+  Distinguished Professor of Political Science  
+  Fellow, American Academy of Arts and Sciences  
+  Email: [bgrofman@uci.edu](mailto:bgrofman@uci.edu)  
 
-**Mark Nordenberg**, University of Pittsburgh  
-Chancellor Emeritus, University of Pittsburgh  
-Dean Emeritus, Pitt Law School  
-Email: [norden@pitt.edu](mailto:norden@pitt.edu)  
+### Mark Nordenberg, University of Pittsburgh
+  Chancellor Emeritus, University of Pittsburgh  
+  Dean Emeritus, Pitt Law School  
+  Email: [norden@pitt.edu](mailto:norden@pitt.edu)  
 
-**Carole Jean Uhlaner**, UC Irvine  
-Professor of Political Science  
-Email: [cuhlaner@uci.edu](mailto:cuhlaner@uci.edu)  
+### Carole Jean Uhlaner, UC Irvine
+  Professor of Political Science  
+  Email: [cuhlaner@uci.edu](mailto:cuhlaner@uci.edu)  
 
-**Richard L. Hasen**, UCLA Law School  
-Chancellor’s Professor of Law and Political Science  
-Email: [rhasen@uci.edu](mailto:rhasen@uci.edu)  
+### Richard L. Hasen, UCLA Law School
+  Chancellor’s Professor of Law and Political Science  
+  Email: [rhasen@uci.edu](mailto:rhasen@uci.edu)  
 
 ---
