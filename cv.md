@@ -24,16 +24,17 @@ chmod +x cv_build.sh
 
 ## University of California, Irvine
 
-### Ph.D., Political Science, 2020
-  Dissertation Committee: Bernard Grofman (Chair), Michael Tesler, Carole Uhlaner  
-  Dissertation: *A Quantitative Assessment of the U.S. Electoral College, 1790–2020*  
-  Fields: American Politics, Political Methodology, Comparative Politics
+- **Ph.D., Political Science, 2020**
+
+    Dissertation Committee: Bernard Grofman (Chair), Michael Tesler, Carole Uhlaner  
+    Dissertation: *A Quantitative Assessment of the U.S. Electoral College, 1790–2020*  
+    Fields: American Politics, Political Methodology, Comparative Politics
   
-### M.A., Political Science, December 2018
+- **M.A., Political Science, December 2018**
 
 ## University of Nevada, Las Vegas
 
-### B.A., Political Science, 2007
+- **B.A., Political Science, 2007**
 
 ## Additional Training
   Workshop on Research Design for Causal Inference, **Northwestern University**, 2017  
@@ -65,7 +66,7 @@ chmod +x cv_build.sh
 # Publications
 
 ## 2025
-- *Partisan Gerrymandering.* Bernard Grofman and **Jonathan Cervas**, Partisan Gerrymandering, in Elgar Encyclopedia of Public Choice 476 (Richard Jong-A-Pin & Christian Bjørnskov eds., 2025) [Read Online](https://www.elgaronline.com/view/book/9781802207750/chapter68.xml)  
+- *Partisan Gerrymandering.* Bernard Grofman and **Jonathan Cervas**, in Elgar Encyclopedia of Public Choice 476 (Richard Jong-A-Pin & Christian Bjørnskov eds., 2025) [Read Online](https://www.elgaronline.com/view/book/9781802207750/chapter68.xml)  
 
 ## 2024
 - *Statistical Fallacies in Claims about ‘Massive and Widespread Fraud’ in the 2020 Presidential Election.* Bernard Grofman and **Jonathan Cervas**. *Statistics and Public Policy*, 11(1). [Read Online](https://www.tandfonline.com/doi/full/10.1080/2330443X.2023.2289529)  
@@ -134,11 +135,11 @@ chmod +x cv_build.sh
 # Professional Experience
 
 ## Special Master
-- *Harkenrider v. Hochul* (2022), New York Congressional and Senate Districts.
+- *[Harkenrider v. Hochul](https://iapps.courts.state.ny.us/nyscef/ViewDocument?docIndex=ffzj4348UcVesF4ziHLc1g==)* (2022), New York Congressional and Senate Districts.
 
 ## Court/Legislative Consultant
-- [Wisconsin Supreme Court (*Clarke v. Wisconsin Elections Commission*)](https://acefiling.wicourts.gov/document/eFiled/2023AP001399/745286, 2023–2024.
-- [Pennsylvania Reapportionment Commission](https://www.redistricting.state.pa.us/resources/press/LRC%20Resolution%20071321.pdf, 2021–2022.
+- [Wisconsin Supreme Court (*Clarke v. Wisconsin Elections Commission*)](https://acefiling.wicourts.gov/document/eFiled/2023AP001399/745286), 2023–2024.
+- [Pennsylvania Reapportionment Commission](https://www.redistricting.state.pa.us/resources/press/LRC%20Resolution%20071321.pdf), 2021–2022.
 
 ## Assistant to the Special Master
 - *Wright v. Sumter County Board of Elections*, 2019–2020.
@@ -146,10 +147,17 @@ chmod +x cv_build.sh
 - *Navajo Nation v. San Juan County, UT*, 2017.
 
 ## Expert Witness
-- *Driver v. Houston County* Civil Action No. 5:25-cv-25. [Expert Report](http://jonathancervas.com/2026/Houston-County/expert.pdf) [Rebuttal Report](http://jonathancervas.com/2026/Houston-County/rebuttal.pdf)
-- *Wise v. State of Missouri* (2026) Case No. 2516-CV29597.  [Expert Report](http://jonathancervas.com/2026/Missouri/expert-amended.pdf) [Rebuttal Report](http://jonathancervas.com/2026/Missouri/rebuttal.pdf)
-- *New York Communities for Change v. County of Nassau* (2025). [Expert Report](http://jonathancervas.com/2025/Nassau/expert.pdf) [Reply Report](http://jonathancervas.com/2025/Nassau/reply.pdf)
-- *Moore v. Lee*, Tennessee Chancery Court (2022). Reports [1](http://jonathancervas.com/2022/TN/tn1.pdf), [2](http://jonathancervas.com/2022/TN/tn2.pdf), [3](http://jonathancervas.com/2022/TN/tn3.pdf), [4](http://jonathancervas.com/2022/TN/tn4.pdf), [5](http://jonathancervas.com/2022/TN/tn5.pdf).
+- *Driver v. Houston County* Civil Action No. 5:25-cv-25. 
+  - [Expert Report](http://jonathancervas.com/2026/Houston-County/expert.pdf) 
+  - [Rebuttal Report](http://jonathancervas.com/2026/Houston-County/rebuttal.pdf)
+- *Wise v. State of Missouri* (2026) Case No. 2516-CV29597.  
+  - [Expert Report](http://jonathancervas.com/2026/Missouri/expert-amended.pdf) 
+  - [Rebuttal Report](http://jonathancervas.com/2026/Missouri/rebuttal.pdf)
+- *New York Communities for Change v. County of Nassau* (2025). 
+  - [Expert Report](http://jonathancervas.com/2025/Nassau/expert.pdf) 
+  - [Reply Report](http://jonathancervas.com/2025/Nassau/reply.pdf)
+- *Moore v. Lee*, Tennessee Chancery Court (2022). 
+  - Reports [1](http://jonathancervas.com/2022/TN/tn1.pdf), [2](http://jonathancervas.com/2022/TN/tn2.pdf), [3](http://jonathancervas.com/2022/TN/tn3.pdf), [4](http://jonathancervas.com/2022/TN/tn4.pdf), [5](http://jonathancervas.com/2022/TN/tn5.pdf).
 
 ## Consultant
 - New York State Board of Elections, Language Assistance (2025-2026)
