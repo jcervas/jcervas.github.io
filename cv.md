@@ -137,8 +137,8 @@ chmod +x cv_build.sh
 - *Harkenrider v. Hochul* (2022), New York Congressional and Senate Districts.
 
 ## Court/Legislative Consultant
-- Wisconsin Supreme Court (*Clarke v. Wisconsin Elections Commission*), 2023–2024.
-- Pennsylvania Reapportionment Commission, 2021–2022.
+- [Wisconsin Supreme Court (*Clarke v. Wisconsin Elections Commission*)](https://acefiling.wicourts.gov/document/eFiled/2023AP001399/745286, 2023–2024.
+- [Pennsylvania Reapportionment Commission](https://www.redistricting.state.pa.us/resources/press/LRC%20Resolution%20071321.pdf, 2021–2022.
 
 ## Assistant to the Special Master
 - *Wright v. Sumter County Board of Elections*, 2019–2020.
@@ -146,12 +146,13 @@ chmod +x cv_build.sh
 - *Navajo Nation v. San Juan County, UT*, 2017.
 
 ## Expert Witness
-- *Driver v. Houston County* Civil Action No. 5:25-cv-25. 
-- *Wise v. State of Missouri* (2026) Case No. 2516-CV29597. 
-- *New York Communities for Change v. County of Nassau* (2024).
+- *Driver v. Houston County* Civil Action No. 5:25-cv-25. [Expert Report](http://jonathancervas.com/2026/Houston-County/expert.pdf) [Rebuttal Report](http://jonathancervas.com/2026/Houston-County/rebuttal.pdf)
+- *Wise v. State of Missouri* (2026) Case No. 2516-CV29597.  [Expert Report](http://jonathancervas.com/2026/Missouri/expert-amended.pdf) [Rebuttal Report](http://jonathancervas.com/2026/Missouri/rebuttal.pdf)
+- *New York Communities for Change v. County of Nassau* (2025). [Expert Report](http://jonathancervas.com/2025/Nassau/expert.pdf) [Reply Report](http://jonathancervas.com/2025/Nassau/reply.pdf)
 - *Moore v. Lee*, Tennessee Chancery Court (2022). Reports [1](http://jonathancervas.com/2022/TN/tn1.pdf), [2](http://jonathancervas.com/2022/TN/tn2.pdf), [3](http://jonathancervas.com/2022/TN/tn3.pdf), [4](http://jonathancervas.com/2022/TN/tn4.pdf), [5](http://jonathancervas.com/2022/TN/tn5.pdf).
 
 ## Consultant
+- New York State Board of Elections, Language Assistance (2025-2026)
 - Town of Newburgh, NY (2024)
 - Town of Cheektowaga, NY (2024)
 
