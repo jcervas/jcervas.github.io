@@ -214,10 +214,10 @@ chmod +x cv_build.sh
 - *Asymmetry in State Grant Distribution: Why Proximity to the State Capital Matters* — Western Political Science Association, San Diego, California.
 
 # Service to the University
-- Constitution Day, Committee Member (2026)
+- Constitution Day, Committee Member (2025-Present)
 - Democracy Day, Co-Chair (2025)
 - Faculty Senate, CMIST Representative (2025)
-- Democracy Day, Committee Member (2024)
+- Democracy Day, Committee Member (2024-Present)
 - Deeper Conversations, Speaker (2024): *Bridging the Divide: Understanding and Addressing Political Polarization in America* [Website](https://www.heinz.cmu.edu/media/2024/November/cmu-community-engages-on-election-issues-through-deeper-conversations)
 
 
