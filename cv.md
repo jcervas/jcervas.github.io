@@ -12,12 +12,26 @@ chmod +x cv_build.sh
 
 ##### Revised March 2026
 
-# Employment
+<style>
+td, th {
+   border: none!important;
+}
+</style>
+
+|                                                    |                                |
+|----------------------------------------------------|--------------------------------|
+| Carnegie Mellon University                         | Office: 412-268-4519           |
+| Dietrich College of Humanities and Social Sciences | Email: <cervas@cmu.edu>        |
+| 5000 Forbes Ave                                    | Homepage: <jonathancervas.com> |
+| Pittsburgh, PA 15213                               |                                |
+
+
+# Academic Employment
 
 ## Carnegie Mellon University
 
-  *Assistant Teaching Professor* — 2024–Present  
-  *Post-Doctoral Fellow* — 2020–2024  
+  *Assistant Teaching Professor*, 2024-  
+  *Post-Doctoral Fellow*, 2020–2024  
 
 
 # Education
@@ -41,8 +55,11 @@ chmod +x cv_build.sh
     Degree GPA: 3.277  
 
 ## Additional Training
-  Workshop on Research Design for Causal Inference, **Northwestern University**, 2017  
-  Inter-university Consortium for Political and Social Research (ICPSR), **University of Michigan**, 2016  
+  Workshop on Research Design for Causal Inference, *Northwestern University*, 2017  
+  Inter-university Consortium for Political and Social Research (ICPSR), *University of Michigan*, 2016  
+
+# Research Interests
+  American Politics, Elections, Voting Rights, Public Opinion & Representation, Methodology.
 
 
 # Teaching Experience
@@ -67,66 +84,59 @@ chmod +x cv_build.sh
   - *Generative AI Teaching as Research Initiative: GAITAR@Scale* - American Political Divides and Great Debates (April 2025) - $3,000
 
 
-# Publications
+# Research
 
-## 2025
-- *[Partisan Gerrymandering](https://www.elgaronline.com/view/book/9781802207750/chapter68.xml)*. Bernard Grofman and **Jonathan Cervas**, in Elgar Encyclopedia of Public Choice 476 (Richard Jong-A-Pin & Christian Bjørnskov eds., 2025)
+## Publications
 
-## 2024
-- *[Statistical Fallacies in Claims about ‘Massive and Widespread Fraud’ in the 2020 Presidential Election](https://www.tandfonline.com/doi/full/10.1080/2330443X.2023.2289529)*. Bernard Grofman and **Jonathan Cervas**. *Statistics and Public Policy*, 11(1).
-- *[Partisan Gerrymandering Cases in State Supreme Courts in the 2020s Redistricting Round](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4617664)*. **Jonathan Cervas**, Bernard Grofman, Scott Matsuda, and Justine Kawa. *Albany Law Review*, Vol. 87, Issue 4, 2024.
+### Peer Reviewed Articles
 
-## 2023
-- *[The Role of State Courts In Constraining Partisan Gerrymandering in Congressional Elections](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4287305)*. **Jonathan Cervas**, Bernard Grofman, and Scott Matsuda. *University of New Hampshire Law Review*, 21:2, 421.
+11\. "[Statistical Fallacies in Claims about ‘Massive and Widespread Fraud’ in the 2020 Presidential Election](https://www.tandfonline.com/doi/full/10.1080/2330443X.2023.2289529)". 2023. *Statistics and Public Policy*, 11(1). (with Bernard Grofman)
 
-## 2022
-- *[Using Folded Seats-Votes Curves to Compare Partisan Bias in the 2020 Presidential Election with Other 21st Century Elections](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4060327)*. **Jonathan Cervas** and Bernard Grofman. *Presidential Studies Quarterly*.
-- *[Turning Communities of Interest into a Rigorous Standard for Fair Districting](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3828800)*. Sam Wang, Sandra Chen, Richard Ober, Bernard Grofman, Kyle Barnes, and **Jonathan Cervas**. *Stanford J. of Civil Rights & Civil Liberties*, 18, 101.
-- *[Why Donald Trump Should be a Fervent Advocate of Using Rank-Choice Voting in 2024](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3832051)* **Jonathan Cervas** and Bernard Grofman. *PS: Political Science & Politics*, 55(1).
+10\. "[Using Folded Seats-Votes Curves to Compare Partisan Bias in the 2020 Presidential Election with Other 21st Century Elections](https://onlinelibrary.wiley.com/doi/10.1111/psq.12788)". 2022. *Presidential Studies Quarterly*. (with Bernard Grofman)
 
-## 2021
-- *[A Systems Framework for Remedying Distortions in U.S. Democracy](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3800433)* Wang, **Cervas**, Grofman, and Lipsitz. *PNAS*, 118(50), e2102154118.
-- *[The Unanticipated Effect of Covid-19 on House Apportionments](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3898284)*. **Jonathan Cervas** and Bernard Grofman. *Social Science Quarterly*, 102(5), 2432-2434.
+9\. "[Why Donald Trump Should Be a Fervent Advocate of Using Rank-Choice Voting in 2024](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3832051)". 2022. *PS: Political Science & Politics*, 55(1). (with Bernard Grofman)
 
-## 2020
-- *[ZIP Codes as Geographic Bases of Representation](http://jonathancervas.com/2020/zipcodes/ZIP.pdf)*. Bernard Grofman and **Jonathan Cervas**. *Election Law Journal.*
-- *[Legal, Political Science and Economics Approaches to Measuring Malapportionment](http://jonathancervas.com/2020/SSQ/malapportionment.pdf)*. **Jonathan Cervas** and Bernard Grofman. *Social Science Quarterly*, 101(6), 2238-2256.
-- *[Tools for Identifying Partisan Gerrymandering: Pennsylvania Case Study](http://polisci.uci.edu/~jcervas/papers/2020/PALWV_PG.pdf)*. **Jonathan Cervas** and Bernard Grofman. *Political Geography*, 76: 102069.
+8\. "[A Systems Framework for Remedying Distortions in U.S. Democracy](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3800433)". 2021. *PNAS*, 118(50), e2102154118. (with Sam Wang, Bernard Grofman, and Lipsitz)
 
-## 2019
-- *[Are Presidential Inversions Inevitable?](http://jonathancervas.com/2019/SSQ/inversions.pdf)*. **Jonathan Cervas** and Bernard Grofman. *Social Science Quarterly*, 100(4), 1322-1342.
+7\. "[The Unanticipated Effect of Covid-19 on House Apportionments](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3898284)". 2021. *Social Science Quarterly*, 102(5): 2432–2434. (with Bernard Grofman)
 
-## 2018
-- *[Can State Courts Cure Partisan Gerrymandering? Lessons from League of Women Voters v. Pennsylvania](http://jonathancervas.com/2018/ELJ/_2018__Can_State_Courts_Cure_Partisan_Gerrymandering.pdf)*. Bernard Grofman and **Jonathan Cervas**. *Election Law Journal*, 17(4), 264–285.
+6\. "[ZIP Codes as Geographic Bases of Representation](http://jonathancervas.com/2020/zipcodes/ZIP.pdf)". 2021. *Election Law Journal*. (with Bernard Grofman)
 
-## 2017
-- *[Why Noncompetitive States Matter: The Electoral College 1868–2016](http://jonathancervas.com/2017/PC/noncompetitiveelections.pdf)*. **Jonathan Cervas** and Bernard Grofman. *Public Choice*, 173(3–4), 251–265.
+5\. "[Legal, Political Science and Economics Approaches to Measuring Malapportionment](http://jonathancervas.com/2020/SSQ/malapportionment.pdf)". 2020. *Social Science Quarterly*, 101(6): 2238–2256. (with Bernard Grofman)
 
-# Other Publications
+4\. "[Tools for Identifying Partisan Gerrymandering: Pennsylvania Case Study](http://polisci.uci.edu/~jcervas/papers/2020/PALWV_PG.pdf)". 2020. *Political Geography*, 76: 102069. (with Bernard Grofman)
 
-## 2024
+3\. "[Are Presidential Inversions Inevitable?](http://jonathancervas.com/2019/SSQ/inversions.pdf)". 2019. *Social Science Quarterly*, 100(4): 1322–1342. (with Bernard Grofman)
+
+2\. "[Can State Courts Cure Partisan Gerrymandering? Lessons from League of Women Voters v. Pennsylvania](http://jonathancervas.com/2018/ELJ/_2018__Can_State_Courts_Cure_Partisan_Gerrymandering.pdf)". 2018. *Election Law Journal*, 17(4): 264–285. (with Bernard Grofman)
+
+1\. "[Why Noncompetitive States Matter: The Electoral College 1868–2016](http://jonathancervas.com/2017/PC/noncompetitiveelections.pdf)". 2017. *Public Choice*, 173(3–4): 251–265. (with Bernard Grofman)
+
+### Editor Reviewed Articles in Journals and Law Reviews
+
+4\. "[Partisan Gerrymandering](https://www.elgaronline.com/view/book/9781802207750/chapter68.xml)". 2025. In *Elgar Encyclopedia of Public Choice*. (with Bernard Grofman; edited by Richard Jong-A-Pin & Christian Bjørnskov)
+
+3\. "[Partisan Gerrymandering Cases in State Supreme Courts in the 2020s Redistricting Round](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4617664)". 2024. *Albany Law Review*, 87(4). (with Bernard Grofman, Scott Matsuda, and Justine Kawa)
+
+2\. "[The Role of State Courts in Constraining Partisan Gerrymandering in Congressional Elections](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4287305)". *University of New Hampshire Law Review*, 21(2): 421. (with Bernard Grofman and Scott Matsuda)
+
+1\. "[Turning Communities of Interest into a Rigorous Standard for Fair Districting](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3828800)". *Stanford Journal of Civil Rights & Civil Liberties*, 18: 101. (with Sam Wang, Sandra Chen, Richard Ober, Bernard Grofman, and Kyle Barnes)
+
+
+### Other Publications
+
 - *[Report of the Court-Appointed Co-Consultants in re Clarke v. Wisconsin Elections Commission](https://jonathancervas.com/2024/WI/Grofman-Cervas-Consultant.pdf)*. (Case Number 2023Ap1399-Oa, 2023 Wi 79).
-
-## 2023
 - *[Memo in Support of Grofman/Cervas/Griggy Remedial Proposals](https://jonathancervas.com/2023/AL/memo.pdf)*. U.S. District Court for the Northern District of Alabama, Southern Division.
 - *[Brief Of Amici Curiae Dr. Jonathan Cervas, Paul Mitchell, Dr. Samuel S.-H. Wang, Roderick Kennedy, Election Reformers Network, Common Cause New Mexico, and League Of Women Voters New Mexico In Support Of Neither Party](https://jonathancervas.com/2023/NM/NM-amicus.pdf)*. State of New Mexico, County of Lea, Fifth Judicial District Court. Cervas, Jonathan et al.
-
-## 2022
 - *Report of the Special Master (Harkinrider v. Hochel).* **Jonathan Cervas**. 
   - [Special Master Report](https://jonathancervas.com/2022/NY/CERVAS-SM-NY-2022.pdf)  
-
-## 2021
 - *[Fracking: A Contiguity-Related Redistricting Metric](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3918044)*. **Jonathan Cervas** and Bernard Grofman. *Election Law Blog*.
 - *[Trump the Wrestler and the 2024 Grudge Match](https://scholar.google.com/scholar?oi=bibs&cluster=18401211417413276692&btnI=1&hl=en)*. Bernard Grofman and **Jonathan Cervas**.
 - *[The GOP Scared Latinos from the Census. Now That May Cost the Party Red Seats](https://www.washingtonpost.com/outlook/2021/05/01/hispanics-census-undercount-house-seats/)*. Sam Wang and **Jonathan Cervas**. *Washington Post*.
 - *[Great Lobster and a More Equitable Voting System Exists in Maine](https://medium.com/3streams/a-more-equitable-voting-system-in-maine-ranked-choice-voting-864cb3367468)*. Anjali Akula, **Jonathan Cervas**, and Elsie Goren. *Medium.com “3Streams”*.
-
-## 2020
 - *[Amicus Curiae with Princeton Electoral Innovation Lab](https://jonathancervas.com/2020/maine.pdf)*.
 - *[How Likely is Trump to Lose the Popular Vote but Win the Electoral College?](https://medium.com/3streams/how-likely-is-trump-to-lose-the-popular-vote-but-win-the-electoral-college-cf5eeb90fc74)*. **Jonathan Cervas** and Bernard Grofman. *Medium.com “3Streams”*.
 - *[These Are the Political Consequences of Excluding Undocumented Immigrants from Apportionment](https://medium.com/3streams/political-consequences-of-excluding-undocumented-immigrants-from-apportionment-eccdd098219d)*. Angela Ocampo and **Jonathan Cervas**. *Medium.com “3Streams”*.
-
-## 2018
 - *[Pennsylvania Has to Draw New Congressional Districts but Getting Rid of Gerrymandering Will Be Harder Than You Think](https://www.washingtonpost.com/news/monkey-cage/wp/2018/02/09/now-pennsylvania-has-to-draw-new-house-districts-but-getting-rid-of-gerrymandering-is-harder-than-you-think/)*. Bernard Grofman and **Jonathan Cervas**. *The Washington Post*.
 
 
