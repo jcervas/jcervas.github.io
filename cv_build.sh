@@ -5,7 +5,7 @@ cd "$BASE_DIR" || exit 1
 DATE=$(date +%Y-%m-%d)
 
 pandoc "cv.md" \
-  --reference-doc="$BASE_DIR/reference.docx" \
+  --reference-doc="$BASE_DIR/cv-reference.docx" \
   -o "cv.docx" || exit 1
 
 osascript <<EOF
