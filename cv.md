@@ -10,7 +10,7 @@ chmod +x cv_build.sh
 
  -->
 
-##### Revised March 2026
+##### Revised April 2026
 
 <style>
 td, th {
@@ -22,7 +22,7 @@ td, th {
 |----------------------------------------------------|--------------------------------|
 | Carnegie Mellon University                         | Office: 412-268-4519           |
 | Dietrich College of Humanities and Social Sciences | Email: <cervas@cmu.edu>        |
-| 5000 Forbes Ave                                    | Homepage: <jonathancervas.com> |
+| 5000 Forbes Ave                                    | Homepage: <https://jonathancervas.com> |
 | Pittsburgh, PA 15213                               |                                |
 
 
@@ -170,11 +170,9 @@ td, th {
 
 # Talks (Invited and Conference)
 
-## 2026
-- *An Experiment on Optimal Campaigning Using a Simplified Seven State Electoral College* - Public Choice Society Annual Conference, San Antonio, Texas. March 14, 2026.
+- *Racial Equality after Callais: Strategies for Implementing Electoral Systems Reform* - Harvard Law School (Charles Hamilton Houston Institute for Race & Justice). Cambridge, Massachusetts. April 16 - 17, 2026.
+-  *An Experiment on Optimal Campaigning Using a Simplified Seven State Electoral College* - Public Choice Society Annual Conference, San Antonio, Texas. March 14, 2026.
 - *Mid-Decade Redistricting* - New York Law School, Hosted by Judge Michelle Childs. February 3, 2026. 
-
-## 2025
 - *What’s the Story with Redistricting?* - Heinz School of Public Policy, Policy and Politics Group, September 24, 2025.
 - *Mid-decade Redistricting* — New York Law School, Hosted by Jeff Wice, September 17, 2025.
 -  *Disinformation and the Fight for Democracy* — University of Pittsburgh, Hosted by Ralph L. Bangs, July 15, 2025.
@@ -182,14 +180,10 @@ td, th {
 - *Gerrymandering and the Voting Rights Act: A Threat to Democracy?* — University of Pittsburgh, Hosted by Ralph L. Bangs, February 11, 2025.
 - *Build a 2030 Redistricting Checklist* — National Conference of State Legislatures, NCSL Annual Summit, Louisville, KY, August 7, 2024.
 - *NY Redistricting Conference: What Happened and What’s Next?* — Keynote Speaker, New York Law School, June 18, 2024. [Website](https://services.nycbar.org/EventDetail?EventKey=ELEC091322) [Keynote Remarks](https://youtu.be/w58d3XdrvjM?si=NGhCcsWxeu13AwTx&t=532)
-
-## 2024
 - *When Third Parties Matter* — Niskanen Center, Hosted by Matt Grossman, May 29, 2024. [Website](https://www.niskanencenter.org/when-third-parties-matter/)
 - *Elections and Voting* — Sacramento State University, Hosted by Hallee Caron, March 25, 2024.
 - *Elections Redistricting and Voting Rights* — New York Law School, Hosted by Jeff Wice, February 21, 2024.
 - *The Issues Shaping Attitudes Around the Election* — New York University School of Journalism, Hosted by Eliza Griswold and SpotlightPA, February 19, 2024.
-
-## 2023
 - *Redistricting* — Carnegie Mellon University Osher Class, Hosted by Randy Weinberg, October 23, 2023.
 - *Power to the People* at “A Path Towards Equality” — Hosted by SpotlightPA, October 11, 2023. [Website](https://www.spotlightpa.org/news/2023/10/pennsylvania-government-equity-representation-harrisburg-summit/)
 - *Elections Redistricting and Voting Rights* — New York Law School, Hosted by Jeff Wice, October 4, 2023.
@@ -197,30 +191,18 @@ td, th {
 - *Pennsylvania Redistricting: Lessons Learned and Next Steps for Reform* — Hosted by Common Cause PA, League of Women Voters PA, NAACP PA, Committee of Seventy, FairDistricts PA, and Pennsylvania Voice, May 31, 2023.
 - *Voting Rights and Election Law* — Touro Law School, Hosted by Judge Phil Solages, May 4, 2023.
 - *Remapping Democracy: Redistricting, Race, and Fair Elections in a Changing Legal Environment* — Government Law Review at Albany Law School, March 6, 2023. [Website](https://www.albanylaw.edu/news/government-law-review-2023-spring-symposium-explores-remapping-democracy-redistricting-race)  
-
-## 2022
 - *Representation, Race, Redistricting* — CUNY Graduate School, Hosted by Keena Lipsitz and John Mollenkopf, November 17, 2022.
 - *Voting Rights and Redistricting: Reshaping American Democracy* — New York Law School, Hosted by Jeff Wice, October 20, 2022.
 - *Democracy Threatened: Will Your Vote Count?* — Great Issues Forum at Redeemer, October 12, 2022.
 - *Contemporary Issues in Election Law* — New Hampshire Law School, Hosted by Kyle Kopko, October 7, 2022. [Website](https://law.unh.edu/blog/2022/09/unh-franklin-pierce-hosts-government-officials-civic-leaders-renowned-scholars-annual-unh-law-review)
 - *Voting Rights and Election Law* — Hofstra Law School, Hosted by Judge Phil Solages, September 12, 2022.
 - *Measuring Compactness* — Pennsylvania Redistricting with Geographers: Communities of Interest Criteria and Beyond, American Association of Geographers.
-
-## 2021
 - *Voting Rights and Elections* — University of Texas at Austin, Hosted by Beto O’Rourke, Spring 2021.
 - *Tools for Identifying a Partisan Gerrymander* — Princeton University Wintersession.
-
-## 2019
 - *2019 NCSL Capitol Forum (Legislative Options for Redistricting Post-conference)* — National Conference of State Legislatures.
 - *Redrawing the Virginia Legislative Map: The Bethune-Hill Racial Gerrymandering Case* — Princeton University.
-
-## 2018
 - *Triple Play: Election 2018, Census 2020, and Redistricting 2021* — University of Houston, Hobby School.
-
-## 2016
 - *Representation of Non-Eligible Resident Populations in Legislative Bodies* — Center for the Study of Democracy Graduate Student Conference, UC Irvine.
-
-## 2015
 - *Asymmetry in State Grant Distribution: Why Proximity to the State Capital Matters* — Western Political Science Association, San Diego, California.
 
 # Service to the University
@@ -232,7 +214,7 @@ td, th {
 
 
 # Service to the Discipline
-Referee: *American Journal of Political Science, Political Geography, Election Law Journal, Public Choice, Political Research Quarterly*
+Referee: *American Journal of Political Science*, *Political Analysis*, *Political Geography, Election Law Journal, Public Choice, Political Research Quarterly*
 
 
 # References
