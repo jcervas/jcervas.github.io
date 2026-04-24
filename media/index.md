@@ -13,7 +13,7 @@ subtitle: "News coverage and mentions"
   <strong>Jonathan Cervas</strong><br>
   Assistant Teaching Professor<br>
   <a href="mailto:jcervas@andrew.cmu.edu">Email</a> · 
-  <a href="tel:7022346075">702-234-6075</a>
+  <!-- <a href="tel:7022346075">702-234-6075</a> -->
 </address>
 </details>
 
