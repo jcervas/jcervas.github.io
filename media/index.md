@@ -72,6 +72,8 @@ Jonathan Cervas was appointed by a New York court as special master to redraw th
 
 ### 2026
 
+- **May 4, 2026** - *AP News*: [Redistricting war accelerates winner-take-all political combat that’s straining American democracy](https://apnews.com/article/donald-trump-supreme-court-redistricting-democracy-d8fcd9fd2dd60cb2233e8003fadc6300), by Nicholas Riccardi
+- **May 4, 2026** - *Votebeat*: [Here’s where redistricting stands after Florida’s new congressional map and the Supreme Court’s Callais decision](https://www.votebeat.org/national/2026/05/04/florida-redistricting-supreme-court-louisiana-callais-gerrymander-2026-election/), by Nathaniel Rakich
 - **April 30, 2026** - *AP News*: [Supreme Court ruling will reshape American politics. The only question is when](https://apnews.com/article/supreme-court-voting-rights-redistricting-congress-b2e730330fa39f139f74c443320567ff), by Nicholas Riccardi
 - **April 30, 2026** - *AP News*: [Supreme Court weakens the Voting Rights Act and aids GOP efforts to control the House](https://apnews.com/article/supreme-court-voting-rights-redistricting-congress-b2e730330fa39f139f74c443320567ff), by Mark Sherman
 - **April 29, 2025** - *New York Post*: [California’s Prop 50 plans thrown into chaos after bombshell Supreme Court ruling in Louisiana: experts](https://nypost.com/2026/04/29/us-news/supreme-court-ruling-on-louisiana-maps-throws-californias-gerrymandering-into-chaos/), by Titus Wu
