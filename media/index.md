@@ -170,6 +170,9 @@ Press Its Advantage")](https://www.nytimes.com/2021/01/31/us/politics/gerrymande
 ### 2020
 - **Oct 25, 2020** - *Pittsburgh Post-Gazette*: [In race between Conor Lamb and Sean Parnell…](https://www.post-gazette.com/news/politics-nation/2020/10/25/Conor-Lamb-Sean-Parnell-17th-Congressional-District-Trump-Pelosi/stories/202010250003?cid=search)
 
+### 2018
+-**November 2, 2018** - *USA Today*: [Midterms: Races for governor, statehouses will help decide control of Congress for a decade](https://www.usatoday.com/story/news/politics/elections/2018/11/02/midterm-elections-redistricting-gerrymandering-governor-statehouse-congress-republican-democrat/1726798002/), by Gregory Korte
+
 ## University & Institution Coverage
 
 - **Apr 21, 2022** - *UC Irvine Social Sciences*: [Meet the scholar redistricting New York: UCI alumnus Jonathan Cervas named special master.](https://www.socsci.uci.edu/newsevents/news/2022/2022-04-21-cervas.php)
