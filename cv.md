@@ -125,11 +125,12 @@ td, th {
 
 ### Other Publications
 
+- *[The Effects of Mid-Decade Redistricting on Electoral Outcomes](https://medium.com/@cervas/the-effects-of-mid-decade-redistricting-on-electoral-outcomes-d870c772942b)* **Jonathan Cervas**.
 - *[Report of the Court-Appointed Co-Consultants in re Clarke v. Wisconsin Elections Commission](https://jonathancervas.com/2024/WI/Grofman-Cervas-Consultant.pdf)*. (Case Number 2023Ap1399-Oa, 2023 Wi 79).
 - *[Memo in Support of Grofman/Cervas/Griggy Remedial Proposals](https://jonathancervas.com/2023/AL/memo.pdf)*. U.S. District Court for the Northern District of Alabama, Southern Division.
 - *[Brief Of Amici Curiae Dr. Jonathan Cervas, Paul Mitchell, Dr. Samuel S.-H. Wang, Roderick Kennedy, Election Reformers Network, Common Cause New Mexico, and League Of Women Voters New Mexico In Support Of Neither Party](https://jonathancervas.com/2023/NM/NM-amicus.pdf)*. State of New Mexico, County of Lea, Fifth Judicial District Court. Cervas, Jonathan et al.
 - *Report of the Special Master (Harkinrider v. Hochel).* **Jonathan Cervas**. 
-  - [Special Master Report](https://jonathancervas.com/2022/NY/CERVAS-SM-NY-2022.pdf)  
+  - [Special Master Report](https://jonathancervas.com/2022/NY/CERVAS-SM-NY-2022.pdf)
 - *[Fracking: A Contiguity-Related Redistricting Metric](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3918044)*. **Jonathan Cervas** and Bernard Grofman. *Election Law Blog*.
 - *[Trump the Wrestler and the 2024 Grudge Match](https://scholar.google.com/scholar?oi=bibs&cluster=18401211417413276692&btnI=1&hl=en)*. Bernard Grofman and **Jonathan Cervas**.
 - *[The GOP Scared Latinos from the Census. Now That May Cost the Party Red Seats](https://www.washingtonpost.com/outlook/2021/05/01/hispanics-census-undercount-house-seats/)*. Sam Wang and **Jonathan Cervas**. *Washington Post*.
