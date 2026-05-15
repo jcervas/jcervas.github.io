@@ -153,6 +153,7 @@ td, th {
   - *Bethune-Hill v. Virginia State Board of Elections*, 2018–2019.
   - *Navajo Nation v. San Juan County, UT*, 2017.
 - Expert Witness
+  - *Sherman v. Hargett* 26-cv-616
   - *Driver v. Houston County* Civil Action No. 5:25-cv-25. 
     - [Expert Report](http://jonathancervas.com/2026/Houston-County/expert.pdf) 
     - [Rebuttal Report](http://jonathancervas.com/2026/Houston-County/rebuttal.pdf)

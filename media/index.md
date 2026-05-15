@@ -72,6 +72,7 @@ Jonathan Cervas was appointed by a New York court as special master to redraw th
 
 ### 2026
 
+- **May 13, 2026** - *Bloomberg Government*: [Clyburn District Survives for Now as S.C. Republicans Buck Trump](https://news.bgov.com/bloomberg-government-news/clyburn-district-survives-for-now-as-s-c-republicans-buck-trump?context=search&index=0), by Greg Giroux
 - **May 6, 2026** - *Bloomberg Government*: [Tennessee Republicans Pitch House Map to Oust Lone Democrat](https://www.bgov.com/news/TEMMU0KGZAK0), by Alexandra Samuels and Andrew Oxford
 - **May 4, 2026** - *AP News*: [Redistricting war accelerates winner-take-all political combat that’s straining American democracy](https://apnews.com/article/donald-trump-supreme-court-redistricting-democracy-d8fcd9fd2dd60cb2233e8003fadc6300), by Nicholas Riccardi
 - **May 4, 2026** - *Votebeat*: [Here’s where redistricting stands after Florida’s new congressional map and the Supreme Court’s Callais decision](https://www.votebeat.org/national/2026/05/04/florida-redistricting-supreme-court-louisiana-callais-gerrymander-2026-election/), by Nathaniel Rakich
