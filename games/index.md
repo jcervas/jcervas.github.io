@@ -22,7 +22,7 @@ subtitle: "Games under production"
 
 A head-to-head strategy game where you act as a presidential candidate competing in a simulated Electoral College. You have $100 to spend across seven winner-take-all states, each with different electoral votes. Spending shifts vote share, and whoever spends more in a state wins all its electoral votes. Your goal is to reach at least 70 of 139 total electoral votes against a randomly assigned opponent.
 
-[Electoral College Game Demo](/ec-game/)
+[Electoral College Game Demo](games/ec-game/)
 
 
 ## District Guess (Better Know a District)
@@ -31,4 +31,4 @@ A development project to build an interactive educational tool called “Better 
 
 The project aims to evolve into both an educational resource and a competitive game with scoring, progression, and optional leaderboards similar to Wordle. Contributors will help design gameplay mechanics, improve the map interface, refine district data accuracy, and develop features that support learning and competition.
 
-[Play Name That Congressional District](https://jonathancervas.com/games/district-guess/)
+[Play Name That Congressional District](games/district-guess/)
