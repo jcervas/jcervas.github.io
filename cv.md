@@ -172,6 +172,8 @@ td, th {
 
 # Talks (Invited and Conference)
 
+- *Redistricting: Drawing the Maps, Presentation and demonstration of how redistricting maps are drawn, including
+the data and inputs that go into making maps.* - National Conference of State Legislatures. Pittsburgh, Pennsylvania. May 29, 2026. 
 - *Racial Equality after Callais: Strategies for Implementing Electoral Systems Reform* - Harvard Law School (Charles Hamilton Houston Institute for Race & Justice). Cambridge, Massachusetts. April 16 - 17, 2026.
 -  *An Experiment on Optimal Campaigning Using a Simplified Seven State Electoral College* - Public Choice Society Annual Conference, San Antonio, Texas. March 14, 2026.
 - *Mid-Decade Redistricting* - New York Law School, Hosted by Judge Michelle Childs. February 3, 2026. 

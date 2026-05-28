@@ -72,6 +72,7 @@ Jonathan Cervas was appointed by a New York court as special master to redraw th
 
 ### 2026
 
+- **May 27, 2026** - *Bloomberg Government*: [South Carolina GOP Ran Into Electoral Reality on Redistricting](https://news.bgov.com/bloomberg-government-news/south-carolina-gop-ran-into-electoral-reality-on-redistricting), by Alexandra Samuels
 - **May 19, 2026** - *The Globe and Mail*: [Mapping how Alberta’s electoral boundary changes could reshape the political landscape](https://www.theglobeandmail.com/canada/alberta/article-alberta-electoral-boundary-changes-ridings-political-landscape/), by Matthew Scace, Dexter Mcmillan, and Graphics By Murat Yükselir
 - **May 13, 2026** - *Bloomberg Government*: [Clyburn District Survives for Now as S.C. Republicans Buck Trump](https://news.bgov.com/bloomberg-government-news/clyburn-district-survives-for-now-as-s-c-republicans-buck-trump?context=search&index=0), by Greg Giroux
 - **May 6, 2026** - *Bloomberg Government*: [Tennessee Republicans Pitch House Map to Oust Lone Democrat](https://www.bgov.com/news/TEMMU0KGZAK0), by Alexandra Samuels and Andrew Oxford
