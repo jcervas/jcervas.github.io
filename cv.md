@@ -140,6 +140,41 @@ td, th {
 - *[These Are the Political Consequences of Excluding Undocumented Immigrants from Apportionment](https://medium.com/3streams/political-consequences-of-excluding-undocumented-immigrants-from-apportionment-eccdd098219d)*. Angela Ocampo and **Jonathan Cervas**. *Medium.com “3Streams”*.
 - *[Pennsylvania Has to Draw New Congressional Districts but Getting Rid of Gerrymandering Will Be Harder Than You Think](https://www.washingtonpost.com/news/monkey-cage/wp/2018/02/09/now-pennsylvania-has-to-draw-new-house-districts-but-getting-rid-of-gerrymandering-is-harder-than-you-think/)*. Bernard Grofman and **Jonathan Cervas**. *The Washington Post*.
 
+### Working Papers/Pipeline
+
+- A Simple Algorithm for Good Government Districting: So Easy You Can Apply it by Hand
+- A typology for forms of redistricting commissions w/ Hayden Goldberg
+- Consequences of Choice of House Apportionment Method in 2020
+- Constituency Diversity and Electoral Competitiveness In House and Senate Elections w/ Brunell
+- Controversies and Complexities in Implementing “Good Government” Criteria for Redistricting in the 2020 Redistricting Round
+- Determinants of Swing Ratio
+- District Diversity and Electoral Competitiveness In House and Senate Elections, 1962-202x - - w/ Brunell
+- Does Partisan Bias In The Electoral College Doom The Democrats In 2024
+- Drop-off of Voters in the 2014 Midterm Election: Orphan States and Minority Withdrawal from the Electorate
+- Estimating the Extent to which there is White Backlash to a Growing Hispanic Population that Generates Greater White Voter Support for Republican Candidates
+- Examining Expert Witness Testimony in Redistricting Litigation - w/ Hayden Goldberg
+- An Experiment on Optimal Campaigning Using a Simplified Seven State Electoral College
+- Folded Seats-Votes Curves (was Simple Graphical Tool to Display Seats-Votes Relationship)w/ Nagle & Lederman
+- Fracking: A Contiguity-Related Redistricting Metric (Splitting Geographies in the Context of Redistricting)
+- How Certain was it that the Democrats would Lose Control of the House of Representatives in 2022? (renamed)
+- Is the Electoral College Biased in Favor of Republicans? Yes and No and Maybe
+- Optimal Partisan Gerrymandering Revisited - w/ Krieg
+- Paths to Victory in Presidential Campaigns
+- Political Polarization (Clarifying Concepts related to polarization)
+- Population-Dependence of Cabinet Sizes - w/ Taagepera, Kaiser, (maybe Atsusaka)
+- Predictable Elections, Ideological Constraint, and Stability in the 21st Century
+- Predicting Divergence between the Popular Vote Winner and the Electoral College Winner, 1868-2016: The Dogs that Didn’t Bite
+- Presidential Primaries and the Collective Action Coordination Problem
+- Recent Approaches to the Definition and Measurement of Compactness - w/ Hayden Goldberg
+- Relative Ideology: Why Context Matters for a person's ideological ID
+- Representation of Non-Eligible Resident Populations in Legislative Bodies - w/ Ocampo
+- State Competitiveness and Pivotality in the U.S. Electoral College - w/ Zora Mihaley
+- The Terminology Of Districting (this is long complete but never found a home)
+- The Political Legacy of American Slavery Revisited
+- Trump the wrestler and the 2024 grudge match
+- Waiting For Godez
+
+
 
 # Professional Experience
 
@@ -172,8 +207,8 @@ td, th {
 
 # Talks (Invited and Conference)
 
-- *Redistricting: Drawing the Maps, Presentation and demonstration of how redistricting maps are drawn, including
-the data and inputs that go into making maps.* - National Conference of State Legislatures. Pittsburgh, Pennsylvania. May 29, 2026. 
+- *Reshaping Government:  Possibilities and Perils.  Congressional Redistricting Frenzy* - University of Pittsburgh, The Dick Thornburgh Forum for Law & Public Policy. Pittsburgh, Pennsylvania. June 4, 2026.
+- *Redistricting: Drawing the Maps, Presentation and demonstration of how redistricting maps are drawn, including the data and inputs that go into making maps.* - National Conference of State Legislatures. Pittsburgh, Pennsylvania. May 29, 2026. 
 - *Racial Equality after Callais: Strategies for Implementing Electoral Systems Reform* - Harvard Law School (Charles Hamilton Houston Institute for Race & Justice). Cambridge, Massachusetts. April 16 - 17, 2026.
 -  *An Experiment on Optimal Campaigning Using a Simplified Seven State Electoral College* - Public Choice Society Annual Conference, San Antonio, Texas. March 14, 2026.
 - *Mid-Decade Redistricting* - New York Law School, Hosted by Judge Michelle Childs. February 3, 2026. 
@@ -194,7 +229,8 @@ the data and inputs that go into making maps.* - National Conference of State Le
 - *Federal Appellate Advocacy* — University of Pittsburgh School of Law, Hosted by Hon. D. Michael Fisher, September 26, 2023.
 - *Pennsylvania Redistricting: Lessons Learned and Next Steps for Reform* — Hosted by Common Cause PA, League of Women Voters PA, NAACP PA, Committee of Seventy, FairDistricts PA, and Pennsylvania Voice, May 31, 2023.
 - *Voting Rights and Election Law* — Touro Law School, Hosted by Judge Phil Solages, May 4, 2023.
-- *Remapping Democracy: Redistricting, Race, and Fair Elections in a Changing Legal Environment* — Government Law Review at Albany Law School, March 6, 2023. [Website](https://www.albanylaw.edu/news/government-law-review-2023-spring-symposium-explores-remapping-democracy-redistricting-race)  
+- *Did a Libertarian Cost Trump the Election? A Q&A with Jonathan Cervas* - American Enterprise Institute. December 29, 2022. [Website](https://www.aei.org/politics-and-public-opinion/did-a-libertarian-cost-trump-the-election-a-qa-with-jonathan-cervas/).
+- *Remapping Democracy: Redistricting, Race, and Fair Elections in a Changing Legal Environment* — Government Law Review at Albany Law School, March 6, 2023. [Website](https://www.albanylaw.edu/news/government-law-review-2023-spring-symposium-explores-remapping-democracy-redistricting-race)
 - *Representation, Race, Redistricting* — CUNY Graduate School, Hosted by Keena Lipsitz and John Mollenkopf, November 17, 2022.
 - *Voting Rights and Redistricting: Reshaping American Democracy* — New York Law School, Hosted by Jeff Wice, October 20, 2022.
 - *Democracy Threatened: Will Your Vote Count?* — Great Issues Forum at Redeemer, October 12, 2022.
