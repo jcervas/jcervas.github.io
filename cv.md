@@ -118,9 +118,9 @@ td, th {
 
 3\. "[Partisan Gerrymandering Cases in State Supreme Courts in the 2020s Redistricting Round](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4617664)". 2024. *Albany Law Review*, 87(4). (with Bernard Grofman, Scott Matsuda, and Justine Kawa)
 
-2\. "[The Role of State Courts in Constraining Partisan Gerrymandering in Congressional Elections](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4287305)". *University of New Hampshire Law Review*, 21(2): 421. (with Bernard Grofman and Scott Matsuda)
+2\. "[The Role of State Courts in Constraining Partisan Gerrymandering in Congressional Elections](https://scholars.unh.edu/unh_lr/vol21/iss2/7/)". 2023. *University of New Hampshire Law Review*, 21(2): 421. (with Bernard Grofman and Scott Matsuda)
 
-1\. "[Turning Communities of Interest into a Rigorous Standard for Fair Districting](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3828800)". *Stanford Journal of Civil Rights & Civil Liberties*, 18: 101. (with Sam Wang, Sandra Chen, Richard Ober, Bernard Grofman, and Kyle Barnes)
+1\. "[Turning Communities of Interest into a Rigorous Standard for Fair Districting](https://law.stanford.edu/wp-content/uploads/2022/02/Chen_01.31.22_PRINT.pdf)". 2022. *Stanford Journal of Civil Rights & Civil Liberties*, 18: 101. (with Sam Wang, Sandra Chen, Richard Ober, Bernard Grofman, and Kyle Barnes)
 
 
 ### Other Publications
