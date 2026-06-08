@@ -596,6 +596,107 @@ main {
 #username-submit:hover { background: var(--accent-hover); }
 #username-error { color: var(--red); font-size: 0.82rem; margin-top: 6px; min-height: 18px; }
 
+/* ---- Reference panel ---- */
+#reference-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+}
+#reference-panel h3 {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.ref-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.ref-label strong { color: var(--text); }
+#state-chips-hint {
+  font-weight: 400;
+  color: #9ca3af;
+  margin-left: 4px;
+}
+
+/* State chips */
+#state-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 4px;
+}
+.state-chip {
+  padding: 3px 7px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: #f0f4ff;
+  color: var(--accent);
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.03em;
+}
+.state-chip:hover:not(:disabled):not(.eliminated) {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+.state-chip.selected {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+.state-chip.eliminated {
+  background: #f3f4f6;
+  color: #c4c9d4;
+  border-color: #e5e7eb;
+  cursor: default;
+  text-decoration: line-through;
+  text-decoration-color: #d1d5db;
+}
+.state-chip:disabled {
+  cursor: default;
+}
+
+/* District reference mini-map */
+#district-ref-section {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+#district-ref-map {
+  height: 260px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: #e8f0f8;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.dist-ref-label div {
+  background: white;
+  border: 1px solid #94a3b8;
+  border-radius: 3px;
+  padding: 1px 4px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #1e40af;
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  cursor: pointer;
+  user-select: none;
+}
+.dist-ref-label div:hover {
+  background: #dbeafe;
+}
+
 /* ---- Utilities ---- */
 .hidden { display: none !important; }
 
