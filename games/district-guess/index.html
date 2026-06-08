@@ -97,10 +97,28 @@
     <div id="reference-panel">
       <h3>Reference</h3>
 
+      <!-- State confirmed badge — shown at top once state is locked -->
+      <div id="state-confirmed" class="hidden">
+        <span>✓ State confirmed:</span> <strong id="state-confirmed-name"></strong>
+      </div>
+
       <!-- Clickable US states map — always shown, states eliminated by clues -->
       <div id="us-ref-section">
         <div class="ref-label">Click a state to select it</div>
         <div id="us-ref-map"></div>
+      </div>
+
+      <!-- Dropdowns + Guess button directly below the map -->
+      <div id="guess-input-row">
+        <div id="guess-selects">
+          <select id="stateSelect">
+            <option value="">State…</option>
+          </select>
+          <select id="districtSelect" disabled>
+            <option value="">District…</option>
+          </select>
+        </div>
+        <button id="guessButton">Guess</button>
       </div>
 
       <!-- State chips: greyed out as clues eliminate states -->
@@ -121,20 +139,6 @@
     <div id="guess-section">
       <div id="guess-history"></div>
       <div id="guess-remaining"></div>
-      <div id="state-confirmed" class="hidden">
-        <span>✓ State confirmed:</span> <strong id="state-confirmed-name"></strong>
-      </div>
-      <div id="guess-input-row">
-        <div id="guess-selects">
-          <select id="stateSelect">
-            <option value="">State…</option>
-          </select>
-          <select id="districtSelect" disabled>
-            <option value="">District…</option>
-          </select>
-        </div>
-        <button id="guessButton">Guess</button>
-      </div>
     </div>
   </div>
 
