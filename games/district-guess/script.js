@@ -147,6 +147,7 @@ let todayKey            = '';     // 'YYYY-MM-DD'
 let map, terrainLayer, streetLayer, districtLayer;
 let usRefMap            = null;   // US states reference map
 let usRefLayers         = {};     // abbr → Leaflet GeoJSON layer
+let wrongStateGuesses   = new Set(); // states guessed wrong (immediately greyed out)
 let guessCount          = 0;
 let guessHistory        = [];     // [{text, correct}]
 let cluesRevealed       = 0;      // how many text clues are showing
@@ -833,6 +834,7 @@ function getValidStates() {
   const correctTZ     = STATE_TIMEZONES[correctState];
 
   return new Set(all.filter(abbr => {
+    if (wrongStateGuesses.has(abbr))                                     return false;
     if (cluesRevealed >= 1 && STATE_REGIONS[abbr]    !== correctRegion) return false;
     if (cluesRevealed >= 2 && STATE_TIMEZONES[abbr]  !== correctTZ)     return false;
     return true;
