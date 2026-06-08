@@ -94,13 +94,14 @@
   <div id="game-section">
     <div id="map"></div>
 
-    <div id="clues-panel">
-      <h3>Clues</h3>
-      <div id="clues-list"></div>
-    </div>
-
     <div id="reference-panel">
       <h3>Reference</h3>
+
+      <!-- Clickable US states map — always shown, states eliminated by clues -->
+      <div id="us-ref-section">
+        <div class="ref-label">Click a state to select it</div>
+        <div id="us-ref-map"></div>
+      </div>
 
       <!-- State chips: greyed out as clues eliminate states -->
       <div id="state-chips-section">
@@ -110,12 +111,11 @@
         </div>
         <div id="state-chips"></div>
       </div>
+    </div>
 
-      <!-- Clickable US states map — always shown, states eliminated by clues -->
-      <div id="us-ref-section">
-        <div class="ref-label">Click a state to select it</div>
-        <div id="us-ref-map"></div>
-      </div>
+    <div id="clues-panel">
+      <h3>Clues</h3>
+      <div id="clues-list"></div>
     </div>
 
     <div id="guess-section">
