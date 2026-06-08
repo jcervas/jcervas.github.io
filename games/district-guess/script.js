@@ -244,10 +244,22 @@ function syncChipsToDropdown(stateAbbr) {
 }
 
 function getGuessFromDropdowns() {
-  const state = document.getElementById('stateSelect').value;
-  const dist  = document.getElementById('districtSelect').value;
-  if (!state || !dist) return null;
-  return dist === 'AT-LARGE' ? `${state}-AT-LARGE` : `${state}-${dist}`;
+  if (!correctStateGuessed) {
+    // Phase 1: state-only guess
+    const state = document.getElementById('stateSelect').value;
+    return state || null;
+  } else {
+    // Phase 2: district guess (state already locked)
+    const state = document.getElementById('stateSelect').value;
+    const dist  = document.getElementById('districtSelect').value;
+    if (!state || !dist) return null;
+    return dist === 'AT-LARGE' ? `${state}-AT-LARGE` : `${state}-${dist}`;
+  }
+}
+
+function updateGuessButton() {
+  const btn = document.getElementById('guessButton');
+  btn.textContent = correctStateGuessed ? 'Guess District' : 'Guess State';
 }
 
 function resetDropdowns() {
@@ -717,43 +729,46 @@ function submitGuess() {
 
   if (!timerRunning) startTimer();
 
-  const correct      = guess === todayDistrict.properties.CONG119;
-  const guessedState = guess.split('-')[0];
-  const correctState = todayDistrict.properties.STATE;
+  const correctState    = todayDistrict.properties.STATE;
+  const correctDistrict = todayDistrict.properties.CONG119;
 
-  guessCount++;
-  guessHistory.push({ text: guess, correct });
+  if (!correctStateGuessed) {
+    // ── Phase 1: state guess ──
+    const correct = guess === correctState;
+    guessCount++;
+    guessHistory.push({ text: guess, correct, phase: 'state' });
 
-  // Check if the guessed state matches — lock it if so
-  if (!correctStateGuessed && guessedState === correctState) {
-    correctStateGuessed = true;
-    lockStateDropdown(correctState);
-  }
-
-  if (correct) {
-    endGame(true);
-  } else {
-    const wrongCount = guessHistory.filter(g => !g.correct).length;
-    // Reveal next text clue
-    if (cluesRevealed < CLUE_DEFS.length) {
+    if (correct) {
+      correctStateGuessed = true;
+      lockStateDropdown(correctState);
+      // Don't end game — move to district phase
+    } else {
+      const wrongCount = guessHistory.filter(g => !g.correct).length;
       cluesRevealed = Math.min(wrongCount, CLUE_DEFS.length);
+      applyMapStage(wrongCount);
+      if (guessCount >= MAX_GUESSES) { endGame(false); return; }
+      resetDropdowns();
     }
-    // Advance map stage (terrain after first wrong guess, no further change until game ends)
-    applyMapStage(wrongCount);
-
-    if (guessCount >= MAX_GUESSES) {
-      endGame(false);
-    }
-  }
-
-  // Keep state dropdown locked if already confirmed; reset district only
-  if (correctStateGuessed) {
-    document.getElementById('districtSelect').value = '';
   } else {
-    resetDropdowns();
+    // ── Phase 2: district guess ──
+    const correct = guess === correctDistrict;
+    guessCount++;
+    guessHistory.push({ text: guess, correct, phase: 'district' });
+
+    if (correct) {
+      endGame(true); return;
+    } else {
+      const wrongCount = guessHistory.filter(g => !g.correct).length;
+      cluesRevealed = Math.min(wrongCount, CLUE_DEFS.length);
+      applyMapStage(wrongCount);
+      if (guessCount >= MAX_GUESSES) { endGame(false); return; }
+      document.getElementById('districtSelect').value = '';
+    }
   }
+
   renderGuessHistory();
   renderClues();
+  updateGuessButton();
   saveGameState();
 }
 
@@ -852,13 +867,31 @@ function stateStyle(abbr) {
 }
 
 function updateUSRefMap() {
+  if (!usRefMap) return;
+  const valid = getValidStates();
+
   for (const [abbr, layer] of Object.entries(usRefLayers)) {
     layer.setStyle(stateStyle(abbr));
-    // Cursor hint
-    const valid = getValidStates();
-    layer.getElement && layer.getElement()?.style.setProperty(
-      'cursor', (!correctStateGuessed && valid.has(abbr)) ? 'pointer' : 'default'
-    );
+  }
+
+  // Zoom map to fit the valid (or confirmed) states
+  const targetAbbrs = correctStateGuessed
+    ? [todayDistrict.properties.STATE]
+    : [...valid];
+
+  const targetLayers = targetAbbrs
+    .map(a => usRefLayers[a])
+    .filter(Boolean);
+
+  if (targetLayers.length > 0) {
+    const group = L.featureGroup(targetLayers);
+    const allStatesCount = Object.keys(stateDistrictMap).length;
+    // Only zoom in if we've narrowed from the full set (or state confirmed)
+    if (correctStateGuessed || valid.size < allStatesCount) {
+      usRefMap.fitBounds(group.getBounds(), { padding: [20, 20], animate: true, duration: 0.5 });
+    } else {
+      usRefMap.fitBounds([[24, -125], [50, -66]]);
+    }
   }
 }
 
@@ -909,11 +942,13 @@ function lockStateDropdown(stateAbbr) {
   document.getElementById('state-confirmed-name').textContent = STATE_NAMES[stateAbbr] || stateAbbr;
   badge.classList.remove('hidden');
 
-  // Repopulate district dropdown for the confirmed state
+  // Repopulate district dropdown and reveal it for phase 2
   populateDistrictDropdown(stateAbbr);
+  document.getElementById('districtSelect').classList.remove('hidden');
   // Update chips and US ref map to reflect confirmed state
   renderStateChips();
   updateUSRefMap();
+  updateGuessButton();
 }
 
 function endGame(won) {
@@ -1075,11 +1110,14 @@ function restoreGame(saved) {
 
   // Reconstruct state-lock from guess history
   const correctState = todayDistrict.properties.STATE;
-  const stateFound   = guessHistory.some(g => g.text.split('-')[0] === correctState);
+  const stateFound   = guessHistory.some(g => g.phase === 'state' ? g.correct : g.text.split('-')[0] === correctState);
   if (stateFound) {
     correctStateGuessed = true;
     lockStateDropdown(correctState);
+  } else {
+    document.getElementById('districtSelect').classList.add('hidden');
   }
+  updateGuessButton();
 
   // Reconstruct map stage
   const wrongCount = guessHistory.filter(g => !g.correct).length;
@@ -1178,10 +1216,14 @@ async function init() {
 document.addEventListener('DOMContentLoaded', () => {
   init();
 
+  // Hide district dropdown until state is confirmed (phase 2)
+  document.getElementById('districtSelect').classList.add('hidden');
+  updateGuessButton();
+
   document.getElementById('guessButton').addEventListener('click', submitGuess);
 
   document.getElementById('stateSelect').addEventListener('change', e => {
-    populateDistrictDropdown(e.target.value);
+    if (!correctStateGuessed) populateDistrictDropdown(e.target.value);
     syncChipsToDropdown(e.target.value);
   });
 
