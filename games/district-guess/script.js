@@ -717,8 +717,79 @@ function renderGuessHistory() {
   }
 }
 
+// Called when a state is chosen (map click, chip click, or Guess State button).
+// Shows a flash animation then processes the guess.
+let _guessLocked = false; // prevent double-submit during animation
+function submitStateGuess(abbr) {
+  if (gameOver || correctStateGuessed || _guessLocked) return;
+  _guessLocked = true;
+
+  // Set dropdown value
+  const stateSel = document.getElementById('stateSelect');
+  stateSel.value = abbr;
+
+  const isCorrect = abbr === todayDistrict.properties.STATE;
+
+  // Flash the state on the map
+  const layer = usRefLayers[abbr];
+  if (layer) {
+    layer.setStyle(isCorrect
+      ? { color: '#15803d', weight: 3, fillColor: '#4ade80', fillOpacity: 0.95 }
+      : { color: '#dc2626', weight: 3, fillColor: '#fca5a5', fillOpacity: 0.95 });
+  }
+
+  // Animate the reference panel
+  const panel = document.getElementById('us-ref-map');
+  panel.classList.add(isCorrect ? 'flash-correct' : 'flash-wrong');
+  setTimeout(() => panel.classList.remove('flash-correct', 'flash-wrong'), 700);
+
+  // Process the guess after a brief pause so the animation is visible
+  setTimeout(() => {
+    _guessLocked = false;
+    processStateGuess(abbr, isCorrect);
+  }, 650);
+}
+
+function processStateGuess(abbr, correct) {
+  if (!timerRunning) startTimer();
+
+  guessCount++;
+  guessHistory.push({ text: abbr, correct, phase: 'state' });
+
+  if (correct) {
+    correctStateGuessed = true;
+    lockStateDropdown(abbr);
+  } else {
+    const wrongCount = guessHistory.filter(g => !g.correct).length;
+    cluesRevealed = Math.min(wrongCount, CLUE_DEFS.length);
+    applyMapStage(wrongCount);
+    if (guessCount >= MAX_GUESSES) { endGame(false); return; }
+    resetDropdowns();
+  }
+
+  renderGuessHistory();
+  renderClues();
+  updateGuessButton();
+  saveGameState();
+}
+
 function submitGuess() {
   if (gameOver) return;
+
+  if (!correctStateGuessed) {
+    // Phase 1: state guess — route through animation
+    const abbr = document.getElementById('stateSelect').value;
+    if (!abbr) {
+      const row = document.getElementById('guess-selects');
+      row.classList.add('shake');
+      setTimeout(() => row.classList.remove('shake'), 400);
+      return;
+    }
+    submitStateGuess(abbr);
+    return;
+  }
+
+  // ── Phase 2: district guess ──
   const guess = getGuessFromDropdowns();
   if (!guess) {
     const row = document.getElementById('guess-selects');
@@ -729,46 +800,23 @@ function submitGuess() {
 
   if (!timerRunning) startTimer();
 
-  const correctState    = todayDistrict.properties.STATE;
   const correctDistrict = todayDistrict.properties.CONG119;
+  const correct = guess === correctDistrict;
+  guessCount++;
+  guessHistory.push({ text: guess, correct, phase: 'district' });
 
-  if (!correctStateGuessed) {
-    // ── Phase 1: state guess ──
-    const correct = guess === correctState;
-    guessCount++;
-    guessHistory.push({ text: guess, correct, phase: 'state' });
-
-    if (correct) {
-      correctStateGuessed = true;
-      lockStateDropdown(correctState);
-      // Don't end game — move to district phase
-    } else {
-      const wrongCount = guessHistory.filter(g => !g.correct).length;
-      cluesRevealed = Math.min(wrongCount, CLUE_DEFS.length);
-      applyMapStage(wrongCount);
-      if (guessCount >= MAX_GUESSES) { endGame(false); return; }
-      resetDropdowns();
-    }
+  if (correct) {
+    endGame(true); return;
   } else {
-    // ── Phase 2: district guess ──
-    const correct = guess === correctDistrict;
-    guessCount++;
-    guessHistory.push({ text: guess, correct, phase: 'district' });
-
-    if (correct) {
-      endGame(true); return;
-    } else {
-      const wrongCount = guessHistory.filter(g => !g.correct).length;
-      cluesRevealed = Math.min(wrongCount, CLUE_DEFS.length);
-      applyMapStage(wrongCount);
-      if (guessCount >= MAX_GUESSES) { endGame(false); return; }
-      document.getElementById('districtSelect').value = '';
-    }
+    const wrongCount = guessHistory.filter(g => !g.correct).length;
+    cluesRevealed = Math.min(wrongCount, CLUE_DEFS.length);
+    applyMapStage(wrongCount);
+    if (guessCount >= MAX_GUESSES) { endGame(false); return; }
+    document.getElementById('districtSelect').value = '';
   }
 
   renderGuessHistory();
   renderClues();
-  updateGuessButton();
   saveGameState();
 }
 
@@ -829,11 +877,8 @@ function initUSRefMap() {
           layer.on('click', () => {
             if (gameOver || correctStateGuessed) return;
             const valid = getValidStates();
-            if (!valid.has(abbr)) return; // eliminated — ignore click
-            const stateSel = document.getElementById('stateSelect');
-            stateSel.value = abbr;
-            stateSel.dispatchEvent(new Event('change'));
-            document.getElementById('guess-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            if (!valid.has(abbr)) return;
+            submitStateGuess(abbr);
           });
 
           layer.on('mouseover', () => {
@@ -918,11 +963,8 @@ function renderStateChips() {
 
     chip.addEventListener('click', () => {
       if (correctStateGuessed || gameOver) return;
-      const stateSel = document.getElementById('stateSelect');
-      stateSel.value = abbr;
-      stateSel.dispatchEvent(new Event('change'));
-      // Scroll to the guess input
-      document.getElementById('guess-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      if (!validStates.has(abbr)) return;
+      submitStateGuess(abbr);
     });
 
     container.appendChild(chip);
