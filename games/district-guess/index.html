@@ -1,150 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Name That Congressional District</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-        #map {
-            height: 600px;
-            width: 100%;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        input, button {
-            margin: 10px;
-            padding: 10px;
-            font-size: 16px;
-        }
-        #instructions {
-            margin-top: 10px;
-            font-size: 14px;
-            color: gray;
-            text-align: center;
-            max-width: 600px;
-        }
-        #result {
-            font-size: 20px;
-            margin-top: 20px;
-            display: none;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>District Guess — Daily Congressional District Game</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <h1>Name That Congressional District</h1>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <div class="header-inner">
+    <h1>District Guess</h1>
+    <div class="header-stats">
+      <div id="timer-display" class="timer">⏱ 0:00</div>
+      <button id="leaderboard-btn" class="btn-icon" title="Leaderboard">🏆</button>
+      <button id="how-to-btn" class="btn-icon" title="How to play">?</button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== HOW TO PLAY MODAL ===== -->
+<div id="how-to-modal" class="modal hidden">
+  <div class="modal-content">
+    <button class="modal-close">✕</button>
+    <h2>How to Play</h2>
+    <p>Identify the <strong>119th Congress</strong> congressional district shown on the map.</p>
+    <ul>
+      <li>You have <strong>5 guesses</strong> per day.</li>
+      <li>A new district appears every day — same for all players.</li>
+      <li>Pick a state, then a district number from the dropdowns.</li>
+      <li>After each wrong guess, a new clue is revealed.</li>
+      <li>Your timer starts when you submit your first guess.</li>
+      <li>Come back tomorrow for a new district!</li>
+    </ul>
+    <h3>Clues revealed in order</h3>
+    <ol>
+      <li>Geographic region + terrain map (elevation only, no labels)</li>
+      <li>Primary time zone</li>
+      <li>Largest racial / ethnic group</li>
+      <li>Median household income</li>
+      <li>Full labeled map — cities revealed before your final guess</li>
+    </ol>
+    <p style="margin-top:10px"><strong>Bonus:</strong> Once you guess the correct state, it locks and you only need to pick the district number.</p>
+  </div>
+</div>
+
+<!-- ===== LEADERBOARD MODAL ===== -->
+<div id="leaderboard-modal" class="modal hidden">
+  <div class="modal-content leaderboard-content">
+    <button class="modal-close">✕</button>
+    <h2>🏆 Leaderboard</h2>
+    <div id="lb-district-label" class="lb-district-label"></div>
+    <div class="leaderboard-tabs">
+      <button class="tab-btn active" data-tab="today">Today</button>
+      <button class="tab-btn" data-tab="alltime">All Time</button>
+      <button class="tab-btn" data-tab="personal">My Stats</button>
+    </div>
+    <div id="leaderboard-today" class="tab-panel active">
+      <div id="today-scores" class="scores-list">Loading…</div>
+    </div>
+    <div id="leaderboard-alltime" class="tab-panel">
+      <div id="alltime-scores" class="scores-list">Loading…</div>
+    </div>
+    <div id="leaderboard-personal" class="tab-panel">
+      <div id="personal-stats"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== USERNAME PROMPT MODAL ===== -->
+<div id="username-modal" class="modal hidden">
+  <div class="modal-content">
+    <h2>Welcome!</h2>
+    <p>Enter a display name for the leaderboard.</p>
+    <input type="text" id="username-input" placeholder="Your name" maxlength="20" autocomplete="off" />
+    <div id="username-error"></div>
+    <button id="username-submit">Start Playing</button>
+  </div>
+</div>
+
+<!-- ===== MAIN ===== -->
+<main>
+
+  <!-- Already played today -->
+  <div id="already-played-banner" class="banner hidden">
+    You've already played today! Come back tomorrow for a new district.
+    <button id="show-results-btn">View Result &amp; Leaderboard</button>
+  </div>
+
+  <!-- Game -->
+  <div id="game-section">
     <div id="map"></div>
-    <input type="text" id="guessInput" placeholder="Enter your guess here" />
-    <div>
-        <button id="guessButton">Submit Guess</button>
-        <button id="skipButton">Skip</button>
-        <button id="clueButton">Show Map Clue</button>
+
+    <div id="clues-panel">
+      <h3>Clues</h3>
+      <div id="clues-list"></div>
     </div>
-    <div id="score">Score: 0 out of 435</div>
-    <div id="progress">Progress: 0 out of 435</div>
-    <div id="instructions">
-        Enter your guess in the format "NY-02" or "SD-AT-LARGE".
-        The highest possible score is 435.
-        Need help? Click "Show Map Clue" to see the underlying map!
-        Enjoyed the game? Please consider making a <a href="https://x.com/RedistrictNet" target="_blank" rel="noopener noreferrer">donation here</a>.
+
+    <div id="guess-section">
+      <div id="guess-history"></div>
+      <div id="guess-remaining"></div>
+      <div id="state-confirmed" class="hidden">
+        <span>✓ State confirmed:</span> <strong id="state-confirmed-name"></strong>
+      </div>
+      <div id="guess-input-row">
+        <div id="guess-selects">
+          <select id="stateSelect">
+            <option value="">State…</option>
+          </select>
+          <select id="districtSelect" disabled>
+            <option value="">District…</option>
+          </select>
+        </div>
+        <button id="guessButton">Guess</button>
+      </div>
     </div>
-    <div id="result"></div>
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script src="./script.js"></script>
+  </div>
+
+  <!-- Result (shown after game ends) -->
+  <div id="result-section" class="hidden">
+    <div id="result-message"></div>
+    <div id="result-stats"></div>
+    <button id="share-btn">📋 Share Result</button>
+    <div id="share-copied" class="hidden">Copied to clipboard!</div>
+  </div>
+
+  <!-- Better Know a District -->
+  <div id="census-section" class="hidden">
+    <h2>📊 Better Know a District</h2>
+    <div id="census-loading">Fetching district data from the U.S. Census…</div>
+    <div id="census-data" class="hidden"></div>
+  </div>
+
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- Firebase (compat v9 — required for leaderboard) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script src="script.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
