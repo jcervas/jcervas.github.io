@@ -145,7 +145,8 @@ let districts           = [];
 let todayDistrict       = null;   // feature object
 let todayKey            = '';     // 'YYYY-MM-DD'
 let map, terrainLayer, streetLayer, districtLayer;
-let refMap              = null;   // district reference mini-map
+let usRefMap            = null;   // US states reference map
+let usRefLayers         = {};     // abbr → Leaflet GeoJSON layer
 let guessCount          = 0;
 let guessHistory        = [];     // [{text, correct}]
 let cluesRevealed       = 0;      // how many text clues are showing
@@ -775,6 +776,92 @@ function getValidStates() {
   }));
 }
 
+// Inverted lookup: full name → abbreviation (built from STATE_NAMES)
+const STATE_ABBR_BY_NAME = {};
+for (const [abbr, name] of Object.entries(STATE_NAMES)) STATE_ABBR_BY_NAME[name] = abbr;
+
+// ---- US reference map (clickable states) ----
+
+function initUSRefMap() {
+  if (usRefMap) return; // already initialised
+  usRefMap = L.map('us-ref-map', {
+    zoomControl: false,
+    attributionControl: false,
+    scrollWheelZoom: false,
+    dragging: false,
+    doubleClickZoom: false,
+    boxZoom: false,
+    keyboard: false,
+  });
+
+  // Fit to CONUS + AK/HI by default; we'll fitBounds after data loads
+  usRefMap.setView([38, -96], 3);
+
+  fetch('https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json')
+    .then(r => r.json())
+    .then(geojson => {
+      // Filter to 50 states + DC  (drop territories)
+      const known = new Set(Object.values(STATE_NAMES));
+      geojson.features = geojson.features.filter(f => known.has(f.properties.name));
+
+      L.geoJSON(geojson, {
+        style: f => stateStyle(STATE_ABBR_BY_NAME[f.properties.name]),
+        onEachFeature(feature, layer) {
+          const abbr = STATE_ABBR_BY_NAME[feature.properties.name];
+          if (!abbr) return;
+          usRefLayers[abbr] = layer;
+
+          layer.on('click', () => {
+            if (gameOver || correctStateGuessed) return;
+            const valid = getValidStates();
+            if (!valid.has(abbr)) return; // eliminated — ignore click
+            const stateSel = document.getElementById('stateSelect');
+            stateSel.value = abbr;
+            stateSel.dispatchEvent(new Event('change'));
+            document.getElementById('guess-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          });
+
+          layer.on('mouseover', () => {
+            const valid = getValidStates();
+            if (correctStateGuessed || !valid.has(abbr)) return;
+            layer.setStyle({ fillOpacity: 0.85, weight: 2 });
+          });
+          layer.on('mouseout', () => layer.setStyle(stateStyle(abbr)));
+        }
+      }).addTo(usRefMap);
+
+      usRefMap.fitBounds([
+        [24, -125], [50, -66]   // CONUS bounding box
+      ]);
+    })
+    .catch(() => {}); // fail silently — ref map is optional
+}
+
+function stateStyle(abbr) {
+  if (!abbr) return { color: '#94a3b8', weight: 1, fillColor: '#e2e8f0', fillOpacity: 0.5 };
+  if (correctStateGuessed) {
+    const confirmed = todayDistrict ? todayDistrict.properties.STATE : null;
+    if (abbr === confirmed) return { color: '#16a34a', weight: 2, fillColor: '#bbf7d0', fillOpacity: 0.8 };
+    return { color: '#94a3b8', weight: 0.5, fillColor: '#f1f5f9', fillOpacity: 0.4 };
+  }
+  const valid = getValidStates();
+  if (valid.has(abbr)) {
+    return { color: '#2563eb', weight: 1.5, fillColor: '#dbeafe', fillOpacity: 0.65 };
+  }
+  return { color: '#cbd5e1', weight: 0.5, fillColor: '#f1f5f9', fillOpacity: 0.25 };
+}
+
+function updateUSRefMap() {
+  for (const [abbr, layer] of Object.entries(usRefLayers)) {
+    layer.setStyle(stateStyle(abbr));
+    // Cursor hint
+    const valid = getValidStates();
+    layer.getElement && layer.getElement()?.style.setProperty(
+      'cursor', (!correctStateGuessed && valid.has(abbr)) ? 'pointer' : 'default'
+    );
+  }
+}
+
 function renderStateChips() {
   const container = document.getElementById('state-chips');
   const countEl   = document.getElementById('state-match-count');
@@ -807,75 +894,9 @@ function renderStateChips() {
 
     container.appendChild(chip);
   }
-}
 
-function showDistrictReferenceMap(stateAbbr) {
-  const section = document.getElementById('district-ref-section');
-  const mapDiv  = document.getElementById('district-ref-map');
-  document.getElementById('district-ref-state').textContent = STATE_NAMES[stateAbbr] || stateAbbr;
-  section.classList.remove('hidden');
-
-  // Destroy previous instance if re-called
-  if (refMap) { refMap.remove(); refMap = null; }
-  mapDiv.innerHTML = '';
-
-  refMap = L.map('district-ref-map', {
-    zoomControl: false,
-    attributionControl: false,
-    scrollWheelZoom: false,
-    dragging: true,
-    doubleClickZoom: false,
-  });
-
-  const stateFeatures = districts.filter(f => f.properties.STATE === stateAbbr);
-  const allLayers = [];
-
-  stateFeatures.forEach(feature => {
-    const distRaw = feature.properties.DISTRICT;
-    const distNum = distRaw === 'AT-LARGE' ? 'AL' : String(parseInt(distRaw, 10));
-    const isAtLarge = distRaw === 'AT-LARGE';
-
-    const layer = L.geoJSON(feature, {
-      style: {
-        color: '#2563eb', weight: 1.5,
-        fillColor: '#dbeafe', fillOpacity: 0.6
-      }
-    }).addTo(refMap);
-
-    // Label at the visual center (pole of inaccessibility approximation via bounds center)
-    const bounds = layer.getBounds();
-    const center = bounds.getCenter();
-    const labelIcon = L.divIcon({
-      className: 'dist-ref-label',
-      html: `<div>${distNum}</div>`,
-      iconSize: null,
-      iconAnchor: [12, 12],
-    });
-    const marker = L.marker(center, { icon: labelIcon, interactive: true }).addTo(refMap);
-
-    // Click label or polygon → select this district
-    const selectDistrict = () => {
-      if (gameOver) return;
-      const distSel = document.getElementById('districtSelect');
-      distSel.value = distRaw;
-      distSel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      // Highlight briefly
-      layer.setStyle({ fillColor: '#bfdbfe', fillOpacity: 0.9 });
-      setTimeout(() => layer.setStyle({ fillColor: '#dbeafe', fillOpacity: 0.6 }), 800);
-    };
-    layer.on('click', selectDistrict);
-    marker.on('click', selectDistrict);
-
-    // Hover highlight
-    layer.on('mouseover', () => layer.setStyle({ fillColor: '#93c5fd', fillOpacity: 0.8 }));
-    layer.on('mouseout',  () => layer.setStyle({ fillColor: '#dbeafe', fillOpacity: 0.6 }));
-
-    allLayers.push(layer);
-  });
-
-  // Fit map to state
-  const group = L.featureGroup(allLayers);
-  refMap.fitBounds(group.getBounds(), { padding: [8, 8] });
+  // Keep the US ref map in sync
+  updateUSRefMap();
 }
 
 function lockStateDropdown(stateAbbr) {
@@ -890,10 +911,9 @@ function lockStateDropdown(stateAbbr) {
 
   // Repopulate district dropdown for the confirmed state
   populateDistrictDropdown(stateAbbr);
-  // Show district reference mini-map
-  showDistrictReferenceMap(stateAbbr);
-  // Freeze chips
+  // Update chips and US ref map to reflect confirmed state
   renderStateChips();
+  updateUSRefMap();
 }
 
 function endGame(won) {
@@ -1128,6 +1148,7 @@ async function init() {
   todayDistrict = districts[idx];
 
   initMap();
+  initUSRefMap();   // start loading US states reference map
 
   // Check for saved game from today
   const saved = loadGameState();
