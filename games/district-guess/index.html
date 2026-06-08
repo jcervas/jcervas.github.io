@@ -99,6 +99,25 @@
       <div id="clues-list"></div>
     </div>
 
+    <div id="reference-panel">
+      <h3>Reference</h3>
+
+      <!-- State chips: greyed out as clues eliminate states -->
+      <div id="state-chips-section">
+        <div class="ref-label">
+          Possible states: <span id="state-match-count">all 51</span>
+          <span id="state-chips-hint">(click to select)</span>
+        </div>
+        <div id="state-chips"></div>
+      </div>
+
+      <!-- District mini-map: appears once state is locked -->
+      <div id="district-ref-section" class="hidden">
+        <div class="ref-label">Districts of <strong id="district-ref-state"></strong> — click a district to select it</div>
+        <div id="district-ref-map"></div>
+      </div>
+    </div>
+
     <div id="guess-section">
       <div id="guess-history"></div>
       <div id="guess-remaining"></div>

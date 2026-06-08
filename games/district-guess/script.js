@@ -145,6 +145,7 @@ let districts           = [];
 let todayDistrict       = null;   // feature object
 let todayKey            = '';     // 'YYYY-MM-DD'
 let map, terrainLayer, streetLayer, districtLayer;
+let refMap              = null;   // district reference mini-map
 let guessCount          = 0;
 let guessHistory        = [];     // [{text, correct}]
 let cluesRevealed       = 0;      // how many text clues are showing
@@ -232,6 +233,13 @@ function populateDistrictDropdown(stateAbbr) {
     sel.value = dists[0];
   }
   sel.disabled = false;
+}
+
+// Also filter chips when state dropdown changes (narrows which chips are clickable)
+function syncChipsToDropdown(stateAbbr) {
+  document.querySelectorAll('.state-chip').forEach(chip => {
+    chip.classList.toggle('selected', chip.textContent === stateAbbr);
+  });
 }
 
 function getGuessFromDropdowns() {
@@ -616,6 +624,7 @@ async function loadAlltimeScores() {
 //  CLUES UI
 // ============================================================
 function renderClues() {
+  renderStateChips(); // update chip states whenever clues change
   const list = document.getElementById('clues-list');
   list.innerHTML = '';
 
@@ -747,6 +756,128 @@ function submitGuess() {
   saveGameState();
 }
 
+// ============================================================
+//  REFERENCE PANEL
+// ============================================================
+
+// Returns the set of state abbreviations still consistent with revealed clues.
+function getValidStates() {
+  const all = Object.keys(stateDistrictMap);
+  if (!todayDistrict) return new Set(all);
+  const correctState  = todayDistrict.properties.STATE;
+  const correctRegion = STATE_REGIONS[correctState];
+  const correctTZ     = STATE_TIMEZONES[correctState];
+
+  return new Set(all.filter(abbr => {
+    if (cluesRevealed >= 1 && STATE_REGIONS[abbr]    !== correctRegion) return false;
+    if (cluesRevealed >= 2 && STATE_TIMEZONES[abbr]  !== correctTZ)     return false;
+    return true;
+  }));
+}
+
+function renderStateChips() {
+  const container = document.getElementById('state-chips');
+  const countEl   = document.getElementById('state-match-count');
+  if (!container) return;
+
+  const validStates = getValidStates();
+  countEl.textContent = `${validStates.size} of 51`;
+
+  // Sort: valid first (alpha), then eliminated (alpha)
+  const allStates = Object.keys(stateDistrictMap).sort((a, b) =>
+    (STATE_NAMES[a] || a).localeCompare(STATE_NAMES[b] || b)
+  );
+
+  container.innerHTML = '';
+  for (const abbr of allStates) {
+    const chip = document.createElement('button');
+    chip.className = 'state-chip' + (validStates.has(abbr) ? '' : ' eliminated');
+    chip.textContent = abbr;
+    chip.title = STATE_NAMES[abbr] || abbr;
+    chip.disabled = correctStateGuessed; // lock chips once state is confirmed
+
+    chip.addEventListener('click', () => {
+      if (correctStateGuessed || gameOver) return;
+      const stateSel = document.getElementById('stateSelect');
+      stateSel.value = abbr;
+      stateSel.dispatchEvent(new Event('change'));
+      // Scroll to the guess input
+      document.getElementById('guess-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    container.appendChild(chip);
+  }
+}
+
+function showDistrictReferenceMap(stateAbbr) {
+  const section = document.getElementById('district-ref-section');
+  const mapDiv  = document.getElementById('district-ref-map');
+  document.getElementById('district-ref-state').textContent = STATE_NAMES[stateAbbr] || stateAbbr;
+  section.classList.remove('hidden');
+
+  // Destroy previous instance if re-called
+  if (refMap) { refMap.remove(); refMap = null; }
+  mapDiv.innerHTML = '';
+
+  refMap = L.map('district-ref-map', {
+    zoomControl: false,
+    attributionControl: false,
+    scrollWheelZoom: false,
+    dragging: true,
+    doubleClickZoom: false,
+  });
+
+  const stateFeatures = districts.filter(f => f.properties.STATE === stateAbbr);
+  const allLayers = [];
+
+  stateFeatures.forEach(feature => {
+    const distRaw = feature.properties.DISTRICT;
+    const distNum = distRaw === 'AT-LARGE' ? 'AL' : String(parseInt(distRaw, 10));
+    const isAtLarge = distRaw === 'AT-LARGE';
+
+    const layer = L.geoJSON(feature, {
+      style: {
+        color: '#2563eb', weight: 1.5,
+        fillColor: '#dbeafe', fillOpacity: 0.6
+      }
+    }).addTo(refMap);
+
+    // Label at the visual center (pole of inaccessibility approximation via bounds center)
+    const bounds = layer.getBounds();
+    const center = bounds.getCenter();
+    const labelIcon = L.divIcon({
+      className: 'dist-ref-label',
+      html: `<div>${distNum}</div>`,
+      iconSize: null,
+      iconAnchor: [12, 12],
+    });
+    const marker = L.marker(center, { icon: labelIcon, interactive: true }).addTo(refMap);
+
+    // Click label or polygon → select this district
+    const selectDistrict = () => {
+      if (gameOver) return;
+      const distSel = document.getElementById('districtSelect');
+      distSel.value = distRaw;
+      distSel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      // Highlight briefly
+      layer.setStyle({ fillColor: '#bfdbfe', fillOpacity: 0.9 });
+      setTimeout(() => layer.setStyle({ fillColor: '#dbeafe', fillOpacity: 0.6 }), 800);
+    };
+    layer.on('click', selectDistrict);
+    marker.on('click', selectDistrict);
+
+    // Hover highlight
+    layer.on('mouseover', () => layer.setStyle({ fillColor: '#93c5fd', fillOpacity: 0.8 }));
+    layer.on('mouseout',  () => layer.setStyle({ fillColor: '#dbeafe', fillOpacity: 0.6 }));
+
+    allLayers.push(layer);
+  });
+
+  // Fit map to state
+  const group = L.featureGroup(allLayers);
+  refMap.fitBounds(group.getBounds(), { padding: [8, 8] });
+}
+
 function lockStateDropdown(stateAbbr) {
   const stateSel = document.getElementById('stateSelect');
   stateSel.value    = stateAbbr;
@@ -757,8 +888,12 @@ function lockStateDropdown(stateAbbr) {
   document.getElementById('state-confirmed-name').textContent = STATE_NAMES[stateAbbr] || stateAbbr;
   badge.classList.remove('hidden');
 
-  // Repopulate district dropdown for the confirmed state (already done, but ensure enabled)
+  // Repopulate district dropdown for the confirmed state
   populateDistrictDropdown(stateAbbr);
+  // Show district reference mini-map
+  showDistrictReferenceMap(stateAbbr);
+  // Freeze chips
+  renderStateChips();
 }
 
 function endGame(won) {
@@ -1004,7 +1139,7 @@ async function init() {
   // Fresh game — ask for username if not set
   const startGame = () => {
     renderDistrict(todayDistrict);
-    renderClues();
+    renderClues();         // also calls renderStateChips()
     renderGuessHistory();
     document.getElementById('guess-remaining').textContent = `${MAX_GUESSES} guesses`;
   };
@@ -1026,6 +1161,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('stateSelect').addEventListener('change', e => {
     populateDistrictDropdown(e.target.value);
+    syncChipsToDropdown(e.target.value);
   });
 
   // Allow Enter key on the district dropdown to submit
