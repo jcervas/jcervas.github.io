@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>District Guess — Daily Congressional District Game</title>
+  <title>District Guess Beta — Daily Congressional District Game</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=9" />
+  <link rel="stylesheet" href="style.css?v=10" />
 </head>
 <body>
 
 <!-- ===== HEADER ===== -->
 <header>
   <div class="header-inner">
-    <h1>District Guess</h1>
+    <h1>District Guess <span class="beta-badge">Beta</span></h1>
     <div class="header-stats">
       <div id="timer-display" class="timer">⏱ 0:00</div>
       <button id="leaderboard-btn" class="btn-icon" title="Leaderboard">🏆</button>
@@ -161,11 +161,12 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
 
 <!-- Firebase (compat v9 — required for leaderboard) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-<script src="script.js?v=9"></script>
+<script src="script.js?v=10"></script>
 </body>
 </html>
