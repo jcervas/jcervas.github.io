@@ -647,7 +647,12 @@ function renderClues() {
     const div = document.createElement('div');
     if (i < cluesRevealed) {
       div.className = 'clue-item revealed';
-      div.innerHTML = `<span class="clue-num">${i+1}</span><span class="clue-icon">${def.icon}</span><span class="clue-text"><strong>${def.label}:</strong> <span class="clue-val">…</span></span>`;
+      div.innerHTML = `
+        <span class="clue-icon">${def.icon}</span>
+        <span class="clue-text">
+          <span class="clue-label">${def.label}</span>
+          <span class="clue-val">…</span>
+        </span>`;
       // Resolve async clue values
       const val = def.fn(districtDataFor(todayDistrict));
       if (val instanceof Promise) {
@@ -659,10 +664,9 @@ function renderClues() {
         div.querySelector('.clue-val').textContent = val;
       }
     } else {
-      const guessesLeft = MAX_GUESSES - guessCount;
       const unlocksAfter = i - cluesRevealed + 1;
       div.className = 'clue-item locked';
-      div.innerHTML = `<span class="clue-num">${i+1}</span><span class="clue-icon">🔒</span><span class="clue-text">${def.label} — unlocks after ${unlocksAfter} more wrong guess${unlocksAfter !== 1 ? 'es' : ''}</span>`;
+      div.innerHTML = `<span class="clue-icon">🔒</span><span class="clue-text">${def.label}</span>`;
     }
     list.appendChild(div);
   }

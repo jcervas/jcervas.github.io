@@ -128,49 +128,71 @@ main {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 14px 16px;
+  padding: 12px 14px;
   box-shadow: var(--shadow);
 }
 #clues-panel h3 {
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   color: var(--muted);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 #clues-list {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
-.clue-item {
+
+/* Revealed clues — prominent */
+.clue-item.revealed {
+  display: grid;
+  grid-template-columns: 1.4rem 1fr;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #eff6ff;
+  border-radius: 8px;
+  border-left: 3px solid var(--accent);
+  animation: clue-in 0.35s ease;
+}
+.clue-item.revealed .clue-icon {
+  font-size: 1rem;
+  text-align: center;
+}
+.clue-item.revealed .clue-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+.clue-item.revealed .clue-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 1px;
+}
+
+/* Locked clues — minimal, fade into background */
+.clue-item.locked {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
-  background: #f8f9fb;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  animation: clue-in 0.4s ease;
+  gap: 6px;
+  padding: 4px 12px;
+  color: #c4c9d4;
+  font-size: 0.78rem;
 }
-.clue-item.locked {
-  color: var(--muted);
-  background: #f3f4f6;
-}
-.clue-item .clue-num {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--muted);
-  min-width: 18px;
-}
-.clue-item .clue-icon { font-size: 1rem; }
-.clue-item .clue-text { font-weight: 500; }
-.clue-item.revealed { background: #eff6ff; border-left: 3px solid var(--accent); }
+.clue-item.locked .clue-icon { opacity: 0.3; font-size: 0.85rem; }
+.clue-item.locked .clue-text { color: #c4c9d4; }
+.clue-item.locked .clue-num { display: none; }
 
 @keyframes clue-in {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 
 /* ---- Guess section ---- */
@@ -704,7 +726,7 @@ main {
 
 /* ---- Responsive ---- */
 
-/* Desktop: two-column layout, everything in viewport */
+/* Desktop: district map top-left, clues top-right, reference full-width bottom */
 @media (min-width: 768px) {
   main {
     max-width: 1400px;
@@ -713,40 +735,47 @@ main {
 
   #game-section {
     display: grid;
-    grid-template-columns: 3fr 2fr;
-    grid-template-rows: 1fr auto auto;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 40vh 1fr;
     grid-template-areas:
-      "map reference"
-      "map clues"
-      "map guess";
+      "map   clues"
+      "ref   ref";
     gap: 10px;
     height: calc(100vh - 68px);
   }
 
-  #map {
-    grid-area: map;
-    height: 100%;
-    min-height: 0;
-  }
+  #map         { grid-area: map;   height: 100%; min-height: 0; }
+  #clues-panel { grid-area: clues; overflow-y: auto; min-height: 0; }
 
+  /* Reference panel: US map left (big), input + chips stacked right */
   #reference-panel {
-    grid-area: reference;
-    overflow-y: auto;
+    grid-area: ref;
     min-height: 0;
+    display: grid;
+    grid-template-columns: 1fr 220px;
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas:
+      "confirmed   confirmed"
+      "usmap       input"
+      "usmap       chips";
+    column-gap: 14px;
+    row-gap: 6px;
+    padding: 12px 14px;
   }
+  #reference-panel h3 { display: none; }
 
-  /* Compact US ref map on desktop */
-  #us-ref-map { height: 160px; }
+  #state-confirmed     { grid-area: confirmed; }
+  #us-ref-section      { grid-area: usmap; display: flex; flex-direction: column; min-height: 0; }
+  #us-ref-section .ref-label { margin-bottom: 4px; }
+  #us-ref-map          { flex: 1; height: auto !important; min-height: 0; }
+  #guess-input-row     { grid-area: input; flex-direction: column; gap: 8px; align-self: start; }
+  #guess-selects       { flex-direction: column; width: 100%; }
+  #guess-selects select { width: 100%; }
+  #guessButton         { width: 100%; }
+  #state-chips-section { grid-area: chips; overflow-y: auto; min-height: 0; }
 
-  #clues-panel {
-    grid-area: clues;
-    overflow-y: auto;
-    min-height: 0;
-  }
-
-  #guess-section {
-    grid-area: guess;
-  }
+  /* Guess history hidden on desktop (shown in clues panel area) */
+  #guess-section { display: none; }
 }
 
 @media (max-width: 767px) {
