@@ -294,8 +294,10 @@ main {
   60%     { transform: translateX(4px); }
   75%     { transform: translateX(-2px); }
 }
-#us-ref-map.flash-correct { animation: flashCorrect 0.7s ease forwards; }
-#us-ref-map.flash-wrong   { animation: flashWrong   0.7s ease forwards; }
+#us-ref-map.flash-correct,
+#guess-input-row.flash-correct { animation: flashCorrect 0.7s ease forwards; }
+#us-ref-map.flash-wrong,
+#guess-input-row.flash-wrong   { animation: flashWrong   0.7s ease forwards; }
 #guessButton {
   padding: 10px 20px;
   background: var(--accent);
@@ -701,8 +703,58 @@ main {
 .hidden { display: none !important; }
 
 /* ---- Responsive ---- */
-@media (max-width: 600px) {
-  #map { height: 300px; }
+
+/* Desktop: two-column layout, everything in viewport */
+@media (min-width: 768px) {
+  main {
+    max-width: 1400px;
+    padding: 10px 20px;
+  }
+
+  #game-section {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    grid-template-rows: 1fr auto auto;
+    grid-template-areas:
+      "map reference"
+      "map clues"
+      "map guess";
+    gap: 10px;
+    height: calc(100vh - 68px);
+  }
+
+  #map {
+    grid-area: map;
+    height: 100%;
+    min-height: 0;
+  }
+
+  #reference-panel {
+    grid-area: reference;
+    overflow-y: auto;
+    min-height: 0;
+  }
+
+  /* Compact US ref map on desktop */
+  #us-ref-map { height: 160px; }
+
+  #clues-panel {
+    grid-area: clues;
+    overflow-y: auto;
+    min-height: 0;
+  }
+
+  #guess-section {
+    grid-area: guess;
+  }
+}
+
+@media (max-width: 767px) {
+  #map { height: 340px; }
+}
+
+@media (max-width: 500px) {
+  #map { height: 260px; }
   .census-grid { grid-template-columns: 1fr 1fr; }
   .personal-grid { grid-template-columns: 1fr 1fr; }
   .header-inner h1 { font-size: 1.1rem; }
