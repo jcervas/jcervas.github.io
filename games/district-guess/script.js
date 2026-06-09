@@ -262,6 +262,7 @@ let timerRunning        = false;
 let gameOver            = false;
 let db                  = null;   // Firestore instance (if configured)
 let username            = '';
+let replayCount         = 0;      // increments each "Play Again" to pick a fresh district
 
 // ============================================================
 //  HELPERS
@@ -375,6 +376,7 @@ function savePersonalStats(won, guesses, seconds) {
     const stats = raw ? JSON.parse(raw) : {
       played: 0, won: 0, streak: 0, maxStreak: 0,
       guessDist: { 1:0,2:0,3:0,4:0,5:0,6:0,X:0 },
+      totalWonTime: 0,
       lastDate: null
     };
     stats.played++;
@@ -383,6 +385,7 @@ function savePersonalStats(won, guesses, seconds) {
       stats.streak = (stats.lastDate === getPrevDayKey()) ? stats.streak + 1 : 1;
       stats.maxStreak = Math.max(stats.maxStreak, stats.streak);
       stats.guessDist[guesses] = (stats.guessDist[guesses] || 0) + 1;
+      stats.totalWonTime = (stats.totalWonTime || 0) + seconds;
     } else {
       stats.streak = 0;
       stats.guessDist['X'] = (stats.guessDist['X'] || 0) + 1;
@@ -567,6 +570,9 @@ function renderInlinePersonalStats() {
     </div>`;
   }).join('');
 
+  const avgSecs  = stats.won > 0 ? Math.round((stats.totalWonTime || 0) / stats.won) : null;
+  const avgLabel = avgSecs !== null ? formatTime(avgSecs) : '—';
+
   el.innerHTML = `
     <div class="result-stats-grid">
       <div class="rstat-cell"><span class="rstat-big">${stats.played}</span><span class="rstat-label">Played</span></div>
@@ -574,6 +580,7 @@ function renderInlinePersonalStats() {
       <div class="rstat-cell"><span class="rstat-big">${stats.streak}</span><span class="rstat-label">Current Streak</span></div>
       <div class="rstat-cell"><span class="rstat-big">${stats.maxStreak}</span><span class="rstat-label">Max Streak</span></div>
     </div>
+    <div class="rstat-avg-time">Avg. solve time (correct guesses): <strong>${avgLabel}</strong></div>
     <div class="result-dist">
       <h4>Guess Distribution</h4>
       ${bars}
@@ -1322,7 +1329,7 @@ function renderDistrictPreview() {
   if (!container || !todayDistrict || !districts || !window.d3) return;
   container.innerHTML = '';
 
-  const W = 440, H = 200, pad = 18;
+  const W = 440, H = 220, pad = 14;
   const dark = isDarkMode();
   const correctState = todayDistrict.properties.STATE;
   const stateFeatures = districts.filter(d => d.properties.STATE === correctState);
@@ -1336,23 +1343,28 @@ function renderDistrictPreview() {
     .attr('viewBox', `0 0 ${W} ${H}`)
     .attr('class', 'district-preview-svg');
 
-  // All state districts as neutral background
+  // Background fill matching the card
+  svg.append('rect')
+    .attr('width', W).attr('height', H)
+    .attr('fill', dark ? '#252526' : '#f3f4f6');
+
+  // All state districts — clearly visible neutral fill
   svg.selectAll('.prev-bg')
     .data(stateFeatures)
     .enter().append('path')
+    .attr('class', 'prev-bg')
     .attr('d', pathGen)
-    .attr('fill', dark ? '#2a2a2c' : '#e8ecef')
-    .attr('stroke', dark ? '#555' : '#b0b8c1')
-    .attr('stroke-width', 1);
+    .attr('fill', dark ? '#3c4043' : '#c8d2da')
+    .attr('stroke', dark ? '#1a1a1b' : '#ffffff')
+    .attr('stroke-width', 1.5);
 
-  // Correct district highlighted
+  // Correct district — solid CMU red, white border so it pops
   svg.append('path')
     .datum(todayDistrict)
     .attr('d', pathGen)
     .attr('fill', '#C41230')
-    .attr('fill-opacity', 0.35)
-    .attr('stroke', '#C41230')
-    .attr('stroke-width', 2.5);
+    .attr('stroke', '#ffffff')
+    .attr('stroke-width', 1.5);
 
   container.appendChild(svg.node());
 }
@@ -1397,9 +1409,14 @@ function showResult(won) {
 function buildShareText() {
   const answer = todayDistrict.properties.CONG119;
   const won    = guessHistory.some(g => g.correct);
-  const emoji  = guessHistory.map(g => g.correct ? '[+]' : '[-]').join(' ');
   const result = won ? `${guessCount}/${MAX_GUESSES}` : `X/${MAX_GUESSES}`;
-  return `District Guess ${todayKey}\n${answer} — ${result}\n${emoji}\nhttps://jcervas.github.io/games/district-guess/`;
+  // Emoji grid: state-phase guesses use squares, district-phase uses a circle for the win
+  const emoji = guessHistory.map(g => {
+    if (g.correct) return '🟩';          // correct guess (any phase)
+    if (g.phase === 'state') return '🟥'; // wrong state
+    return '🟧';                          // wrong district (so close!)
+  }).join(' ');
+  return `🗳️ District Guess ${todayKey}\n📍 ${answer} — ${result}\n${emoji}\nhttps://jcervas.github.io/games/district-guess/`;
 }
 
 // ============================================================
@@ -1542,7 +1559,6 @@ function restoreGame(saved) {
   if (gameOver) {
     showResult(saved.won);
     fetchAndRenderCensusPanel(districtDataFor(todayDistrict));
-    document.getElementById('already-played-banner').classList.remove('hidden');
   }
 }
 
@@ -1566,6 +1582,79 @@ function promptUsername(callback) {
     callback();
   };
   input.onkeydown = e => { if (e.key === 'Enter') submit.onclick(); };
+}
+
+// ============================================================
+//  PLAY AGAIN — reset all state and start a fresh district
+// ============================================================
+function resetGame(newIdx) {
+  // Stop any running timer
+  stopTimer();
+
+  // Reset all mutable game state
+  guessCount          = 0;
+  guessHistory        = [];
+  cluesRevealed       = 0;
+  correctStateGuessed = false;
+  gameOver            = false;
+  elapsedSeconds      = 0;
+  eliminatedStates    = new Set();
+  _distLocked         = false;
+  _guessLocked        = false;
+
+  // Pick the new district
+  todayDistrict = districts[newIdx];
+
+  // Remove saved game so restoreGame() won't trigger on this key
+  localStorage.removeItem(STORAGE_PREFIX + 'today');
+
+  // --- UI resets ---
+
+  // Hide modals / banners
+  document.getElementById('result-modal').classList.add('hidden');
+  document.getElementById('already-played-banner').classList.add('hidden');
+
+  // Timer
+  const tvEl = document.getElementById('timer-value');
+  if (tvEl) tvEl.textContent = '0:00';
+  document.getElementById('timer-display').classList.remove('running');
+
+  // Reset Leaflet map: remove district layer, pan back to default view
+  if (districtLayer) { map.removeLayer(districtLayer); districtLayer = null; }
+  applyMapStage(0);
+  map.setView([37.8, -96], 4);
+
+  // Reset US reference map (clear the SVG so initUSRefMap rebuilds it)
+  const refMapEl = document.getElementById('us-ref-map');
+  refMapEl.innerHTML = '';
+  refMapEl.classList.remove('hidden');
+  refMapEl.style.opacity = '';
+  usRefMap       = null;
+  usRefMapGroup  = null;
+  usRefLayers    = {};
+
+  // Reset district tiles
+  const tilesEl = document.getElementById('district-tiles');
+  tilesEl.innerHTML = '';
+  tilesEl.classList.add('hidden');
+  tilesEl.style.opacity = '';
+
+  // Re-show state chips section
+  document.getElementById('state-chips-section').classList.remove('hidden');
+
+  // Hide state-confirmed badge
+  document.getElementById('state-confirmed').classList.add('hidden');
+
+  // Reset reference label
+  const labelEl = document.getElementById('ref-label');
+  if (labelEl) labelEl.textContent = 'Click a state to select it';
+
+  // Re-initialise reference map and render
+  initUSRefMap();
+  renderDistrict(todayDistrict);
+  renderClues();
+  renderGuessHistory();
+  document.getElementById('guess-remaining').textContent = `${MAX_GUESSES} guesses`;
 }
 
 // ============================================================
@@ -1605,19 +1694,11 @@ async function init() {
     return;
   }
 
-  // Fresh game — ask for username if not set
-  const startGame = () => {
-    renderDistrict(todayDistrict);
-    renderClues();         // also calls renderStateChips()
-    renderGuessHistory();
-    document.getElementById('guess-remaining').textContent = `${MAX_GUESSES} guesses`;
-  };
-
-  if (!username) {
-    promptUsername(startGame);
-  } else {
-    startGame();
-  }
+  // Fresh game — start immediately (username/login will be added later)
+  renderDistrict(todayDistrict);
+  renderClues();         // also calls renderStateChips()
+  renderGuessHistory();
+  document.getElementById('guess-remaining').textContent = `${MAX_GUESSES} guesses`;
 }
 
 // ============================================================
@@ -1634,6 +1715,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const tile = e.target.closest('.district-tile');
     if (!tile || tile.disabled) return;
     submitDistrictTile(tile.dataset.dist);
+  });
+
+  // Play Again — pick a new district (offset from daily seed by replayCount)
+  document.getElementById('play-again-btn').addEventListener('click', () => {
+    replayCount++;
+    const newIdx = seededIndex(dateSeed() + replayCount, districts.length);
+    resetGame(newIdx);
   });
 
   // Share

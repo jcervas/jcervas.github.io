@@ -32,12 +32,12 @@
   --wrong-bg:       #fef2f2;
   --wrong-border:   #fca5a5;
   --wrong-text:     #991b1b;
-  --fact-bg:        #eff6ff;
+  --fact-bg:        #fdf4f5;
   --banner-bg:      #fef9c3;
   --banner-border:  #fde047;
 
-  --accent:         var(--cmu-sky);
-  --accent-hover:   #005f97;
+  --accent:         var(--cmu-red);
+  --accent-hover:   var(--cmu-red-dark);
   --green:          var(--cmu-green);
   --red:            var(--cmu-red);
   --yellow:         var(--cmu-gold);
@@ -71,6 +71,9 @@
     --banner-border:  #665800;
     --shadow:         0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
     --shadow-lg:      0 10px 25px rgba(0,0,0,0.5);
+    /* Slightly lighter red so it reads on dark surfaces */
+    --accent:         #e8314a;
+    --accent-hover:   #C41230;
   }
 }
 /* Applied when user explicitly toggled dark */
@@ -94,6 +97,9 @@ body.dark-mode {
   --banner-border:  #665800;
   --shadow:         0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
   --shadow-lg:      0 10px 25px rgba(0,0,0,0.5);
+  /* Slightly lighter red so it reads on dark surfaces */
+  --accent:         #e8314a;
+  --accent-hover:   #C41230;
 }
 
 body {
@@ -565,23 +571,60 @@ main {
   width: 100%;
   text-align: center;
 }
+.result-action-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+}
 #share-btn {
   background: var(--cmu-red);
   color: white;
   border: none;
   border-radius: var(--radius);
-  padding: 10px 26px;
+  padding: 10px 22px;
   font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
   letter-spacing: 0.04em;
   transition: background 0.15s;
+  flex: 1;
+  min-width: 120px;
 }
 #share-btn:hover { background: var(--cmu-red-dark); }
+#play-again-btn {
+  background: transparent;
+  color: var(--cmu-red);
+  border: 2px solid var(--cmu-red);
+  border-radius: var(--radius);
+  padding: 10px 22px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: background 0.15s, color 0.15s;
+  flex: 1;
+  min-width: 120px;
+}
+#play-again-btn:hover {
+  background: var(--cmu-red);
+  color: white;
+}
 #share-copied {
   font-size: 0.85rem;
   color: var(--green);
   font-weight: 600;
+}
+.rstat-avg-time {
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 6px;
+}
+.rstat-avg-time strong {
+  color: var(--text);
+  font-weight: 700;
 }
 
 /* ---- Wordle-style inline stats (result modal) ---- */
