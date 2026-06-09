@@ -276,21 +276,37 @@ main {
   background: var(--banner-bg);
   border: 1px solid var(--banner-border);
   border-radius: var(--radius);
-  padding: 12px 16px;
-  text-align: center;
-  font-size: 0.95rem;
+  padding: 10px 16px;
+  font-size: 0.9rem;
   color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.banner-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
 }
 .banner button {
-  margin-left: 12px;
   background: var(--accent);
   color: white;
   border: none;
   border-radius: 4px;
-  padding: 4px 10px;
+  padding: 5px 12px;
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
 }
+#banner-new-map-btn {
+  background: transparent;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+}
+#banner-new-map-btn:hover { background: var(--accent); color: white; }
 
 /* ---- Map ---- */
 #map {
@@ -573,44 +589,48 @@ main {
 }
 .result-action-row {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
   justify-content: center;
   flex-wrap: wrap;
 }
+/* Shared base for all three action buttons */
+.result-action-row button,
+.result-action-row .post-x-btn {
+  flex: 1;
+  min-width: 80px;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: var(--radius);
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
 #share-btn {
   background: var(--cmu-red);
   color: white;
-  border: none;
-  border-radius: var(--radius);
-  padding: 10px 22px;
-  font-size: 0.95rem;
-  font-weight: 700;
-  cursor: pointer;
-  letter-spacing: 0.04em;
-  transition: background 0.15s;
-  flex: 1;
-  min-width: 120px;
+  border: 2px solid var(--cmu-red);
 }
-#share-btn:hover { background: var(--cmu-red-dark); }
+#share-btn:hover { background: var(--cmu-red-dark); border-color: var(--cmu-red-dark); }
+/* X/Twitter post button */
+.post-x-btn {
+  background: #000;
+  color: #fff !important;
+  border: 2px solid #000;
+}
+.post-x-btn:hover { background: #222; border-color: #222; }
+body.dark-mode .post-x-btn { background: #e7e9ea; color: #0f1419 !important; border-color: #e7e9ea; }
 #play-again-btn {
   background: transparent;
   color: var(--cmu-red);
   border: 2px solid var(--cmu-red);
-  border-radius: var(--radius);
-  padding: 10px 22px;
-  font-size: 0.95rem;
-  font-weight: 700;
-  cursor: pointer;
-  letter-spacing: 0.04em;
-  transition: background 0.15s, color 0.15s;
-  flex: 1;
-  min-width: 120px;
 }
-#play-again-btn:hover {
-  background: var(--cmu-red);
-  color: white;
-}
+#play-again-btn:hover { background: var(--cmu-red); color: white; }
 #share-copied {
   font-size: 0.85rem;
   color: var(--green);
@@ -626,6 +646,44 @@ main {
   color: var(--text);
   font-weight: 700;
 }
+
+/* ---- Guess progress counter (dots + label) ---- */
+.guess-counter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 0 8px;
+}
+.gc-dots { display: flex; gap: 3px; }
+.gc-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  border: 2px solid var(--border);
+  background: transparent;
+  transition: background 0.2s, border-color 0.2s;
+}
+.gc-dot.gc-correct { background: var(--green); border-color: var(--green); }
+.gc-dot.gc-wrong   { background: var(--cmu-red); border-color: var(--cmu-red); }
+.gc-label { font-size: 0.75rem; color: var(--muted); font-weight: 600; }
+
+/* ---- US Reference map tooltip ---- */
+.us-ref-tooltip {
+  position: fixed;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 3px 9px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  pointer-events: none;
+  z-index: 5000;
+  box-shadow: var(--shadow);
+  display: none;
+  white-space: nowrap;
+}
+.us-ref-tooltip.visible { display: block; }
 
 /* ---- Wordle-style inline stats (result modal) ---- */
 .result-stats-grid {
@@ -1063,10 +1121,13 @@ main {
   border-top: 1px solid var(--border);
 }
 #us-ref-map {
-  height: 220px;
+  /* Fluid: scales with container width (960:400 ratio = 2.4:1) */
+  aspect-ratio: 960 / 400;
+  max-height: 260px;
+  width: 100%;
   border-radius: var(--radius);
   border: 1px solid var(--border);
-  background: var(--bg);   /* matches page background — no blue ocean tint */
+  background: var(--bg);
   margin-top: 8px;
   overflow: hidden;
   transition: opacity 0.35s ease;
