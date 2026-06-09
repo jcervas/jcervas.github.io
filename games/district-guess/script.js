@@ -761,6 +761,7 @@ function processStateGuess(abbr, correct) {
     correctStateGuessed = true;
     lockStateDropdown(abbr);
   } else {
+    wrongStateGuesses.add(abbr);  // immediately grey it out
     const wrongCount = guessHistory.filter(g => !g.correct).length;
     cluesRevealed = Math.min(wrongCount, CLUE_DEFS.length);
     applyMapStage(wrongCount);
@@ -809,6 +810,11 @@ function submitGuess() {
   if (correct) {
     endGame(true); return;
   } else {
+    // Flash wrong animation on the guess row
+    const row = document.getElementById('guess-input-row');
+    row.classList.add('flash-wrong');
+    setTimeout(() => row.classList.remove('flash-wrong'), 700);
+
     const wrongCount = guessHistory.filter(g => !g.correct).length;
     cluesRevealed = Math.min(wrongCount, CLUE_DEFS.length);
     applyMapStage(wrongCount);
@@ -1151,6 +1157,9 @@ function restoreGame(saved) {
   gameOver       = saved.gameOver;
 
   document.getElementById('timer-display').textContent = '⏱ ' + formatTime(elapsedSeconds);
+
+  // Reconstruct wrong state guesses
+  guessHistory.filter(g => g.phase === 'state' && !g.correct).forEach(g => wrongStateGuesses.add(g.text));
 
   // Reconstruct state-lock from guess history
   const correctState = todayDistrict.properties.STATE;
