@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>District Guess Beta — Daily Congressional District Game</title>
+  <title>District Guess Beta 1.0 — Daily Congressional District Game</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=21" />
+  <link rel="stylesheet" href="style.css?v=22" />
 </head>
 <body>
 
@@ -21,6 +21,9 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
       </button>
       <button id="theme-toggle" class="btn-icon" title="Toggle dark mode"><!-- set by JS --></button>
+      <button id="feedback-btn" class="btn-icon" title="Send feedback">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </button>
     </div>
     <!-- Title centered in middle column -->
     <h1>
@@ -29,7 +32,7 @@
         <circle cx="12" cy="10" r="4.5" fill="white"/>
         <circle cx="12" cy="10" r="2" fill="#C41230"/>
       </svg>
-      District Guess <span class="beta-badge">Beta</span>
+      District Guess <span class="beta-badge">Beta 1.0</span>
     </h1>
     <!-- Timer + donate link on the right -->
     <div class="header-right">
@@ -51,7 +54,7 @@
   <div class="modal-content">
     <button class="modal-close">✕</button>
     <h2>How to Play</h2>
-    <p>Identify the <strong>119th Congress</strong> congressional district shown on the map.</p>
+    <p>Identify the congressional district shown on the map using the 2026 district boundaries.</p>
     <ul>
       <li>You have <strong>6 guesses</strong> per day.</li>
       <li>A new district appears every day — same for all players.</li>
@@ -71,6 +74,32 @@
       <button id="how-to-got-it" class="got-it-btn">Got it!</button>
       <span class="how-to-note">Opens automatically on first visit &mdash; use the ? button to re-open.</span>
     </div>
+  </div>
+</div>
+
+<!-- ===== FEEDBACK MODAL ===== -->
+<div id="feedback-modal" class="modal hidden">
+  <div class="modal-content">
+    <button class="modal-close">✕</button>
+    <h2>Send Feedback</h2>
+    <p style="margin-bottom:16px;color:var(--muted)">Report a bug, suggest a feature, or share your thoughts.</p>
+    <form id="feedback-form">
+      <div class="form-group">
+        <label for="fb-name">Name</label>
+        <input type="text" id="fb-name" placeholder="Your name" maxlength="60" autocomplete="name" />
+      </div>
+      <div class="form-group">
+        <label for="fb-email">Email <span class="form-optional">(optional)</span></label>
+        <input type="email" id="fb-email" placeholder="you@example.com" autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <label for="fb-comment">Comment <span class="form-required">*</span></label>
+        <textarea id="fb-comment" rows="4" placeholder="What's on your mind?" maxlength="1000" required></textarea>
+      </div>
+      <div id="fb-error" class="form-error"></div>
+      <button type="submit" id="fb-submit">Send via Email</button>
+    </form>
+    <p class="form-note">Opens your email client to send to cervas@cmu.edu &amp; jafierman@gmail.com</p>
   </div>
 </div>
 
@@ -216,6 +245,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-<script src="script.js?v=21"></script>
+<script src="script.js?v=22"></script>
 </body>
 </html>
