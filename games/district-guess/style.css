@@ -105,6 +105,49 @@ body {
   flex-direction: column;
 }
 
+/* ---- SVG icon system ---- */
+.icon {
+  display: inline-block;
+  width: 1.1em;
+  height: 1.1em;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+/* Inline icon inside btn-icon buttons */
+.btn-icon .icon,
+.btn-icon svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+/* Clue/fact panel icon */
+.clue-icon-svg {
+  width: 1rem;
+  height: 1rem;
+  display: block;
+  color: var(--accent);
+}
+.clue-icon-svg.locked { color: var(--muted-border); }
+/* Guess history row icons */
+.guess-icon-svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  display: block;
+  flex-shrink: 0;
+}
+.guess-row.correct .guess-icon-svg { color: var(--green); }
+.guess-row.wrong   .guess-icon-svg { color: var(--red); }
+/* Hot/cold hint icons */
+.hint-icon {
+  width: 0.85rem;
+  height: 0.85rem;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 2px;
+}
+.guess-hint.hot  .hint-icon { color: #c97600; }
+.guess-hint.cold .hint-icon { color: #0a4e8a; }
+
 /* ---- Header ---- */
 header {
   background: var(--surface);
@@ -137,6 +180,12 @@ header h1 {
   justify-content: center;
   white-space: nowrap;
 }
+.game-logo {
+  width: 20px;
+  height: 25px;
+  flex-shrink: 0;
+  display: block;
+}
 .beta-badge {
   font-size: 0.6rem;
   font-weight: 700;
@@ -149,12 +198,31 @@ header h1 {
   vertical-align: middle;
   line-height: 1;
 }
-.header-stats {
+.header-right {
   display: flex;
   align-items: center;
   gap: 6px;
   justify-content: flex-end;
+  min-width: 0;
 }
+/* Donate to CMU pill — Wordle-style action button */
+.donate-btn {
+  display: inline-flex;
+  align-items: center;
+  background: var(--cmu-red);
+  color: white;
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 6px 13px;
+  border-radius: 20px;
+  white-space: nowrap;
+  line-height: 1;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.donate-btn:hover { background: var(--cmu-red-dark); }
+.donate-short { display: none; }
 .timer {
   font-size: 0.95rem;
   font-weight: 700;
@@ -164,7 +232,9 @@ header h1 {
   padding: 4px 10px;
   border-radius: 20px;
   min-width: 68px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 .timer.running { color: var(--accent); }
 .btn-icon {
@@ -223,7 +293,7 @@ main {
   border-radius: var(--radius);
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
-  background: #e8f0f8;
+  background: var(--bg);
   /* Contain Leaflet's internal z-indexes so they don't bleed over other elements */
   isolation: isolate;
   position: relative;
@@ -265,8 +335,9 @@ main {
   animation: clue-in 0.35s ease;
 }
 .clue-item.revealed .clue-icon {
-  font-size: 1rem;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .clue-item.revealed .clue-text {
   font-size: 0.9rem;
@@ -293,7 +364,7 @@ main {
   color: var(--muted-border);
   font-size: 0.78rem;
 }
-.clue-item.locked .clue-icon { opacity: 0.3; font-size: 0.85rem; }
+.clue-item.locked .clue-icon { opacity: 0.4; }
 .clue-item.locked .clue-text { color: var(--muted-border); }
 .clue-item.locked .clue-num { display: none; }
 
@@ -337,7 +408,7 @@ main {
   border: 1px solid var(--wrong-border);
   color: var(--wrong-text);
 }
-.guess-row .guess-icon  { font-size: 1rem; }
+.guess-row .guess-icon  { display: flex; align-items: center; }
 .guess-row .guess-label { flex: 1; }
 .guess-hint {
   font-size: 0.75rem;
@@ -362,48 +433,6 @@ main {
   color: var(--muted);
   text-align: center;
 }
-#guess-input-row {
-  display: flex;
-  gap: 8px;
-  align-items: stretch;
-}
-#guess-selects {
-  display: flex;
-  gap: 8px;
-  flex: 1;
-}
-#stateSelect, #districtSelect {
-  flex: 1;
-  padding: 10px 10px;
-  font-size: 0.92rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  outline: none;
-  background: var(--surface);
-  color: var(--text);
-  font-weight: 500;
-  cursor: pointer;
-  transition: border-color 0.15s;
-  appearance: auto;
-  min-width: 0;
-}
-#stateSelect:focus, #districtSelect:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(37,99,235,0.12);
-}
-#districtSelect:disabled {
-  background: var(--surface-alt);
-  color: var(--muted);
-  cursor: not-allowed;
-}
-#stateSelect.confirmed {
-  border-color: var(--green);
-  background: var(--correct-bg);
-  color: var(--correct-text);
-  font-weight: 700;
-  cursor: default;
-}
-
 /* State confirmed badge */
 #state-confirmed {
   display: flex;
@@ -443,24 +472,9 @@ main {
   75%     { transform: translateX(-2px); }
 }
 #us-ref-map.flash-correct,
-#guess-input-row.flash-correct { animation: flashCorrect 0.7s ease forwards; }
+#district-tiles.flash-correct { animation: flashCorrect 0.7s ease forwards; }
 #us-ref-map.flash-wrong,
-#guess-input-row.flash-wrong   { animation: flashWrong   0.7s ease forwards; }
-#guessButton {
-  padding: 10px 20px;
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: var(--radius);
-  font-size: 0.95rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.15s;
-  white-space: nowrap;
-}
-#guessButton:hover { background: var(--accent-hover); }
-#guessButton:disabled { background: var(--muted); cursor: not-allowed; }
-
+#district-tiles.flash-wrong   { animation: flashWrong   0.7s ease forwards; }
 /* ---- Result section ---- */
 /* ---- Result modal ---- */
 .result-modal-content {
@@ -501,16 +515,54 @@ main {
 }
 .result-tab-pane.active { display: flex; flex-direction: column; align-items: center; gap: 14px; }
 
+/* District shape preview in result modal */
+#result-district-preview {
+  width: 100%;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  min-height: 80px;
+}
+.district-preview-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Answer reveal block */
+.result-answer {
+  text-align: center;
+  line-height: 1.2;
+}
+.result-answer-code {
+  display: block;
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.result-answer-sub {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.result-time-line {
+  font-size: 0.88rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: -6px;
+}
+
 #result-message {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 800;
 }
 #result-message.won  { color: var(--green); }
 #result-message.lost { color: var(--red); }
 #result-stats {
-  font-size: 0.95rem;
-  color: var(--muted);
-  line-height: 1.7;
+  width: 100%;
   text-align: center;
 }
 #share-btn {
@@ -718,6 +770,38 @@ main {
   padding: 4px;
 }
 .modal-close:hover { color: var(--text); }
+
+/* ---- How-to modal footer ---- */
+.how-to-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.how-to-note {
+  font-size: 0.75rem;
+  color: var(--muted);
+  flex: 1;
+  min-width: 0;
+}
+.got-it-btn {
+  background: var(--cmu-red);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  padding: 8px 22px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.got-it-btn:hover { background: var(--cmu-red-dark); }
 
 /* ---- Leaderboard ---- */
 .leaderboard-content { max-width: 560px; }
@@ -942,15 +1026,86 @@ main {
   background: var(--bg);   /* matches page background — no blue ocean tint */
   margin-top: 8px;
   overflow: hidden;
+  transition: opacity 0.35s ease;
+}
+
+/* ---- District tile grid (replaces US map once state is confirmed) ---- */
+#district-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
+  gap: 6px;
+  padding: 6px 0 4px;
+  transition: opacity 0.35s ease;
+  margin-top: 8px;
+}
+
+.district-tile {
+  aspect-ratio: 1;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, transform 0.08s, opacity 0.25s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 2px;
+  user-select: none;
+}
+.district-tile:hover:not(:disabled) {
+  background: var(--fact-bg);
+  border-color: var(--accent);
+  transform: scale(1.08);
+}
+.district-tile:active:not(:disabled) {
+  transform: scale(0.93);
+}
+.district-tile.tile-flash-correct {
+  background: var(--cmu-gold) !important;
+  border-color: var(--cmu-gold) !important;
+  color: #333 !important;
+  transform: scale(1.15);
+  transition: none;
+}
+.district-tile.tile-flash-wrong {
+  border-color: var(--cmu-red) !important;
+  color: var(--cmu-red) !important;
+  animation: flashWrong 0.45s ease;
+}
+.district-tile.tile-wrong {
+  background: var(--surface-alt);
+  border-color: var(--muted-border);
+  color: var(--muted);
+  opacity: 0.4;
+  cursor: default;
+}
+.district-tile.tile-correct {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: white;
+  cursor: default;
 }
 
 /* ---- Utilities ---- */
 .hidden { display: none !important; }
 
-/* ---- Responsive ---- */
+/* ============================================================
+   RESPONSIVE LAYOUT
+   Portrait / narrow  → stacked (map top, ref + clues below)
+   Landscape / wide   → side-by-side (map left, ref + clues right)
+   ============================================================ */
 
-/* Desktop: district map top-left, clues top-right, reference full-width bottom */
-@media (min-width: 768px) {
+/* --- Fluid map height in portrait --- */
+#map {
+  height: clamp(220px, 48vw, 400px);
+}
+
+/* --- Landscape: map left column, ref + clues right column --- */
+@media (orientation: landscape) and (min-width: 600px) {
   main {
     max-width: 1400px;
     padding: 10px 20px;
@@ -958,57 +1113,52 @@ main {
 
   #game-section {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 40vh 1fr;
+    grid-template-columns: 55% 45%;
+    grid-template-rows: 62fr 38fr;
     grid-template-areas:
-      "map   clues"
-      "ref   ref";
+      "map ref"
+      "map clues";
     gap: 10px;
     height: calc(100vh - 68px);
+    overflow: hidden;
   }
 
-  #map         { grid-area: map;   height: 100%; min-height: 0; }
-  #clues-panel { grid-area: clues; overflow-y: auto; min-height: 0; }
+  /* Map spans both rows on the left */
+  #map { grid-area: map; height: 100%; min-height: 0; width: 100%; }
 
-  /* Reference panel: US map left (big), input + chips stacked right */
+  /* Reference panel: flex column, top-right */
   #reference-panel {
     grid-area: ref;
     min-height: 0;
-    display: grid;
-    grid-template-columns: 1fr 220px;
-    grid-template-rows: auto auto 1fr;
-    grid-template-areas:
-      "confirmed   confirmed"
-      "usmap       input"
-      "usmap       chips";
-    column-gap: 14px;
-    row-gap: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    overflow: hidden;
     padding: 12px 14px;
   }
-  #reference-panel h3 { display: none; }
+  #reference-panel h3    { display: none; }
+  #state-confirmed       { flex-shrink: 0; }
+  #us-ref-section        { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  #us-ref-section .ref-label { flex-shrink: 0; margin-bottom: 4px; }
+  #us-ref-map            { flex: 1; height: auto !important; min-height: 0; }
+  #district-tiles        { flex: 1; overflow-y: auto; align-content: start; }
+  #state-chips-section   { flex-shrink: 0; max-height: 130px; overflow-y: auto; }
 
-  #state-confirmed     { grid-area: confirmed; }
-  #us-ref-section      { grid-area: usmap; display: flex; flex-direction: column; min-height: 0; }
-  #us-ref-section .ref-label { margin-bottom: 4px; }
-  #us-ref-map          { flex: 1; height: auto !important; min-height: 0; }
-  #guess-input-row     { grid-area: input; flex-direction: column; gap: 8px; align-self: start; }
-  #guess-selects       { flex-direction: column; width: 100%; }
-  #guess-selects select { width: 100%; }
-  #guessButton         { width: 100%; }
-  #state-chips-section { grid-area: chips; overflow-y: auto; min-height: 0; }
+  /* Clues panel: flex, bottom-right */
+  #clues-panel { grid-area: clues; overflow-y: auto; min-height: 0; }
 
-  /* Guess history hidden on desktop (shown in clues panel area) */
+  /* Guess history in game-section is hidden (history visible in clues area on mobile) */
   #guess-section { display: none; }
 }
 
-@media (max-width: 767px) {
-  #map { height: 340px; }
-}
-
-@media (max-width: 500px) {
-  #map { height: 260px; }
+/* --- Small screens (narrow phones, etc.) --- */
+@media (max-width: 480px) {
+  /* Abbreviate donate to just "Donate" */
+  .donate-long  { display: none; }
+  .donate-short { display: inline; }
+  #timer-display { min-width: 0; }
+  .header-inner h1 { font-size: 1.05rem; }
+  .modal-content { padding: 18px; }
   .census-grid { grid-template-columns: 1fr 1fr; }
   .personal-grid { grid-template-columns: 1fr 1fr; }
-  .header-inner h1 { font-size: 1.1rem; }
-  .modal-content { padding: 18px; }
 }

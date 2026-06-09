@@ -5,21 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>District Guess Beta — Daily Congressional District Game</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=13" />
+  <link rel="stylesheet" href="style.css?v=18" />
 </head>
 <body>
 
 <!-- ===== HEADER ===== -->
 <header>
   <div class="header-inner">
+    <!-- All icon-buttons on the left, Wordle-style -->
     <div class="header-left">
-      <button id="how-to-btn" class="btn-icon" title="How to play">?</button>
+      <button id="how-to-btn" class="btn-icon" title="How to play">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12" y2="17.01"/></svg>
+      </button>
+      <button id="leaderboard-btn" class="btn-icon" title="Leaderboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      </button>
+      <button id="theme-toggle" class="btn-icon" title="Toggle dark mode"><!-- set by JS --></button>
     </div>
-    <h1>District Guess <span class="beta-badge">Beta</span></h1>
-    <div class="header-stats">
-      <div id="timer-display" class="timer">⏱ 0:00</div>
-      <button id="leaderboard-btn" class="btn-icon" title="Leaderboard">📊</button>
-      <button id="theme-toggle" class="btn-icon" title="Toggle dark mode">🌙</button>
+    <!-- Title centered in middle column -->
+    <h1>
+      <svg class="game-logo" viewBox="0 0 24 30" aria-hidden="true">
+        <path d="M12 1C7.03 1 3 5.03 3 10C3 16.8 12 29 12 29C12 29 21 16.8 21 10C21 5.03 16.97 1 12 1Z" fill="#C41230"/>
+        <circle cx="12" cy="10" r="4.5" fill="white"/>
+        <circle cx="12" cy="10" r="2" fill="#C41230"/>
+      </svg>
+      District Guess <span class="beta-badge">Beta</span>
+    </h1>
+    <!-- Timer + donate link on the right -->
+    <div class="header-right">
+      <div id="timer-display" class="timer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="icon"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span id="timer-value">0:00</span>
+      </div>
+      <a href="https://givenow.cmu.edu/campaigns/42524/donations/new?a=8338674"
+         class="donate-btn" target="_blank" rel="noopener">
+        <span class="donate-long">Donate to CMU</span>
+        <span class="donate-short">Donate</span>
+      </a>
     </div>
   </div>
 </header>
@@ -31,7 +53,7 @@
     <h2>How to Play</h2>
     <p>Identify the <strong>119th Congress</strong> congressional district shown on the map.</p>
     <ul>
-      <li>You have <strong>5 guesses</strong> per day.</li>
+      <li>You have <strong>6 guesses</strong> per day.</li>
       <li>A new district appears every day — same for all players.</li>
       <li>Click a state on the reference map to guess it first.</li>
       <li>Once you nail the state, pick the district number.</li>
@@ -41,10 +63,14 @@
     <h3>Hot / Cold elimination</h3>
     <p>Each wrong state guess tells you something geographic:</p>
     <ul>
-      <li><strong>🔥 Adjacent</strong> — the correct state borders the one you guessed. Only neighboring states stay in play.</li>
-      <li><strong>❄️ Not adjacent</strong> — the correct state is far away. The guessed state <em>and</em> all its neighbors are eliminated.</li>
+      <li><strong>Hot / Adjacent</strong> — the correct state borders the one you guessed. Only neighboring states stay in play.</li>
+      <li><strong>Cold / Not adjacent</strong> — the correct state is far away. The guessed state <em>and</em> all its neighbors are eliminated.</li>
     </ul>
     <p style="margin-top:10px">Eliminated states grey out on the map and chip list automatically.</p>
+    <div class="how-to-footer">
+      <button id="how-to-got-it" class="got-it-btn">Got it!</button>
+      <span class="how-to-note">Opens automatically on first visit &mdash; use the ? button to re-open.</span>
+    </div>
   </div>
 </div>
 
@@ -52,7 +78,7 @@
 <div id="leaderboard-modal" class="modal hidden">
   <div class="modal-content leaderboard-content">
     <button class="modal-close">✕</button>
-    <h2>🏆 Leaderboard</h2>
+    <h2>Leaderboard</h2>
     <div id="lb-district-label" class="lb-district-label"></div>
     <div class="leaderboard-tabs">
       <button class="tab-btn active" data-tab="today">Today</button>
@@ -103,23 +129,11 @@
         <span>✓ State confirmed:</span> <strong id="state-confirmed-name"></strong>
       </div>
 
-      <!-- Clickable US states map — always shown, states eliminated by clues -->
+      <!-- Clickable US states map — fades out once state confirmed; replaced by district tiles -->
       <div id="us-ref-section">
-        <div class="ref-label">Click a state to select it</div>
+        <div class="ref-label" id="ref-label">Click a state to select it</div>
         <div id="us-ref-map"></div>
-      </div>
-
-      <!-- Dropdowns + Guess button directly below the map -->
-      <div id="guess-input-row">
-        <div id="guess-selects">
-          <select id="stateSelect">
-            <option value="">State…</option>
-          </select>
-          <select id="districtSelect" disabled>
-            <option value="">District…</option>
-          </select>
-        </div>
-        <button id="guessButton">Guess</button>
+        <div id="district-tiles" class="hidden"></div>
       </div>
 
       <!-- State chips: greyed out as clues eliminate states -->
@@ -149,20 +163,24 @@
       <button class="modal-close">✕</button>
 
       <div class="result-modal-tabs">
-        <button class="result-tab-btn active" data-rtab="result">🎯 Result</button>
-        <button class="result-tab-btn" data-rtab="census">📊 District Profile</button>
+        <button class="result-tab-btn active" data-rtab="result">Result</button>
+        <button class="result-tab-btn" data-rtab="census">District Profile</button>
       </div>
 
       <div id="result-section" class="result-tab-pane active">
+        <div id="result-district-preview"></div>
         <div id="result-message"></div>
         <div id="result-stats"></div>
         <div id="result-personal-stats"></div>
-        <button id="share-btn">📋 Share Result</button>
+        <button id="share-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:1em;height:1em;vertical-align:middle;margin-right:6px"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+          Share Result
+        </button>
         <div id="share-copied" class="hidden">Copied to clipboard!</div>
       </div>
 
       <div id="census-section" class="result-tab-pane">
-        <h2>📊 Better Know a District</h2>
+        <h2>Better Know a District</h2>
         <div id="census-loading">Fetching district data from the U.S. Census…</div>
         <div id="census-data" class="hidden"></div>
       </div>
@@ -179,6 +197,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-<script src="script.js?v=13"></script>
+<script src="script.js?v=18"></script>
 </body>
 </html>

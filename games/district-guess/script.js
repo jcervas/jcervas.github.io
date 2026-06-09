@@ -150,10 +150,41 @@ const STATE_ADJACENCY = {
 };
 
 // ============================================================
+//  SVG ICON SYSTEM  (no emojis anywhere in the UI)
+// ============================================================
+// Each entry is the inner path/shape markup for a 24×24 viewBox.
+const ICON_PATHS = {
+  question:    `<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12" y2="17.01"/>`,
+  barchart:    `<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>`,
+  moon:        `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`,
+  sun:         `<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>`,
+  clock:       `<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>`,
+  checkCircle: `<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>`,
+  xCircle:     `<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>`,
+  lock:        `<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>`,
+  share:       `<path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/>`,
+  target:      `<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>`,
+  flame:       `<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>`,
+  snowflake:   `<line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="20" y1="16" x2="4" y2="8"/><line x1="20" y1="8" x2="4" y2="16"/><line x1="16" y1="20" x2="8" y2="4"/><line x1="8" y1="20" x2="16" y2="4"/>`,
+  ruler:       `<path d="M21.3 8.7 8.7 21.3c-1 1-2.5 1-3.4 0l-2.6-2.6c-1-1-1-2.5 0-3.4L15.3 2.7c1-1 2.5-1 3.4 0l2.6 2.6c1 1 1 2.5 0 3.4z"/><path d="m7.5 10.5 3 3"/><path d="m10.5 7.5 3 3"/><path d="m13.5 4.5 3 3"/>`,
+  building:    `<rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/>`,
+  dollar:      `<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>`,
+  people:      `<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>`,
+  mappin:      `<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>`,
+};
+
+/** Returns an SVG element string for the named icon. */
+function svgIcon(name, cls = 'icon') {
+  const inner = ICON_PATHS[name] || '';
+  return `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${inner}</svg>`;
+}
+
+// ============================================================
 //  GAME CONSTANTS
 // ============================================================
-const MAX_GUESSES = 5;
+const MAX_GUESSES = 6;
 const STORAGE_PREFIX = 'districtguess_';
+const HOW_TO_SEEN_KEY = STORAGE_PREFIX + 'howToSeen';
 
 // Built at load time from GeoJSON: { 'TX': ['01','02',...], 'WY': ['AT-LARGE'], ... }
 let stateDistrictMap = {};
@@ -162,7 +193,7 @@ let stateDistrictMap = {};
 // fn receives districtDataFor(todayDistrict) = {state, district}
 const FACT_DEFS = [
   {
-    icon: '📐',
+    icon: 'ruler',
     label: 'District size',
     fn: () => {
       if (!todayDistrict) return '—';
@@ -176,7 +207,7 @@ const FACT_DEFS = [
     }
   },
   {
-    icon: '🏛️',
+    icon: 'building',
     label: 'State delegation size',
     fn: d => {
       const count = stateDistrictMap[d.state]?.length || 1;
@@ -185,17 +216,17 @@ const FACT_DEFS = [
     }
   },
   {
-    icon: '💵',
+    icon: 'dollar',
     label: 'Median household income',
     fn: async d => fetchCensus(d, 'income')
   },
   {
-    icon: '👥',
+    icon: 'people',
     label: 'Largest racial/ethnic group',
     fn: async d => fetchCensus(d, 'plurality')
   },
   {
-    icon: '📍',
+    icon: 'mappin',
     label: 'State',
     fn: d => STATE_NAMES[d.state] || d.state
   },
@@ -275,74 +306,8 @@ function buildStateDistrictMap(features) {
   return map;
 }
 
-function populateStateDropdown() {
-  const sel = document.getElementById('stateSelect');
-  // Sort states alphabetically by full name
-  const sorted = Object.keys(stateDistrictMap).sort((a, b) =>
-    (STATE_NAMES[a] || a).localeCompare(STATE_NAMES[b] || b)
-  );
-  for (const abbr of sorted) {
-    const opt = document.createElement('option');
-    opt.value = abbr;
-    opt.textContent = STATE_NAMES[abbr] || abbr;
-    sel.appendChild(opt);
-  }
-}
-
-function populateDistrictDropdown(stateAbbr) {
-  const sel = document.getElementById('districtSelect');
-  sel.innerHTML = '<option value="">District…</option>';
-  if (!stateAbbr || !stateDistrictMap[stateAbbr]) {
-    sel.disabled = true;
-    return;
-  }
-  const dists = stateDistrictMap[stateAbbr];
-  for (const d of dists) {
-    const opt = document.createElement('option');
-    opt.value = d;
-    opt.textContent = d === 'AT-LARGE' ? 'At-Large' : `District ${parseInt(d, 10)}`;
-    sel.appendChild(opt);
-  }
-  // If only one district (at-large state), auto-select it
-  if (dists.length === 1) {
-    sel.value = dists[0];
-  }
-  sel.disabled = false;
-}
-
-// Also filter chips when state dropdown changes (narrows which chips are clickable)
-function syncChipsToDropdown(stateAbbr) {
-  document.querySelectorAll('.state-chip').forEach(chip => {
-    chip.classList.toggle('selected', chip.textContent === stateAbbr);
-  });
-}
-
-function getGuessFromDropdowns() {
-  if (!correctStateGuessed) {
-    // Phase 1: state-only guess
-    const state = document.getElementById('stateSelect').value;
-    return state || null;
-  } else {
-    // Phase 2: district guess (state already locked)
-    const state = document.getElementById('stateSelect').value;
-    const dist  = document.getElementById('districtSelect').value;
-    if (!state || !dist) return null;
-    return dist === 'AT-LARGE' ? `${state}-AT-LARGE` : `${state}-${dist}`;
-  }
-}
-
-function updateGuessButton() {
-  const btn = document.getElementById('guessButton');
-  btn.textContent = correctStateGuessed ? 'Guess District' : 'Guess State';
-}
-
-function resetDropdowns() {
-  const stateSel = document.getElementById('stateSelect');
-  const distSel  = document.getElementById('districtSelect');
-  stateSel.value = '';
-  distSel.innerHTML = '<option value="">District…</option>';
-  distSel.disabled = true;
-}
+// State selected via D3 map or chips only.
+// District selected via tile grid (shown after state is confirmed).
 
 function parseDistrict(raw) {
   const t = raw.trim().toUpperCase()
@@ -590,10 +555,10 @@ function renderInlinePersonalStats() {
   const maxBar  = Math.max(...Object.values(dist).map(Number), 1);
   const wonToday = guessHistory.some(g => g.correct);
 
-  const bars = [1, 2, 3, 4, 5, 'X'].map(k => {
+  const bars = [1, 2, 3, 4, 5, 6, 'X'].map(k => {
     const count = dist[k] || 0;
     const pct   = count > 0 ? Math.max(Math.round(count / maxBar * 100), 7) : 0;
-    const hi    = wonToday && k === guessCount;
+    const hi    = (wonToday && k === guessCount) || (!wonToday && k === 'X');
     return `<div class="rdist-row">
       <span class="rdist-n">${k}</span>
       <div class="rdist-bar-wrap">
@@ -768,7 +733,7 @@ function renderClues() {
     if (i <= cluesRevealed) {
       div.className = 'clue-item revealed';
       div.innerHTML = `
-        <span class="clue-icon">${def.icon}</span>
+        <span class="clue-icon">${svgIcon(def.icon, 'clue-icon-svg')}</span>
         <span class="clue-text">
           <span class="clue-label">${def.label}</span>
           <span class="clue-val">…</span>
@@ -784,7 +749,7 @@ function renderClues() {
       }
     } else {
       div.className = 'clue-item locked';
-      div.innerHTML = `<span class="clue-icon">🔒</span><span class="clue-text">${def.label}</span>`;
+      div.innerHTML = `<span class="clue-icon">${svgIcon('lock', 'clue-icon-svg locked')}</span><span class="clue-text">${def.label}</span>`;
     }
     list.appendChild(div);
   }
@@ -806,7 +771,8 @@ function startTimer() {
   document.getElementById('timer-display').classList.add('running');
   timerInterval = setInterval(() => {
     elapsedSeconds++;
-    document.getElementById('timer-display').textContent = '⏱ ' + formatTime(elapsedSeconds);
+    const tv = document.getElementById('timer-value');
+    if (tv) tv.textContent = formatTime(elapsedSeconds);
     saveGameState();
   }, 1000);
 }
@@ -823,31 +789,32 @@ function stopTimer() {
 function renderGuessHistory() {
   const el = document.getElementById('guess-history');
   el.innerHTML = guessHistory.map(g => {
-    const icon  = g.correct ? '✅' : '❌';
-    const cls   = g.correct ? 'correct' : 'wrong';
+    const iconName = g.correct ? 'checkCircle' : 'xCircle';
+    const cls      = g.correct ? 'correct' : 'wrong';
 
     if (g.phase === 'state') {
       const label = STATE_NAMES[g.text] || g.text;
       if (!g.correct) {
-        // Show hot/cold adjacency hint
         const hint = g.adjacent
-          ? '<span class="guess-hint hot">🔥 Adjacent</span>'
-          : '<span class="guess-hint cold">❄️ Not adjacent</span>';
+          ? `<span class="guess-hint hot">${svgIcon('flame','hint-icon')} Adjacent</span>`
+          : `<span class="guess-hint cold">${svgIcon('snowflake','hint-icon')} Not adjacent</span>`;
         return `<div class="guess-row ${cls}">
-          <span class="guess-icon">${icon}</span>
+          <span class="guess-icon">${svgIcon(iconName,'guess-icon-svg')}</span>
           <span class="guess-label">${label}</span>${hint}
         </div>`;
       }
       return `<div class="guess-row ${cls}">
-        <span class="guess-icon">${icon}</span>
+        <span class="guess-icon">${svgIcon(iconName,'guess-icon-svg')}</span>
         <span class="guess-label">${label}</span>
       </div>`;
     }
 
     // District phase
+    const distPart  = g.text.split('-').slice(1).join('-');
+    const distLabel = distPart === 'AT-LARGE' ? 'At-Large' : `District ${parseInt(distPart, 10)}`;
     return `<div class="guess-row ${cls}">
-      <span class="guess-icon">${icon}</span>
-      <span class="guess-label">${g.text}</span>
+      <span class="guess-icon">${svgIcon(iconName,'guess-icon-svg')}</span>
+      <span class="guess-label">${distLabel}</span>
     </div>`;
   }).join('');
 
@@ -862,16 +829,11 @@ function renderGuessHistory() {
   }
 }
 
-// Called when a state is chosen (map click, chip click, or Guess State button).
-// Shows a flash animation then processes the guess.
+// Called when a state is chosen via map click or chip click.
 let _guessLocked = false; // prevent double-submit during animation
 function submitStateGuess(abbr) {
   if (gameOver || correctStateGuessed || _guessLocked) return;
   _guessLocked = true;
-
-  // Set dropdown value
-  const stateSel = document.getElementById('stateSelect');
-  stateSel.value = abbr;
 
   const isCorrect = abbr === todayDistrict.properties.STATE;
 
@@ -929,62 +891,63 @@ function processStateGuess(abbr, correct) {
     cluesRevealed = Math.min(wrongCount, FACT_DEFS.length);
     applyMapStage(wrongCount);
     if (guessCount >= MAX_GUESSES) { endGame(false); return; }
-    resetDropdowns();
   }
 
   renderGuessHistory();
   renderClues();        // also calls updateUSRefMap() + renderStateChips()
-  updateGuessButton();
   zoomUSRefMapToValid(); // zoom D3 map to remaining valid states
   saveGameState();
 }
 
-function submitGuess() {
-  if (gameOver) return;
+// ── Phase 2: district tile input ──────────────────────────────
+let _distLocked = false; // prevent double-tap during tile animation
 
-  if (!correctStateGuessed) {
-    // Phase 1: state guess — route through animation
-    const abbr = document.getElementById('stateSelect').value;
-    if (!abbr) {
-      const row = document.getElementById('guess-selects');
-      row.classList.add('shake');
-      setTimeout(() => row.classList.remove('shake'), 400);
-      return;
-    }
-    submitStateGuess(abbr);
-    return;
-  }
+function submitDistrictTile(dist) {
+  if (gameOver || !correctStateGuessed || _distLocked) return;
+  const tileEl = document.querySelector(`.district-tile[data-dist="${CSS.escape(dist)}"]`);
+  if (!tileEl || tileEl.disabled) return;
 
-  // ── Phase 2: district guess ──
-  const guess = getGuessFromDropdowns();
-  if (!guess) {
-    const row = document.getElementById('guess-selects');
-    row.classList.add('shake');
-    setTimeout(() => row.classList.remove('shake'), 400);
-    return;
-  }
-
+  _distLocked = true;
   if (!timerRunning) startTimer();
 
-  const correctDistrict = todayDistrict.properties.CONG119;
-  const correct = guess === correctDistrict;
+  const stateAbbr = todayDistrict.properties.STATE;
+  const fullGuess = dist === 'AT-LARGE' ? `${stateAbbr}-AT-LARGE` : `${stateAbbr}-${dist}`;
+  const correct   = fullGuess === todayDistrict.properties.CONG119;
+
+  // Flash the tile
+  tileEl.classList.add(correct ? 'tile-flash-correct' : 'tile-flash-wrong');
+  setTimeout(() => {
+    tileEl.classList.remove('tile-flash-correct', 'tile-flash-wrong');
+    _distLocked = false;
+    processDistrictGuessTile(dist, fullGuess, correct);
+  }, 480);
+}
+
+function processDistrictGuessTile(dist, fullGuess, correct) {
   guessCount++;
-  guessHistory.push({ text: guess, correct, phase: 'district' });
+  guessHistory.push({ text: fullGuess, correct, phase: 'district' });
+
+  const tileEl = document.querySelector(`.district-tile[data-dist="${CSS.escape(dist)}"]`);
 
   if (correct) {
-    endGame(true); return;
-  } else {
-    // Flash wrong animation on the guess row
-    const row = document.getElementById('guess-input-row');
-    row.classList.add('flash-wrong');
-    setTimeout(() => row.classList.remove('flash-wrong'), 700);
-
-    const wrongCount = guessHistory.filter(g => !g.correct).length;
-    cluesRevealed = Math.min(wrongCount, FACT_DEFS.length);
-    applyMapStage(wrongCount);
-    if (guessCount >= MAX_GUESSES) { endGame(false); return; }
-    document.getElementById('districtSelect').value = '';
+    if (tileEl) { tileEl.classList.add('tile-correct'); tileEl.disabled = true; }
+    endGame(true);
+    return;
   }
+
+  // Wrong — grey out the tile
+  if (tileEl) { tileEl.classList.add('tile-wrong'); tileEl.disabled = true; }
+
+  // Flash the container
+  const tilesEl = document.getElementById('district-tiles');
+  tilesEl.classList.add('flash-wrong');
+  setTimeout(() => tilesEl.classList.remove('flash-wrong'), 750);
+
+  const wrongCount = guessHistory.filter(g => !g.correct).length;
+  cluesRevealed = Math.min(wrongCount, FACT_DEFS.length);
+  applyMapStage(wrongCount);
+
+  if (guessCount >= MAX_GUESSES) { endGame(false); return; }
 
   renderGuessHistory();
   renderClues();
@@ -1045,7 +1008,7 @@ function toggleDarkMode() {
 
 function updateThemeToggle() {
   const btn = document.getElementById('theme-toggle');
-  if (btn) btn.textContent = isDarkMode() ? '☀️' : '🌙';
+  if (btn) btn.innerHTML = isDarkMode() ? svgIcon('sun') : svgIcon('moon');
 }
 
 // ---- US reference map (clickable states) ----
@@ -1251,24 +1214,80 @@ function renderStateChips() {
   updateUSRefMap();
 }
 
-function lockStateDropdown(stateAbbr) {
-  const stateSel = document.getElementById('stateSelect');
-  stateSel.value    = stateAbbr;
-  stateSel.disabled = true;
-  stateSel.classList.add('confirmed');
-
-  const badge = document.getElementById('state-confirmed');
+function lockStateDropdown(stateAbbr, instant = false) {
+  // Show confirmed-state badge
   document.getElementById('state-confirmed-name').textContent = STATE_NAMES[stateAbbr] || stateAbbr;
-  badge.classList.remove('hidden');
+  document.getElementById('state-confirmed').classList.remove('hidden');
 
-  // Repopulate district dropdown and reveal it for phase 2
-  populateDistrictDropdown(stateAbbr);
-  document.getElementById('districtSelect').classList.remove('hidden');
-  // Update chips and US ref map to reflect confirmed state
+  // Update chips and US ref map to show only the confirmed state
   renderStateChips();
   updateUSRefMap();
-  zoomUSRefMapToValid(); // zoom in on confirmed state
-  updateGuessButton();
+  zoomUSRefMapToValid();
+
+  // Fade out national map → show district tile grid (only when game is still in progress)
+  if (!gameOver) {
+    fadeToDistrictTiles(stateAbbr, instant);
+  }
+}
+
+function fadeToDistrictTiles(stateAbbr, instant = false) {
+  const mapEl   = document.getElementById('us-ref-map');
+  const tilesEl = document.getElementById('district-tiles');
+  const labelEl = document.getElementById('ref-label');
+
+  // Hide state chips — not needed in district phase
+  document.getElementById('state-chips-section').classList.add('hidden');
+
+  // Build tile buttons
+  buildDistrictTiles(stateAbbr);
+
+  // Update label
+  const count = (stateDistrictMap[stateAbbr] || []).length;
+  if (labelEl) {
+    labelEl.textContent = count === 1
+      ? 'One district — click to guess'
+      : `Pick a district (${count} total)`;
+  }
+
+  if (instant) {
+    // Restore — skip animation
+    mapEl.classList.add('hidden');
+    tilesEl.classList.remove('hidden');
+    tilesEl.style.opacity = '1';
+  } else {
+    // Animate: fade out national map, fade in tiles
+    mapEl.style.opacity = '0';
+    setTimeout(() => { mapEl.classList.add('hidden'); }, 370);
+
+    tilesEl.style.opacity = '0';
+    tilesEl.classList.remove('hidden');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      tilesEl.style.opacity = '1';
+    }));
+  }
+}
+
+function buildDistrictTiles(stateAbbr) {
+  const tilesEl  = document.getElementById('district-tiles');
+  const districts = stateDistrictMap[stateAbbr] || [];
+
+  // Collect already-guessed wrong districts
+  const wrongDists = new Set(
+    guessHistory
+      .filter(g => g.phase === 'district' && !g.correct)
+      .map(g => g.text.split('-').slice(1).join('-'))
+  );
+  const wonDist = guessHistory.find(g => g.phase === 'district' && g.correct);
+  const wonDistPart = wonDist ? wonDist.text.split('-').slice(1).join('-') : null;
+
+  tilesEl.innerHTML = districts.map(dist => {
+    const label   = dist === 'AT-LARGE' ? 'AL' : String(parseInt(dist, 10));
+    const isWrong   = wrongDists.has(dist);
+    const isCorrect = wonDistPart === dist;
+    const cls = isCorrect ? 'tile-correct' : isWrong ? 'tile-wrong' : '';
+    const dis = (isWrong || isCorrect || gameOver) ? ' disabled' : '';
+    return `<button class="district-tile ${cls}" data-dist="${dist}"${dis}>${label}</button>`;
+  }).join('');
 }
 
 function endGame(won) {
@@ -1282,10 +1301,10 @@ function endGame(won) {
     lockStateDropdown(todayDistrict.properties.STATE);
   }
   renderClues();
-  document.getElementById('guess-input-row').classList.add('hidden');
   renderGuessHistory();
-  showResult(won);
+  // Save stats BEFORE showResult so renderInlinePersonalStats shows current game
   savePersonalStats(won, guessCount, elapsedSeconds);
+  showResult(won);
   saveGameState();
 
   // Submit to Firebase and render census data
@@ -1296,37 +1315,90 @@ function endGame(won) {
 // ============================================================
 //  RESULT & SHARE
 // ============================================================
+
+/** Renders a mini D3 SVG showing the state's districts with today's district highlighted. */
+function renderDistrictPreview() {
+  const container = document.getElementById('result-district-preview');
+  if (!container || !todayDistrict || !districts || !window.d3) return;
+  container.innerHTML = '';
+
+  const W = 440, H = 200, pad = 18;
+  const dark = isDarkMode();
+  const correctState = todayDistrict.properties.STATE;
+  const stateFeatures = districts.filter(d => d.properties.STATE === correctState);
+  const stateFC = { type: 'FeatureCollection', features: stateFeatures };
+
+  const projection = d3.geoMercator()
+    .fitExtent([[pad, pad], [W - pad, H - pad]], stateFC);
+  const pathGen = d3.geoPath(projection);
+
+  const svg = d3.create('svg')
+    .attr('viewBox', `0 0 ${W} ${H}`)
+    .attr('class', 'district-preview-svg');
+
+  // All state districts as neutral background
+  svg.selectAll('.prev-bg')
+    .data(stateFeatures)
+    .enter().append('path')
+    .attr('d', pathGen)
+    .attr('fill', dark ? '#2a2a2c' : '#e8ecef')
+    .attr('stroke', dark ? '#555' : '#b0b8c1')
+    .attr('stroke-width', 1);
+
+  // Correct district highlighted
+  svg.append('path')
+    .datum(todayDistrict)
+    .attr('d', pathGen)
+    .attr('fill', '#C41230')
+    .attr('fill-opacity', 0.35)
+    .attr('stroke', '#C41230')
+    .attr('stroke-width', 2.5);
+
+  container.appendChild(svg.node());
+}
+
 function showResult(won) {
-  // Show the result modal; switch to result tab
   const modal = document.getElementById('result-modal');
   modal.classList.remove('hidden');
   switchResultTab('result');
-  renderInlinePersonalStats();
 
+  const answer    = todayDistrict.properties.CONG119;
+  const stateName = STATE_NAMES[todayDistrict.properties.STATE] || todayDistrict.properties.STATE;
+  const distPart  = answer.split('-').slice(1).join('-');
+  const distLabel = distPart === 'AT-LARGE' ? 'At-Large District' : `District ${parseInt(distPart, 10)}`;
+
+  // District preview map
+  renderDistrictPreview();
+
+  // Answer block
   const msg   = document.getElementById('result-message');
   const stats = document.getElementById('result-stats');
 
-  const answer = todayDistrict.properties.CONG119;
-
   if (won) {
-    msg.textContent = guessCount === 1 ? 'Hole in one! 🎉' :
-                      guessCount <= 3  ? 'Impressive! 🎊' : 'Got it! ✅';
+    msg.innerHTML = guessCount === 1 ? 'Hole in one!' :
+                    guessCount <= 3  ? 'Impressive!' : 'Got it!';
     msg.className = 'won';
-    stats.innerHTML = `The answer was <strong>${answer}</strong>.<br>
-      Solved in <strong>${guessCount} guess${guessCount !== 1 ? 'es' : ''}</strong> and <strong>${formatTime(elapsedSeconds)}</strong>.`;
   } else {
-    msg.textContent = 'Better luck tomorrow! 😅';
+    msg.innerHTML = 'Better luck tomorrow';
     msg.className = 'lost';
-    stats.innerHTML = `The answer was <strong>${answer}</strong>.<br>
-      Come back tomorrow for a new district.`;
   }
+
+  stats.innerHTML = `
+    <div class="result-answer">
+      <span class="result-answer-code">${answer}</span>
+      <span class="result-answer-sub">${stateName} &mdash; ${distLabel}</span>
+    </div>
+    ${won ? `<div class="result-time-line">Solved in <strong>${guessCount}</strong> guess${guessCount !== 1 ? 'es' : ''} &middot; <strong>${formatTime(elapsedSeconds)}</strong></div>` : ''}`;
+
+  // Wordle-style statistics + distribution
+  renderInlinePersonalStats();
 }
 
 function buildShareText() {
   const answer = todayDistrict.properties.CONG119;
   const won    = guessHistory.some(g => g.correct);
-  const emoji  = guessHistory.map(g => g.correct ? '🟩' : '🟥').join('');
-  const result = won ? `${guessCount}/${MAX_GUESSES}` : 'X/6';
+  const emoji  = guessHistory.map(g => g.correct ? '[+]' : '[-]').join(' ');
+  const result = won ? `${guessCount}/${MAX_GUESSES}` : `X/${MAX_GUESSES}`;
   return `District Guess ${todayKey}\n${answer} — ${result}\n${emoji}\nhttps://jcervas.github.io/games/district-guess/`;
 }
 
@@ -1430,7 +1502,8 @@ function restoreGame(saved) {
   elapsedSeconds = saved.elapsedSeconds || 0;
   gameOver       = saved.gameOver;
 
-  document.getElementById('timer-display').textContent = '⏱ ' + formatTime(elapsedSeconds);
+  const tvEl = document.getElementById('timer-value');
+  if (tvEl) tvEl.textContent = formatTime(elapsedSeconds);
 
   // Reconstruct adjacency-based eliminations from saved guess history
   eliminatedStates = new Set();
@@ -1454,11 +1527,9 @@ function restoreGame(saved) {
   const stateFound   = guessHistory.some(g => g.phase === 'state' ? g.correct : g.text.split('-')[0] === correctState);
   if (stateFound) {
     correctStateGuessed = true;
-    lockStateDropdown(correctState);
-  } else {
-    document.getElementById('districtSelect').classList.add('hidden');
+    // instant=true: skip fade animation on page restore
+    lockStateDropdown(correctState, true);
   }
-  updateGuessButton();
 
   // Reconstruct map stage
   const wrongCount = guessHistory.filter(g => !g.correct).length;
@@ -1469,7 +1540,6 @@ function restoreGame(saved) {
   renderClues();
 
   if (gameOver) {
-    document.getElementById('guess-input-row').classList.add('hidden');
     showResult(saved.won);
     fetchAndRenderCensusPanel(districtDataFor(todayDistrict));
     document.getElementById('already-played-banner').classList.remove('hidden');
@@ -1518,9 +1588,8 @@ async function init() {
     return;
   }
 
-  // Build state→district lookup and populate state dropdown
+  // Build state→district lookup
   stateDistrictMap = buildStateDistrictMap(districts);
-  populateStateDropdown();
 
   // Pick today's district deterministically by date
   const idx = seededIndex(dateSeed(), districts.length);
@@ -1557,22 +1626,14 @@ async function init() {
 document.addEventListener('DOMContentLoaded', () => {
   applyDarkModeClass(); // must run before init() so D3 map gets correct colors
   updateThemeToggle();
+
   init();
 
-  // Hide district dropdown until state is confirmed (phase 2)
-  document.getElementById('districtSelect').classList.add('hidden');
-  updateGuessButton();
-
-  document.getElementById('guessButton').addEventListener('click', submitGuess);
-
-  document.getElementById('stateSelect').addEventListener('change', e => {
-    if (!correctStateGuessed) populateDistrictDropdown(e.target.value);
-    syncChipsToDropdown(e.target.value);
-  });
-
-  // Allow Enter key on the district dropdown to submit
-  document.getElementById('districtSelect').addEventListener('keydown', e => {
-    if (e.key === 'Enter') submitGuess();
+  // District tile clicks — event delegation on the tile container
+  document.getElementById('district-tiles').addEventListener('click', e => {
+    const tile = e.target.closest('.district-tile');
+    if (!tile || tile.disabled) return;
+    submitDistrictTile(tile.dataset.dist);
   });
 
   // Share
@@ -1599,9 +1660,17 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => switchResultTab(btn.dataset.rtab));
   });
 
-  // How to play (button now in header-left)
+  // How to play — auto-show on first visit
+  const howToModal = document.getElementById('how-to-modal');
+  if (!localStorage.getItem(HOW_TO_SEEN_KEY)) {
+    howToModal.classList.remove('hidden');
+  }
   document.getElementById('how-to-btn').addEventListener('click', () => {
-    document.getElementById('how-to-modal').classList.remove('hidden');
+    howToModal.classList.remove('hidden');
+  });
+  document.getElementById('how-to-got-it').addEventListener('click', () => {
+    howToModal.classList.add('hidden');
+    localStorage.setItem(HOW_TO_SEEN_KEY, '1');
   });
 
   // Dark mode toggle
