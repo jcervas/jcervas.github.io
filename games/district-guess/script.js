@@ -184,9 +184,13 @@ function svgIcon(name, cls = 'icon') {
 // ============================================================
 const MAX_GUESSES = 6;
 const STORAGE_PREFIX = 'districtguess_';
-const HOW_TO_SEEN_KEY = STORAGE_PREFIX + 'howToSeen';
+const HOW_TO_SEEN_KEY    = STORAGE_PREFIX + 'howToSeen';
+const SESSION_REPLAY_KEY = 'districtguess_replay';   // sessionStorage key
+// D3 US reference map coordinate space (viewBox dimensions)
+const REF_VB_W = 960;
+const REF_VB_H = 400;
 
-// Built at load time from GeoJSON: { 'TX': ['01','02',...], 'WY': ['AT-LARGE'], ... }
+// Built at load time from GeoJSON: { 'TX': ['01','02',...], 'WY': ['01'], ... }
 let stateDistrictMap = {};
 
 // District facts — Fact 0 is always visible; one more unlocks per wrong guess.
@@ -197,9 +201,7 @@ const FACT_DEFS = [
     label: 'District size',
     fn: () => {
       if (!todayDistrict) return '—';
-      // d3.geoArea returns steradians; Earth radius ≈ 6371 km
-      const areaKm2  = d3.geoArea(todayDistrict) * 6371 * 6371;
-      const areaMi2  = Math.round(areaKm2 * 0.386102);
+      const areaMi2 = Math.round(todayDistrict.properties.area_sqmi || 0);
       if (areaMi2 <   300) return `Very compact — under 300 sq mi`;
       if (areaMi2 <  2000) return `Small — ~${areaMi2.toLocaleString()} sq mi`;
       if (areaMi2 < 15000) return `Mid-size — ~${areaMi2.toLocaleString()} sq mi`;
@@ -251,6 +253,8 @@ let map, terrainLayer, streetLayer, districtLayer;
 let usRefMap            = null;   // US states reference map SVG element
 let usRefMapGroup       = null;   // main <g> inside the SVG (holds all paths)
 let usRefLayers         = {};     // abbr → D3 path selection
+let usRefZoom           = null;   // d3.zoom instance
+let usRefSvgSel         = null;   // d3 selection of the SVG element
 let eliminatedStates    = new Set(); // all states removed from valid set (wrong guess + adjacency)
 let guessCount          = 0;
 let guessHistory        = [];     // [{text, correct}]
@@ -291,18 +295,17 @@ function dateSeed() {
 function buildStateDistrictMap(features) {
   const map = {};
   for (const f of features) {
-    const state = f.properties.STATE;
-    const dist  = f.properties.DISTRICT; // '01', '02', 'AT-LARGE', etc.
+    const state = f.properties.state;
+    if (!state) continue; // skip territory features with no state code
+    // Derive district number from 'state-district' (e.g. 'TX-01' → '01')
+    const sd   = f.properties['state-district'] || '';
+    const dist = sd.slice(state.length + 1) || '01';
     if (!map[state]) map[state] = [];
     map[state].push(dist);
   }
-  // Sort districts: AT-LARGE first, then numerically
+  // Sort numerically
   for (const state of Object.keys(map)) {
-    map[state].sort((a, b) => {
-      if (a === 'AT-LARGE') return -1;
-      if (b === 'AT-LARGE') return  1;
-      return parseInt(a, 10) - parseInt(b, 10);
-    });
+    map[state].sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
   }
   return map;
 }
@@ -459,9 +462,10 @@ function applyMapStage(wrongGuesses, gameEnded = false) {
 function renderDistrict(feature) {
   if (districtLayer) map.removeLayer(districtLayer);
   districtLayer = L.geoJSON(feature, {
-    style: { color: '#2563eb', weight: 2.5, fillColor: '#2563eb', fillOpacity: 0.15 }
+    style: { color: '#C41230', weight: 2.5, fillColor: '#C41230', fillOpacity: 0.12 }
   }).addTo(map);
-  map.fitBounds(districtLayer.getBounds(), { padding: [30, 30] });
+  map.invalidateSize();   // ensure container dimensions are current before fitting
+  map.fitBounds(districtLayer.getBounds(), { padding: [30, 30], animate: false });
 }
 
 // ============================================================
@@ -477,7 +481,7 @@ async function getDistrictCensusData(districtData) {
   if (!fips) return null;
 
   let cdNum = districtData.district;
-  if (cdNum === 'AT-LARGE') cdNum = '00';
+  if (cdNum === '00' || cdNum === 'AT-LARGE') cdNum = '00'; // at-large / single-district states
   else cdNum = String(parseInt(cdNum, 10)).padStart(2, '0');
 
   // B03002 = race × Hispanic origin (no double-counting)
@@ -647,7 +651,7 @@ async function fetchAndRenderCensusPanel(districtData) {
       <div class="census-card">
         <div class="label">State</div>
         <div class="value">${STATE_NAMES[districtData.state] || districtData.state}</div>
-        <div class="sub">${districtData.district === 'AT-LARGE' ? 'At-Large District' : `District ${parseInt(districtData.district, 10)}`}</div>
+        <div class="sub">${(stateDistrictMap[districtData.state] || []).length === 1 ? 'At-Large District' : `District ${parseInt(districtData.district, 10)}`}</div>
       </div>
     </div>
     <div class="census-source">Source: U.S. Census Bureau, American Community Survey 5-Year Estimates (2022). ${d.name}</div>
@@ -763,10 +767,12 @@ function renderClues() {
 }
 
 function districtDataFor(feature) {
-  return {
-    state: feature.properties.STATE,
-    district: feature.properties.DISTRICT
-  };
+  const state    = feature.properties.state;
+  const sd       = feature.properties['state-district'] || '';
+  const distPart = sd.slice(state.length + 1) || '01';
+  // Census API uses '00' for at-large (single-district) states
+  const censusDist = (stateDistrictMap[state] || []).length === 1 ? '00' : distPart;
+  return { state, district: censusDist };
 }
 
 // ============================================================
@@ -818,7 +824,9 @@ function renderGuessHistory() {
 
     // District phase
     const distPart  = g.text.split('-').slice(1).join('-');
-    const distLabel = distPart === 'AT-LARGE' ? 'At-Large' : `District ${parseInt(distPart, 10)}`;
+    const guessState = g.text.split('-')[0];
+    const distLabel = (stateDistrictMap[guessState] || []).length === 1
+      ? 'At-Large' : `District ${parseInt(distPart, 10)}`;
     return `<div class="guess-row ${cls}">
       <span class="guess-icon">${svgIcon(iconName,'guess-icon-svg')}</span>
       <span class="guess-label">${distLabel}</span>
@@ -834,6 +842,31 @@ function renderGuessHistory() {
   } else {
     remEl.textContent = '';
   }
+
+  updateGuessCounter();
+}
+
+/** Render the small dot-row guess progress indicator in the reference panel. */
+function updateGuessCounter() {
+  const el = document.getElementById('guess-counter');
+  if (!el) return;
+
+  const dots = Array.from({ length: MAX_GUESSES }, (_, i) => {
+    const g = guessHistory[i];
+    if (!g) return '<span class="gc-dot gc-empty"></span>';
+    if (g.correct) return '<span class="gc-dot gc-correct"></span>';
+    return '<span class="gc-dot gc-wrong"></span>';
+  }).join('');
+
+  const used     = guessHistory.length;
+  const wonGame  = guessHistory.some(g => g.correct);
+  const label    = gameOver
+    ? (wonGame ? 'Solved!' : 'No more guesses')
+    : used === 0
+      ? `${MAX_GUESSES} guesses`
+      : `${used} / ${MAX_GUESSES} · ${MAX_GUESSES - used} left`;
+
+  el.innerHTML = `<div class="gc-dots">${dots}</div><span class="gc-label">${label}</span>`;
 }
 
 // Called when a state is chosen via map click or chip click.
@@ -842,7 +875,7 @@ function submitStateGuess(abbr) {
   if (gameOver || correctStateGuessed || _guessLocked) return;
   _guessLocked = true;
 
-  const isCorrect = abbr === todayDistrict.properties.STATE;
+  const isCorrect = abbr === todayDistrict.properties.state;
 
   // Flash the state — CMU Gold (correct) or Carnegie Red (wrong)
   const pathEl = usRefLayers[abbr];
@@ -867,7 +900,7 @@ function submitStateGuess(abbr) {
 function processStateGuess(abbr, correct) {
   if (!timerRunning) startTimer();
 
-  const correctState = todayDistrict.properties.STATE;
+  const correctState = todayDistrict.properties.state;
   const neighbors    = STATE_ADJACENCY[abbr] || [];
   const isAdjacent   = neighbors.includes(correctState);
 
@@ -917,9 +950,9 @@ function submitDistrictTile(dist) {
   _distLocked = true;
   if (!timerRunning) startTimer();
 
-  const stateAbbr = todayDistrict.properties.STATE;
-  const fullGuess = dist === 'AT-LARGE' ? `${stateAbbr}-AT-LARGE` : `${stateAbbr}-${dist}`;
-  const correct   = fullGuess === todayDistrict.properties.CONG119;
+  const stateAbbr = todayDistrict.properties.state;
+  const fullGuess = `${stateAbbr}-${dist}`;
+  const correct   = fullGuess === todayDistrict.properties['state-district'];
 
   // Flash the tile
   tileEl.classList.add(correct ? 'tile-flash-correct' : 'tile-flash-wrong');
@@ -1032,7 +1065,7 @@ function _stateColors(abbr) {
   const grayOp     = dark ? 0.55 : 0.35;
 
   if (correctStateGuessed) {
-    const confirmed = todayDistrict ? todayDistrict.properties.STATE : null;
+    const confirmed = todayDistrict ? todayDistrict.properties.state : null;
     if (abbr === confirmed) return { fill: redFill, stroke: '#C41230', sw: 2, opacity: 0.9 };
     return { fill: grayFill, stroke: grayStroke, sw: 0.5, opacity: grayOp };
   }
@@ -1053,20 +1086,36 @@ function _applyStateStyle(sel, abbr) {
 function initUSRefMap() {
   if (usRefMap) return;
   const container = document.getElementById('us-ref-map');
-  const W = container.clientWidth  || 960;
-  const H = container.clientHeight || 400;
+
+  // Use a fixed coordinate space (viewBox) so the SVG scales with CSS
+  const W = REF_VB_W, H = REF_VB_H;
 
   const svgSel = d3.select(container)
     .append('svg')
-    .attr('width', W)
-    .attr('height', H)
+    .attr('viewBox', `0 0 ${W} ${H}`)
+    .attr('width', '100%')
+    .attr('height', '100%')
+    .attr('preserveAspectRatio', 'xMidYMid meet')
     .style('display', 'block')
     .style('background', 'transparent');
 
-  usRefMap = svgSel.node();
+  usRefMap    = svgSel.node();
+  usRefSvgSel = svgSel;
+
+  // D3 zoom — allow user to pan & scroll-zoom the reference map
+  usRefZoom = d3.zoom()
+    .scaleExtent([0.7, 14])
+    .on('zoom', (event) => {
+      d3.select(usRefMapGroup).attr('transform', event.transform);
+    });
+  svgSel.call(usRefZoom);
+  // Double-click resets to fitted view instead of zooming in
+  svgSel.on('dblclick.zoom', () => zoomUSRefMapToValid(true));
 
   const projection = d3.geoAlbersUsa();
   const pathGen    = d3.geoPath().projection(projection);
+
+  const tooltip = document.getElementById('us-ref-tooltip');
 
   fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json')
     .then(r => r.json())
@@ -1074,7 +1123,7 @@ function initUSRefMap() {
       const geojson = topojson.feature(us, us.objects.states);
       projection.fitSize([W, H], geojson);
 
-      // Single group for ALL content — mesh paths included — so zoom transforms everything
+      // Single group for ALL content so zoom transforms everything
       const g = svgSel.append('g');
       usRefMapGroup = g.node();
 
@@ -1098,15 +1147,32 @@ function initUSRefMap() {
             if (!getValidStates().has(abbr)) return;
             submitStateGuess(abbr);
           })
-          .on('mouseover', () => {
-            if (correctStateGuessed || !getValidStates().has(abbr)) return;
-            pathEl.attr('fill', '#007BC0').attr('fill-opacity', 0.65);
+          .on('mouseover', (event) => {
+            // Tooltip — show for all states
+            if (tooltip) {
+              tooltip.textContent = (STATE_NAMES[abbr] || abbr) + ' (' + abbr + ')';
+              tooltip.classList.add('visible');
+              tooltip.style.left = (event.clientX + 14) + 'px';
+              tooltip.style.top  = (event.clientY - 34) + 'px';
+            }
+            // Highlight only clickable states
+            if (!correctStateGuessed && getValidStates().has(abbr)) {
+              pathEl.attr('fill', '#C41230').attr('fill-opacity', 0.7);
+            }
           })
-          .on('mouseout', () => _applyStateStyle(pathEl, abbr));
+          .on('mousemove', (event) => {
+            if (tooltip) {
+              tooltip.style.left = (event.clientX + 14) + 'px';
+              tooltip.style.top  = (event.clientY - 34) + 'px';
+            }
+          })
+          .on('mouseout', () => {
+            if (tooltip) tooltip.classList.remove('visible');
+            _applyStateStyle(pathEl, abbr);
+          });
       });
 
-      // White internal borders — inside the group so they zoom with it
-      // vector-effect keeps stroke visually 1px regardless of scale
+      // White internal borders
       g.append('path')
         .datum(topojson.mesh(us, us.objects.states, (a, b) => a !== b))
         .attr('d', pathGen)
@@ -1141,13 +1207,14 @@ function zoomUSRefMapToValid(animated = true) {
 
   // Determine target state set
   const targetSet = correctStateGuessed && todayDistrict
-    ? new Set([todayDistrict.properties.STATE])
+    ? new Set([todayDistrict.properties.state])
     : getValidStates();
 
   if (targetSet.size === 0) return;
 
-  const W = usRefMap.clientWidth  || 960;
-  const H = usRefMap.clientHeight || 400;
+  // Always use the viewBox coordinate space — not CSS pixel dimensions
+  const W = REF_VB_W;
+  const H = REF_VB_H;
 
   // Compute bounding box in the group's LOCAL coordinate space
   let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
@@ -1166,17 +1233,23 @@ function zoomUSRefMapToValid(animated = true) {
   const dy = y1 - y0;
   if (dx === 0 || dy === 0) return;
 
-  const padding = 24;
+  const padding = 28;
   const scale   = Math.min((W - 2 * padding) / dx, (H - 2 * padding) / dy);
   const tx      = W / 2 - scale * (x0 + dx / 2);
   const ty      = H / 2 - scale * (y0 + dy / 2);
-  const transform = `translate(${tx},${ty}) scale(${scale})`;
 
-  const gSel = d3.select(usRefMapGroup);
-  if (animated) {
-    gSel.transition().duration(700).ease(d3.easeCubicInOut).attr('transform', transform);
+  // Sync through d3.zoom so user pan/scroll starts from the correct position
+  const zTransform = d3.zoomIdentity.translate(tx, ty).scale(scale);
+  if (usRefZoom && usRefSvgSel) {
+    if (animated) {
+      usRefSvgSel.transition().duration(700).ease(d3.easeCubicInOut)
+        .call(usRefZoom.transform, zTransform);
+    } else {
+      usRefSvgSel.call(usRefZoom.transform, zTransform);
+    }
   } else {
-    gSel.attr('transform', transform);
+    // Fallback if zoom not yet initialized
+    d3.select(usRefMapGroup).attr('transform', `translate(${tx},${ty}) scale(${scale})`);
   }
 }
 
@@ -1287,8 +1360,9 @@ function buildDistrictTiles(stateAbbr) {
   const wonDist = guessHistory.find(g => g.phase === 'district' && g.correct);
   const wonDistPart = wonDist ? wonDist.text.split('-').slice(1).join('-') : null;
 
+  const isAtLargeState = (stateDistrictMap[stateAbbr] || []).length === 1;
   tilesEl.innerHTML = districts.map(dist => {
-    const label   = dist === 'AT-LARGE' ? 'AL' : String(parseInt(dist, 10));
+    const label   = isAtLargeState ? 'AL' : String(parseInt(dist, 10));
     const isWrong   = wrongDists.has(dist);
     const isCorrect = wonDistPart === dist;
     const cls = isCorrect ? 'tile-correct' : isWrong ? 'tile-wrong' : '';
@@ -1305,7 +1379,7 @@ function endGame(won) {
   // Ensure state is locked to the answer
   if (!correctStateGuessed) {
     correctStateGuessed = true;
-    lockStateDropdown(todayDistrict.properties.STATE);
+    lockStateDropdown(todayDistrict.properties.state);
   }
   renderClues();
   renderGuessHistory();
@@ -1313,6 +1387,16 @@ function endGame(won) {
   savePersonalStats(won, guessCount, elapsedSeconds);
   showResult(won);
   saveGameState();
+
+  // Show the game-over banner so "View Result" / "New Map" are accessible after modal close
+  const banner = document.getElementById('already-played-banner');
+  const bannerMsg = document.getElementById('banner-msg');
+  if (banner) {
+    if (bannerMsg) bannerMsg.textContent = won
+      ? `You got it — ${todayDistrict.properties['state-district']}!`
+      : `The answer was ${todayDistrict.properties['state-district']}.`;
+    banner.classList.remove('hidden');
+  }
 
   // Submit to Firebase and render census data
   submitScore(won, guessCount, elapsedSeconds);
@@ -1331,8 +1415,8 @@ function renderDistrictPreview() {
 
   const W = 440, H = 220, pad = 14;
   const dark = isDarkMode();
-  const correctState = todayDistrict.properties.STATE;
-  const stateFeatures = districts.filter(d => d.properties.STATE === correctState);
+  const correctState = todayDistrict.properties.state;
+  const stateFeatures = districts.filter(d => d.properties.state === correctState);
   const stateFC = { type: 'FeatureCollection', features: stateFeatures };
 
   const projection = d3.geoMercator()
@@ -1374,10 +1458,11 @@ function showResult(won) {
   modal.classList.remove('hidden');
   switchResultTab('result');
 
-  const answer    = todayDistrict.properties.CONG119;
-  const stateName = STATE_NAMES[todayDistrict.properties.STATE] || todayDistrict.properties.STATE;
-  const distPart  = answer.split('-').slice(1).join('-');
-  const distLabel = distPart === 'AT-LARGE' ? 'At-Large District' : `District ${parseInt(distPart, 10)}`;
+  const answer    = todayDistrict.properties['state-district'];
+  const stateName = STATE_NAMES[todayDistrict.properties.state] || todayDistrict.properties.state;
+  const distPart  = answer.slice(todayDistrict.properties.state.length + 1);
+  const isAtLarge = (stateDistrictMap[todayDistrict.properties.state] || []).length === 1;
+  const distLabel = isAtLarge ? 'At-Large District' : `District ${parseInt(distPart, 10)}`;
 
   // District preview map
   renderDistrictPreview();
@@ -1407,7 +1492,7 @@ function showResult(won) {
 }
 
 function buildShareText() {
-  const answer = todayDistrict.properties.CONG119;
+  const answer = todayDistrict.properties['state-district'];
   const won    = guessHistory.some(g => g.correct);
   const result = won ? `${guessCount}/${MAX_GUESSES}` : `X/${MAX_GUESSES}`;
   // Emoji grid: state-phase guesses use squares, district-phase uses a circle for the win
@@ -1441,7 +1526,7 @@ function escapeHtml(str) {
 async function openLeaderboard() {
   document.getElementById('leaderboard-modal').classList.remove('hidden');
   document.getElementById('lb-district-label').textContent =
-    `Today's district: ${gameOver ? todayDistrict.properties.CONG119 : '???'} · ${todayKey}`;
+    `Today's district: ${gameOver ? todayDistrict.properties['state-district'] : '???'} · ${todayKey}`;
 
   // Today's scores
   const todayEl = document.getElementById('today-scores');
@@ -1540,7 +1625,7 @@ function restoreGame(saved) {
   });
 
   // Reconstruct state-lock from guess history
-  const correctState = todayDistrict.properties.STATE;
+  const correctState = todayDistrict.properties.state;
   const stateFound   = guessHistory.some(g => g.phase === 'state' ? g.correct : g.text.split('-')[0] === correctState);
   if (stateFound) {
     correctStateGuessed = true;
@@ -1608,6 +1693,9 @@ function resetGame(newIdx) {
   // Remove saved game so restoreGame() won't trigger on this key
   localStorage.removeItem(STORAGE_PREFIX + 'today');
 
+  // Clear census cache so District Profile loads fresh data for the new district
+  _cachePromise = null;
+
   // --- UI resets ---
 
   // Hide modals / banners
@@ -1632,6 +1720,8 @@ function resetGame(newIdx) {
   usRefMap       = null;
   usRefMapGroup  = null;
   usRefLayers    = {};
+  usRefZoom      = null;
+  usRefSvgSel    = null;
 
   // Reset district tiles
   const tilesEl = document.getElementById('district-tiles');
@@ -1653,7 +1743,7 @@ function resetGame(newIdx) {
   initUSRefMap();
   renderDistrict(todayDistrict);
   renderClues();
-  renderGuessHistory();
+  renderGuessHistory();  // also calls updateGuessCounter()
   document.getElementById('guess-remaining').textContent = `${MAX_GUESSES} guesses`;
 }
 
@@ -1669,9 +1759,10 @@ async function init() {
   // Load GeoJSON
   let data;
   try {
-    const res = await fetch('./national_cong119_carto_boundary.json');
+    const res = await fetch('./national-cd-2026.geojson');
     data = await res.json();
-    districts = data.features;
+    // Filter out territory features (no state code) before building the game
+    districts = data.features.filter(f => f.properties.state);
   } catch {
     alert('Failed to load district data. Please refresh.');
     return;
@@ -1680,8 +1771,12 @@ async function init() {
   // Build state→district lookup
   stateDistrictMap = buildStateDistrictMap(districts);
 
-  // Pick today's district deterministically by date
-  const idx = seededIndex(dateSeed(), districts.length);
+  // Restore replayCount from sessionStorage so hard-reload resumes the same map
+  const savedReplay = parseInt(sessionStorage.getItem(SESSION_REPLAY_KEY) || '0', 10);
+  replayCount = isNaN(savedReplay) ? 0 : savedReplay;
+
+  // Pick today's district — offset by replayCount so "New Map" gives a different puzzle
+  const idx = seededIndex(dateSeed() + replayCount, districts.length);
   todayDistrict = districts[idx];
 
   initMap();
@@ -1717,11 +1812,26 @@ document.addEventListener('DOMContentLoaded', () => {
     submitDistrictTile(tile.dataset.dist);
   });
 
-  // Play Again — pick a new district (offset from daily seed by replayCount)
-  document.getElementById('play-again-btn').addEventListener('click', () => {
+  // New Map — pick a new district (both from result modal button AND banner button)
+  function startNewMap() {
     replayCount++;
+    sessionStorage.setItem(SESSION_REPLAY_KEY, String(replayCount));
     const newIdx = seededIndex(dateSeed() + replayCount, districts.length);
     resetGame(newIdx);
+  }
+  document.getElementById('play-again-btn').addEventListener('click', startNewMap);
+  document.getElementById('banner-new-map-btn').addEventListener('click', startNewMap);
+
+  // Post to X / Twitter
+  document.getElementById('post-x-btn').addEventListener('click', () => {
+    const text = buildShareText();
+    const url  = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text);
+    window.open(url, '_blank', 'noopener,noreferrer');
+  });
+
+  // Resize — keep Leaflet map tile grid current when container changes
+  window.addEventListener('resize', () => {
+    if (map) map.invalidateSize();
   });
 
   // Share
