@@ -5,7 +5,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  /* CMU color palette */
+  /* CMU brand colors — constant across themes */
   --cmu-red:        #C41230;
   --cmu-red-dark:   #941120;
   --cmu-sky:        #007BC0;
@@ -15,19 +15,85 @@
   --cmu-gray:       #6D6E71;
   --cmu-steel:      #E0E0E0;
 
-  --bg:          #f5f5f3;
-  --surface:     #ffffff;
-  --border:      #d1d5db;
-  --text:        #1a1a1a;
-  --muted:       #6b7280;
-  --accent:      var(--cmu-sky);
-  --accent-hover: #005f97;
-  --green:       var(--cmu-green);
-  --red:         var(--cmu-red);
-  --yellow:      var(--cmu-gold);
-  --radius: 8px;
-  --shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
-  --shadow-lg: 0 10px 25px rgba(0,0,0,0.15);
+  /* ---- Light mode (default) ---- */
+  --bg:             #f5f5f3;
+  --surface:        #ffffff;
+  --surface-alt:    #f3f4f6;
+  --border:         #d1d5db;
+  --text:           #1a1a1a;
+  --text-secondary: #374151;
+  --muted:          #6b7280;
+  --muted-border:   #c4c9d4;
+
+  /* semantic colors — theme-aware */
+  --correct-bg:     #dcfce7;
+  --correct-border: #86efac;
+  --correct-text:   #166534;
+  --wrong-bg:       #fef2f2;
+  --wrong-border:   #fca5a5;
+  --wrong-text:     #991b1b;
+  --fact-bg:        #eff6ff;
+  --banner-bg:      #fef9c3;
+  --banner-border:  #fde047;
+
+  --accent:         var(--cmu-sky);
+  --accent-hover:   #005f97;
+  --green:          var(--cmu-green);
+  --red:            var(--cmu-red);
+  --yellow:         var(--cmu-gold);
+  --radius:         8px;
+  --shadow:         0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
+  --shadow-lg:      0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+/* Applied when system prefers dark AND user hasn't forced light */
+@media (prefers-color-scheme: dark) {
+  body:not(.light-mode) {
+    --bg:             #111213;
+    --surface:        #1a1a1b;
+    --surface-alt:    #252526;
+    --border:         #3a3a3c;
+    --text:           #ffffff;
+    --text-secondary: #d1d5db;
+    --muted:          #818384;
+    --muted-border:   #4a4a4c;
+    --correct-bg:     #143620;
+    --correct-border: #2a7a4e;
+    --correct-text:   #86efac;
+    --wrong-bg:       #321010;
+    --wrong-border:   #7a2020;
+    --wrong-text:     #fca5a5;
+    --fact-bg:        #1a2535;
+    --banner-bg:      #332c00;
+    --banner-border:  #665800;
+    --shadow:         0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-lg:      0 10px 25px rgba(0,0,0,0.5);
+  }
+}
+/* Applied when user explicitly toggled dark */
+body.dark-mode {
+  --bg:             #111213;
+  --surface:        #1a1a1b;
+  --surface-alt:    #252526;
+  --border:         #3a3a3c;
+  --text:           #ffffff;
+  --text-secondary: #d1d5db;
+  --muted:          #818384;
+  --muted-border:   #4a4a4c;
+  --correct-bg:     #143620;
+  --correct-border: #2a7a4e;
+  --correct-text:   #86efac;
+  --wrong-bg:       #321010;
+  --wrong-border:   #7a2020;
+  --wrong-text:     #fca5a5;
+  --fact-bg:        #1a2535;
+  --banner-bg:      #332c00;
+  --banner-border:  #665800;
+  --shadow:         0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-lg:      0 10px 25px rgba(0,0,0,0.5);
 }
 
 body {
@@ -50,18 +116,26 @@ header {
 .header-inner {
   max-width: 900px;
   margin: 0 auto;
-  padding: 12px 16px;
+  padding: 0 14px;
+  height: 52px;
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
+  align-items: center;
+}
+.header-left {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 6px;
 }
 header h1 {
-  font-size: 1.4rem;
+  font-size: 1.35rem;
   font-weight: 800;
   letter-spacing: -0.5px;
   display: flex;
   align-items: center;
   gap: 8px;
+  justify-content: center;
+  white-space: nowrap;
 }
 .beta-badge {
   font-size: 0.6rem;
@@ -78,16 +152,18 @@ header h1 {
 .header-stats {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  justify-content: flex-end;
 }
 .timer {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-  background: #f3f4f6;
+  background: var(--surface-alt);
+  color: var(--text);
   padding: 4px 10px;
   border-radius: 20px;
-  min-width: 70px;
+  min-width: 68px;
   text-align: center;
 }
 .timer.running { color: var(--accent); }
@@ -102,9 +178,10 @@ header h1 {
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--text);
   transition: background 0.15s;
 }
-.btn-icon:hover { background: #f3f4f6; }
+.btn-icon:hover { background: var(--surface-alt); }
 
 /* ---- Main layout ---- */
 main {
@@ -120,12 +197,13 @@ main {
 
 /* ---- Banner ---- */
 .banner {
-  background: #fef9c3;
-  border: 1px solid #fde047;
+  background: var(--banner-bg);
+  border: 1px solid var(--banner-border);
   border-radius: var(--radius);
   padding: 12px 16px;
   text-align: center;
   font-size: 0.95rem;
+  color: var(--text);
 }
 .banner button {
   margin-left: 12px;
@@ -146,6 +224,10 @@ main {
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
   background: #e8f0f8;
+  /* Contain Leaflet's internal z-indexes so they don't bleed over other elements */
+  isolation: isolate;
+  position: relative;
+  z-index: 0;
 }
 
 /* ---- Clues panel ---- */
@@ -170,14 +252,14 @@ main {
   gap: 4px;
 }
 
-/* Revealed clues — prominent */
+/* Revealed facts — prominent */
 .clue-item.revealed {
   display: grid;
   grid-template-columns: 1.4rem 1fr;
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  background: #eff6ff;
+  background: var(--fact-bg);
   border-radius: 8px;
   border-left: 3px solid var(--accent);
   animation: clue-in 0.35s ease;
@@ -202,17 +284,17 @@ main {
   margin-bottom: 1px;
 }
 
-/* Locked clues — minimal, fade into background */
+/* Locked facts — minimal */
 .clue-item.locked {
   display: flex;
   align-items: center;
   gap: 6px;
   padding: 4px 12px;
-  color: #c4c9d4;
+  color: var(--muted-border);
   font-size: 0.78rem;
 }
 .clue-item.locked .clue-icon { opacity: 0.3; font-size: 0.85rem; }
-.clue-item.locked .clue-text { color: #c4c9d4; }
+.clue-item.locked .clue-text { color: var(--muted-border); }
 .clue-item.locked .clue-num { display: none; }
 
 @keyframes clue-in {
@@ -246,16 +328,35 @@ main {
   font-weight: 600;
 }
 .guess-row.correct {
-  background: #dcfce7;
-  border: 1px solid #86efac;
-  color: var(--green);
+  background: var(--correct-bg);
+  border: 1px solid var(--correct-border);
+  color: var(--correct-text);
 }
 .guess-row.wrong {
-  background: #fef2f2;
-  border: 1px solid #fca5a5;
-  color: var(--red);
+  background: var(--wrong-bg);
+  border: 1px solid var(--wrong-border);
+  color: var(--wrong-text);
 }
-.guess-row .guess-icon { font-size: 1rem; }
+.guess-row .guess-icon  { font-size: 1rem; }
+.guess-row .guess-label { flex: 1; }
+.guess-hint {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+  letter-spacing: 0.03em;
+}
+.guess-hint.hot {
+  background: #fff3cd;
+  color: #7a4f00;
+  border: 1px solid #ffc107;
+}
+.guess-hint.cold {
+  background: #e7f3ff;
+  color: #0a4e8a;
+  border: 1px solid #90c8f5;
+}
 #guess-remaining {
   font-size: 0.85rem;
   color: var(--muted);
@@ -278,7 +379,7 @@ main {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   outline: none;
-  background: white;
+  background: var(--surface);
   color: var(--text);
   font-weight: 500;
   cursor: pointer;
@@ -291,14 +392,14 @@ main {
   box-shadow: 0 0 0 2px rgba(37,99,235,0.12);
 }
 #districtSelect:disabled {
-  background: #f3f4f6;
+  background: var(--surface-alt);
   color: var(--muted);
   cursor: not-allowed;
 }
 #stateSelect.confirmed {
   border-color: var(--green);
-  background: #dcfce7;
-  color: var(--green);
+  background: var(--correct-bg);
+  color: var(--correct-text);
   font-weight: 700;
   cursor: default;
 }
@@ -310,9 +411,9 @@ main {
   gap: 6px;
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--green);
-  background: #dcfce7;
-  border: 1px solid #86efac;
+  color: var(--correct-text);
+  background: var(--correct-bg);
+  border: 1px solid var(--correct-border);
   border-radius: var(--radius);
   padding: 6px 12px;
   margin-bottom: 8px;
@@ -361,54 +462,151 @@ main {
 #guessButton:disabled { background: var(--muted); cursor: not-allowed; }
 
 /* ---- Result section ---- */
-#result-section {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
-  box-shadow: var(--shadow);
-  text-align: center;
+/* ---- Result modal ---- */
+.result-modal-content {
+  max-width: 520px;
+  width: 92vw;
+  max-height: 85vh;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 12px;
+  gap: 0;
+  padding: 0;          /* tabs + panes handle their own padding */
 }
+.result-modal-tabs {
+  display: flex;
+  border-bottom: 2px solid var(--border);
+  padding: 16px 20px 0;
+  gap: 4px;
+}
+.result-tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 8px 14px;
+  margin-bottom: -2px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.result-tab-btn.active {
+  color: var(--cmu-red);
+  border-bottom-color: var(--cmu-red);
+}
+.result-tab-pane {
+  display: none;
+  padding: 20px;
+}
+.result-tab-pane.active { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+
 #result-message {
   font-size: 1.4rem;
   font-weight: 800;
 }
-#result-message.won { color: var(--green); }
+#result-message.won  { color: var(--green); }
 #result-message.lost { color: var(--red); }
 #result-stats {
   font-size: 0.95rem;
   color: var(--muted);
   line-height: 1.7;
+  text-align: center;
 }
 #share-btn {
-  background: #111827;
+  background: var(--cmu-red);
   color: white;
   border: none;
   border-radius: var(--radius);
-  padding: 10px 22px;
+  padding: 10px 26px;
   font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
+  letter-spacing: 0.04em;
   transition: background 0.15s;
 }
-#share-btn:hover { background: #374151; }
+#share-btn:hover { background: var(--cmu-red-dark); }
 #share-copied {
   font-size: 0.85rem;
   color: var(--green);
   font-weight: 600;
 }
 
-/* ---- Census / Better Know a District ---- */
-#census-section {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
-  box-shadow: var(--shadow);
+/* ---- Wordle-style inline stats (result modal) ---- */
+.result-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  width: 100%;
+  margin: 4px 0;
+}
+.rstat-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.rstat-big {
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--text);
+}
+.rstat-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.2;
+}
+.result-dist {
+  width: 100%;
+}
+.result-dist h4 {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text);
+  text-align: center;
+  margin-bottom: 10px;
+}
+.rdist-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.rdist-n {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text);
+  width: 14px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.rdist-bar-wrap { flex: 1; }
+.rdist-bar {
+  background: var(--surface-alt);
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-align: right;
+  padding: 3px 8px;
+  border-radius: 2px;
+  min-width: 24px;
+  transition: width 0.4s ease;
+}
+.rdist-bar.today {
+  background: var(--cmu-red);
+  color: white;
+}
+
+/* ---- Census tab inside result modal ---- */
+#census-section.result-tab-pane.active {
+  align-items: stretch;
 }
 #census-section h2 {
   font-size: 1.1rem;
@@ -430,7 +628,7 @@ main {
   gap: 12px;
 }
 .census-card {
-  background: #f8f9fb;
+  background: var(--surface-alt);
   border-radius: var(--radius);
   padding: 12px 14px;
 }
@@ -499,7 +697,7 @@ main {
 .modal-content p, .modal-content li {
   font-size: 0.9rem;
   line-height: 1.6;
-  color: #374151;
+  color: var(--text-secondary);
 }
 .modal-content ul, .modal-content ol {
   padding-left: 18px;
@@ -558,11 +756,11 @@ main {
   align-items: center;
   gap: 10px;
   padding: 8px 12px;
-  background: #f8f9fb;
+  background: var(--surface-alt);
   border-radius: 6px;
   font-size: 0.88rem;
 }
-.score-row.me { background: #eff6ff; border: 1px solid #bfdbfe; }
+.score-row.me { background: var(--fact-bg); border: 1px solid var(--accent); }
 .score-row .rank { font-weight: 800; color: var(--muted); text-align: center; }
 .score-row .rank.gold { color: #d97706; }
 .score-row .rank.silver { color: #9ca3af; }
@@ -587,7 +785,7 @@ main {
   margin-bottom: 14px;
 }
 .stat-card {
-  background: #f8f9fb;
+  background: var(--surface-alt);
   border-radius: var(--radius);
   padding: 12px;
   text-align: center;
@@ -720,12 +918,12 @@ main {
   border-color: var(--accent);
 }
 .state-chip.eliminated {
-  background: #f3f4f6;
-  color: #c4c9d4;
-  border-color: #e5e7eb;
+  background: var(--surface-alt);
+  color: var(--muted-border);
+  border-color: var(--border);
   cursor: default;
   text-decoration: line-through;
-  text-decoration-color: #d1d5db;
+  text-decoration-color: var(--muted);
 }
 .state-chip:disabled {
   cursor: default;
@@ -741,7 +939,7 @@ main {
   height: 220px;
   border-radius: var(--radius);
   border: 1px solid var(--border);
-  background: #f5f5f3;   /* match page bg — no blue ocean */
+  background: var(--bg);   /* matches page background — no blue ocean tint */
   margin-top: 8px;
   overflow: hidden;
 }

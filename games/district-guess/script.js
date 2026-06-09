@@ -90,6 +90,65 @@ const STATE_REGIONS = {
   UT:'West',NV:'West',WA:'West',OR:'West',CA:'West',AK:'West',HI:'West'
 };
 
+// Adjacency: which states share a land border.
+// AK and HI have no contiguous neighbors (empty array).
+// Used for the hot/cold elimination mechanic:
+//   correct IS adjacent → eliminate guessed + everything NOT in its neighbors
+//   correct NOT adjacent → eliminate guessed + all of its neighbors
+const STATE_ADJACENCY = {
+  AL: ['FL','GA','MS','TN'],
+  AK: [],
+  AZ: ['CA','CO','NM','NV','UT'],
+  AR: ['LA','MO','MS','OK','TN','TX'],
+  CA: ['AZ','NV','OR'],
+  CO: ['AZ','KS','NE','NM','OK','UT','WY'],
+  CT: ['MA','NY','RI'],
+  DC: ['MD','VA'],
+  DE: ['MD','NJ','PA'],
+  FL: ['AL','GA'],
+  GA: ['AL','FL','NC','SC','TN'],
+  HI: [],
+  ID: ['MT','NV','OR','UT','WA','WY'],
+  IL: ['IN','IA','KY','MO','WI'],
+  IN: ['IL','KY','MI','OH'],
+  IA: ['IL','MN','MO','NE','SD','WI'],
+  KS: ['CO','MO','NE','OK'],
+  KY: ['IL','IN','MO','OH','TN','VA','WV'],
+  LA: ['AR','MS','TX'],
+  ME: ['NH'],
+  MD: ['DC','DE','PA','VA','WV'],
+  MA: ['CT','NH','NY','RI','VT'],
+  MI: ['IN','OH','WI'],
+  MN: ['IA','ND','SD','WI'],
+  MS: ['AL','AR','LA','TN'],
+  MO: ['AR','IL','IA','KS','KY','NE','OK','TN'],
+  MT: ['ID','ND','SD','WY'],
+  NE: ['CO','IA','KS','MO','SD','WY'],
+  NV: ['AZ','CA','ID','OR','UT'],
+  NH: ['MA','ME','VT'],
+  NJ: ['DE','NY','PA'],
+  NM: ['AZ','CO','OK','TX','UT'],
+  NY: ['CT','MA','NJ','PA','VT'],
+  NC: ['GA','SC','TN','VA'],
+  ND: ['MN','MT','SD'],
+  OH: ['IN','KY','MI','PA','WV'],
+  OK: ['AR','CO','KS','MO','NM','TX'],
+  OR: ['CA','ID','NV','WA'],
+  PA: ['DE','MD','NJ','NY','OH','WV'],
+  RI: ['CT','MA'],
+  SC: ['GA','NC'],
+  SD: ['IA','MN','MT','ND','NE','WY'],
+  TN: ['AL','AR','GA','KY','MO','MS','NC','VA'],
+  TX: ['AR','LA','NM','OK'],
+  UT: ['AZ','CO','ID','NM','NV','WY'],
+  VT: ['MA','NH','NY'],
+  VA: ['DC','KY','MD','NC','TN','WV'],
+  WA: ['ID','OR'],
+  WV: ['KY','MD','OH','PA','VA'],
+  WI: ['IL','IA','MI','MN'],
+  WY: ['CO','ID','MT','NE','SD','UT'],
+};
+
 // ============================================================
 //  GAME CONSTANTS
 // ============================================================
@@ -99,18 +158,36 @@ const STORAGE_PREFIX = 'districtguess_';
 // Built at load time from GeoJSON: { 'TX': ['01','02',...], 'WY': ['AT-LARGE'], ... }
 let stateDistrictMap = {};
 
-// Text clues — one revealed per wrong guess (0-indexed).
-// Clue 0 unlocks after the 1st wrong guess, etc.
-const CLUE_DEFS = [
+// District facts — Fact 0 is always visible; one more unlocks per wrong guess.
+// fn receives districtDataFor(todayDistrict) = {state, district}
+const FACT_DEFS = [
   {
-    icon: '🗺️',
-    label: 'Region',
-    fn: d => STATE_REGIONS[d.state] || 'Unknown'
+    icon: '📐',
+    label: 'District size',
+    fn: () => {
+      if (!todayDistrict) return '—';
+      // d3.geoArea returns steradians; Earth radius ≈ 6371 km
+      const areaKm2  = d3.geoArea(todayDistrict) * 6371 * 6371;
+      const areaMi2  = Math.round(areaKm2 * 0.386102);
+      if (areaMi2 <   300) return `Very compact — under 300 sq mi`;
+      if (areaMi2 <  2000) return `Small — ~${areaMi2.toLocaleString()} sq mi`;
+      if (areaMi2 < 15000) return `Mid-size — ~${areaMi2.toLocaleString()} sq mi`;
+      return `Large — ~${areaMi2.toLocaleString()} sq mi`;
+    }
   },
   {
-    icon: '🕐',
-    label: 'Time zone',
-    fn: d => (STATE_TIMEZONES[d.state] || 'Unknown') + ' Time'
+    icon: '🏛️',
+    label: 'State delegation size',
+    fn: d => {
+      const count = stateDistrictMap[d.state]?.length || 1;
+      if (count === 1) return 'At-large — only congressional district in its state';
+      return `One of ${count} congressional districts in its state`;
+    }
+  },
+  {
+    icon: '💵',
+    label: 'Median household income',
+    fn: async d => fetchCensus(d, 'income')
   },
   {
     icon: '👥',
@@ -118,14 +195,9 @@ const CLUE_DEFS = [
     fn: async d => fetchCensus(d, 'plurality')
   },
   {
-    icon: '💵',
-    label: 'Median Household Income',
-    fn: async d => fetchCensus(d, 'income')
-  },
-  {
-    icon: '🌐',
-    label: 'Map',
-    fn: () => 'Full labeled map revealed — one guess remaining!'
+    icon: '📍',
+    label: 'State',
+    fn: d => STATE_NAMES[d.state] || d.state
   },
 ];
 
@@ -145,9 +217,10 @@ let districts           = [];
 let todayDistrict       = null;   // feature object
 let todayKey            = '';     // 'YYYY-MM-DD'
 let map, terrainLayer, streetLayer, districtLayer;
-let usRefMap            = null;   // US states reference map
-let usRefLayers         = {};     // abbr → Leaflet GeoJSON layer
-let wrongStateGuesses   = new Set(); // states guessed wrong (immediately greyed out)
+let usRefMap            = null;   // US states reference map SVG element
+let usRefMapGroup       = null;   // main <g> inside the SVG (holds all paths)
+let usRefLayers         = {};     // abbr → D3 path selection
+let eliminatedStates    = new Set(); // all states removed from valid set (wrong guess + adjacency)
 let guessCount          = 0;
 let guessHistory        = [];     // [{text, correct}]
 let cluesRevealed       = 0;      // how many text clues are showing
@@ -505,11 +578,56 @@ async function fetchCensus(districtData, field) {
   return 'N/A';
 }
 
+// Wordle-style personal stats grid (played, win%, streaks, distribution)
+function renderInlinePersonalStats() {
+  const el = document.getElementById('result-personal-stats');
+  if (!el) return;
+  const stats = loadPersonalStats();
+  if (!stats || stats.played === 0) { el.innerHTML = ''; return; }
+
+  const winRate = Math.round(stats.won / stats.played * 100);
+  const dist    = stats.guessDist || {};
+  const maxBar  = Math.max(...Object.values(dist).map(Number), 1);
+  const wonToday = guessHistory.some(g => g.correct);
+
+  const bars = [1, 2, 3, 4, 5, 'X'].map(k => {
+    const count = dist[k] || 0;
+    const pct   = count > 0 ? Math.max(Math.round(count / maxBar * 100), 7) : 0;
+    const hi    = wonToday && k === guessCount;
+    return `<div class="rdist-row">
+      <span class="rdist-n">${k}</span>
+      <div class="rdist-bar-wrap">
+        <div class="rdist-bar${hi ? ' today' : ''}" style="width:${pct}%">${count || ''}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="result-stats-grid">
+      <div class="rstat-cell"><span class="rstat-big">${stats.played}</span><span class="rstat-label">Played</span></div>
+      <div class="rstat-cell"><span class="rstat-big">${winRate}</span><span class="rstat-label">Win %</span></div>
+      <div class="rstat-cell"><span class="rstat-big">${stats.streak}</span><span class="rstat-label">Current Streak</span></div>
+      <div class="rstat-cell"><span class="rstat-big">${stats.maxStreak}</span><span class="rstat-label">Max Streak</span></div>
+    </div>
+    <div class="result-dist">
+      <h4>Guess Distribution</h4>
+      ${bars}
+    </div>`;
+}
+
+// Helper: switch the result modal between "result" and "census" tabs
+function switchResultTab(tab) {
+  document.querySelectorAll('.result-tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.result-tab-btn').forEach(b => b.classList.remove('active'));
+  const pane = document.getElementById(tab === 'result' ? 'result-section' : 'census-section');
+  const btn  = document.querySelector(`.result-tab-btn[data-rtab="${tab}"]`);
+  if (pane) pane.classList.add('active');
+  if (btn)  btn.classList.add('active');
+}
+
 async function fetchAndRenderCensusPanel(districtData) {
-  const censusSection = document.getElementById('census-section');
   const censusLoading = document.getElementById('census-loading');
   const censusDataEl  = document.getElementById('census-data');
-  censusSection.classList.remove('hidden');
 
   const d = await getDistrictCensusData(districtData);
   if (!d) {
@@ -635,17 +753,19 @@ async function loadAlltimeScores() {
 }
 
 // ============================================================
-//  CLUES UI
+//  FACTS UI  (one per wrong guess; fact 0 always visible)
 // ============================================================
 function renderClues() {
-  renderStateChips(); // update chip states whenever clues change
+  renderStateChips(); // update chip states whenever facts change
+  updateUSRefMap();   // keep D3 map in sync
   const list = document.getElementById('clues-list');
   list.innerHTML = '';
 
-  for (let i = 0; i < CLUE_DEFS.length; i++) {
-    const def = CLUE_DEFS[i];
+  for (let i = 0; i < FACT_DEFS.length; i++) {
+    const def = FACT_DEFS[i];
     const div = document.createElement('div');
-    if (i < cluesRevealed) {
+    // Fact 0 always visible (i <= cluesRevealed means i=0 shows when cluesRevealed=0)
+    if (i <= cluesRevealed) {
       div.className = 'clue-item revealed';
       div.innerHTML = `
         <span class="clue-icon">${def.icon}</span>
@@ -653,7 +773,6 @@ function renderClues() {
           <span class="clue-label">${def.label}</span>
           <span class="clue-val">…</span>
         </span>`;
-      // Resolve async clue values
       const val = def.fn(districtDataFor(todayDistrict));
       if (val instanceof Promise) {
         val.then(v => {
@@ -664,7 +783,6 @@ function renderClues() {
         div.querySelector('.clue-val').textContent = val;
       }
     } else {
-      const unlocksAfter = i - cluesRevealed + 1;
       div.className = 'clue-item locked';
       div.innerHTML = `<span class="clue-icon">🔒</span><span class="clue-text">${def.label}</span>`;
     }
@@ -704,12 +822,34 @@ function stopTimer() {
 // ============================================================
 function renderGuessHistory() {
   const el = document.getElementById('guess-history');
-  el.innerHTML = guessHistory.map(g => `
-    <div class="guess-row ${g.correct ? 'correct' : 'wrong'}">
-      <span class="guess-icon">${g.correct ? '✅' : '❌'}</span>
-      <span>${g.text}</span>
-    </div>
-  `).join('');
+  el.innerHTML = guessHistory.map(g => {
+    const icon  = g.correct ? '✅' : '❌';
+    const cls   = g.correct ? 'correct' : 'wrong';
+
+    if (g.phase === 'state') {
+      const label = STATE_NAMES[g.text] || g.text;
+      if (!g.correct) {
+        // Show hot/cold adjacency hint
+        const hint = g.adjacent
+          ? '<span class="guess-hint hot">🔥 Adjacent</span>'
+          : '<span class="guess-hint cold">❄️ Not adjacent</span>';
+        return `<div class="guess-row ${cls}">
+          <span class="guess-icon">${icon}</span>
+          <span class="guess-label">${label}</span>${hint}
+        </div>`;
+      }
+      return `<div class="guess-row ${cls}">
+        <span class="guess-icon">${icon}</span>
+        <span class="guess-label">${label}</span>
+      </div>`;
+    }
+
+    // District phase
+    return `<div class="guess-row ${cls}">
+      <span class="guess-icon">${icon}</span>
+      <span class="guess-label">${g.text}</span>
+    </div>`;
+  }).join('');
 
   const remaining = MAX_GUESSES - guessCount;
   const remEl = document.getElementById('guess-remaining');
@@ -758,24 +898,44 @@ function submitStateGuess(abbr) {
 function processStateGuess(abbr, correct) {
   if (!timerRunning) startTimer();
 
+  const correctState = todayDistrict.properties.STATE;
+  const neighbors    = STATE_ADJACENCY[abbr] || [];
+  const isAdjacent   = neighbors.includes(correctState);
+
   guessCount++;
-  guessHistory.push({ text: abbr, correct, phase: 'state' });
+  guessHistory.push({ text: abbr, correct, phase: 'state', adjacent: isAdjacent });
 
   if (correct) {
     correctStateGuessed = true;
     lockStateDropdown(abbr);
   } else {
-    wrongStateGuesses.add(abbr);  // immediately grey it out
+    // Always eliminate the guessed state
+    eliminatedStates.add(abbr);
+
+    if (isAdjacent) {
+      // 🔥 Correct state IS a neighbor of the guessed state.
+      // Keep ONLY the guessed state's neighbors; eliminate everything else.
+      const neighborsSet = new Set(neighbors);
+      for (const s of Object.keys(stateDistrictMap)) {
+        if (!neighborsSet.has(s)) eliminatedStates.add(s);
+      }
+    } else {
+      // ❄️ Correct state is NOT adjacent to the guessed state.
+      // Also eliminate all of the guessed state's neighbors (they can't be it either).
+      for (const n of neighbors) eliminatedStates.add(n);
+    }
+
     const wrongCount = guessHistory.filter(g => !g.correct).length;
-    cluesRevealed = Math.min(wrongCount, CLUE_DEFS.length);
+    cluesRevealed = Math.min(wrongCount, FACT_DEFS.length);
     applyMapStage(wrongCount);
     if (guessCount >= MAX_GUESSES) { endGame(false); return; }
     resetDropdowns();
   }
 
   renderGuessHistory();
-  renderClues();
+  renderClues();        // also calls updateUSRefMap() + renderStateChips()
   updateGuessButton();
+  zoomUSRefMapToValid(); // zoom D3 map to remaining valid states
   saveGameState();
 }
 
@@ -820,7 +980,7 @@ function submitGuess() {
     setTimeout(() => row.classList.remove('flash-wrong'), 700);
 
     const wrongCount = guessHistory.filter(g => !g.correct).length;
-    cluesRevealed = Math.min(wrongCount, CLUE_DEFS.length);
+    cluesRevealed = Math.min(wrongCount, FACT_DEFS.length);
     applyMapStage(wrongCount);
     if (guessCount >= MAX_GUESSES) { endGame(false); return; }
     document.getElementById('districtSelect').value = '';
@@ -835,20 +995,12 @@ function submitGuess() {
 //  REFERENCE PANEL
 // ============================================================
 
-// Returns the set of state abbreviations still consistent with revealed clues.
+// Returns the set of state abbreviations still in play.
+// Valid = not yet eliminated by the adjacency-based hot/cold mechanic.
 function getValidStates() {
   const all = Object.keys(stateDistrictMap);
   if (!todayDistrict) return new Set(all);
-  const correctState  = todayDistrict.properties.STATE;
-  const correctRegion = STATE_REGIONS[correctState];
-  const correctTZ     = STATE_TIMEZONES[correctState];
-
-  return new Set(all.filter(abbr => {
-    if (wrongStateGuesses.has(abbr))                                     return false;
-    if (cluesRevealed >= 1 && STATE_REGIONS[abbr]    !== correctRegion) return false;
-    if (cluesRevealed >= 2 && STATE_TIMEZONES[abbr]  !== correctTZ)     return false;
-    return true;
-  }));
+  return new Set(all.filter(abbr => !eliminatedStates.has(abbr)));
 }
 
 // Inverted lookup: full name → abbreviation (built from STATE_NAMES)
@@ -867,29 +1019,56 @@ const FIPS_TO_ABBR = {
   '55':'WI','56':'WY'
 };
 
+// ============================================================
+//  DARK MODE
+// ============================================================
+function isDarkMode() {
+  return document.body.classList.contains('dark-mode') ||
+    (!document.body.classList.contains('light-mode') &&
+     window.matchMedia('(prefers-color-scheme: dark)').matches);
+}
+
+function applyDarkModeClass() {
+  const saved = localStorage.getItem('districtguess_theme');
+  if (saved === 'dark')  document.body.classList.add('dark-mode');
+  if (saved === 'light') document.body.classList.add('light-mode');
+}
+
+function toggleDarkMode() {
+  const dark = isDarkMode();
+  document.body.classList.toggle('dark-mode',  !dark);
+  document.body.classList.toggle('light-mode',  dark);
+  localStorage.setItem('districtguess_theme', dark ? 'light' : 'dark');
+  updateThemeToggle();
+  updateUSRefMap(); // repaint D3 map with new color scheme
+}
+
+function updateThemeToggle() {
+  const btn = document.getElementById('theme-toggle');
+  if (btn) btn.textContent = isDarkMode() ? '☀️' : '🌙';
+}
+
 // ---- US reference map (clickable states) ----
 
 // ---- D3 AlbersUSA reference map ----
 
-// CMU color scheme
-const CMU = {
-  skyFill:   '#cce4f0',  // light Highlands Sky Blue fill for valid states
-  skyStroke: '#007BC0',  // Highlands Sky Blue stroke
-  redFill:   '#fde8ec',  // light Carnegie Red fill for confirmed state
-  redStroke: '#C41230',  // Carnegie Red stroke
-  grayFill:  '#E0E0E0',  // Steel Gray for eliminated states
-  grayStroke:'#c4c9d4',
-};
-
+// Returns theme-aware D3 map colors
 function _stateColors(abbr) {
+  const dark = isDarkMode();
+  const skyFill    = dark ? '#1a3a5c' : '#cce4f0';
+  const redFill    = dark ? '#3d0a18' : '#fde8ec';
+  const grayFill   = dark ? '#2a2a2c' : '#E0E0E0';
+  const grayStroke = dark ? '#3a3a3c' : '#c4c9d4';
+  const grayOp     = dark ? 0.55 : 0.35;
+
   if (correctStateGuessed) {
     const confirmed = todayDistrict ? todayDistrict.properties.STATE : null;
-    if (abbr === confirmed) return { fill: CMU.redFill, stroke: CMU.redStroke, sw: 2, opacity: 0.9 };
-    return { fill: CMU.grayFill, stroke: CMU.grayStroke, sw: 0.5, opacity: 0.35 };
+    if (abbr === confirmed) return { fill: redFill, stroke: '#C41230', sw: 2, opacity: 0.9 };
+    return { fill: grayFill, stroke: grayStroke, sw: 0.5, opacity: grayOp };
   }
   const valid = getValidStates();
-  if (valid.has(abbr)) return { fill: CMU.skyFill, stroke: CMU.skyStroke, sw: 1.2, opacity: 0.85 };
-  return { fill: CMU.grayFill, stroke: CMU.grayStroke, sw: 0.4, opacity: 0.3 };
+  if (valid.has(abbr)) return { fill: skyFill, stroke: '#007BC0', sw: 1.2, opacity: 0.85 };
+  return { fill: grayFill, stroke: grayStroke, sw: 0.4, opacity: grayOp };
 }
 
 function _applyStateStyle(sel, abbr) {
@@ -919,26 +1098,25 @@ function initUSRefMap() {
   const projection = d3.geoAlbersUsa();
   const pathGen    = d3.geoPath().projection(projection);
 
-  // us-atlas states (properly pre-processed — no Aleutian Islands artifacts)
   fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json')
     .then(r => r.json())
     .then(us => {
       const geojson = topojson.feature(us, us.objects.states);
-
-      // Fit projection to container size
       projection.fitSize([W, H], geojson);
 
-      // Draw filled state polygons (clickable)
+      // Single group for ALL content — mesh paths included — so zoom transforms everything
       const g = svgSel.append('g');
+      usRefMapGroup = g.node();
+
       geojson.features.forEach(feature => {
         const fips = String(feature.id).padStart(2, '0');
         const abbr = FIPS_TO_ABBR[fips];
-        if (!abbr || !stateDistrictMap[abbr]) return; // skip DC + territories
+        if (!abbr || !stateDistrictMap[abbr]) return;
 
         const pathEl = g.append('path')
           .datum(feature)
           .attr('d', pathGen)
-          .attr('stroke', 'none') // borders drawn separately as mesh
+          .attr('stroke', 'none')
           .attr('data-abbr', abbr);
 
         usRefLayers[abbr] = pathEl;
@@ -952,30 +1130,84 @@ function initUSRefMap() {
           })
           .on('mouseover', () => {
             if (correctStateGuessed || !getValidStates().has(abbr)) return;
-            pathEl.attr('fill-opacity', 1);
+            pathEl.attr('fill', '#007BC0').attr('fill-opacity', 0.65);
           })
           .on('mouseout', () => _applyStateStyle(pathEl, abbr));
       });
 
-      // Draw state borders as a single white mesh path (no double-borders)
-      svgSel.append('path')
+      // White internal borders — inside the group so they zoom with it
+      // vector-effect keeps stroke visually 1px regardless of scale
+      g.append('path')
         .datum(topojson.mesh(us, us.objects.states, (a, b) => a !== b))
         .attr('d', pathGen)
         .attr('fill', 'none')
         .attr('stroke', '#ffffff')
         .attr('stroke-width', 1)
+        .attr('vector-effect', 'non-scaling-stroke')
         .attr('pointer-events', 'none');
 
       // Outer US boundary
-      svgSel.append('path')
+      g.append('path')
         .datum(topojson.mesh(us, us.objects.states, (a, b) => a === b))
         .attr('d', pathGen)
         .attr('fill', 'none')
         .attr('stroke', '#adb5bd')
         .attr('stroke-width', 0.75)
+        .attr('vector-effect', 'non-scaling-stroke')
         .attr('pointer-events', 'none');
+
+      // If a game is already in progress, zoom to current valid set
+      if (eliminatedStates.size > 0 || correctStateGuessed) {
+        zoomUSRefMapToValid(false);
+      }
     })
     .catch(() => {});
+}
+
+// Zoom the D3 reference map to the bounding box of still-valid states.
+// Pass animated=false for instant placement (e.g., on restore).
+function zoomUSRefMapToValid(animated = true) {
+  if (!usRefMapGroup || !usRefMap) return;
+
+  // Determine target state set
+  const targetSet = correctStateGuessed && todayDistrict
+    ? new Set([todayDistrict.properties.STATE])
+    : getValidStates();
+
+  if (targetSet.size === 0) return;
+
+  const W = usRefMap.clientWidth  || 960;
+  const H = usRefMap.clientHeight || 400;
+
+  // Compute bounding box in the group's LOCAL coordinate space
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const [abbr, pathEl] of Object.entries(usRefLayers)) {
+    if (!targetSet.has(abbr)) continue;
+    const bb = pathEl.node().getBBox();
+    if (bb.width === 0 && bb.height === 0) continue;
+    x0 = Math.min(x0, bb.x);
+    y0 = Math.min(y0, bb.y);
+    x1 = Math.max(x1, bb.x + bb.width);
+    y1 = Math.max(y1, bb.y + bb.height);
+  }
+  if (x0 === Infinity) return;
+
+  const dx = x1 - x0;
+  const dy = y1 - y0;
+  if (dx === 0 || dy === 0) return;
+
+  const padding = 24;
+  const scale   = Math.min((W - 2 * padding) / dx, (H - 2 * padding) / dy);
+  const tx      = W / 2 - scale * (x0 + dx / 2);
+  const ty      = H / 2 - scale * (y0 + dy / 2);
+  const transform = `translate(${tx},${ty}) scale(${scale})`;
+
+  const gSel = d3.select(usRefMapGroup);
+  if (animated) {
+    gSel.transition().duration(700).ease(d3.easeCubicInOut).attr('transform', transform);
+  } else {
+    gSel.attr('transform', transform);
+  }
 }
 
 function updateUSRefMap() {
@@ -1035,13 +1267,14 @@ function lockStateDropdown(stateAbbr) {
   // Update chips and US ref map to reflect confirmed state
   renderStateChips();
   updateUSRefMap();
+  zoomUSRefMapToValid(); // zoom in on confirmed state
   updateGuessButton();
 }
 
 function endGame(won) {
   gameOver = true;
   stopTimer();
-  cluesRevealed = CLUE_DEFS.length;   // reveal all text clues
+  cluesRevealed = FACT_DEFS.length;   // reveal all text clues
   applyMapStage(0, true);             // full OSM with labels
   // Ensure state is locked to the answer
   if (!correctStateGuessed) {
@@ -1064,10 +1297,14 @@ function endGame(won) {
 //  RESULT & SHARE
 // ============================================================
 function showResult(won) {
-  const section = document.getElementById('result-section');
-  const msg     = document.getElementById('result-message');
-  const stats   = document.getElementById('result-stats');
-  section.classList.remove('hidden');
+  // Show the result modal; switch to result tab
+  const modal = document.getElementById('result-modal');
+  modal.classList.remove('hidden');
+  switchResultTab('result');
+  renderInlinePersonalStats();
+
+  const msg   = document.getElementById('result-message');
+  const stats = document.getElementById('result-stats');
 
   const answer = todayDistrict.properties.CONG119;
 
@@ -1195,8 +1432,22 @@ function restoreGame(saved) {
 
   document.getElementById('timer-display').textContent = '⏱ ' + formatTime(elapsedSeconds);
 
-  // Reconstruct wrong state guesses
-  guessHistory.filter(g => g.phase === 'state' && !g.correct).forEach(g => wrongStateGuesses.add(g.text));
+  // Reconstruct adjacency-based eliminations from saved guess history
+  eliminatedStates = new Set();
+  guessHistory.filter(g => g.phase === 'state' && !g.correct).forEach(g => {
+    eliminatedStates.add(g.text);
+    const neighbors = STATE_ADJACENCY[g.text] || [];
+    if (g.adjacent === true) {
+      // Was "hot" — everything outside this state's neighbors was eliminated
+      const neighborsSet = new Set(neighbors);
+      for (const s of Object.keys(stateDistrictMap)) {
+        if (!neighborsSet.has(s)) eliminatedStates.add(s);
+      }
+    } else {
+      // Was "cold" (or old save without adjacency data) — neighbors eliminated too
+      for (const n of neighbors) eliminatedStates.add(n);
+    }
+  });
 
   // Reconstruct state-lock from guess history
   const correctState = todayDistrict.properties.STATE;
@@ -1304,6 +1555,8 @@ async function init() {
 //  EVENT LISTENERS
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
+  applyDarkModeClass(); // must run before init() so D3 map gets correct colors
+  updateThemeToggle();
   init();
 
   // Hide district dropdown until state is confirmed (phase 2)
@@ -1337,13 +1590,25 @@ document.addEventListener('DOMContentLoaded', () => {
   // Leaderboard
   document.getElementById('leaderboard-btn').addEventListener('click', openLeaderboard);
   document.getElementById('show-results-btn').addEventListener('click', () => {
-    openLeaderboard();
+    document.getElementById('result-modal').classList.remove('hidden');
+    switchResultTab('result');
   });
 
-  // How to play
+  // Result modal tabs
+  document.querySelectorAll('.result-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchResultTab(btn.dataset.rtab));
+  });
+
+  // How to play (button now in header-left)
   document.getElementById('how-to-btn').addEventListener('click', () => {
     document.getElementById('how-to-modal').classList.remove('hidden');
   });
+
+  // Dark mode toggle
+  document.getElementById('theme-toggle').addEventListener('click', toggleDarkMode);
+
+  // Also update toggle icon when system preference changes (no user action needed)
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateThemeToggle);
 
   // Modal close buttons
   document.querySelectorAll('.modal-close').forEach(btn => {

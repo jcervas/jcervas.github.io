@@ -5,18 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>District Guess Beta — Daily Congressional District Game</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=10" />
+  <link rel="stylesheet" href="style.css?v=13" />
 </head>
 <body>
 
 <!-- ===== HEADER ===== -->
 <header>
   <div class="header-inner">
+    <div class="header-left">
+      <button id="how-to-btn" class="btn-icon" title="How to play">?</button>
+    </div>
     <h1>District Guess <span class="beta-badge">Beta</span></h1>
     <div class="header-stats">
       <div id="timer-display" class="timer">⏱ 0:00</div>
-      <button id="leaderboard-btn" class="btn-icon" title="Leaderboard">🏆</button>
-      <button id="how-to-btn" class="btn-icon" title="How to play">?</button>
+      <button id="leaderboard-btn" class="btn-icon" title="Leaderboard">📊</button>
+      <button id="theme-toggle" class="btn-icon" title="Toggle dark mode">🌙</button>
     </div>
   </div>
 </header>
@@ -30,20 +33,18 @@
     <ul>
       <li>You have <strong>5 guesses</strong> per day.</li>
       <li>A new district appears every day — same for all players.</li>
-      <li>Pick a state, then a district number from the dropdowns.</li>
-      <li>After each wrong guess, a new clue is revealed.</li>
+      <li>Click a state on the reference map to guess it first.</li>
+      <li>Once you nail the state, pick the district number.</li>
       <li>Your timer starts when you submit your first guess.</li>
       <li>Come back tomorrow for a new district!</li>
     </ul>
-    <h3>Clues revealed in order</h3>
-    <ol>
-      <li>Geographic region + terrain map (elevation only, no labels)</li>
-      <li>Primary time zone</li>
-      <li>Largest racial / ethnic group</li>
-      <li>Median household income</li>
-      <li>Full labeled map — cities revealed before your final guess</li>
-    </ol>
-    <p style="margin-top:10px"><strong>Bonus:</strong> Once you guess the correct state, it locks and you only need to pick the district number.</p>
+    <h3>Hot / Cold elimination</h3>
+    <p>Each wrong state guess tells you something geographic:</p>
+    <ul>
+      <li><strong>🔥 Adjacent</strong> — the correct state borders the one you guessed. Only neighboring states stay in play.</li>
+      <li><strong>❄️ Not adjacent</strong> — the correct state is far away. The guessed state <em>and</em> all its neighbors are eliminated.</li>
+    </ul>
+    <p style="margin-top:10px">Eliminated states grey out on the map and chip list automatically.</p>
   </div>
 </div>
 
@@ -87,7 +88,7 @@
   <!-- Already played today -->
   <div id="already-played-banner" class="banner hidden">
     You've already played today! Come back tomorrow for a new district.
-    <button id="show-results-btn">View Result &amp; Leaderboard</button>
+    <button id="show-results-btn">View Result</button>
   </div>
 
   <!-- Game -->
@@ -132,7 +133,7 @@
     </div>
 
     <div id="clues-panel">
-      <h3>Clues</h3>
+      <h3>Facts</h3>
       <div id="clues-list"></div>
     </div>
 
@@ -142,19 +143,30 @@
     </div>
   </div>
 
-  <!-- Result (shown after game ends) -->
-  <div id="result-section" class="hidden">
-    <div id="result-message"></div>
-    <div id="result-stats"></div>
-    <button id="share-btn">📋 Share Result</button>
-    <div id="share-copied" class="hidden">Copied to clipboard!</div>
-  </div>
+  <!-- Result modal (opens on game end or "View Result" click) -->
+  <div id="result-modal" class="modal hidden">
+    <div class="modal-content result-modal-content">
+      <button class="modal-close">✕</button>
 
-  <!-- Better Know a District -->
-  <div id="census-section" class="hidden">
-    <h2>📊 Better Know a District</h2>
-    <div id="census-loading">Fetching district data from the U.S. Census…</div>
-    <div id="census-data" class="hidden"></div>
+      <div class="result-modal-tabs">
+        <button class="result-tab-btn active" data-rtab="result">🎯 Result</button>
+        <button class="result-tab-btn" data-rtab="census">📊 District Profile</button>
+      </div>
+
+      <div id="result-section" class="result-tab-pane active">
+        <div id="result-message"></div>
+        <div id="result-stats"></div>
+        <div id="result-personal-stats"></div>
+        <button id="share-btn">📋 Share Result</button>
+        <div id="share-copied" class="hidden">Copied to clipboard!</div>
+      </div>
+
+      <div id="census-section" class="result-tab-pane">
+        <h2>📊 Better Know a District</h2>
+        <div id="census-loading">Fetching district data from the U.S. Census…</div>
+        <div id="census-data" class="hidden"></div>
+      </div>
+    </div>
   </div>
 
 </main>
@@ -167,6 +179,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-<script src="script.js?v=10"></script>
+<script src="script.js?v=13"></script>
 </body>
 </html>
