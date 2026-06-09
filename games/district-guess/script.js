@@ -440,6 +440,22 @@ function setUsername(name) {
 // ============================================================
 //  MAP
 // ============================================================
+
+// Tile helpers — dark mode uses CartoDB Dark Matter; light uses OSM
+function streetTileUrl() {
+  return isDarkMode()
+    ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+    : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+}
+function streetTileAttrib() {
+  return isDarkMode()
+    ? '© <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>'
+    : '© OpenStreetMap contributors';
+}
+
+// Track current street-layer opacity so we can restore it after a tile swap
+let _streetOpacity = 0.01;
+
 function initMap() {
   map = L.map('map', {
     zoomControl:      false,   // no zoom buttons — district map is for context only
@@ -460,11 +476,11 @@ function initMap() {
     }
   ).addTo(map);
 
-  // Layer 2: streets (OSM) — roads, labels, cities — renders on top
-  streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  // Layer 2: streets — dark CartoDB tiles in dark mode, OSM otherwise
+  streetLayer = L.tileLayer(streetTileUrl(), {
     maxZoom: 19,
     opacity: 0.01,
-    attribution: '© OpenStreetMap'
+    attribution: streetTileAttrib()
   }).addTo(map);
 
   L.control.attribution({ position: 'bottomright', prefix: false }).addTo(map);
@@ -481,7 +497,8 @@ function applyMapStage(wrongGuesses, gameEnded = false) {
   }
   const stage = MAP_STAGES[idx];
   terrainLayer.setOpacity(stage.terrainOpacity);
-  streetLayer.setOpacity(stage.streetOpacity);
+  _streetOpacity = stage.streetOpacity;
+  streetLayer.setOpacity(_streetOpacity);
 }
 
 function renderDistrict(feature) {
@@ -489,8 +506,14 @@ function renderDistrict(feature) {
   districtLayer = L.geoJSON(feature, {
     style: { color: '#C41230', weight: 2.5, fillColor: '#C41230', fillOpacity: 0.12 }
   }).addTo(map);
-  map.invalidateSize();   // ensure container dimensions are current before fitting
-  map.fitBounds(districtLayer.getBounds(), { padding: [30, 30], animate: false });
+  // Double rAF: wait for CSS layout to fully settle (grid/flex) before Leaflet
+  // measures the container and picks a zoom level for fitBounds.
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    map.invalidateSize();
+    if (districtLayer) {
+      map.fitBounds(districtLayer.getBounds(), { padding: [40, 40], animate: false });
+    }
+  }));
 }
 
 // ============================================================
@@ -1068,7 +1091,16 @@ function toggleDarkMode() {
   document.body.classList.toggle('light-mode',  dark);
   localStorage.setItem('districtguess_theme', dark ? 'light' : 'dark');
   updateThemeToggle();
-  updateUSRefMap(); // repaint D3 map with new color scheme
+  updateUSRefMap(); // repaint D3 reference map with new color scheme
+  // Swap Leaflet street tiles to match new theme
+  if (map && streetLayer) {
+    map.removeLayer(streetLayer);
+    streetLayer = L.tileLayer(streetTileUrl(), {
+      maxZoom: 19,
+      opacity: _streetOpacity,
+      attribution: streetTileAttrib(),
+    }).addTo(map);
+  }
 }
 
 function updateThemeToggle() {
@@ -1081,25 +1113,34 @@ function updateThemeToggle() {
 // ---- D3 AlbersUSA reference map ----
 
 // Returns theme-aware D3 map colors
+// Hover fill used in initUSRefMap mouseover — kept in sync here.
+const STATE_COLOR = {
+  // Light mode
+  light: {
+    valid:     { fill: '#d4606e', opacity: 1.0 },   // saturated salmon-red — clearly "in play"
+    elim:      { fill: '#b8bcc4', opacity: 1.0 },   // blue-gray — clearly "out"
+    confirmed: { fill: '#C41230', opacity: 1.0 },   // solid CMU red — the answer
+    hover:     '#a01025',                            // darker red — clear interactive feedback
+  },
+  // Dark mode
+  dark: {
+    valid:     { fill: '#9b2d3e', opacity: 1.0 },   // medium crimson — warm on dark bg
+    elim:      { fill: '#48484a', opacity: 1.0 },   // dark gray — clearly inactive
+    confirmed: { fill: '#e8314a', opacity: 1.0 },   // bright red — pops on dark bg
+    hover:     '#ff4d62',                            // bright pink-red — obvious on dark
+  },
+};
+
 function _stateColors(abbr) {
-  const dark = isDarkMode();
-  // Valid states: clearly warm/pinkish so they stand out from the gray eliminated ones
-  const validFill     = dark ? '#6b1428' : '#f0a8b4';  // rose — "still in play"
-  // Confirmed state (correct state guessed): prominent CMU red tint
-  const confirmedFill = dark ? '#C41230' : '#C41230';
-  const confirmedOp   = dark ? 0.40 : 0.28;
-  // Eliminated states: muted gray — clearly "out of play"
-  const grayFill      = dark ? '#2a2a2c' : '#b0b0b0';
-  const grayOp        = dark ? 0.50 : 0.50;
+  const c = isDarkMode() ? STATE_COLOR.dark : STATE_COLOR.light;
 
   if (correctStateGuessed) {
     const confirmed = todayDistrict ? todayDistrict.properties.state : null;
-    if (abbr === confirmed) return { fill: confirmedFill, opacity: confirmedOp };
-    return { fill: grayFill, opacity: grayOp };
+    if (abbr === confirmed) return c.confirmed;
+    return c.elim;
   }
   const valid = getValidStates();
-  if (valid.has(abbr)) return { fill: validFill, opacity: 0.80 };
-  return { fill: grayFill, opacity: grayOp };
+  return valid.has(abbr) ? c.valid : c.elim;
 }
 
 function _applyStateStyle(sel, abbr) {
@@ -1184,7 +1225,8 @@ function initUSRefMap() {
             }
             // Highlight only clickable states
             if (!correctStateGuessed && getValidStates().has(abbr)) {
-              pathEl.attr('fill', '#C41230').attr('fill-opacity', 0.7);
+              const hoverColor = isDarkMode() ? STATE_COLOR.dark.hover : STATE_COLOR.light.hover;
+              pathEl.attr('fill', hoverColor).attr('fill-opacity', 1.0);
             }
           })
           .on('mousemove', (event) => {
@@ -1456,19 +1498,19 @@ function renderDistrictPreview() {
     .attr('viewBox', `0 0 ${W} ${H}`)
     .attr('class', 'district-preview-svg');
 
-  // Background fill matching the card
+  // Background fill — use the app background color so the SVG blends into the card
   svg.append('rect')
     .attr('width', W).attr('height', H)
-    .attr('fill', dark ? '#252526' : '#f3f4f6');
+    .attr('fill', dark ? '#111213' : '#f3f4f6');
 
-  // All state districts — clearly visible neutral fill
+  // All state districts — clearly distinct neutral fill so they read against the card
   svg.selectAll('.prev-bg')
     .data(stateFeatures)
     .enter().append('path')
     .attr('class', 'prev-bg')
     .attr('d', pathGen)
-    .attr('fill', dark ? '#3c4043' : '#c8d2da')
-    .attr('stroke', dark ? '#1a1a1b' : '#ffffff')
+    .attr('fill', dark ? '#606468' : '#b8c4ce')   // clearly lighter than card bg in both modes
+    .attr('stroke', dark ? '#111213' : '#ffffff')
     .attr('stroke-width', 1.5);
 
   // Correct district — solid CMU red with white halo so it pops on any background
