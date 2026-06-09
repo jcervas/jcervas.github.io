@@ -1266,3 +1266,58 @@ body.dark-mode .post-x-btn { background: #e7e9ea; color: #0f1419 !important; bor
   .census-grid { grid-template-columns: 1fr 1fr; }
   .personal-grid { grid-template-columns: 1fr 1fr; }
 }
+
+/* ============================================================
+   FEEDBACK FORM
+   ============================================================ */
+.form-group {
+  margin-bottom: 14px;
+}
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: var(--text);
+}
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface-alt);
+  color: var(--text);
+  font-size: 0.92rem;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+.form-optional {
+  font-weight: 400;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.form-required {
+  color: var(--cmu-red);
+}
+.form-error {
+  color: var(--cmu-red);
+  font-size: 0.82rem;
+  margin-bottom: 8px;
+  min-height: 18px;
+}
+.form-note {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 12px;
+  text-align: center;
+}

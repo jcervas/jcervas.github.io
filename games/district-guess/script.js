@@ -171,6 +171,8 @@ const ICON_PATHS = {
   dollar:      `<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>`,
   people:      `<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>`,
   mappin:      `<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>`,
+  flag:        `<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>`,
+  message:     `<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>`,
 };
 
 /** Returns an SVG element string for the named icon. */
@@ -189,6 +191,7 @@ const SESSION_REPLAY_KEY = 'districtguess_replay';   // sessionStorage key
 // D3 US reference map coordinate space (viewBox dimensions)
 const REF_VB_W = 960;
 const REF_VB_H = 400;
+const GAME_VERSION = 'Beta 1.0';
 
 // Built at load time from GeoJSON: { 'TX': ['01','02',...], 'WY': ['01'], ... }
 let stateDistrictMap = {};
@@ -226,6 +229,21 @@ const FACT_DEFS = [
     icon: 'people',
     label: 'Largest racial/ethnic group',
     fn: async d => fetchCensus(d, 'plurality')
+  },
+  {
+    icon: 'flag',
+    label: '2024 Presidential vote',
+    fn: () => {
+      if (!todayDistrict) return '—';
+      const margin  = todayDistrict.properties.Margin2024Pres;
+      if (margin == null || isNaN(+margin)) return 'No data';
+      const pctDem  = Math.round((todayDistrict.properties.DemPct2024Pres || 0) * 100);
+      const pctRep  = Math.round((todayDistrict.properties.RepPct2024Pres || 0) * 100);
+      const absMar  = Math.abs(+margin * 100).toFixed(1);
+      if (+margin >  0.05) return `Leaned Democratic — D+${absMar}% (${pctDem}D / ${pctRep}R)`;
+      if (+margin < -0.05) return `Leaned Republican — R+${absMar}% (${pctDem}D / ${pctRep}R)`;
+      return `Competitive — within 5 points (${pctDem}D / ${pctRep}R)`;
+    }
   },
   {
     icon: 'mappin',
@@ -423,7 +441,14 @@ function setUsername(name) {
 //  MAP
 // ============================================================
 function initMap() {
-  map = L.map('map', { zoomControl: true, attributionControl: false }).setView([37.8, -96], 4);
+  map = L.map('map', {
+    zoomControl:      false,   // no zoom buttons — district map is for context only
+    scrollWheelZoom:  false,   // no scroll-wheel zoom
+    doubleClickZoom:  false,   // no dbl-click zoom
+    touchZoom:        false,   // no pinch zoom
+    boxZoom:          false,   // no drag-box zoom
+    attributionControl: false
+  }).setView([37.8, -96], 4);
 
   // Layer 1: shaded relief (ESRI) — pure elevation/hillshade, no labels or roads
   terrainLayer = L.tileLayer(
@@ -1058,8 +1083,7 @@ function updateThemeToggle() {
 // Returns theme-aware D3 map colors
 function _stateColors(abbr) {
   const dark = isDarkMode();
-  const skyFill    = dark ? '#1a3a5c' : '#cce4f0';
-  const redFill    = dark ? '#3d0a18' : '#fde8ec';
+  const redFill    = dark ? '#3d0a18' : '#fde8ec';   // CMU red tones for valid/confirmed states
   const grayFill   = dark ? '#2a2a2c' : '#E0E0E0';
   const grayStroke = dark ? '#3a3a3c' : '#c4c9d4';
   const grayOp     = dark ? 0.55 : 0.35;
@@ -1070,7 +1094,7 @@ function _stateColors(abbr) {
     return { fill: grayFill, stroke: grayStroke, sw: 0.5, opacity: grayOp };
   }
   const valid = getValidStates();
-  if (valid.has(abbr)) return { fill: skyFill, stroke: '#007BC0', sw: 1.2, opacity: 0.85 };
+  if (valid.has(abbr)) return { fill: redFill, stroke: '#C41230', sw: 1.2, opacity: 0.65 };
   return { fill: grayFill, stroke: grayStroke, sw: 0.4, opacity: grayOp };
 }
 
@@ -1419,8 +1443,10 @@ function renderDistrictPreview() {
   const stateFeatures = districts.filter(d => d.properties.state === correctState);
   const stateFC = { type: 'FeatureCollection', features: stateFeatures };
 
+  // Zoom projection to the correct district for clarity;
+  // neighboring districts render as context around it.
   const projection = d3.geoMercator()
-    .fitExtent([[pad, pad], [W - pad, H - pad]], stateFC);
+    .fitExtent([[pad * 3, pad * 3], [W - pad * 3, H - pad * 3]], todayDistrict);
   const pathGen = d3.geoPath(projection);
 
   const svg = d3.create('svg')
@@ -1900,5 +1926,34 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
       document.getElementById(`leaderboard-${tab}`).classList.add('active');
     });
+  });
+
+  // Feedback button + form
+  document.getElementById('feedback-btn').addEventListener('click', () => {
+    document.getElementById('feedback-modal').classList.remove('hidden');
+  });
+  document.getElementById('feedback-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name    = (document.getElementById('fb-name').value.trim()) || 'Anonymous';
+    const email   = document.getElementById('fb-email').value.trim();
+    const comment = document.getElementById('fb-comment').value.trim();
+    const errEl   = document.getElementById('fb-error');
+    if (!comment) { errEl.textContent = 'Please enter a comment.'; return; }
+    errEl.textContent = '';
+    const subject = `District Guess Feedback — ${name}`;
+    const body    = [
+      `Name: ${name}`,
+      `Email: ${email || 'Not provided'}`,
+      `Version: ${GAME_VERSION}`,
+      `District: ${todayDistrict ? todayDistrict.properties['state-district'] : 'unknown'}`,
+      ``,
+      comment,
+    ].join('\n');
+    window.open(
+      `mailto:cervas@cmu.edu,jafierman@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+      '_blank'
+    );
+    document.getElementById('feedback-modal').classList.add('hidden');
+    document.getElementById('feedback-form').reset();
   });
 });
