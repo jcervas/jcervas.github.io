@@ -735,14 +735,14 @@ function submitStateGuess(abbr) {
 
   const isCorrect = abbr === todayDistrict.properties.STATE;
 
-  // Flash the state on the D3 map
+  // Flash the state on the D3 map — CMU Gold (correct) or Carnegie Red (wrong)
   const pathEl = usRefLayers[abbr];
   if (pathEl) {
     pathEl
-      .attr('fill',         isCorrect ? '#4ade80' : '#fca5a5')
-      .attr('stroke',       isCorrect ? '#15803d' : '#dc2626')
-      .attr('stroke-width', 3)
-      .attr('fill-opacity', 0.95);
+      .attr('fill',         isCorrect ? '#FDB515' : '#C41230')
+      .attr('stroke',       isCorrect ? '#b8860b' : '#941120')
+      .attr('stroke-width', 2.5)
+      .attr('fill-opacity', 0.9);
   }
 
   // Animate the reference panel
@@ -860,18 +860,26 @@ for (const [abbr, name] of Object.entries(STATE_NAMES)) STATE_ABBR_BY_NAME[name]
 // ---- US reference map (clickable states) ----
 
 // ---- D3 AlbersUSA reference map ----
-// Standard AlbersUSA coordinate space (matches d3.geoAlbersUsa default scale)
-const _D3_W = 960, _D3_H = 600;
+
+// CMU color scheme
+const CMU = {
+  skyFill:   '#cce4f0',  // light Highlands Sky Blue fill for valid states
+  skyStroke: '#007BC0',  // Highlands Sky Blue stroke
+  redFill:   '#fde8ec',  // light Carnegie Red fill for confirmed state
+  redStroke: '#C41230',  // Carnegie Red stroke
+  grayFill:  '#E0E0E0',  // Steel Gray for eliminated states
+  grayStroke:'#c4c9d4',
+};
 
 function _stateColors(abbr) {
   if (correctStateGuessed) {
     const confirmed = todayDistrict ? todayDistrict.properties.STATE : null;
-    if (abbr === confirmed) return { fill: '#bbf7d0', stroke: '#16a34a', sw: 1.5, opacity: 0.9 };
-    return { fill: '#f1f5f9', stroke: '#cbd5e1', sw: 0.5, opacity: 0.35 };
+    if (abbr === confirmed) return { fill: CMU.redFill, stroke: CMU.redStroke, sw: 2, opacity: 0.9 };
+    return { fill: CMU.grayFill, stroke: CMU.grayStroke, sw: 0.5, opacity: 0.35 };
   }
   const valid = getValidStates();
-  if (valid.has(abbr)) return { fill: '#dbeafe', stroke: '#2563eb', sw: 1.2, opacity: 0.7 };
-  return { fill: '#f1f5f9', stroke: '#e2e8f0', sw: 0.5, opacity: 0.25 };
+  if (valid.has(abbr)) return { fill: CMU.skyFill, stroke: CMU.skyStroke, sw: 1.2, opacity: 0.85 };
+  return { fill: CMU.grayFill, stroke: CMU.grayStroke, sw: 0.4, opacity: 0.3 };
 }
 
 function _applyStateStyle(sel, abbr) {
@@ -887,28 +895,30 @@ function initUSRefMap() {
   if (usRefMap) return;
   const container = document.getElementById('us-ref-map');
 
-  const svg = d3.select(container)
+  // Use actual container dimensions so projection fills the space perfectly
+  const W = container.clientWidth  || 960;
+  const H = container.clientHeight || 400;
+
+  const svgSel = d3.select(container)
     .append('svg')
-    .attr('viewBox', `0 0 ${_D3_W} ${_D3_H}`)
-    .attr('preserveAspectRatio', 'xMidYMid meet')
-    .style('width', '100%')
-    .style('height', '100%')
+    .attr('width', W)
+    .attr('height', H)
     .style('display', 'block');
 
-  usRefMap = svg.node();
+  usRefMap = svgSel.node();
 
-  const projection = d3.geoAlbersUsa()
-    .scale(1280)
-    .translate([_D3_W / 2, _D3_H / 2]);
+  const projection = d3.geoAlbersUsa();
   const pathGen = d3.geoPath().projection(projection);
-
-  const g = svg.append('g');
+  const g = svgSel.append('g');
 
   fetch('https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json')
     .then(r => r.json())
     .then(geojson => {
       const known = new Set(Object.values(STATE_NAMES));
       geojson.features = geojson.features.filter(f => known.has(f.properties.name));
+
+      // Fit projection to container — AlbersUSA repositions AK + HI automatically
+      projection.fitSize([W, H], { type: 'FeatureCollection', features: geojson.features });
 
       geojson.features.forEach(feature => {
         const abbr = STATE_ABBR_BY_NAME[feature.properties.name];
@@ -929,7 +939,7 @@ function initUSRefMap() {
         })
         .on('mouseover', () => {
           if (correctStateGuessed || !getValidStates().has(abbr)) return;
-          pathEl.attr('fill-opacity', 0.9).attr('stroke-width', 2);
+          pathEl.attr('fill-opacity', 1).attr('stroke-width', 2);
         })
         .on('mouseout', () => _applyStateStyle(pathEl, abbr));
       });
