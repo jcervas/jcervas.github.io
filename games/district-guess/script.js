@@ -735,12 +735,14 @@ function submitStateGuess(abbr) {
 
   const isCorrect = abbr === todayDistrict.properties.STATE;
 
-  // Flash the state on the map
-  const layer = usRefLayers[abbr];
-  if (layer) {
-    layer.setStyle(isCorrect
-      ? { color: '#15803d', weight: 3, fillColor: '#4ade80', fillOpacity: 0.95 }
-      : { color: '#dc2626', weight: 3, fillColor: '#fca5a5', fillOpacity: 0.95 });
+  // Flash the state on the D3 map
+  const pathEl = usRefLayers[abbr];
+  if (pathEl) {
+    pathEl
+      .attr('fill',         isCorrect ? '#4ade80' : '#fca5a5')
+      .attr('stroke',       isCorrect ? '#15803d' : '#dc2626')
+      .attr('stroke-width', 3)
+      .attr('fill-opacity', 0.95);
   }
 
   // Animate the reference panel
@@ -857,98 +859,88 @@ for (const [abbr, name] of Object.entries(STATE_NAMES)) STATE_ABBR_BY_NAME[name]
 
 // ---- US reference map (clickable states) ----
 
-function initUSRefMap() {
-  if (usRefMap) return; // already initialised
-  usRefMap = L.map('us-ref-map', {
-    zoomControl: false,
-    attributionControl: false,
-    scrollWheelZoom: false,
-    dragging: false,
-    doubleClickZoom: false,
-    boxZoom: false,
-    keyboard: false,
-  });
+// ---- D3 AlbersUSA reference map ----
+// Standard AlbersUSA coordinate space (matches d3.geoAlbersUsa default scale)
+const _D3_W = 960, _D3_H = 600;
 
-  // Fit to CONUS + AK/HI by default; we'll fitBounds after data loads
-  usRefMap.setView([38, -96], 3);
+function _stateColors(abbr) {
+  if (correctStateGuessed) {
+    const confirmed = todayDistrict ? todayDistrict.properties.STATE : null;
+    if (abbr === confirmed) return { fill: '#bbf7d0', stroke: '#16a34a', sw: 1.5, opacity: 0.9 };
+    return { fill: '#f1f5f9', stroke: '#cbd5e1', sw: 0.5, opacity: 0.35 };
+  }
+  const valid = getValidStates();
+  if (valid.has(abbr)) return { fill: '#dbeafe', stroke: '#2563eb', sw: 1.2, opacity: 0.7 };
+  return { fill: '#f1f5f9', stroke: '#e2e8f0', sw: 0.5, opacity: 0.25 };
+}
+
+function _applyStateStyle(sel, abbr) {
+  const s = _stateColors(abbr);
+  sel.attr('fill', s.fill)
+     .attr('stroke', s.stroke)
+     .attr('stroke-width', s.sw)
+     .attr('fill-opacity', s.opacity)
+     .style('cursor', (!correctStateGuessed && getValidStates().has(abbr)) ? 'pointer' : 'default');
+}
+
+function initUSRefMap() {
+  if (usRefMap) return;
+  const container = document.getElementById('us-ref-map');
+
+  const svg = d3.select(container)
+    .append('svg')
+    .attr('viewBox', `0 0 ${_D3_W} ${_D3_H}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet')
+    .style('width', '100%')
+    .style('height', '100%')
+    .style('display', 'block');
+
+  usRefMap = svg.node();
+
+  const projection = d3.geoAlbersUsa()
+    .scale(1280)
+    .translate([_D3_W / 2, _D3_H / 2]);
+  const pathGen = d3.geoPath().projection(projection);
+
+  const g = svg.append('g');
 
   fetch('https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json')
     .then(r => r.json())
     .then(geojson => {
-      // Filter to 50 states + DC  (drop territories)
       const known = new Set(Object.values(STATE_NAMES));
       geojson.features = geojson.features.filter(f => known.has(f.properties.name));
 
-      L.geoJSON(geojson, {
-        style: f => stateStyle(STATE_ABBR_BY_NAME[f.properties.name]),
-        onEachFeature(feature, layer) {
-          const abbr = STATE_ABBR_BY_NAME[feature.properties.name];
-          if (!abbr) return;
-          usRefLayers[abbr] = layer;
+      geojson.features.forEach(feature => {
+        const abbr = STATE_ABBR_BY_NAME[feature.properties.name];
+        if (!abbr) return;
 
-          layer.on('click', () => {
-            if (gameOver || correctStateGuessed) return;
-            const valid = getValidStates();
-            if (!valid.has(abbr)) return;
-            submitStateGuess(abbr);
-          });
+        const pathEl = g.append('path')
+          .datum(feature)
+          .attr('d', pathGen)
+          .attr('data-abbr', abbr);
 
-          layer.on('mouseover', () => {
-            const valid = getValidStates();
-            if (correctStateGuessed || !valid.has(abbr)) return;
-            layer.setStyle({ fillOpacity: 0.85, weight: 2 });
-          });
-          layer.on('mouseout', () => layer.setStyle(stateStyle(abbr)));
-        }
-      }).addTo(usRefMap);
+        usRefLayers[abbr] = pathEl;
+        _applyStateStyle(pathEl, abbr);
 
-      usRefMap.fitBounds([
-        [24, -125], [50, -66]   // CONUS bounding box
-      ]);
+        pathEl.on('click', () => {
+          if (gameOver || correctStateGuessed) return;
+          if (!getValidStates().has(abbr)) return;
+          submitStateGuess(abbr);
+        })
+        .on('mouseover', () => {
+          if (correctStateGuessed || !getValidStates().has(abbr)) return;
+          pathEl.attr('fill-opacity', 0.9).attr('stroke-width', 2);
+        })
+        .on('mouseout', () => _applyStateStyle(pathEl, abbr));
+      });
     })
-    .catch(() => {}); // fail silently — ref map is optional
-}
-
-function stateStyle(abbr) {
-  if (!abbr) return { color: '#94a3b8', weight: 1, fillColor: '#e2e8f0', fillOpacity: 0.5 };
-  if (correctStateGuessed) {
-    const confirmed = todayDistrict ? todayDistrict.properties.STATE : null;
-    if (abbr === confirmed) return { color: '#16a34a', weight: 2, fillColor: '#bbf7d0', fillOpacity: 0.8 };
-    return { color: '#94a3b8', weight: 0.5, fillColor: '#f1f5f9', fillOpacity: 0.4 };
-  }
-  const valid = getValidStates();
-  if (valid.has(abbr)) {
-    return { color: '#2563eb', weight: 1.5, fillColor: '#dbeafe', fillOpacity: 0.65 };
-  }
-  return { color: '#cbd5e1', weight: 0.5, fillColor: '#f1f5f9', fillOpacity: 0.25 };
+    .catch(() => {});
 }
 
 function updateUSRefMap() {
   if (!usRefMap) return;
-  const valid = getValidStates();
-
-  for (const [abbr, layer] of Object.entries(usRefLayers)) {
-    layer.setStyle(stateStyle(abbr));
-  }
-
-  // Zoom map to fit the valid (or confirmed) states
-  const targetAbbrs = correctStateGuessed
-    ? [todayDistrict.properties.STATE]
-    : [...valid];
-
-  const targetLayers = targetAbbrs
-    .map(a => usRefLayers[a])
-    .filter(Boolean);
-
-  if (targetLayers.length > 0) {
-    const group = L.featureGroup(targetLayers);
-    const allStatesCount = Object.keys(stateDistrictMap).length;
-    // Only zoom in if we've narrowed from the full set (or state confirmed)
-    if (correctStateGuessed || valid.size < allStatesCount) {
-      usRefMap.fitBounds(group.getBounds(), { padding: [20, 20], animate: true, duration: 0.5 });
-    } else {
-      usRefMap.fitBounds([[24, -125], [50, -66]]);
-    }
+  for (const [abbr, pathEl] of Object.entries(usRefLayers)) {
+    _applyStateStyle(pathEl, abbr);
   }
 }
 
