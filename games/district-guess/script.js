@@ -735,13 +735,11 @@ function submitStateGuess(abbr) {
 
   const isCorrect = abbr === todayDistrict.properties.STATE;
 
-  // Flash the state on the D3 map — CMU Gold (correct) or Carnegie Red (wrong)
+  // Flash the state — CMU Gold (correct) or Carnegie Red (wrong)
   const pathEl = usRefLayers[abbr];
   if (pathEl) {
     pathEl
       .attr('fill',         isCorrect ? '#FDB515' : '#C41230')
-      .attr('stroke',       isCorrect ? '#b8860b' : '#941120')
-      .attr('stroke-width', 2.5)
       .attr('fill-opacity', 0.9);
   }
 
@@ -857,6 +855,18 @@ function getValidStates() {
 const STATE_ABBR_BY_NAME = {};
 for (const [abbr, name] of Object.entries(STATE_NAMES)) STATE_ABBR_BY_NAME[name] = abbr;
 
+// FIPS code → state abbreviation (for us-atlas TopoJSON)
+const FIPS_TO_ABBR = {
+  '01':'AL','02':'AK','04':'AZ','05':'AR','06':'CA','08':'CO','09':'CT',
+  '10':'DE','11':'DC','12':'FL','13':'GA','15':'HI','16':'ID','17':'IL',
+  '18':'IN','19':'IA','20':'KS','21':'KY','22':'LA','23':'ME','24':'MD',
+  '25':'MA','26':'MI','27':'MN','28':'MS','29':'MO','30':'MT','31':'NE',
+  '32':'NV','33':'NH','34':'NJ','35':'NM','36':'NY','37':'NC','38':'ND',
+  '39':'OH','40':'OK','41':'OR','42':'PA','44':'RI','45':'SC','46':'SD',
+  '47':'TN','48':'TX','49':'UT','50':'VT','51':'VA','53':'WA','54':'WV',
+  '55':'WI','56':'WY'
+};
+
 // ---- US reference map (clickable states) ----
 
 // ---- D3 AlbersUSA reference map ----
@@ -884,9 +894,9 @@ function _stateColors(abbr) {
 
 function _applyStateStyle(sel, abbr) {
   const s = _stateColors(abbr);
+  // No stroke on individual polygons — borders drawn as white mesh overlay
   sel.attr('fill', s.fill)
-     .attr('stroke', s.stroke)
-     .attr('stroke-width', s.sw)
+     .attr('stroke', 'none')
      .attr('fill-opacity', s.opacity)
      .style('cursor', (!correctStateGuessed && getValidStates().has(abbr)) ? 'pointer' : 'default');
 }
@@ -894,8 +904,6 @@ function _applyStateStyle(sel, abbr) {
 function initUSRefMap() {
   if (usRefMap) return;
   const container = document.getElementById('us-ref-map');
-
-  // Use actual container dimensions so projection fills the space perfectly
   const W = container.clientWidth  || 960;
   const H = container.clientHeight || 400;
 
@@ -903,46 +911,69 @@ function initUSRefMap() {
     .append('svg')
     .attr('width', W)
     .attr('height', H)
-    .style('display', 'block');
+    .style('display', 'block')
+    .style('background', 'transparent');
 
   usRefMap = svgSel.node();
 
   const projection = d3.geoAlbersUsa();
-  const pathGen = d3.geoPath().projection(projection);
-  const g = svgSel.append('g');
+  const pathGen    = d3.geoPath().projection(projection);
 
-  fetch('https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json')
+  // us-atlas states (properly pre-processed — no Aleutian Islands artifacts)
+  fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json')
     .then(r => r.json())
-    .then(geojson => {
-      const known = new Set(Object.values(STATE_NAMES));
-      geojson.features = geojson.features.filter(f => known.has(f.properties.name));
+    .then(us => {
+      const geojson = topojson.feature(us, us.objects.states);
 
-      // Fit projection to container — AlbersUSA repositions AK + HI automatically
-      projection.fitSize([W, H], { type: 'FeatureCollection', features: geojson.features });
+      // Fit projection to container size
+      projection.fitSize([W, H], geojson);
 
+      // Draw filled state polygons (clickable)
+      const g = svgSel.append('g');
       geojson.features.forEach(feature => {
-        const abbr = STATE_ABBR_BY_NAME[feature.properties.name];
-        if (!abbr) return;
+        const fips = String(feature.id).padStart(2, '0');
+        const abbr = FIPS_TO_ABBR[fips];
+        if (!abbr || !stateDistrictMap[abbr]) return; // skip DC + territories
 
         const pathEl = g.append('path')
           .datum(feature)
           .attr('d', pathGen)
+          .attr('stroke', 'none') // borders drawn separately as mesh
           .attr('data-abbr', abbr);
 
         usRefLayers[abbr] = pathEl;
         _applyStateStyle(pathEl, abbr);
 
-        pathEl.on('click', () => {
-          if (gameOver || correctStateGuessed) return;
-          if (!getValidStates().has(abbr)) return;
-          submitStateGuess(abbr);
-        })
-        .on('mouseover', () => {
-          if (correctStateGuessed || !getValidStates().has(abbr)) return;
-          pathEl.attr('fill-opacity', 1).attr('stroke-width', 2);
-        })
-        .on('mouseout', () => _applyStateStyle(pathEl, abbr));
+        pathEl
+          .on('click', () => {
+            if (gameOver || correctStateGuessed) return;
+            if (!getValidStates().has(abbr)) return;
+            submitStateGuess(abbr);
+          })
+          .on('mouseover', () => {
+            if (correctStateGuessed || !getValidStates().has(abbr)) return;
+            pathEl.attr('fill-opacity', 1);
+          })
+          .on('mouseout', () => _applyStateStyle(pathEl, abbr));
       });
+
+      // Draw state borders as a single white mesh path (no double-borders)
+      svgSel.append('path')
+        .datum(topojson.mesh(us, us.objects.states, (a, b) => a !== b))
+        .attr('d', pathGen)
+        .attr('fill', 'none')
+        .attr('stroke', '#ffffff')
+        .attr('stroke-width', 1)
+        .attr('pointer-events', 'none');
+
+      // Outer US boundary
+      svgSel.append('path')
+        .datum(topojson.mesh(us, us.objects.states, (a, b) => a === b))
+        .attr('d', pathGen)
+        .attr('fill', 'none')
+        .attr('stroke', '#adb5bd')
+        .attr('stroke-width', 0.75)
+        .attr('pointer-events', 'none');
     })
     .catch(() => {});
 }
