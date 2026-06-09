@@ -1083,26 +1083,29 @@ function updateThemeToggle() {
 // Returns theme-aware D3 map colors
 function _stateColors(abbr) {
   const dark = isDarkMode();
-  const redFill    = dark ? '#3d0a18' : '#fde8ec';   // CMU red tones for valid/confirmed states
-  const grayFill   = dark ? '#2a2a2c' : '#E0E0E0';
-  const grayStroke = dark ? '#3a3a3c' : '#c4c9d4';
-  const grayOp     = dark ? 0.55 : 0.35;
+  // Valid states: clearly warm/pinkish so they stand out from the gray eliminated ones
+  const validFill     = dark ? '#6b1428' : '#f0a8b4';  // rose — "still in play"
+  // Confirmed state (correct state guessed): prominent CMU red tint
+  const confirmedFill = dark ? '#C41230' : '#C41230';
+  const confirmedOp   = dark ? 0.40 : 0.28;
+  // Eliminated states: muted gray — clearly "out of play"
+  const grayFill      = dark ? '#2a2a2c' : '#b0b0b0';
+  const grayOp        = dark ? 0.50 : 0.50;
 
   if (correctStateGuessed) {
     const confirmed = todayDistrict ? todayDistrict.properties.state : null;
-    if (abbr === confirmed) return { fill: redFill, stroke: '#C41230', sw: 2, opacity: 0.9 };
-    return { fill: grayFill, stroke: grayStroke, sw: 0.5, opacity: grayOp };
+    if (abbr === confirmed) return { fill: confirmedFill, opacity: confirmedOp };
+    return { fill: grayFill, opacity: grayOp };
   }
   const valid = getValidStates();
-  if (valid.has(abbr)) return { fill: redFill, stroke: '#C41230', sw: 1.2, opacity: 0.65 };
-  return { fill: grayFill, stroke: grayStroke, sw: 0.4, opacity: grayOp };
+  if (valid.has(abbr)) return { fill: validFill, opacity: 0.80 };
+  return { fill: grayFill, opacity: grayOp };
 }
 
 function _applyStateStyle(sel, abbr) {
   const s = _stateColors(abbr);
-  // No stroke on individual polygons — borders drawn as white mesh overlay
   sel.attr('fill', s.fill)
-     .attr('stroke', 'none')
+     .attr('stroke', 'none')   // borders drawn as separate white mesh overlay
      .attr('fill-opacity', s.opacity)
      .style('cursor', (!correctStateGuessed && getValidStates().has(abbr)) ? 'pointer' : 'default');
 }
@@ -1443,10 +1446,10 @@ function renderDistrictPreview() {
   const stateFeatures = districts.filter(d => d.properties.state === correctState);
   const stateFC = { type: 'FeatureCollection', features: stateFeatures };
 
-  // Zoom projection to the correct district for clarity;
-  // neighboring districts render as context around it.
+  // Fit projection to ALL districts in the state so the correct district
+  // appears in geographic context — makes it easy to see WHERE in the state it is.
   const projection = d3.geoMercator()
-    .fitExtent([[pad * 3, pad * 3], [W - pad * 3, H - pad * 3]], todayDistrict);
+    .fitExtent([[pad, pad], [W - pad, H - pad]], stateFC);
   const pathGen = d3.geoPath(projection);
 
   const svg = d3.create('svg')
@@ -1468,13 +1471,14 @@ function renderDistrictPreview() {
     .attr('stroke', dark ? '#1a1a1b' : '#ffffff')
     .attr('stroke-width', 1.5);
 
-  // Correct district — solid CMU red, white border so it pops
+  // Correct district — solid CMU red with white halo so it pops on any background
   svg.append('path')
     .datum(todayDistrict)
     .attr('d', pathGen)
     .attr('fill', '#C41230')
     .attr('stroke', '#ffffff')
-    .attr('stroke-width', 1.5);
+    .attr('stroke-width', 2)
+    .attr('paint-order', 'stroke');  // stroke behind fill so border doesn't eat into shape
 
   container.appendChild(svg.node());
 }
@@ -1787,7 +1791,16 @@ async function init() {
   try {
     const res = await fetch('./national-cd-2026.geojson');
     data = await res.json();
-    // Filter out territory features (no state code) before building the game
+    // Patch Louisiana features whose state/state-district properties are missing.
+    // (These 6 features have integer id 1–6 and no state field — a data authoring gap.)
+    data.features.forEach(f => {
+      const p = f.properties;
+      if (!p.state && typeof p.id === 'number' && p.id >= 1 && p.id <= 6) {
+        p.state = 'LA';
+        p['state-district'] = `LA-${String(p.id).padStart(2, '0')}`;
+      }
+    });
+    // Filter out any remaining territory features (no state code)
     districts = data.features.filter(f => f.properties.state);
   } catch {
     alert('Failed to load district data. Please refresh.');
