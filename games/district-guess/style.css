@@ -4,6 +4,8 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+.leaflet-control-attribution { display: none !important; }
+
 :root {
   /* CMU brand colors — constant across themes */
   --cmu-red:        #C41230;
@@ -684,8 +686,31 @@ body.dark-mode .post-x-btn { background: #e7e9ea; color: #0f1419 !important; bor
   background: transparent;
   transition: background 0.2s, border-color 0.2s;
 }
-.gc-dot.gc-correct { background: var(--green); border-color: var(--green); }
-.gc-dot.gc-wrong   { background: var(--cmu-red); border-color: var(--cmu-red); }
+/* Correct: filled circle, blue — distinguishable without color alone */
+.gc-dot.gc-correct {
+  background: #2563EB;
+  border-color: #2563EB;
+  border-radius: 50%;
+}
+/* Wrong: X shape, neutral dark — no red/green dependency */
+.gc-dot.gc-wrong {
+  background: transparent;
+  border-color: transparent;
+  position: relative;
+}
+.gc-dot.gc-wrong::before,
+.gc-dot.gc-wrong::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 100%;
+  height: 2px;
+  background: var(--text);
+  border-radius: 1px;
+}
+.gc-dot.gc-wrong::before { transform: rotate(45deg); }
+.gc-dot.gc-wrong::after  { transform: rotate(-45deg); }
 .gc-label { font-size: 0.75rem; color: var(--muted); font-weight: 600; }
 
 /* ---- US Reference map tooltip ---- */
@@ -1254,20 +1279,20 @@ body.dark-mode .post-x-btn { background: #e7e9ea; color: #0f1419 !important; bor
 
   #game-section {
     display: grid;
-    grid-template-columns: 55% 45%;
+    grid-template-columns: 45% 55%;
     grid-template-rows: 62fr 38fr;
     grid-template-areas:
-      "map ref"
-      "map clues";
+      "ref map"
+      "clues map";
     gap: 10px;
     height: calc(100vh - 68px);
     overflow: hidden;
   }
 
-  /* Map spans both rows on the left */
+  /* District map spans both rows on the RIGHT in landscape */
   #map { grid-area: map; height: 100%; min-height: 0; width: 100%; }
 
-  /* Reference panel: flex column, top-right */
+  /* Reference panel (national map + state picker): left column, top */
   #reference-panel {
     grid-area: ref;
     min-height: 0;
