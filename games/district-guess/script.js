@@ -198,7 +198,7 @@ const GAME_VERSION = (() => {
   const day = String(d.getDate()).padStart(2, '0');
   const h = String(d.getHours()).padStart(2, '0');
   const min = String(d.getMinutes()).padStart(2, '0');
-  return `Beta 1.0 (${y}-${m}-${day} ${h}:${min})`;
+  return `Beta 1.1 (${y}-${m}-${day} ${h}:${min})`;
 })();
 
 // Built at load time from GeoJSON: { 'TX': ['01','02',...], 'WY': ['01'], ... }
@@ -620,6 +620,25 @@ async function fetchCensus(districtData, field) {
   return 'N/A';
 }
 
+function renderGuessesSummary() {
+  const el = document.getElementById('guesses-summary');
+  if (!el || !todayDistrict) return;
+  const won = guessHistory.some(g => g.correct);
+  const answer = todayDistrict.properties['state-district'] || '';
+  const stateName = STATE_NAMES[todayDistrict.properties.state] || todayDistrict.properties.state;
+  const distNum = (stateDistrictMap[todayDistrict.properties.state] || []).length === 1
+    ? 'At-Large' : `District ${parseInt(todayDistrict.properties['state-district']?.split('-')[1] || '0', 10)}`;
+  const timeStr = elapsedSeconds > 0 ? ` · ${formatTime(elapsedSeconds)}` : '';
+  const resultLine = won
+    ? `Solved in <strong>${guessCount}</strong> guess${guessCount !== 1 ? 'es' : ''}${timeStr}`
+    : `Not solved — the answer was <strong>${answer}</strong>`;
+  el.innerHTML = `
+    <div class="guesses-summary-header">
+      <div class="gs-answer">${stateName} — ${distNum}</div>
+      <div class="gs-result">${resultLine}</div>
+    </div>`;
+}
+
 // Wordle-style personal stats grid (played, win%, streaks, distribution)
 function renderInlinePersonalStats() {
   const el = document.getElementById('result-personal-stats');
@@ -630,12 +649,12 @@ function renderInlinePersonalStats() {
   const winRate = Math.round(stats.won / stats.played * 100);
   const dist    = stats.guessDist || {};
   const maxBar  = Math.max(...Object.values(dist).map(Number), 1);
-  const wonToday = guessHistory.some(g => g.correct);
+  const wonToday = guessHistory.some(g => g.correct && g.phase === 'district');
 
   const bars = [1, 2, 3, 4, 5, 6, 'X'].map(k => {
     const count = dist[k] || 0;
     const pct   = count > 0 ? Math.max(Math.round(count / maxBar * 100), 12) : 0;
-    const hi    = (wonToday && k === guessCount) || (!wonToday && k === 'X');
+    const hi    = gameOver && ((wonToday && k === guessCount) || (!wonToday && k === 'X'));
     return `<div class="rdist-row">
       <span class="rdist-n">${k}</span>
       <div class="rdist-bar-wrap">
@@ -667,11 +686,16 @@ function renderInlinePersonalStats() {
 function switchResultTab(tab) {
   document.querySelectorAll('.result-tab-pane').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.result-tab-btn').forEach(b => b.classList.remove('active'));
-  const pane = document.getElementById(tab === 'result' ? 'result-section' : 'census-section');
+  const paneId = { result: 'result-section', guesses: 'guesses-section', census: 'census-section' }[tab] || 'result-section';
+  const pane = document.getElementById(paneId);
   const btn  = document.querySelector(`.result-tab-btn[data-rtab="${tab}"]`);
   if (pane) pane.classList.add('active');
   if (btn)  btn.classList.add('active');
   if (tab === 'census') renderDistrictPreview('census-district-preview');
+  if (tab === 'guesses') {
+    renderDistrictPreview('guesses-district-preview');
+    renderGuessesSummary();
+  }
 }
 
 async function fetchAndRenderCensusPanel(districtData) {
@@ -930,8 +954,8 @@ function updateGuessCounter() {
   const dots = Array.from({ length: MAX_GUESSES }, (_, i) => {
     const g = guessHistory[i];
     if (!g) return '<span class="gc-dot gc-empty"></span>';
-    if (g.correct) return '<span class="gc-dot gc-correct"></span>';
-    return '<span class="gc-dot gc-wrong"></span>';
+    if (g.correct) return `<span class="gc-dot gc-used gc-correct">${svgIcon('checkCircle','gc-icon-svg')}</span>`;
+    return `<span class="gc-dot gc-used gc-wrong">${svgIcon('xCircle','gc-icon-svg')}</span>`;
   }).join('');
 
   const used     = guessHistory.length;
@@ -1022,8 +1046,6 @@ let _distLocked = false; // prevent double-tap during tile animation
 
 function submitDistrictTile(dist) {
   if (gameOver || !correctStateGuessed || _distLocked) return;
-  const tileEl = document.querySelector(`.district-tile[data-dist="${CSS.escape(dist)}"]`);
-  if (!tileEl || tileEl.disabled) return;
 
   _distLocked = true;
   if (!timerRunning) startTimer();
@@ -1032,29 +1054,30 @@ function submitDistrictTile(dist) {
   const fullGuess = `${stateAbbr}-${dist}`;
   const correct   = fullGuess === todayDistrict.properties['state-district'];
 
-  // Flash the tile
-  tileEl.classList.add(correct ? 'tile-flash-correct' : 'tile-flash-wrong');
+  // Brief visual flash via CSS class on the SVG container
+  const tilesEl = document.getElementById('district-tiles');
+  tilesEl.classList.add(correct ? 'flash-correct' : 'flash-wrong');
   setTimeout(() => {
-    tileEl.classList.remove('tile-flash-correct', 'tile-flash-wrong');
+    tilesEl.classList.remove('flash-correct', 'flash-wrong');
     _distLocked = false;
     processDistrictGuessTile(dist, fullGuess, correct);
   }, 480);
 }
 
+// Alias used by the D3 map click handlers
+const submitDistrictGuess = submitDistrictTile;
+
 function processDistrictGuessTile(dist, fullGuess, correct) {
   guessCount++;
   guessHistory.push({ text: fullGuess, correct, phase: 'district' });
 
-  const tileEl = document.querySelector(`.district-tile[data-dist="${CSS.escape(dist)}"]`);
-
   if (correct) {
-    if (tileEl) { tileEl.classList.add('tile-correct'); tileEl.disabled = true; }
     endGame(true);
     return;
   }
 
-  // Wrong — grey out the tile
-  if (tileEl) { tileEl.classList.add('tile-wrong'); tileEl.disabled = true; }
+  // Rebuild D3 district map to reflect the wrong guess (icon turns grey)
+  buildDistrictD3Map(todayDistrict.properties.state);
 
   // Flash the container
   const tilesEl = document.getElementById('district-tiles');
@@ -1406,31 +1429,22 @@ function renderStateChips() {
 }
 
 function lockStateDropdown(stateAbbr, instant = false) {
-  // Show confirmed-state badge
-  document.getElementById('state-confirmed-name').textContent = STATE_NAMES[stateAbbr] || stateAbbr;
-  document.getElementById('state-confirmed').classList.remove('hidden');
-
   // Update chips and US ref map to show only the confirmed state
   renderStateChips();
   updateUSRefMap();
   zoomUSRefMapToValid();
 
-  // Fade out national map → show district tile grid (only when game is still in progress)
-  if (!gameOver) {
-    fadeToDistrictTiles(stateAbbr, instant);
-  }
+  // Zoom into state and show D3 district map (always — read-only when game is over)
+  showDistrictD3Map(stateAbbr, instant);
 }
 
-function fadeToDistrictTiles(stateAbbr, instant = false) {
+function showDistrictD3Map(stateAbbr, instant = false) {
   const mapEl   = document.getElementById('us-ref-map');
   const tilesEl = document.getElementById('district-tiles');
   const labelEl = document.getElementById('ref-label');
 
-  // Hide state chips — not needed in district phase
+  // Hide state chips
   document.getElementById('state-chips-section').classList.add('hidden');
-
-  // Build tile buttons
-  buildDistrictTiles(stateAbbr);
 
   // Update label
   const count = (stateDistrictMap[stateAbbr] || []).length;
@@ -1440,16 +1454,16 @@ function fadeToDistrictTiles(stateAbbr, instant = false) {
       : `Pick a district (${count} total)`;
   }
 
+  // Build the D3 district map inside tilesEl
+  buildDistrictD3Map(stateAbbr);
+
   if (instant) {
-    // Restore — skip animation
     mapEl.classList.add('hidden');
     tilesEl.classList.remove('hidden');
     tilesEl.style.opacity = '1';
   } else {
-    // Animate: fade out national map, fade in tiles
     mapEl.style.opacity = '0';
     setTimeout(() => { mapEl.classList.add('hidden'); }, 370);
-
     tilesEl.style.opacity = '0';
     tilesEl.classList.remove('hidden');
     requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -1458,11 +1472,13 @@ function fadeToDistrictTiles(stateAbbr, instant = false) {
   }
 }
 
-function buildDistrictTiles(stateAbbr) {
-  const tilesEl  = document.getElementById('district-tiles');
-  const districts = stateDistrictMap[stateAbbr] || [];
+function buildDistrictD3Map(stateAbbr) {
+  const tilesEl = document.getElementById('district-tiles');
+  tilesEl.innerHTML = '';
 
-  // Collect already-guessed wrong districts
+  const stateFeatures = districts.filter(f => f.properties.state === stateAbbr);
+  if (!stateFeatures.length) return;
+
   const wrongDists = new Set(
     guessHistory
       .filter(g => g.phase === 'district' && !g.correct)
@@ -1470,16 +1486,165 @@ function buildDistrictTiles(stateAbbr) {
   );
   const wonDist = guessHistory.find(g => g.phase === 'district' && g.correct);
   const wonDistPart = wonDist ? wonDist.text.split('-').slice(1).join('-') : null;
+  const isAtLarge = stateFeatures.length === 1;
 
-  const isAtLargeState = (stateDistrictMap[stateAbbr] || []).length === 1;
-  tilesEl.innerHTML = districts.map(dist => {
-    const label   = isAtLargeState ? 'AL' : String(parseInt(dist, 10));
+  const W = REF_VB_W, H = REF_VB_H;
+  const dark = isDarkMode();
+
+  const svg = d3.select(tilesEl)
+    .append('svg')
+    .attr('viewBox', `0 0 ${W} ${H}`)
+    .attr('width', '100%')
+    .attr('height', '100%')
+    .attr('preserveAspectRatio', 'xMidYMid meet')
+    .style('display', 'block');
+
+  // Fix CW winding (GeoJSON districts have CW outer rings; D3 expects CCW)
+  function fixWinding(feature) {
+    const geom = feature.geometry;
+    if (!geom) return feature;
+    const fixRings = rings => rings.map((ring, i) => i === 0 ? ring.slice().reverse() : ring);
+    let geometry;
+    if (geom.type === 'Polygon') {
+      geometry = { ...geom, coordinates: fixRings(geom.coordinates) };
+    } else if (geom.type === 'MultiPolygon') {
+      geometry = { ...geom, coordinates: geom.coordinates.map(fixRings) };
+    } else {
+      geometry = geom;
+    }
+    return { ...feature, geometry };
+  }
+
+  const fixedFeatures = stateFeatures.map(fixWinding);
+  const stateCollection = { type: 'FeatureCollection', features: fixedFeatures };
+  const projection = d3.geoMercator().fitExtent([[20, 20], [W - 20, H - 20]], stateCollection);
+  const pathGen = d3.geoPath().projection(projection);
+
+  const g = svg.append('g');
+
+  // Draw state outline without revealing district boundaries:
+  // 1. Stroke all district paths (shows outer state border + internal edges)
+  // 2. Fill all district paths with background color on top (covers internal edges)
+  // Result: only the outer state boundary stroke remains visible.
+  const stateBorderColor = dark ? '#999' : '#555';
+  const stateFillColor   = dark ? '#1e1e1e' : '#f0f0f0';
+
+  const borderG = g.append('g').attr('class', 'state-border');
+  fixedFeatures.forEach(f => {
+    borderG.append('path')
+      .datum(f)
+      .attr('d', pathGen)
+      .attr('fill', 'none')
+      .attr('stroke', stateBorderColor)
+      .attr('stroke-width', 2)
+      .attr('vector-effect', 'non-scaling-stroke')
+      .attr('pointer-events', 'none');
+  });
+
+  // Fills go on top of strokes to erase internal district-boundary segments
+  const fillG = g.append('g').attr('class', 'state-fill');
+  fixedFeatures.forEach(f => {
+    fillG.append('path')
+      .datum(f)
+      .attr('d', pathGen)
+      .attr('fill', stateFillColor)
+      .attr('stroke', 'none')
+      .attr('pointer-events', 'none');
+  });
+
+  // Compute positions by projecting the geographic centroid of each district.
+  // d3.geoCentroid works in lat/lon space (no DOM needed), then we project to SVG coords.
+  // Use the largest polygon for MultiPolygon features to keep the point inside the main body.
+  const nodes = fixedFeatures.map((f, i) => {
+    const dist = stateFeatures[i].properties['state-district']?.split('-').slice(1).join('-') || '00';
+    const label = isAtLarge ? 'AL' : String(parseInt(dist, 10));
     const isWrong   = wrongDists.has(dist);
     const isCorrect = wonDistPart === dist;
-    const cls = isCorrect ? 'tile-correct' : isWrong ? 'tile-wrong' : '';
-    const dis = (isWrong || isCorrect || gameOver) ? ' disabled' : '';
-    return `<button class="district-tile ${cls}" data-dist="${dist}"${dis}>${label}</button>`;
-  }).join('');
+
+    // Pick centroid feature: for MultiPolygon use the largest sub-polygon
+    let centroidFeature = f;
+    if (f.geometry?.type === 'MultiPolygon') {
+      const largest = f.geometry.coordinates.reduce((best, poly) => {
+        const a = d3.geoArea({ type: 'Feature', geometry: { type: 'Polygon', coordinates: poly } });
+        const b = d3.geoArea({ type: 'Feature', geometry: { type: 'Polygon', coordinates: best } });
+        return a > b ? poly : best;
+      });
+      centroidFeature = { type: 'Feature', geometry: { type: 'Polygon', coordinates: largest } };
+    }
+    const [lon, lat] = d3.geoCentroid(centroidFeature);
+    const projected = projection([lon, lat]);
+    const cx = projected && isFinite(projected[0]) ? projected[0] : W / 2;
+    const cy = projected && isFinite(projected[1]) ? projected[1] : H / 2;
+    return { dist, label, isWrong, isCorrect, x: cx, y: cy, ox: cx, oy: cy };
+  });
+
+  const R = 13; // icon radius
+
+  // Force simulation for collision avoidance
+  const sim = d3.forceSimulation(nodes)
+    .force('collide', d3.forceCollide(R + 3))
+    .force('x', d3.forceX(d => d.ox).strength(0.6))
+    .force('y', d3.forceY(d => d.oy).strength(0.6))
+    .stop();
+
+  // Run synchronously (no animation needed)
+  for (let i = 0; i < 120; i++) sim.tick();
+
+  // Draw connector lines from centroid to (possibly shifted) icon
+  const lineG = g.append('g').attr('class', 'dist-connectors');
+  nodes.forEach(d => {
+    const dx = d.x - d.ox, dy = d.y - d.oy;
+    if (Math.sqrt(dx*dx + dy*dy) > 4) {
+      lineG.append('line')
+        .attr('x1', d.ox).attr('y1', d.oy)
+        .attr('x2', d.x).attr('y2', d.y)
+        .attr('stroke', dark ? '#666' : '#aaa')
+        .attr('stroke-width', 0.8)
+        .attr('pointer-events', 'none');
+    }
+  });
+
+  // Draw clickable icons
+  const iconG = g.append('g').attr('class', 'dist-icons');
+  nodes.forEach(d => {
+    const disabled = d.isWrong || d.isCorrect || gameOver;
+    const fillColor = d.isCorrect
+      ? '#2563EB'
+      : d.isWrong
+        ? (dark ? '#444' : '#ccc')
+        : (dark ? '#C41230' : '#C41230');
+    const textColor = (d.isWrong && !dark) ? '#888' : '#fff';
+
+    const grp = iconG.append('g')
+      .attr('transform', `translate(${d.x},${d.y})`)
+      .style('cursor', disabled ? 'default' : 'pointer');
+
+    grp.append('circle')
+      .attr('r', R)
+      .attr('fill', fillColor)
+      .attr('stroke', dark ? '#222' : '#fff')
+      .attr('stroke-width', 1.5);
+
+    grp.append('text')
+      .attr('text-anchor', 'middle')
+      .attr('dominant-baseline', 'central')
+      .attr('font-size', d.label.length > 2 ? '8px' : '9px')
+      .attr('font-weight', '700')
+      .attr('fill', textColor)
+      .attr('pointer-events', 'none')
+      .text(d.label);
+
+    if (!disabled) {
+      grp
+        .on('mouseover', function() {
+          d3.select(this).select('circle').attr('fill', dark ? '#a01025' : '#a01025');
+        })
+        .on('mouseout', function() {
+          d3.select(this).select('circle').attr('fill', fillColor);
+        })
+        .on('click', () => submitDistrictGuess(d.dist));
+    }
+  });
 }
 
 function endGame(won) {
@@ -1903,9 +2068,6 @@ function resetGame(newIdx) {
 
   // Re-show state chips section
   document.getElementById('state-chips-section').classList.remove('hidden');
-
-  // Hide state-confirmed badge
-  document.getElementById('state-confirmed').classList.add('hidden');
 
   // Reset reference label
   const labelEl = document.getElementById('ref-label');
