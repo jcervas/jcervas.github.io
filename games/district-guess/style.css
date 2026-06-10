@@ -1279,20 +1279,18 @@ body.dark-mode .post-x-btn { background: #e7e9ea; color: #0f1419 !important; bor
 
   #game-section {
     display: grid;
-    grid-template-columns: 45% 55%;
-    grid-template-rows: 62fr 38fr;
-    grid-template-areas:
-      "ref map"
-      "clues map";
+    grid-template-columns: 45% 25% 30%;
+    grid-template-rows: 1fr;
+    grid-template-areas: "map ref clues";
     gap: 10px;
     height: calc(100vh - 68px);
     overflow: hidden;
   }
 
-  /* District map spans both rows on the RIGHT in landscape */
+  /* District map: rightmost column, full height */
   #map { grid-area: map; height: 100%; min-height: 0; width: 100%; }
 
-  /* Reference panel (national map + state picker): left column, top */
+  /* Reference panel: left column, full height */
   #reference-panel {
     grid-area: ref;
     min-height: 0;
@@ -1310,10 +1308,10 @@ body.dark-mode .post-x-btn { background: #e7e9ea; color: #0f1419 !important; bor
   #district-tiles        { flex: 1; overflow-y: auto; align-content: start; }
   #state-chips-section   { flex-shrink: 0; max-height: 130px; overflow-y: auto; }
 
-  /* Clues panel: flex, bottom-right */
+  /* Clues panel: middle column, full height */
   #clues-panel { grid-area: clues; overflow-y: auto; min-height: 0; }
 
-  /* Guess history in game-section is hidden (history visible in clues area on mobile) */
+  /* Guess counter moves into reference panel area — keep it visible */
   #guess-section { display: none; }
 }
 
