@@ -544,13 +544,14 @@ main {
   overflow: hidden;
   background: var(--surface-alt);
   border: 1px solid var(--border);
-  min-height: 80px;
+  height: 180px;
 }
-.district-preview-svg {
+#preview-map-inner {
   width: 100%;
-  height: auto;
-  display: block;
+  height: 180px;
+  background: var(--surface-alt);
 }
+#preview-map-inner .leaflet-tile-pane { display: none; }
 
 /* Answer reveal block */
 .result-answer {
