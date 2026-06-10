@@ -740,21 +740,28 @@ body.dark-mode .post-x-btn { background: #e7e9ea; color: #0f1419 !important; bor
   text-align: center;
   flex-shrink: 0;
 }
-.rdist-bar-wrap { flex: 1; }
-.rdist-bar {
+.rdist-bar-wrap {
+  flex: 1;
+  height: 22px;
   background: var(--surface-alt);
-  color: var(--text);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.rdist-bar {
+  height: 100%;
+  background: var(--muted);
+  border-radius: 3px;
+  transition: width 0.4s ease;
+  min-width: 0;
+}
+.rdist-bar.today { background: var(--cmu-red); }
+.rdist-count {
   font-size: 0.78rem;
   font-weight: 700;
+  color: var(--text);
+  width: 18px;
   text-align: right;
-  padding: 3px 8px;
-  border-radius: 2px;
-  min-width: 24px;
-  transition: width 0.4s ease;
-}
-.rdist-bar.today {
-  background: var(--cmu-red);
-  color: white;
+  flex-shrink: 0;
 }
 
 /* ---- Census tab inside result modal ---- */

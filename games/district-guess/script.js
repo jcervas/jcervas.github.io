@@ -191,7 +191,15 @@ const SESSION_REPLAY_KEY = 'districtguess_replay';   // sessionStorage key
 // D3 US reference map coordinate space (viewBox dimensions)
 const REF_VB_W = 960;
 const REF_VB_H = 400;
-const GAME_VERSION = 'Beta 1.0';
+const GAME_VERSION = (() => {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const h = String(d.getHours()).padStart(2, '0');
+  const min = String(d.getMinutes()).padStart(2, '0');
+  return `Beta 1.0 (${y}-${m}-${day} ${h}:${min})`;
+})();
 
 // Built at load time from GeoJSON: { 'TX': ['01','02',...], 'WY': ['01'], ... }
 let stateDistrictMap = {};
@@ -252,14 +260,11 @@ const FACT_DEFS = [
   },
 ];
 
-// Map tile progression.
-// Terrain (ESRI shaded relief, no labels) after guess 1, stays through guess 4.
-// Full OSM (cities + labels) unlocks as the 5th clue after 4 wrong guesses.
-const MAP_STAGES = [
-  { terrainOpacity: 0, streetOpacity: 0.01 }, // 0 wrong: outline only
-  { terrainOpacity: 1, streetOpacity: 0    }, // 1–3 wrong: terrain, no labels
-  { terrainOpacity: 0, streetOpacity: 1    }, // 4 wrong OR game over: full OSM
-];
+// Map tile progression — all pre-label stages use label-free tile sources.
+// Stage 0: outline only (nearly invisible background)
+// Stage 1: ESRI shaded relief (light) / satellite (dark) — geographic shape, no labels
+// Stage 2: ESRI satellite imagery — detailed terrain, still no labels
+// Stage 3: labeled tiles (CartoDB / OSM) — revealed only after 4 wrong guesses or game over
 
 // ============================================================
 //  STATE
@@ -267,12 +272,14 @@ const MAP_STAGES = [
 let districts           = [];
 let todayDistrict       = null;   // feature object
 let todayKey            = '';     // 'YYYY-MM-DD'
-let map, terrainLayer, streetLayer, districtLayer;
+let map, terrainLayer, satelliteLayer, streetLayer, districtLayer;
 let usRefMap            = null;   // US states reference map SVG element
 let usRefMapGroup       = null;   // main <g> inside the SVG (holds all paths)
 let usRefLayers         = {};     // abbr → D3 path selection
 let usRefZoom           = null;   // d3.zoom instance
 let usRefSvgSel         = null;   // d3 selection of the SVG element
+let usRefPathGen        = null;   // reusable geoPath generator (set after projection.fitSize)
+let usDistLayers        = {};     // distPart ('01','02'…) → D3 path selection for district overlay
 let eliminatedStates    = new Set(); // all states removed from valid set (wrong guess + adjacency)
 let guessCount          = 0;
 let guessHistory        = [];     // [{text, correct}]
@@ -466,17 +473,19 @@ function initMap() {
     attributionControl: false
   }).setView([37.8, -96], 4);
 
-  // Layer 1: shaded relief (ESRI) — pure elevation/hillshade, no labels or roads
+  // Layer 1: shaded relief — no labels, pure hillshade (light mode stage 1)
   terrainLayer = L.tileLayer(
     'https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}',
-    {
-      maxZoom: 13,
-      opacity: 0,
-      attribution: 'Tiles © Esri — Source: Esri'
-    }
+    { maxZoom: 13, opacity: 0, attribution: 'Tiles © Esri' }
   ).addTo(map);
 
-  // Layer 2: streets — dark CartoDB tiles in dark mode, OSM otherwise
+  // Layer 2: satellite imagery — no labels, used as stage 2 hint in all modes
+  satelliteLayer = L.tileLayer(
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    { maxZoom: 19, opacity: 0, attribution: 'Tiles © Esri — Source: Esri, Maxar, Earthstar Geographics' }
+  ).addTo(map);
+
+  // Layer 3: labeled tiles — CartoDB dark in dark mode, OSM in light; revealed only at game end
   streetLayer = L.tileLayer(streetTileUrl(), {
     maxZoom: 19,
     opacity: 0.01,
@@ -487,25 +496,38 @@ function initMap() {
 }
 
 function applyMapStage(wrongGuesses, gameEnded = false) {
+  const dark = isDarkMode();
   let idx;
-  if (gameEnded || wrongGuesses >= 4) {
-    idx = 2; // full OSM with labels
-  } else if (wrongGuesses >= 1) {
-    idx = 1; // terrain only
-  } else {
-    idx = 0; // outline only
-  }
-  const stage = MAP_STAGES[idx];
-  terrainLayer.setOpacity(stage.terrainOpacity);
-  _streetOpacity = stage.streetOpacity;
+  if (gameEnded || wrongGuesses >= 4) idx = 3;
+  else if (wrongGuesses >= 3)         idx = 2;
+  else if (wrongGuesses >= 1)         idx = 1;
+  else                                idx = 0;
+
+  // ESRI terrain tiles are light-colored — never show in dark mode
+  terrainLayer.setOpacity(dark ? 0 : (idx === 1 ? 1 : 0));
+
+  // Satellite (no labels): stages 1–2 in dark mode, stage 2 only in light mode
+  const satOpacity = dark ? (idx === 1 || idx === 2 ? 1 : 0) : (idx === 2 ? 1 : 0);
+  satelliteLayer.setOpacity(satOpacity);
+
+  // Labeled tiles only at stage 3 (game over / 4 wrong guesses)
+  _streetOpacity = idx >= 3 ? 1 : 0.01;
   streetLayer.setOpacity(_streetOpacity);
+}
+
+function districtStyle() {
+  const dark = isDarkMode();
+  return {
+    color:       dark ? '#ffffff' : '#C41230',  // white stroke on dark tiles, red on light
+    weight:      dark ? 3 : 2.5,
+    fillColor:   '#C41230',
+    fillOpacity: dark ? 0.28 : 0.12,
+  };
 }
 
 function renderDistrict(feature) {
   if (districtLayer) map.removeLayer(districtLayer);
-  districtLayer = L.geoJSON(feature, {
-    style: { color: '#C41230', weight: 2.5, fillColor: '#C41230', fillOpacity: 0.12 }
-  }).addTo(map);
+  districtLayer = L.geoJSON(feature, { style: districtStyle() }).addTo(map);
   // Double rAF: wait for CSS layout to fully settle (grid/flex) before Leaflet
   // measures the container and picks a zoom level for fitBounds.
   requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -617,8 +639,9 @@ function renderInlinePersonalStats() {
     return `<div class="rdist-row">
       <span class="rdist-n">${k}</span>
       <div class="rdist-bar-wrap">
-        <div class="rdist-bar${hi ? ' today' : ''}" style="width:${pct}%">${count || ''}</div>
+        <div class="rdist-bar${hi ? ' today' : ''}" style="width:${pct}%"></div>
       </div>
+      <span class="rdist-count">${count || ''}</span>
     </div>`;
   }).join('');
 
@@ -1101,6 +1124,13 @@ function toggleDarkMode() {
       attribution: streetTileAttrib(),
     }).addTo(map);
   }
+  // Re-apply map tile stage (dark mode skips terrain, prefers satellite)
+  if (map) {
+    const wrongCount = guessHistory.filter(g => !g.correct).length;
+    applyMapStage(wrongCount, gameOver);
+  }
+  // Update district boundary color for new theme
+  if (districtLayer) districtLayer.setStyle(districtStyle());
 }
 
 function updateThemeToggle() {
@@ -1190,6 +1220,7 @@ function initUSRefMap() {
     .then(us => {
       const geojson = topojson.feature(us, us.objects.states);
       projection.fitSize([W, H], geojson);
+      usRefPathGen = pathGen; // save for district overlay
 
       // Single group for ALL content so zoom transforms everything
       const g = svgSel.append('g');
@@ -1264,6 +1295,10 @@ function initUSRefMap() {
       // If a game is already in progress, zoom to current valid set
       if (eliminatedStates.size > 0 || correctStateGuessed) {
         zoomUSRefMapToValid(false);
+      }
+      // If state already confirmed (restored session), draw district overlay immediately
+      if (correctStateGuessed && todayDistrict && !gameOver) {
+        buildDistrictMapOverlay(todayDistrict.properties.state);
       }
     })
     .catch(() => {});
@@ -1476,51 +1511,117 @@ function endGame(won) {
 //  RESULT & SHARE
 // ============================================================
 
-/** Renders a mini D3 SVG showing the state's districts with today's district highlighted. */
+// Lazy-load cache for preview background layers
+let _previewRoads  = null;  // TopoJSON object once loaded
+let _previewUrban  = null;
+
+/** Renders the district preview using D3 + bbox projection.
+ *  Roads and urban areas loaded once from TopoJSON and cached. */
 function renderDistrictPreview() {
   const container = document.getElementById('result-district-preview');
-  if (!container || !todayDistrict || !districts || !window.d3) return;
+  if (!container || !todayDistrict || !window.d3) return;
+  container.innerHTML = '<div class="preview-loading">Loading…</div>';
+
+  const loadRoads = _previewRoads
+    ? Promise.resolve(_previewRoads)
+    : fetch('./previews-data/roads.topojson').then(r => r.json()).then(d => { _previewRoads = d; return d; });
+
+  const loadUrban = _previewUrban
+    ? Promise.resolve(_previewUrban)
+    : fetch('./previews-data/urban.topojson').then(r => r.json()).then(d => { _previewUrban = d; return d; });
+
+  Promise.all([loadRoads, loadUrban])
+    .then(([roads, urban]) => _drawPreview(container, roads, urban))
+    .catch(() => _drawPreview(container, null, null));
+}
+
+function _drawPreview(container, roads, urban) {
+  if (!window.d3 || !todayDistrict) return;
   container.innerHTML = '';
 
-  const W = 440, H = 220, pad = 14;
+  const W = 440, H = 220, pad = 24;
   const dark = isDarkMode();
-  const correctState = todayDistrict.properties.state;
-  const stateFeatures = districts.filter(d => d.properties.state === correctState);
-  const stateFC = { type: 'FeatureCollection', features: stateFeatures };
 
-  // Fit projection to ALL districts in the state so the correct district
-  // appears in geographic context — makes it easy to see WHERE in the state it is.
   const projection = d3.geoMercator()
-    .fitExtent([[pad, pad], [W - pad, H - pad]], stateFC);
+    .fitExtent([[pad, pad], [W - pad, H - pad]], todayDistrict);
   const pathGen = d3.geoPath(projection);
+
+  // District geographic bbox — used to filter roads/urban to just what's nearby
+  const [[minLon, minLat], [maxLon, maxLat]] = d3.geoBounds(todayDistrict);
+  const lonBuf = (maxLon - minLon) * 0.15;
+  const latBuf = (maxLat - minLat) * 0.15;
+  function nearDistrict(feat) {
+    if (!feat.geometry) return false;
+    try {
+      const [[fx0, fy0], [fx1, fy1]] = d3.geoBounds(feat);
+      return fx1 >= minLon - lonBuf && fx0 <= maxLon + lonBuf &&
+             fy1 >= minLat - latBuf && fy0 <= maxLat + latBuf;
+    } catch { return false; }
+  }
 
   const svg = d3.create('svg')
     .attr('viewBox', `0 0 ${W} ${H}`)
     .attr('class', 'district-preview-svg');
 
-  // Background fill — use the app background color so the SVG blends into the card
-  svg.append('rect')
-    .attr('width', W).attr('height', H)
+  // Background
+  svg.append('rect').attr('width', W).attr('height', H)
     .attr('fill', dark ? '#111213' : '#f3f4f6');
 
-  // All state districts — clearly distinct neutral fill so they read against the card
-  svg.selectAll('.prev-bg')
-    .data(stateFeatures)
-    .enter().append('path')
-    .attr('class', 'prev-bg')
-    .attr('d', pathGen)
-    .attr('fill', dark ? '#606468' : '#b8c4ce')   // clearly lighter than card bg in both modes
-    .attr('stroke', dark ? '#111213' : '#ffffff')
-    .attr('stroke-width', 1.5);
+  // SVG clipPath — clips roads/urban to district boundary
+  const defs = svg.append('defs');
+  defs.append('clipPath').attr('id', 'district-clip')
+    .append('path').datum(todayDistrict).attr('d', pathGen);
 
-  // Correct district — solid CMU red with white halo so it pops on any background
+  // Layer 1: district interior — clearly lighter than dark bg so shape is legible
+  svg.append('path')
+    .datum(todayDistrict)
+    .attr('d', pathGen)
+    .attr('fill', dark ? '#2e2e2e' : '#ffffff')
+    .attr('stroke', 'none');
+
+  // Layer 2: urban areas, clipped to district
+  if (urban) {
+    const urbanFC = topojson.feature(urban, Object.values(urban.objects)[0]);
+    svg.append('g')
+      .attr('clip-path', 'url(#district-clip)')
+      .selectAll('path')
+      .data(urbanFC.features.filter(nearDistrict))
+      .enter().append('path')
+      .attr('d', pathGen)
+      .attr('fill', dark ? '#3a3a3a' : '#e8e8e8')
+      .attr('stroke', 'none');
+  }
+
+  // Layer 3: roads, clipped to district
+  if (roads) {
+    const roadsFC = topojson.feature(roads, Object.values(roads.objects)[0]);
+    svg.append('g')
+      .attr('clip-path', 'url(#district-clip)')
+      .selectAll('path')
+      .data(roadsFC.features.filter(nearDistrict))
+      .enter().append('path')
+      .attr('d', pathGen)
+      .attr('fill', 'none')
+      .attr('stroke', dark ? '#555' : '#bbb')
+      .attr('stroke-width', 0.8);
+  }
+
+  // Layer 4: CMU red fill tint over the district interior
   svg.append('path')
     .datum(todayDistrict)
     .attr('d', pathGen)
     .attr('fill', '#C41230')
-    .attr('stroke', '#ffffff')
-    .attr('stroke-width', 2)
-    .attr('paint-order', 'stroke');  // stroke behind fill so border doesn't eat into shape
+    .attr('fill-opacity', 0.15)
+    .attr('stroke', 'none');
+
+  // Layer 5: district boundary stroke on top
+  svg.append('path')
+    .datum(todayDistrict)
+    .attr('d', pathGen)
+    .attr('fill', 'none')
+    .attr('stroke', dark ? '#ff6b6b' : '#C41230')
+    .attr('stroke-width', 2.5)
+    .attr('stroke-linejoin', 'round');
 
   container.appendChild(svg.node());
 }
@@ -1779,10 +1880,9 @@ function resetGame(newIdx) {
   if (tvEl) tvEl.textContent = '0:00';
   document.getElementById('timer-display').classList.remove('running');
 
-  // Reset Leaflet map: remove district layer, pan back to default view
+  // Reset Leaflet map: remove district layer; renderDistrict below will fitBounds to new district
   if (districtLayer) { map.removeLayer(districtLayer); districtLayer = null; }
   applyMapStage(0);
-  map.setView([37.8, -96], 4);
 
   // Reset US reference map (clear the SVG so initUSRefMap rebuilds it)
   const refMapEl = document.getElementById('us-ref-map');
