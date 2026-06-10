@@ -1511,38 +1511,110 @@ function endGame(won) {
 //  RESULT & SHARE
 // ============================================================
 
-let _previewMap = null;
+function _previewSVGPaths(W, H, pad, dark) {
+  // The GeoJSON district polygons have CW winding (D3 expects CCW for outer rings).
+  // Reverse the outer ring to fix winding so fitExtent/geoBounds work correctly.
+  // Also drop inner rings (holes/enclaves) which cause SVG fill artifacts.
+  const geom = todayDistrict && todayDistrict.geometry;
+  let outerRing = null;
+  if (geom && geom.type === 'Polygon') {
+    outerRing = geom.coordinates[0];
+  } else if (geom && geom.type === 'MultiPolygon') {
+    // Use the largest polygon (by geographic area)
+    const largest = geom.coordinates.reduce((best, poly) => {
+      const a = d3.geoArea({ type: 'Feature', geometry: { type: 'Polygon', coordinates: poly } });
+      const b = d3.geoArea({ type: 'Feature', geometry: { type: 'Polygon', coordinates: best } });
+      return a < b ? poly : best;
+    });
+    outerRing = largest[0];
+  }
+  const ring = outerRing ? outerRing.slice().reverse() : [];
+  const outerFeature = { type: 'Feature', geometry: { type: 'Polygon', coordinates: [ring] } };
+  const projection = d3.geoMercator()
+    .fitExtent([[pad, pad], [W - pad, H - pad]], outerFeature);
+  const pathGen = d3.geoPath(projection);
+  const d = pathGen(outerFeature);
+  const stroke = dark ? '#ff6b6b' : '#C41230';
+  return { d, stroke };
+}
+
+function _renderDistrictToBlob() {
+  return new Promise((resolve, reject) => {
+    if (!todayDistrict || !window.d3) return reject('no district');
+    const W = 800, H = 450, pad = 40;
+    const dark = isDarkMode();
+    const { d, stroke } = _previewSVGPaths(W, H, pad, dark);
+
+    const ns = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('xmlns', ns);
+    svg.setAttribute('width', W); svg.setAttribute('height', H);
+
+    const bg = document.createElementNS(ns, 'rect');
+    bg.setAttribute('width', W); bg.setAttribute('height', H);
+    bg.setAttribute('fill', dark ? '#252526' : '#f3f4f6');
+    svg.appendChild(bg);
+
+    const fill = document.createElementNS(ns, 'path');
+    fill.setAttribute('d', d);
+    fill.setAttribute('fill', '#C41230');
+    fill.setAttribute('fill-opacity', dark ? '0.55' : '0.3');
+    svg.appendChild(fill);
+
+    const outline = document.createElementNS(ns, 'path');
+    outline.setAttribute('d', d);
+    outline.setAttribute('fill', 'none');
+    outline.setAttribute('stroke', stroke);
+    outline.setAttribute('stroke-width', '3');
+    outline.setAttribute('stroke-linejoin', 'round');
+    svg.appendChild(outline);
+
+    const url = URL.createObjectURL(
+      new Blob([new XMLSerializer().serializeToString(svg)], { type: 'image/svg+xml' })
+    );
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = W; canvas.height = H;
+      canvas.getContext('2d').drawImage(img, 0, 0);
+      URL.revokeObjectURL(url);
+      canvas.toBlob(b => b ? resolve(b) : reject('toBlob failed'), 'image/png');
+    };
+    img.onerror = () => reject('svg→img failed');
+    img.src = url;
+  });
+}
 
 function renderDistrictPreview() {
   const container = document.getElementById('result-district-preview');
-  if (!container || !todayDistrict) return;
+  if (!container || !todayDistrict || !window.d3) return;
+  container.innerHTML = '';
 
-  // Destroy any existing preview map
-  if (_previewMap) { _previewMap.remove(); _previewMap = null; }
-  container.innerHTML = '<div id="preview-map-inner"></div>';
-
+  const W = 440, H = 180, pad = 20;
   const dark = isDarkMode();
+  const { d, stroke } = _previewSVGPaths(W, H, pad, dark);
 
-  _previewMap = L.map('preview-map-inner', {
-    zoomControl: false,
-    attributionControl: false,
-    dragging: false,
-    scrollWheelZoom: false,
-    doubleClickZoom: false,
-    boxZoom: false,
-    keyboard: false,
-    touchZoom: false
-  });
+  const svg = d3.create('svg')
+    .attr('viewBox', `0 0 ${W} ${H}`)
+    .attr('class', 'district-preview-svg');
 
-  // District overlay — no base map, just the boundary on a plain background
-  L.geoJSON(todayDistrict, {
-    style: { color: '#C41230', weight: 2, fillColor: '#C41230', fillOpacity: 0.35 }
-  }).addTo(_previewMap);
+  // Exterior mask: dark overlay outside the district so interior stands out
+  const exterior = `M0,0L${W},0L${W},${H}L0,${H}Z ${d}`;
+  svg.append('path').attr('d', exterior)
+    .attr('fill', dark ? 'rgba(0,0,0,0.55)' : 'rgba(0,0,0,0.18)')
+    .attr('fill-rule', 'evenodd');
 
-  // Fit to district and invalidate size once container is visible
-  const bounds = L.geoJSON(todayDistrict).getBounds();
-  _previewMap.fitBounds(bounds, { padding: [12, 12] });
-  setTimeout(() => _previewMap && _previewMap.invalidateSize(), 50);
+  // District fill
+  svg.append('path').attr('d', d)
+    .attr('fill', '#C41230').attr('fill-opacity', dark ? 0.45 : 0.25);
+
+  // District stroke
+  svg.append('path').attr('d', d)
+    .attr('fill', 'none')
+    .attr('stroke', stroke)
+    .attr('stroke-width', 2.5).attr('stroke-linejoin', 'round');
+
+  container.appendChild(svg.node());
 }
 
 function showResult(won) {
@@ -1923,10 +1995,22 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('banner-new-map-btn').addEventListener('click', startNewMap);
 
   // Post to X / Twitter
-  document.getElementById('post-x-btn').addEventListener('click', () => {
+  document.getElementById('post-x-btn').addEventListener('click', async () => {
     const text = buildShareText();
-    const url  = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text);
-    window.open(url, '_blank', 'noopener,noreferrer');
+    const tweetUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text);
+
+    // Try to share with district image via Web Share API (mobile/Safari)
+    if (navigator.canShare && todayDistrict && window.d3) {
+      try {
+        const blob = await _renderDistrictToBlob();
+        const file = new File([blob], 'district.png', { type: 'image/png' });
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], text });
+          return;
+        }
+      } catch (err) { /* fall through to web intent */ }
+    }
+    window.open(tweetUrl, '_blank', 'noopener,noreferrer');
   });
 
   // Resize — keep Leaflet map tile grid current when container changes
@@ -1982,9 +2066,6 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => {
       const modal = btn.closest('.modal');
       modal.classList.add('hidden');
-      if (modal.id === 'result-modal' && _previewMap) {
-        _previewMap.remove(); _previewMap = null;
-      }
     });
   });
 
