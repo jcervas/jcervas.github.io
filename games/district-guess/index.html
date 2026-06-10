@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>District Guess Beta 1.0 — Daily Congressional District Game</title>
+  <title>District Guess Beta 1.1 — Daily Congressional District Game</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=24" />
+  <link rel="stylesheet" href="style.css?v=26" />
 </head>
 <body>
 
@@ -32,7 +32,7 @@
         <circle cx="12" cy="10" r="4.5" fill="white"/>
         <circle cx="12" cy="10" r="2" fill="#C41230"/>
       </svg>
-      District Guess <span class="beta-badge">Beta 1.0</span>
+      District Guess <span class="beta-badge">Beta 1.1</span>
     </h1>
     <!-- Timer + donate link on the right -->
     <div class="header-right">
@@ -159,12 +159,7 @@
       <!-- Guess progress dots — always visible; inline timer injected by JS on mobile -->
       <div id="guess-counter" class="guess-counter"></div>
 
-      <!-- State confirmed badge — shown at top once state is locked -->
-      <div id="state-confirmed" class="hidden">
-        <span>✓ State confirmed:</span> <strong id="state-confirmed-name"></strong>
-      </div>
-
-      <!-- Clickable US states map — fades out once state confirmed; replaced by district tiles -->
+      <!-- Clickable US states map — zooms to state once confirmed; replaced by D3 district map -->
       <div id="us-ref-section">
         <div class="ref-label" id="ref-label">Click a state to select it</div>
         <div id="us-ref-map"></div>
@@ -186,10 +181,6 @@
       <div id="clues-list"></div>
     </div>
 
-    <div id="guess-section">
-      <div id="guess-history"></div>
-      <div id="guess-remaining"></div>
-    </div>
   </div>
 
   <!-- Result modal (opens on game end or "View Result" click) -->
@@ -199,6 +190,7 @@
 
       <div class="result-modal-tabs">
         <button class="result-tab-btn active" data-rtab="result">Result</button>
+        <button class="result-tab-btn" data-rtab="guesses">Guesses</button>
         <button class="result-tab-btn" data-rtab="census">District Profile</button>
       </div>
 
@@ -226,6 +218,13 @@
            class="donate-btn result-donate-btn" target="_blank" rel="noopener">
           Donate to CMU
         </a>
+      </div>
+
+      <div id="guesses-section" class="result-tab-pane">
+        <div id="guesses-district-preview"></div>
+        <div id="guesses-summary"></div>
+        <div id="guess-history"></div>
+        <div id="guess-remaining"></div>
       </div>
 
       <div id="census-section" class="result-tab-pane">
