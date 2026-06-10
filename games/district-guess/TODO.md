@@ -1,19 +1,5 @@
 # TODO 🚧
 
-Your new site is all yours so it doesn't matter if you break it! Try editing the code–add a button element that moves when the user clicks it.
-
-In `index.html`, add this code on the line after the comment with `ADD BUTTON HERE` in it (you can copy and paste the button element HTML):
-
-```html
-<button>
-    Click me!
-</button>
-```
-
-Look at the page to see the button. Click it!
-
-Open `script.js` to see the script that makes the button move.
-
-## Keep going! 🚀
-
-Try adding more properties to the CSS `dipped` style for the button to see how the changes appear on click.
+1. Want to preprocess topojson to add more flexibility when rendering in D3. For instance, I have now added inner points (check projection) as feature properties (but probably can just create a layer). I also added polsby popper compactness (but have code at '/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/GitHub/createMaps/compactness/compactness.sh' to calculate reock). Might also want to have a layer with innerlines so that the D3 map doesn't show the district lines in the reference map until game is over.
+2. Need to move the hints to the bottom of the screen, showing the most recent hint but leaving all previous ones in a popup (add icon to that div). Will need to test ways to implement this cleanly.
+3. Make sure reference map fills ~55% of the screen and "map" fills ~35% (with hint being around 10%).
