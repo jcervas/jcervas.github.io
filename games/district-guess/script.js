@@ -634,14 +634,15 @@ function renderInlinePersonalStats() {
 
   const bars = [1, 2, 3, 4, 5, 6, 'X'].map(k => {
     const count = dist[k] || 0;
-    const pct   = count > 0 ? Math.max(Math.round(count / maxBar * 100), 7) : 0;
+    const pct   = count > 0 ? Math.max(Math.round(count / maxBar * 100), 12) : 0;
     const hi    = (wonToday && k === guessCount) || (!wonToday && k === 'X');
     return `<div class="rdist-row">
       <span class="rdist-n">${k}</span>
       <div class="rdist-bar-wrap">
-        <div class="rdist-bar${hi ? ' today' : ''}" style="width:${pct}%"></div>
+        <div class="rdist-bar${hi ? ' today' : ''}" style="width:${pct}%">
+          ${count ? `<span class="rdist-count">${count}</span>` : ''}
+        </div>
       </div>
-      <span class="rdist-count">${count || ''}</span>
     </div>`;
   }).join('');
 
@@ -670,6 +671,7 @@ function switchResultTab(tab) {
   const btn  = document.querySelector(`.result-tab-btn[data-rtab="${tab}"]`);
   if (pane) pane.classList.add('active');
   if (btn)  btn.classList.add('active');
+  if (tab === 'census') renderDistrictPreview('census-district-preview');
 }
 
 async function fetchAndRenderCensusPanel(districtData) {
@@ -855,8 +857,11 @@ function startTimer() {
   document.getElementById('timer-display').classList.add('running');
   timerInterval = setInterval(() => {
     elapsedSeconds++;
+    const t = formatTime(elapsedSeconds);
     const tv = document.getElementById('timer-value');
-    if (tv) tv.textContent = formatTime(elapsedSeconds);
+    if (tv) tv.textContent = t;
+    const tvi = document.getElementById('timer-value-inline');
+    if (tvi) tvi.textContent = t;
     saveGameState();
   }, 1000);
 }
@@ -937,7 +942,9 @@ function updateGuessCounter() {
       ? `${MAX_GUESSES} guesses`
       : `${used} / ${MAX_GUESSES} · ${MAX_GUESSES - used} left`;
 
-  el.innerHTML = `<div class="gc-dots">${dots}</div><span class="gc-label">${label}</span>`;
+  const timerVal = document.getElementById('timer-value-inline');
+  const timerHtml = `<div id="timer-display-inline" class="timer-inline">${svgIcon('clock','icon')}<span id="timer-value-inline">${timerVal ? timerVal.textContent : '0:00'}</span></div>`;
+  el.innerHTML = `<div class="gc-dots">${dots}</div><span class="gc-label">${label}</span>${timerHtml}`;
 }
 
 // Called when a state is chosen via map click or chip click.
@@ -1585,8 +1592,8 @@ function _renderDistrictToBlob() {
   });
 }
 
-function renderDistrictPreview() {
-  const container = document.getElementById('result-district-preview');
+function renderDistrictPreview(containerId = 'result-district-preview') {
+  const container = document.getElementById(containerId);
   if (!container || !todayDistrict || !window.d3) return;
   container.innerHTML = '';
 
@@ -1770,6 +1777,8 @@ function restoreGame(saved) {
 
   const tvEl = document.getElementById('timer-value');
   if (tvEl) tvEl.textContent = formatTime(elapsedSeconds);
+  const tvElI = document.getElementById('timer-value-inline');
+  if (tvElI) tvElI.textContent = formatTime(elapsedSeconds);
 
   // Reconstruct adjacency-based eliminations from saved guess history
   eliminatedStates = new Set();
