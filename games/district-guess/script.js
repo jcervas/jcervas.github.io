@@ -198,7 +198,7 @@ const GAME_VERSION = (() => {
   const day = String(d.getDate()).padStart(2, '0');
   const h = String(d.getHours()).padStart(2, '0');
   const min = String(d.getMinutes()).padStart(2, '0');
-  return `Beta 1.1 (${y}-${m}-${day} ${h}:${min})`;
+  return `Beta 1.11 (${y}-${m}-${day} ${h}:${min})`;
 })();
 
 // Built at load time from GeoJSON: { 'TX': ['01','02',...], 'WY': ['01'], ... }
@@ -260,11 +260,11 @@ const FACT_DEFS = [
   },
 ];
 
-// Map tile progression — all pre-label stages use label-free tile sources.
+// Map tile progression — label-free throughout (labels give away city/state names).
 // Stage 0: outline only (nearly invisible background)
 // Stage 1: ESRI shaded relief (light) / satellite (dark) — geographic shape, no labels
-// Stage 2: ESRI satellite imagery — detailed terrain, still no labels
-// Stage 3: labeled tiles (CartoDB / OSM) — revealed only after 4 wrong guesses or game over
+// Stage 2: ESRI satellite imagery — detailed terrain, no labels
+// Stage 3: same as stage 2 (satellite stays); labeled tiles never revealed
 
 // ============================================================
 //  STATE
@@ -506,13 +506,14 @@ function applyMapStage(wrongGuesses, gameEnded = false) {
   // ESRI terrain tiles are light-colored — never show in dark mode
   terrainLayer.setOpacity(dark ? 0 : (idx === 1 ? 1 : 0));
 
-  // Satellite (no labels): stages 1–2 in dark mode, stage 2 only in light mode
-  const satOpacity = dark ? (idx === 1 || idx === 2 ? 1 : 0) : (idx === 2 ? 1 : 0);
+  // Satellite (no labels): stages 1–3 in dark mode, stages 2–3 in light mode
+  // Labels never revealed — satellite stays at max from stage 2/3 onward
+  const satOpacity = dark ? (idx >= 1 ? 1 : 0) : (idx >= 2 ? 1 : 0);
   satelliteLayer.setOpacity(satOpacity);
 
-  // Labeled tiles only at stage 3 (game over / 4 wrong guesses)
-  _streetOpacity = idx >= 3 ? 1 : 0.01;
-  streetLayer.setOpacity(_streetOpacity);
+  // Labeled street layer stays hidden throughout — labels give away city/state names
+  _streetOpacity = 0.01;
+  streetLayer.setOpacity(0.01);
 }
 
 function districtStyle() {
@@ -620,24 +621,29 @@ async function fetchCensus(districtData, field) {
   return 'N/A';
 }
 
-function renderGuessesSummary() {
-  const el = document.getElementById('guesses-summary');
+function renderTabHeader(containerId) {
+  const el = document.getElementById(containerId);
   if (!el || !todayDistrict) return;
-  const won = guessHistory.some(g => g.correct);
-  const answer = todayDistrict.properties['state-district'] || '';
+  const answer    = todayDistrict.properties['state-district'] || '';
   const stateName = STATE_NAMES[todayDistrict.properties.state] || todayDistrict.properties.state;
-  const distNum = (stateDistrictMap[todayDistrict.properties.state] || []).length === 1
-    ? 'At-Large' : `District ${parseInt(todayDistrict.properties['state-district']?.split('-')[1] || '0', 10)}`;
-  const timeStr = elapsedSeconds > 0 ? ` · ${formatTime(elapsedSeconds)}` : '';
-  const resultLine = won
+  const isAtLarge = (stateDistrictMap[todayDistrict.properties.state] || []).length === 1;
+  const distPart  = answer.slice(todayDistrict.properties.state.length + 1);
+  const distLabel = isAtLarge ? 'At-Large District' : `District ${parseInt(distPart, 10)}`;
+  const won       = guessHistory.some(g => g.correct && g.phase === 'district');
+  const timeStr   = elapsedSeconds > 0 ? ` &middot; <strong>${formatTime(elapsedSeconds)}</strong>` : '';
+  const solveStr  = won
     ? `Solved in <strong>${guessCount}</strong> guess${guessCount !== 1 ? 'es' : ''}${timeStr}`
-    : `Not solved — the answer was <strong>${answer}</strong>`;
+    : `Not solved &mdash; the answer was <strong>${answer}</strong>`;
   el.innerHTML = `
-    <div class="guesses-summary-header">
-      <div class="gs-answer">${stateName} — ${distNum}</div>
-      <div class="gs-result">${resultLine}</div>
-    </div>`;
+    <div class="result-answer">
+      <span class="result-answer-code">${answer}</span>
+      <span class="result-answer-sub">${stateName} &mdash; ${distLabel}</span>
+    </div>
+    <div class="result-time-line">${solveStr}</div>`;
 }
+
+// kept for backward compat call sites
+function renderGuessesSummary() { renderTabHeader('guesses-header'); }
 
 // Wordle-style personal stats grid (played, win%, streaks, distribution)
 function renderInlinePersonalStats() {
@@ -691,10 +697,13 @@ function switchResultTab(tab) {
   const btn  = document.querySelector(`.result-tab-btn[data-rtab="${tab}"]`);
   if (pane) pane.classList.add('active');
   if (btn)  btn.classList.add('active');
-  if (tab === 'census') renderDistrictPreview('census-district-preview');
+  if (tab === 'census') {
+    renderDistrictPreview('census-district-preview');
+    renderTabHeader('census-header');
+  }
   if (tab === 'guesses') {
     renderDistrictPreview('guesses-district-preview');
-    renderGuessesSummary();
+    renderTabHeader('guesses-header');
   }
 }
 
@@ -716,10 +725,38 @@ async function fetchAndRenderCensusPanel(districtData) {
   const bachPlus = parseInt(d.bach, 10) + parseInt(d.master, 10);
   const eduPct   = total > 0 ? Math.round(bachPlus / total * 100) : 0;
 
+  // Shapefile-derived facts (precise values for District Profile)
+  const areaMi2     = Math.round(todayDistrict?.properties.area_sqmi || 0);
+  const delegCount  = (stateDistrictMap[districtData.state] || []).length;
+  const margin      = todayDistrict?.properties.Margin2024Pres;
+  const pctDem      = Math.round((todayDistrict?.properties.DemPct2024Pres || 0) * 100);
+  const pctRep      = Math.round((todayDistrict?.properties.RepPct2024Pres || 0) * 100);
+  const absMar      = margin != null ? Math.abs(+margin * 100).toFixed(1) : null;
+  const voteValue   = absMar == null ? 'No data'
+    : +margin >  0.05 ? `D+${absMar}%`
+    : +margin < -0.05 ? `R+${absMar}%`
+    : 'Competitive';
+  const voteSub     = absMar == null ? '' : `${pctDem}D / ${pctRep}R`;
+
   censusLoading.classList.add('hidden');
   censusDataEl.classList.remove('hidden');
   censusDataEl.innerHTML = `
     <div class="census-grid">
+      <div class="census-card">
+        <div class="label">District Area</div>
+        <div class="value">${areaMi2 > 0 ? areaMi2.toLocaleString() + ' sq mi' : '—'}</div>
+        <div class="sub">2026 district boundaries</div>
+      </div>
+      <div class="census-card">
+        <div class="label">State Delegation</div>
+        <div class="value">${delegCount === 1 ? 'At-Large' : delegCount + ' districts'}</div>
+        <div class="sub">${STATE_NAMES[districtData.state] || districtData.state}</div>
+      </div>
+      <div class="census-card">
+        <div class="label">2024 Presidential Vote</div>
+        <div class="value">${voteValue}</div>
+        <div class="sub">${voteSub}</div>
+      </div>
       <div class="census-card">
         <div class="label">Total Population</div>
         <div class="value">${formatNumber(d.pop)}</div>
@@ -745,13 +782,8 @@ async function fetchAndRenderCensusPanel(districtData) {
         <div class="value">${whPct}% White (non-Hispanic)</div>
         <div class="sub">${blPct}% Black · ${hiPct}% Hispanic · ${asPct}% Asian</div>
       </div>
-      <div class="census-card">
-        <div class="label">State</div>
-        <div class="value">${STATE_NAMES[districtData.state] || districtData.state}</div>
-        <div class="sub">${(stateDistrictMap[districtData.state] || []).length === 1 ? 'At-Large District' : `District ${parseInt(districtData.district, 10)}`}</div>
-      </div>
     </div>
-    <div class="census-source">Source: U.S. Census Bureau, American Community Survey 5-Year Estimates (2022). ${d.name}</div>
+    <div class="census-source">Source: U.S. Census Bureau, ACS 5-Year Estimates (2022) &amp; 2026 district boundaries. ${d.name}</div>
   `;
 }
 
@@ -831,35 +863,39 @@ async function loadAlltimeScores() {
 function renderClues() {
   renderStateChips(); // update chip states whenever facts change
   updateUSRefMap();   // keep D3 map in sync
-  const list = document.getElementById('clues-list');
-  list.innerHTML = '';
+  const containers = ['hints-clues-list'].map(id => document.getElementById(id)).filter(Boolean);
+
+  containers.forEach(list => { list.innerHTML = ''; });
 
   for (let i = 0; i < FACT_DEFS.length; i++) {
     const def = FACT_DEFS[i];
-    const div = document.createElement('div');
-    // Fact 0 always visible (i <= cluesRevealed means i=0 shows when cluesRevealed=0)
-    if (i <= cluesRevealed) {
-      div.className = 'clue-item revealed';
-      div.innerHTML = `
-        <span class="clue-icon">${svgIcon(def.icon, 'clue-icon-svg')}</span>
-        <span class="clue-text">
-          <span class="clue-label">${def.label}</span>
-          <span class="clue-val">…</span>
-        </span>`;
-      const val = def.fn(districtDataFor(todayDistrict));
-      if (val instanceof Promise) {
-        val.then(v => {
-          const el = div.querySelector('.clue-val');
-          if (el) el.textContent = v;
-        });
+    const revealed = i <= cluesRevealed;
+
+    containers.forEach(list => {
+      const div = document.createElement('div');
+      if (revealed) {
+        div.className = 'clue-item revealed';
+        div.innerHTML = `
+          <span class="clue-icon">${svgIcon(def.icon, 'clue-icon-svg')}</span>
+          <span class="clue-text">
+            <span class="clue-label">${def.label}</span>
+            <span class="clue-val">…</span>
+          </span>`;
+        const val = def.fn(districtDataFor(todayDistrict));
+        if (val instanceof Promise) {
+          val.then(v => {
+            const el = div.querySelector('.clue-val');
+            if (el) el.textContent = v;
+          });
+        } else {
+          div.querySelector('.clue-val').textContent = val;
+        }
       } else {
-        div.querySelector('.clue-val').textContent = val;
+        div.className = 'clue-item locked';
+        div.innerHTML = `<span class="clue-icon">${svgIcon('lock', 'clue-icon-svg locked')}</span><span class="clue-text">${def.label}</span>`;
       }
-    } else {
-      div.className = 'clue-item locked';
-      div.innerHTML = `<span class="clue-icon">${svgIcon('lock', 'clue-icon-svg locked')}</span><span class="clue-text">${def.label}</span>`;
-    }
-    list.appendChild(div);
+      list.appendChild(div);
+    });
   }
 }
 
@@ -1527,7 +1563,6 @@ function buildDistrictD3Map(stateAbbr) {
   // 2. Fill all district paths with background color on top (covers internal edges)
   // Result: only the outer state boundary stroke remains visible.
   const stateBorderColor = dark ? '#999' : '#555';
-  const stateFillColor   = dark ? '#1e1e1e' : '#f0f0f0';
 
   const borderG = g.append('g').attr('class', 'state-border');
   fixedFeatures.forEach(f => {
@@ -1547,7 +1582,7 @@ function buildDistrictD3Map(stateAbbr) {
     fillG.append('path')
       .datum(f)
       .attr('d', pathGen)
-      .attr('fill', stateFillColor)
+      .attr('style', 'fill: var(--surface);')  // CSS var matches container background exactly
       .attr('stroke', 'none')
       .attr('pointer-events', 'none');
   });
@@ -1651,7 +1686,7 @@ function endGame(won) {
   gameOver = true;
   stopTimer();
   cluesRevealed = FACT_DEFS.length;   // reveal all text clues
-  applyMapStage(0, true);             // full OSM with labels
+  applyMapStage(0, true);
   // Ensure state is locked to the answer
   if (!correctStateGuessed) {
     correctStateGuessed = true;
@@ -2123,6 +2158,8 @@ async function init() {
   todayDistrict = districts[idx];
 
   initMap();
+  // Leaflet caches container size at init; flex layout may not be settled yet
+  setTimeout(() => { if (map) map.invalidateSize(); }, 50);
   initUSRefMap();   // start loading US states reference map
 
   // Check for saved game from today
@@ -2259,6 +2296,11 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Feedback button + form
+  document.getElementById('hints-btn').addEventListener('click', () => {
+    renderClues();
+    document.getElementById('hints-modal').classList.remove('hidden');
+  });
+
   document.getElementById('feedback-btn').addEventListener('click', () => {
     document.getElementById('feedback-modal').classList.remove('hidden');
   });

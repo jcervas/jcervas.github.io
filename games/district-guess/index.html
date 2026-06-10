@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>District Guess Beta 1.1 — Daily Congressional District Game</title>
+  <title>District Guess Beta 1.11 — Daily Congressional District Game</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="style.css?v=26" />
 </head>
@@ -21,6 +21,9 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
       </button>
       <button id="theme-toggle" class="btn-icon" title="Toggle dark mode"><!-- set by JS --></button>
+      <button id="hints-btn" class="btn-icon" title="Hints">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
+      </button>
       <button id="feedback-btn" class="btn-icon" title="Send feedback">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       </button>
@@ -32,7 +35,7 @@
         <circle cx="12" cy="10" r="4.5" fill="white"/>
         <circle cx="12" cy="10" r="2" fill="#C41230"/>
       </svg>
-      District Guess <span class="beta-badge">Beta 1.1</span>
+      District Guess <span class="beta-badge">Beta 1.11</span>
     </h1>
     <!-- Timer + donate link on the right -->
     <div class="header-right">
@@ -103,6 +106,15 @@
   </div>
 </div>
 
+<!-- ===== HINTS MODAL ===== -->
+<div id="hints-modal" class="modal hidden">
+  <div class="modal-content">
+    <button class="modal-close">✕</button>
+    <h2>Hints</h2>
+    <div id="hints-clues-list"></div>
+  </div>
+</div>
+
 <!-- ===== LEADERBOARD MODAL ===== -->
 <div id="leaderboard-modal" class="modal hidden">
   <div class="modal-content leaderboard-content">
@@ -154,7 +166,6 @@
     <div id="map"></div>
 
     <div id="reference-panel">
-      <h3>Reference</h3>
 
       <!-- Guess progress dots — always visible; inline timer injected by JS on mobile -->
       <div id="guess-counter" class="guess-counter"></div>
@@ -176,11 +187,6 @@
       </div>
     </div>
 
-    <div id="clues-panel">
-      <h3>Facts</h3>
-      <div id="clues-list"></div>
-    </div>
-
   </div>
 
   <!-- Result modal (opens on game end or "View Result" click) -->
@@ -196,8 +202,8 @@
 
       <div id="result-section" class="result-tab-pane active">
         <div id="result-district-preview"></div>
-        <div id="result-message"></div>
         <div id="result-stats"></div>
+        <div id="result-message"></div>
         <div id="result-personal-stats"></div>
         <div class="result-action-row">
           <button id="share-btn">
@@ -222,14 +228,14 @@
 
       <div id="guesses-section" class="result-tab-pane">
         <div id="guesses-district-preview"></div>
-        <div id="guesses-summary"></div>
+        <div id="guesses-header"></div>
         <div id="guess-history"></div>
         <div id="guess-remaining"></div>
       </div>
 
       <div id="census-section" class="result-tab-pane">
         <div id="census-district-preview"></div>
-        <h2>Better Know a District</h2>
+        <div id="census-header"></div>
         <div id="census-loading">Fetching district data from the U.S. Census…</div>
         <div id="census-data" class="hidden"></div>
         <a href="https://givenow.cmu.edu/campaigns/42524/donations/new?a=8338674"

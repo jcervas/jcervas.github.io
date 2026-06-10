@@ -285,6 +285,28 @@ main {
   gap: 16px;
 }
 
+/* Game section: fixed viewport height so flex-basis % on children resolves correctly */
+#game-section {
+  height: calc(100dvh - 90px); /* dvh avoids mobile browser chrome changes */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+}
+
+#map {
+  flex: 0 0 40%;
+  min-height: 0;
+}
+
+#reference-panel {
+  flex: 0 0 60%;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
 /* ---- Banner ---- */
 .banner {
   background: var(--banner-bg);
@@ -324,38 +346,22 @@ main {
 
 /* ---- Map ---- */
 #map {
-  height: 420px;
   width: 100%;
   border-radius: var(--radius);
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
   background: var(--bg);
-  /* Contain Leaflet's internal z-indexes so they don't bleed over other elements */
   isolation: isolate;
   position: relative;
   z-index: 0;
 }
 
 /* ---- Clues panel ---- */
-#clues-panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 12px 14px;
-  box-shadow: var(--shadow);
-}
-#clues-panel h3 {
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
-  color: var(--muted);
-  margin-bottom: 8px;
-}
-#clues-list {
+#hints-clues-list {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  margin-top: 8px;
 }
 
 /* Revealed facts — prominent */
@@ -1205,56 +1211,11 @@ body.dark-mode .post-x-btn { background: #e7e9ea; color: #0f1419 !important; bor
 .hidden { display: none !important; }
 
 /* ============================================================
-   RESPONSIVE LAYOUT
-   Portrait / narrow  → stacked (map top, ref + clues below)
-   Landscape / wide   → side-by-side (map left, ref + clues right)
+   RESPONSIVE LAYOUT — always stacked (map top 40%, ref bottom 60%)
    ============================================================ */
 
-/* --- Fluid map height in portrait --- */
-#map {
-  height: clamp(220px, 48vw, 400px);
-}
-
-/* --- Landscape: map left column, ref + clues right column --- */
 @media (orientation: landscape) and (min-width: 600px) {
-  main {
-    max-width: 1400px;
-    padding: 10px 20px;
-  }
-
-  #game-section {
-    display: grid;
-    grid-template-columns: 45% 25% 30%;
-    grid-template-rows: 1fr;
-    grid-template-areas: "map ref clues";
-    gap: 10px;
-    height: calc(100vh - 68px);
-    overflow: hidden;
-  }
-
-  /* District map: rightmost column, full height */
-  #map { grid-area: map; height: 100%; min-height: 0; width: 100%; }
-
-  /* Reference panel: left column, full height */
-  #reference-panel {
-    grid-area: ref;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    overflow: hidden;
-    padding: 12px 14px;
-  }
-  #reference-panel h3    { display: none; }
-  #us-ref-section        { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-  #us-ref-section .ref-label { flex-shrink: 0; margin-bottom: 4px; }
-  #us-ref-map            { flex: 1; height: auto !important; min-height: 0; }
-  #district-tiles        { flex: 1; overflow-y: auto; align-content: start; }
-  #state-chips-section   { flex-shrink: 0; max-height: 130px; overflow-y: auto; }
-
-  /* Clues panel: middle column, full height */
-  #clues-panel { grid-area: clues; overflow-y: auto; min-height: 0; }
-
+  main { max-width: 1400px; padding: 10px 20px; }
 }
 
 /* --- Small screens (narrow phones, etc.) --- */
@@ -1273,9 +1234,6 @@ body.dark-mode .post-x-btn { background: #e7e9ea; color: #0f1419 !important; bor
 
   /* ── Game layout: fit in one screen ── */
   main { padding: 6px 8px; }
-
-  /* Map: tall enough to be useful, not so tall it crowds the rest */
-  #map { height: clamp(190px, 44vw, 260px); }
 
   /* Suppress Leaflet attribution on mobile to save space */
   .leaflet-control-attribution { display: none !important; }
