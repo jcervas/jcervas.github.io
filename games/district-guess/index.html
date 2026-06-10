@@ -156,7 +156,7 @@
     <div id="reference-panel">
       <h3>Reference</h3>
 
-      <!-- Guess progress dots — always visible -->
+      <!-- Guess progress dots — always visible; inline timer injected by JS on mobile -->
       <div id="guess-counter" class="guess-counter"></div>
 
       <!-- State confirmed badge — shown at top once state is locked -->
@@ -222,12 +222,21 @@
           </button>
         </div>
         <div id="share-copied" class="hidden">Copied to clipboard!</div>
+        <a href="https://givenow.cmu.edu/campaigns/42524/donations/new?a=8338674"
+           class="donate-btn result-donate-btn" target="_blank" rel="noopener">
+          Donate to CMU
+        </a>
       </div>
 
       <div id="census-section" class="result-tab-pane">
+        <div id="census-district-preview"></div>
         <h2>Better Know a District</h2>
         <div id="census-loading">Fetching district data from the U.S. Census…</div>
         <div id="census-data" class="hidden"></div>
+        <a href="https://givenow.cmu.edu/campaigns/42524/donations/new?a=8338674"
+           class="donate-btn result-donate-btn" target="_blank" rel="noopener">
+          Donate to CMU
+        </a>
       </div>
     </div>
   </div>

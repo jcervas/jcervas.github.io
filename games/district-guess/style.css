@@ -243,6 +243,18 @@ header h1 {
   gap: 5px;
 }
 .timer.running { color: var(--accent); }
+
+/* Inline timer shown on mobile, inside guess-counter row */
+.timer-inline {
+  display: none;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  margin-left: auto;
+}
 .btn-icon {
   background: none;
   border: 1px solid var(--border);
@@ -537,8 +549,9 @@ main {
 }
 .result-tab-pane.active { display: flex; flex-direction: column; align-items: center; gap: 14px; }
 
-/* District shape preview in result modal */
-#result-district-preview {
+/* District shape preview in result modal (both tabs) */
+#result-district-preview,
+#census-district-preview {
   width: 100%;
   border-radius: var(--radius);
   overflow: hidden;
@@ -593,6 +606,14 @@ main {
   width: 100%;
   justify-content: center;
   flex-wrap: wrap;
+}
+.result-donate-btn {
+  width: 100%;
+  text-align: center;
+  font-size: 0.78rem;
+  padding: 7px 16px;
+  border-radius: var(--radius);
+  opacity: 0.85;
 }
 /* Shared base for all three action buttons */
 .result-action-row button,
@@ -742,8 +763,8 @@ body.dark-mode .post-x-btn { background: #e7e9ea; color: #0f1419 !important; bor
 }
 .rdist-bar-wrap {
   flex: 1;
-  height: 22px;
-  background: var(--surface-alt);
+  height: 17px;
+  background: var(--surface);
   border-radius: 3px;
   overflow: hidden;
 }
@@ -753,13 +774,21 @@ body.dark-mode .post-x-btn { background: #e7e9ea; color: #0f1419 !important; bor
   border-radius: 3px;
   transition: width 0.4s ease;
   min-width: 0;
+  position: relative;
+  overflow: hidden;
 }
 .rdist-bar.today { background: var(--cmu-red); }
 .rdist-count {
-  font-size: 0.78rem;
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.72rem;
   font-weight: 700;
-  color: var(--text);
-  width: 18px;
+  color: white;
+  pointer-events: none;
+  line-height: 1;
+  white-space: nowrap;
   text-align: right;
   flex-shrink: 0;
 }
@@ -823,6 +852,7 @@ body.dark-mode .post-x-btn { background: #e7e9ea; color: #0f1419 !important; bor
 
 /* ---- Modals ---- */
 .modal {
+  isolation: isolate;
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.5);
@@ -1264,14 +1294,91 @@ body.dark-mode .post-x-btn { background: #e7e9ea; color: #0f1419 !important; bor
 
 /* --- Small screens (narrow phones, etc.) --- */
 @media (max-width: 480px) {
-  /* Abbreviate donate to just "Donate" */
-  .donate-long  { display: none; }
+  /* ── Header: move timer inline, keep donate compact ── */
+  #timer-display { display: none; }        /* timer moves inline with guess dots */
+  .header-inner h1 { font-size: 1rem; gap: 5px; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .header-inner { height: 46px; padding: 0 8px; }
+  .donate-btn { font-size: 0.72rem; padding: 5px 10px; }
+  .donate-long { display: none; }
   .donate-short { display: inline; }
-  #timer-display { min-width: 0; }
-  .header-inner h1 { font-size: 1.05rem; }
+  /* Progressive hiding if still crowded: beta → logo → title text */
+  .beta-badge { display: none; }
+  @media (max-width: 360px) { .game-logo  { display: none; } }
+  @media (max-width: 310px) { .header-inner h1 > :not(.game-logo) { display: none; } }
+
+  /* ── Game layout: fit in one screen ── */
+  main { padding: 6px 8px; }
+
+  /* Map: tall enough to be useful, not so tall it crowds the rest */
+  #map { height: clamp(190px, 44vw, 260px); }
+
+  /* Suppress Leaflet attribution on mobile to save space */
+  .leaflet-control-attribution { display: none !important; }
+
+  /* Show inline timer next to guess dots */
+  .timer-inline { display: flex; }
+
+  /* Reference panel: keep state map, drop chips */
+  #state-chips-section { display: none; }
+  #reference-panel h3 { display: none; }
+  #reference-panel { padding: 6px 8px; gap: 4px; }
+  #state-confirmed { font-size: 0.82rem; }
+
+  /* Donate: compact in header */
+  .donate-btn { font-size: 0.72rem; padding: 5px 10px; }
+  .donate-long { display: none; }
+  .donate-short { display: inline; }
+
+  /* Game-over banner: sticky below header so it's always reachable */
+  #already-played-banner:not(.hidden) {
+    position: sticky;
+    top: 46px;
+    z-index: 90;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    margin: 0 -8px;
+  }
+
+  /* Clues panel: compact */
+  #clues-panel { padding: 4px 8px; }
+  #clues-panel h3 { display: none; }
+  .clue-item.revealed {
+    padding: 5px 10px;
+    gap: 6px;
+    border-radius: 6px;
+  }
+  .clue-item.revealed .clue-label { font-size: 0.62rem; margin-bottom: 0; }
+  .clue-item.revealed .clue-text  { font-size: 0.82rem; line-height: 1.2; }
+  .clue-icon-svg { width: 14px; height: 14px; }
+  #clues-list { gap: 3px; }
+
+  /* Guess counter: smaller dots, no wasted space */
+  .guess-counter { padding: 0 0 4px; gap: 5px; }
+  .gc-dot { width: 9px; height: 9px; }
+  .gc-label { font-size: 0.7rem; }
+
+  /* Guess section: compact */
+  #guess-section { padding: 2px 8px; }
+
+  /* Modals */
   .modal-content { padding: 18px; }
   .census-grid { grid-template-columns: 1fr 1fr; }
   .personal-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Result modal takes full viewport on mobile */
+  #result-modal {
+    align-items: flex-start;
+    padding: 0;
+  }
+  #result-modal .result-modal-content {
+    width: 100vw;
+    max-width: 100vw;
+    max-height: 100dvh;
+    height: 100dvh;
+    border-radius: 0;
+    margin: 0;
+  }
 }
 
 /* ============================================================
