@@ -1511,119 +1511,38 @@ function endGame(won) {
 //  RESULT & SHARE
 // ============================================================
 
-// Lazy-load cache for preview background layers
-let _previewRoads  = null;  // TopoJSON object once loaded
-let _previewUrban  = null;
+let _previewMap = null;
 
-/** Renders the district preview using D3 + bbox projection.
- *  Roads and urban areas loaded once from TopoJSON and cached. */
 function renderDistrictPreview() {
   const container = document.getElementById('result-district-preview');
-  if (!container || !todayDistrict || !window.d3) return;
-  container.innerHTML = '<div class="preview-loading">Loading…</div>';
+  if (!container || !todayDistrict) return;
 
-  const loadRoads = _previewRoads
-    ? Promise.resolve(_previewRoads)
-    : fetch('./previews-data/roads.topojson').then(r => r.json()).then(d => { _previewRoads = d; return d; });
+  // Destroy any existing preview map
+  if (_previewMap) { _previewMap.remove(); _previewMap = null; }
+  container.innerHTML = '<div id="preview-map-inner"></div>';
 
-  const loadUrban = _previewUrban
-    ? Promise.resolve(_previewUrban)
-    : fetch('./previews-data/urban.topojson').then(r => r.json()).then(d => { _previewUrban = d; return d; });
-
-  Promise.all([loadRoads, loadUrban])
-    .then(([roads, urban]) => _drawPreview(container, roads, urban))
-    .catch(() => _drawPreview(container, null, null));
-}
-
-function _drawPreview(container, roads, urban) {
-  if (!window.d3 || !todayDistrict) return;
-  container.innerHTML = '';
-
-  const W = 440, H = 220, pad = 24;
   const dark = isDarkMode();
 
-  const projection = d3.geoMercator()
-    .fitExtent([[pad, pad], [W - pad, H - pad]], todayDistrict);
-  const pathGen = d3.geoPath(projection);
+  _previewMap = L.map('preview-map-inner', {
+    zoomControl: false,
+    attributionControl: false,
+    dragging: false,
+    scrollWheelZoom: false,
+    doubleClickZoom: false,
+    boxZoom: false,
+    keyboard: false,
+    touchZoom: false
+  });
 
-  // District geographic bbox — used to filter roads/urban to just what's nearby
-  const [[minLon, minLat], [maxLon, maxLat]] = d3.geoBounds(todayDistrict);
-  const lonBuf = (maxLon - minLon) * 0.15;
-  const latBuf = (maxLat - minLat) * 0.15;
-  function nearDistrict(feat) {
-    if (!feat.geometry) return false;
-    try {
-      const [[fx0, fy0], [fx1, fy1]] = d3.geoBounds(feat);
-      return fx1 >= minLon - lonBuf && fx0 <= maxLon + lonBuf &&
-             fy1 >= minLat - latBuf && fy0 <= maxLat + latBuf;
-    } catch { return false; }
-  }
+  // District overlay — no base map, just the boundary on a plain background
+  L.geoJSON(todayDistrict, {
+    style: { color: '#C41230', weight: 2, fillColor: '#C41230', fillOpacity: 0.35 }
+  }).addTo(_previewMap);
 
-  const svg = d3.create('svg')
-    .attr('viewBox', `0 0 ${W} ${H}`)
-    .attr('class', 'district-preview-svg');
-
-  // Background
-  svg.append('rect').attr('width', W).attr('height', H)
-    .attr('fill', dark ? '#111213' : '#f3f4f6');
-
-  // SVG clipPath — clips roads/urban to district boundary
-  const defs = svg.append('defs');
-  defs.append('clipPath').attr('id', 'district-clip')
-    .append('path').datum(todayDistrict).attr('d', pathGen);
-
-  // Layer 1: district interior — clearly lighter than dark bg so shape is legible
-  svg.append('path')
-    .datum(todayDistrict)
-    .attr('d', pathGen)
-    .attr('fill', dark ? '#2e2e2e' : '#ffffff')
-    .attr('stroke', 'none');
-
-  // Layer 2: urban areas, clipped to district
-  if (urban) {
-    const urbanFC = topojson.feature(urban, Object.values(urban.objects)[0]);
-    svg.append('g')
-      .attr('clip-path', 'url(#district-clip)')
-      .selectAll('path')
-      .data(urbanFC.features.filter(nearDistrict))
-      .enter().append('path')
-      .attr('d', pathGen)
-      .attr('fill', dark ? '#3a3a3a' : '#e8e8e8')
-      .attr('stroke', 'none');
-  }
-
-  // Layer 3: roads, clipped to district
-  if (roads) {
-    const roadsFC = topojson.feature(roads, Object.values(roads.objects)[0]);
-    svg.append('g')
-      .attr('clip-path', 'url(#district-clip)')
-      .selectAll('path')
-      .data(roadsFC.features.filter(nearDistrict))
-      .enter().append('path')
-      .attr('d', pathGen)
-      .attr('fill', 'none')
-      .attr('stroke', dark ? '#555' : '#bbb')
-      .attr('stroke-width', 0.8);
-  }
-
-  // Layer 4: CMU red fill tint over the district interior
-  svg.append('path')
-    .datum(todayDistrict)
-    .attr('d', pathGen)
-    .attr('fill', '#C41230')
-    .attr('fill-opacity', 0.15)
-    .attr('stroke', 'none');
-
-  // Layer 5: district boundary stroke on top
-  svg.append('path')
-    .datum(todayDistrict)
-    .attr('d', pathGen)
-    .attr('fill', 'none')
-    .attr('stroke', dark ? '#ff6b6b' : '#C41230')
-    .attr('stroke-width', 2.5)
-    .attr('stroke-linejoin', 'round');
-
-  container.appendChild(svg.node());
+  // Fit to district and invalidate size once container is visible
+  const bounds = L.geoJSON(todayDistrict).getBounds();
+  _previewMap.fitBounds(bounds, { padding: [12, 12] });
+  setTimeout(() => _previewMap && _previewMap.invalidateSize(), 50);
 }
 
 function showResult(won) {
@@ -2061,7 +1980,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Modal close buttons
   document.querySelectorAll('.modal-close').forEach(btn => {
     btn.addEventListener('click', () => {
-      btn.closest('.modal').classList.add('hidden');
+      const modal = btn.closest('.modal');
+      modal.classList.add('hidden');
+      if (modal.id === 'result-modal' && _previewMap) {
+        _previewMap.remove(); _previewMap = null;
+      }
     });
   });
 
