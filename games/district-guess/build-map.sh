@@ -27,6 +27,7 @@ CREATEMAPS="$(cd "$SCRIPT_DIR/../../../createMaps" && pwd)"
 DISTRICTS_SRC="$CREATEMAPS/national/output/national-cd-2026.geojson"
 URBAN_SRC="$CREATEMAPS/us-urban.json"
 ROADS_SRC="$CREATEMAPS/us_can_roads.json"
+ACS_CSV="$CREATEMAPS/acs_by_district.csv"
 OUT="$SCRIPT_DIR/districts.topojson"
 
 SIMPLIFY="${SIMPLIFY:-10%}"
@@ -65,7 +66,7 @@ mapshaper "$DISTRICTS_SRC" name=districts \
 # ── Compactness + area via R redist package ───────────────────────────────────
 DISTRICTS_WITH_COMPACT="$TMPWORK/districts_compact.json"
 echo "  Computing area, Polsby-Popper, and Reock via R redist..."
-Rscript - "$DISTRICTS_SIMPLE" "$DISTRICTS_WITH_COMPACT" <<'REOF'
+Rscript - "$DISTRICTS_SIMPLE" "$DISTRICTS_WITH_COMPACT" "$ACS_CSV" <<'REOF'
 args <- commandArgs(trailingOnly = TRUE)
 suppressPackageStartupMessages({
   library(sf)
@@ -85,6 +86,15 @@ shp$reock         <- round(comp_reock(plans, shp_proj), 4)
 
 # R replaces hyphens in column names with dots — restore original name
 names(shp)[names(shp) == "state.district"] <- "state-district"
+
+# Join ACS data if CSV path provided and exists
+if (length(args) >= 3 && file.exists(args[3])) {
+  acs <- read.csv(args[3], stringsAsFactors = FALSE, check.names = FALSE)
+  shp <- merge(shp, acs[, c("state-district","pop","income","medianHome",
+                              "whiteNH","black","asian","hispanic","bach","master")],
+               by = "state-district", all.x = TRUE)
+  cat(sprintf("  ACS data joined for %d districts.\n", sum(!is.na(shp$pop))))
+}
 
 st_write(shp, args[2], driver = "GeoJSON", delete_dsn = TRUE, quiet = TRUE)
 cat(sprintf("  area/PP/Reock written for %d districts.\n", nrow(shp)))

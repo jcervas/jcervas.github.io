@@ -478,10 +478,11 @@ let _streetOpacity = 0.01;
 function initMap() {
   map = L.map('map', {
     zoomControl:      false,   // no zoom buttons — district map is for context only
-    scrollWheelZoom:  false,   // no scroll-wheel zoom
-    doubleClickZoom:  false,   // no dbl-click zoom
-    touchZoom:        false,   // no pinch zoom
-    boxZoom:          false,   // no drag-box zoom
+    scrollWheelZoom:  false,
+    doubleClickZoom:  false,
+    touchZoom:        false,
+    boxZoom:          false,
+    dragging:         false,   // prevent accidental map panning on mobile
     attributionControl: false
   }).setView([37.8, -96], 4);
 
@@ -615,58 +616,28 @@ function renderDistrict(feature) {
 }
 
 // ============================================================
-//  CENSUS API — single cached fetch for today's district
+//  CENSUS DATA — read from TopoJSON properties (pre-aggregated via BAF)
 // ============================================================
-// Cache the Promise itself so concurrent calls all await the same request
-let _cachePromise = null;
-
-async function getDistrictCensusData(districtData) {
-  if (_cachePromise) return _cachePromise;
-
-  const fips = STATE_FIPS[districtData.state];
-  if (!fips) return null;
-
-  let cdNum = districtData.district;
-  if (cdNum === '00' || cdNum === 'AT-LARGE') cdNum = '00'; // at-large / single-district states
-  else cdNum = String(parseInt(cdNum, 10)).padStart(2, '0');
-
-  // B03002 = race × Hispanic origin (no double-counting)
-  const vars = [
-    'NAME',
-    'B01003_001E', // total population
-    'B19013_001E', // median household income
-    'B03002_003E', // White alone, not Hispanic
-    'B03002_004E', // Black alone, not Hispanic
-    'B03002_006E', // Asian alone, not Hispanic
-    'B03002_012E', // Hispanic or Latino (any race)
-    'B25077_001E', // median home value
-    'B15003_022E', // bachelor's degree
-    'B15003_023E', // master's degree
-  ].join(',');
-
-  const keyParam = CENSUS_API_KEY ? `&key=${CENSUS_API_KEY}` : '';
-  const url = `https://api.census.gov/data/2022/acs/acs5?get=${vars}&for=congressional%20district:${cdNum}&in=state:${fips}${keyParam}`;
-
-  _cachePromise = (async () => {
-    try {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`Census API ${res.status}`);
-      const data = await res.json();
-      if (!data[1]) throw new Error('Empty Census response');
-      const [name, pop, income, whiteNH, black, asian, hispanic, medianHome, bach, master] = data[1];
-      return { name, pop, income, whiteNH, black, asian, hispanic, medianHome, bach, master };
-    } catch (e) {
-      console.error('Census fetch failed:', e);
-      _cachePromise = null; // allow retry on next call
-      return null;
-    }
-  })();
-
-  return _cachePromise;
+async function getDistrictCensusData() {
+  if (!todayDistrict) return null;
+  const p = todayDistrict.properties;
+  if (p.pop == null) return null;
+  return {
+    name:       p['state-district'],
+    pop:        p.pop,
+    income:     p.income,
+    whiteNH:    p.whiteNH,
+    black:      p.black,
+    asian:      p.asian,
+    hispanic:   p.hispanic,
+    medianHome: p.medianHome,
+    bach:       p.bach,
+    master:     p.master,
+  };
 }
 
 async function fetchCensus(districtData, field) {
-  const d = await getDistrictCensusData(districtData);
+  const d = await getDistrictCensusData();
   if (!d) return 'N/A';
 
   if (field === 'pop') {
@@ -786,7 +757,7 @@ async function fetchAndRenderCensusPanel(districtData) {
   const censusLoading = document.getElementById('census-loading');
   const censusDataEl  = document.getElementById('census-data');
 
-  const d = await getDistrictCensusData(districtData);
+  const d = await getDistrictCensusData();
   if (!d) {
     censusLoading.textContent = 'Census data unavailable for this district.';
     return;
@@ -1467,6 +1438,21 @@ function initUSRefMap() {
       // If state already confirmed (restored session), draw district overlay immediately
       if (correctStateGuessed && todayDistrict && !gameOver) {
         showDistrictD3Map(todayDistrict.properties.state, true);
+      }
+
+      // Re-zoom once the container has real CSS dimensions (fixes mobile timing issue
+      // where getBBox() fires before layout settles, leaving the map too zoomed out)
+      const refEl = document.getElementById('us-ref-map');
+      if (refEl && window.ResizeObserver) {
+        let fired = false;
+        const ro = new ResizeObserver(() => {
+          if (refEl.offsetWidth > 0 && refEl.offsetHeight > 0 && !fired) {
+            fired = true;
+            ro.disconnect();
+            zoomUSRefMapToValid(false);
+          }
+        });
+        ro.observe(refEl);
       }
     })
     .catch(() => {});
