@@ -2046,16 +2046,16 @@ function showResult(won) {
 }
 
 function buildShareText() {
-  const answer = todayDistrict.properties['state-district'];
-  const won    = guessHistory.some(g => g.correct);
-  const result = won ? `${guessCount}/${MAX_GUESSES}` : `X/${MAX_GUESSES}`;
-  // Emoji grid: state-phase guesses use squares, district-phase uses a circle for the win
-  const emoji = guessHistory.map(g => {
-    if (g.correct) return '🟩';          // correct guess (any phase)
-    if (g.phase === 'state') return '🟥'; // wrong state
-    return '🟧';                          // wrong district (so close!)
+  const answer   = todayDistrict.properties['state-district'];
+  const winGuess = guessHistory.findIndex(g => g.correct && g.phase === 'district');
+  const won      = winGuess !== -1;
+  const winNum   = won ? winGuess + 1 : null;
+  const result   = won ? `${winNum}/${MAX_GUESSES}` : `X/${MAX_GUESSES}`;
+  const grid = guessHistory.map(g => {
+    if (g.correct && g.phase === 'district') return '✓';
+    return '✗';
   }).join(' ');
-  return `🗳️ District Guess ${todayKey}\n📍 ${answer} — ${result}\n${emoji}\nhttps://jcervas.github.io/games/district-guess/`;
+  return `🗳️ District Guess ${todayKey}\n📍 ${answer} — ${result}\n${grid}\nhttps://jcervas.github.io/games/district-guess/`;
 }
 
 // ============================================================
