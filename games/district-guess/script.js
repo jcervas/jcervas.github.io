@@ -560,10 +560,10 @@ function renderMapD3(stage) {
     .attr('width', W).attr('height', H)
     .style('display', 'block');
 
-  // Opaque background for stages 0-1 (no tile basemap visible); matches panel surface color
+  // Opaque background for stages 0-1 (no tile basemap visible); matches --bg like us-ref-map
   if (stage < 2) {
-    const surface = getComputedStyle(document.documentElement).getPropertyValue('--surface').trim();
-    svg.append('rect').attr('width', W).attr('height', H).attr('fill', surface || '#ffffff');
+    const bg = getComputedStyle(document.body).getPropertyValue('--bg').trim();
+    svg.append('rect').attr('width', W).attr('height', H).attr('fill', bg || '#f5f5f5');
   }
 
   // Urban areas + roads at stage 1+
@@ -586,12 +586,6 @@ function renderMapD3(stage) {
         .attr('stroke', dark ? 'rgba(255,255,255,0.2)' : '#bbb')
         .attr('stroke-width', 0.6));
   }
-
-  // Exterior mask dims area outside the district (works over any basemap)
-  svg.append('path')
-    .attr('d', `M0,0L${W},0L${W},${H}L0,${H}Z ${dPath}`)
-    .attr('fill', dark ? 'rgba(0,0,0,0.55)' : 'rgba(0,0,0,0.18)')
-    .attr('fill-rule', 'evenodd');
 
   // District fill (subtle red tint)
   svg.append('path').attr('d', dPath)
