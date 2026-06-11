@@ -1651,6 +1651,13 @@ function buildDistrictD3Map(stateAbbr) {
 
   const g = svg.append('g');
 
+  // Pan & zoom on the district tiles map
+  svg.call(
+    d3.zoom()
+      .scaleExtent([0.5, 20])
+      .on('zoom', (event) => g.attr('transform', event.transform))
+  ).on('dblclick.zoom', null);
+
   // Fill all districts with the panel background to hide internal district lines
   const fillG = g.append('g').attr('class', 'state-fill');
   stateFeatures.forEach(f => {
