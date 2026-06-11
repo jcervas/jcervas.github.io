@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>District Guess Beta 1.11 — Daily Congressional District Game</title>
+  <title>District Guess Beta 1.2 — Daily Congressional District Game</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="style.css?v=26" />
 </head>
@@ -21,10 +21,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
       </button>
       <button id="theme-toggle" class="btn-icon" title="Toggle dark mode"><!-- set by JS --></button>
-      <button id="hints-btn" class="btn-icon" title="Hints">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
-      </button>
-      <button id="feedback-btn" class="btn-icon" title="Send feedback">
+<button id="feedback-btn" class="btn-icon" title="Send feedback">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       </button>
     </div>
@@ -35,7 +32,7 @@
         <circle cx="12" cy="10" r="4.5" fill="white"/>
         <circle cx="12" cy="10" r="2" fill="#C41230"/>
       </svg>
-      District Guess <span class="beta-badge">Beta 1.11</span>
+      District Guess <span class="beta-badge">Beta 1.2</span>
     </h1>
     <!-- Timer + donate link on the right -->
     <div class="header-right">
@@ -185,6 +182,20 @@
         </div>
         <div id="state-chips"></div>
       </div>
+    </div>
+
+    <!-- Hint bar — latest clue, expand to see all -->
+    <div id="hint-bar">
+      <div id="hint-bar-inner">
+        <span id="hint-bar-icon" class="hint-bar-icon"></span>
+        <div id="hint-bar-text">
+          <span id="hint-bar-label" class="hint-bar-label"></span>
+          <span id="hint-bar-val" class="hint-bar-val"></span>
+        </div>
+      </div>
+      <button id="hint-bar-expand" class="btn-icon" title="All hints">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+      </button>
     </div>
 
   </div>

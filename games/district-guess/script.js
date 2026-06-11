@@ -198,7 +198,7 @@ const GAME_VERSION = (() => {
   const day = String(d.getDate()).padStart(2, '0');
   const h = String(d.getHours()).padStart(2, '0');
   const min = String(d.getMinutes()).padStart(2, '0');
-  return `Beta 1.11 (${y}-${m}-${day} ${h}:${min})`;
+  return `Beta 1.2 (${y}-${m}-${day} ${h}:${min})`;
 })();
 
 // Built at load time from GeoJSON: { 'TX': ['01','02',...], 'WY': ['01'], ... }
@@ -860,9 +860,35 @@ async function loadAlltimeScores() {
 // ============================================================
 //  FACTS UI  (one per wrong guess; fact 0 always visible)
 // ============================================================
+function renderHintBar() {
+  if (!todayDistrict) return;
+  const bar      = document.getElementById('hint-bar');
+  const iconEl   = document.getElementById('hint-bar-icon');
+  const labelEl  = document.getElementById('hint-bar-label');
+  const valEl    = document.getElementById('hint-bar-val');
+  if (!bar || !labelEl || !valEl) return;
+
+  // cluesRevealed is 0-based: 0 means fact 0 is visible (always); use cluesRevealed as the latest index
+  const idx = Math.min(cluesRevealed, FACT_DEFS.length - 1);
+  const def = FACT_DEFS[idx];
+  if (!def) return;
+
+  iconEl.innerHTML = svgIcon(def.icon, 'clue-icon-svg');
+  labelEl.textContent = def.label;
+  valEl.textContent = '…';
+
+  const val = def.fn(districtDataFor(todayDistrict));
+  if (val instanceof Promise) {
+    val.then(v => { if (valEl) valEl.textContent = v; });
+  } else {
+    valEl.textContent = val;
+  }
+}
+
 function renderClues() {
   renderStateChips(); // update chip states whenever facts change
   updateUSRefMap();   // keep D3 map in sync
+  renderHintBar();
   const containers = ['hints-clues-list'].map(id => document.getElementById(id)).filter(Boolean);
 
   containers.forEach(list => { list.innerHTML = ''; });
@@ -1364,7 +1390,7 @@ function initUSRefMap() {
       }
       // If state already confirmed (restored session), draw district overlay immediately
       if (correctStateGuessed && todayDistrict && !gameOver) {
-        buildDistrictMapOverlay(todayDistrict.properties.state);
+        showDistrictD3Map(todayDistrict.properties.state, true);
       }
     })
     .catch(() => {});
@@ -2295,8 +2321,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Feedback button + form
-  document.getElementById('hints-btn').addEventListener('click', () => {
+  // Hint bar expand → opens full hints modal
+  document.getElementById('hint-bar-expand').addEventListener('click', () => {
     renderClues();
     document.getElementById('hints-modal').classList.remove('hidden');
   });
