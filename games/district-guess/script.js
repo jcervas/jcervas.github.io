@@ -1626,7 +1626,27 @@ function buildDistrictD3Map(stateAbbr) {
     .style('display', 'block');
 
   const stateCollection = { type: 'FeatureCollection', features: stateFeatures };
-  const projection = d3.geoMercator().fitExtent([[20, 20], [W - 20, H - 20]], stateCollection);
+
+  // In game-over, zoom into the answer district with surrounding context
+  let projection;
+  if (gameOver && todayDistrict && stateFeatures.length > 1) {
+    const answerKey = todayDistrict.properties['state-district'];
+    const answerF   = stateFeatures.find(f => f.properties['state-district'] === answerKey);
+    if (answerF) {
+      // Fit tightly to the answer district, then zoom out by factor while keeping center
+      projection = d3.geoMercator().fitExtent([[20, 20], [W - 20, H - 20]], answerF);
+      const factor = 0.45;
+      const origScale = projection.scale();
+      const [tx, ty]  = projection.translate();
+      projection
+        .scale(origScale * factor)
+        .translate([W / 2 - factor * (W / 2 - tx), H / 2 - factor * (H / 2 - ty)]);
+    } else {
+      projection = d3.geoMercator().fitExtent([[20, 20], [W - 20, H - 20]], stateCollection);
+    }
+  } else {
+    projection = d3.geoMercator().fitExtent([[20, 20], [W - 20, H - 20]], stateCollection);
+  }
   const pathGen = d3.geoPath().projection(projection);
 
   const g = svg.append('g');
@@ -1660,14 +1680,16 @@ function buildDistrictD3Map(stateAbbr) {
         .attr('pointer-events', 'none');
     });
 
-    // Highlight the answer district
+    // Highlight the answer district — white in dark mode, near-black in light mode
     const answerFeature = stateFeatures.find(f => f.properties['state-district'] === answerKey);
     if (answerFeature) {
+      const answerFill   = dark ? '#ffffff' : '#111213';
+      const answerStroke = dark ? '#ffffff' : '#111213';
       g.append('path')
         .datum(answerFeature)
         .attr('d', pathGen)
-        .attr('fill', '#ffffff')
-        .attr('stroke', '#ffffff')
+        .attr('fill', answerFill)
+        .attr('stroke', answerStroke)
         .attr('stroke-width', 2)
         .attr('vector-effect', 'non-scaling-stroke')
         .attr('pointer-events', 'none');
@@ -2189,6 +2211,14 @@ function restoreGame(saved) {
   renderClues();
 
   if (gameOver) {
+    const banner    = document.getElementById('already-played-banner');
+    const bannerMsg = document.getElementById('banner-msg');
+    if (banner && bannerMsg) {
+      bannerMsg.textContent = saved.won
+        ? `You got it — ${todayDistrict.properties['state-district']}!`
+        : `The answer was ${todayDistrict.properties['state-district']}.`;
+      banner.classList.remove('hidden');
+    }
     showResult(saved.won);
     fetchAndRenderCensusPanel(districtDataFor(todayDistrict));
   }
@@ -2462,13 +2492,22 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => {
       const modal = btn.closest('.modal');
       modal.classList.add('hidden');
+      // Re-show game-over banner whenever result modal is dismissed
+      if (modal.id === 'result-modal' && gameOver) {
+        document.getElementById('already-played-banner')?.classList.remove('hidden');
+      }
     });
   });
 
   // Close modal on backdrop click
   document.querySelectorAll('.modal').forEach(modal => {
     modal.addEventListener('click', e => {
-      if (e.target === modal) modal.classList.add('hidden');
+      if (e.target === modal) {
+        modal.classList.add('hidden');
+        if (modal.id === 'result-modal' && gameOver) {
+          document.getElementById('already-played-banner')?.classList.remove('hidden');
+        }
+      }
     });
   });
 
