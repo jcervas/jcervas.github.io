@@ -589,10 +589,12 @@ function renderMapD3(stage) {
         .attr('stroke-width', 0.6));
   }
 
-  // District fill (subtle red tint)
+  // District fill — white in dark mode after game over, subtle red tint otherwise
+  const fillColor   = (dark && gameOver) ? '#ffffff' : '#C41230';
+  const fillOpacity = (dark && gameOver) ? 0.25 : (dark ? 0.3 : 0.35);
   svg.append('path').attr('d', dPath)
-    .attr('fill', '#C41230')
-    .attr('fill-opacity', dark ? 0.3 : 0.35);
+    .attr('fill', fillColor)
+    .attr('fill-opacity', fillOpacity);
 
   // District border — always white
   svg.append('path').attr('d', dPath)
