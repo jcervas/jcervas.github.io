@@ -281,6 +281,7 @@ let districtPoints      = {};  // state-district key → [lon, lat] inner point
 let topoRoads           = null;  // FeatureCollection from TopoJSON roads layer
 let topoUrban           = null;  // FeatureCollection from TopoJSON urban layer
 let topoStates          = {};    // state abbr → merged state Feature for clean outline drawing
+let currentMapStage     = 0;     // highest stage reached; preserved across re-renders
 let todayDistrict       = null;   // feature object
 let todayKey            = '';     // 'YYYY-MM-DD'
 let map, terrainLayer, satelliteLayer, streetLayer, districtLayer;
@@ -515,12 +516,12 @@ function applyMapStage(wrongGuesses, gameEnded = false) {
   else                                idx = 0;
 
   // D3 overlay: stages 0 (outline only), 1 (+ urban/roads), 2+ (transparent bg over terrain)
-  renderMapD3(idx);
+  currentMapStage = Math.max(currentMapStage, idx);
+  renderMapD3(currentMapStage);
 
-  // Tile basemaps start at stage 2 (terrain in light mode, satellite in dark)
-  terrainLayer.setOpacity(dark ? 0 : (idx >= 2 ? 1 : 0));
-  const satOpacity = dark ? (idx >= 2 ? 1 : 0) : (idx >= 3 ? 1 : 0);
-  satelliteLayer.setOpacity(satOpacity);
+  // One basemap per theme starting at stage 2: terrain in light mode, satellite in dark mode
+  terrainLayer.setOpacity(dark ? 0 : (currentMapStage >= 2 ? 1 : 0));
+  satelliteLayer.setOpacity(dark ? (currentMapStage >= 2 ? 1 : 0) : 0);
 
   // Labels never shown
   _streetOpacity = 0.01;
@@ -590,7 +591,7 @@ function renderMapD3(stage) {
   // District fill (subtle red tint)
   svg.append('path').attr('d', dPath)
     .attr('fill', '#C41230')
-    .attr('fill-opacity', dark ? 0.3 : 0.15);
+    .attr('fill-opacity', dark ? 0.3 : 0.35);
 
   // District border — always white
   svg.append('path').attr('d', dPath)
@@ -609,7 +610,7 @@ function renderDistrict(feature) {
     if (districtLayer) {
       map.fitBounds(districtLayer.getBounds(), { padding: [40, 40], maxZoom: 10, animate: false });
     }
-    renderMapD3(0); // draw initial stage-0 D3 overlay after layout settles
+    renderMapD3(currentMapStage); // restore current stage (preserves urban/roads if already revealed)
   }));
 }
 
@@ -2264,6 +2265,7 @@ function resetGame(newIdx) {
 
   // Reset Leaflet map: remove district layer; renderDistrict below will fitBounds to new district
   if (districtLayer) { map.removeLayer(districtLayer); districtLayer = null; }
+  currentMapStage = 0;
   applyMapStage(0);
 
   // Reset US reference map (clear the SVG so initUSRefMap rebuilds it)
