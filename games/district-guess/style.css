@@ -409,7 +409,7 @@ main {
   border-radius: var(--radius);
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
-  background: var(--bg);
+  background: var(--surface);
   isolation: isolate;
   position: relative;
   z-index: 0;
@@ -746,6 +746,7 @@ body.dark-mode .post-x-btn { background: #e7e9ea; color: #0f1419 !important; bor
   align-items: center;
   gap: 8px;
   padding: 2px 0 8px;
+  flex-shrink: 0;
 }
 .gc-dots { display: flex; gap: 3px; }
 .gc-dot {
@@ -1198,6 +1199,11 @@ body.dark-mode .post-x-btn { background: #e7e9ea; color: #0f1419 !important; bor
   margin-left: 4px;
 }
 
+/* State chips section — fixed height, does not grow into the map area */
+#state-chips-section {
+  flex-shrink: 0;
+}
+
 /* State chips */
 #state-chips {
   display: flex;
@@ -1244,11 +1250,15 @@ body.dark-mode .post-x-btn { background: #e7e9ea; color: #0f1419 !important; bor
   margin-top: 14px;
   padding-top: 14px;
   border-top: 1px solid var(--border);
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 #us-ref-map {
-  /* Fluid: scales with container width (960:400 ratio = 2.4:1) */
-  aspect-ratio: 960 / 400;
-  max-height: 260px;
+  flex: 1;
+  min-height: 0;
   width: 100%;
   border-radius: var(--radius);
   border: 1px solid var(--border);
