@@ -295,16 +295,75 @@ main {
 }
 
 #map {
-  flex: 0 0 40%;
+  flex: 0 0 35%;
   min-height: 0;
 }
 
 #reference-panel {
-  flex: 0 0 60%;
+  flex: 1;
   min-height: 0;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+
+/* ---- Hint bar ---- */
+#hint-bar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  min-height: 52px;
+}
+
+#hint-bar-inner {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.hint-bar-icon {
+  flex-shrink: 0;
+  width: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+}
+
+#hint-bar-text {
+  min-width: 0;
+}
+
+.hint-bar-label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: 1px;
+}
+
+.hint-bar-val {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#hint-bar-expand {
+  flex-shrink: 0;
 }
 
 /* ---- Banner ---- */
