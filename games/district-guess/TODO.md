@@ -1,5 +1,2 @@
 # TODO 🚧
 
-1. Want to preprocess topojson to add more flexibility when rendering in D3. For instance, I have now added inner points (check projection) as feature properties (but probably can just create a layer). I also added polsby popper compactness (but have code at '/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/GitHub/createMaps/compactness/compactness.sh' to calculate reock). Might also want to have a layer with innerlines so that the D3 map doesn't show the district lines in the reference map until game is over.
-2. Need to move the hints to the bottom of the screen, showing the most recent hint but leaving all previous ones in a popup (add icon to that div). Will need to test ways to implement this cleanly.
-3. Make sure reference map fills ~55% of the screen and "map" fills ~35% (with hint being around 10%).

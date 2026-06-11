@@ -198,7 +198,7 @@ const GAME_VERSION = (() => {
   const day = String(d.getDate()).padStart(2, '0');
   const h = String(d.getHours()).padStart(2, '0');
   const min = String(d.getMinutes()).padStart(2, '0');
-  return `Beta 1.2 (${y}-${m}-${day} ${h}:${min})`;
+  return `Beta 1.3 (${y}-${m}-${day} ${h}:${min})`;
 })();
 
 // Built at load time from GeoJSON: { 'TX': ['01','02',...], 'WY': ['01'], ... }
@@ -248,9 +248,16 @@ const FACT_DEFS = [
       const pctDem  = Math.round((todayDistrict.properties.DemPct2024Pres || 0) * 100);
       const pctRep  = Math.round((todayDistrict.properties.RepPct2024Pres || 0) * 100);
       const absMar  = Math.abs(+margin * 100).toFixed(1);
-      if (+margin >  0.05) return `Leaned Democratic — D+${absMar}% (${pctDem}D / ${pctRep}R)`;
-      if (+margin < -0.05) return `Leaned Republican — R+${absMar}% (${pctDem}D / ${pctRep}R)`;
-      return `Competitive — within 5 points (${pctDem}D / ${pctRep}R)`;
+      const m = +margin;
+      const tag = m >  0.30 ? 'Strongly Democratic'
+                : m >  0.10 ? 'Likely Democratic'
+                : m >  0.05 ? 'Leans Democratic'
+                : m < -0.30 ? 'Strongly Republican'
+                : m < -0.10 ? 'Likely Republican'
+                : m < -0.05 ? 'Leans Republican'
+                : 'Competitive';
+      const side = m > 0 ? `D+${absMar}%` : m < 0 ? `R+${absMar}%` : 'Even';
+      return `${tag} — ${side} (${pctDem}D / ${pctRep}R)`;
     }
   },
   {
@@ -270,6 +277,10 @@ const FACT_DEFS = [
 //  STATE
 // ============================================================
 let districts           = [];
+let districtPoints      = {};  // state-district key → [lon, lat] inner point
+let topoRoads           = null;  // FeatureCollection from TopoJSON roads layer
+let topoUrban           = null;  // FeatureCollection from TopoJSON urban layer
+let topoStates          = {};    // state abbr → merged state Feature for clean outline drawing
 let todayDistrict       = null;   // feature object
 let todayKey            = '';     // 'YYYY-MM-DD'
 let map, terrainLayer, satelliteLayer, streetLayer, districtLayer;
@@ -503,39 +514,108 @@ function applyMapStage(wrongGuesses, gameEnded = false) {
   else if (wrongGuesses >= 1)         idx = 1;
   else                                idx = 0;
 
-  // ESRI terrain tiles are light-colored — never show in dark mode
-  terrainLayer.setOpacity(dark ? 0 : (idx === 1 ? 1 : 0));
+  // D3 overlay: stages 0 (outline only), 1 (+ urban/roads), 2+ (transparent bg over terrain)
+  renderMapD3(idx);
 
-  // Satellite (no labels): stages 1–3 in dark mode, stages 2–3 in light mode
-  // Labels never revealed — satellite stays at max from stage 2/3 onward
-  const satOpacity = dark ? (idx >= 1 ? 1 : 0) : (idx >= 2 ? 1 : 0);
+  // Tile basemaps start at stage 2 (terrain in light mode, satellite in dark)
+  terrainLayer.setOpacity(dark ? 0 : (idx >= 2 ? 1 : 0));
+  const satOpacity = dark ? (idx >= 2 ? 1 : 0) : (idx >= 3 ? 1 : 0);
   satelliteLayer.setOpacity(satOpacity);
 
-  // Labeled street layer stays hidden throughout — labels give away city/state names
+  // Labels never shown
   _streetOpacity = 0.01;
   streetLayer.setOpacity(0.01);
 }
 
 function districtStyle() {
+  // Leaflet layer is used only for fitBounds — D3 overlay draws the visible border
+  return { color: 'transparent', weight: 0, fillOpacity: 0 };
+}
+
+function renderMapD3(stage) {
+  const mapEl = document.getElementById('map');
+  if (!mapEl || !todayDistrict || !window.d3) return;
+
+  let overlayEl = document.getElementById('map-d3-overlay');
+  if (!overlayEl) {
+    overlayEl = document.createElement('div');
+    overlayEl.id = 'map-d3-overlay';
+    overlayEl.style.cssText =
+      'position:absolute;inset:0;z-index:500;pointer-events:none;';
+    mapEl.appendChild(overlayEl);
+  }
+  overlayEl.innerHTML = '';
+
+  const W = mapEl.offsetWidth  || 400;
+  const H = mapEl.offsetHeight || 300;
+  const pad = Math.min(W, H) * 0.1;
   const dark = isDarkMode();
-  return {
-    color:       dark ? '#ffffff' : '#C41230',  // white stroke on dark tiles, red on light
-    weight:      dark ? 3 : 2.5,
-    fillColor:   '#C41230',
-    fillOpacity: dark ? 0.28 : 0.12,
-  };
+
+  const projection = _previewProjection(W, H, pad);
+  const pathGen    = d3.geoPath(projection);
+  const dPath      = pathGen(todayDistrict);
+  if (!dPath) return;
+
+  const svg = d3.select(overlayEl).append('svg')
+    .attr('width', W).attr('height', H)
+    .style('display', 'block');
+
+  // Opaque background for stages 0-1 (no tile basemap visible); matches panel surface color
+  if (stage < 2) {
+    const surface = getComputedStyle(document.documentElement).getPropertyValue('--surface').trim();
+    svg.append('rect').attr('width', W).attr('height', H).attr('fill', surface || '#ffffff');
+  }
+
+  // Urban areas + roads at stage 1+
+  if (stage >= 1 && (topoUrban || topoRoads)) {
+    const [[bx0, by0], [bx1, by1]] = d3.geoBounds(todayDistrict);
+    const mg = 0.1;
+    const inBounds = f => {
+      try {
+        const [[fx0, fy0], [fx1, fy1]] = d3.geoBounds(f);
+        return fx1 >= bx0-mg && fx0 <= bx1+mg && fy1 >= by0-mg && fy0 <= by1+mg;
+      } catch { return false; }
+    };
+    if (topoUrban) topoUrban.features.filter(inBounds).forEach(f =>
+      svg.append('path').attr('d', pathGen(f))
+        .attr('fill', dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.09)')
+        .attr('stroke', 'none'));
+    if (topoRoads) topoRoads.features.filter(inBounds).forEach(f =>
+      svg.append('path').attr('d', pathGen(f))
+        .attr('fill', 'none')
+        .attr('stroke', dark ? 'rgba(255,255,255,0.2)' : '#bbb')
+        .attr('stroke-width', 0.6));
+  }
+
+  // Exterior mask dims area outside the district (works over any basemap)
+  svg.append('path')
+    .attr('d', `M0,0L${W},0L${W},${H}L0,${H}Z ${dPath}`)
+    .attr('fill', dark ? 'rgba(0,0,0,0.55)' : 'rgba(0,0,0,0.18)')
+    .attr('fill-rule', 'evenodd');
+
+  // District fill (subtle red tint)
+  svg.append('path').attr('d', dPath)
+    .attr('fill', '#C41230')
+    .attr('fill-opacity', dark ? 0.3 : 0.15);
+
+  // District border — always white
+  svg.append('path').attr('d', dPath)
+    .attr('fill', 'none')
+    .attr('stroke', '#ffffff')
+    .attr('stroke-width', 2.5)
+    .attr('stroke-linejoin', 'round');
 }
 
 function renderDistrict(feature) {
   if (districtLayer) map.removeLayer(districtLayer);
+  // Invisible Leaflet layer — used only to drive fitBounds; D3 overlay draws the visible border
   districtLayer = L.geoJSON(feature, { style: districtStyle() }).addTo(map);
-  // Double rAF: wait for CSS layout to fully settle (grid/flex) before Leaflet
-  // measures the container and picks a zoom level for fitBounds.
   requestAnimationFrame(() => requestAnimationFrame(() => {
     map.invalidateSize();
     if (districtLayer) {
-      map.fitBounds(districtLayer.getBounds(), { padding: [40, 40], animate: false });
+      map.fitBounds(districtLayer.getBounds(), { padding: [40, 40], maxZoom: 10, animate: false });
     }
+    renderMapD3(0); // draw initial stage-0 D3 overlay after layout settles
   }));
 }
 
@@ -1384,10 +1464,8 @@ function initUSRefMap() {
         .attr('vector-effect', 'non-scaling-stroke')
         .attr('pointer-events', 'none');
 
-      // If a game is already in progress, zoom to current valid set
-      if (eliminatedStates.size > 0 || correctStateGuessed) {
-        zoomUSRefMapToValid(false);
-      }
+      // Always fit the ref map to the current valid state set (removes AlbersUSA whitespace)
+      zoomUSRefMapToValid(false);
       // If state already confirmed (restored session), draw district overlay immediately
       if (correctStateGuessed && todayDistrict && !gameOver) {
         showDistrictD3Map(todayDistrict.properties.state, true);
@@ -1561,123 +1639,162 @@ function buildDistrictD3Map(stateAbbr) {
     .attr('preserveAspectRatio', 'xMidYMid meet')
     .style('display', 'block');
 
-  // Fix CW winding (GeoJSON districts have CW outer rings; D3 expects CCW)
-  function fixWinding(feature) {
-    const geom = feature.geometry;
-    if (!geom) return feature;
-    const fixRings = rings => rings.map((ring, i) => i === 0 ? ring.slice().reverse() : ring);
-    let geometry;
-    if (geom.type === 'Polygon') {
-      geometry = { ...geom, coordinates: fixRings(geom.coordinates) };
-    } else if (geom.type === 'MultiPolygon') {
-      geometry = { ...geom, coordinates: geom.coordinates.map(fixRings) };
-    } else {
-      geometry = geom;
-    }
-    return { ...feature, geometry };
-  }
-
-  const fixedFeatures = stateFeatures.map(fixWinding);
-  const stateCollection = { type: 'FeatureCollection', features: fixedFeatures };
+  const stateCollection = { type: 'FeatureCollection', features: stateFeatures };
   const projection = d3.geoMercator().fitExtent([[20, 20], [W - 20, H - 20]], stateCollection);
   const pathGen = d3.geoPath().projection(projection);
 
   const g = svg.append('g');
 
-  // Draw state outline without revealing district boundaries:
-  // 1. Stroke all district paths (shows outer state border + internal edges)
-  // 2. Fill all district paths with background color on top (covers internal edges)
-  // Result: only the outer state boundary stroke remains visible.
-  const stateBorderColor = dark ? '#999' : '#555';
-
-  const borderG = g.append('g').attr('class', 'state-border');
-  fixedFeatures.forEach(f => {
-    borderG.append('path')
+  // Fill all districts with the panel background to hide internal district lines
+  const fillG = g.append('g').attr('class', 'state-fill');
+  stateFeatures.forEach(f => {
+    fillG.append('path')
       .datum(f)
+      .attr('d', pathGen)
+      .attr('style', 'fill: var(--surface);')
+      .attr('stroke', 'none')
+      .attr('pointer-events', 'none');
+  });
+
+  // Game-over view: show all district lines, highlight answer in white, red number badge
+  if (gameOver && todayDistrict) {
+    const answerKey  = todayDistrict.properties['state-district'];
+    const answerDist = answerKey?.split('-').slice(1).join('-') || '00';
+    const answerLabel = isAtLarge ? 'AL' : String(parseInt(answerDist, 10));
+
+    // Draw all district boundaries at half stroke-width
+    stateFeatures.forEach(f => {
+      g.append('path')
+        .datum(f)
+        .attr('d', pathGen)
+        .attr('fill', 'none')
+        .attr('stroke', dark ? '#555' : '#bbb')
+        .attr('stroke-width', 1)
+        .attr('vector-effect', 'non-scaling-stroke')
+        .attr('pointer-events', 'none');
+    });
+
+    // Highlight the answer district
+    const answerFeature = stateFeatures.find(f => f.properties['state-district'] === answerKey);
+    if (answerFeature) {
+      g.append('path')
+        .datum(answerFeature)
+        .attr('d', pathGen)
+        .attr('fill', '#ffffff')
+        .attr('stroke', '#ffffff')
+        .attr('stroke-width', 2)
+        .attr('vector-effect', 'non-scaling-stroke')
+        .attr('pointer-events', 'none');
+
+      // Red circle with district number at inner point
+      const sdKey = answerFeature.properties['state-district'];
+      const inner = districtPoints[sdKey];
+      let cx, cy;
+      if (inner) {
+        const p = projection(inner);
+        cx = p && isFinite(p[0]) ? p[0] : W / 2;
+        cy = p && isFinite(p[1]) ? p[1] : H / 2;
+      } else {
+        const p = projection(d3.geoCentroid(answerFeature));
+        cx = p && isFinite(p[0]) ? p[0] : W / 2;
+        cy = p && isFinite(p[1]) ? p[1] : H / 2;
+      }
+      const R = 13;
+      const badge = g.append('g').attr('transform', `translate(${cx},${cy})`);
+      badge.append('circle').attr('r', R)
+        .attr('fill', '#C41230')
+        .attr('stroke', dark ? '#222' : '#fff')
+        .attr('stroke-width', 1.5);
+      badge.append('text')
+        .attr('text-anchor', 'middle')
+        .attr('dominant-baseline', 'central')
+        .attr('font-size', answerLabel.length > 2 ? '8px' : '9px')
+        .attr('font-weight', '700')
+        .attr('fill', '#fff')
+        .attr('pointer-events', 'none')
+        .text(answerLabel);
+    }
+
+    // State outline on top
+    const stateOutline = topoStates[stateAbbr];
+    if (stateOutline) {
+      g.append('path')
+        .datum(stateOutline)
+        .attr('d', pathGen)
+        .attr('fill', 'none')
+        .attr('stroke', dark ? '#888' : '#555')
+        .attr('stroke-width', 2)
+        .attr('vector-effect', 'non-scaling-stroke')
+        .attr('pointer-events', 'none');
+    }
+    return;
+  }
+
+  const stateBorderColor = dark ? '#999' : '#555';
+  const stateOutline = topoStates[stateAbbr];
+  if (stateOutline) {
+    g.append('path')
+      .datum(stateOutline)
+      .attr('class', 'state-border')
       .attr('d', pathGen)
       .attr('fill', 'none')
       .attr('stroke', stateBorderColor)
       .attr('stroke-width', 2)
       .attr('vector-effect', 'non-scaling-stroke')
       .attr('pointer-events', 'none');
-  });
+  }
 
-  // Fills go on top of strokes to erase internal district-boundary segments
-  const fillG = g.append('g').attr('class', 'state-fill');
-  fixedFeatures.forEach(f => {
-    fillG.append('path')
-      .datum(f)
-      .attr('d', pathGen)
-      .attr('style', 'fill: var(--surface);')  // CSS var matches container background exactly
-      .attr('stroke', 'none')
-      .attr('pointer-events', 'none');
-  });
-
-  // Compute positions by projecting the geographic centroid of each district.
-  // d3.geoCentroid works in lat/lon space (no DOM needed), then we project to SVG coords.
-  // Use the largest polygon for MultiPolygon features to keep the point inside the main body.
-  const nodes = fixedFeatures.map((f, i) => {
-    const dist = stateFeatures[i].properties['state-district']?.split('-').slice(1).join('-') || '00';
+  // Use pre-computed inner points (guaranteed inside polygon) from the TopoJSON points layer.
+  // Fall back to d3.geoCentroid if no inner point is available.
+  const nodes = stateFeatures.map(f => {
+    const sdKey = f.properties['state-district'];
+    const dist  = sdKey?.split('-').slice(1).join('-') || '00';
     const label = isAtLarge ? 'AL' : String(parseInt(dist, 10));
     const isWrong   = wrongDists.has(dist);
     const isCorrect = wonDistPart === dist;
 
-    // Pick centroid feature: for MultiPolygon use the largest sub-polygon
-    let centroidFeature = f;
-    if (f.geometry?.type === 'MultiPolygon') {
-      const largest = f.geometry.coordinates.reduce((best, poly) => {
-        const a = d3.geoArea({ type: 'Feature', geometry: { type: 'Polygon', coordinates: poly } });
-        const b = d3.geoArea({ type: 'Feature', geometry: { type: 'Polygon', coordinates: best } });
-        return a > b ? poly : best;
-      });
-      centroidFeature = { type: 'Feature', geometry: { type: 'Polygon', coordinates: largest } };
+    let cx, cy;
+    const inner = districtPoints[sdKey];
+    if (inner) {
+      const projected = projection(inner);
+      cx = projected && isFinite(projected[0]) ? projected[0] : W / 2;
+      cy = projected && isFinite(projected[1]) ? projected[1] : H / 2;
+    } else {
+      const projected = projection(d3.geoCentroid(f));
+      cx = projected && isFinite(projected[0]) ? projected[0] : W / 2;
+      cy = projected && isFinite(projected[1]) ? projected[1] : H / 2;
     }
-    const [lon, lat] = d3.geoCentroid(centroidFeature);
-    const projected = projection([lon, lat]);
-    const cx = projected && isFinite(projected[0]) ? projected[0] : W / 2;
-    const cy = projected && isFinite(projected[1]) ? projected[1] : H / 2;
     return { dist, label, isWrong, isCorrect, x: cx, y: cy, ox: cx, oy: cy };
   });
 
   const R = 13; // icon radius
 
-  // Force simulation for collision avoidance
-  const sim = d3.forceSimulation(nodes)
-    .force('collide', d3.forceCollide(R + 3))
-    .force('x', d3.forceX(d => d.ox).strength(0.6))
-    .force('y', d3.forceY(d => d.oy).strength(0.6))
-    .stop();
-
-  // Run synchronously (no animation needed)
-  for (let i = 0; i < 120; i++) sim.tick();
-
-  // Draw connector lines from centroid to (possibly shifted) icon
+  // Draw connector lines (initially at origin point, animated by simulation)
   const lineG = g.append('g').attr('class', 'dist-connectors');
-  nodes.forEach(d => {
-    const dx = d.x - d.ox, dy = d.y - d.oy;
-    if (Math.sqrt(dx*dx + dy*dy) > 4) {
-      lineG.append('line')
-        .attr('x1', d.ox).attr('y1', d.oy)
-        .attr('x2', d.x).attr('y2', d.y)
-        .attr('stroke', dark ? '#666' : '#aaa')
-        .attr('stroke-width', 0.8)
-        .attr('pointer-events', 'none');
-    }
-  });
+  const lineEls = nodes.map(d =>
+    lineG.append('line')
+      .attr('x1', d.ox).attr('y1', d.oy)
+      .attr('x2', d.ox).attr('y2', d.oy)
+      .attr('stroke', dark ? '#666' : '#aaa')
+      .attr('stroke-width', 0.8)
+      .attr('stroke-opacity', 0)
+      .attr('pointer-events', 'none')
+      .node()
+  );
 
-  // Draw clickable icons
+  // Draw clickable icons (positioned at inner points, animated by simulation)
   const iconG = g.append('g').attr('class', 'dist-icons');
-  nodes.forEach(d => {
+  const iconEls = nodes.map(d => {
     const disabled = d.isWrong || d.isCorrect || gameOver;
     const fillColor = d.isCorrect
       ? '#2563EB'
       : d.isWrong
         ? (dark ? '#444' : '#ccc')
-        : (dark ? '#C41230' : '#C41230');
+        : '#C41230';
     const textColor = (d.isWrong && !dark) ? '#888' : '#fff';
 
     const grp = iconG.append('g')
-      .attr('transform', `translate(${d.x},${d.y})`)
+      .attr('transform', `translate(${d.ox},${d.oy})`)
       .style('cursor', disabled ? 'default' : 'pointer');
 
     grp.append('circle')
@@ -1705,7 +1822,26 @@ function buildDistrictD3Map(stateAbbr) {
         })
         .on('click', () => submitDistrictGuess(d.dist));
     }
+
+    return grp.node();
   });
+
+  // Animated force simulation — icons settle from their inner-point origins
+  d3.forceSimulation(nodes)
+    .force('collide', d3.forceCollide(R + 3))
+    .force('x', d3.forceX(d => d.ox).strength(0.6))
+    .force('y', d3.forceY(d => d.oy).strength(0.6))
+    .on('tick', () => {
+      nodes.forEach((d, i) => {
+        d3.select(iconEls[i]).attr('transform', `translate(${d.x},${d.y})`);
+        const dx = d.x - d.ox, dy = d.y - d.oy;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        d3.select(lineEls[i])
+          .attr('x1', d.ox).attr('y1', d.oy)
+          .attr('x2', d.x).attr('y2', d.y)
+          .attr('stroke-opacity', dist > 4 ? 1 : 0);
+      });
+    });
 }
 
 function endGame(won) {
@@ -1744,31 +1880,21 @@ function endGame(won) {
 //  RESULT & SHARE
 // ============================================================
 
-function _previewSVGPaths(W, H, pad, dark) {
-  // The GeoJSON district polygons have CW winding (D3 expects CCW for outer rings).
-  // Reverse the outer ring to fix winding so fitExtent/geoBounds work correctly.
-  // Also drop inner rings (holes/enclaves) which cause SVG fill artifacts.
+function _previewProjection(W, H, pad) {
+  // Features from TopoJSON are already CCW-wound — no winding fix needed.
+  // For MultiPolygon, fit to the largest sub-polygon so small islands don't
+  // blow out the extent.
   const geom = todayDistrict && todayDistrict.geometry;
-  let outerRing = null;
-  if (geom && geom.type === 'Polygon') {
-    outerRing = geom.coordinates[0];
-  } else if (geom && geom.type === 'MultiPolygon') {
-    // Use the largest polygon (by geographic area)
+  let fitFeature = todayDistrict;
+  if (geom && geom.type === 'MultiPolygon') {
     const largest = geom.coordinates.reduce((best, poly) => {
       const a = d3.geoArea({ type: 'Feature', geometry: { type: 'Polygon', coordinates: poly } });
       const b = d3.geoArea({ type: 'Feature', geometry: { type: 'Polygon', coordinates: best } });
-      return a < b ? poly : best;
+      return a > b ? poly : best;
     });
-    outerRing = largest[0];
+    fitFeature = { type: 'Feature', geometry: { type: 'Polygon', coordinates: largest } };
   }
-  const ring = outerRing ? outerRing.slice().reverse() : [];
-  const outerFeature = { type: 'Feature', geometry: { type: 'Polygon', coordinates: [ring] } };
-  const projection = d3.geoMercator()
-    .fitExtent([[pad, pad], [W - pad, H - pad]], outerFeature);
-  const pathGen = d3.geoPath(projection);
-  const d = pathGen(outerFeature);
-  const stroke = dark ? '#ff6b6b' : '#C41230';
-  return { d, stroke };
+  return d3.geoMercator().fitExtent([[pad, pad], [W - pad, H - pad]], fitFeature);
 }
 
 function _renderDistrictToBlob() {
@@ -1776,7 +1902,10 @@ function _renderDistrictToBlob() {
     if (!todayDistrict || !window.d3) return reject('no district');
     const W = 800, H = 450, pad = 40;
     const dark = isDarkMode();
-    const { d, stroke } = _previewSVGPaths(W, H, pad, dark);
+    const projection = _previewProjection(W, H, pad);
+    const pathGen = d3.geoPath(projection);
+    const d = pathGen(todayDistrict);
+    const stroke = dark ? '#ff6b6b' : '#C41230';
 
     const ns = 'http://www.w3.org/2000/svg';
     const svg = document.createElementNS(ns, 'svg');
@@ -1825,26 +1954,59 @@ function renderDistrictPreview(containerId = 'result-district-preview') {
 
   const W = 440, H = 180, pad = 20;
   const dark = isDarkMode();
-  const { d, stroke } = _previewSVGPaths(W, H, pad, dark);
+  const projection = _previewProjection(W, H, pad);
+  const pathGen = d3.geoPath(projection);
+
+  // Bounding box of district for filtering roads/urban to visible area
+  const [[bx0, by0], [bx1, by1]] = d3.geoBounds(todayDistrict);
+  const mg = 0.1;
+  const inBounds = f => {
+    try {
+      const [[fx0, fy0], [fx1, fy1]] = d3.geoBounds(f);
+      return fx1 >= bx0 - mg && fx0 <= bx1 + mg && fy1 >= by0 - mg && fy0 <= by1 + mg;
+    } catch { return false; }
+  };
 
   const svg = d3.create('svg')
     .attr('viewBox', `0 0 ${W} ${H}`)
     .attr('class', 'district-preview-svg');
 
-  // Exterior mask: dark overlay outside the district so interior stands out
-  const exterior = `M0,0L${W},0L${W},${H}L0,${H}Z ${d}`;
-  svg.append('path').attr('d', exterior)
+  // Urban areas
+  if (topoUrban) {
+    const urbanG = svg.append('g');
+    topoUrban.features.filter(inBounds).forEach(f => {
+      urbanG.append('path').attr('d', pathGen(f))
+        .attr('fill', dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.09)')
+        .attr('stroke', 'none');
+    });
+  }
+
+  // Roads
+  if (topoRoads) {
+    const roadsG = svg.append('g');
+    topoRoads.features.filter(inBounds).forEach(f => {
+      roadsG.append('path').attr('d', pathGen(f))
+        .attr('fill', 'none')
+        .attr('stroke', dark ? 'rgba(255,255,255,0.2)' : '#bbb')
+        .attr('stroke-width', 0.6);
+    });
+  }
+
+  // Exterior mask: dims area outside the district
+  const dPath = pathGen(todayDistrict);
+  svg.append('path')
+    .attr('d', `M0,0L${W},0L${W},${H}L0,${H}Z ${dPath}`)
     .attr('fill', dark ? 'rgba(0,0,0,0.55)' : 'rgba(0,0,0,0.18)')
     .attr('fill-rule', 'evenodd');
 
   // District fill
-  svg.append('path').attr('d', d)
+  svg.append('path').attr('d', dPath)
     .attr('fill', '#C41230').attr('fill-opacity', dark ? 0.45 : 0.25);
 
   // District stroke
-  svg.append('path').attr('d', d)
+  svg.append('path').attr('d', dPath)
     .attr('fill', 'none')
-    .attr('stroke', stroke)
+    .attr('stroke', dark ? '#ff6b6b' : '#C41230')
     .attr('stroke-width', 2.5).attr('stroke-linejoin', 'round');
 
   container.appendChild(svg.node());
@@ -2151,13 +2313,12 @@ async function init() {
 
   username = getUsername();
 
-  // Load GeoJSON
-  let data;
+  // Load TopoJSON
   try {
-    const res = await fetch('./national-cd-2026.geojson');
-    data = await res.json();
+    const res = await fetch('./districts.topojson');
+    const topo = await res.json();
+    const data = topojson.feature(topo, topo.objects.districts);
     // Patch Louisiana features whose state/state-district properties are missing.
-    // (These 6 features have integer id 1–6 and no state field — a data authoring gap.)
     data.features.forEach(f => {
       const p = f.properties;
       if (!p.state && typeof p.id === 'number' && p.id >= 1 && p.id <= 6) {
@@ -2165,8 +2326,22 @@ async function init() {
         p['state-district'] = `LA-${String(p.id).padStart(2, '0')}`;
       }
     });
-    // Filter out any remaining territory features (no state code)
     districts = data.features.filter(f => f.properties.state);
+
+    // Store inner points keyed by state-district for use in buildDistrictD3Map
+    if (topo.objects.points) {
+      topojson.feature(topo, topo.objects.points).features.forEach(f => {
+        const key = f.properties['state-district'];
+        if (key) districtPoints[key] = f.geometry.coordinates;
+      });
+    }
+    if (topo.objects.roads) topoRoads = topojson.feature(topo, topo.objects.roads);
+    if (topo.objects.urban) topoUrban = topojson.feature(topo, topo.objects.urban);
+    if (topo.objects.states) {
+      topojson.feature(topo, topo.objects.states).features.forEach(f => {
+        if (f.properties.state) topoStates[f.properties.state] = f;
+      });
+    }
   } catch {
     alert('Failed to load district data. Please refresh.');
     return;
