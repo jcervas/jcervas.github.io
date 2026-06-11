@@ -62,6 +62,35 @@ mapshaper "$DISTRICTS_SRC" name=districts \
   -simplify "$SIMPLIFY" keep-shapes \
   -o "$DISTRICTS_SIMPLE"
 
+# ── Compactness + area via R redist package ───────────────────────────────────
+DISTRICTS_WITH_COMPACT="$TMPWORK/districts_compact.json"
+echo "  Computing area, Polsby-Popper, and Reock via R redist..."
+Rscript - "$DISTRICTS_SIMPLE" "$DISTRICTS_WITH_COMPACT" <<'REOF'
+args <- commandArgs(trailingOnly = TRUE)
+suppressPackageStartupMessages({
+  library(sf)
+  library(redistmetrics)
+})
+
+shp <- st_read(args[1], quiet = TRUE)
+shp_proj <- st_transform(shp, 5070)   # NAD83 / Conus Albers (equal-area)
+shp_proj <- st_make_valid(shp_proj)
+
+# Each row is its own district; plans vector = 1:nrow
+plans <- seq_len(nrow(shp_proj))
+
+shp$area_sqmi     <- round(as.numeric(st_area(shp_proj)) / 2589988.11)
+shp$polsby_popper <- round(comp_polsby(plans, shp_proj), 4)
+shp$reock         <- round(comp_reock(plans, shp_proj), 4)
+
+# R replaces hyphens in column names with dots — restore original name
+names(shp)[names(shp) == "state.district"] <- "state-district"
+
+st_write(shp, args[2], driver = "GeoJSON", delete_dsn = TRUE, quiet = TRUE)
+cat(sprintf("  area/PP/Reock written for %d districts.\n", nrow(shp)))
+REOF
+DISTRICTS_SIMPLE="$DISTRICTS_WITH_COMPACT"
+
 # ── States: dissolve districts by state ──────────────────────────────────────
 echo "Step 2/5  Dissolving state boundaries..."
 mapshaper "$DISTRICTS_SIMPLE" name=districts \
