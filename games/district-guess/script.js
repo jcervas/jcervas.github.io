@@ -1056,6 +1056,7 @@ function renderGuessHistory() {
       return `<div class="guess-row ${cls}">
         <span class="guess-icon">${svgIcon(iconName,'guess-icon-svg')}</span>
         <span class="guess-label">${label}</span>
+        <span class="guess-hint hot">Correct state!</span>
       </div>`;
     }
 
@@ -1064,9 +1065,11 @@ function renderGuessHistory() {
     const guessState = g.text.split('-')[0];
     const distLabel = (stateDistrictMap[guessState] || []).length === 1
       ? 'At-Large' : `District ${parseInt(distPart, 10)}`;
+    const distHint  = g.correct ? `<span class="guess-hint hot">Correct!</span>` : '';
     return `<div class="guess-row ${cls}">
       <span class="guess-icon">${svgIcon(iconName,'guess-icon-svg')}</span>
       <span class="guess-label">${distLabel}</span>
+      ${distHint}
     </div>`;
   }).join('');
 
