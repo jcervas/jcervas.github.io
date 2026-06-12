@@ -278,6 +278,11 @@ const FACT_DEFS = [
 // ============================================================
 let districts           = [];
 let districtPoints      = {};  // state-district key → [lon, lat] inner point
+
+// Manual overrides for districts where the computed inner point lands in water.
+const POINT_OVERRIDES = {
+  'FL-13': [-82.784, 27.910],  // Pinellas peninsula — computed point lands in Old Tampa Bay
+};
 let topoRoads           = null;  // FeatureCollection from TopoJSON roads layer
 let topoUrban           = null;  // FeatureCollection from TopoJSON urban layer
 let topoStates          = {};    // state abbr → merged state Feature for clean outline drawing
@@ -1776,8 +1781,10 @@ function buildDistrictD3Map(stateAbbr) {
       g.select('.dist-icons').selectAll('circle').attr('r', rk);
       g.select('.dist-icons').selectAll('text').attr('font-size', function() {
         const len = d3.select(this).text().length;
-        return `${Math.round((len > 2 ? 8 : 9) / k)}px`;
+        return `${(len > 2 ? 8 : 9) / k}px`;
       });
+      // Hide connector lines when zoomed in — icons sit close enough to their centroids
+      g.select('.dist-connectors').attr('display', k > 1.5 ? 'none' : null);
       if (event.sourceEvent) {
         districtUserZoomed     = true;
         districtSavedTransform = event.transform;
@@ -1852,7 +1859,7 @@ function buildDistrictD3Map(stateAbbr) {
 
       // Red circle with district number at inner point
       const sdKey = answerFeature.properties['state-district'];
-      const inner = districtPoints[sdKey];
+      const inner = POINT_OVERRIDES[sdKey] || districtPoints[sdKey];
       let cx, cy;
       if (inner) {
         const p = projection(inner);
@@ -1918,7 +1925,7 @@ function buildDistrictD3Map(stateAbbr) {
     const isCorrect = wonDistPart === dist;
 
     let cx, cy;
-    const inner = districtPoints[sdKey];
+    const inner = POINT_OVERRIDES[sdKey] || districtPoints[sdKey];
     if (inner) {
       const projected = projection(inner);
       cx = projected && isFinite(projected[0]) ? projected[0] : W / 2;
@@ -1941,7 +1948,24 @@ function buildDistrictD3Map(stateAbbr) {
 
   // Scale icon radius inversely to zoom so circles stay the same visual size at any zoom level.
   // At k=2 the viewBox is 2× bigger on screen, so halving R keeps icons at their default px size.
-  const zoomK = (districtUserZoomed && districtSavedTransform) ? districtSavedTransform.k : 1;
+  // Determine effective zoom level so icon radius and collision match what will be displayed.
+  // For user-zoomed sessions, use the saved transform. For auto-zoom, pre-compute the expected
+  // scale so icons are built at the right size before the zoom fires.
+  let zoomK = 1;
+  if (districtUserZoomed && districtSavedTransform) {
+    zoomK = districtSavedTransform.k;
+  } else if (!gameOver && possibleKeys.size < stateFeatures.length) {
+    const pf = stateFeatures.filter(f => possibleKeys.has(f.properties['state-district']));
+    if (pf.length > 0) {
+      const pb = d3.geoPath(projection).bounds({ type: 'FeatureCollection', features: pf });
+      const [[px0, py0], [px1, py1]] = pb;
+      const pad = 30;
+      zoomK = Math.min(12, Math.min(
+        (W - 2 * pad) / Math.max(px1 - px0, 1),
+        (H - 2 * pad) / Math.max(py1 - py0, 1)
+      ));
+    }
+  }
   const R = Math.max(1, 13 / zoomK);
 
   // Draw connector lines (initially at origin point, animated by simulation)
@@ -1985,7 +2009,7 @@ function buildDistrictD3Map(stateAbbr) {
     grp.append('text')
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'central')
-      .attr('font-size', d.label.length > 2 ? '8px' : '9px')
+      .attr('font-size', `${(d.label.length > 2 ? 8 : 9) / zoomK}px`)
       .attr('font-weight', '700')
       .attr('fill', textColor)
       .attr('pointer-events', 'none')
@@ -2006,8 +2030,9 @@ function buildDistrictD3Map(stateAbbr) {
   });
 
   // Animated force simulation — icons settle from their inner-point origins
+  const collide = 16 / zoomK; // visual collision radius constant (~16px) at any zoom level
   d3.forceSimulation(nodes)
-    .force('collide', d3.forceCollide(d => d.isCold ? R * 0.25 : d.isHot ? R * 0.45 : R + 3))
+    .force('collide', d3.forceCollide(d => d.isCold ? collide * 0.25 : d.isHot ? collide * 0.45 : collide))
     .force('x', d3.forceX(d => d.ox).strength(0.6))
     .force('y', d3.forceY(d => d.oy).strength(0.6))
     .on('tick', () => {
