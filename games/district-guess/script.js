@@ -924,20 +924,34 @@ function renderHintBar() {
         <span class="hint-card-icon">${svgIcon(iconSrc, 'clue-icon-svg')}</span>
         <span class="hint-card-label">${def.label}</span>
       </div>
-      ${revealed ? `<div class="hint-card-val">…</div>` : ''}`;
+      ${revealed ? `<div class="hint-card-val"><span>…</span></div>` : ''}`;
 
     if (revealed) {
-      const valEl = card.querySelector('.hint-card-val');
+      const spanEl = card.querySelector('.hint-card-val > span');
       const val = def.fn(distData);
       if (val instanceof Promise) {
-        val.then(v => { if (valEl) valEl.textContent = v; });
+        val.then(v => { if (spanEl) spanEl.textContent = v; });
       } else {
-        valEl.textContent = val;
+        spanEl.textContent = val;
       }
-      card.addEventListener('click', () => card.classList.toggle('open'));
     }
 
     bar.appendChild(card);
+  });
+
+  // After all cards are in the DOM, measure overflow and enable auto-scroll
+  requestAnimationFrame(() => {
+    bar.querySelectorAll('.hint-card-val').forEach(el => {
+      const inner = el.querySelector('span');
+      if (!inner) return;
+      const overflow = inner.scrollWidth - el.clientWidth;
+      if (overflow > 4) {
+        const duration = Math.max(3, overflow / 40);
+        el.style.setProperty('--scroll-dist', `-${overflow}px`);
+        el.style.setProperty('--scroll-duration', `${duration}s`);
+        el.classList.add('auto-scroll');
+      }
+    });
   });
 
   // Scroll latest revealed card into view
