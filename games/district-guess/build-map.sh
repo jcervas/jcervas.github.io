@@ -30,7 +30,7 @@ ROADS_SRC="$CREATEMAPS/us_can_roads.json"
 ACS_CSV="$CREATEMAPS/acs_by_district.csv"
 OUT="$SCRIPT_DIR/districts.topojson"
 
-SIMPLIFY="${SIMPLIFY:-10%}"
+SIMPLIFY="20%"
 
 echo "=== district-guess map builder ==="
 echo "  Input:    $DISTRICTS_SRC"

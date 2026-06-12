@@ -745,14 +745,8 @@ function switchResultTab(tab) {
   const btn  = document.querySelector(`.result-tab-btn[data-rtab="${tab}"]`);
   if (pane) pane.classList.add('active');
   if (btn)  btn.classList.add('active');
-  if (tab === 'census') {
-    renderDistrictPreview('census-district-preview');
-    renderTabHeader('census-header');
-  }
-  if (tab === 'guesses') {
-    renderDistrictPreview('guesses-district-preview');
-    renderTabHeader('guesses-header');
-  }
+  if (tab === 'census') renderTabHeader('census-header');
+  if (tab === 'guesses') renderTabHeader('guesses-header');
 }
 
 async function fetchAndRenderCensusPanel(districtData) {
@@ -910,27 +904,45 @@ async function loadAlltimeScores() {
 // ============================================================
 function renderHintBar() {
   if (!todayDistrict) return;
-  const bar      = document.getElementById('hint-bar');
-  const iconEl   = document.getElementById('hint-bar-icon');
-  const labelEl  = document.getElementById('hint-bar-label');
-  const valEl    = document.getElementById('hint-bar-val');
-  if (!bar || !labelEl || !valEl) return;
+  const bar = document.getElementById('hint-bar');
+  if (!bar) return;
 
-  // cluesRevealed is 0-based: 0 means fact 0 is visible (always); use cluesRevealed as the latest index
-  const idx = Math.min(cluesRevealed, FACT_DEFS.length - 1);
-  const def = FACT_DEFS[idx];
-  if (!def) return;
+  bar.innerHTML = '';
+  const distData = districtDataFor(todayDistrict);
 
-  iconEl.innerHTML = svgIcon(def.icon, 'clue-icon-svg');
-  labelEl.textContent = def.label;
-  valEl.textContent = '…';
+  FACT_DEFS.forEach((def, i) => {
+    const revealed = i <= cluesRevealed;
+    const isLatest = revealed && i === Math.min(cluesRevealed, FACT_DEFS.length - 1);
 
-  const val = def.fn(districtDataFor(todayDistrict));
-  if (val instanceof Promise) {
-    val.then(v => { if (valEl) valEl.textContent = v; });
-  } else {
-    valEl.textContent = val;
-  }
+    const card = document.createElement('div');
+    card.className = 'hint-card' + (revealed ? ' revealed' + (isLatest ? ' latest' : '') : ' locked');
+    card.setAttribute('role', 'listitem');
+
+    const iconSrc = revealed ? def.icon : 'lock';
+    card.innerHTML = `
+      <div class="hint-card-header">
+        <span class="hint-card-icon">${svgIcon(iconSrc, 'clue-icon-svg')}</span>
+        <span class="hint-card-label">${def.label}</span>
+      </div>
+      ${revealed ? `<div class="hint-card-val">…</div>` : ''}`;
+
+    if (revealed) {
+      const valEl = card.querySelector('.hint-card-val');
+      const val = def.fn(distData);
+      if (val instanceof Promise) {
+        val.then(v => { if (valEl) valEl.textContent = v; });
+      } else {
+        valEl.textContent = val;
+      }
+      card.addEventListener('click', () => card.classList.toggle('open'));
+    }
+
+    bar.appendChild(card);
+  });
+
+  // Scroll latest revealed card into view
+  const latest = bar.querySelectorAll('.hint-card.revealed');
+  if (latest.length) latest[latest.length - 1].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
 }
 
 function renderClues() {
@@ -1658,16 +1670,19 @@ function buildDistrictD3Map(stateAbbr) {
       .on('zoom', (event) => g.attr('transform', event.transform))
   ).on('dblclick.zoom', null);
 
-  // Fill all districts with the panel background to hide internal district lines
-  const fillG = g.append('g').attr('class', 'state-fill');
-  stateFeatures.forEach(f => {
-    fillG.append('path')
-      .datum(f)
-      .attr('d', pathGen)
-      .attr('style', 'fill: var(--surface);')
-      .attr('stroke', 'none')
-      .attr('pointer-events', 'none');
-  });
+  // During gameplay: fill all districts with panel background to hide internal SVG lines.
+  // At game-over: no fill — only the answer district gets colored.
+  if (!gameOver) {
+    const fillG = g.append('g').attr('class', 'state-fill');
+    stateFeatures.forEach(f => {
+      fillG.append('path')
+        .datum(f)
+        .attr('d', pathGen)
+        .attr('style', 'fill: var(--surface);')
+        .attr('stroke', 'none')
+        .attr('pointer-events', 'none');
+    });
+  }
 
   // Game-over view: show all district lines, highlight answer in white, red number badge
   if (gameOver && todayDistrict) {
@@ -1675,19 +1690,19 @@ function buildDistrictD3Map(stateAbbr) {
     const answerDist = answerKey?.split('-').slice(1).join('-') || '00';
     const answerLabel = isAtLarge ? 'AL' : String(parseInt(answerDist, 10));
 
-    // Draw all district boundaries at half stroke-width
+    // Draw all district boundaries (no fill — transparent background shows through)
     stateFeatures.forEach(f => {
       g.append('path')
         .datum(f)
         .attr('d', pathGen)
         .attr('fill', 'none')
-        .attr('stroke', dark ? '#555' : '#bbb')
+        .attr('stroke', dark ? '#777' : '#aaa')
         .attr('stroke-width', 1)
         .attr('vector-effect', 'non-scaling-stroke')
         .attr('pointer-events', 'none');
     });
 
-    // Highlight the answer district — white in dark mode, near-black in light mode
+    // Highlight the answer district — near-black fill on white background (both modes)
     const answerFeature = stateFeatures.find(f => f.properties['state-district'] === answerKey);
     if (answerFeature) {
       const answerFill   = dark ? '#ffffff' : '#111213';
@@ -1737,7 +1752,7 @@ function buildDistrictD3Map(stateAbbr) {
         .datum(stateOutline)
         .attr('d', pathGen)
         .attr('fill', 'none')
-        .attr('stroke', dark ? '#888' : '#555')
+        .attr('stroke', dark ? '#aaa' : '#555')
         .attr('stroke-width', 2)
         .attr('vector-effect', 'non-scaling-stroke')
         .attr('pointer-events', 'none');
@@ -1869,6 +1884,9 @@ function endGame(won) {
     correctStateGuessed = true;
     lockStateDropdown(todayDistrict.properties.state);
   }
+  // Always rebuild district tiles at game-over so the answer district gets the highlight
+  buildDistrictD3Map(todayDistrict.properties.state);
+  document.getElementById('game-section')?.classList.add('map-collapsed');
   renderClues();
   renderGuessHistory();
   // Save stats BEFORE showResult so renderInlinePersonalStats shows current game
@@ -2227,6 +2245,8 @@ function restoreGame(saved) {
         : `The answer was ${todayDistrict.properties['state-district']}.`;
       banner.classList.remove('hidden');
     }
+    buildDistrictD3Map(todayDistrict.properties.state);
+    document.getElementById('game-section')?.classList.add('map-collapsed');
     showResult(saved.won);
     fetchAndRenderCensusPanel(districtDataFor(todayDistrict));
   }
@@ -2420,6 +2440,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // New Map — pick a new district (both from result modal button AND banner button)
   function startNewMap() {
+    document.getElementById('game-section')?.classList.remove('map-collapsed');
     replayCount++;
     sessionStorage.setItem(SESSION_REPLAY_KEY, String(replayCount));
     const newIdx = seededIndex(dateSeed() + replayCount, districts.length);
