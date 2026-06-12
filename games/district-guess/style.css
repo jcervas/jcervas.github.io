@@ -410,9 +410,9 @@ main {
   transition: max-height 0.2s ease, opacity 0.2s ease;
 }
 
-/* Desktop: reveal on hover */
+/* Desktop: always show */
 @media (hover: hover) {
-  .hint-card.revealed:hover .hint-card-val {
+  .hint-card.revealed .hint-card-val {
     max-height: 60px;
     opacity: 1;
   }
