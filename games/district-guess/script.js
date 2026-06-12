@@ -1663,10 +1663,11 @@ function showDistrictD3Map(stateAbbr, instant = false) {
 function buildDistrictD3Map(stateAbbr) {
   const tilesEl = document.getElementById('district-tiles');
 
-  // Preserve user's zoom across rebuilds (wrong guess triggers full SVG rebuild)
+  // Preserve user's zoom across rebuilds (wrong guess triggers full SVG rebuild).
+  // Zoom is attached to the svg element itself, so read __zoom from svg, not g.
   const existingSvg = tilesEl.querySelector('svg');
   if (existingSvg && districtUserZoomed) {
-    districtSavedTransform = d3.zoomTransform(existingSvg.querySelector('g') || existingSvg);
+    districtSavedTransform = d3.zoomTransform(existingSvg);
   }
 
   tilesEl.innerHTML = '';
@@ -1935,7 +1936,10 @@ function buildDistrictD3Map(stateAbbr) {
     return rank(a) - rank(b);
   });
 
-  const R = 13; // icon radius
+  // Scale icon radius inversely to zoom so circles stay the same visual size at any zoom level.
+  // At k=2 the viewBox is 2× bigger on screen, so halving R keeps icons at their default px size.
+  const zoomK = (districtUserZoomed && districtSavedTransform) ? districtSavedTransform.k : 1;
+  const R = Math.min(20, Math.max(5, Math.round(13 / zoomK)));
 
   // Draw connector lines (initially at origin point, animated by simulation)
   const lineG = g.append('g').attr('class', 'dist-connectors');
