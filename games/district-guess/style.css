@@ -112,6 +112,8 @@ body {
   display: flex;
   flex-direction: column;
 }
+/* Prevent page scroll when any modal is open */
+body:has(.modal:not(.hidden)) { overflow: hidden; }
 
 /* ---- SVG icon system ---- */
 .icon {
@@ -320,16 +322,20 @@ main {
   flex-direction: column;
 }
 
-/* ---- Hint cards row ---- */
-#hint-bar {
+/* ---- Hint cards + guess counter container ---- */
+#game-controls {
   flex-shrink: 0;
   display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+#hint-bar {
+  display: flex;
   gap: 8px;
-  padding: 6px 0;
+  padding: 6px 0 2px;
   overflow-x: auto;
   overflow-y: visible;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
 #hint-bar::-webkit-scrollbar { display: none; }
@@ -427,6 +433,32 @@ main {
 @keyframes hintScroll {
   0%,  15% { margin-left: 0; }
   85%, 100% { margin-left: var(--scroll-dist, 0px); }
+}
+
+/* ── Mobile hint bar ─────────────────────────────────────────── */
+@media (max-width: 640px) {
+  /* Latest clue gets most of the bar */
+  .hint-card.latest { flex: 3 1 0; }
+
+  /* Locked and collapsed-previous cards shrink to icon strip */
+  .hint-card.locked,
+  .hint-card.revealed:not(.latest):not(.expanded) {
+    flex: 0 0 30px;
+    min-width: 30px;
+    padding: 8px 6px;
+    overflow: hidden;
+  }
+  .hint-card.locked .hint-card-header,
+  .hint-card.revealed:not(.latest):not(.expanded) .hint-card-header {
+    justify-content: center;
+  }
+  .hint-card.revealed:not(.latest):not(.expanded) .hint-card-label,
+  .hint-card.revealed:not(.latest):not(.expanded) .hint-card-val {
+    display: none;
+  }
+
+  /* Previous revealed cards are tappable (open hints modal) */
+  .hint-card.revealed:not(.latest) { cursor: pointer; }
 }
 
 /* ---- Banner ---- */
@@ -805,7 +837,7 @@ body.dark-mode .post-x-btn { background: #e7e9ea; color: #0f1419 !important; bor
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 2px 0 8px;
+  padding: 8px 0 2px;
   flex-shrink: 0;
 }
 .gc-dots { display: flex; gap: 3px; }
@@ -1283,6 +1315,12 @@ body.dark-mode .post-x-btn { background: #e7e9ea; color: #0f1419 !important; bor
   transition: all 0.15s;
   letter-spacing: 0.03em;
 }
+
+@media (prefers-color-scheme: dark) {
+  .state-chip { background: #3a3a3c; color: var(--bg); }
+}
+body.dark-mode .state-chip { background: #3a3a3c; color: var(--bg); }
+body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
 .state-chip:hover:not(:disabled):not(.eliminated) {
   background: var(--accent);
   color: white;
@@ -1300,6 +1338,7 @@ body.dark-mode .post-x-btn { background: #e7e9ea; color: #0f1419 !important; bor
   cursor: default;
   text-decoration: line-through;
   text-decoration-color: var(--muted);
+  opacity: 0.25;
 }
 .state-chip:disabled {
   cursor: default;
@@ -1307,9 +1346,6 @@ body.dark-mode .post-x-btn { background: #e7e9ea; color: #0f1419 !important; bor
 
 /* US states reference map */
 #us-ref-section {
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid var(--border);
   flex: 1;
   min-height: 0;
   display: flex;

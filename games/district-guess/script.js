@@ -214,9 +214,9 @@ const FACT_DEFS = [
       if (!todayDistrict) return '—';
       const areaMi2 = Math.round(todayDistrict.properties.area_sqmi || 0);
       if (areaMi2 <   300) return `Very compact — under 300 sq mi`;
-      if (areaMi2 <  2000) return `Small — ~${areaMi2.toLocaleString()} sq mi`;
-      if (areaMi2 < 15000) return `Mid-size — ~${areaMi2.toLocaleString()} sq mi`;
-      return `Large — ~${areaMi2.toLocaleString()} sq mi`;
+      if (areaMi2 <  2000) return `Small: ~${areaMi2.toLocaleString()} sq mi`;
+      if (areaMi2 < 15000) return `Mid-size: ~${areaMi2.toLocaleString()} sq mi`;
+      return `Large: ~${areaMi2.toLocaleString()} sq mi`;
     }
   },
   {
@@ -224,7 +224,7 @@ const FACT_DEFS = [
     label: 'State delegation size',
     fn: d => {
       const count = stateDistrictMap[d.state]?.length || 1;
-      if (count === 1) return 'At-large — only congressional district in its state';
+      if (count === 1) return 'At-large: only congressional district in its state';
       return `One of ${count} congressional districts in its state`;
     }
   },
@@ -281,6 +281,7 @@ let districtPoints      = {};  // state-district key → [lon, lat] inner point
 let topoRoads           = null;  // FeatureCollection from TopoJSON roads layer
 let topoUrban           = null;  // FeatureCollection from TopoJSON urban layer
 let topoStates          = {};    // state abbr → merged state Feature for clean outline drawing
+let adjMap              = new Map(); // state-district key → string[] of adjacent keys
 let currentMapStage     = 0;     // highest stage reached; preserved across re-renders
 let todayDistrict       = null;   // feature object
 let todayKey            = '';     // 'YYYY-MM-DD'
@@ -293,6 +294,9 @@ let usRefSvgSel         = null;   // d3 selection of the SVG element
 let usRefPathGen        = null;   // reusable geoPath generator (set after projection.fitSize)
 let usDistLayers        = {};     // distPart ('01','02'…) → D3 path selection for district overlay
 let eliminatedStates    = new Set(); // all states removed from valid set (wrong guess + adjacency)
+let districtZoomBehavior   = null;   // saved d3.zoom instance for district tiles map
+let districtUserZoomed     = false;  // true once user manually pans/zooms district map
+let districtSavedTransform = null;   // zoom transform preserved across rebuilds
 let guessCount          = 0;
 let guessHistory        = [];     // [{text, correct}]
 let cluesRevealed       = 0;      // how many text clues are showing
@@ -936,23 +940,35 @@ function renderHintBar() {
       }
     }
 
+    // Tap any previous revealed card → open hints modal showing all clues
+    if (revealed && !isLatest) {
+      card.addEventListener('click', () => {
+        document.getElementById('hints-modal')?.classList.remove('hidden');
+      });
+    }
+
     bar.appendChild(card);
   });
 
-  // After all cards are in the DOM, measure overflow and enable auto-scroll
-  requestAnimationFrame(() => {
-    bar.querySelectorAll('.hint-card-val').forEach(el => {
+  // Measure overflow and enable auto-scroll after all cards are in DOM
+  function applyScrollMeasure(root) {
+    const els = root ? root.querySelectorAll('.hint-card-val') : bar.querySelectorAll('.hint-card-val');
+    els.forEach(el => {
+      el.classList.remove('auto-scroll');
       const inner = el.querySelector('span');
       if (!inner) return;
-      const overflow = inner.scrollWidth - el.clientWidth;
-      if (overflow > 4) {
-        const duration = Math.max(3, overflow / 40);
-        el.style.setProperty('--scroll-dist', `-${overflow}px`);
-        el.style.setProperty('--scroll-duration', `${duration}s`);
-        el.classList.add('auto-scroll');
-      }
+      requestAnimationFrame(() => {
+        const overflow = inner.scrollWidth - el.clientWidth;
+        if (overflow > 4) {
+          const duration = Math.max(3, overflow / 40);
+          el.style.setProperty('--scroll-dist', `-${overflow}px`);
+          el.style.setProperty('--scroll-duration', `${duration}s`);
+          el.classList.add('auto-scroll');
+        }
+      });
     });
-  });
+  }
+  requestAnimationFrame(() => applyScrollMeasure(null));
 
   // Scroll latest revealed card into view
   const latest = bar.querySelectorAll('.hint-card.revealed');
@@ -1037,6 +1053,8 @@ function stopTimer() {
 // ============================================================
 function renderGuessHistory() {
   const el = document.getElementById('guess-history');
+  const answerKey = todayDistrict?.properties['state-district'];
+  const answerNeighbors = new Set(adjMap.get(answerKey) || []);
   el.innerHTML = guessHistory.map(g => {
     const iconName = g.correct ? 'checkCircle' : 'xCircle';
     const cls      = g.correct ? 'correct' : 'wrong';
@@ -1060,11 +1078,18 @@ function renderGuessHistory() {
     }
 
     // District phase
-    const distPart  = g.text.split('-').slice(1).join('-');
+    const distPart   = g.text.split('-').slice(1).join('-');
     const guessState = g.text.split('-')[0];
-    const distLabel = (stateDistrictMap[guessState] || []).length === 1
+    const distLabel  = (stateDistrictMap[guessState] || []).length === 1
       ? 'At-Large' : `District ${parseInt(distPart, 10)}`;
-    const distHint  = g.correct ? `<span class="guess-hint hot">Correct!</span>` : '';
+    let distHint = '';
+    if (g.correct) {
+      distHint = `<span class="guess-hint hot">Correct!</span>`;
+    } else if (answerNeighbors && answerNeighbors.has(g.text)) {
+      distHint = `<span class="guess-hint hot">${svgIcon('flame','hint-icon')} Adjacent</span>`;
+    } else if (answerNeighbors) {
+      distHint = `<span class="guess-hint cold">${svgIcon('snowflake','hint-icon')} Not adjacent</span>`;
+    }
     return `<div class="guess-row ${cls}">
       <span class="guess-icon">${svgIcon(iconName,'guess-icon-svg')}</span>
       <span class="guess-label">${distLabel}</span>
@@ -1145,7 +1170,7 @@ function processStateGuess(abbr, correct) {
   const neighbors    = STATE_ADJACENCY[abbr] || [];
   const isAdjacent   = neighbors.includes(correctState);
 
-  guessCount++;
+  if (!correct) guessCount++;   // correct state unlocks district phase — not a counted guess
   guessHistory.push({ text: abbr, correct, phase: 'state', adjacent: isAdjacent });
 
   if (correct) {
@@ -1207,7 +1232,7 @@ function submitDistrictTile(dist) {
 const submitDistrictGuess = submitDistrictTile;
 
 function processDistrictGuessTile(dist, fullGuess, correct) {
-  guessCount++;
+  if (!correct) guessCount++;   // only wrong guesses count; correct = free winning move
   guessHistory.push({ text: fullGuess, correct, phase: 'district' });
 
   if (correct) {
@@ -1215,13 +1240,9 @@ function processDistrictGuessTile(dist, fullGuess, correct) {
     return;
   }
 
-  // Rebuild D3 district map to reflect the wrong guess (icon turns grey)
-  buildDistrictD3Map(todayDistrict.properties.state);
-
-  // Flash the container
-  const tilesEl = document.getElementById('district-tiles');
-  tilesEl.classList.add('flash-wrong');
-  setTimeout(() => tilesEl.classList.remove('flash-wrong'), 750);
+  // Rebuild D3 district map after one frame so the compositing layer
+  // from the first flash (in submitDistrictTile) has already settled.
+  requestAnimationFrame(() => buildDistrictD3Map(todayDistrict.properties.state));
 
   const wrongCount = guessHistory.filter(g => !g.correct).length;
   cluesRevealed = Math.min(wrongCount, FACT_DEFS.length);
@@ -1601,10 +1622,25 @@ function showDistrictD3Map(stateAbbr, instant = false) {
   // Update label
   const count = (stateDistrictMap[stateAbbr] || []).length;
   if (labelEl) {
-    labelEl.textContent = count === 1
-      ? 'One district — click to guess'
-      : `Pick a district (${count} total)`;
+    if (gameOver && todayDistrict) {
+      const answerKey = todayDistrict.properties['state-district'];
+      const distPart  = answerKey.split('-').slice(1).join('-');
+      const isAL      = count === 1;
+      const distLabel = isAL ? 'At-Large' : `District ${parseInt(distPart, 10)}`;
+      const won       = guessHistory.some(g => g.correct && g.phase === 'district');
+      labelEl.textContent = won
+        ? `Answer: ${answerKey} — ${distLabel}`
+        : `Answer was: ${answerKey} — ${distLabel}`;
+    } else {
+      labelEl.textContent = count === 1
+        ? 'One district — click to guess'
+        : `Pick a district (${count} total)`;
+    }
   }
+
+  // Reset zoom state when entering a new state's district phase
+  districtUserZoomed     = false;
+  districtSavedTransform = null;
 
   // Build the D3 district map inside tilesEl
   buildDistrictD3Map(stateAbbr);
@@ -1626,32 +1662,91 @@ function showDistrictD3Map(stateAbbr, instant = false) {
 
 function buildDistrictD3Map(stateAbbr) {
   const tilesEl = document.getElementById('district-tiles');
+
+  // Preserve user's zoom across rebuilds (wrong guess triggers full SVG rebuild)
+  const existingSvg = tilesEl.querySelector('svg');
+  if (existingSvg && districtUserZoomed) {
+    districtSavedTransform = d3.zoomTransform(existingSvg.querySelector('g') || existingSvg);
+  }
+
   tilesEl.innerHTML = '';
 
   const stateFeatures = districts.filter(f => f.properties.state === stateAbbr);
   if (!stateFeatures.length) return;
 
-  const wrongDists = new Set(
-    guessHistory
-      .filter(g => g.phase === 'district' && !g.correct)
-      .map(g => g.text.split('-').slice(1).join('-'))
+  const answerKey = todayDistrict?.properties['state-district'];
+  const answerNeighbors = new Set(adjMap.get(answerKey) || []);
+
+  const wrongGuesses = guessHistory.filter(g => g.phase === 'district' && !g.correct);
+
+  // Compute which districts are still possible answers using hot/cold inference.
+  // Hot guess X: answer is in X's neighbors → eliminate everything outside neighbors(X).
+  // Cold guess X: answer is not adjacent to X → eliminate X and all neighbors(X).
+  let possibleKeys = new Set(stateFeatures.map(f => f.properties['state-district']));
+  const hotGuessKeys  = new Set(); // keys (dist part) of hot wrong guesses
+  const coldGuessKeys = new Set(); // keys (dist part) of cold wrong guesses
+
+  for (const g of wrongGuesses) {
+    const key  = g.text; // full 'ST-##'
+    const dist = key.split('-').slice(1).join('-');
+    const isHotGuess = answerNeighbors.has(key);
+    if (isHotGuess) {
+      hotGuessKeys.add(dist);
+      // Intersect possible with key's neighbors (key itself is wrong)
+      const nbrSet = new Set(adjMap.get(key) || []);
+      for (const k of [...possibleKeys]) {
+        if (k !== key && !nbrSet.has(k)) possibleKeys.delete(k);
+      }
+      possibleKeys.delete(key);
+    } else {
+      coldGuessKeys.add(dist);
+      // Eliminate key and all its neighbors
+      possibleKeys.delete(key);
+      for (const nbr of (adjMap.get(key) || [])) possibleKeys.delete(nbr);
+    }
+  }
+
+  // Derive hotKeys / coldKeys for rendering (dist parts only)
+  const hotKeys  = hotGuessKeys;
+  const coldKeys = new Set(
+    stateFeatures
+      .map(f => f.properties['state-district'])
+      .filter(k => !possibleKeys.has(k))
+      .map(k => k.split('-').slice(1).join('-'))
+      .filter(d => !hotGuessKeys.has(d))
   );
+
   const wonDist = guessHistory.find(g => g.phase === 'district' && g.correct);
   const wonDistPart = wonDist ? wonDist.text.split('-').slice(1).join('-') : null;
   const isAtLarge = stateFeatures.length === 1;
 
-  const W = REF_VB_W, H = REF_VB_H;
+  // Use actual container dimensions so the projection fills all available space
+  // (tilesEl may still be display:none here, so read from the visible proxy)
+  const refProxy = document.getElementById('us-ref-map');
+  const srcEl    = (tilesEl.offsetWidth > 0) ? tilesEl : (refProxy || tilesEl);
+  const W      = srcEl.offsetWidth  || REF_VB_W;
+  const H_max  = srcEl.offsetHeight || REF_VB_H;
   const dark = isDarkMode();
+
+  const stateCollection = { type: 'FeatureCollection', features: stateFeatures };
+
+  // Compute the state's natural geographic aspect ratio (height/width) so the
+  // viewBox height adapts to the state shape rather than the container.
+  // Wide states (TN, KS) get a short SVG; tall states (CA) get a tall one.
+  const tempProj = d3.geoMercator().fitExtent([[20, 20], [W - 20, W - 20]], stateCollection);
+  const tempPath = d3.geoPath(tempProj);
+  const [[gx0, gy0], [gx1, gy1]] = tempPath.bounds(stateCollection);
+  const geoAspect = (gy1 - gy0) / Math.max(gx1 - gx0, 1); // height / width of rendered state
+  // Clamp: always at least 25% as tall as wide, never taller than container
+  const H = Math.min(H_max, Math.max(Math.round(W * geoAspect) + 40, Math.round(W * 0.25)));
 
   const svg = d3.select(tilesEl)
     .append('svg')
     .attr('viewBox', `0 0 ${W} ${H}`)
     .attr('width', '100%')
     .attr('height', '100%')
-    .attr('preserveAspectRatio', 'xMidYMid meet')
+    .attr('preserveAspectRatio', 'xMidYMin meet')
     .style('display', 'block');
-
-  const stateCollection = { type: 'FeatureCollection', features: stateFeatures };
 
   // In game-over, zoom into the answer district with surrounding context
   let projection;
@@ -1678,11 +1773,32 @@ function buildDistrictD3Map(stateAbbr) {
   const g = svg.append('g');
 
   // Pan & zoom on the district tiles map
-  svg.call(
-    d3.zoom()
-      .scaleExtent([0.5, 20])
-      .on('zoom', (event) => g.attr('transform', event.transform))
-  ).on('dblclick.zoom', null);
+  districtZoomBehavior = d3.zoom()
+    .scaleExtent([0.5, 20])
+    .on('zoom', event => {
+      g.attr('transform', event.transform);
+      if (event.sourceEvent) districtUserZoomed = true; // user-initiated only
+    });
+  svg.call(districtZoomBehavior).on('dblclick.zoom', null);
+
+  // Auto-zoom to the remaining possible districts (skip if user has already zoomed/panned)
+  if (!gameOver && !districtUserZoomed && possibleKeys.size < stateFeatures.length) {
+    const possFeatures = stateFeatures.filter(f => possibleKeys.has(f.properties['state-district']));
+    if (possFeatures.length > 0) {
+      const pb = d3.geoPath(projection).bounds({ type: 'FeatureCollection', features: possFeatures });
+      const [[px0, py0], [px1, py1]] = pb;
+      const pad = 30;
+      const scaleX = (W - 2 * pad) / Math.max(px1 - px0, 1);
+      const scaleY = (H - 2 * pad) / Math.max(py1 - py0, 1);
+      const scale  = Math.min(12, Math.min(scaleX, scaleY));
+      const tx = (W - scale * (px0 + px1)) / 2;
+      const ty = (H - scale * (py0 + py1)) / 2;
+      svg.call(districtZoomBehavior.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
+    }
+  } else if (districtUserZoomed && districtSavedTransform) {
+    // Restore user's zoom from the previous SVG generation
+    svg.call(districtZoomBehavior.transform, districtSavedTransform);
+  }
 
   // During gameplay: fill all districts with panel background to hide internal SVG lines.
   // At game-over: no fill — only the answer district gets colored.
@@ -1794,7 +1910,7 @@ function buildDistrictD3Map(stateAbbr) {
     const sdKey = f.properties['state-district'];
     const dist  = sdKey?.split('-').slice(1).join('-') || '00';
     const label = isAtLarge ? 'AL' : String(parseInt(dist, 10));
-    const isWrong   = wrongDists.has(dist);
+    const isWrong   = hotKeys.has(dist) || coldKeys.has(dist);
     const isCorrect = wonDistPart === dist;
 
     let cx, cy;
@@ -1808,7 +1924,15 @@ function buildDistrictD3Map(stateAbbr) {
       cx = projected && isFinite(projected[0]) ? projected[0] : W / 2;
       cy = projected && isFinite(projected[1]) ? projected[1] : H / 2;
     }
-    return { dist, label, isWrong, isCorrect, x: cx, y: cy, ox: cx, oy: cy };
+    const isHot   = hotKeys.has(dist);
+    const isCold  = coldKeys.has(dist);
+    return { dist, label, isWrong, isCorrect, isHot, isCold, x: cx, y: cy, ox: cx, oy: cy };
+  });
+
+  // Draw order: cold (back) → hot → remaining (front)
+  nodes.sort((a, b) => {
+    const rank = d => d.isCold ? 0 : d.isHot ? 1 : 2;
+    return rank(a) - rank(b);
   });
 
   const R = 13; // icon radius
@@ -1832,14 +1956,18 @@ function buildDistrictD3Map(stateAbbr) {
     const disabled = d.isWrong || d.isCorrect || gameOver;
     const fillColor = d.isCorrect
       ? '#2563EB'
-      : d.isWrong
-        ? (dark ? '#444' : '#ccc')
-        : '#C41230';
-    const textColor = (d.isWrong && !dark) ? '#888' : '#fff';
+      : d.isCold
+        ? (dark ? '#333' : '#bbb')
+        : d.isHot
+          ? (dark ? '#6b3030' : '#d4908a')
+          : '#C41230';
+    const textColor = (d.isCold && !dark) ? '#888' : (d.isHot && !dark) ? '#7a2020' : '#fff';
+    const opacity   = d.isCold ? 0.18 : d.isHot ? 0.32 : 1;
 
     const grp = iconG.append('g')
       .attr('transform', `translate(${d.ox},${d.oy})`)
-      .style('cursor', disabled ? 'default' : 'pointer');
+      .style('cursor', disabled ? 'default' : 'pointer')
+      .style('opacity', opacity);
 
     grp.append('circle')
       .attr('r', R)
@@ -1872,7 +2000,7 @@ function buildDistrictD3Map(stateAbbr) {
 
   // Animated force simulation — icons settle from their inner-point origins
   d3.forceSimulation(nodes)
-    .force('collide', d3.forceCollide(R + 3))
+    .force('collide', d3.forceCollide(d => d.isCold ? R * 0.25 : d.isHot ? R * 0.45 : R + 3))
     .force('x', d3.forceX(d => d.ox).strength(0.6))
     .force('y', d3.forceY(d => d.oy).strength(0.6))
     .on('tick', () => {
@@ -1899,10 +2027,13 @@ function endGame(won) {
     lockStateDropdown(todayDistrict.properties.state);
   }
   // Always rebuild district tiles at game-over so the answer district gets the highlight
-  buildDistrictD3Map(todayDistrict.properties.state);
+  // showDistrictD3Map updates the label correctly for game-over state
+  showDistrictD3Map(todayDistrict.properties.state, true);
   document.getElementById('game-section')?.classList.add('map-collapsed');
   renderClues();
   renderGuessHistory();
+  // Wrong guesses only — correct guess is free; minimum 1 so a perfect game shows "1"
+  if (won) guessCount = Math.max(guessCount, 1);
   // Save stats BEFORE showResult so renderInlinePersonalStats shows current game
   savePersonalStats(won, guessCount, elapsedSeconds);
   showResult(won);
@@ -2409,6 +2540,14 @@ async function init() {
   // Build state→district lookup
   stateDistrictMap = buildStateDistrictMap(districts);
 
+  // Build district adjacency lookup from embedded `adj` property
+  adjMap = new Map(
+    districts.map(f => [
+      f.properties['state-district'],
+      (f.properties.adj || '').split('|').filter(Boolean)
+    ])
+  );
+
   // Restore replayCount from sessionStorage so hard-reload resumes the same map
   const savedReplay = parseInt(sessionStorage.getItem(SESSION_REPLAY_KEY) || '0', 10);
   replayCount = isNaN(savedReplay) ? 0 : savedReplay;
@@ -2458,7 +2597,15 @@ document.addEventListener('DOMContentLoaded', () => {
     replayCount++;
     sessionStorage.setItem(SESSION_REPLAY_KEY, String(replayCount));
     const newIdx = seededIndex(dateSeed() + replayCount, districts.length);
-    resetGame(newIdx);
+    // Defer reset until after the CSS collapse transition (0.3s) so Leaflet
+    // measures the correct map size when renderDistrict calls fitBounds.
+    setTimeout(() => {
+      resetGame(newIdx);
+      requestAnimationFrame(() => {
+        map.invalidateSize();
+        if (districtLayer) map.fitBounds(districtLayer.getBounds(), { padding: [40, 40], maxZoom: 10, animate: false });
+      });
+    }, 320);
   }
   document.getElementById('play-again-btn').addEventListener('click', startNewMap);
   document.getElementById('banner-new-map-btn').addEventListener('click', startNewMap);

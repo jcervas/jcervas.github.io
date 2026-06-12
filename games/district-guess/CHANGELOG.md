@@ -2,7 +2,15 @@
 
 ---
 
-## v1.35 (current) — Hint Cards Redesign
+## v1.4 (current) — Mobile Polish & Scoring Fix
+
+- **Mobile hint bar**: previous revealed cards collapse to icon-only strip; tap any to open the hints modal showing all clues
+- **District map auto-zoom**: after eliminations, map zooms to fit remaining possible districts; user's manual zoom is preserved across rebuilds; resets when a new state is selected
+- **Reference map aspect ratio**: district tiles SVG viewBox now adapts to container dimensions and state shape (wide states like TN get a short map; tall states like CA fill the full height)
+- **Guess scoring fix**: only wrong guesses count; winning moves (correct-state unlock and correct-district pick) are free (perfect game = 1; 2 wrongs + correct = 2)
+- **Guess counter spacing**: more padding above, less below
+
+## v1.35 — Hint Cards Redesign
 - Replaced single expanding hint bar with a horizontal scrollable card row
 - Each clue gets its own card: locked cards show a lock icon; revealed cards show icon + label + value
 - Latest revealed card highlighted with accent border and reveal animation
