@@ -87,6 +87,14 @@ shp$reock         <- round(comp_reock(plans, shp_proj), 4)
 # R replaces hyphens in column names with dots — restore original name
 names(shp)[names(shp) == "state.district"] <- "state-district"
 
+# Adjacency: pipe-separated list of neighboring state-district keys
+adj_touches <- sf::st_touches(shp, sparse = TRUE)
+ids <- shp[["state-district"]]
+shp$adj <- sapply(seq_along(adj_touches), function(i) {
+  paste(ids[adj_touches[[i]]], collapse = "|")
+})
+cat(sprintf("  Adjacency computed for %d districts.\n", nrow(shp)))
+
 # Join ACS data if CSV path provided and exists
 if (length(args) >= 3 && file.exists(args[3])) {
   acs <- read.csv(args[3], stringsAsFactors = FALSE, check.names = FALSE)

@@ -689,7 +689,6 @@ function renderTabHeader(containerId) {
   el.innerHTML = `
     <div class="result-answer">
       <span class="result-answer-code">${answer}</span>
-      <span class="result-answer-sub">${stateName} &mdash; ${distLabel}</span>
     </div>
     <div class="result-time-line">${solveStr}</div>`;
 }
@@ -1663,13 +1662,7 @@ function showDistrictD3Map(stateAbbr, instant = false) {
 function buildDistrictD3Map(stateAbbr) {
   const tilesEl = document.getElementById('district-tiles');
 
-  // Preserve user's zoom across rebuilds (wrong guess triggers full SVG rebuild).
-  // Zoom is attached to the svg element itself, so read __zoom from svg, not g.
-  const existingSvg = tilesEl.querySelector('svg');
-  if (existingSvg && districtUserZoomed) {
-    districtSavedTransform = d3.zoomTransform(existingSvg);
-  }
-
+  // districtSavedTransform is kept current by the zoom event handler.
   tilesEl.innerHTML = '';
 
   const stateFeatures = districts.filter(f => f.properties.state === stateAbbr);
@@ -1778,7 +1771,17 @@ function buildDistrictD3Map(stateAbbr) {
     .scaleExtent([0.5, 20])
     .on('zoom', event => {
       g.attr('transform', event.transform);
-      if (event.sourceEvent) districtUserZoomed = true; // user-initiated only
+      const k = event.transform.k;
+      const rk = Math.max(1, 13 / k);
+      g.select('.dist-icons').selectAll('circle').attr('r', rk);
+      g.select('.dist-icons').selectAll('text').attr('font-size', function() {
+        const len = d3.select(this).text().length;
+        return `${Math.round((len > 2 ? 8 : 9) / k)}px`;
+      });
+      if (event.sourceEvent) {
+        districtUserZoomed     = true;
+        districtSavedTransform = event.transform;
+      }
     });
   svg.call(districtZoomBehavior).on('dblclick.zoom', null);
 
@@ -1939,7 +1942,7 @@ function buildDistrictD3Map(stateAbbr) {
   // Scale icon radius inversely to zoom so circles stay the same visual size at any zoom level.
   // At k=2 the viewBox is 2× bigger on screen, so halving R keeps icons at their default px size.
   const zoomK = (districtUserZoomed && districtSavedTransform) ? districtSavedTransform.k : 1;
-  const R = Math.min(20, Math.max(5, Math.round(13 / zoomK)));
+  const R = Math.max(1, 13 / zoomK);
 
   // Draw connector lines (initially at origin point, animated by simulation)
   const lineG = g.append('g').attr('class', 'dist-connectors');
@@ -2134,7 +2137,9 @@ function renderDistrictPreview(containerId = 'result-district-preview') {
   if (!container || !todayDistrict || !window.d3) return;
   container.innerHTML = '';
 
-  const W = 440, H = 180, pad = 20;
+  const pad = 20;
+  const W = Math.max(container.offsetWidth  || 440, 100);
+  const H = Math.max(container.offsetHeight || 180, 100);
   const dark = isDarkMode();
   const projection = _previewProjection(W, H, pad);
   const pathGen = d3.geoPath(projection);
@@ -2224,7 +2229,6 @@ function showResult(won) {
   stats.innerHTML = `
     <div class="result-answer">
       <span class="result-answer-code">${answer}</span>
-      <span class="result-answer-sub">${stateName} &mdash; ${distLabel}</span>
     </div>
     ${won ? `<div class="result-time-line">Solved in <strong>${guessCount}</strong> guess${guessCount !== 1 ? 'es' : ''} &middot; <strong>${formatTime(elapsedSeconds)}</strong></div>` : ''}`;
 
@@ -2510,6 +2514,7 @@ async function init() {
   // Load TopoJSON
   try {
     const res = await fetch('./districts.topojson');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const topo = await res.json();
     const data = topojson.feature(topo, topo.objects.districts);
     // Patch Louisiana features whose state/state-district properties are missing.
@@ -2536,8 +2541,9 @@ async function init() {
         if (f.properties.state) topoStates[f.properties.state] = f;
       });
     }
-  } catch {
-    alert('Failed to load district data. Please refresh.');
+  } catch (err) {
+    console.error('TopoJSON load failed:', err);
+    alert(`Failed to load district data (${err.message}). Please refresh.`);
     return;
   }
 
