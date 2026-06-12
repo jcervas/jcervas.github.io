@@ -808,7 +808,7 @@ async function fetchAndRenderCensusPanel(districtData) {
       <div class="census-card">
         <div class="label">Total Population</div>
         <div class="value">${formatNumber(d.pop)}</div>
-        <div class="sub">ACS 2022 5-year</div>
+        <div class="sub">ACS 2024 5-year</div>
       </div>
       <div class="census-card">
         <div class="label">Median Household Income</div>
@@ -831,7 +831,7 @@ async function fetchAndRenderCensusPanel(districtData) {
         <div class="sub">${blPct}% Black · ${hiPct}% Hispanic · ${asPct}% Asian</div>
       </div>
     </div>
-    <div class="census-source">Source: U.S. Census Bureau, ACS 5-Year Estimates (2022) &amp; 2026 district boundaries. ${d.name}</div>
+    <div class="census-source">Source: U.S. Census Bureau, ACS 5-Year Estimates (2024) &amp; 2026 district boundaries. ${d.name}</div>
   `;
 }
 
@@ -2075,7 +2075,8 @@ function buildShareText() {
     if (g.correct && g.phase === 'district') return '✓';
     return '✗';
   }).join(' ');
-  return `🗳️ District Guess ${todayKey}\n📍 ${answer} — ${result}\n${grid}\nhttps://jcervas.github.io/games/district-guess/`;
+  const outcome = won ? `solved in ${winNum}/${MAX_GUESSES} guesses` : `unsolved (${MAX_GUESSES}/${MAX_GUESSES})`;
+  return `🗳️ District Guess\n📍 ${answer} — ${outcome}\n${grid}\nCan you identify it? https://jcervas.github.io/games/district-guess/`;
 }
 
 // ============================================================
