@@ -187,7 +187,8 @@ function svgIcon(name, cls = 'icon') {
 const MAX_GUESSES = 6;
 const STORAGE_PREFIX = 'districtguess_';
 const HOW_TO_SEEN_KEY    = STORAGE_PREFIX + 'howToSeen';
-const SESSION_REPLAY_KEY = 'districtguess_replay';   // sessionStorage key
+const SESSION_REPLAY_KEY  = 'districtguess_replay';      // sessionStorage key
+const SESSION_RANDSEED_KEY = 'districtguess_randseed';  // seed for current random (non-daily) game
 // D3 US reference map coordinate space (viewBox dimensions)
 const REF_VB_W = 960;
 const REF_VB_H = 400;
@@ -2587,8 +2588,15 @@ async function init() {
   const savedReplay = parseInt(sessionStorage.getItem(SESSION_REPLAY_KEY) || '0', 10);
   replayCount = isNaN(savedReplay) ? 0 : savedReplay;
 
-  // Pick today's district — offset by replayCount so "New Map" gives a different puzzle
-  const idx = seededIndex(dateSeed() + replayCount, districts.length);
+  // Pick the district: daily (replayCount=0) uses a date seed shared by all players;
+  // subsequent "New Map" games use a per-user random seed stored in sessionStorage.
+  let idx;
+  if (replayCount === 0) {
+    idx = seededIndex(dateSeed(), districts.length);
+  } else {
+    const stored = parseInt(sessionStorage.getItem(SESSION_RANDSEED_KEY) || '0', 10);
+    idx = seededIndex(stored || Date.now(), districts.length);
+  }
   todayDistrict = districts[idx];
 
   initMap();
@@ -2631,7 +2639,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('game-section')?.classList.remove('map-collapsed');
     replayCount++;
     sessionStorage.setItem(SESSION_REPLAY_KEY, String(replayCount));
-    const newIdx = seededIndex(dateSeed() + replayCount, districts.length);
+    // Generate a fresh random seed unique to this user/moment and persist it
+    // so a page refresh during this game reloads the same district.
+    const randSeed = Date.now() ^ (Math.random() * 0xffffffff | 0);
+    sessionStorage.setItem(SESSION_RANDSEED_KEY, String(randSeed));
+    const newIdx = seededIndex(randSeed, districts.length);
     // Defer reset until after the CSS collapse transition (0.3s) so Leaflet
     // measures the correct map size when renderDistrict calls fitBounds.
     setTimeout(() => {
