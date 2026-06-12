@@ -281,9 +281,7 @@ let districts           = [];
 let districtPoints      = {};  // state-district key → [lon, lat] inner point
 
 // Manual overrides for districts where the computed inner point lands in water.
-const POINT_OVERRIDES = {
-  'FL-13': [-82.784, 27.910],  // Pinellas peninsula — computed point lands in Old Tampa Bay
-};
+const POINT_OVERRIDES = {};
 let topoRoads           = null;  // FeatureCollection from TopoJSON roads layer
 let topoUrban           = null;  // FeatureCollection from TopoJSON urban layer
 let topoStates          = {};    // state abbr → merged state Feature for clean outline drawing
@@ -2032,10 +2030,13 @@ function buildDistrictD3Map(stateAbbr) {
 
   // Animated force simulation — icons settle from their inner-point origins
   const collide = 16 / zoomK; // visual collision radius constant (~16px) at any zoom level
+  // At high zoom, pull icons tightly to their inner point so they don't drift into water/neighbors.
+  // At k=1 (full state): strength 0.6 (normal separation). At k=3+: strength ~0.9 (nearly locked).
+  const forceStrength = Math.min(0.98, 0.6 + (zoomK - 1) * 0.15);
   d3.forceSimulation(nodes)
     .force('collide', d3.forceCollide(d => d.isCold ? collide * 0.25 : d.isHot ? collide * 0.45 : collide))
-    .force('x', d3.forceX(d => d.ox).strength(0.6))
-    .force('y', d3.forceY(d => d.oy).strength(0.6))
+    .force('x', d3.forceX(d => d.ox).strength(forceStrength))
+    .force('y', d3.forceY(d => d.oy).strength(forceStrength))
     .on('tick', () => {
       nodes.forEach((d, i) => {
         d3.select(iconEls[i]).attr('transform', `translate(${d.x},${d.y})`);

@@ -2,7 +2,14 @@
 
 ---
 
-## v1.4 (current) — Mobile Polish & Scoring Fix
+## v1.4.0.1 (current) — Patch: District Tiles & Result Modal Polish
+
+- **Result modal**: removed redundant district name sub-line; tightened spacing around answer, message, and stats; smaller action buttons and stat numbers; district preview fills 35% of viewport height on mobile with container-fitted SVG projection
+- **District tiles zoom**: icons, labels, and connector lines now scale correctly at any zoom level — visual radius stays constant (13px), connector lines hide above 1.5× zoom, force attraction strengthens with zoom so icons stay near their inner point and don't drift into water
+- **Daily vs. random games**: first game each day is the same for all players (date seed); subsequent "New Map" games use a per-user random seed persisted in sessionStorage
+- **Icon positioning**: force attraction strength scales with zoom (0.6 at 1×, ~0.98 at 4×+) so icons lock tightly to their inner point when zoomed in
+
+## v1.4 — Mobile Polish & Scoring Fix
 
 - **Mobile hint bar**: previous revealed cards collapse to icon-only strip; tap any to open the hints modal showing all clues
 - **District map auto-zoom**: after eliminations, map zooms to fit remaining possible districts; user's manual zoom is preserved across rebuilds; resets when a new state is selected
