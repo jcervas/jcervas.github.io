@@ -163,6 +163,20 @@
   <div id="game-section">
     <div id="map"></div>
 
+    <!-- Hint bar — latest clue, expand to see all -->
+    <div id="hint-bar">
+      <div id="hint-bar-inner">
+        <span id="hint-bar-icon" class="hint-bar-icon"></span>
+        <div id="hint-bar-text">
+          <span id="hint-bar-label" class="hint-bar-label"></span>
+          <span id="hint-bar-val" class="hint-bar-val"></span>
+        </div>
+      </div>
+      <button id="hint-bar-expand" class="btn-icon" title="All hints">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+      </button>
+    </div>
+
     <div id="reference-panel">
 
       <!-- Guess progress dots — always visible; inline timer injected by JS on mobile -->
@@ -183,20 +197,6 @@
         </div>
         <div id="state-chips"></div>
       </div>
-    </div>
-
-    <!-- Hint bar — latest clue, expand to see all -->
-    <div id="hint-bar">
-      <div id="hint-bar-inner">
-        <span id="hint-bar-icon" class="hint-bar-icon"></span>
-        <div id="hint-bar-text">
-          <span id="hint-bar-label" class="hint-bar-label"></span>
-          <span id="hint-bar-val" class="hint-bar-val"></span>
-        </div>
-      </div>
-      <button id="hint-bar-expand" class="btn-icon" title="All hints">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
-      </button>
     </div>
 
   </div>
