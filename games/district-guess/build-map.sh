@@ -153,14 +153,33 @@ mapshaper "$ROADS_FC" name=roads \
 
 # ── Combine all layers into one TopoJSON ─────────────────────────────────────
 echo "Step 5/5  Building TopoJSON..."
+
+# Core file: districts + states + points (needed to start playing)
+CORE_OUT="${OUT%.topojson}-core.topojson"
 mapshaper \
-  -i "$DISTRICTS_SIMPLE" "$STATES" "$POINTS" "$URBAN_SIMPLE" "$ROADS_SIMPLE" combine-files \
-  -rename-layers districts,states,points,urban,roads \
-  -o "$OUT" format=topojson no-quantization
+  -i "$DISTRICTS_SIMPLE" "$STATES" "$POINTS" combine-files \
+  -rename-layers districts,states,points \
+  -o "$CORE_OUT" format=topojson
+
+# Overlay file: urban + roads (decorative; lazy-loaded after game starts)
+OVERLAY_OUT="${OUT%.topojson}-overlay.topojson"
+mapshaper \
+  -i "$URBAN_SIMPLE" "$ROADS_SIMPLE" combine-files \
+  -rename-layers urban,roads \
+  -o "$OVERLAY_OUT" format=topojson
+
+# Legacy combined file (kept for backwards compatibility; uses quantization now)
+mapshaper \
+  -i "$CORE_OUT" "$OVERLAY_OUT" combine-files \
+  -o "$OUT" format=topojson
 
 echo ""
 SIZE=$(du -sh "$OUT" | cut -f1)
+CORE_SIZE=$(du -sh "$CORE_OUT" | cut -f1)
+OVERLAY_SIZE=$(du -sh "$OVERLAY_OUT" | cut -f1)
 echo "Done → $OUT  ($SIZE)"
+echo "      → $CORE_OUT  ($CORE_SIZE)  [core — served first]"
+echo "      → $OVERLAY_OUT  ($OVERLAY_SIZE)  [overlay — lazy-loaded]"
 echo ""
 echo "Layers:"
 python3 - "$OUT" <<'PYEOF'

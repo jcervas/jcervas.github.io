@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>District Guess Beta 1.4.1 — Daily Congressional District Game</title>
+  <title>District Guess Beta 1.4.2 — Daily Congressional District Game</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=37" />
+  <link rel="stylesheet" href="style.css?v=39" />
 </head>
 <body>
 
@@ -32,7 +32,7 @@
         <circle cx="12" cy="10" r="4.5" fill="white"/>
         <circle cx="12" cy="10" r="2" fill="#C41230"/>
       </svg>
-      District Guess <span class="beta-badge"><span class="beta-label">Beta</span><span class="beta-version">1.4.1</span></span>
+      District Guess <span class="beta-badge"><span class="beta-label">Beta</span><span class="beta-version">1.4.2</span></span>
     </h1>
     <!-- Timer + donate link on the right -->
     <div class="header-right">
@@ -284,14 +284,9 @@
 <!-- Floating tooltip for D3 state map hover -->
 <div id="us-ref-tooltip" class="us-ref-tooltip"></div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
-
-<!-- Firebase (compat v9 — required for leaderboard) -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-<script>document.write('<scr'+'ipt src="script.js?v='+Date.now()+'"><\/scr'+'ipt>');</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js" defer></script>
+<script src="script.js?v=39" defer></script>
 </body>
 </html>
