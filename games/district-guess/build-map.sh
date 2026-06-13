@@ -119,12 +119,13 @@ mapshaper "$DISTRICTS_SIMPLE" name=districts \
 echo "Step 3/5  Computing inner points..."
 mapshaper "$DISTRICTS_SIMPLE" name=districts \
   -points inner \
+  -filter-fields state-district \
   -o "$POINTS"
 
 # ── Urban areas ───────────────────────────────────────────────────────────────
 echo "Step 4/5  Simplifying urban areas and roads..."
 mapshaper "$URBAN_SRC" name=urban \
-  -simplify "$SIMPLIFY" keep-shapes \
+  -simplify 1% keep-shapes \
   -filter-fields 'NAME20,GEOID20' \
   -o "$URBAN_SIMPLE"
 
@@ -147,7 +148,7 @@ print(f"  Roads: {len(features)} geometries ready.")
 PYEOF
 
 mapshaper "$ROADS_FC" name=roads \
-  -simplify "$SIMPLIFY" \
+  -simplify 0.5% \
   -o "$ROADS_SIMPLE"
 
 # ── Combine all layers into one TopoJSON ─────────────────────────────────────

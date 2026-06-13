@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>District Guess Beta 1.4.0.1 — Daily Congressional District Game</title>
+  <title>District Guess Beta 1.4.1 — Daily Congressional District Game</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=30" />
+  <link rel="stylesheet" href="style.css?v=34" />
 </head>
 <body>
 
@@ -32,7 +32,7 @@
         <circle cx="12" cy="10" r="4.5" fill="white"/>
         <circle cx="12" cy="10" r="2" fill="#C41230"/>
       </svg>
-      District Guess <span class="beta-badge"><span class="beta-label">Beta</span><span class="beta-version">1.4.0.1</span></span>
+      District Guess <span class="beta-badge"><span class="beta-label">Beta</span><span class="beta-version">1.4.1</span></span>
     </h1>
     <!-- Timer + donate link on the right -->
     <div class="header-right">
@@ -48,6 +48,31 @@
     </div>
   </div>
 </header>
+
+<!-- ===== WELCOME / SPLASH MODAL ===== -->
+<div id="welcome-modal" class="modal hidden">
+  <div class="modal-content welcome-modal-content">
+    <h1 class="welcome-title">
+      <svg class="game-logo" viewBox="0 0 24 30" aria-hidden="true">
+        <path d="M12 1C7.03 1 3 5.03 3 10C3 16.8 12 29 12 29C12 29 21 16.8 21 10C21 5.03 16.97 1 12 1Z" fill="#C41230"/>
+        <circle cx="12" cy="10" r="4.5" fill="white"/>
+        <circle cx="12" cy="10" r="2" fill="#C41230"/>
+      </svg>
+      District Guess
+    </h1>
+    <p class="welcome-desc">Identify the congressional district from its shape.<br>A new puzzle every day — same for everyone.</p>
+    <ul class="welcome-rules">
+      <li>You have <strong>6 guesses</strong> per day.</li>
+      <li>Click a state on the reference map, then pick the district number.</li>
+      <li>Wrong guesses narrow down the remaining states.</li>
+    </ul>
+    <button id="welcome-play-btn" class="welcome-play-btn">Play</button>
+    <a href="https://givenow.cmu.edu/campaigns/42524/donations/new?a=8338674"
+       class="welcome-donate-btn" target="_blank" rel="noopener">
+      Donate to Support this Game and Scholarship
+    </a>
+  </div>
+</div>
 
 <!-- ===== HOW TO PLAY MODAL ===== -->
 <div id="how-to-modal" class="modal hidden">
@@ -174,8 +199,14 @@
       <!-- Clickable US states map — zooms to state once confirmed; replaced by D3 district map -->
       <div id="us-ref-section">
         <div class="ref-label" id="ref-label">Click a state to select it</div>
-        <div id="us-ref-map"></div>
-        <div id="district-tiles" class="hidden"></div>
+        <div class="us-ref-map-wrap">
+          <div id="us-ref-map"></div>
+          <div id="district-tiles" class="hidden"></div>
+          <div class="us-ref-hint" id="us-ref-hint">
+            <span class="hint-desktop">Drag to pan · Scroll to zoom</span>
+            <span class="hint-mobile">Drag · Pinch to zoom</span>
+          </div>
+        </div>
       </div>
 
       <!-- State chips: greyed out as clues eliminate states -->
@@ -193,9 +224,10 @@
   <!-- Result modal (opens on game end or "View Result" click) -->
   <div id="result-modal" class="modal hidden">
     <div class="modal-content result-modal-content">
-      <button class="modal-close">✕</button>
-
       <!-- Single district preview shared across all tabs -->
+      <div class="result-modal-header">
+        <button class="modal-close result-modal-close">← Back to map</button>
+      </div>
       <div id="result-district-preview"></div>
 
       <div class="result-modal-tabs">
