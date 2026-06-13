@@ -844,17 +844,35 @@ async function fetchAndRenderCensusPanel(districtData) {
 // ============================================================
 //  FIREBASE / LEADERBOARD
 // ============================================================
-function initFirebase() {
-  if (!FIREBASE_CONFIG) return;
-  try {
-    firebase.initializeApp(FIREBASE_CONFIG);
-    db = firebase.firestore();
-  } catch (e) {
-    console.warn('Firebase init failed:', e);
-  }
+let _firebaseReady = null; // Promise that resolves when Firebase is loaded and initialized
+
+function loadFirebase() {
+  if (_firebaseReady) return _firebaseReady;
+  if (!FIREBASE_CONFIG) { _firebaseReady = Promise.resolve(); return _firebaseReady; }
+  _firebaseReady = new Promise(resolve => {
+    const s1 = document.createElement('script');
+    s1.src = 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js';
+    s1.onload = () => {
+      const s2 = document.createElement('script');
+      s2.src = 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js';
+      s2.onload = () => {
+        try {
+          firebase.initializeApp(FIREBASE_CONFIG);
+          db = firebase.firestore();
+        } catch (e) { console.warn('Firebase init failed:', e); }
+        resolve();
+      };
+      s2.onerror = resolve; // non-fatal
+      document.head.appendChild(s2);
+    };
+    s1.onerror = resolve; // non-fatal
+    document.head.appendChild(s1);
+  });
+  return _firebaseReady;
 }
 
 async function submitScore(won, guesses, seconds) {
+  await loadFirebase();
   if (!db) return;
   try {
     await db.collection('scores').add({
@@ -871,6 +889,7 @@ async function submitScore(won, guesses, seconds) {
 }
 
 async function loadTodayScores() {
+  await loadFirebase();
   if (!db) return null;
   try {
     const snap = await db.collection('scores')
@@ -885,6 +904,7 @@ async function loadTodayScores() {
 }
 
 async function loadAlltimeScores() {
+  await loadFirebase();
   if (!db) return null;
   try {
     // Fetch recent 500 scores and aggregate client-side
@@ -1580,66 +1600,66 @@ function initUSRefMap() {
 
   const tooltip = document.getElementById('us-ref-tooltip');
 
-  fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json')
-    .then(r => r.json())
-    .then(us => {
-      const geojson = topojson.feature(us, us.objects.states);
-      projection.fitSize([W, H], geojson);
-      usRefPathGen = pathGen; // save for district overlay
+  // Use states already loaded from districts-core.topojson — no CDN fetch needed.
+  (function renderRefMap() {
+    const stateFeatures = Object.values(topoStates).filter(Boolean);
+    const geojson = { type: 'FeatureCollection', features: stateFeatures };
+    projection.fitSize([W, H], geojson);
+    usRefPathGen = pathGen; // save for district overlay
 
-      // Single group for ALL content so zoom transforms everything
-      const g = svgSel.append('g');
-      usRefMapGroup = g.node();
+    // Single group for ALL content so zoom transforms everything
+    const g = svgSel.append('g');
+    usRefMapGroup = g.node();
 
-      geojson.features.forEach(feature => {
-        const fips = String(feature.id).padStart(2, '0');
-        const abbr = FIPS_TO_ABBR[fips];
-        if (!abbr || !stateDistrictMap[abbr]) return;
+    stateFeatures.forEach(feature => {
+      const abbr = feature.properties && feature.properties.state;
+      if (!abbr || !stateDistrictMap[abbr]) return;
 
-        const pathEl = g.append('path')
-          .datum(feature)
-          .attr('d', pathGen)
-          .attr('stroke', 'none')
-          .attr('data-abbr', abbr);
+      const pathEl = g.append('path')
+        .datum(feature)
+        .attr('d', pathGen)
+        .attr('stroke', 'none')
+        .attr('data-abbr', abbr);
 
-        usRefLayers[abbr] = pathEl;
-        _applyStateStyle(pathEl, abbr);
+      usRefLayers[abbr] = pathEl;
+      _applyStateStyle(pathEl, abbr);
 
-        pathEl
-          .on('click', () => {
-            if (gameOver || correctStateGuessed) return;
-            if (!getValidStates().has(abbr)) return;
-            submitStateGuess(abbr);
-          })
-          .on('mouseover', (event) => {
-            // Tooltip — desktop/mouse only
-            if (tooltip && !window.matchMedia('(pointer: coarse)').matches) {
-              tooltip.textContent = (STATE_NAMES[abbr] || abbr) + ' (' + abbr + ')';
-              tooltip.classList.add('visible');
-              tooltip.style.left = (event.clientX + 14) + 'px';
-              tooltip.style.top  = (event.clientY - 34) + 'px';
-            }
-            // Highlight only clickable states
-            if (!correctStateGuessed && getValidStates().has(abbr)) {
-              const hoverColor = isDarkMode() ? STATE_COLOR.dark.hover : STATE_COLOR.light.hover;
-              pathEl.attr('fill', hoverColor).attr('fill-opacity', 1.0);
-            }
-          })
-          .on('mousemove', (event) => {
-            if (tooltip) {
-              tooltip.style.left = (event.clientX + 14) + 'px';
-              tooltip.style.top  = (event.clientY - 34) + 'px';
-            }
-          })
-          .on('mouseout', () => {
-            if (tooltip) tooltip.classList.remove('visible');
-            _applyStateStyle(pathEl, abbr);
-          });
-      });
+      pathEl
+        .on('click', () => {
+          if (gameOver || correctStateGuessed) return;
+          if (!getValidStates().has(abbr)) return;
+          submitStateGuess(abbr);
+        })
+        .on('mouseover', (event) => {
+          // Tooltip — desktop/mouse only
+          if (tooltip && !window.matchMedia('(pointer: coarse)').matches) {
+            tooltip.textContent = (STATE_NAMES[abbr] || abbr) + ' (' + abbr + ')';
+            tooltip.classList.add('visible');
+            tooltip.style.left = (event.clientX + 14) + 'px';
+            tooltip.style.top  = (event.clientY - 34) + 'px';
+          }
+          // Highlight only clickable states
+          if (!correctStateGuessed && getValidStates().has(abbr)) {
+            const hoverColor = isDarkMode() ? STATE_COLOR.dark.hover : STATE_COLOR.light.hover;
+            pathEl.attr('fill', hoverColor).attr('fill-opacity', 1.0);
+          }
+        })
+        .on('mousemove', (event) => {
+          if (tooltip) {
+            tooltip.style.left = (event.clientX + 14) + 'px';
+            tooltip.style.top  = (event.clientY - 34) + 'px';
+          }
+        })
+        .on('mouseout', () => {
+          if (tooltip) tooltip.classList.remove('visible');
+          _applyStateStyle(pathEl, abbr);
+        });
+    });
 
-      // White internal borders
+    // White internal borders
+    if (rawTopo && rawTopo.objects.states) {
       g.append('path')
-        .datum(topojson.mesh(us, us.objects.states, (a, b) => a !== b))
+        .datum(topojson.mesh(rawTopo, rawTopo.objects.states, (a, b) => a !== b))
         .attr('d', pathGen)
         .attr('fill', 'none')
         .attr('stroke', '#ffffff')
@@ -1649,42 +1669,48 @@ function initUSRefMap() {
 
       // Outer US boundary
       g.append('path')
-        .datum(topojson.mesh(us, us.objects.states, (a, b) => a === b))
+        .datum(topojson.mesh(rawTopo, rawTopo.objects.states, (a, b) => a === b))
         .attr('d', pathGen)
         .attr('fill', 'none')
         .attr('stroke', '#adb5bd')
         .attr('stroke-width', 0.75)
         .attr('vector-effect', 'non-scaling-stroke')
         .attr('pointer-events', 'none');
+    }
 
-      // Callouts for small states (drawn last so they sit on top of borders)
-      const fipsToFeature = {};
-      geojson.features.forEach(f => { fipsToFeature[String(f.id).padStart(2, '0')] = f; });
-      _addStateCallouts(g, geojson, pathGen, fipsToFeature);
-
-      // Always fit the ref map to the current valid state set (removes AlbersUSA whitespace)
-      zoomUSRefMapToValid(false);
-      // If state already confirmed (restored session), draw district overlay immediately
-      if (correctStateGuessed && todayDistrict && !gameOver) {
-        showDistrictD3Map(todayDistrict.properties.state, true);
+    // Callouts for small states — build abbr-keyed lookup from our state features
+    const fipsToFeature = {};
+    stateFeatures.forEach(f => {
+      const abbr = f.properties && f.properties.state;
+      if (abbr) {
+        const fips = Object.keys(FIPS_TO_ABBR).find(k => FIPS_TO_ABBR[k] === abbr);
+        if (fips) fipsToFeature[fips] = f;
       }
+    });
+    _addStateCallouts(g, geojson, pathGen, fipsToFeature);
 
-      // Re-zoom once the container has real CSS dimensions (fixes mobile timing issue
-      // where getBBox() fires before layout settles, leaving the map too zoomed out)
-      const refEl = document.getElementById('us-ref-map');
-      if (refEl && window.ResizeObserver) {
-        let fired = false;
-        const ro = new ResizeObserver(() => {
-          if (refEl.offsetWidth > 0 && refEl.offsetHeight > 0 && !fired) {
-            fired = true;
-            ro.disconnect();
-            zoomUSRefMapToValid(false);
-          }
-        });
-        ro.observe(refEl);
-      }
-    })
-    .catch(() => {});
+    // Always fit the ref map to the current valid state set (removes AlbersUSA whitespace)
+    zoomUSRefMapToValid(false);
+    // If state already confirmed (restored session), draw district overlay immediately
+    if (correctStateGuessed && todayDistrict && !gameOver) {
+      showDistrictD3Map(todayDistrict.properties.state, true);
+    }
+
+    // Re-zoom once the container has real CSS dimensions (fixes mobile timing issue
+    // where getBBox() fires before layout settles, leaving the map too zoomed out)
+    const refEl = document.getElementById('us-ref-map');
+    if (refEl && window.ResizeObserver) {
+      let fired = false;
+      const ro = new ResizeObserver(() => {
+        if (refEl.offsetWidth > 0 && refEl.offsetHeight > 0 && !fired) {
+          fired = true;
+          ro.disconnect();
+          zoomUSRefMapToValid(false);
+        }
+      });
+      ro.observe(refEl);
+    }
+  })();
 }
 
 // Zoom the D3 reference map to the bounding box of still-valid states.
@@ -1962,27 +1988,15 @@ function buildDistrictD3Map(stateAbbr) {
     .attr('preserveAspectRatio', 'xMidYMin meet')
     .style('display', 'block');
 
-  // In game-over, zoom into the answer district with surrounding context
+  // In game-over, use AlbersUSA so AK/HI appear in their inset positions.
+  // In gameplay, use Mercator fit to this state.
   let projection;
-  if (gameOver && todayDistrict && stateFeatures.length > 1) {
-    const answerKey = todayDistrict.properties['state-district'];
-    const answerF   = stateFeatures.find(f => f.properties['state-district'] === answerKey);
-    if (answerF) {
-      // Fit tightly to the answer district, then zoom out by factor while keeping center
-      projection = d3.geoMercator().fitExtent([[20, 20], [W - 20, H - 20]], answerF);
-      const factor = 0.45;
-      const origScale = projection.scale();
-      const [tx, ty]  = projection.translate();
-      projection
-        .scale(origScale * factor)
-        .translate([W / 2 - factor * (W / 2 - tx), H / 2 - factor * (H / 2 - ty)]);
-    } else {
-      projection = d3.geoMercator().fitExtent([[20, 20], [W - 20, H - 20]], stateCollection);
-    }
+  if (gameOver) {
+    const allStatesFC = { type: 'FeatureCollection', features: Object.values(topoStates).filter(Boolean) };
+    projection = d3.geoAlbersUsa().fitExtent([[10, 10], [W - 10, H - 10]], allStatesFC);
   } else {
     projection = d3.geoMercator().fitExtent([[20, 20], [W - 20, H - 20]], stateCollection);
-    // Zoom in based on district count: more districts = more zoom so individual
-    // districts are legible. Single-district states stay at 1×.
+    // Zoom in based on district count so individual districts are legible.
     const distCount = stateFeatures.length;
     const zf = distCount <= 1 ? 1 : Math.min(1 + (distCount - 1) * 0.06, 2.2);
     if (zf > 1) {
@@ -2003,7 +2017,7 @@ function buildDistrictD3Map(stateAbbr) {
       g.attr('transform', event.transform);
       const k = event.transform.k;
       const rk = Math.max(1, 13 / k);
-      g.select('.dist-icons').selectAll('circle').attr('r', rk);
+      g.select('.dist-icons').selectAll('circle').attr('r', rk).attr('stroke-width', 1.5 / k);
       g.select('.dist-icons').selectAll('text').attr('font-size', function() {
         const len = d3.select(this).text().length;
         return `${(len > 2 ? 8 : 9) / k}px`;
@@ -2029,6 +2043,19 @@ function buildDistrictD3Map(stateAbbr) {
       const scale  = Math.min(12, Math.min(scaleX, scaleY));
       const tx = (W - scale * (px0 + px1)) / 2;
       const ty = (H - scale * (py0 + py1)) / 2;
+      svg.call(districtZoomBehavior.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
+    }
+  } else if (gameOver && !districtUserZoomed && todayDistrict) {
+    // Game-over: zoom into the answer state so it's clearly visible against the national backdrop
+    const answerF = stateFeatures.find(f => f.properties['state-district'] === todayDistrict.properties['state-district']);
+    const zoomTarget = answerF || (stateFeatures.length ? { type: 'FeatureCollection', features: stateFeatures } : null);
+    if (zoomTarget) {
+      const [[bx0, by0], [bx1, by1]] = pathGen.bounds(zoomTarget);
+      const bw = Math.max(bx1 - bx0, 1), bh = Math.max(by1 - by0, 1);
+      const pad = 60;
+      const scale = Math.min(10, Math.min((W - 2 * pad) / bw, (H - 2 * pad) / bh) * 0.55);
+      const tx = W / 2 - scale * (bx0 + bx1) / 2;
+      const ty = H / 2 - scale * (by0 + by1) / 2;
       svg.call(districtZoomBehavior.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
     }
   } else if (districtUserZoomed && districtSavedTransform) {
@@ -2140,7 +2167,7 @@ function buildDistrictD3Map(stateAbbr) {
         cy = p && isFinite(p[1]) ? p[1] : H / 2;
       }
       const R = 13;
-      const badge = g.append('g').attr('transform', `translate(${cx},${cy})`);
+      const badge = g.append('g').attr('class', 'dist-icons').attr('transform', `translate(${cx},${cy})`);
       badge.append('circle').attr('r', R)
         .attr('fill', '#C41230')
         .attr('stroke', dark ? '#222' : '#fff')
@@ -2804,25 +2831,17 @@ function resetGame(newIdx) {
 // ============================================================
 async function init() {
   todayKey = getTodayKey();
-  initFirebase();
-
   username = getUsername();
 
-  // Load TopoJSON
+  // Load core TopoJSON (districts + states + points) — game is playable once this completes.
+  // Roads and urban are lazy-loaded afterwards as a non-blocking overlay.
   try {
-    const res = await fetch('./districts.topojson');
+    const coreUrl = './districts-core.topojson';
+    const res = await fetch(coreUrl);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const topo = await res.json();
     rawTopo = topo;
     const data = topojson.feature(topo, topo.objects.districts);
-    // Patch Louisiana features whose state/state-district properties are missing.
-    data.features.forEach(f => {
-      const p = f.properties;
-      if (!p.state && typeof p.id === 'number' && p.id >= 1 && p.id <= 6) {
-        p.state = 'LA';
-        p['state-district'] = `LA-${String(p.id).padStart(2, '0')}`;
-      }
-    });
     districts = data.features.filter(f => f.properties.state);
 
     // Store inner points keyed by state-district for use in buildDistrictD3Map
@@ -2857,8 +2876,6 @@ async function init() {
         }
       }
     });
-    if (topo.objects.roads) topoRoads = topojson.feature(topo, topo.objects.roads);
-    if (topo.objects.urban) topoUrban = topojson.feature(topo, topo.objects.urban);
     if (topo.objects.states) {
       topojson.feature(topo, topo.objects.states).features.forEach(f => {
         if (f.properties.state) topoStates[f.properties.state] = f;
@@ -2869,6 +2886,15 @@ async function init() {
     alert(`Failed to load district data (${err.message}). Please refresh.`);
     return;
   }
+
+  // Lazy-load decorative overlay (roads + urban) — non-blocking.
+  fetch('./districts-overlay.topojson')
+    .then(r => r.ok ? r.json() : Promise.reject(r.status))
+    .then(topo => {
+      if (topo.objects.roads) topoRoads = topojson.feature(topo, topo.objects.roads);
+      if (topo.objects.urban) topoUrban = topojson.feature(topo, topo.objects.urban);
+    })
+    .catch(err => console.warn('Overlay load failed (non-fatal):', err));
 
   // Build state→district lookup
   stateDistrictMap = buildStateDistrictMap(districts);
@@ -3068,7 +3094,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Hint bar expand → opens full hints modal
-  document.getElementById('hint-bar-expand').addEventListener('click', () => {
+  document.getElementById('hint-bar-expand')?.addEventListener('click', () => {
     renderClues();
     document.getElementById('hints-modal').classList.remove('hidden');
   });

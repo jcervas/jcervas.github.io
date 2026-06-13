@@ -1523,20 +1523,20 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
   /* Compact header */
   .header-inner { height: 44px; }
 
-  main { padding: 4px 8px; gap: 4px; }
+  main { padding: 4px 6px; gap: 0; }
 
-  /* Switch game section to 2-column grid:
-       left  = map
-       right = [controls on top, reference below] */
+  /* 3-column grid:
+       narrow left  = district map (Leaflet)
+       thin middle  = hints strip
+       wide right   = reference panel (US map / district tiles — clickable)  */
   #game-section {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto 1fr;
-    grid-template-areas:
-      "map controls"
-      "map reference";
+    grid-template-columns: 28% auto 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "map controls reference";
     height: calc(100dvh - 44px);
-    gap: 6px;
+    gap: 4px;
+    overflow: hidden;
   }
 
   #map {
@@ -1549,6 +1549,12 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
   #game-controls {
     grid-area: controls;
     min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 4px;
+    padding: 2px 0;
+    width: auto;
   }
 
   #reference-panel {
@@ -1558,9 +1564,9 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
     overflow: hidden;
   }
 
-  /* Map-collapsed (game-over): left column disappears, right fills full width */
+  /* Map-collapsed (game-over): district map column collapses, reference fills */
   #game-section.map-collapsed {
-    grid-template-columns: 0px 1fr;
+    grid-template-columns: 0px auto 1fr;
   }
   #game-section.map-collapsed #map {
     overflow: hidden;
@@ -1568,60 +1574,48 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
     pointer-events: none;
   }
 
-  /* ---- Vertical hint bar ---- */
+  /* ---- Hints: vertical strip, icon-only cards ---- */
   #hint-bar {
     flex-direction: column;
     overflow-x: hidden;
     overflow-y: auto;
-    padding: 2px 0;
+    padding: 0;
     gap: 3px;
-    max-height: 130px;
+    flex: 1;
+    min-height: 0;
   }
 
-  /* Compact hint cards stacked vertically — single row layout inside each */
+  /* Each card: narrow pill showing just the icon */
   .hint-card {
     flex: 0 0 auto;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
     min-height: 0;
-    padding: 4px 8px;
-    gap: 6px;
+    padding: 5px 6px;
+    gap: 2px;
+    width: 38px;
   }
 
-  /* In landscape, un-collapse the small-screen collapsed cards so they show inline */
+  /* Override small-screen collapsed styles */
   .hint-card.locked,
   .hint-card.revealed:not(.latest):not(.expanded) {
     flex: 0 0 auto;
-    min-width: unset;
-    width: 100%;
+    min-width: 0;
+    width: 38px;
     overflow: hidden;
+    padding: 5px 6px;
   }
 
-  .hint-card-header {
-    flex-shrink: 0;
-    flex-direction: row;
-    align-items: center;
-    gap: 4px;
-    margin: 0;
-  }
+  /* Hide label and value — icon only in the strip */
+  .hint-card-label,
+  .hint-card-val { display: none !important; }
 
-  /* Show label inline next to icon */
-  .hint-card.revealed:not(.latest):not(.expanded) .hint-card-label {
-    display: inline;
-    font-size: 0.72rem;
-  }
+  /* Guess counter fits below the hint strip */
+  .guess-counter { flex-shrink: 0; }
+  .gc-label { display: none; }
 
-  /* Value goes on the right */
-  .hint-card-val {
-    margin-left: auto;
-    font-size: 0.72rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 50%;
-  }
-
-  /* State chips: hide in landscape to save space */
+  /* State chips: hide to save space */
   #state-chips-section { display: none; }
 }
 
