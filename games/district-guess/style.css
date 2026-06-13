@@ -721,7 +721,7 @@ main {
   overflow: hidden;
   background: var(--surface-alt);
   border: 1px solid var(--border);
-  min-height: 150px;
+  flex: 0 0 clamp(130px, 27vh, 240px);
 }
 .district-preview-svg {
   width: 100%;
@@ -751,7 +751,7 @@ main {
 #result-message {
   font-size: 1.2rem;
   font-weight: 800;
-  margin: 2px 0;
+  margin: -8px 0;
 }
 #result-message.won  { color: var(--green); }
 #result-message.lost { color: var(--red); }
@@ -1360,12 +1360,139 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
   transition: opacity 0.35s ease;
 }
 
+.us-ref-map-wrap {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.us-ref-hint {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding: 5px 9px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  pointer-events: none;
+  opacity: 0.9;
+  transition: opacity 0.4s ease;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  z-index: 5;
+}
+.us-ref-hint.dismissed { opacity: 0; }
+.us-ref-hint .hint-mobile { display: none; }
+@media (max-width: 480px) {
+  .us-ref-hint .hint-desktop { display: none; }
+  .us-ref-hint .hint-mobile  { display: inline; }
+}
+
 /* ---- District D3 map (replaces US map once state is confirmed) ---- */
 #district-tiles {
   flex: 1;
   min-height: 0;
   transition: opacity 0.35s ease;
   overflow: hidden;
+}
+
+/* ---- Welcome / splash modal ---- */
+.welcome-modal-content {
+  max-width: 420px;
+  width: 92vw;
+  text-align: center;
+  padding: 36px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.welcome-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+.welcome-title .game-logo { width: 32px; height: 40px; }
+.welcome-desc {
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+}
+.welcome-rules {
+  text-align: left;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  padding-left: 1.2em;
+  margin: 0;
+  color: var(--text);
+}
+.welcome-play-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  margin-top: 4px;
+}
+.welcome-play-btn:hover { opacity: 0.88; }
+.welcome-donate-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: center;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  text-decoration: none;
+  box-sizing: border-box;
+}
+.welcome-donate-btn:hover { color: var(--text); border-color: var(--text); }
+
+/* ---- Result modal close button ---- */
+.result-modal-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+  flex-shrink: 0;
+}
+.result-modal-close {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: none;
+  cursor: pointer;
+  color: var(--muted);
+}
+.result-modal-close:hover { color: var(--text); border-color: var(--text); }
+
+/* ---- STATISTICS label in result tab ---- */
+.result-statistics-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 2px;
 }
 
 /* ---- Utilities ---- */
@@ -1461,8 +1588,7 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
     margin: 0;
   }
   #result-district-preview {
-    flex: 0 0 35dvh;
-    min-height: 0;
+    flex: 0 0 clamp(120px, 30dvh, 200px);
   }
   .result-tab-pane {
     padding: 12px 16px;

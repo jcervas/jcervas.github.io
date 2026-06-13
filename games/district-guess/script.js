@@ -187,6 +187,7 @@ function svgIcon(name, cls = 'icon') {
 const MAX_GUESSES = 6;
 const STORAGE_PREFIX = 'districtguess_';
 const HOW_TO_SEEN_KEY    = STORAGE_PREFIX + 'howToSeen';
+const WELCOME_SEEN_KEY   = STORAGE_PREFIX + 'welcomeSeen';
 const SESSION_REPLAY_KEY  = 'districtguess_replay';      // sessionStorage key
 const SESSION_RANDSEED_KEY = 'districtguess_randseed';  // seed for current random (non-daily) game
 // D3 US reference map coordinate space (viewBox dimensions)
@@ -285,6 +286,7 @@ const POINT_OVERRIDES = {};
 let topoRoads           = null;  // FeatureCollection from TopoJSON roads layer
 let topoUrban           = null;  // FeatureCollection from TopoJSON urban layer
 let topoStates          = {};    // state abbr → merged state Feature for clean outline drawing
+let rawTopo             = null;  // raw TopoJSON topology — kept for topojson.mesh() calls
 let adjMap              = new Map(); // state-district key → string[] of adjacent keys
 let currentMapStage     = 0;     // highest stage reached; preserved across re-renders
 let todayDistrict       = null;   // feature object
@@ -293,6 +295,8 @@ let map, terrainLayer, satelliteLayer, streetLayer, districtLayer;
 let usRefMap            = null;   // US states reference map SVG element
 let usRefMapGroup       = null;   // main <g> inside the SVG (holds all paths)
 let usRefLayers         = {};     // abbr → D3 path selection
+let usRefCallouts       = {};     // abbr → { group, circle, line, text, anchorX, anchorY, offX, offY } for small-state callouts
+let _lastFitBBoxKey     = null;   // dedupe key — skip zoomUSRefMapToValid when bbox unchanged
 let usRefZoom           = null;   // d3.zoom instance
 let usRefSvgSel         = null;   // d3 selection of the SVG element
 let usRefPathGen        = null;   // reusable geoPath generator (set after projection.fitSize)
@@ -730,6 +734,7 @@ function renderInlinePersonalStats() {
   const avgLabel = avgSecs !== null ? formatTime(avgSecs) : '—';
 
   el.innerHTML = `
+    <div class="result-statistics-label">STATISTICS</div>
     <div class="result-stats-grid">
       <div class="rstat-cell"><span class="rstat-big">${stats.played}</span><span class="rstat-label">Played</span></div>
       <div class="rstat-cell"><span class="rstat-big">${winRate}</span><span class="rstat-label">Win %</span></div>
@@ -1374,6 +1379,167 @@ function _applyStateStyle(sel, abbr) {
      .style('cursor', (!correctStateGuessed && getValidStates().has(abbr)) ? 'pointer' : 'default');
 }
 
+// Resize/reposition callouts based on current zoom k.
+// k=1 → full offshore + full size; higher k → lerp toward anchor, shrink, fade.
+function _updateCalloutsForZoom(k) {
+  _usRefZoomK = k || 1;
+  const K_FULL = 1.0;
+  const K_HIDE = 2.4;
+  const t = Math.max(0, Math.min(1, (k - K_FULL) / (K_HIDE - K_FULL)));
+  const inv = 1 / k;
+
+  for (const abbr of Object.keys(usRefCallouts)) {
+    const co = usRefCallouts[abbr];
+    // Callouts stay at their stacked offshore position; only fade out with zoom.
+    const x = co.offX;
+    const y = co.offY;
+    const rx = CALLOUT_RX * inv;
+    const ry = CALLOUT_RY * inv;
+    const fontSize = 11 * inv;
+
+    co.circle.attr('cx', x).attr('cy', y).attr('rx', rx).attr('ry', ry);
+    co.text.attr('x', x).attr('y', y).attr('font-size', fontSize);
+    co.line
+      .attr('x2', x).attr('y2', y)
+      .attr('stroke-width', 0.8 * inv);
+
+    const clickable = !correctStateGuessed && getValidStates().has(abbr);
+    const confirmed = correctStateGuessed && todayDistrict && todayDistrict.properties.state === abbr;
+    const baseOpacity = (clickable || confirmed) ? 1 : 0.55;
+    const opacity = baseOpacity * (1 - t);
+    co.group.style('opacity', opacity);
+    co.group.style('pointer-events', opacity < 0.15 ? 'none' : null);
+  }
+}
+
+function _applyCalloutStyle(abbr) {
+  const co = usRefCallouts[abbr];
+  if (!co) return;
+  const s = _stateColors(abbr);
+  const clickable = !correctStateGuessed && getValidStates().has(abbr);
+  const stroke = isDarkMode() ? '#ffffff' : '#ffffff';
+  co.circle
+    .attr('fill', s.fill)
+    .attr('fill-opacity', s.opacity)
+    .attr('stroke', stroke)
+    .attr('stroke-width', 1.25)
+    .style('cursor', clickable ? 'pointer' : 'default');
+  co.line
+    .attr('stroke', s.fill)
+    .attr('stroke-opacity', 0.7);
+  // Opacity is controlled jointly by zoom level and clickability — applied in _updateCalloutsForZoom.
+  _updateCalloutsForZoom(_usRefZoomK);
+}
+
+let _usRefZoomK = 1;
+
+// Small/dense states that are easy to misclick — render a labeled
+// callout badge offshore connected by a leader line.
+const CALLOUT_STATES = ['VT', 'NH', 'MA', 'RI', 'CT', 'NJ', 'DE', 'MD'];
+const CALLOUT_RX = 14;   // ellipse horizontal radius
+const CALLOUT_RY = 8.5;  // ellipse vertical radius
+const CALLOUT_GAP = 2;   // vertical pixel gap between stacked ellipses
+
+function _addStateCallouts(g, geojson, pathGen, fipsToFeature) {
+  // Collect, sorted north-to-south by each state's bbox upper bound (min y in projection).
+  const items = [];
+  let maxEast = -Infinity;
+  CALLOUT_STATES.forEach((abbr) => {
+    const fips = Object.keys(FIPS_TO_ABBR).find(k => FIPS_TO_ABBR[k] === abbr);
+    const feature = fipsToFeature[fips];
+    if (!feature) return;
+    const [cx, cy] = pathGen.centroid(feature);
+    if (!isFinite(cx)) return;
+    const b = pathGen.bounds(feature); // [[x0,y0],[x1,y1]]
+    items.push({ abbr, anchorX: cx, anchorY: cy, topY: b[0][1], eastX: b[1][0] });
+    if (b[1][0] > maxEast) maxEast = b[1][0];
+  });
+  items.sort((a, b) => a.topY - b.topY);
+
+  // Stack left-aligned at a common X just east of the eastmost state's edge.
+  const stackX = maxEast + 18 + CALLOUT_RX;
+  // Stack starts at the topmost state's anchorY, then steps down by 2*ry + gap.
+  const stepY = 2 * CALLOUT_RY + CALLOUT_GAP;
+  const startY = items.length ? items[0].anchorY : 0;
+
+  const layer = g.append('g').attr('class', 'us-ref-callouts');
+
+  // Convert items into nodes with their stacked offshore positions
+  const nodes = items.map((it, i) => ({
+    abbr: it.abbr,
+    anchorX: it.anchorX,
+    anchorY: it.anchorY,
+    x: stackX,
+    y: startY + i * stepY,
+  }));
+
+  nodes.forEach(n => {
+    const grp = layer.append('g').attr('data-abbr', n.abbr);
+    const line = grp.append('line')
+      .attr('x1', n.anchorX).attr('y1', n.anchorY)
+      .attr('x2', n.x).attr('y2', n.y)
+      .attr('stroke-width', 0.8)
+      .attr('vector-effect', 'non-scaling-stroke')
+      .attr('pointer-events', 'none');
+    const circle = grp.append('ellipse')
+      .attr('cx', n.x).attr('cy', n.y)
+      .attr('rx', CALLOUT_RX).attr('ry', CALLOUT_RY)
+      .attr('vector-effect', 'non-scaling-stroke');
+    const textSel = grp.append('text')
+      .attr('x', n.x).attr('y', n.y)
+      .attr('text-anchor', 'middle')
+      .attr('dominant-baseline', 'central')
+      .attr('font-size', 11)
+      .attr('font-weight', '700')
+      .attr('fill', '#ffffff')
+      .attr('pointer-events', 'none')
+      .text(n.abbr);
+
+    usRefCallouts[n.abbr] = {
+      group: grp, circle, line, text: textSel,
+      anchorX: n.anchorX, anchorY: n.anchorY,
+      offX: n.x, offY: n.y,
+    };
+
+    const tooltip = document.getElementById('us-ref-tooltip');
+    circle
+      .on('click', () => {
+        if (gameOver || correctStateGuessed) return;
+        if (!getValidStates().has(n.abbr)) return;
+        submitStateGuess(n.abbr);
+      })
+      .on('mouseover', (event) => {
+        if (tooltip && !window.matchMedia('(pointer: coarse)').matches) {
+          tooltip.textContent = (STATE_NAMES[n.abbr] || n.abbr) + ' (' + n.abbr + ')';
+          tooltip.classList.add('visible');
+          tooltip.style.left = (event.clientX + 14) + 'px';
+          tooltip.style.top  = (event.clientY - 34) + 'px';
+        }
+        if (!correctStateGuessed && getValidStates().has(n.abbr)) {
+          const hoverColor = isDarkMode() ? STATE_COLOR.dark.hover : STATE_COLOR.light.hover;
+          circle.attr('fill', hoverColor).attr('fill-opacity', 1.0);
+          // Also flash the actual state path
+          const pathEl = usRefLayers[n.abbr];
+          if (pathEl) pathEl.attr('fill', hoverColor).attr('fill-opacity', 1.0);
+        }
+      })
+      .on('mousemove', (event) => {
+        if (tooltip) {
+          tooltip.style.left = (event.clientX + 14) + 'px';
+          tooltip.style.top  = (event.clientY - 34) + 'px';
+        }
+      })
+      .on('mouseout', () => {
+        if (tooltip) tooltip.classList.remove('visible');
+        _applyCalloutStyle(n.abbr);
+        const pathEl = usRefLayers[n.abbr];
+        if (pathEl) _applyStateStyle(pathEl, n.abbr);
+      });
+
+    _applyCalloutStyle(n.abbr);
+  });
+}
+
 function initUSRefMap() {
   if (usRefMap) return;
   const container = document.getElementById('us-ref-map');
@@ -1386,7 +1552,7 @@ function initUSRefMap() {
     .attr('viewBox', `0 0 ${W} ${H}`)
     .attr('width', '100%')
     .attr('height', '100%')
-    .attr('preserveAspectRatio', 'xMidYMid meet')
+    .attr('preserveAspectRatio', 'xMidYMid slice')
     .style('display', 'block')
     .style('background', 'transparent');
 
@@ -1398,6 +1564,12 @@ function initUSRefMap() {
     .scaleExtent([0.7, 14])
     .on('zoom', (event) => {
       d3.select(usRefMapGroup).attr('transform', event.transform);
+      _updateCalloutsForZoom(event.transform.k);
+      // Dismiss the pan/zoom hint on the first user gesture (not programmatic transitions)
+      if (event.sourceEvent) {
+        const hint = document.getElementById('us-ref-hint');
+        if (hint) hint.classList.add('dismissed');
+      }
     });
   svgSel.call(usRefZoom);
   // Double-click resets to fitted view instead of zooming in
@@ -1440,8 +1612,8 @@ function initUSRefMap() {
             submitStateGuess(abbr);
           })
           .on('mouseover', (event) => {
-            // Tooltip — show for all states
-            if (tooltip) {
+            // Tooltip — desktop/mouse only
+            if (tooltip && !window.matchMedia('(pointer: coarse)').matches) {
               tooltip.textContent = (STATE_NAMES[abbr] || abbr) + ' (' + abbr + ')';
               tooltip.classList.add('visible');
               tooltip.style.left = (event.clientX + 14) + 'px';
@@ -1484,6 +1656,11 @@ function initUSRefMap() {
         .attr('stroke-width', 0.75)
         .attr('vector-effect', 'non-scaling-stroke')
         .attr('pointer-events', 'none');
+
+      // Callouts for small states (drawn last so they sit on top of borders)
+      const fipsToFeature = {};
+      geojson.features.forEach(f => { fipsToFeature[String(f.id).padStart(2, '0')] = f; });
+      _addStateCallouts(g, geojson, pathGen, fipsToFeature);
 
       // Always fit the ref map to the current valid state set (removes AlbersUSA whitespace)
       zoomUSRefMapToValid(false);
@@ -1535,6 +1712,17 @@ function zoomUSRefMapToValid(animated = true) {
     x0 = Math.min(x0, bb.x);
     y0 = Math.min(y0, bb.y);
     x1 = Math.max(x1, bb.x + bb.width);
+    // Include callout bbox so offshore badges stay in frame
+    const co = usRefCallouts[abbr];
+    if (co) {
+      const cb = co.group.node().getBBox();
+      if (cb.width > 0 || cb.height > 0) {
+        x0 = Math.min(x0, cb.x);
+        y0 = Math.min(y0, cb.y);
+        x1 = Math.max(x1, cb.x + cb.width);
+        y1 = Math.max(y1, cb.y + cb.height);
+      }
+    }
     y1 = Math.max(y1, bb.y + bb.height);
   }
   if (x0 === Infinity) return;
@@ -1543,10 +1731,31 @@ function zoomUSRefMapToValid(animated = true) {
   const dy = y1 - y0;
   if (dx === 0 || dy === 0) return;
 
+  // Skip re-fitting if the target bbox hasn't changed since the last call —
+  // preserves the user's pan/zoom state when a guess doesn't change the valid set.
+  const bboxKey = `${x0.toFixed(1)},${y0.toFixed(1)},${x1.toFixed(1)},${y1.toFixed(1)}`;
+  if (_lastFitBBoxKey === bboxKey) return;
+  _lastFitBBoxKey = bboxKey;
+
   const padding = 28;
-  const scale   = Math.min((W - 2 * padding) / dx, (H - 2 * padding) / dy);
-  const tx      = W / 2 - scale * (x0 + dx / 2);
-  const ty      = H / 2 - scale * (y0 + dy / 2);
+  // With slice mode, the visible viewBox region is determined by container aspect.
+  // pxPerVb = max(cw/W, ch/H) (slice fills the larger axis, crops the other).
+  const svgRect = usRefMap.getBoundingClientRect();
+  const pxPerVb = (svgRect.width > 0 && svgRect.height > 0)
+    ? Math.max(svgRect.width / W, svgRect.height / H)
+    : 1;
+  const visW = svgRect.width  > 0 ? svgRect.width  / pxPerVb : W;
+  const visH = svgRect.height > 0 ? svgRect.height / pxPerVb : H;
+  const containerAspect = svgRect.height > 0 ? svgRect.width / svgRect.height : (W / H);
+  const vbAspect = W / H;
+  const minFit = Math.min((visW - 2 * padding) / dx, (visH - 2 * padding) / dy);
+  const maxFit = Math.max((visW - 2 * padding) / dx, (visH - 2 * padding) / dy);
+  // On portrait containers, split the difference between min-fit (everything visible,
+  // letterboxed) and max-fit (fill vertically, crop sides). On landscape, just min-fit.
+  const fit = containerAspect < vbAspect ? (minFit + maxFit) / 2 : minFit;
+  const scale = Math.max(1, fit);
+  const tx    = W / 2 - scale * (x0 + dx / 2);
+  const ty    = H / 2 - scale * (y0 + dy / 2);
 
   // Sync through d3.zoom so user pan/scroll starts from the correct position
   const zTransform = d3.zoomIdentity.translate(tx, ty).scale(scale);
@@ -1567,6 +1776,9 @@ function updateUSRefMap() {
   if (!usRefMap) return;
   for (const [abbr, pathEl] of Object.entries(usRefLayers)) {
     _applyStateStyle(pathEl, abbr);
+  }
+  for (const abbr of Object.keys(usRefCallouts)) {
+    _applyCalloutStyle(abbr);
   }
 }
 
@@ -1644,6 +1856,10 @@ function showDistrictD3Map(stateAbbr, instant = false) {
   // Reset zoom state when entering a new state's district phase
   districtUserZoomed     = false;
   districtSavedTransform = null;
+
+  // Dismiss the pan/zoom hint pill when entering district-pick phase
+  const hintEl = document.getElementById('us-ref-hint');
+  if (hintEl) hintEl.classList.add('dismissed');
 
   // Build the D3 district map inside tilesEl
   buildDistrictD3Map(stateAbbr);
@@ -1765,6 +1981,16 @@ function buildDistrictD3Map(stateAbbr) {
     }
   } else {
     projection = d3.geoMercator().fitExtent([[20, 20], [W - 20, H - 20]], stateCollection);
+    // Zoom in based on district count: more districts = more zoom so individual
+    // districts are legible. Single-district states stay at 1×.
+    const distCount = stateFeatures.length;
+    const zf = distCount <= 1 ? 1 : Math.min(1 + (distCount - 1) * 0.06, 2.2);
+    if (zf > 1) {
+      const s0 = projection.scale();
+      const [tx, ty] = projection.translate();
+      projection.scale(s0 * zf)
+        .translate([W / 2 - zf * (W / 2 - tx), H / 2 - zf * (H / 2 - ty)]);
+    }
   }
   const pathGen = d3.geoPath().projection(projection);
 
@@ -1772,7 +1998,7 @@ function buildDistrictD3Map(stateAbbr) {
 
   // Pan & zoom on the district tiles map
   districtZoomBehavior = d3.zoom()
-    .scaleExtent([0.5, 20])
+    .scaleExtent([0.1, 20])
     .on('zoom', event => {
       g.attr('transform', event.transform);
       const k = event.transform.k;
@@ -1829,6 +2055,56 @@ function buildDistrictD3Map(stateAbbr) {
     const answerKey  = todayDistrict.properties['state-district'];
     const answerDist = answerKey?.split('-').slice(1).join('-') || '00';
     const answerLabel = isAtLarge ? 'AL' : String(parseInt(answerDist, 10));
+
+    // ── Context: neighboring states ──────────────────────────────
+    if (rawTopo) {
+      const neighborAbbrs = new Set(STATE_ADJACENCY[stateAbbr] || []);
+      const neighborFills = [...neighborAbbrs].map(a => topoStates[a]).filter(Boolean);
+
+      // Fill neighboring states (very muted)
+      if (neighborFills.length) {
+        g.append('g').attr('class', 'context-state-fills')
+          .attr('pointer-events', 'none')
+          .selectAll('path')
+          .data(neighborFills)
+          .join('path')
+          .attr('d', pathGen)
+          .attr('fill', dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)')
+          .attr('stroke', 'none');
+      }
+
+      // District inner lines for neighboring states — use mesh so each shared arc
+      // is drawn only once (clean, fast, no double-stroke)
+      const distInnerMesh = topojson.mesh(
+        rawTopo, rawTopo.objects.districts,
+        (a, b) => a !== b
+          && a.properties?.state === b.properties?.state
+          && neighborAbbrs.has(a.properties?.state)
+      );
+      g.append('path')
+        .datum(distInnerMesh)
+        .attr('class', 'context-district-lines')
+        .attr('d', pathGen)
+        .attr('fill', 'none')
+        .attr('stroke', dark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.13)')
+        .attr('stroke-width', 0.6)
+        .attr('vector-effect', 'non-scaling-stroke')
+        .attr('pointer-events', 'none');
+
+      // State outlines for neighboring states — same weight as target state borders
+      if (neighborFills.length) {
+        g.append('g').attr('class', 'context-state-borders')
+          .attr('pointer-events', 'none')
+          .selectAll('path')
+          .data(neighborFills)
+          .join('path')
+          .attr('d', pathGen)
+          .attr('fill', 'none')
+          .attr('stroke', dark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.28)')
+          .attr('stroke-width', 1)
+          .attr('vector-effect', 'non-scaling-stroke');
+      }
+    }
 
     // Draw all district boundaries (no fill — transparent background shows through)
     stateFeatures.forEach(f => {
@@ -1924,15 +2200,13 @@ function buildDistrictD3Map(stateAbbr) {
     const isCorrect = wonDistPart === dist;
 
     let cx, cy;
-    const inner = POINT_OVERRIDES[sdKey] || districtPoints[sdKey];
-    if (inner) {
-      const projected = projection(inner);
-      cx = projected && isFinite(projected[0]) ? projected[0] : W / 2;
-      cy = projected && isFinite(projected[1]) ? projected[1] : H / 2;
+    // districtPoints are corrected at init time (water-body guard runs once on load)
+    const refPoint = POINT_OVERRIDES[sdKey] || districtPoints[sdKey] || d3.geoCentroid(f);
+    const projected = projection(refPoint);
+    if (projected && isFinite(projected[0])) {
+      cx = projected[0]; cy = projected[1];
     } else {
-      const projected = projection(d3.geoCentroid(f));
-      cx = projected && isFinite(projected[0]) ? projected[0] : W / 2;
-      cy = projected && isFinite(projected[1]) ? projected[1] : H / 2;
+      cx = W / 2; cy = H / 2;
     }
     const isHot   = hotKeys.has(dist);
     const isCold  = coldKeys.has(dist);
@@ -2066,8 +2340,8 @@ function endGame(won) {
   document.getElementById('game-section')?.classList.add('map-collapsed');
   renderClues();
   renderGuessHistory();
-  // Wrong guesses only — correct guess is free; minimum 1 so a perfect game shows "1"
-  if (won) guessCount = Math.max(guessCount, 1);
+  // Add 1 for the winning guess itself; wrong guesses are already counted
+  if (won) guessCount += 1;
   // Save stats BEFORE showResult so renderInlinePersonalStats shows current game
   savePersonalStats(won, guessCount, elapsedSeconds);
   showResult(won);
@@ -2505,6 +2779,8 @@ function resetGame(newIdx) {
   usRefMap       = null;
   usRefMapGroup  = null;
   usRefLayers    = {};
+  usRefCallouts  = {};
+  _lastFitBBoxKey = null;
   usRefZoom      = null;
   usRefSvgSel    = null;
 
@@ -2543,6 +2819,7 @@ async function init() {
     const res = await fetch('./districts.topojson');
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const topo = await res.json();
+    rawTopo = topo;
     const data = topojson.feature(topo, topo.objects.districts);
     // Patch Louisiana features whose state/state-district properties are missing.
     data.features.forEach(f => {
@@ -2561,6 +2838,31 @@ async function init() {
         if (key) districtPoints[key] = f.geometry.coordinates;
       });
     }
+
+    // Correct inner points that land in enclosed water bodies.
+    // For MultiPolygon districts (islands, coastal districts), check if the inner point
+    // is inside the largest sub-polygon; if not, fall back to that polygon's centroid.
+    // For single Polygon districts, same check against the whole polygon.
+    districts.forEach(f => {
+      const key  = f.properties['state-district'];
+      const geom = f.geometry;
+      if (!key || !geom) return;
+      const inner = POINT_OVERRIDES[key] || districtPoints[key];
+      if (geom.type === 'MultiPolygon' && geom.coordinates.length > 0) {
+        const largest = geom.coordinates.reduce((a, b) =>
+          d3.geoArea({ type: 'Feature', geometry: { type: 'Polygon', coordinates: a } }) >=
+          d3.geoArea({ type: 'Feature', geometry: { type: 'Polygon', coordinates: b } }) ? a : b
+        );
+        const largestF = { type: 'Feature', geometry: { type: 'Polygon', coordinates: largest } };
+        if (!inner || !d3.geoContains(largestF, inner)) {
+          districtPoints[key] = d3.geoCentroid(largestF);
+        }
+      } else if (geom.type === 'Polygon') {
+        if (inner && !d3.geoContains(f, inner)) {
+          districtPoints[key] = d3.geoCentroid(f);
+        }
+      }
+    });
     if (topo.objects.roads) topoRoads = topojson.feature(topo, topo.objects.roads);
     if (topo.objects.urban) topoUrban = topojson.feature(topo, topo.objects.urban);
     if (topo.objects.states) {
@@ -2706,7 +3008,18 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => switchResultTab(btn.dataset.rtab));
   });
 
-  // How to play — auto-show on first visit
+  // Welcome splash — show on first-ever visit; how-to shows afterwards
+  const welcomeModal = document.getElementById('welcome-modal');
+  if (!localStorage.getItem(WELCOME_SEEN_KEY)) {
+    welcomeModal.classList.remove('hidden');
+  }
+  document.getElementById('welcome-play-btn').addEventListener('click', () => {
+    welcomeModal.classList.add('hidden');
+    localStorage.setItem(WELCOME_SEEN_KEY, '1');
+    localStorage.setItem(HOW_TO_SEEN_KEY, '1'); // skip how-to after welcome
+  });
+
+  // How to play — auto-show on first visit (after welcome)
   const howToModal = document.getElementById('how-to-modal');
   if (!localStorage.getItem(HOW_TO_SEEN_KEY)) {
     howToModal.classList.remove('hidden');
