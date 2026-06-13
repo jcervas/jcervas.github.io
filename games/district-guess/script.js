@@ -2056,54 +2056,48 @@ function buildDistrictD3Map(stateAbbr) {
     const answerDist = answerKey?.split('-').slice(1).join('-') || '00';
     const answerLabel = isAtLarge ? 'AL' : String(parseInt(answerDist, 10));
 
-    // ── Context: neighboring states ──────────────────────────────
+    // ── Context: all US states as national backdrop ───────────────
     if (rawTopo) {
-      const neighborAbbrs = new Set(STATE_ADJACENCY[stateAbbr] || []);
-      const neighborFills = [...neighborAbbrs].map(a => topoStates[a]).filter(Boolean);
+      const allStateFills = Object.values(topoStates).filter(f => f.properties?.state !== stateAbbr);
 
-      // Fill neighboring states (very muted)
-      if (neighborFills.length) {
-        g.append('g').attr('class', 'context-state-fills')
-          .attr('pointer-events', 'none')
-          .selectAll('path')
-          .data(neighborFills)
-          .join('path')
-          .attr('d', pathGen)
-          .attr('fill', dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)')
-          .attr('stroke', 'none');
-      }
+      // Fill all non-target states (very muted)
+      g.append('g').attr('class', 'context-state-fills')
+        .attr('pointer-events', 'none')
+        .selectAll('path')
+        .data(allStateFills)
+        .join('path')
+        .attr('d', pathGen)
+        .attr('fill', dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)')
+        .attr('stroke', 'none');
 
-      // District inner lines for neighboring states — use mesh so each shared arc
-      // is drawn only once (clean, fast, no double-stroke)
+      // District inner lines for all non-target states via mesh
       const distInnerMesh = topojson.mesh(
         rawTopo, rawTopo.objects.districts,
         (a, b) => a !== b
           && a.properties?.state === b.properties?.state
-          && neighborAbbrs.has(a.properties?.state)
+          && a.properties?.state !== stateAbbr
       );
       g.append('path')
         .datum(distInnerMesh)
         .attr('class', 'context-district-lines')
         .attr('d', pathGen)
         .attr('fill', 'none')
-        .attr('stroke', dark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.13)')
-        .attr('stroke-width', 0.6)
+        .attr('stroke', dark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.09)')
+        .attr('stroke-width', 0.5)
         .attr('vector-effect', 'non-scaling-stroke')
         .attr('pointer-events', 'none');
 
-      // State outlines for neighboring states — same weight as target state borders
-      if (neighborFills.length) {
-        g.append('g').attr('class', 'context-state-borders')
-          .attr('pointer-events', 'none')
-          .selectAll('path')
-          .data(neighborFills)
-          .join('path')
-          .attr('d', pathGen)
-          .attr('fill', 'none')
-          .attr('stroke', dark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.28)')
-          .attr('stroke-width', 1)
-          .attr('vector-effect', 'non-scaling-stroke');
-      }
+      // State outlines for all non-target states
+      g.append('g').attr('class', 'context-state-borders')
+        .attr('pointer-events', 'none')
+        .selectAll('path')
+        .data(allStateFills)
+        .join('path')
+        .attr('d', pathGen)
+        .attr('fill', 'none')
+        .attr('stroke', dark ? 'rgba(255,255,255,0.28)' : 'rgba(0,0,0,0.22)')
+        .attr('stroke-width', 0.8)
+        .attr('vector-effect', 'non-scaling-stroke');
     }
 
     // Draw all district boundaries (no fill — transparent background shows through)
