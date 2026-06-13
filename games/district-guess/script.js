@@ -2018,10 +2018,27 @@ function buildDistrictD3Map(stateAbbr) {
       const k = event.transform.k;
       const rk = Math.max(1, 13 / k);
       g.select('.dist-icons').selectAll('circle').attr('r', rk).attr('stroke-width', 1.5 / k);
-      g.select('.dist-icons').selectAll('text').attr('font-size', function() {
-        const len = d3.select(this).text().length;
-        return `${(len > 2 ? 8 : 9) / k}px`;
-      });
+      // Reposition the answer badge to maintain a fixed screen-pixel gap from the district edge
+      const leader = g.select('.dist-leader');
+      if (!leader.empty()) {
+        const ldbx0 = +leader.attr('data-dbx0'), ldbx1 = +leader.attr('data-dbx1');
+        const ldby0 = +leader.attr('data-dby0'), ldby1 = +leader.attr('data-dby1');
+        const screenGap = 20;
+        let nbx = ldbx1 + screenGap / k;
+        if (nbx > W * 0.88) nbx = ldbx0 - screenGap / k;
+        const nby = (ldby0 + ldby1) / 2;
+        leader.attr('x2', nbx).attr('y2', nby).attr('stroke-width', 1 / k);
+        const badgeG = g.select('.dist-icons');
+        badgeG.attr('transform', `translate(${nbx},${nby})`);
+        const label = badgeG.select('text').text();
+        const pH = 16 / k, pW = (label.length * 5.5 + 18) / k, pRx = pH / 2;
+        badgeG.select('rect')
+          .attr('width', pW).attr('height', pH).attr('rx', pRx)
+          .attr('x', -pW / 2).attr('y', -pH / 2)
+          .attr('stroke-width', 1 / k);
+        badgeG.select('text').attr('font-size', `${8 / k}px`).attr('letter-spacing', 0.3 / k);
+      }
+      g.selectAll('.dist-leader').attr('stroke-width', 1 / k);
       // Hide connector lines when zoomed in — icons sit close enough to their centroids
       g.select('.dist-connectors').attr('display', k > 1.5 ? 'none' : null);
       if (event.sourceEvent) {
@@ -2081,7 +2098,7 @@ function buildDistrictD3Map(stateAbbr) {
   if (gameOver && todayDistrict) {
     const answerKey  = todayDistrict.properties['state-district'];
     const answerDist = answerKey?.split('-').slice(1).join('-') || '00';
-    const answerLabel = isAtLarge ? 'AL' : String(parseInt(answerDist, 10));
+    const answerLabel = isAtLarge ? stateAbbr : answerKey;
 
     // ── Context: all US states as national backdrop ───────────────
     if (rawTopo) {
@@ -2166,18 +2183,51 @@ function buildDistrictD3Map(stateAbbr) {
         cx = p && isFinite(p[0]) ? p[0] : W / 2;
         cy = p && isFinite(p[1]) ? p[1] : H / 2;
       }
-      const R = 13;
-      const badge = g.append('g').attr('class', 'dist-icons').attr('transform', `translate(${cx},${cy})`);
-      badge.append('circle').attr('r', R)
-        .attr('fill', '#C41230')
-        .attr('stroke', dark ? '#222' : '#fff')
-        .attr('stroke-width', 1.5);
+      // Read the zoom scale already applied so the badge is correctly sized on first render
+      const initK = d3.zoomTransform(svg.node()).k || 1;
+      const initR = Math.max(1, 13 / initK);
+
+      // Place badge outside the district bbox, connected by a leader line.
+      // Gap is expressed in screen pixels (divided by zoom scale) so it looks
+      // consistent at any zoom level — ~18px from the district edge on screen.
+      const [[dbx0, dby0], [dbx1, dby1]] = pathGen.bounds(answerFeature);
+      const screenGap = 18 / initK;
+      // Prefer right side; fall back to left if too close to SVG edge
+      let bx = dbx1 + screenGap;
+      let by = (dby0 + dby1) / 2;
+      if (bx + initR > W - 4) bx = dbx0 - screenGap;
+      bx = Math.max(initR + 4, Math.min(W - initR - 4, bx));
+      by = Math.max(initR + 4, Math.min(H - initR - 4, by));
+
+      // Leader line from district centroid to badge; store bbox for zoom handler repositioning
+      g.append('line')
+        .attr('class', 'dist-leader')
+        .attr('x1', cx).attr('y1', cy)
+        .attr('x2', bx).attr('y2', by)
+        .attr('stroke', dark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.4)')
+        .attr('stroke-width', 1 / initK)
+        .attr('pointer-events', 'none')
+        .attr('data-dbx0', dbx0).attr('data-dbx1', dbx1)
+        .attr('data-dby0', dby0).attr('data-dby1', dby1);
+
+      // Pill badge styled like the drag/zoom hint: dark translucent bg, white border
+      const pillH  = 16 / initK;  // total height in SVG units
+      const pillW  = (answerLabel.length * 5.5 + 18) / initK;
+      const pillRx = pillH / 2;   // full pill rounding
+      const badge = g.append('g').attr('class', 'dist-icons').attr('transform', `translate(${bx},${by})`);
+      badge.append('rect')
+        .attr('x', -pillW / 2).attr('y', -pillH / 2)
+        .attr('width', pillW).attr('height', pillH).attr('rx', pillRx)
+        .attr('fill', 'rgba(196,18,48,0.82)')
+        .attr('stroke', 'rgba(255,255,255,0.35)')
+        .attr('stroke-width', 1 / initK);
       badge.append('text')
         .attr('text-anchor', 'middle')
         .attr('dominant-baseline', 'central')
-        .attr('font-size', answerLabel.length > 2 ? '8px' : '9px')
-        .attr('font-weight', '700')
+        .attr('font-size', `${8 / initK}px`)
+        .attr('font-weight', '600')
         .attr('fill', '#fff')
+        .attr('letter-spacing', 0.3 / initK)
         .attr('pointer-events', 'none')
         .text(answerLabel);
     }
