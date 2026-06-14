@@ -1574,7 +1574,8 @@ function initUSRefMap() {
     .attr('height', '100%')
     .attr('preserveAspectRatio', 'xMidYMid slice')
     .style('display', 'block')
-    .style('background', 'transparent');
+    .style('background', 'transparent')
+    .style('touch-action', 'none');  // let D3 zoom own all touch gestures (pinch, two-finger)
 
   usRefMap    = svgSel.node();
   usRefSvgSel = svgSel;
@@ -1594,6 +1595,32 @@ function initUSRefMap() {
   svgSel.call(usRefZoom);
   // Double-click resets to fitted view instead of zooming in
   svgSel.on('dblclick.zoom', () => zoomUSRefMapToValid(true));
+
+  // Zoom +/- buttons — added once to the wrap, shared by ref-map and district-tiles
+  const wrap = container.closest('.us-ref-map-wrap');
+  if (wrap && !wrap.querySelector('.map-zoom-btns')) {
+    const btnWrap = document.createElement('div');
+    btnWrap.className = 'map-zoom-btns';
+    btnWrap.innerHTML = '<button class="mzb" data-dir="in" aria-label="Zoom in">+</button>'
+                      + '<button class="mzb" data-dir="out" aria-label="Zoom out">−</button>';
+    wrap.appendChild(btnWrap);
+    btnWrap.addEventListener('click', e => {
+      const btn = e.target.closest('.mzb');
+      if (!btn) return;
+      const factor = btn.dataset.dir === 'in' ? 1.6 : 1 / 1.6;
+      const tilesHidden = document.getElementById('district-tiles').classList.contains('hidden');
+      if (tilesHidden) {
+        // US ref map is visible
+        usRefSvgSel?.transition().duration(250).call(usRefZoom.scaleBy, factor);
+      } else {
+        // District tiles map is visible
+        const tilesSvg = d3.select('#district-tiles svg');
+        if (!tilesSvg.empty() && districtZoomBehavior) {
+          tilesSvg.transition().duration(250).call(districtZoomBehavior.scaleBy, factor);
+        }
+      }
+    });
+  }
 
   const projection = d3.geoAlbersUsa();
   const pathGen    = d3.geoPath().projection(projection);
@@ -1908,6 +1935,9 @@ function showDistrictD3Map(stateAbbr, instant = false) {
 function buildDistrictD3Map(stateAbbr) {
   const tilesEl = document.getElementById('district-tiles');
 
+  // Mark element so CSS can distinguish game-over national view from gameplay district view
+  tilesEl.classList.toggle('gameover-context', !!gameOver);
+
   // districtSavedTransform is kept current by the zoom event handler.
   tilesEl.innerHTML = '';
 
@@ -1986,7 +2016,8 @@ function buildDistrictD3Map(stateAbbr) {
     .attr('width', '100%')
     .attr('height', '100%')
     .attr('preserveAspectRatio', 'xMidYMin meet')
-    .style('display', 'block');
+    .style('display', 'block')
+    .style('touch-action', 'none');  // let D3 zoom own all touch gestures
 
   // In game-over, use AlbersUSA so AK/HI appear in their inset positions.
   // In gameplay, use Mercator fit to this state.
@@ -2104,14 +2135,14 @@ function buildDistrictD3Map(stateAbbr) {
     if (rawTopo) {
       const allStateFills = Object.values(topoStates).filter(f => f.properties?.state !== stateAbbr);
 
-      // Fill all non-target states (very muted)
+      // Fill all non-target states with a subtle tint so they read as "elsewhere"
       g.append('g').attr('class', 'context-state-fills')
         .attr('pointer-events', 'none')
         .selectAll('path')
         .data(allStateFills)
         .join('path')
         .attr('d', pathGen)
-        .attr('fill', dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)')
+        .attr('fill', dark ? 'rgba(255,255,255,0.06)' : 'rgba(100,100,120,0.07)')
         .attr('stroke', 'none');
 
       // District inner lines for all non-target states via mesh
@@ -2126,12 +2157,12 @@ function buildDistrictD3Map(stateAbbr) {
         .attr('class', 'context-district-lines')
         .attr('d', pathGen)
         .attr('fill', 'none')
-        .attr('stroke', dark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.09)')
-        .attr('stroke-width', 0.5)
+        .attr('stroke', dark ? 'rgba(255,255,255,0.10)' : 'rgba(80,80,100,0.12)')
+        .attr('stroke-width', 0.4)
         .attr('vector-effect', 'non-scaling-stroke')
         .attr('pointer-events', 'none');
 
-      // State outlines for all non-target states
+      // State outlines for all non-target states — slightly more visible than district lines
       g.append('g').attr('class', 'context-state-borders')
         .attr('pointer-events', 'none')
         .selectAll('path')
@@ -2139,33 +2170,31 @@ function buildDistrictD3Map(stateAbbr) {
         .join('path')
         .attr('d', pathGen)
         .attr('fill', 'none')
-        .attr('stroke', dark ? 'rgba(255,255,255,0.28)' : 'rgba(0,0,0,0.22)')
-        .attr('stroke-width', 0.8)
+        .attr('stroke', dark ? 'rgba(255,255,255,0.30)' : 'rgba(60,60,80,0.30)')
+        .attr('stroke-width', 0.7)
         .attr('vector-effect', 'non-scaling-stroke');
     }
 
-    // Draw all district boundaries (no fill — transparent background shows through)
+    // Draw target-state district boundaries (muted, no fill)
     stateFeatures.forEach(f => {
       g.append('path')
         .datum(f)
         .attr('d', pathGen)
         .attr('fill', 'none')
-        .attr('stroke', dark ? '#777' : '#aaa')
-        .attr('stroke-width', 1)
+        .attr('stroke', dark ? 'rgba(255,255,255,0.35)' : 'rgba(60,60,80,0.25)')
+        .attr('stroke-width', 0.8)
         .attr('vector-effect', 'non-scaling-stroke')
         .attr('pointer-events', 'none');
     });
 
-    // Highlight the answer district — near-black fill on white background (both modes)
+    // Highlight the answer district in CMU red
     const answerFeature = stateFeatures.find(f => f.properties['state-district'] === answerKey);
     if (answerFeature) {
-      const answerFill   = dark ? '#ffffff' : '#111213';
-      const answerStroke = dark ? '#ffffff' : '#111213';
       g.append('path')
         .datum(answerFeature)
         .attr('d', pathGen)
-        .attr('fill', answerFill)
-        .attr('stroke', answerStroke)
+        .attr('fill', dark ? 'rgba(196,18,48,0.55)' : 'rgba(196,18,48,0.30)')
+        .attr('stroke', '#C41230')
         .attr('stroke-width', 2)
         .attr('vector-effect', 'non-scaling-stroke')
         .attr('pointer-events', 'none');
@@ -2685,17 +2714,24 @@ function renderPersonalStats() {
     el.innerHTML = '<div class="lb-empty">No games played yet.</div>';
     return;
   }
-  const winRate = Math.round(stats.won / stats.played * 100);
-  const dist    = stats.guessDist || {};
-  const maxBar  = Math.max(...Object.values(dist), 1);
+  const winRate  = Math.round(stats.won / stats.played * 100);
+  const dist     = stats.guessDist || {};
+  const maxBar   = Math.max(...Object.values(dist).map(Number), 1);
+  const wonToday = guessHistory.some(g => g.correct && g.phase === 'district');
+  const avgSecs  = stats.won > 0 ? Math.round((stats.totalWonTime || 0) / stats.won) : null;
+  const avgLabel = avgSecs !== null ? formatTime(avgSecs) : '—';
 
-  const barRows = [1,2,3,4,5,6,'X'].map(k => {
+  const bars = [1, 2, 3, 4, 5, 6, 'X'].map(k => {
     const count = dist[k] || 0;
-    const pct   = Math.round(count / maxBar * 100);
-    return `<div class="dist-row">
-      <span class="dist-label">${k}</span>
-      <div class="dist-bar-wrap"><div class="dist-bar" style="width:${pct}%"></div></div>
-      <span class="dist-count">${count}</span>
+    const pct   = count > 0 ? Math.max(Math.round(count / maxBar * 100), 12) : 0;
+    const hi    = gameOver && ((wonToday && k === guessCount) || (!wonToday && k === 'X'));
+    return `<div class="rdist-row">
+      <span class="rdist-n">${k}</span>
+      <div class="rdist-bar-wrap">
+        <div class="rdist-bar${hi ? ' today' : ''}" style="width:${pct}%">
+          ${count ? `<span class="rdist-count">${count}</span>` : ''}
+        </div>
+      </div>
     </div>`;
   }).join('');
 
@@ -2706,9 +2742,10 @@ function renderPersonalStats() {
       <div class="stat-card"><div class="stat-val">${stats.streak}</div><div class="stat-label">Current Streak</div></div>
       <div class="stat-card"><div class="stat-val">${stats.maxStreak}</div><div class="stat-label">Max Streak</div></div>
     </div>
-    <div class="guess-dist">
+    <div class="rstat-avg-time">Avg. solve time (correct guesses): <strong>${avgLabel}</strong></div>
+    <div class="result-dist">
       <h4>Guess Distribution</h4>
-      ${barRows}
+      ${bars}
     </div>`;
 }
 

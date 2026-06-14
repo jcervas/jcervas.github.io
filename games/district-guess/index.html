@@ -77,7 +77,7 @@
 <!-- ===== HOW TO PLAY MODAL ===== -->
 <div id="how-to-modal" class="modal hidden">
   <div class="modal-content">
-    <button class="modal-close">✕</button>
+    <div class="result-modal-header"><button class="modal-close result-modal-close">← Back to map</button></div>
     <h2>How to Play</h2>
     <p>Identify the congressional district shown on the map using the 2026 district boundaries.</p>
     <ul>
@@ -106,7 +106,7 @@
 <!-- ===== FEEDBACK MODAL ===== -->
 <div id="feedback-modal" class="modal hidden">
   <div class="modal-content">
-    <button class="modal-close">✕</button>
+    <div class="result-modal-header"><button class="modal-close result-modal-close">← Back to map</button></div>
     <h2>Send Feedback</h2>
     <p style="margin-bottom:16px;color:var(--muted)">Report a bug, suggest a feature, or share your thoughts.</p>
     <form id="feedback-form">
@@ -132,7 +132,7 @@
 <!-- ===== HINTS MODAL ===== -->
 <div id="hints-modal" class="modal hidden">
   <div class="modal-content">
-    <button class="modal-close">✕</button>
+    <div class="result-modal-header"><button class="modal-close result-modal-close">← Back to map</button></div>
     <h2>Hints</h2>
     <div id="hints-clues-list"></div>
   </div>
@@ -141,7 +141,7 @@
 <!-- ===== LEADERBOARD MODAL ===== -->
 <div id="leaderboard-modal" class="modal hidden">
   <div class="modal-content leaderboard-content">
-    <button class="modal-close">✕</button>
+    <div class="result-modal-header"><button class="modal-close result-modal-close">← Back to map</button></div>
     <h2>Leaderboard</h2>
     <div id="lb-district-label" class="lb-district-label"></div>
     <div class="leaderboard-tabs">
@@ -172,6 +172,18 @@
   </div>
 </div>
 
+<!-- Rotate-device overlay: shown on mobile landscape -->
+<div id="rotate-overlay" aria-hidden="true">
+  <div class="rotate-overlay-inner">
+    <svg viewBox="0 0 80 80" width="64" height="64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="18" y="8" width="44" height="64" rx="6" stroke="currentColor" stroke-width="4"/>
+      <path d="M10 52 C6 44 6 32 14 24" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/>
+      <polyline points="8,18 14,24 20,18" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+    <p>Rotate your device to play</p>
+  </div>
+</div>
+
 <!-- ===== MAIN ===== -->
 <main>
 
@@ -194,7 +206,7 @@
       <div id="guess-counter" class="guess-counter"></div>
     </div>
 
-    <div id="reference-panel">
+    <div id="map-panel">
 
       <!-- Clickable US states map — zooms to state once confirmed; replaced by D3 district map -->
       <div id="us-ref-section">
