@@ -2531,6 +2531,19 @@ function endGame(won) {
   // Save stats BEFORE showResult so renderInlinePersonalStats shows current game
   savePersonalStats(won, guessCount, elapsedSeconds);
   showResult(won);
+
+  // Auto-prompt feedback every 5 games if not already prompted at this count
+  const _fbStats = loadPersonalStats();
+  if (_fbStats && _fbStats.played > 0 && _fbStats.played % 5 === 0) {
+    const lastPrompted = parseInt(localStorage.getItem(FEEDBACK_PROMPTED_AT) || '0', 10);
+    if (lastPrompted < _fbStats.played) {
+      localStorage.setItem(FEEDBACK_PROMPTED_AT, String(_fbStats.played));
+      setTimeout(() => {
+        document.getElementById('result-modal')?.classList.add('hidden');
+        document.getElementById('feedback-modal').classList.remove('hidden');
+      }, 3000);
+    }
+  }
   saveGameState();
 
   // Show the game-over banner so "View Result" / "New Map" are accessible after modal close
@@ -2759,7 +2772,7 @@ function escapeHtml(str) {
 async function openLeaderboard() {
   document.getElementById('leaderboard-modal').classList.remove('hidden');
   document.getElementById('lb-district-label').textContent =
-    `Today's district: ${gameOver ? todayDistrict.properties['state-district'] : '???'} · ${todayKey}`;
+    gameOver ? `${todayDistrict.properties['state-district']} · ${todayKey}` : todayKey;
 
   // Today's scores
   const todayEl = document.getElementById('today-scores');
@@ -3353,30 +3366,115 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('hints-modal').classList.remove('hidden');
   });
 
-  document.getElementById('feedback-btn').addEventListener('click', () => {
+  // Feedback — opened from settings panel
+  document.getElementById('settings-feedback-btn')?.addEventListener('click', () => {
+    document.getElementById('settings-modal').classList.add('hidden');
     document.getElementById('feedback-modal').classList.remove('hidden');
   });
+
+  // Wire Confirm Selection toggle
+  const confirmToggle = document.getElementById('settings-confirm-toggle');
+  if (confirmToggle) {
+    confirmToggle.checked = confirmInputMode;
+    confirmToggle.addEventListener('change', () => {
+      confirmInputMode = confirmToggle.checked;
+      localStorage.setItem('districtguess_confirmMode', confirmInputMode ? '1' : '0');
+      if (!confirmInputMode) setConfirmPending(null); // clear any pending state
+    });
+  }
+
   document.getElementById('feedback-form').addEventListener('submit', (e) => {
     e.preventDefault();
-    const name    = (document.getElementById('fb-name').value.trim()) || 'Anonymous';
-    const email   = document.getElementById('fb-email').value.trim();
-    const comment = document.getElementById('fb-comment').value.trim();
-    const errEl   = document.getElementById('fb-error');
-    if (!comment) { errEl.textContent = 'Please enter a comment.'; return; }
+    const val = id => (document.getElementById(id)?.value || '').trim();
+    const sel = id => { const el = document.getElementById(id); return el ? el.value : ''; };
+    const name     = val('fb-name') || 'Anonymous';
+    const email    = val('fb-email');
+    const overall  = sel('fb-overall');
+    const diff     = sel('fb-difficulty');
+    const intuit   = sel('fb-intuitive');
+    const mechanic = sel('fb-mechanic');
+    const challenge= sel('fb-challenge');
+    const freq     = sel('fb-frequency');
+    const recommend= sel('fb-recommend');
+    const enjoyed  = val('fb-enjoyed');
+    const improve  = val('fb-improve');
+    const comment  = val('fb-comment');
+    const errEl    = document.getElementById('fb-error');
+
+    const missing = [];
+    if (!overall)   missing.push('Overall experience');
+    if (!diff)      missing.push('Difficulty');
+    if (!intuit)    missing.push('Ease of understanding');
+    if (!mechanic)  missing.push('Hot/Cold mechanic');
+    if (!freq)      missing.push('How often you’d play');
+    if (!recommend) missing.push('Would you recommend');
+    if (missing.length) { errEl.textContent = `Please answer: ${missing.join(', ')}.`; return; }
     errEl.textContent = '';
+
+    const stats  = loadPersonalStats();
+
+    // Build guess history summary for today's session
+    const guessLog = guessHistory.map((g, i) =>
+      `  ${i+1}. [${g.phase}] ${g.text}${g.correct ? ' ✓' : g.adjacent === true ? ' (hot)' : g.adjacent === false ? ' (cold)' : ''}`
+    ).join('\n') || '  (no guesses yet)';
+
+    // Settings snapshot
+    const settingsSnap = [
+      `Dark mode: ${isDarkMode() ? 'on' : 'off'}`,
+      `Confirm selection: ${confirmInputMode ? 'on' : 'off'}`,
+      `Theme pref stored: ${localStorage.getItem('districtguess_theme') || 'system default'}`,
+    ].join(', ');
+
     const subject = `Daily District Feedback — ${name}`;
-    const body    = [
+    const body = [
+      `=== Session Info ===`,
+      `Version: ${GAME_VERSION}`,
+      `Date: ${todayKey}`,
+      `District (today): ${todayDistrict ? todayDistrict.properties['state-district'] : 'unknown'}`,
+      `Game status: ${gameOver ? (guessHistory.some(g => g.correct) ? 'won' : 'lost') : 'in progress'}`,
+      `Guesses used: ${guessCount}`,
+      `Solve time: ${elapsedSeconds > 0 ? formatTime(elapsedSeconds) : '—'}`,
+      `Replay count (session): ${replayCount}`,
+      ``,
+      `=== Guess History ===`,
+      guessLog,
+      ``,
+      `=== Lifetime Stats ===`,
+      `Played: ${stats?.played ?? 0}  |  Won: ${stats?.won ?? 0}  |  Win %: ${stats?.played ? Math.round((stats.won/stats.played)*100) : 0}%`,
+      `Current streak: ${stats?.streak ?? 0}  |  Max streak: ${stats?.maxStreak ?? 0}`,
+      `Avg solve time (wins): ${stats?.won > 0 ? formatTime(Math.round((stats.totalWonTime||0)/stats.won)) : '—'}`,
+      ``,
+      `=== Settings ===`,
+      settingsSnap,
+      `Browser: ${navigator.userAgent}`,
+      `Screen: ${screen.width}×${screen.height}  |  Viewport: ${window.innerWidth}×${window.innerHeight}`,
+      ``,
+      `=== Player Info ===`,
       `Name: ${name}`,
       `Email: ${email || 'Not provided'}`,
-      `Version: ${GAME_VERSION}`,
-      `District: ${todayDistrict ? todayDistrict.properties['state-district'] : 'unknown'}`,
       ``,
-      comment,
+      `=== Ratings (1–5 stars) ===`,
+      `Overall experience: ${overall}/5`,
+      `Difficulty: ${diff}/5  (1=too easy, 5=too hard)`,
+      `Ease of understanding: ${intuit}/5`,
+      ``,
+      `=== Gameplay Questions ===`,
+      `Hot/Cold mechanic made sense: ${mechanic}`,
+      `Biggest challenge: ${challenge || 'not answered'}`,
+      `How often would play: ${freq}`,
+      `Would recommend: ${recommend}`,
+      ``,
+      `=== Open Feedback ===`,
+      `Enjoyed most: ${enjoyed || '—'}`,
+      `Should improve: ${improve || '—'}`,
+      `Other comments: ${comment || '—'}`,
     ].join('\n');
+
     window.open(
       `mailto:cervas@cmu.edu,jafierman@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
       '_blank'
     );
+    localStorage.setItem(FEEDBACK_PROMPTED_AT, String(stats?.played ?? 0));
     document.getElementById('feedback-modal').classList.add('hidden');
     document.getElementById('feedback-form').reset();
   });
