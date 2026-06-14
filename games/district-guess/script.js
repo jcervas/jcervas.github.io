@@ -1349,6 +1349,8 @@ function toggleDarkMode() {
   }
   // Update district boundary color for new theme
   if (districtLayer) districtLayer.setStyle(districtStyle());
+  // Rebuild game-over context map so colors match new theme
+  if (gameOver && todayDistrict) buildDistrictD3Map(todayDistrict.properties.state);
 }
 
 function updateThemeToggle() {
@@ -2048,8 +2050,22 @@ function buildDistrictD3Map(stateAbbr) {
       g.attr('transform', event.transform);
       const k = event.transform.k;
       const rk = Math.max(1, 13 / k);
-      g.select('.dist-icons').selectAll('circle').attr('r', rk).attr('stroke-width', 1.5 / k);
-      // Reposition the answer badge to maintain a fixed screen-pixel gap from the district edge
+
+      // Gameplay circles: scale radius, stroke, and text
+      g.select('.dist-icons').selectAll('circle')
+        .attr('r', rk)
+        .attr('stroke-width', 1.5 / k);
+      g.select('.dist-icons').selectAll('text').each(function() {
+        // Skip pill badge text — its parent g contains a rect
+        if (this.parentNode && this.parentNode.querySelector('rect')) return;
+        const baseSize = this.textContent.length > 2 ? 8 : 9;
+        d3.select(this).attr('font-size', `${baseSize / k}px`);
+      });
+
+      // Connector lines between inner points and icons
+      g.select('.dist-connectors').selectAll('line').attr('stroke-width', 0.8 / k);
+
+      // Game-over pill badge: reposition and resize to maintain fixed screen size
       const leader = g.select('.dist-leader');
       if (!leader.empty()) {
         const ldbx0 = +leader.attr('data-dbx0'), ldbx1 = +leader.attr('data-dbx1');
@@ -2142,10 +2158,47 @@ function buildDistrictD3Map(stateAbbr) {
         .data(allStateFills)
         .join('path')
         .attr('d', pathGen)
-        .attr('fill', dark ? 'rgba(255,255,255,0.06)' : 'rgba(100,100,120,0.07)')
+        .attr('fill', dark ? 'rgba(255,255,255,0.06)' : 'rgba(100,100,120,0.12)')
         .attr('stroke', 'none');
 
-      // District inner lines for all non-target states via mesh
+      // Clip roads and urban to the US land boundary so they don't spill outside state edges
+      const clipId = 'gameover-us-land-clip';
+      let defs = svg.select('defs');
+      if (defs.empty()) defs = svg.insert('defs', ':first-child');
+      defs.selectAll(`#${clipId}`).remove();
+      const usLandMerge = topojson.merge(rawTopo, rawTopo.objects.districts.geometries);
+      defs.append('clipPath').attr('id', clipId)
+        .append('path').datum(usLandMerge).attr('d', pathGen);
+
+      // Urban areas — very faint filled polygons (rendered below district lines)
+      if (topoUrban) {
+        g.append('g').attr('class', 'context-urban')
+          .attr('clip-path', `url(#${clipId})`)
+          .attr('pointer-events', 'none')
+          .selectAll('path')
+          .data(topoUrban.features)
+          .join('path')
+          .attr('d', pathGen)
+          .attr('fill', dark ? 'rgba(255,255,255,0.09)' : 'rgba(80,80,140,0.13)')
+          .attr('stroke', 'none');
+      }
+
+      // Road network — very faint lines, clipped to US land (rendered below district lines)
+      if (topoRoads) {
+        g.append('g').attr('class', 'context-roads')
+          .attr('clip-path', `url(#${clipId})`)
+          .attr('pointer-events', 'none')
+          .selectAll('path')
+          .data(topoRoads.features)
+          .join('path')
+          .attr('d', pathGen)
+          .attr('fill', 'none')
+          .attr('stroke', dark ? 'rgba(255,255,255,0.15)' : 'rgba(60,60,100,0.20)')
+          .attr('stroke-width', 0.5)
+          .attr('vector-effect', 'non-scaling-stroke');
+      }
+
+      // District inner lines drawn on top of urban/roads so they remain visible
       const distInnerMesh = topojson.mesh(
         rawTopo, rawTopo.objects.districts,
         (a, b) => a !== b
@@ -2157,8 +2210,8 @@ function buildDistrictD3Map(stateAbbr) {
         .attr('class', 'context-district-lines')
         .attr('d', pathGen)
         .attr('fill', 'none')
-        .attr('stroke', dark ? 'rgba(255,255,255,0.10)' : 'rgba(80,80,100,0.12)')
-        .attr('stroke-width', 0.4)
+        .attr('stroke', dark ? 'rgba(255,255,255,0.22)' : 'rgba(60,60,90,0.50)')
+        .attr('stroke-width', 0.5)
         .attr('vector-effect', 'non-scaling-stroke')
         .attr('pointer-events', 'none');
 
@@ -2170,7 +2223,7 @@ function buildDistrictD3Map(stateAbbr) {
         .join('path')
         .attr('d', pathGen)
         .attr('fill', 'none')
-        .attr('stroke', dark ? 'rgba(255,255,255,0.30)' : 'rgba(60,60,80,0.30)')
+        .attr('stroke', dark ? 'rgba(255,255,255,0.30)' : 'rgba(40,40,60,0.60)')
         .attr('stroke-width', 0.7)
         .attr('vector-effect', 'non-scaling-stroke');
     }
@@ -3115,16 +3168,59 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => switchResultTab(btn.dataset.rtab));
   });
 
-  // Welcome splash — show on first-ever visit; how-to shows afterwards
+  // Welcome splash — shown every time the game opens
   const welcomeModal = document.getElementById('welcome-modal');
-  if (!localStorage.getItem(WELCOME_SEEN_KEY)) {
-    welcomeModal.classList.remove('hidden');
-  }
-  document.getElementById('welcome-play-btn').addEventListener('click', () => {
-    welcomeModal.classList.add('hidden');
-    localStorage.setItem(WELCOME_SEEN_KEY, '1');
-    localStorage.setItem(HOW_TO_SEEN_KEY, '1'); // skip how-to after welcome
-  });
+
+  // Populate date and puzzle number
+  (function populateWelcomeMeta() {
+    const EPOCH = new Date('2025-01-20T00:00:00-05:00'); // 119th Congress first day
+    const now   = new Date();
+    const msPerDay = 86400000;
+    const puzzleNum = Math.floor((now - EPOCH) / msPerDay) + 1;
+    const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    document.getElementById('welcome-date-line').textContent = dateStr;
+    document.getElementById('welcome-puzzle-num').textContent = `No. ${puzzleNum}`;
+  })();
+
+  // Build buttons based on whether today's puzzle is already complete
+  (function buildWelcomeButtons() {
+    const container = document.getElementById('welcome-buttons');
+    container.innerHTML = '';
+    if (gameOver) {
+      const btnMap = document.createElement('button');
+      btnMap.className = 'welcome-action-btn';
+      btnMap.textContent = 'Back to Map';
+      btnMap.addEventListener('click', () => {
+        welcomeModal.classList.add('hidden');
+        localStorage.setItem(HOW_TO_SEEN_KEY, '1');
+      });
+
+      const btnResult = document.createElement('button');
+      btnResult.className = 'welcome-action-btn secondary';
+      btnResult.textContent = 'Review Result';
+      btnResult.addEventListener('click', () => {
+        welcomeModal.classList.add('hidden');
+        localStorage.setItem(HOW_TO_SEEN_KEY, '1');
+        document.getElementById('result-modal').classList.remove('hidden');
+        switchResultTab('result');
+      });
+
+      container.appendChild(btnMap);
+      container.appendChild(btnResult);
+    } else {
+      const btnPlay = document.createElement('button');
+      btnPlay.className = 'welcome-action-btn';
+      btnPlay.textContent = 'Play';
+      btnPlay.addEventListener('click', () => {
+        welcomeModal.classList.add('hidden');
+        localStorage.setItem(WELCOME_SEEN_KEY, '1');
+        localStorage.setItem(HOW_TO_SEEN_KEY, '1');
+      });
+      container.appendChild(btnPlay);
+    }
+  })();
+
+  welcomeModal.classList.remove('hidden');
 
   // How to play — auto-show on first visit (after welcome)
   const howToModal = document.getElementById('how-to-modal');
@@ -3142,8 +3238,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // Dark mode toggle
   document.getElementById('theme-toggle').addEventListener('click', toggleDarkMode);
 
-  // Also update toggle icon when system preference changes (no user action needed)
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateThemeToggle);
+  // When system preference changes and user has no manual override, repaint everything
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (localStorage.getItem('districtguess_theme')) return; // user chose manually — respect it
+    updateThemeToggle();
+    updateUSRefMap();
+    if (map && streetLayer) {
+      map.removeLayer(streetLayer);
+      streetLayer = L.tileLayer(streetTileUrl(), { maxZoom: 19, opacity: _streetOpacity, attribution: streetTileAttrib() }).addTo(map);
+    }
+    if (map) applyMapStage(guessHistory.filter(g => !g.correct).length, gameOver);
+    if (districtLayer) districtLayer.setStyle(districtStyle());
+    if (gameOver && todayDistrict) buildDistrictD3Map(todayDistrict.properties.state);
+  });
 
   // Modal close buttons
   document.querySelectorAll('.modal-close').forEach(btn => {
