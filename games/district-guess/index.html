@@ -4,8 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Daily District — Daily Congressional District Game</title>
+  <!-- Barlow: closest freely available match to CMU's Gibson typeface -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=39" />
+  <link rel="stylesheet" href="style.css?v=40" />
 </head>
 <body>
 
@@ -93,6 +97,7 @@
     <div class="settings-row">
       <div class="settings-row-label">
         <span class="settings-row-name">Dark Theme</span>
+        <button id="settings-reset-theme" class="settings-sub-link">Use system default</button>
       </div>
       <label class="settings-toggle-wrap" aria-label="Dark theme">
         <input type="checkbox" id="settings-dark-toggle" class="settings-toggle-input">
@@ -123,7 +128,6 @@
     </div>
     <div class="settings-divider"></div>
     <button id="settings-feedback-btn" class="settings-link-btn">Send Feedback &rsaquo;</button>
-    <button id="settings-reset-theme" class="settings-link-btn">Use system default</button>
     <div class="settings-footer">&copy; 2026 Jonathan Cervas &amp; Jason Fierman. All rights reserved.</div>
   </div>
 </div>
@@ -160,18 +164,21 @@
 <!-- ===== FEEDBACK MODAL ===== -->
 <div id="feedback-modal" class="modal hidden">
   <div class="modal-content">
-    <div class="result-modal-header"><button class="modal-close result-modal-close">← Back to map</button></div>
+    <div class="result-modal-header"><button class="modal-close result-modal-close">← Back</button></div>
     <h2>How's it playing?</h2>
-    <p style="margin-bottom:16px;color:var(--muted);font-size:0.9rem">Help us improve Daily District — takes about 60 seconds.</p>
+    <p style="margin-bottom:16px;color:var(--muted);font-size:0.9rem">Help us improve Daily District — takes about 2 minutes.</p>
     <form id="feedback-form">
       <div class="form-group">
-        <label for="fb-name">Name</label>
+        <label for="fb-name">Name <span class="form-optional">(optional)</span></label>
         <input type="text" id="fb-name" placeholder="Your name" maxlength="60" autocomplete="name" />
       </div>
       <div class="form-group">
         <label for="fb-email">Email <span class="form-optional">(optional, for follow-up)</span></label>
         <input type="email" id="fb-email" placeholder="you@example.com" autocomplete="email" />
       </div>
+
+      <div class="fb-section-label">About the Game</div>
+
       <div class="form-group">
         <label>Overall experience <span class="form-required">*</span></label>
         <div class="fb-rating-group" id="fb-overall-stars">
@@ -182,9 +189,11 @@
           <label class="fb-star-label" data-val="5">★</label>
           <input type="hidden" id="fb-overall" value="">
         </div>
+        <div class="fb-scale-labels"><span>Poor</span><span>Excellent</span></div>
       </div>
+
       <div class="form-group">
-        <label>Difficulty level <span class="form-required">*</span></label>
+        <label>Difficulty <span class="form-required">*</span></label>
         <div class="fb-rating-group" id="fb-difficulty-stars">
           <label class="fb-star-label" data-val="1">★</label>
           <label class="fb-star-label" data-val="2">★</label>
@@ -193,10 +202,13 @@
           <label class="fb-star-label" data-val="5">★</label>
           <input type="hidden" id="fb-difficulty" value="">
         </div>
-        <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-top:2px"><span>Too easy</span><span>Too hard</span></div>
+        <div class="fb-scale-labels"><span>Too easy</span><span>Too hard</span></div>
       </div>
+
+      <div class="fb-section-label">Gameplay Mechanics</div>
+
       <div class="form-group">
-        <label>How intuitive is the gameplay? <span class="form-required">*</span></label>
+        <label>How easy was it to understand how to play? <span class="form-required">*</span></label>
         <div class="fb-rating-group" id="fb-intuitive-stars">
           <label class="fb-star-label" data-val="1">★</label>
           <label class="fb-star-label" data-val="2">★</label>
@@ -205,24 +217,72 @@
           <label class="fb-star-label" data-val="5">★</label>
           <input type="hidden" id="fb-intuitive" value="">
         </div>
-        <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-top:2px"><span>Confusing</span><span>Very clear</span></div>
+        <div class="fb-scale-labels"><span>Very confusing</span><span>Very clear</span></div>
+      </div>
+
+      <div class="form-group">
+        <label for="fb-mechanic">Did the Hot/Cold elimination mechanic make sense? <span class="form-required">*</span></label>
+        <select id="fb-mechanic">
+          <option value="">— select —</option>
+          <option value="yes">Yes, right away</option>
+          <option value="eventually">Eventually, after a few guesses</option>
+          <option value="no">No, it was confusing</option>
+          <option value="na">I haven't used it yet</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="fb-challenge">What was the biggest challenge? <span class="form-optional">(optional)</span></label>
+        <select id="fb-challenge">
+          <option value="">— select —</option>
+          <option value="shapes">Recognizing district shapes</option>
+          <option value="states">Figuring out which state first</option>
+          <option value="controls">Map controls / navigation</option>
+          <option value="mobile">Playing on mobile</option>
+          <option value="other">Something else</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="fb-frequency">How often would you want to play? <span class="form-required">*</span></label>
+        <select id="fb-frequency">
+          <option value="">— select —</option>
+          <option value="daily">Every day</option>
+          <option value="few-week">A few times a week</option>
+          <option value="weekly">Once a week</option>
+          <option value="occasionally">Occasionally</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="fb-recommend">Would you recommend this game to someone? <span class="form-required">*</span></label>
+        <select id="fb-recommend">
+          <option value="">— select —</option>
+          <option value="yes">Yes, definitely</option>
+          <option value="maybe">Maybe</option>
+          <option value="no">Probably not</option>
+        </select>
+      </div>
+
+      <div class="fb-section-label">Open Feedback</div>
+
+      <div class="form-group">
+        <label for="fb-enjoyed">What do you enjoy most? <span class="form-optional">(optional)</span></label>
+        <textarea id="fb-enjoyed" rows="2" placeholder="e.g. Learning district shapes, the daily challenge, the statistics…" maxlength="500"></textarea>
       </div>
       <div class="form-group">
-        <label for="fb-enjoyed">What did you enjoy most? <span class="form-optional">(optional)</span></label>
-        <textarea id="fb-enjoyed" rows="2" placeholder="e.g. Learning about district shapes, the daily challenge…" maxlength="500"></textarea>
+        <label for="fb-improve">What should we improve or add? <span class="form-optional">(optional)</span></label>
+        <textarea id="fb-improve" rows="2" placeholder="e.g. Better hints, more map context, sharing, accessibility…" maxlength="500"></textarea>
       </div>
       <div class="form-group">
-        <label for="fb-improve">What could be improved? <span class="form-optional">(optional)</span></label>
-        <textarea id="fb-improve" rows="2" placeholder="e.g. Hints, map controls, mobile layout…" maxlength="500"></textarea>
+        <label for="fb-comment">Anything else — bugs, questions, ideas? <span class="form-optional">(optional)</span></label>
+        <textarea id="fb-comment" rows="2" placeholder="Anything goes…" maxlength="500"></textarea>
       </div>
-      <div class="form-group">
-        <label for="fb-comment">Anything else? <span class="form-optional">(optional)</span></label>
-        <textarea id="fb-comment" rows="2" placeholder="Bugs, feature ideas, questions…" maxlength="500"></textarea>
-      </div>
+
       <div id="fb-error" class="form-error"></div>
       <button type="submit" id="fb-submit">Send via Email</button>
     </form>
-    <p class="form-note">Opens your email client to send to cervas@cmu.edu &amp; jafierman@gmail.com</p>
+    <p class="form-note">Opens your email client · cervas@cmu.edu &amp; jafierman@gmail.com</p>
   </div>
 </div>
 
