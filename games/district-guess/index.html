@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>District Guess Beta 1.4.2 — Daily Congressional District Game</title>
+  <title>Daily District — Daily Congressional District Game</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="style.css?v=39" />
 </head>
@@ -20,19 +20,21 @@
       <button id="leaderboard-btn" class="btn-icon" title="Leaderboard">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
       </button>
-      <button id="theme-toggle" class="btn-icon" title="Toggle dark mode"><!-- set by JS --></button>
-<button id="feedback-btn" class="btn-icon" title="Send feedback">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <button id="settings-btn" class="btn-icon" title="Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
     </div>
     <!-- Title centered in middle column -->
     <h1>
-      <svg class="game-logo" viewBox="0 0 24 30" aria-hidden="true">
-        <path d="M12 1C7.03 1 3 5.03 3 10C3 16.8 12 29 12 29C12 29 21 16.8 21 10C21 5.03 16.97 1 12 1Z" fill="#C41230"/>
-        <circle cx="12" cy="10" r="4.5" fill="white"/>
-        <circle cx="12" cy="10" r="2" fill="#C41230"/>
+      <svg class="game-logo" viewBox="0 0 110 76" aria-hidden="true">
+        <path fill="currentColor" d="M7,22 L5,14 L6,3 L22,2 L38,2 L50,2 L52,6 L56,2 L70,2 L84,2 L96,4 L102,10 L104,24 L102,36 L100,46 L96,54 L90,60 L84,52 L76,52 L66,55 L52,57 L42,54 L32,52 L18,50 L8,48 L5,36 Z"/>
+        <path fill="currentColor" d="M5,63 L9,60 L16,60 L22,62 L28,61 L30,65 L26,70 L20,74 L12,74 L6,70 L4,65 Z"/>
+        <ellipse cx="36" cy="70" rx="4" ry="2.5" fill="currentColor"/>
+        <ellipse cx="43" cy="72" rx="3" ry="2" fill="currentColor"/>
+        <ellipse cx="49" cy="71" rx="2" ry="1.5" fill="currentColor"/>
+        <polygon fill="#C41230" points="65,17 71,19 74,26 71,33 65,35 59,33 56,26 59,19"/>
       </svg>
-      District Guess <span class="beta-badge"><span class="beta-label">Beta</span><span class="beta-version">1.4.2</span></span>
+      Daily District <span class="beta-badge"><span class="beta-label">Beta</span><span class="beta-version">1.4.2</span></span>
     </h1>
     <!-- Timer + donate link on the right -->
     <div class="header-right">
@@ -53,13 +55,16 @@
 <div id="welcome-modal" class="modal hidden">
   <div class="modal-content welcome-modal-content">
     <div class="welcome-logo-wrap">
-      <svg class="welcome-logo-svg" viewBox="0 0 24 30" aria-hidden="true">
-        <path d="M12 1C7.03 1 3 5.03 3 10C3 16.8 12 29 12 29C12 29 21 16.8 21 10C21 5.03 16.97 1 12 1Z" fill="#C41230"/>
-        <circle cx="12" cy="10" r="4.5" fill="white"/>
-        <circle cx="12" cy="10" r="2" fill="#C41230"/>
+      <svg class="welcome-logo-svg" viewBox="0 0 110 76" aria-hidden="true">
+        <path fill="currentColor" d="M7,22 L5,14 L6,3 L22,2 L38,2 L50,2 L52,6 L56,2 L70,2 L84,2 L96,4 L102,10 L104,24 L102,36 L100,46 L96,54 L90,60 L84,52 L76,52 L66,55 L52,57 L42,54 L32,52 L18,50 L8,48 L5,36 Z"/>
+        <path fill="currentColor" d="M5,63 L9,60 L16,60 L22,62 L28,61 L30,65 L26,70 L20,74 L12,74 L6,70 L4,65 Z"/>
+        <ellipse cx="36" cy="70" rx="4" ry="2.5" fill="currentColor"/>
+        <ellipse cx="43" cy="72" rx="3" ry="2" fill="currentColor"/>
+        <ellipse cx="49" cy="71" rx="2" ry="1.5" fill="currentColor"/>
+        <polygon fill="#C41230" points="65,17 71,19 74,26 71,33 65,35 59,33 56,26 59,19"/>
       </svg>
     </div>
-    <div class="welcome-wordmark">DISTRICT GUESS</div>
+    <div class="welcome-wordmark">DAILY DISTRICT</div>
     <div class="welcome-slogan">Identify the congressional district from its shape</div>
     <div class="welcome-divider"></div>
     <div class="welcome-meta">
@@ -75,6 +80,51 @@
        class="welcome-donate-btn" target="_blank" rel="noopener">
       Donate to Support this Game and Scholarship
     </a>
+  </div>
+</div>
+
+<!-- ===== SETTINGS MODAL ===== -->
+<div id="settings-modal" class="modal hidden">
+  <div class="modal-content settings-modal-content">
+    <div class="settings-header">
+      <span class="settings-title">SETTINGS</span>
+      <button id="settings-close" class="settings-close-btn" aria-label="Close settings">&#x2715;</button>
+    </div>
+    <div class="settings-row">
+      <div class="settings-row-label">
+        <span class="settings-row-name">Dark Theme</span>
+      </div>
+      <label class="settings-toggle-wrap" aria-label="Dark theme">
+        <input type="checkbox" id="settings-dark-toggle" class="settings-toggle-input">
+        <span class="settings-toggle-track"><span class="settings-toggle-thumb"></span></span>
+      </label>
+    </div>
+    <div class="settings-divider"></div>
+    <div class="settings-row disabled">
+      <div class="settings-row-label">
+        <span class="settings-row-name">Hard Mode</span>
+        <div class="settings-row-desc">Coming soon — additional constraints after each guess</div>
+      </div>
+      <label class="settings-toggle-wrap" aria-label="Hard mode">
+        <input type="checkbox" id="settings-hard-toggle" class="settings-toggle-input" disabled>
+        <span class="settings-toggle-track"><span class="settings-toggle-thumb"></span></span>
+      </label>
+    </div>
+    <div class="settings-divider"></div>
+    <div class="settings-row">
+      <div class="settings-row-label">
+        <span class="settings-row-name">Confirm Selection</span>
+        <div class="settings-row-desc">Tap a state twice to submit — first tap highlights, second confirms</div>
+      </div>
+      <label class="settings-toggle-wrap" aria-label="Confirm selection">
+        <input type="checkbox" id="settings-confirm-toggle" class="settings-toggle-input">
+        <span class="settings-toggle-track"><span class="settings-toggle-thumb"></span></span>
+      </label>
+    </div>
+    <div class="settings-divider"></div>
+    <button id="settings-feedback-btn" class="settings-link-btn">Send Feedback &rsaquo;</button>
+    <button id="settings-reset-theme" class="settings-link-btn">Use system default</button>
+    <div class="settings-footer">&copy; 2026 Jonathan Cervas &amp; Jason Fierman. All rights reserved.</div>
   </div>
 </div>
 
@@ -111,20 +161,63 @@
 <div id="feedback-modal" class="modal hidden">
   <div class="modal-content">
     <div class="result-modal-header"><button class="modal-close result-modal-close">← Back to map</button></div>
-    <h2>Send Feedback</h2>
-    <p style="margin-bottom:16px;color:var(--muted)">Report a bug, suggest a feature, or share your thoughts.</p>
+    <h2>How's it playing?</h2>
+    <p style="margin-bottom:16px;color:var(--muted);font-size:0.9rem">Help us improve Daily District — takes about 60 seconds.</p>
     <form id="feedback-form">
       <div class="form-group">
         <label for="fb-name">Name</label>
         <input type="text" id="fb-name" placeholder="Your name" maxlength="60" autocomplete="name" />
       </div>
       <div class="form-group">
-        <label for="fb-email">Email <span class="form-optional">(optional)</span></label>
+        <label for="fb-email">Email <span class="form-optional">(optional, for follow-up)</span></label>
         <input type="email" id="fb-email" placeholder="you@example.com" autocomplete="email" />
       </div>
       <div class="form-group">
-        <label for="fb-comment">Comment <span class="form-required">*</span></label>
-        <textarea id="fb-comment" rows="4" placeholder="What's on your mind?" maxlength="1000" required></textarea>
+        <label>Overall experience <span class="form-required">*</span></label>
+        <div class="fb-rating-group" id="fb-overall-stars">
+          <label class="fb-star-label" data-val="1">★</label>
+          <label class="fb-star-label" data-val="2">★</label>
+          <label class="fb-star-label" data-val="3">★</label>
+          <label class="fb-star-label" data-val="4">★</label>
+          <label class="fb-star-label" data-val="5">★</label>
+          <input type="hidden" id="fb-overall" value="">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Difficulty level <span class="form-required">*</span></label>
+        <div class="fb-rating-group" id="fb-difficulty-stars">
+          <label class="fb-star-label" data-val="1">★</label>
+          <label class="fb-star-label" data-val="2">★</label>
+          <label class="fb-star-label" data-val="3">★</label>
+          <label class="fb-star-label" data-val="4">★</label>
+          <label class="fb-star-label" data-val="5">★</label>
+          <input type="hidden" id="fb-difficulty" value="">
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-top:2px"><span>Too easy</span><span>Too hard</span></div>
+      </div>
+      <div class="form-group">
+        <label>How intuitive is the gameplay? <span class="form-required">*</span></label>
+        <div class="fb-rating-group" id="fb-intuitive-stars">
+          <label class="fb-star-label" data-val="1">★</label>
+          <label class="fb-star-label" data-val="2">★</label>
+          <label class="fb-star-label" data-val="3">★</label>
+          <label class="fb-star-label" data-val="4">★</label>
+          <label class="fb-star-label" data-val="5">★</label>
+          <input type="hidden" id="fb-intuitive" value="">
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-top:2px"><span>Confusing</span><span>Very clear</span></div>
+      </div>
+      <div class="form-group">
+        <label for="fb-enjoyed">What did you enjoy most? <span class="form-optional">(optional)</span></label>
+        <textarea id="fb-enjoyed" rows="2" placeholder="e.g. Learning about district shapes, the daily challenge…" maxlength="500"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="fb-improve">What could be improved? <span class="form-optional">(optional)</span></label>
+        <textarea id="fb-improve" rows="2" placeholder="e.g. Hints, map controls, mobile layout…" maxlength="500"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="fb-comment">Anything else? <span class="form-optional">(optional)</span></label>
+        <textarea id="fb-comment" rows="2" placeholder="Bugs, feature ideas, questions…" maxlength="500"></textarea>
       </div>
       <div id="fb-error" class="form-error"></div>
       <button type="submit" id="fb-submit">Send via Email</button>
@@ -217,6 +310,7 @@
           <div class="ref-label" id="ref-label">Click a state to select it</div>
           <div id="guess-counter" class="guess-counter"></div>
         </div>
+        <div id="confirm-hint">Tap again to confirm</div>
         <div class="us-ref-map-wrap">
           <div id="us-ref-map"></div>
           <div id="district-tiles" class="hidden"></div>
