@@ -52,21 +52,25 @@
 <!-- ===== WELCOME / SPLASH MODAL ===== -->
 <div id="welcome-modal" class="modal hidden">
   <div class="modal-content welcome-modal-content">
-    <h1 class="welcome-title">
-      <svg class="game-logo" viewBox="0 0 24 30" aria-hidden="true">
+    <div class="welcome-logo-wrap">
+      <svg class="welcome-logo-svg" viewBox="0 0 24 30" aria-hidden="true">
         <path d="M12 1C7.03 1 3 5.03 3 10C3 16.8 12 29 12 29C12 29 21 16.8 21 10C21 5.03 16.97 1 12 1Z" fill="#C41230"/>
         <circle cx="12" cy="10" r="4.5" fill="white"/>
         <circle cx="12" cy="10" r="2" fill="#C41230"/>
       </svg>
-      District Guess
-    </h1>
-    <p class="welcome-desc">Identify the congressional district from its shape.<br>A new puzzle every day — same for everyone.</p>
-    <ul class="welcome-rules">
-      <li>You have <strong>6 guesses</strong> per day.</li>
-      <li>Click a state on the reference map, then pick the district number.</li>
-      <li>Wrong guesses narrow down the remaining states.</li>
-    </ul>
-    <button id="welcome-play-btn" class="welcome-play-btn">Play</button>
+    </div>
+    <div class="welcome-wordmark">DISTRICT GUESS</div>
+    <div class="welcome-slogan">Identify the congressional district from its shape</div>
+    <div class="welcome-divider"></div>
+    <div class="welcome-meta">
+      <div id="welcome-date-line" class="welcome-date-line"></div>
+      <div id="welcome-puzzle-num" class="welcome-puzzle-num"></div>
+      <div class="welcome-editor">Edited by Jonathan Cervas</div>
+    </div>
+    <div class="welcome-buttons" id="welcome-buttons">
+      <!-- populated by JS -->
+    </div>
+    <div class="welcome-donate-spacer"></div>
     <a href="https://givenow.cmu.edu/campaigns/42524/donations/new?a=8338674"
        class="welcome-donate-btn" target="_blank" rel="noopener">
       Donate to Support this Game and Scholarship
@@ -200,17 +204,19 @@
   <div id="game-section">
     <div id="map"></div>
 
-    <!-- Hint cards + guess counter row -->
+    <!-- Hint cards row -->
     <div id="game-controls">
       <div id="hint-bar" role="list" aria-label="Hints"></div>
-      <div id="guess-counter" class="guess-counter"></div>
     </div>
 
     <div id="map-panel">
 
       <!-- Clickable US states map — zooms to state once confirmed; replaced by D3 district map -->
-      <div id="us-ref-section">
-        <div class="ref-label" id="ref-label">Click a state to select it</div>
+      <div id="map-view">
+        <div class="map-view-header">
+          <div class="ref-label" id="ref-label">Click a state to select it</div>
+          <div id="guess-counter" class="guess-counter"></div>
+        </div>
         <div class="us-ref-map-wrap">
           <div id="us-ref-map"></div>
           <div id="district-tiles" class="hidden"></div>
