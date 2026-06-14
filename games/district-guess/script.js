@@ -186,8 +186,9 @@ function svgIcon(name, cls = 'icon') {
 // ============================================================
 const MAX_GUESSES = 6;
 const STORAGE_PREFIX = 'districtguess_';
-const HOW_TO_SEEN_KEY    = STORAGE_PREFIX + 'howToSeen';
-const WELCOME_SEEN_KEY   = STORAGE_PREFIX + 'welcomeSeen';
+const HOW_TO_SEEN_KEY      = STORAGE_PREFIX + 'howToSeen';
+const WELCOME_SEEN_KEY     = STORAGE_PREFIX + 'welcomeSeen';
+const FEEDBACK_PROMPTED_AT = STORAGE_PREFIX + 'feedbackAt'; // games-played count when last prompted
 const SESSION_REPLAY_KEY  = 'districtguess_replay';      // sessionStorage key
 const SESSION_RANDSEED_KEY = 'districtguess_randseed';  // seed for current random (non-daily) game
 // D3 US reference map coordinate space (viewBox dimensions)
@@ -1163,6 +1164,38 @@ function updateGuessCounter() {
   el.innerHTML = `<div class="gc-dots">${dots}</div><span class="gc-label">${label}</span>${timerHtml}`;
 }
 
+// ---- Confirm-selection mode ----
+let confirmInputMode   = localStorage.getItem('districtguess_confirmMode') === '1';
+let _pendingConfirmAbbr = null;
+
+function setConfirmPending(abbr) {
+  _pendingConfirmAbbr = abbr;
+  const hint = document.getElementById('confirm-hint');
+  if (hint) {
+    hint.textContent = abbr ? `Tap ${abbr} again to confirm` : 'Tap again to confirm';
+    hint.classList.toggle('visible', !!abbr);
+  }
+  // Highlight pending state gold, restore others
+  Object.entries(usRefLayers).forEach(([a, pathEl]) => {
+    if (a === abbr) pathEl.attr('fill', '#FDB515').attr('fill-opacity', 0.85);
+    else _applyStateStyle(pathEl, a);
+  });
+  Object.entries(usRefCallouts).forEach(([a, co]) => {
+    if (a === abbr) co.circle.attr('fill', '#FDB515').attr('fill-opacity', 1);
+    else _applyCalloutStyle(a);
+  });
+}
+
+function handleStateSelection(abbr) {
+  if (!confirmInputMode) { submitStateGuess(abbr); return; }
+  if (_pendingConfirmAbbr === abbr) {
+    setConfirmPending(null);
+    submitStateGuess(abbr);
+  } else {
+    setConfirmPending(abbr);
+  }
+}
+
 // Called when a state is chosen via map click or chip click.
 let _guessLocked = false; // prevent double-submit during animation
 function submitStateGuess(abbr) {
@@ -1354,8 +1387,8 @@ function toggleDarkMode() {
 }
 
 function updateThemeToggle() {
-  const btn = document.getElementById('theme-toggle');
-  if (btn) btn.innerHTML = isDarkMode() ? svgIcon('sun') : svgIcon('moon');
+  const cb = document.getElementById('settings-dark-toggle');
+  if (cb) cb.checked = isDarkMode();
 }
 
 // ---- US reference map (clickable states) ----
@@ -1528,7 +1561,7 @@ function _addStateCallouts(g, geojson, pathGen, fipsToFeature) {
       .on('click', () => {
         if (gameOver || correctStateGuessed) return;
         if (!getValidStates().has(n.abbr)) return;
-        submitStateGuess(n.abbr);
+        handleStateSelection(n.abbr);
       })
       .on('mouseover', (event) => {
         if (tooltip && !window.matchMedia('(pointer: coarse)').matches) {
@@ -1657,7 +1690,7 @@ function initUSRefMap() {
         .on('click', () => {
           if (gameOver || correctStateGuessed) return;
           if (!getValidStates().has(abbr)) return;
-          submitStateGuess(abbr);
+          handleStateSelection(abbr);
         })
         .on('mouseover', (event) => {
           // Tooltip — desktop/mouse only
@@ -1861,7 +1894,7 @@ function renderStateChips() {
     chip.addEventListener('click', () => {
       if (correctStateGuessed || gameOver) return;
       if (!validStates.has(abbr)) return;
-      submitStateGuess(abbr);
+      handleStateSelection(abbr);
     });
 
     container.appendChild(chip);
@@ -2701,7 +2734,7 @@ function buildShareText() {
     return '✗';
   }).join(' ');
   const outcome = won ? `solved in ${winNum}/${MAX_GUESSES} guesses` : `unsolved (${MAX_GUESSES}/${MAX_GUESSES})`;
-  return `🗳️ District Guess\n📍 ${answer} — ${outcome}\n${grid}\nCan you identify it? https://jcervas.github.io/games/district-guess/`;
+  return `🗺️ Daily District\n📍 ${answer} — ${outcome}\n${grid}\nCan you identify it? https://jcervas.github.io/games/district-guess/`;
 }
 
 // ============================================================
@@ -3235,8 +3268,35 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem(HOW_TO_SEEN_KEY, '1');
   });
 
-  // Dark mode toggle
-  document.getElementById('theme-toggle').addEventListener('click', toggleDarkMode);
+  // Settings modal
+  const settingsModal = document.getElementById('settings-modal');
+  document.getElementById('settings-btn').addEventListener('click', () => {
+    updateThemeToggle();
+    settingsModal.classList.remove('hidden');
+  });
+  document.getElementById('settings-close').addEventListener('click', () => {
+    settingsModal.classList.add('hidden');
+  });
+  settingsModal.addEventListener('click', e => {
+    if (e.target === settingsModal) settingsModal.classList.add('hidden');
+  });
+  document.getElementById('settings-dark-toggle').addEventListener('change', () => {
+    toggleDarkMode();
+  });
+  document.getElementById('settings-reset-theme').addEventListener('click', () => {
+    localStorage.removeItem('districtguess_theme');
+    document.body.classList.remove('dark-mode', 'light-mode');
+    updateThemeToggle();
+    // repaint everything to match system pref
+    updateUSRefMap();
+    if (map && streetLayer) {
+      map.removeLayer(streetLayer);
+      streetLayer = L.tileLayer(streetTileUrl(), { maxZoom: 19, opacity: _streetOpacity, attribution: streetTileAttrib() }).addTo(map);
+    }
+    if (map) applyMapStage(guessHistory.filter(g => !g.correct).length, gameOver);
+    if (districtLayer) districtLayer.setStyle(districtStyle());
+    if (gameOver && todayDistrict) buildDistrictD3Map(todayDistrict.properties.state);
+  });
 
   // When system preference changes and user has no manual override, repaint everything
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
@@ -3304,7 +3364,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const errEl   = document.getElementById('fb-error');
     if (!comment) { errEl.textContent = 'Please enter a comment.'; return; }
     errEl.textContent = '';
-    const subject = `District Guess Feedback — ${name}`;
+    const subject = `Daily District Feedback — ${name}`;
     const body    = [
       `Name: ${name}`,
       `Email: ${email || 'Not provided'}`,
