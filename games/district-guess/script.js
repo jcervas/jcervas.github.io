@@ -3319,6 +3319,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // measures the correct map size when renderDistrict calls fitBounds.
     setTimeout(() => {
       resetGame(newIdx);
+      // After reset, show the welcome splash with a fresh "Play" button
+      // (gameOver is now false, guessCount is 0, so buildWelcomeButtons renders "Play")
+      _gameStarted = false;
+      buildWelcomeButtons();
+      welcomeModal.classList.remove('hidden');
       requestAnimationFrame(() => {
         map.invalidateSize();
         if (districtLayer) map.fitBounds(districtLayer.getBounds(), { padding: [40, 40], maxZoom: 10, animate: false });
@@ -3368,11 +3373,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // Welcome splash — shown every time the game opens
   const welcomeModal = document.getElementById('welcome-modal');
 
-  // Build buttons after init() resolves so guessCount/gameOver reflect restored state
-  _initPromise.then(() => {
-  (function buildWelcomeButtons() {
+  function buildWelcomeButtons() {
     const container = document.getElementById('welcome-buttons');
     container.innerHTML = '';
+
+    // Reset wordmark to SVG (may have been swapped to "Welcome Back" text)
+    const wmSvg  = document.querySelector('.welcome-wordmark-svg');
+    const wmBack = document.getElementById('welcome-back-text');
+    const slogan = document.querySelector('.welcome-slogan');
+    if (wmSvg)  wmSvg.hidden  = false;
+    if (wmBack) wmBack.hidden = true;
+    if (slogan) slogan.textContent = 'Identify the district from its shape';
 
     function dismissAndStart() {
       _gameStarted = true;
@@ -3403,8 +3414,9 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       const inProgress = guessCount > 0 || correctStateGuessed;
       if (inProgress) {
-        document.querySelector('.welcome-wordmark').textContent = 'Welcome Back';
-        document.querySelector('.welcome-slogan').textContent =
+        if (wmSvg)  wmSvg.hidden  = true;
+        if (wmBack) wmBack.hidden = false;
+        if (slogan) slogan.textContent =
           `You've made ${guessCount} of ${MAX_GUESSES} guess${guessCount !== 1 ? 'es' : ''}. Keep it up!`;
       }
       const btnPlay = document.createElement('button');
@@ -3413,7 +3425,11 @@ document.addEventListener('DOMContentLoaded', () => {
       btnPlay.addEventListener('click', dismissAndStart);
       container.appendChild(btnPlay);
     }
-  })();
+  }
+
+  // Build buttons after init() resolves so guessCount/gameOver reflect restored state
+  _initPromise.then(() => {
+  buildWelcomeButtons();
 
   // How to play — auto-show on first visit (after welcome buttons ready)
   const howToModal = document.getElementById('how-to-modal');
