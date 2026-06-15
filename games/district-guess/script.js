@@ -2836,8 +2836,13 @@ function launchConfetti() {
 
 function showResult(won) {
   const modal = document.getElementById('result-modal');
-  modal.classList.remove('hidden');
-  switchResultTab('result');
+  // Don't auto-open the result modal if the welcome splash is still up —
+  // the user will reach it via the "Review Result" button on that screen.
+  const welcomeVisible = !document.getElementById('welcome-modal')?.classList.contains('hidden');
+  if (!welcomeVisible) {
+    modal.classList.remove('hidden');
+    switchResultTab('result');
+  }
   if (won) setTimeout(launchConfetti, 300);
 
   const answer    = todayDistrict.properties['state-district'];
