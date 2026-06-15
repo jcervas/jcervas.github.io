@@ -2207,10 +2207,13 @@ function buildDistrictD3Map(stateAbbr) {
       const pad = 30;
       const scaleX = (W - 2 * pad) / Math.max(px1 - px0, 1);
       const scaleY = (H - 2 * pad) / Math.max(py1 - py0, 1);
-      const scale  = Math.min(12, Math.max(1, Math.min(scaleX, scaleY)));
-      const tx = (W - scale * (px0 + px1)) / 2;
-      const ty = (H - scale * (py0 + py1)) / 2;
-      svg.call(districtZoomBehavior.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
+      const scale  = Math.min(12, Math.min(scaleX, scaleY));
+      // Only zoom in — if remaining districts already fill most of the viewport, leave the view alone
+      if (scale > 1.15) {
+        const tx = (W - scale * (px0 + px1)) / 2;
+        const ty = (H - scale * (py0 + py1)) / 2;
+        svg.call(districtZoomBehavior.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
+      }
     }
   } else if (gameOver && !districtUserZoomed && todayDistrict) {
     // Game-over: zoom into the answer state so it's clearly visible against the national backdrop
