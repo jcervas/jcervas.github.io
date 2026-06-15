@@ -307,6 +307,7 @@ let districtZoomBehavior   = null;   // saved d3.zoom instance for district tile
 let districtUserZoomed     = false;  // true once user manually pans/zooms district map
 let districtSavedTransform = null;   // zoom transform preserved across rebuilds
 let districtSimulation     = null;   // active force simulation — updated on zoom for centroid pull
+let _gameStarted        = false;   // true after welcome is dismissed; guards clue/guess DOM rendering
 let guessCount          = 0;
 let guessHistory        = [];     // [{text, correct}]
 let cluesRevealed       = 0;      // how many text clues are showing
@@ -940,6 +941,7 @@ function renderHintBar() {
   if (!todayDistrict) return;
   const bar = document.getElementById('hint-bar');
   if (!bar) return;
+  if (!_gameStarted) { bar.innerHTML = ''; return; }
 
   bar.innerHTML = '';
   const distData = districtDataFor(todayDistrict);
@@ -1082,6 +1084,7 @@ function stopTimer() {
 //  GUESS HANDLING
 // ============================================================
 function renderGuessHistory() {
+  if (!_gameStarted) return;
   const el = document.getElementById('guess-history');
   const answerKey = todayDistrict?.properties['state-district'];
   const answerNeighbors = new Set(adjMap.get(answerKey) || []);
@@ -3049,6 +3052,7 @@ function resetGame(newIdx) {
   cluesRevealed       = 0;
   correctStateGuessed = false;
   gameOver            = false;
+  _gameStarted        = true;   // Play Again always goes straight to game
   elapsedSeconds      = 0;
   eliminatedStates    = new Set();
   _distLocked         = false;
@@ -3235,6 +3239,23 @@ document.addEventListener('DOMContentLoaded', () => {
   applyDarkModeClass(); // must run before init() so D3 map gets correct colors
   updateThemeToggle();
 
+  // Show welcome splash immediately — game loads in background behind it
+  (function showWelcomeImmediately() {
+    const wm = document.getElementById('welcome-modal');
+    if (!wm) return;
+    const EPOCH = new Date('2025-01-20T00:00:00-05:00');
+    const now   = new Date();
+    const puzzleNum = Math.floor((now - EPOCH) / 86400000) + 1;
+    const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    const dateLine = document.getElementById('welcome-date-line');
+    const numLine  = document.getElementById('welcome-puzzle-num');
+    if (dateLine) dateLine.textContent = dateStr;
+    if (numLine)  numLine.textContent  = `No. ${puzzleNum}`;
+    document.getElementById('welcome-buttons').innerHTML =
+      '<div class="welcome-loading-spinner"></div>';
+    wm.classList.remove('hidden');
+  })();
+
   const _initPromise = init();
 
   // District tile clicks — event delegation on the tile container
@@ -3318,37 +3339,32 @@ document.addEventListener('DOMContentLoaded', () => {
   // Welcome splash — shown every time the game opens
   const welcomeModal = document.getElementById('welcome-modal');
 
-  // Populate date and puzzle number
-  (function populateWelcomeMeta() {
-    const EPOCH = new Date('2025-01-20T00:00:00-05:00'); // 119th Congress first day
-    const now   = new Date();
-    const msPerDay = 86400000;
-    const puzzleNum = Math.floor((now - EPOCH) / msPerDay) + 1;
-    const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    document.getElementById('welcome-date-line').textContent = dateStr;
-    document.getElementById('welcome-puzzle-num').textContent = `No. ${puzzleNum}`;
-  })();
-
   // Build buttons after init() resolves so guessCount/gameOver reflect restored state
   _initPromise.then(() => {
   (function buildWelcomeButtons() {
     const container = document.getElementById('welcome-buttons');
     container.innerHTML = '';
+
+    function dismissAndStart() {
+      _gameStarted = true;
+      welcomeModal.classList.add('hidden');
+      localStorage.setItem(WELCOME_SEEN_KEY, '1');
+      localStorage.setItem(HOW_TO_SEEN_KEY, '1');
+      renderClues();
+      renderGuessHistory();
+    }
+
     if (gameOver) {
       const btnMap = document.createElement('button');
       btnMap.className = 'welcome-action-btn';
       btnMap.textContent = 'Back to Map';
-      btnMap.addEventListener('click', () => {
-        welcomeModal.classList.add('hidden');
-        localStorage.setItem(HOW_TO_SEEN_KEY, '1');
-      });
+      btnMap.addEventListener('click', dismissAndStart);
 
       const btnResult = document.createElement('button');
       btnResult.className = 'welcome-action-btn secondary';
       btnResult.textContent = 'Review Result';
       btnResult.addEventListener('click', () => {
-        welcomeModal.classList.add('hidden');
-        localStorage.setItem(HOW_TO_SEEN_KEY, '1');
+        dismissAndStart();
         document.getElementById('result-modal').classList.remove('hidden');
         switchResultTab('result');
       });
@@ -3365,18 +3381,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const btnPlay = document.createElement('button');
       btnPlay.className = 'welcome-action-btn';
       btnPlay.textContent = inProgress ? 'Continue' : 'Play';
-      btnPlay.addEventListener('click', () => {
-        welcomeModal.classList.add('hidden');
-        localStorage.setItem(WELCOME_SEEN_KEY, '1');
-        localStorage.setItem(HOW_TO_SEEN_KEY, '1');
-      });
+      btnPlay.addEventListener('click', dismissAndStart);
       container.appendChild(btnPlay);
     }
   })();
 
-  welcomeModal.classList.remove('hidden');
-
-  // How to play — auto-show on first visit (after welcome)
+  // How to play — auto-show on first visit (after welcome buttons ready)
   const howToModal = document.getElementById('how-to-modal');
   if (!localStorage.getItem(HOW_TO_SEEN_KEY)) {
     howToModal.classList.remove('hidden');
