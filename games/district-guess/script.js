@@ -3315,17 +3315,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (map) map.invalidateSize();
   });
 
-  // Share
-  document.getElementById('share-btn').addEventListener('click', () => {
-    const text    = buildShareText();
-    const copiedEl = document.getElementById('share-copied');
-    navigator.clipboard.writeText(text).then(() => {
-      copiedEl.classList.remove('hidden');
-      setTimeout(() => copiedEl.classList.add('hidden'), 2000);
-    }).catch(() => {
-      prompt('Copy this result:', text);
-    });
-  });
 
   // Leaderboard
   document.getElementById('leaderboard-btn').addEventListener('click', openLeaderboard);
