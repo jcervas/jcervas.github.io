@@ -735,20 +735,22 @@ function renderInlinePersonalStats() {
 
   const avgSecs  = stats.won > 0 ? Math.round((stats.totalWonTime || 0) / stats.won) : null;
   const avgLabel = avgSecs !== null ? formatTime(avgSecs) : '—';
+  const totalWonGuesses = [1,2,3,4,5,6].reduce((s, k) => s + k * (dist[k] || 0), 0);
+  const totalWonCount   = [1,2,3,4,5,6].reduce((s, k) => s + (dist[k] || 0), 0);
+  const avgGuesses = totalWonCount > 0 ? (totalWonGuesses / totalWonCount).toFixed(1) : '—';
 
   el.innerHTML = `
-
     <div class="result-stats-grid">
       <div class="rstat-cell"><span class="rstat-big">${stats.played}</span><span class="rstat-label">Played</span></div>
       <div class="rstat-cell"><span class="rstat-big">${winRate}</span><span class="rstat-label">Win %</span></div>
       <div class="rstat-cell"><span class="rstat-big">${stats.streak}</span><span class="rstat-label">Current Streak</span></div>
       <div class="rstat-cell"><span class="rstat-big">${stats.maxStreak}</span><span class="rstat-label">Max Streak</span></div>
     </div>
-    <div class="rstat-avg-time">Avg. solve time (correct guesses): <strong>${avgLabel}</strong></div>
     <div class="result-dist">
       <h4>Guess Distribution</h4>
       ${bars}
-    </div>`;
+    </div>
+    <div class="rstat-avg-time">Avg. guesses (wins): <strong>${avgGuesses}</strong> &nbsp;&middot;&nbsp; Avg. time: <strong>${avgLabel}</strong></div>`;
 }
 
 // Helper: switch the result modal between "result" and "census" tabs
@@ -1535,20 +1537,31 @@ function _addStateCallouts(g, geojson, pathGen, fipsToFeature) {
 
   // Stack left-aligned at a common X just east of the eastmost state's edge.
   const stackX = maxEast + 18 + CALLOUT_RX;
-  // Stack starts at the topmost state's anchorY, then steps down by 2*ry + gap.
-  const stepY = 2 * CALLOUT_RY + CALLOUT_GAP;
-  const startY = items.length ? items[0].anchorY : 0;
 
   const layer = g.append('g').attr('class', 'us-ref-callouts');
 
-  // Convert items into nodes with their stacked offshore positions
-  const nodes = items.map((it, i) => ({
+  // Start each label at its state's centroid Y, then resolve collisions.
+  const minSpacing = 2 * CALLOUT_RY + CALLOUT_GAP;
+  const nodes = items.map(it => ({
     abbr: it.abbr,
     anchorX: it.anchorX,
     anchorY: it.anchorY,
     x: stackX,
-    y: startY + i * stepY,
+    y: it.anchorY,
   }));
+  nodes.sort((a, b) => a.y - b.y);
+  for (let iter = 0; iter < 60; iter++) {
+    let moved = false;
+    for (let i = 1; i < nodes.length; i++) {
+      const overlap = minSpacing - (nodes[i].y - nodes[i - 1].y);
+      if (overlap > 0) {
+        nodes[i - 1].y -= overlap / 2;
+        nodes[i].y     += overlap / 2;
+        moved = true;
+      }
+    }
+    if (!moved) break;
+  }
 
   nodes.forEach(n => {
     const grp = layer.append('g').attr('data-abbr', n.abbr);
@@ -2942,6 +2955,9 @@ function renderPersonalStats() {
   const wonToday = guessHistory.some(g => g.correct && g.phase === 'district');
   const avgSecs  = stats.won > 0 ? Math.round((stats.totalWonTime || 0) / stats.won) : null;
   const avgLabel = avgSecs !== null ? formatTime(avgSecs) : '—';
+  const totalWonGuesses = [1,2,3,4,5,6].reduce((s, k) => s + k * (dist[k] || 0), 0);
+  const totalWonCount   = [1,2,3,4,5,6].reduce((s, k) => s + (dist[k] || 0), 0);
+  const avgGuesses = totalWonCount > 0 ? (totalWonGuesses / totalWonCount).toFixed(1) : '—';
 
   const bars = [1, 2, 3, 4, 5, 6, 'X'].map(k => {
     const count = dist[k] || 0;
@@ -2964,11 +2980,11 @@ function renderPersonalStats() {
       <div class="stat-card"><div class="stat-val">${stats.streak}</div><div class="stat-label">Current Streak</div></div>
       <div class="stat-card"><div class="stat-val">${stats.maxStreak}</div><div class="stat-label">Max Streak</div></div>
     </div>
-    <div class="rstat-avg-time">Avg. solve time (correct guesses): <strong>${avgLabel}</strong></div>
     <div class="result-dist">
       <h4>Guess Distribution</h4>
       ${bars}
-    </div>`;
+    </div>
+    <div class="rstat-avg-time">Avg. guesses (wins): <strong>${avgGuesses}</strong> &nbsp;&middot;&nbsp; Avg. time: <strong>${avgLabel}</strong></div>`;
 }
 
 // ============================================================
