@@ -2,16 +2,18 @@
 
 ## UI / Layout
 
-- [ ] Modal text should scale relative to screen size to avoid scrolling — better use of spacing throughout
+- [x] Modal text should scale relative to screen size to avoid scrolling — better use of spacing throughout
 
 ## Features
 
-- [ ] Get racial/ethnic data from topojson for district profile
-- [ ] Switch median home price → Polsby-Popper (show district inside circle, white with black stroke)
-- [ ] Replace median household income → Reock (draw circle with district comparison)
-- [ ] Potential callouts for small-area states (e.g. New England) with force collision
+- [ ] chs ge game over screen to include judt national map with dostrict (existing) ribbon for new game (existing) and better know a district data
+- [x] Get racial/ethnic data from topojson for district profile
+- [ ] add Polsby-Popper (show district inside circle, white with black stroke)
+- [ ] add → Reock (draw circle with district comparison)
+- [ ] potentially add other redistricting data like county splits
+- [x] Potential callouts for small-area states (e.g. New England) with force collision
 - [ ] When an at-large state is the answer, clicking the state should give the win (not requiring the district tile)
-- [ ] Hard Mode — additional constraints after each guess (UI toggle already added, disabled)
+- [ ] Hard Mode — in hard mode, user gets no hints, just 6 guesses (UI toggle already added, disabled)
 
 ## Done
 
