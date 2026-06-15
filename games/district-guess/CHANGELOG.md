@@ -2,6 +2,13 @@
 
 ---
 
+## v1.4.7 — Force Simulation Performance Fix
+
+- **Fast simulation convergence**: raised D3 force simulation `alphaDecay` from the default `0.0228` (~300 ticks, ~5 s at 60 fps) to `0.12` (~35 ticks, < 1 s); `alphaMin` set to `0.01` — eliminates noticeable lag on large states like NY (26 districts)
+- **Zoom re-tune also accelerated**: restart after zoom now uses the same `alphaDecay(0.12)` so re-layout after zooming settles quickly
+
+---
+
 ## v1.4.6 — Welcome Modal Wordmark & New Map Flow
 
 - **Wordmark SVG in welcome splash**: replaced plain "DAILY DISTRICT" text with `wordmark.svg` (Barlow 800 vector paths, CMU red `#C41230`); scales via `clamp(28px, 5vh, 44px)`

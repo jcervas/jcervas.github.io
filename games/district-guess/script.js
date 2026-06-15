@@ -2159,7 +2159,7 @@ function buildDistrictD3Map(stateAbbr) {
           .force('x', d3.forceX(d => d.ox).strength(newStrength))
           .force('y', d3.forceY(d => d.oy).strength(newStrength));
         if (districtSimulation.alpha() < 0.05) {
-          districtSimulation.alpha(0.2).restart();
+          districtSimulation.alphaDecay(0.12).alpha(0.2).restart();
         }
       }
 
@@ -2584,6 +2584,8 @@ function buildDistrictD3Map(stateAbbr) {
   // At k=1 (full state): strength 0.6 (normal separation). At k=3+: strength ~0.9 (nearly locked).
   const forceStrength = Math.min(0.98, 0.6 + (zoomK - 1) * 0.15);
   districtSimulation = d3.forceSimulation(nodes)
+    .alphaDecay(0.12)   // converge in ~35 ticks instead of D3 default ~300
+    .alphaMin(0.01)
     .force('collide', d3.forceCollide(d => d.isCold ? collide * 0.25 : d.isHot ? collide * 0.45 : collide))
     .force('x', d3.forceX(d => d.ox).strength(forceStrength))
     .force('y', d3.forceY(d => d.oy).strength(forceStrength))
