@@ -3309,23 +3309,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // New Map — pick a new district (both from result modal button AND banner button)
   function startNewMap() {
-    document.getElementById('game-section')?.classList.remove('map-collapsed');
     replayCount++;
     sessionStorage.setItem(SESSION_REPLAY_KEY, String(replayCount));
-    // Generate a fresh random seed unique to this user/moment and persist it
-    // so a page refresh during this game reloads the same district.
     const randSeed = Date.now() ^ (Math.random() * 0xffffffff | 0);
     sessionStorage.setItem(SESSION_RANDSEED_KEY, String(randSeed));
     const newIdx = seededIndex(randSeed, districts.length);
-    // Defer reset until after the CSS collapse transition (0.3s) so Leaflet
+
+    // Show welcome splash immediately (before map refresh) so user never sees
+    // the new district flash in behind the closing result modal.
+    document.getElementById('result-modal')?.classList.add('hidden');
+    gameOver = false;
+    guessCount = 0;
+    correctStateGuessed = false;
+    _gameStarted = false;
+    buildWelcomeButtons();
+    welcomeModal.classList.remove('hidden');
+
+    // Defer full reset until after the CSS collapse transition (0.3s) so Leaflet
     // measures the correct map size when renderDistrict calls fitBounds.
     setTimeout(() => {
+      document.getElementById('game-section')?.classList.remove('map-collapsed');
       resetGame(newIdx);
-      // After reset, show the welcome splash with a fresh "Play" button
-      // (gameOver is now false, guessCount is 0, so buildWelcomeButtons renders "Play")
-      _gameStarted = false;
-      buildWelcomeButtons();
-      welcomeModal.classList.remove('hidden');
       requestAnimationFrame(() => {
         map.invalidateSize();
         if (districtLayer) map.fitBounds(districtLayer.getBounds(), { padding: [40, 40], maxZoom: 10, animate: false });
