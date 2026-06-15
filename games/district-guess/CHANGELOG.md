@@ -2,6 +2,15 @@
 
 ---
 
+## v1.4.6 — Welcome Modal Wordmark & New Map Flow
+
+- **Wordmark SVG in welcome splash**: replaced plain "DAILY DISTRICT" text with `wordmark.svg` (Barlow 800 vector paths, CMU red `#C41230`); scales via `clamp(28px, 5vh, 44px)`
+- **"Welcome Back" state**: for in-progress games the wordmark is swapped for a "Welcome Back" heading; CSS `[hidden] { display: none }` added to prevent `display: block` overriding the `hidden` attribute
+- **New Map → welcome splash**: after clicking "New Map", the welcome splash now reappears with a fresh "Play" button instead of going straight into the game; `buildWelcomeButtons` lifted to module scope so `startNewMap` can call it after reset
+- **`_gameStarted` reset on New Map**: ensures clue/history DOM guards fire correctly for the new game
+
+---
+
 ## v1.4.5.1 — Bug Fix: Result Modal Not Blocking Welcome Splash
 
 - **Fix "Back to map" routing**: closing the result modal no longer reveals the welcome splash — `showResult()` now skips auto-opening the modal when the welcome splash is still visible; users reach the result via the "Review Result" button on the welcome screen, which dismisses the splash first
