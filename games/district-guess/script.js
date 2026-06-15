@@ -1629,7 +1629,7 @@ function initUSRefMap() {
     .attr('viewBox', `0 0 ${W} ${H}`)
     .attr('width', '100%')
     .attr('height', '100%')
-    .attr('preserveAspectRatio', 'xMidYMid meet')
+    .attr('preserveAspectRatio', 'xMidYMid slice')
     .style('display', 'block')
     .style('background', 'transparent')
     .style('touch-action', 'none');  // let D3 zoom own all touch gestures (pinch, two-finger)
@@ -1848,11 +1848,23 @@ function zoomUSRefMapToValid(animated = true) {
   _lastFitBBoxKey = bboxKey;
 
   const padding = 28;
-  // With meet mode, the full viewBox is always visible — visW/visH = VB dimensions.
-  const visW = W;
-  const visH = H;
-  const fit   = Math.min((visW - 2 * padding) / dx, (visH - 2 * padding) / dy);
-  const scale = Math.max(1, fit);
+  // With slice mode, the visible viewBox region is determined by container aspect.
+  // pxPerVb = max(cw/W, ch/H) (slice fills the larger axis, crops the other).
+  const svgRect = usRefMap.getBoundingClientRect();
+  const pxPerVb = (svgRect.width > 0 && svgRect.height > 0)
+    ? Math.max(svgRect.width / W, svgRect.height / H)
+    : 1;
+  const visW = svgRect.width  > 0 ? svgRect.width  / pxPerVb : W;
+  const visH = svgRect.height > 0 ? svgRect.height / pxPerVb : H;
+  const containerAspect = svgRect.height > 0 ? svgRect.width / svgRect.height : (W / H);
+  const vbAspect = W / H;
+  const minFit = Math.min((visW - 2 * padding) / dx, (visH - 2 * padding) / dy);
+  const maxFit = Math.max((visW - 2 * padding) / dx, (visH - 2 * padding) / dy);
+  // On portrait containers, blend min/max fit so the US fills well in both axes.
+  // On landscape containers, just use min-fit so nothing is cropped.
+  const fit = containerAspect < vbAspect ? (minFit + maxFit) / 2 : minFit;
+  // No minimum scale — allow zooming out to show the full US at game start.
+  const scale = Math.max(0.3, fit);
   const tx    = W / 2 - scale * (x0 + dx / 2);
   const ty    = H / 2 - scale * (y0 + dy / 2);
 
