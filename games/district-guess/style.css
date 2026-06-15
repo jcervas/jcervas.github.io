@@ -1744,8 +1744,8 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
   transition: color 0.1s;
   line-height: 1;
 }
-.fb-star-label:hover,
-.fb-star-label.selected { color: #FDB515; }
+.fb-star-label.selected,
+.fb-star-label.hovered { color: #FDB515; }
 
 /* ---- Result modal close button ---- */
 .result-modal-header {
