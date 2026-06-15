@@ -1520,6 +1520,7 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
   gap: 0;
   overflow: hidden;
 }
+.welcome-top-spacer { flex: 1.2; }
 .welcome-logo-wrap { margin-bottom: clamp(8px, 1.5vh, 16px); }
 .welcome-logo-svg { width: clamp(80px, 14vh, 140px); height: auto; }
 .welcome-wordmark {
@@ -1589,7 +1590,8 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
 }
 .welcome-action-btn {
   width: 60%;
-  min-width: 180px;
+  min-width: 160px;
+  max-width: 240px;
   padding: 14px 0;
   font-size: 1rem;
   font-weight: 800;
