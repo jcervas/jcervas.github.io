@@ -1171,6 +1171,9 @@ function updateGuessCounter() {
   el.innerHTML = `<div class="gc-dots">${dots}</div><span class="gc-label">${label}</span>${timerHtml}`;
 }
 
+// ---- Hard mode ----
+let hardMode = localStorage.getItem('districtguess_hardMode') === '1';
+
 // ---- Confirm-selection mode ----
 let confirmInputMode   = localStorage.getItem('districtguess_confirmMode') === '1';
 let _pendingConfirmAbbr = null;
@@ -1242,6 +1245,18 @@ function processStateGuess(abbr, correct) {
   guessHistory.push({ text: abbr, correct, phase: 'state', adjacent: isAdjacent });
 
   if (correct) {
+    const isAtLarge = (stateDistrictMap[abbr] || []).length === 1;
+    if (isAtLarge) {
+      // At-large state — state guess IS the district guess; win immediately
+      const fullGuess = `${abbr}-AL`;
+      guessHistory.push({ text: fullGuess, correct: true, phase: 'district' });
+      correctStateGuessed = true;
+      renderGuessHistory();
+      renderClues();
+      saveGameState();
+      endGame(true);
+      return;
+    }
     correctStateGuessed = true;
     lockStateDropdown(abbr);
   } else {
@@ -1262,7 +1277,7 @@ function processStateGuess(abbr, correct) {
     }
 
     const wrongCount = guessHistory.filter(g => !g.correct).length;
-    cluesRevealed = Math.min(wrongCount, FACT_DEFS.length);
+    if (!hardMode) cluesRevealed = Math.min(wrongCount, FACT_DEFS.length);
     applyMapStage(wrongCount);
     if (guessCount >= MAX_GUESSES) { endGame(false); return; }
   }
@@ -1313,7 +1328,7 @@ function processDistrictGuessTile(dist, fullGuess, correct) {
   requestAnimationFrame(() => buildDistrictD3Map(todayDistrict.properties.state));
 
   const wrongCount = guessHistory.filter(g => !g.correct).length;
-  cluesRevealed = Math.min(wrongCount, FACT_DEFS.length);
+  if (!hardMode) cluesRevealed = Math.min(wrongCount, FACT_DEFS.length);
   applyMapStage(wrongCount);
 
   if (guessCount >= MAX_GUESSES) { endGame(false); return; }
@@ -3487,6 +3502,16 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('settings-modal').classList.add('hidden');
     document.getElementById('feedback-modal').classList.remove('hidden');
   });
+
+  // Wire Hard Mode toggle
+  const hardToggle = document.getElementById('settings-hard-toggle');
+  if (hardToggle) {
+    hardToggle.checked = hardMode;
+    hardToggle.addEventListener('change', () => {
+      hardMode = hardToggle.checked;
+      localStorage.setItem('districtguess_hardMode', hardMode ? '1' : '0');
+    });
+  }
 
   // Wire Confirm Selection toggle
   const confirmToggle = document.getElementById('settings-confirm-toggle');
