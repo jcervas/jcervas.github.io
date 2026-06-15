@@ -2,6 +2,17 @@
 
 ---
 
+## v1.4.5 — Result Modal & Map Label Polish
+
+- **Result modal layout**: avg-time/guesses line moved below guess distribution; `result-time-line` gets a surface-alt background pill; `rstat-avg-time` drops its background and is now plain muted text
+- **Avg guesses stat**: result modal now shows average number of guesses among correctly solved games (weighted from `guessDist`), alongside average solve time
+- **Result answer code**: font-size clamped (`clamp(0.95rem, 3vw, 1.75rem)`) so long district names take less vertical space
+- **result-message hidden on short viewports**: `@media (max-height: 720px)` hides the win/lose message to prevent scrolling
+- **NE callout label collision avoidance**: small-state labels (VT, NH, MA, RI, CT, NJ, DE, MD) now start at each state's actual centroid Y and use iterative relaxation to push overlapping labels apart, rather than a fixed step from the topmost anchor
+- **Wordmark SVG**: `wordmark.svg` created as vector paths (Barlow 800 outlines via Inkscape) — no font dependency, `fill="currentColor"` for theming
+
+---
+
 ## v1.4.3 — UX Polish: Welcome Back, Confetti & Map Fixes
 
 - **Welcome back screen**: returning to an in-progress game shows "Welcome Back", guess count ("You've made N of 6 guesses. Keep it up!"), and a "Continue" button instead of "Play" — built after `init()` resolves so game state is accurate
