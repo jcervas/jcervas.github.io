@@ -3213,7 +3213,7 @@ document.addEventListener('DOMContentLoaded', () => {
   applyDarkModeClass(); // must run before init() so D3 map gets correct colors
   updateThemeToggle();
 
-  init();
+  const _initPromise = init();
 
   // District tile clicks — event delegation on the tile container
   document.getElementById('district-tiles').addEventListener('click', e => {
@@ -3307,7 +3307,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('welcome-puzzle-num').textContent = `No. ${puzzleNum}`;
   })();
 
-  // Build buttons based on whether today's puzzle is already complete
+  // Build buttons after init() resolves so guessCount/gameOver reflect restored state
+  _initPromise.then(() => {
   (function buildWelcomeButtons() {
     const container = document.getElementById('welcome-buttons');
     container.innerHTML = '';
@@ -3365,6 +3366,7 @@ document.addEventListener('DOMContentLoaded', () => {
     howToModal.classList.add('hidden');
     localStorage.setItem(HOW_TO_SEEN_KEY, '1');
   });
+  }); // end _initPromise.then
 
   // Settings modal
   const settingsModal = document.getElementById('settings-modal');

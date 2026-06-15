@@ -2,7 +2,18 @@
 
 ---
 
-## v1.4.0.1 (current) — Patch: District Tiles & Result Modal Polish
+## v1.4.3 — UX Polish: Welcome Back, Confetti & Map Fixes
+
+- **Welcome back screen**: returning to an in-progress game shows "Welcome Back", guess count ("You've made N of 6 guesses. Keep it up!"), and a "Continue" button instead of "Play" — built after `init()` resolves so game state is accurate
+- **Confetti on win**: colorful canvas confetti animation fires when the result modal opens on a correct district guess
+- **State zoom fixed**: district selection map now fits the full state extent instead of over-zooming based on district count; district boundaries fade in at zoom > 2× so users can see which area each circle belongs to
+- **Star ratings fixed**: feedback form star clicks now correctly highlight stars and store values via hidden inputs
+- **"STATISTICS" heading removed** from result modal to save space
+- **Force simulation on zoom**: district icon positions re-tune (smaller collision radius, stronger centroid pull) as user zooms in, so icons migrate toward their true geographic inner points
+
+---
+
+## v1.4.0.1 — Patch: District Tiles & Result Modal Polish
 
 - **Result modal**: removed redundant district name sub-line; tightened spacing around answer, message, and stats; smaller action buttons and stat numbers; district preview fills 35% of viewport height on mobile with container-fitted SVG projection
 - **District tiles zoom**: icons, labels, and connector lines now scale correctly at any zoom level — visual radius stays constant (13px), connector lines hide above 1.5× zoom, force attraction strengthens with zoom so icons stay near their inner point and don't drift into water
