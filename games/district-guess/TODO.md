@@ -4,6 +4,7 @@
 
 - [ ] Feedback form stars not working as expected
 
+<<<<<<< Updated upstream
 ## UI / Layout
 
 - [ ] Modal text should scale relative to screen size to avoid scrolling — better use of spacing throughout
@@ -21,3 +22,12 @@
 ## Done
 
 - [x] Logo SVG — real district map with buffer and CMU red styling (`logo.svg`)
+=======
+when at large state is the answer clicking, the state should give you the win not having to click the district tile
+
+---
+
+## In progress
+
+- [x] **Logo SVG**: Real district map with buffer and CMU red styling — used in header and welcome modal (`logo.svg`)
+>>>>>>> Stashed changes

@@ -9,7 +9,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=40" />
+  <link rel="stylesheet" href="style.css?v=41" />
+  <!-- Preload the core map data so fetch starts before JS executes -->
+  <link rel="preload" href="districts-core.topojson" as="fetch" crossorigin />
 </head>
 <body>
 
@@ -30,14 +32,7 @@
     </div>
     <!-- Title centered in middle column -->
     <h1>
-      <svg class="game-logo" viewBox="0 0 110 76" aria-hidden="true">
-        <path fill="currentColor" d="M7,22 L5,14 L6,3 L22,2 L38,2 L50,2 L52,6 L56,2 L70,2 L84,2 L96,4 L102,10 L104,24 L102,36 L100,46 L96,54 L90,60 L84,52 L76,52 L66,55 L52,57 L42,54 L32,52 L18,50 L8,48 L5,36 Z"/>
-        <path fill="currentColor" d="M5,63 L9,60 L16,60 L22,62 L28,61 L30,65 L26,70 L20,74 L12,74 L6,70 L4,65 Z"/>
-        <ellipse cx="36" cy="70" rx="4" ry="2.5" fill="currentColor"/>
-        <ellipse cx="43" cy="72" rx="3" ry="2" fill="currentColor"/>
-        <ellipse cx="49" cy="71" rx="2" ry="1.5" fill="currentColor"/>
-        <polygon fill="#C41230" points="65,17 71,19 74,26 71,33 65,35 59,33 56,26 59,19"/>
-      </svg>
+      <img src="logo.svg" class="game-logo" alt="" aria-hidden="true" />
       Daily District <span class="beta-badge"><span class="beta-label">Beta</span><span class="beta-version">1.4.2</span></span>
     </h1>
     <!-- Timer + donate link on the right -->
@@ -59,14 +54,7 @@
 <div id="welcome-modal" class="modal hidden">
   <div class="modal-content welcome-modal-content">
     <div class="welcome-logo-wrap">
-      <svg class="welcome-logo-svg" viewBox="0 0 110 76" aria-hidden="true">
-        <path fill="currentColor" d="M7,22 L5,14 L6,3 L22,2 L38,2 L50,2 L52,6 L56,2 L70,2 L84,2 L96,4 L102,10 L104,24 L102,36 L100,46 L96,54 L90,60 L84,52 L76,52 L66,55 L52,57 L42,54 L32,52 L18,50 L8,48 L5,36 Z"/>
-        <path fill="currentColor" d="M5,63 L9,60 L16,60 L22,62 L28,61 L30,65 L26,70 L20,74 L12,74 L6,70 L4,65 Z"/>
-        <ellipse cx="36" cy="70" rx="4" ry="2.5" fill="currentColor"/>
-        <ellipse cx="43" cy="72" rx="3" ry="2" fill="currentColor"/>
-        <ellipse cx="49" cy="71" rx="2" ry="1.5" fill="currentColor"/>
-        <polygon fill="#C41230" points="65,17 71,19 74,26 71,33 65,35 59,33 56,26 59,19"/>
-      </svg>
+      <img src="logo.svg" class="welcome-logo-svg" alt="" aria-hidden="true" />
     </div>
     <div class="welcome-wordmark">DAILY DISTRICT</div>
     <div class="welcome-slogan">Identify the congressional district from its shape</div>
@@ -459,6 +447,6 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js" defer></script>
-<script src="script.js?v=39" defer></script>
+<script src="script.js?v=40" defer></script>
 </body>
 </html>
