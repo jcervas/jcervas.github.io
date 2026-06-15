@@ -1540,9 +1540,9 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
   font-weight: 800;
   letter-spacing: -0.012em;
   color: var(--text);
-  display: block;
   text-align: center;
 }
+.welcome-back-text[hidden] { display: none; }
 .welcome-slogan {
   font-size: clamp(0.95rem, 2.2vh, 1.3rem);
   font-weight: 400;
