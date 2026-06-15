@@ -1011,6 +1011,7 @@ function renderClues() {
   renderStateChips(); // update chip states whenever facts change
   updateUSRefMap();   // keep D3 map in sync
   renderHintBar();
+  if (!_gameStarted) return; // don't populate clue lists until player has dismissed welcome
   const containers = ['hints-clues-list'].map(id => document.getElementById(id)).filter(Boolean);
 
   containers.forEach(list => { list.innerHTML = ''; });
