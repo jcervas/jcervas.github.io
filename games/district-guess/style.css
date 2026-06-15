@@ -2002,8 +2002,7 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
 
   /* Game-over banner: sticky below header so it's always reachable */
   #already-played-banner:not(.hidden) {
-    position: sticky;
-    top: 46px;
+    position: static;
     z-index: 90;
     border-radius: 0;
     border-left: none;
