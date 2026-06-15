@@ -975,6 +975,7 @@ function renderHintBar() {
     // Tap any previous revealed card → open hints modal showing all clues
     if (revealed && !isLatest) {
       card.addEventListener('click', () => {
+        renderHintsModal();
         document.getElementById('hints-modal')?.classList.remove('hidden');
       });
     }
@@ -1011,40 +1012,38 @@ function renderClues() {
   renderStateChips(); // update chip states whenever facts change
   updateUSRefMap();   // keep D3 map in sync
   renderHintBar();
-  if (!_gameStarted) return; // don't populate clue lists until player has dismissed welcome
-  const containers = ['hints-clues-list'].map(id => document.getElementById(id)).filter(Boolean);
+  // hints-clues-list is populated lazily when the hints modal opens — not stored in DOM at rest
+}
 
-  containers.forEach(list => { list.innerHTML = ''; });
-
+function renderHintsModal() {
+  if (!todayDistrict) return;
+  const list = document.getElementById('hints-clues-list');
+  if (!list) return;
+  list.innerHTML = '';
+  const distData = districtDataFor(todayDistrict);
   for (let i = 0; i < FACT_DEFS.length; i++) {
     const def = FACT_DEFS[i];
     const revealed = i <= cluesRevealed;
-
-    containers.forEach(list => {
-      const div = document.createElement('div');
-      if (revealed) {
-        div.className = 'clue-item revealed';
-        div.innerHTML = `
-          <span class="clue-icon">${svgIcon(def.icon, 'clue-icon-svg')}</span>
-          <span class="clue-text">
-            <span class="clue-label">${def.label}</span>
-            <span class="clue-val">…</span>
-          </span>`;
-        const val = def.fn(districtDataFor(todayDistrict));
-        if (val instanceof Promise) {
-          val.then(v => {
-            const el = div.querySelector('.clue-val');
-            if (el) el.textContent = v;
-          });
-        } else {
-          div.querySelector('.clue-val').textContent = val;
-        }
+    const div = document.createElement('div');
+    if (revealed) {
+      div.className = 'clue-item revealed';
+      div.innerHTML = `
+        <span class="clue-icon">${svgIcon(def.icon, 'clue-icon-svg')}</span>
+        <span class="clue-text">
+          <span class="clue-label">${def.label}</span>
+          <span class="clue-val">…</span>
+        </span>`;
+      const val = def.fn(distData);
+      if (val instanceof Promise) {
+        val.then(v => { const el = div.querySelector('.clue-val'); if (el) el.textContent = v; });
       } else {
-        div.className = 'clue-item locked';
-        div.innerHTML = `<span class="clue-icon">${svgIcon('lock', 'clue-icon-svg locked')}</span><span class="clue-text">${def.label}</span>`;
+        div.querySelector('.clue-val').textContent = val;
       }
-      list.appendChild(div);
-    });
+    } else {
+      div.className = 'clue-item locked';
+      div.innerHTML = `<span class="clue-icon">${svgIcon('lock', 'clue-icon-svg locked')}</span><span class="clue-text">${def.label}</span>`;
+    }
+    list.appendChild(div);
   }
 }
 
@@ -3454,6 +3453,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (modal.id === 'result-modal' && gameOver) {
         document.getElementById('already-played-banner')?.classList.remove('hidden');
       }
+      // Clear hints list when closing hints modal — populated lazily on open
+      if (modal.id === 'hints-modal') {
+        const list = document.getElementById('hints-clues-list');
+        if (list) list.innerHTML = '';
+      }
     });
   });
 
@@ -3482,7 +3486,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Hint bar expand → opens full hints modal
   document.getElementById('hint-bar-expand')?.addEventListener('click', () => {
-    renderClues();
+    renderHintsModal();
     document.getElementById('hints-modal').classList.remove('hidden');
   });
 
