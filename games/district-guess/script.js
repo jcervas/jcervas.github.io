@@ -735,7 +735,7 @@ function renderInlinePersonalStats() {
   const avgLabel = avgSecs !== null ? formatTime(avgSecs) : '—';
 
   el.innerHTML = `
-    <div class="result-statistics-label">STATISTICS</div>
+
     <div class="result-stats-grid">
       <div class="rstat-cell"><span class="rstat-big">${stats.played}</span><span class="rstat-label">Played</span></div>
       <div class="rstat-cell"><span class="rstat-big">${winRate}</span><span class="rstat-label">Win %</span></div>
@@ -3382,6 +3382,25 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!confirmInputMode) setConfirmPending(null); // clear any pending state
     });
   }
+
+  document.querySelectorAll('.fb-rating-group').forEach(group => {
+    const hidden = group.querySelector('input[type="hidden"]');
+    const labels = group.querySelectorAll('.fb-star-label');
+    labels.forEach(lbl => {
+      lbl.addEventListener('click', () => {
+        const val = lbl.dataset.val;
+        if (hidden) hidden.value = val;
+        labels.forEach(l => l.classList.toggle('selected', +l.dataset.val <= +val));
+      });
+      lbl.addEventListener('mouseover', () => {
+        const val = +lbl.dataset.val;
+        labels.forEach(l => l.classList.toggle('hovered', +l.dataset.val <= val));
+      });
+      lbl.addEventListener('mouseout', () => {
+        labels.forEach(l => l.classList.remove('hovered'));
+      });
+    });
+  });
 
   document.getElementById('feedback-form').addEventListener('submit', (e) => {
     e.preventDefault();
