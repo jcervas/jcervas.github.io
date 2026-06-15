@@ -1411,7 +1411,7 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
 }
 #us-ref-map {
   flex: 1;
-  min-height: 160px;
+  min-height: 0;
   width: 100%;
   border-radius: var(--radius);
   border: 1px solid var(--border);
