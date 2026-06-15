@@ -6,7 +6,8 @@
 
 ## Features
 
-- [ ] chs ge game over screen to include judt national map with dostrict (existing) ribbon for new game (existing) and better know a district data
+- [ ] US map that shows when game is first started is zoomed in too much. Should show all or nearly of US. the current full zoom out is reasonable
+- [ ] change game over screen to include just national map with district (existing), ribbon for new game (existing), and better know a district data
 - [x] Get racial/ethnic data from topojson for district profile
 - [ ] add Polsby-Popper (show district inside circle, white with black stroke)
 - [ ] add → Reock (draw circle with district comparison)
