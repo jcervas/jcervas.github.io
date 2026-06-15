@@ -2128,12 +2128,10 @@ function buildDistrictD3Map(stateAbbr) {
         }
       }
 
-      // Show district boundary lines at high zoom so users can see which area each circle covers
-      const distMesh = g.select('.dist-boundaries');
-      if (!distMesh.empty()) {
-        distMesh.attr('stroke-opacity', k > 2 ? Math.min(0.75, (k - 2) * 0.25) : 0)
-                .attr('stroke-width', 1 / k);
-      }
+      // Fade in roads and urban areas at high zoom for geographic context (not district lines)
+      const fadeOpacity = k > 2 ? Math.min(1, (k - 2) * 0.35) : 0;
+      g.select('.context-urban').attr('opacity', fadeOpacity);
+      g.select('.context-roads').attr('opacity', fadeOpacity);
 
       if (event.sourceEvent) {
         districtUserZoomed     = true;
@@ -2187,23 +2185,47 @@ function buildDistrictD3Map(stateAbbr) {
         .attr('pointer-events', 'none');
     });
 
-    // Subtle district boundary mesh — hidden at full view, fades in when zoomed in
-    // so users can see which area each circle belongs to.
+    // Roads and urban areas — faint context, hidden at full zoom, fade in when zoomed in.
+    // Helps orient the user without revealing district boundaries.
     if (rawTopo) {
-      const stateMesh = topojson.mesh(
-        rawTopo, rawTopo.objects.districts,
-        (a, b) => a !== b && a.properties?.state === stateAbbr && b.properties?.state === stateAbbr
+      const clipId = 'district-land-clip';
+      let defs = svg.select('defs');
+      if (defs.empty()) defs = svg.insert('defs', ':first-child');
+      defs.selectAll(`#${clipId}`).remove();
+      const stateLandMerge = topojson.merge(
+        rawTopo,
+        rawTopo.objects.districts.geometries.filter(g => g.properties?.state === stateAbbr)
       );
-      g.append('path')
-        .datum(stateMesh)
-        .attr('class', 'dist-boundaries')
-        .attr('d', pathGen)
-        .attr('fill', 'none')
-        .attr('stroke', dark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.5)')
-        .attr('stroke-width', 1)
-        .attr('stroke-opacity', 0)
-        .attr('vector-effect', 'non-scaling-stroke')
-        .attr('pointer-events', 'none');
+      defs.append('clipPath').attr('id', clipId)
+        .append('path').datum(stateLandMerge).attr('d', pathGen);
+
+      if (topoUrban) {
+        g.append('g').attr('class', 'context-urban')
+          .attr('clip-path', `url(#${clipId})`)
+          .attr('pointer-events', 'none')
+          .attr('opacity', 0)
+          .selectAll('path')
+          .data(topoUrban.features)
+          .join('path')
+          .attr('d', pathGen)
+          .attr('fill', dark ? 'rgba(255,255,255,0.12)' : 'rgba(80,80,140,0.15)')
+          .attr('stroke', 'none');
+      }
+
+      if (topoRoads) {
+        g.append('g').attr('class', 'context-roads')
+          .attr('clip-path', `url(#${clipId})`)
+          .attr('pointer-events', 'none')
+          .attr('opacity', 0)
+          .selectAll('path')
+          .data(topoRoads.features)
+          .join('path')
+          .attr('d', pathGen)
+          .attr('fill', 'none')
+          .attr('stroke', dark ? 'rgba(255,255,255,0.18)' : 'rgba(60,60,100,0.22)')
+          .attr('stroke-width', 0.5)
+          .attr('vector-effect', 'non-scaling-stroke');
+      }
     }
   }
 
