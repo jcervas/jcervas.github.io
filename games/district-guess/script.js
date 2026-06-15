@@ -3402,6 +3402,9 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('how-to-btn').addEventListener('click', () => {
     howToModal.classList.remove('hidden');
   });
+  document.getElementById('welcome-how-to-btn')?.addEventListener('click', () => {
+    howToModal.classList.remove('hidden');
+  });
   document.getElementById('how-to-got-it').addEventListener('click', () => {
     howToModal.classList.add('hidden');
     localStorage.setItem(HOW_TO_SEEN_KEY, '1');
