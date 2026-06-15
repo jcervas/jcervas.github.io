@@ -306,6 +306,7 @@ let eliminatedStates    = new Set(); // all states removed from valid set (wrong
 let districtZoomBehavior   = null;   // saved d3.zoom instance for district tiles map
 let districtUserZoomed     = false;  // true once user manually pans/zooms district map
 let districtSavedTransform = null;   // zoom transform preserved across rebuilds
+let districtSimulation     = null;   // active force simulation — updated on zoom for centroid pull
 let guessCount          = 0;
 let guessHistory        = [];     // [{text, correct}]
 let cluesRevealed       = 0;      // how many text clues are showing
@@ -2121,6 +2122,28 @@ function buildDistrictD3Map(stateAbbr) {
       g.selectAll('.dist-leader').attr('stroke-width', 1 / k);
       // Hide connector lines when zoomed in — icons sit close enough to their centroids
       g.select('.dist-connectors').attr('display', k > 1.5 ? 'none' : null);
+
+      // Re-tune simulation so icons migrate toward their true centroids as user zooms in.
+      // Higher zoom → smaller collision radius → icons can sit closer to their inner points.
+      if (districtSimulation && !gameOver) {
+        const newCollide = 16 / k;
+        const newStrength = Math.min(0.98, 0.6 + (k - 1) * 0.15);
+        districtSimulation
+          .force('collide', d3.forceCollide(d => d.isCold ? newCollide * 0.25 : d.isHot ? newCollide * 0.45 : newCollide))
+          .force('x', d3.forceX(d => d.ox).strength(newStrength))
+          .force('y', d3.forceY(d => d.oy).strength(newStrength));
+        if (districtSimulation.alpha() < 0.05) {
+          districtSimulation.alpha(0.2).restart();
+        }
+      }
+
+      // Show district boundary lines at high zoom so users can see which area each circle covers
+      const distMesh = g.select('.dist-boundaries');
+      if (!distMesh.empty()) {
+        distMesh.attr('stroke-opacity', k > 2 ? Math.min(0.75, (k - 2) * 0.25) : 0)
+                .attr('stroke-width', 1 / k);
+      }
+
       if (event.sourceEvent) {
         districtUserZoomed     = true;
         districtSavedTransform = event.transform;
@@ -2172,6 +2195,25 @@ function buildDistrictD3Map(stateAbbr) {
         .attr('stroke', 'none')
         .attr('pointer-events', 'none');
     });
+
+    // Subtle district boundary mesh — hidden at full view, fades in when zoomed in
+    // so users can see which area each circle belongs to.
+    if (rawTopo) {
+      const stateMesh = topojson.mesh(
+        rawTopo, rawTopo.objects.districts,
+        (a, b) => a !== b && a.properties?.state === stateAbbr && b.properties?.state === stateAbbr
+      );
+      g.append('path')
+        .datum(stateMesh)
+        .attr('class', 'dist-boundaries')
+        .attr('d', pathGen)
+        .attr('fill', 'none')
+        .attr('stroke', dark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.5)')
+        .attr('stroke-width', 1)
+        .attr('stroke-opacity', 0)
+        .attr('vector-effect', 'non-scaling-stroke')
+        .attr('pointer-events', 'none');
+    }
   }
 
   // Game-over view: show all district lines, highlight answer in white, red number badge
@@ -2493,7 +2535,7 @@ function buildDistrictD3Map(stateAbbr) {
   // At high zoom, pull icons tightly to their inner point so they don't drift into water/neighbors.
   // At k=1 (full state): strength 0.6 (normal separation). At k=3+: strength ~0.9 (nearly locked).
   const forceStrength = Math.min(0.98, 0.6 + (zoomK - 1) * 0.15);
-  d3.forceSimulation(nodes)
+  districtSimulation = d3.forceSimulation(nodes)
     .force('collide', d3.forceCollide(d => d.isCold ? collide * 0.25 : d.isHot ? collide * 0.45 : collide))
     .force('x', d3.forceX(d => d.ox).strength(forceStrength))
     .force('y', d3.forceY(d => d.oy).strength(forceStrength))
