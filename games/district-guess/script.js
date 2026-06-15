@@ -1303,11 +1303,34 @@ function submitDistrictTile(dist) {
   const fullGuess = `${stateAbbr}-${dist}`;
   const correct   = fullGuess === todayDistrict.properties['state-district'];
 
-  // Brief visual flash via CSS class on the SVG container
   const tilesEl = document.getElementById('district-tiles');
-  tilesEl.classList.add(correct ? 'flash-correct' : 'flash-wrong');
+
+  if (correct) {
+    // Animate the correct district shape: green fill fades in then out
+    const mainG = tilesEl.querySelector('svg > g');
+    const refPath = mainG?.querySelector(`path[data-key="${fullGuess}"]`);
+    if (mainG && refPath && window.d3) {
+      const overlay = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      overlay.setAttribute('d', refPath.getAttribute('d'));
+      overlay.setAttribute('fill', 'rgba(34,197,94,0.0)');
+      overlay.setAttribute('stroke', '#22c55e');
+      overlay.setAttribute('stroke-width', '2');
+      overlay.setAttribute('vector-effect', 'non-scaling-stroke');
+      overlay.setAttribute('pointer-events', 'none');
+      mainG.appendChild(overlay);
+      d3.select(overlay)
+        .transition().duration(120).ease(d3.easeQuadOut)
+        .attr('fill', 'rgba(34,197,94,0.55)')
+        .transition().duration(340).ease(d3.easeCubicIn)
+        .attr('fill', 'rgba(34,197,94,0.0)')
+        .attr('stroke', 'rgba(34,197,94,0.0)');
+    }
+  } else {
+    tilesEl.classList.add('flash-wrong');
+  }
+
   setTimeout(() => {
-    tilesEl.classList.remove('flash-correct', 'flash-wrong');
+    tilesEl.classList.remove('flash-wrong');
     _distLocked = false;
     processDistrictGuessTile(dist, fullGuess, correct);
   }, 480);
@@ -2355,6 +2378,7 @@ function buildDistrictD3Map(stateAbbr) {
     stateFeatures.forEach(f => {
       g.append('path')
         .datum(f)
+        .attr('data-key', f.properties['state-district'])
         .attr('d', pathGen)
         .attr('fill', 'none')
         .attr('stroke', dark ? 'rgba(255,255,255,0.35)' : 'rgba(60,60,80,0.25)')
