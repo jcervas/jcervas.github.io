@@ -3411,6 +3411,11 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   }); // end _initPromise.then
 
+  // Title click → show welcome splash
+  document.getElementById('title-home-btn')?.addEventListener('click', () => {
+    document.getElementById('welcome-modal').classList.remove('hidden');
+  });
+
   // Settings modal
   const settingsModal = document.getElementById('settings-modal');
   document.getElementById('settings-btn').addEventListener('click', () => {

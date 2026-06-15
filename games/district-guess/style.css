@@ -198,6 +198,19 @@ header h1 {
   justify-content: center;
   white-space: nowrap;
 }
+.title-home-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: inherit;
+  align-items: inherit;
+  gap: inherit;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  white-space: inherit;
+}
 .game-logo {
   width: 44px;
   height: auto;
