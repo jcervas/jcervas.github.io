@@ -2063,15 +2063,6 @@ function buildDistrictD3Map(stateAbbr) {
     projection = d3.geoAlbersUsa().fitExtent([[10, 10], [W - 10, H - 10]], allStatesFC);
   } else {
     projection = d3.geoMercator().fitExtent([[20, 20], [W - 20, H - 20]], stateCollection);
-    // Zoom in based on district count so individual districts are legible.
-    const distCount = stateFeatures.length;
-    const zf = distCount <= 1 ? 1 : Math.min(1 + (distCount - 1) * 0.06, 2.2);
-    if (zf > 1) {
-      const s0 = projection.scale();
-      const [tx, ty] = projection.translate();
-      projection.scale(s0 * zf)
-        .translate([W / 2 - zf * (W / 2 - tx), H / 2 - zf * (H / 2 - ty)]);
-    }
   }
   const pathGen = d3.geoPath().projection(projection);
 
@@ -2741,10 +2732,56 @@ function renderDistrictPreview(containerId = 'result-district-preview') {
   container.appendChild(svg.node());
 }
 
+function launchConfetti() {
+  const canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999';
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const COLORS = ['#C41230','#FDB515','#2563EB','#16a34a','#f97316','#8b5cf6'];
+  const particles = Array.from({length: 140}, () => ({
+    x: Math.random() * canvas.width,
+    y: -10 - Math.random() * 100,
+    w: 6 + Math.random() * 6,
+    h: 3 + Math.random() * 4,
+    color: COLORS[Math.floor(Math.random() * COLORS.length)],
+    vx: (Math.random() - 0.5) * 3,
+    vy: 2 + Math.random() * 4,
+    angle: Math.random() * Math.PI * 2,
+    spin: (Math.random() - 0.5) * 0.2,
+    opacity: 1,
+  }));
+  let frame, start;
+  function tick(ts) {
+    if (!start) start = ts;
+    const elapsed = ts - start;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let alive = false;
+    for (const p of particles) {
+      p.x += p.vx; p.y += p.vy; p.vy += 0.08;
+      p.angle += p.spin;
+      p.opacity = elapsed < 2000 ? 1 : Math.max(0, 1 - (elapsed - 2000) / 800);
+      if (p.y < canvas.height + 20) alive = true;
+      ctx.save();
+      ctx.globalAlpha = p.opacity;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.angle);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    }
+    if (alive && elapsed < 3500) frame = requestAnimationFrame(tick);
+    else { cancelAnimationFrame(frame); canvas.remove(); }
+  }
+  frame = requestAnimationFrame(tick);
+}
+
 function showResult(won) {
   const modal = document.getElementById('result-modal');
   modal.classList.remove('hidden');
   switchResultTab('result');
+  if (won) setTimeout(launchConfetti, 300);
 
   const answer    = todayDistrict.properties['state-district'];
   const stateName = STATE_NAMES[todayDistrict.properties.state] || todayDistrict.properties.state;
@@ -3296,9 +3333,15 @@ document.addEventListener('DOMContentLoaded', () => {
       container.appendChild(btnMap);
       container.appendChild(btnResult);
     } else {
+      const inProgress = guessCount > 0 || correctStateGuessed;
+      if (inProgress) {
+        document.querySelector('.welcome-wordmark').textContent = 'Welcome Back';
+        document.querySelector('.welcome-slogan').textContent =
+          `You've made ${guessCount} of ${MAX_GUESSES} guess${guessCount !== 1 ? 'es' : ''}. Keep it up!`;
+      }
       const btnPlay = document.createElement('button');
       btnPlay.className = 'welcome-action-btn';
-      btnPlay.textContent = 'Play';
+      btnPlay.textContent = inProgress ? 'Continue' : 'Play';
       btnPlay.addEventListener('click', () => {
         welcomeModal.classList.add('hidden');
         localStorage.setItem(WELCOME_SEEN_KEY, '1');
