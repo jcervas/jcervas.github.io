@@ -2,8 +2,7 @@
    Daily District — styles
    ============================================================ */
 
-/* Barlow is the closest freely available match to CMU's licensed Gibson typeface */
-@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Barlow+Condensed:wght@700;800;900&display=swap');
+/* Barlow loaded via <link> in index.html — no @import needed here */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -200,8 +199,8 @@ header h1 {
   white-space: nowrap;
 }
 .game-logo {
-  width: 36px;
-  height: 25px;
+  width: 44px;
+  height: auto;
   flex-shrink: 0;
   display: block;
 }
@@ -1512,7 +1511,7 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
   overflow-y: auto;
 }
 .welcome-logo-wrap { margin-bottom: 16px; }
-.welcome-logo-svg { width: 96px; height: 66px; }
+.welcome-logo-svg { width: 160px; height: auto; }
 .welcome-wordmark {
   font-family: 'Barlow Condensed', 'Barlow', system-ui, sans-serif;
   font-size: 2rem;
