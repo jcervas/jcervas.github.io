@@ -954,13 +954,16 @@ function renderHintBar() {
     card.className = 'hint-card' + (revealed ? ' revealed' + (isLatest ? ' latest' : '') : ' locked');
     card.setAttribute('role', 'listitem');
 
-    const iconSrc = revealed ? def.icon : 'lock';
-    card.innerHTML = `
-      <div class="hint-card-header">
-        <span class="hint-card-icon">${svgIcon(iconSrc, 'clue-icon-svg')}</span>
-        <span class="hint-card-label">${def.label}</span>
-      </div>
-      ${revealed ? `<div class="hint-card-val"><span>…</span></div>` : ''}`;
+    if (revealed) {
+      card.innerHTML = `
+        <div class="hint-card-header">
+          <span class="hint-card-icon">${svgIcon(def.icon, 'clue-icon-svg')}</span>
+          <span class="hint-card-label">${def.label}</span>
+        </div>
+        <div class="hint-card-val"><span>…</span></div>`;
+    } else {
+      card.innerHTML = `<div class="hint-card-header"><span class="hint-card-icon">${svgIcon('lock', 'clue-icon-svg')}</span></div>`;
+    }
 
     if (revealed) {
       const spanEl = card.querySelector('.hint-card-val > span');
