@@ -331,6 +331,10 @@ main:has(#already-played-banner:not(.hidden)) {
   margin-bottom: -10px;
 }
 
+#game-section.map-collapsed #game-controls {
+  display: none;
+}
+
 #map-panel {
   flex: 1;
   min-height: 0;
