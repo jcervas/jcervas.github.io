@@ -1329,11 +1329,16 @@ function submitDistrictTile(dist) {
     tilesEl.classList.add('flash-wrong');
   }
 
-  setTimeout(() => {
-    tilesEl.classList.remove('flash-wrong');
+  if (correct) {
     _distLocked = false;
-    processDistrictGuessTile(dist, fullGuess, correct);
-  }, 480);
+    processDistrictGuessTile(dist, fullGuess, true);
+  } else {
+    setTimeout(() => {
+      tilesEl.classList.remove('flash-wrong');
+      _distLocked = false;
+      processDistrictGuessTile(dist, fullGuess, false);
+    }, 480);
+  }
 }
 
 // Alias used by the D3 map click handlers
