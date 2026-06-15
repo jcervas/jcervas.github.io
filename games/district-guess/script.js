@@ -1912,7 +1912,7 @@ function renderStateChips() {
   if (!container) return;
 
   const validStates = getValidStates();
-  countEl.textContent = `${validStates.size} of 51`;
+  countEl.textContent = `${validStates.size} of 50`;
 
   // Sort: valid first (alpha), then eliminated (alpha)
   const allStates = Object.keys(stateDistrictMap).sort((a, b) =>
@@ -3175,7 +3175,7 @@ async function init() {
     const topo = await res.json();
     rawTopo = topo;
     const data = topojson.feature(topo, topo.objects.districts);
-    districts = data.features.filter(f => f.properties.state);
+    districts = data.features.filter(f => f.properties.state && f.properties.state !== 'DC');
 
     // Store inner points keyed by state-district for use in buildDistrictD3Map
     if (topo.objects.points) {
