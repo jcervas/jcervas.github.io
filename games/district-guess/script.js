@@ -287,6 +287,16 @@ let districtPoints      = {};  // state-district key → [lon, lat] inner point
 // Manual overrides for districts where the computed inner point lands in water.
 const POINT_OVERRIDES = {};
 let topoRoads              = null;  // FeatureCollection from TopoJSON roads layer
+// Debug logging — set window._debugGame = true in console to enable.
+// Recorded events are in window._gameLog; call copy(window._gameLog.join('\n')) to export.
+window._gameLog = [];
+function dbg(...args) {
+  if (!window._debugGame) return;
+  const msg = `[${new Date().toISOString().slice(11,23)}] ${args.join(' ')}`;
+  window._gameLog.push(msg);
+  console.log('%c[DG]', 'color:#C41230;font-weight:bold', ...args);
+}
+
 let topoUrban              = null;  // FeatureCollection from TopoJSON urban layer
 let topoCounties           = null;  // FeatureCollection of county boundary lines
 let districtGameOverTransform = null; // saved game-over zoom transform for fit-toggle button
@@ -1301,6 +1311,7 @@ let _distLocked = false; // prevent double-tap during tile animation
 
 function submitDistrictTile(dist) {
   if (gameOver || !correctStateGuessed || _distLocked) return;
+  dbg(`submitDistrictTile dist=${dist} today=${todayDistrict?.properties?.['state-district']} guessCount=${guessCount}`);
 
   _distLocked = true;
   if (!timerRunning) startTimer();
@@ -1354,8 +1365,9 @@ function submitDistrictTile(dist) {
 const submitDistrictGuess = submitDistrictTile;
 
 function processDistrictGuessTile(dist, fullGuess, correct) {
-  if (!correct) guessCount++;   // only wrong guesses count; correct = free winning move
+  if (!correct) guessCount++;
   guessHistory.push({ text: fullGuess, correct, phase: 'district' });
+  dbg(`processDistrictGuessTile guess=${fullGuess} correct=${correct} guessCount=${guessCount}`);
 
   if (correct) {
     endGame(true);
@@ -2049,11 +2061,19 @@ function showDistrictD3Map(stateAbbr, instant = false, animateReveal = false) {
   const hintEl = document.getElementById('us-ref-hint');
   if (hintEl) hintEl.classList.add('dismissed');
 
+  const zoomIn = !instant && !gameOver;
+
   // Build the D3 district map inside tilesEl
-  buildDistrictD3Map(stateAbbr, animateReveal);
+  buildDistrictD3Map(stateAbbr, animateReveal, zoomIn);
 
   if (instant) {
     mapEl.classList.add('hidden');
+    tilesEl.classList.remove('hidden');
+    tilesEl.style.opacity = '1';
+  } else if (zoomIn) {
+    // Show immediately — the zoom animation handles the reveal
+    mapEl.style.opacity = '0';
+    setTimeout(() => { mapEl.classList.add('hidden'); }, 370);
     tilesEl.classList.remove('hidden');
     tilesEl.style.opacity = '1';
   } else {
@@ -2067,7 +2087,8 @@ function showDistrictD3Map(stateAbbr, instant = false, animateReveal = false) {
   }
 }
 
-function buildDistrictD3Map(stateAbbr, animateReveal = false) {
+function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
+  dbg(`buildDistrictD3Map state=${stateAbbr} gameOver=${gameOver} animateReveal=${animateReveal} zoomIn=${zoomIn} districtUserZoomed=${districtUserZoomed} savedK=${districtSavedTransform?.k?.toFixed(2)??'null'}`);
   const tilesEl = document.getElementById('district-tiles');
 
   // Mark element so CSS can distinguish game-over national view from gameplay district view
@@ -2145,6 +2166,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
   const geoAspect = (gy1 - gy0) / Math.max(gx1 - gx0, 1); // height / width of rendered state
   // Clamp: always at least 25% as tall as wide, never taller than container
   const H = Math.min(H_max, Math.max(Math.round(W * geoAspect) + 40, Math.round(W * 0.25)));
+  dbg(`SVG W=${W} H=${H} possibleKeys=${possibleKeys.size}/${stateFeatures.length}`);
 
   const svg = d3.select(tilesEl)
     .append('svg')
@@ -2155,15 +2177,10 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
     .style('display', 'block')
     .style('touch-action', 'none');  // let D3 zoom own all touch gestures
 
-  // In game-over, use AlbersUSA so AK/HI appear in their inset positions.
-  // In gameplay, use Mercator fit to this state.
+  // Always use AlbersUSA so AK/HI appear correctly and the projection never changes between renders.
   let projection;
-  if (gameOver) {
-    const allStatesFC = { type: 'FeatureCollection', features: Object.values(topoStates).filter(Boolean) };
-    projection = d3.geoAlbersUsa().fitExtent([[10, 10], [W - 10, H - 10]], allStatesFC);
-  } else {
-    projection = d3.geoMercator().fitExtent([[20, 20], [W - 20, H - 20]], stateCollection);
-  }
+  const allStatesFC = { type: 'FeatureCollection', features: Object.values(topoStates).filter(Boolean) };
+  projection = d3.geoAlbersUsa().fitExtent([[10, 10], [W - 10, H - 10]], allStatesFC);
   const pathGen = d3.geoPath().projection(projection);
 
   const g = svg.append('g');
@@ -2252,8 +2269,28 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
     });
   svg.call(districtZoomBehavior).on('dblclick.zoom', null);
 
-  // Auto-zoom to the remaining possible districts (skip if user has already zoomed/panned)
-  if (!gameOver && !districtUserZoomed && possibleKeys.size < stateFeatures.length) {
+  // Zoom-in entry animation: start at national view, animate to state bounding box
+  if (zoomIn) {
+    const stateFC = { type: 'FeatureCollection', features: stateFeatures };
+    const [[sx0, sy0], [sx1, sy1]] = pathGen.bounds(stateFC);
+    const pad = 50;
+    const scaleX = (W - 2 * pad) / Math.max(sx1 - sx0, 1);
+    const scaleY = (H - 2 * pad) / Math.max(sy1 - sy0, 1);
+    const targetScale = Math.min(scaleX, scaleY);
+    const targetTx = W / 2 - targetScale * (sx0 + sx1) / 2;
+    const targetTy = H / 2 - targetScale * (sy0 + sy1) / 2;
+    const targetTransform = d3.zoomIdentity.translate(targetTx, targetTy).scale(targetScale);
+    dbg(`zoomIn target k=${targetScale.toFixed(2)} tx=${targetTx.toFixed(0)} ty=${targetTy.toFixed(0)}`);
+    // Save as the baseline so subsequent rebuilds restore the same zoom level
+    districtSavedTransform = targetTransform;
+    // Start at national view (identity), then animate in
+    svg.call(districtZoomBehavior.transform, d3.zoomIdentity);
+    svg.transition().duration(900).ease(d3.easeCubicInOut)
+      .call(districtZoomBehavior.transform, targetTransform);
+  }
+
+  // Auto-zoom to the remaining possible districts (skip if a saved transform exists or user has zoomed)
+  if (!gameOver && !zoomIn && !districtSavedTransform && !districtUserZoomed && possibleKeys.size < stateFeatures.length) {
     const possFeatures = stateFeatures.filter(f => possibleKeys.has(f.properties['state-district']));
     if (possFeatures.length > 0) {
       const pb = d3.geoPath(projection).bounds({ type: 'FeatureCollection', features: possFeatures });
@@ -2261,11 +2298,13 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
       const pad = 30;
       const scaleX = (W - 2 * pad) / Math.max(px1 - px0, 1);
       const scaleY = (H - 2 * pad) / Math.max(py1 - py0, 1);
-      const scale  = Math.min(12, Math.min(scaleX, scaleY));
+      const scale  = Math.min(5, Math.min(scaleX, scaleY));
+      dbg(`auto-zoom possibleKeys=${possibleKeys.size}/${stateFeatures.length} bbox=[${px0.toFixed(0)},${py0.toFixed(0)},${px1.toFixed(0)},${py1.toFixed(0)}] scaleX=${scaleX.toFixed(2)} scaleY=${scaleY.toFixed(2)} scale=${scale.toFixed(2)}`);
       // Only zoom in — if remaining districts already fill most of the viewport, leave the view alone
       if (scale > 1.15) {
         const tx = (W - scale * (px0 + px1)) / 2;
         const ty = (H - scale * (py0 + py1)) / 2;
+        dbg(`auto-zoom applying tx=${tx.toFixed(0)} ty=${ty.toFixed(0)} k=${scale.toFixed(2)}`);
         svg.call(districtZoomBehavior.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
       }
     }
@@ -2287,14 +2326,28 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
       districtGameOverTransform = goTransform;
       svg.call(districtZoomBehavior.transform, goTransform);
     }
-  } else if (districtUserZoomed && districtSavedTransform) {
-    // Restore user's zoom from the previous SVG generation
+  } else if (!gameOver && !zoomIn && districtSavedTransform) {
+    // Restore saved zoom (from zoomIn entry or user pan/zoom) across SVG rebuilds
     svg.call(districtZoomBehavior.transform, districtSavedTransform);
   }
 
   // During gameplay: fill all districts with panel background to hide internal SVG lines.
   // At game-over: no fill — only the answer district gets colored.
   if (!gameOver) {
+    // Draw other states as gray context behind the active state
+    const otherStateFills = Object.values(topoStates).filter(f => f && f.properties?.state !== stateAbbr);
+    g.append('g').attr('class', 'context-other-states')
+      .attr('pointer-events', 'none')
+      .selectAll('path')
+      .data(otherStateFills)
+      .join('path')
+      .attr('d', pathGen)
+      .attr('fill', dark ? 'rgba(255,255,255,0.05)' : 'rgba(160,160,175,0.25)')
+      .attr('stroke', dark ? 'rgba(255,255,255,0.12)' : 'rgba(130,130,150,0.45)')
+      .attr('stroke-width', 0.4)
+      .attr('vector-effect', 'non-scaling-stroke');
+
+    // Active state: white fill (dark mode: dark surface) to stand out from context
     const fillG = g.append('g').attr('class', 'state-fill');
     stateFeatures.forEach(f => {
       fillG.append('path')
@@ -2305,48 +2358,6 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
         .attr('pointer-events', 'none');
     });
 
-    // Roads and urban areas — faint context, hidden at full zoom, fade in when zoomed in.
-    // Helps orient the user without revealing district boundaries.
-    if (rawTopo) {
-      const clipId = 'district-land-clip';
-      let defs = svg.select('defs');
-      if (defs.empty()) defs = svg.insert('defs', ':first-child');
-      defs.selectAll(`#${clipId}`).remove();
-      const stateLandMerge = topojson.merge(
-        rawTopo,
-        rawTopo.objects.districts.geometries.filter(g => g.properties?.state === stateAbbr)
-      );
-      defs.append('clipPath').attr('id', clipId)
-        .append('path').datum(stateLandMerge).attr('d', pathGen);
-
-      if (topoUrban) {
-        g.append('g').attr('class', 'context-urban')
-          .attr('clip-path', `url(#${clipId})`)
-          .attr('pointer-events', 'none')
-          .attr('opacity', 0)
-          .selectAll('path')
-          .data(topoUrban.features)
-          .join('path')
-          .attr('d', pathGen)
-          .attr('fill', dark ? 'rgba(255,255,255,0.12)' : 'rgba(80,80,140,0.15)')
-          .attr('stroke', 'none');
-      }
-
-      if (topoRoads) {
-        g.append('g').attr('class', 'context-roads')
-          .attr('clip-path', `url(#${clipId})`)
-          .attr('pointer-events', 'none')
-          .attr('opacity', 0)
-          .selectAll('path')
-          .data(topoRoads.features)
-          .join('path')
-          .attr('d', pathGen)
-          .attr('fill', 'none')
-          .attr('stroke', dark ? 'rgba(255,255,255,0.18)' : 'rgba(60,60,100,0.22)')
-          .attr('stroke-width', 0.5)
-          .attr('vector-effect', 'non-scaling-stroke');
-      }
-    }
   }
 
   // Game-over view: show all district lines, highlight answer in white, red number badge
@@ -2732,7 +2743,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
       const pb = d3.geoPath(projection).bounds({ type: 'FeatureCollection', features: pf });
       const [[px0, py0], [px1, py1]] = pb;
       const pad = 30;
-      zoomK = Math.min(12, Math.min(
+      zoomK = Math.min(5, Math.min(
         (W - 2 * pad) / Math.max(px1 - px0, 1),
         (H - 2 * pad) / Math.max(py1 - py0, 1)
       ));
