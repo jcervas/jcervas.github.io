@@ -2549,6 +2549,23 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
             tilesEl.classList.add('gameover-loss-shake');
           } else {
             tilesEl.classList.add('gameover-win-pulse');
+            // Confetti bursts sampled from the district boundary
+            if (len > 0) {
+              const svgEl   = svg.node();
+              const svgRect = svgEl.getBoundingClientRect();
+              const { k, x: tx, y: ty } = d3.zoomTransform(svgEl);
+              const N = 60;
+              const origins = [];
+              for (let i = 0; i < N; i++) {
+                const pt = node.getPointAtLength((i / N) * len);
+                const sx = svgRect.left + tx + pt.x * k;
+                const sy = svgRect.top  + ty + pt.y * k;
+                if (sx >= 0 && sx <= window.innerWidth && sy >= 0 && sy <= window.innerHeight) {
+                  origins.push({ x: sx, y: sy });
+                }
+              }
+              if (origins.length) launchBoundaryConfetti(origins);
+            }
           }
         }
       }
@@ -3014,6 +3031,58 @@ function renderDistrictPreview(containerId = 'result-district-preview') {
     .attr('stroke-width', 2.5).attr('stroke-linejoin', 'round');
 
   container.appendChild(svg.node());
+}
+
+// Burst confetti outward from a set of screen-coordinate {x,y} origin points.
+function launchBoundaryConfetti(origins) {
+  const canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999';
+  document.body.appendChild(canvas);
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+  const COLORS = ['#C41230','#ffffff','#ffb020','#ff7700','#fffbe8','#FDB515'];
+  const particles = [];
+  for (const o of origins) {
+    const count = 8 + Math.floor(Math.random() * 5);
+    for (let i = 0; i < count; i++) {
+      const ang = Math.random() * Math.PI * 2;
+      const spd = 3 + Math.random() * 7;
+      particles.push({
+        x: o.x, y: o.y,
+        w: 5 + Math.random() * 6, h: 2.5 + Math.random() * 3.5,
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        vx: Math.cos(ang) * spd,
+        vy: Math.sin(ang) * spd - 3,
+        angle: Math.random() * Math.PI * 2,
+        spin: (Math.random() - 0.5) * 0.25,
+        opacity: 1,
+      });
+    }
+  }
+  let frame, start;
+  function tick(ts) {
+    if (!start) start = ts;
+    const elapsed = ts - start;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let alive = false;
+    for (const p of particles) {
+      p.x += p.vx; p.y += p.vy; p.vy += 0.10;
+      p.angle += p.spin;
+      p.opacity = elapsed < 2200 ? 1 : Math.max(0, 1 - (elapsed - 2200) / 1200);
+      if (p.opacity > 0) alive = true;
+      ctx.save();
+      ctx.globalAlpha = p.opacity;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.angle);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    }
+    if (alive) frame = requestAnimationFrame(tick);
+    else { cancelAnimationFrame(frame); canvas.remove(); }
+  }
+  frame = requestAnimationFrame(tick);
 }
 
 function launchConfetti() {
