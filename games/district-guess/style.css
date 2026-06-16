@@ -1466,7 +1466,7 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
 }
 .map-zoom-btns {
   position: absolute;
-  bottom: 10px;
+  top: 10px;
   left: 10px;
   display: flex;
   flex-direction: column;
@@ -1490,6 +1490,43 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
   transition: background 0.15s;
 }
 .mzb:hover { background: rgba(0,0,0,0.65); }
+.mzb-fit .mzb-icon { width: 14px; height: 14px; stroke-width: 2.5; }
+
+/* Pulsing "View Results" arrow on game-over map */
+.gameover-results-arrow {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 56px;
+  border: none;
+  border-radius: 6px 0 0 6px;
+  background: rgba(196,18,48,0.72);
+  color: #fff;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: gra-pulse 2s ease-in-out infinite;
+  pointer-events: auto;
+}
+.gameover-results-arrow svg {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+.gameover-results-arrow:hover {
+  background: rgba(196,18,48,0.95);
+  animation-play-state: paused;
+}
+@keyframes gra-pulse {
+  0%, 100% { opacity: 0.7;  transform: translateY(-50%) scale(1);    }
+  50%       { opacity: 1;   transform: translateY(-50%) scale(1.06); }
+}
 
 .us-ref-hint {
   position: absolute;

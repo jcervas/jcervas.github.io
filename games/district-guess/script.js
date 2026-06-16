@@ -160,7 +160,7 @@ const ICON_PATHS = {
   sun:         `<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>`,
   clock:       `<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>`,
   checkCircle: `<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>`,
-  xCircle:     `<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>`,
+  xCircle:     `<path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>`,
   lock:        `<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>`,
   share:       `<path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/>`,
   target:      `<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>`,
@@ -171,6 +171,8 @@ const ICON_PATHS = {
   dollar:      `<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>`,
   people:      `<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>`,
   mappin:      `<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>`,
+  maximize:    `<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>`,
+  minimize:    `<path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>`,
   flag:        `<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>`,
   message:     `<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>`,
 };
@@ -284,9 +286,10 @@ let districtPoints      = {};  // state-district key → [lon, lat] inner point
 
 // Manual overrides for districts where the computed inner point lands in water.
 const POINT_OVERRIDES = {};
-let topoRoads           = null;  // FeatureCollection from TopoJSON roads layer
-let topoUrban           = null;  // FeatureCollection from TopoJSON urban layer
-let topoCounties        = null;  // FeatureCollection of county boundary lines
+let topoRoads              = null;  // FeatureCollection from TopoJSON roads layer
+let topoUrban              = null;  // FeatureCollection from TopoJSON urban layer
+let topoCounties           = null;  // FeatureCollection of county boundary lines
+let districtGameOverTransform = null; // saved game-over zoom transform for fit-toggle button
 let topoStates          = {};    // state abbr → merged state Feature for clean outline drawing
 let rawTopo             = null;  // raw TopoJSON topology — kept for topojson.mesh() calls
 let adjMap              = new Map(); // state-district key → string[] of adjacent keys
@@ -1703,18 +1706,45 @@ function initUSRefMap() {
     const btnWrap = document.createElement('div');
     btnWrap.className = 'map-zoom-btns';
     btnWrap.innerHTML = '<button class="mzb" data-dir="in" aria-label="Zoom in">+</button>'
-                      + '<button class="mzb" data-dir="out" aria-label="Zoom out">−</button>';
+                      + '<button class="mzb" data-dir="out" aria-label="Zoom out">−</button>'
+                      + '<button class="mzb mzb-fit hidden" data-dir="fit" aria-label="Toggle national / district view" title="Toggle national / district view">'
+                      + svgIcon('maximize', 'mzb-icon') + '</button>';
     wrap.appendChild(btnWrap);
     btnWrap.addEventListener('click', e => {
       const btn = e.target.closest('.mzb');
       if (!btn) return;
-      const factor = btn.dataset.dir === 'in' ? 1.6 : 1 / 1.6;
+      const dir = btn.dataset.dir;
       const tilesHidden = document.getElementById('district-tiles').classList.contains('hidden');
+
+      if (dir === 'fit') {
+        const tilesSvg = d3.select('#district-tiles svg');
+        if (tilesSvg.empty() || !districtZoomBehavior) return;
+        const atNational = btn.classList.contains('at-national');
+        if (atNational) {
+          // Zoom back to district
+          const target = districtGameOverTransform || d3.zoomIdentity;
+          tilesSvg.transition().duration(600).ease(d3.easeCubicInOut)
+            .call(districtZoomBehavior.transform, target);
+          btn.classList.remove('at-national');
+          btn.querySelector('svg')?.replaceWith(
+            Object.assign(document.createRange().createContextualFragment(svgIcon('maximize','mzb-icon')).firstChild)
+          );
+        } else {
+          // Zoom out to national view
+          tilesSvg.transition().duration(600).ease(d3.easeCubicInOut)
+            .call(districtZoomBehavior.transform, d3.zoomIdentity);
+          btn.classList.add('at-national');
+          btn.querySelector('svg')?.replaceWith(
+            Object.assign(document.createRange().createContextualFragment(svgIcon('minimize','mzb-icon')).firstChild)
+          );
+        }
+        return;
+      }
+
+      const factor = dir === 'in' ? 1.6 : 1 / 1.6;
       if (tilesHidden) {
-        // US ref map is visible
         usRefSvgSel?.transition().duration(250).call(usRefZoom.scaleBy, factor);
       } else {
-        // District tiles map is visible
         const tilesSvg = d3.select('#district-tiles svg');
         if (!tilesSvg.empty() && districtZoomBehavior) {
           tilesSvg.transition().duration(250).call(districtZoomBehavior.scaleBy, factor);
@@ -2205,8 +2235,10 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
         districtSimulation._applyIconPositions();
       }
 
-      // Fade in roads and urban areas at high zoom for geographic context (not district lines)
-      const fadeOpacity = k > 2 ? Math.min(1, (k - 2) * 0.35) : 0;
+      // Fade context layers in with zoom: counties appear first, then roads, then urban
+      const countyOpacity = k > 1.5 ? Math.min(1, (k - 1.5) * 0.5) : 0;
+      const fadeOpacity   = k > 2   ? Math.min(1, (k - 2)   * 0.35) : 0;
+      g.select('.context-counties').attr('opacity', countyOpacity);
       g.select('.context-urban').attr('opacity', fadeOpacity);
       g.select('.context-roads').attr('opacity', fadeOpacity);
 
@@ -2248,7 +2280,9 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
       const scale = Math.min(25, Math.max(1.2, fitScale * 0.45));
       const tx = W / 2 - scale * (bx0 + bx1) / 2;
       const ty = H / 2 - scale * (by0 + by1) / 2;
-      svg.call(districtZoomBehavior.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
+      const goTransform = d3.zoomIdentity.translate(tx, ty).scale(scale);
+      districtGameOverTransform = goTransform;
+      svg.call(districtZoomBehavior.transform, goTransform);
     }
   } else if (districtUserZoomed && districtSavedTransform) {
     // Restore user's zoom from the previous SVG generation
@@ -2345,6 +2379,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
       if (topoUrban) {
         g.append('g').attr('class', 'context-urban')
           .attr('clip-path', `url(#${clipId})`)
+          .attr('opacity', 0)
           .attr('pointer-events', 'none')
           .selectAll('path')
           .data(topoUrban.features)
@@ -2358,6 +2393,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
       if (topoRoads) {
         g.append('g').attr('class', 'context-roads')
           .attr('clip-path', `url(#${clipId})`)
+          .attr('opacity', 0)
           .attr('pointer-events', 'none')
           .selectAll('path')
           .data(topoRoads.features)
@@ -2373,6 +2409,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
       if (topoCounties) {
         g.append('g').attr('class', 'context-counties')
           .attr('clip-path', `url(#${clipId})`)
+          .attr('opacity', 0)
           .attr('pointer-events', 'none')
           .selectAll('path')
           .data(topoCounties.features)
@@ -2383,6 +2420,16 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
           .attr('stroke-width', 0.5)
           .attr('stroke-dasharray', '2 3')
           .attr('vector-effect', 'non-scaling-stroke');
+      }
+
+      // Sync initial context-layer opacity to current zoom (zoom handler fires before elements exist)
+      {
+        const k0 = d3.zoomTransform(svg.node()).k || 1;
+        const cOp = k0 > 1.5 ? Math.min(1, (k0 - 1.5) * 0.5) : 0;
+        const fOp = k0 > 2   ? Math.min(1, (k0 - 2)   * 0.35) : 0;
+        g.select('.context-counties').attr('opacity', cOp);
+        g.select('.context-roads').attr('opacity', fOp);
+        g.select('.context-urban').attr('opacity', fOp);
       }
 
       // District inner lines drawn on top of urban/roads so they remain visible
@@ -2776,6 +2823,19 @@ function endGame(won) {
   // Always rebuild district tiles at game-over so the answer district gets the highlight
   // showDistrictD3Map updates the label correctly for game-over state
   showDistrictD3Map(todayDistrict.properties.state, true, true);
+  // Show the fit-toggle button now that we're in game-over view
+  document.querySelector('.mzb-fit')?.classList.remove('hidden');
+  document.querySelector('.mzb-fit')?.classList.remove('at-national');
+  // Pulsing "View Results" arrow overlay on the map
+  const tilesEl = document.getElementById('district-tiles');
+  if (tilesEl && !tilesEl.querySelector('.gameover-results-arrow')) {
+    const arrow = document.createElement('button');
+    arrow.className = 'gameover-results-arrow';
+    arrow.setAttribute('aria-label', 'View results');
+    arrow.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>`;
+    arrow.addEventListener('click', () => { openResultModal(); });
+    tilesEl.appendChild(arrow);
+  }
   document.getElementById('game-section')?.classList.add('map-collapsed');
   renderClues();
   renderGuessHistory();
@@ -3005,6 +3065,7 @@ function launchConfetti() {
 // Used by the "View Result" banner button and "Review Result" welcome-splash button —
 // the actual content is rendered ahead of time by showResult(won, false) in endGame().
 function openResultModal() {
+  document.querySelector('.gameover-results-arrow')?.remove();
   document.getElementById('result-modal').classList.remove('hidden');
   switchResultTab('result');
   if (lastGameWon && !_resultConfettiFired) {
@@ -3277,6 +3338,10 @@ function resetGame(newIdx) {
   gameOver            = false;
   _gameStarted        = true;   // Play Again always goes straight to game
   elapsedSeconds      = 0;
+  districtGameOverTransform = null;
+  document.querySelector('.mzb-fit')?.classList.add('hidden');
+  document.querySelector('.mzb-fit')?.classList.remove('at-national');
+  document.querySelector('.gameover-results-arrow')?.remove();
   eliminatedStates    = new Set();
   _distLocked         = false;
   _guessLocked        = false;
