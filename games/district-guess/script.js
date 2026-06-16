@@ -2170,9 +2170,9 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
         badgeG.attr('transform', `translate(${nbx},${nby})`);
         const label = badgeG.select('text').text();
         const hasIcon = !badgeG.select('.gc-icon-svg').empty();
-        const iconSize = 11 / k, iconGap = 3 / k;
-        const pH = 16 / k;
-        const pW = (label.length * 5.5 + 18) / k + (hasIcon ? iconSize + iconGap : 0);
+        const iconSize = 13 / k, iconGap = 4 / k;
+        const pH = 20 / k;
+        const pW = (label.length * 6.5 + 22) / k + (hasIcon ? iconSize + iconGap : 0);
         const pRx = pH / 2;
         badgeG.select('rect')
           .attr('width', pW).attr('height', pH).attr('rx', pRx)
@@ -2185,7 +2185,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
             .attr('transform', `translate(${iconX},0) scale(${iconSize / 24}) translate(-12,-12)`);
           badgeG.select('text').attr('x', iconSize / 2 + iconGap / 2);
         }
-        badgeG.select('text').attr('font-size', `${8 / k}px`).attr('letter-spacing', 0.3 / k);
+        badgeG.select('text').attr('font-size', `${10 / k}px`).attr('letter-spacing', 0.3 / k);
       }
       g.selectAll('.dist-leader').attr('stroke-width', 1 / k);
       // Hide connector lines when zoomed in — icons sit close enough to their centroids
@@ -2427,75 +2427,61 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
         .attr('vector-effect', 'non-scaling-stroke')
         .attr('pointer-events', 'none');
 
-      if (animateReveal) {
-        // Boundary "draws in" via stroke-dasharray, with a traveling spark (like someone
-        // tracing/welding the outline) riding the leading edge, then the fill fades in.
+      // Spark always runs when game is over (every time this screen is shown).
+      {
         const node = answerPath.node();
         const len  = node.getTotalLength ? node.getTotalLength() : 0;
         if (len > 0) {
-          const sparkR = 2.5 / d3.zoomTransform(svg.node()).k;
+          const k0 = d3.zoomTransform(svg.node()).k || 1;
+          // 4 screen-pixels wide regardless of zoom
+          const sparkR = 4 / k0;
           const spark = g.append('circle')
             .attr('r', sparkR)
-            .attr('fill', '#fff7d6')
             .attr('pointer-events', 'none')
-            .style('filter', 'drop-shadow(0 0 3px #fff) drop-shadow(0 0 6px #ffb020)');
-          const startPt = node.getPointAtLength(0);
-          spark.attr('cx', startPt.x).attr('cy', startPt.y);
+            .attr('fill', '#fffbe8')
+            .style('filter', 'drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px #ffb020) drop-shadow(0 0 16px #ff7700)');
+          const p0 = node.getPointAtLength(0);
+          spark.attr('cx', p0.x).attr('cy', p0.y);
 
-          // Small ember particles spawned along the way, each fading independently
           function emitEmber(x, y) {
-            const ang = Math.random() * Math.PI * 2;
-            const dist = (4 + Math.random() * 6) / d3.zoomTransform(svg.node()).k;
+            const k = d3.zoomTransform(svg.node()).k || 1;
+            const ang  = Math.random() * Math.PI * 2;
+            const dist = (6 + Math.random() * 9) / k;
             g.append('circle')
               .attr('cx', x).attr('cy', y)
-              .attr('r', (1 + Math.random()) / d3.zoomTransform(svg.node()).k)
-              .attr('fill', '#ffb020')
+              .attr('r', (1.5 + Math.random() * 1.2) / k)
+              .attr('fill', Math.random() < 0.5 ? '#ffb020' : '#ff5500')
               .attr('pointer-events', 'none')
-              .style('filter', 'drop-shadow(0 0 2px #ffb020)')
+              .style('filter', 'drop-shadow(0 0 3px #ff8800)')
               .transition()
-                .duration(280 + Math.random() * 120)
-                .ease(d3.easeCubicOut)
-                .attr('cx', x + Math.cos(ang) * dist)
-                .attr('cy', y + Math.sin(ang) * dist)
-                .attr('r', 0)
-                .style('opacity', 0)
-                .remove();
+                .duration(350 + Math.random() * 200).ease(d3.easeCubicOut)
+                .attr('cx', x + Math.cos(ang) * dist).attr('cy', y + Math.sin(ang) * dist)
+                .attr('r', 0).style('opacity', 0).remove();
           }
 
-          answerPath
-            .attr('fill', 'none')
-            .attr('fill-opacity', 0)
-            .attr('stroke-dasharray', `${len} ${len}`)
-            .attr('stroke-dashoffset', len)
-            .transition()
-              .duration(650)
-              .ease(d3.easeCubicInOut)
-              .attrTween('stroke-dashoffset', () => {
-                const interp = d3.interpolateNumber(len, 0);
-                return t => {
-                  const off = interp(t);
-                  const pt = node.getPointAtLength(len - off);
-                  spark.attr('cx', pt.x).attr('cy', pt.y);
-                  if (Math.random() < 0.45) emitEmber(pt.x, pt.y);
-                  return off;
-                };
-              })
-              .on('end', () => {
-                spark.transition().duration(200).attr('r', 0).style('opacity', 0).remove();
-              })
-            .transition()
-              .duration(350)
-              .ease(d3.easeCubicOut)
-              .attr('fill', finalFill)
-              .attr('fill-opacity', 1)
-              .on('end', function () { d3.select(this).attr('stroke-dasharray', null); });
+          // 5 laps around the boundary at ~4000 ms/lap = 20 s total
+          const LAPS   = 5;
+          const LAP_MS = 3000;
+          const t0 = performance.now();
+          (function frame(now) {
+            const elapsed = now - t0;
+            const lapT = (elapsed % LAP_MS) / LAP_MS;
+            const pt   = node.getPointAtLength(lapT * len);
+            spark.attr('cx', pt.x).attr('cy', pt.y);
+            if (Math.random() < 0.45) emitEmber(pt.x, pt.y);
+            if (elapsed < LAPS * LAP_MS) {
+              requestAnimationFrame(frame);
+            } else {
+              spark.transition().duration(300).attr('r', 0).style('opacity', 0).remove();
+            }
+          })(t0);
         }
-        if (!won) {
-          // Shake the whole map to signal the loss
-          tilesEl.classList.add('gameover-loss-shake');
-        } else {
-          // Pulse ring to celebrate the win
-          tilesEl.classList.add('gameover-win-pulse');
+        if (animateReveal) {
+          if (!won) {
+            tilesEl.classList.add('gameover-loss-shake');
+          } else {
+            tilesEl.classList.add('gameover-win-pulse');
+          }
         }
       }
 
@@ -2541,10 +2527,10 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
 
       // Pill badge styled like the drag/zoom hint: CMU-red bg, white border.
       // Includes a small check/x icon to indicate win vs loss without recoloring the badge.
-      const iconSize = 11 / initK;
-      const iconGap  = 3 / initK;
-      const pillH  = 16 / initK;  // total height in SVG units
-      const pillW  = (answerLabel.length * 5.5 + 18) / initK + iconSize + iconGap;
+      const iconSize = 13 / initK;
+      const iconGap  = 4 / initK;
+      const pillH  = 20 / initK;  // total height in SVG units
+      const pillW  = (answerLabel.length * 6.5 + 22) / initK + iconSize + iconGap;
       const pillRx = pillH / 2;   // full pill rounding
       const badge = g.append('g').attr('class', 'dist-icons').attr('transform', `translate(${bx},${by})`);
       badge.append('rect')
@@ -2573,7 +2559,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
         .attr('x', iconSize / 2 + iconGap / 2)
         .attr('text-anchor', 'middle')
         .attr('dominant-baseline', 'central')
-        .attr('font-size', `${8 / initK}px`)
+        .attr('font-size', `${10 / initK}px`)
         .attr('font-weight', '600')
         .attr('fill', '#fff')
         .attr('letter-spacing', 0.3 / initK)
