@@ -1620,7 +1620,7 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
 .welcome-logo-wrap { margin-bottom: clamp(8px, 1.5vh, 16px); }
 .welcome-logo-svg { width: clamp(80px, 14vh, 140px); height: auto; }
 .welcome-wordmark {
-  margin-bottom: clamp(6px, 1vh, 10px);
+  margin-bottom: clamp(14px, 2.5vh, 24px);
   line-height: 1;
 }
 .welcome-wordmark-svg {
