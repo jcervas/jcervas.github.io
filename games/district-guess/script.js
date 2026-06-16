@@ -2177,18 +2177,17 @@ function buildDistrictD3Map(stateAbbr) {
       // Hide connector lines when zoomed in — icons sit close enough to their centroids
       g.select('.dist-connectors').attr('display', k > 1.5 ? 'none' : null);
 
-      // Re-tune simulation so icons migrate toward their true centroids as user zooms in.
-      // Higher zoom → smaller collision radius → icons can sit closer to their inner points.
-      if (districtSimulation && !gameOver) {
+      // Re-tune simulation synchronously when zoom changes so icons jump to new positions instantly.
+      if (districtSimulation && !gameOver && districtSimulation._applyIconPositions) {
         const newCollide = 16 / k;
         const newStrength = Math.min(0.98, 0.6 + (k - 1) * 0.15);
         districtSimulation
           .force('collide', d3.forceCollide(d => d.isCold ? newCollide * 0.25 : d.isHot ? newCollide * 0.45 : newCollide))
           .force('x', d3.forceX(d => d.ox).strength(newStrength))
-          .force('y', d3.forceY(d => d.oy).strength(newStrength));
-        if (districtSimulation.alpha() < 0.05) {
-          districtSimulation.alphaDecay(0.12).alpha(0.2).restart();
-        }
+          .force('y', d3.forceY(d => d.oy).strength(newStrength))
+          .alpha(1).stop();
+        districtSimulation.tick(Math.ceil(Math.log(districtSimulation.alphaMin() / districtSimulation.alpha()) / Math.log(1 - districtSimulation.alphaDecay())));
+        districtSimulation._applyIconPositions();
       }
 
       // Fade in roads and urban areas at high zoom for geographic context (not district lines)
@@ -2610,28 +2609,35 @@ function buildDistrictD3Map(stateAbbr) {
     return grp.node();
   });
 
-  // Animated force simulation — icons settle from their inner-point origins
-  const collide = 16 / zoomK; // visual collision radius constant (~16px) at any zoom level
-  // At high zoom, pull icons tightly to their inner point so they don't drift into water/neighbors.
-  // At k=1 (full state): strength 0.6 (normal separation). At k=3+: strength ~0.9 (nearly locked).
+  const collide = 16 / zoomK;
   const forceStrength = Math.min(0.98, 0.6 + (zoomK - 1) * 0.15);
+
+  function applyIconPositions() {
+    nodes.forEach((d, i) => {
+      d3.select(iconEls[i]).attr('transform', `translate(${d.x},${d.y})`);
+      const dx = d.x - d.ox, dy = d.y - d.oy;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      d3.select(lineEls[i])
+        .attr('x1', d.ox).attr('y1', d.oy)
+        .attr('x2', d.x).attr('y2', d.y)
+        .attr('stroke-opacity', dist > 4 ? 1 : 0);
+    });
+  }
+
+  // Run simulation synchronously — compute final layout instantly, no per-tick animation
   districtSimulation = d3.forceSimulation(nodes)
-    .alphaDecay(0.12)   // converge in ~35 ticks instead of D3 default ~300
+    .alphaDecay(0.12)
     .alphaMin(0.01)
     .force('collide', d3.forceCollide(d => d.isCold ? collide * 0.25 : d.isHot ? collide * 0.45 : collide))
     .force('x', d3.forceX(d => d.ox).strength(forceStrength))
     .force('y', d3.forceY(d => d.oy).strength(forceStrength))
-    .on('tick', () => {
-      nodes.forEach((d, i) => {
-        d3.select(iconEls[i]).attr('transform', `translate(${d.x},${d.y})`);
-        const dx = d.x - d.ox, dy = d.y - d.oy;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        d3.select(lineEls[i])
-          .attr('x1', d.ox).attr('y1', d.oy)
-          .attr('x2', d.x).attr('y2', d.y)
-          .attr('stroke-opacity', dist > 4 ? 1 : 0);
-      });
-    });
+    .stop();
+
+  districtSimulation.tick(Math.ceil(Math.log(districtSimulation.alphaMin() / districtSimulation.alpha()) / Math.log(1 - districtSimulation.alphaDecay())));
+  applyIconPositions();
+
+  // Re-run synchronously when the user zooms (collision radius / strength change with zoom level)
+  districtSimulation._applyIconPositions = applyIconPositions;
 }
 
 function endGame(won) {
