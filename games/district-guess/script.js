@@ -3436,6 +3436,11 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem(HOW_TO_SEEN_KEY, '1');
       renderClues();
       renderGuessHistory();
+      // #map was sized while hidden behind the modal — Leaflet's cached size is stale
+      requestAnimationFrame(() => {
+        if (map) map.invalidateSize();
+        if (districtLayer) map.fitBounds(districtLayer.getBounds(), { padding: [40, 40], maxZoom: 10, animate: false });
+      });
     }
 
     if (gameOver) {
