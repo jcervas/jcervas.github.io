@@ -2,6 +2,22 @@
 
 ---
 
+## v1.5 — Spark Animation Polish & Badge Sizing
+
+- **Spark always plays**: animation runs every time the game-over screen is shown (including on page reload after completing a game), not just on the first reveal
+- **District stays red**: fill is CMU red throughout the spark trace — no fill-hide/fade-in cycle
+- **5 laps at 4 screen pixels**: spark circles the boundary 5 times at 4000 ms/lap (~20 s total); spark size 4 screen-pixels with triple drop-shadow glow
+- **Larger badge pill**: pill height 16→20px, font 8→10px, per-character width factor 5.5→6.5 — pill and text are proportionally larger at all zoom levels
+- **Shake/pulse gated to first reveal**: win-pulse and loss-shake CSS animations still only fire on the first correct/final guess, not on revisits
+
+---
+
+## v1.4.22 — rAF Spark (Internal)
+
+- Switched from `d3.attrTween` (low-fps D3 transition) to `requestAnimationFrame` for smooth 60fps spark tracing
+
+---
+
 ## v1.4.21 — Spark Animation, Badge Zoom Fix & Game-Over Zoom Tuning
 
 - **Spark/ember boundary animation**: on game over, the answer district boundary now "draws in" like a welder tracing the outline — a glowing white spark rides the leading edge; `#ffb020` ember particles are emitted at ~45% probability per frame, flying outward and fading; after draw-in, the spark fades and the district fill fades in
