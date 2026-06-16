@@ -1534,9 +1534,12 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
   width: auto;
   display: block;
   margin: 0 auto;
-  /* tint the CMU-red paths to match current theme accent */
-  filter: none;
 }
+@media (prefers-color-scheme: dark) {
+  .welcome-wordmark-svg { filter: brightness(0) invert(1); }
+}
+body.dark-mode .welcome-wordmark-svg { filter: brightness(0) invert(1); }
+body.light-mode .welcome-wordmark-svg { filter: none; }
 .welcome-back-text {
   font-family: 'Barlow Condensed', 'Barlow', system-ui, sans-serif;
   font-size: clamp(1.5rem, 4vh, 2.2rem);
