@@ -316,6 +316,8 @@ let timerInterval       = null;
 let elapsedSeconds      = 0;
 let timerRunning        = false;
 let gameOver            = false;
+let lastGameWon         = false;  // outcome of the most recently finished game (for confetti gating)
+let _resultConfettiFired = false; // confetti fires once per game, the first time results are viewed
 let db                  = null;   // Firestore instance (if configured)
 let username            = '';
 let replayCount         = 0;      // increments each "Play Again" to pick a fresh district
@@ -1978,7 +1980,7 @@ function lockStateDropdown(stateAbbr, instant = false) {
   showDistrictD3Map(stateAbbr, instant);
 }
 
-function showDistrictD3Map(stateAbbr, instant = false) {
+function showDistrictD3Map(stateAbbr, instant = false, animateReveal = false) {
   const mapEl   = document.getElementById('us-ref-map');
   const tilesEl = document.getElementById('district-tiles');
   const labelEl = document.getElementById('ref-label');
@@ -2014,7 +2016,7 @@ function showDistrictD3Map(stateAbbr, instant = false) {
   if (hintEl) hintEl.classList.add('dismissed');
 
   // Build the D3 district map inside tilesEl
-  buildDistrictD3Map(stateAbbr);
+  buildDistrictD3Map(stateAbbr, animateReveal);
 
   if (instant) {
     mapEl.classList.add('hidden');
@@ -2031,11 +2033,12 @@ function showDistrictD3Map(stateAbbr, instant = false) {
   }
 }
 
-function buildDistrictD3Map(stateAbbr) {
+function buildDistrictD3Map(stateAbbr, animateReveal = false) {
   const tilesEl = document.getElementById('district-tiles');
 
   // Mark element so CSS can distinguish game-over national view from gameplay district view
   tilesEl.classList.toggle('gameover-context', !!gameOver);
+  tilesEl.classList.remove('gameover-loss-shake', 'gameover-win-pulse');
 
   // districtSavedTransform is kept current by the zoom event handler.
   tilesEl.innerHTML = '';
@@ -2166,11 +2169,22 @@ function buildDistrictD3Map(stateAbbr) {
         const badgeG = g.select('.dist-icons');
         badgeG.attr('transform', `translate(${nbx},${nby})`);
         const label = badgeG.select('text').text();
-        const pH = 16 / k, pW = (label.length * 5.5 + 18) / k, pRx = pH / 2;
+        const hasIcon = !badgeG.select('.gc-icon-svg').empty();
+        const iconSize = 11 / k, iconGap = 3 / k;
+        const pH = 16 / k;
+        const pW = (label.length * 5.5 + 18) / k + (hasIcon ? iconSize + iconGap : 0);
+        const pRx = pH / 2;
         badgeG.select('rect')
           .attr('width', pW).attr('height', pH).attr('rx', pRx)
           .attr('x', -pW / 2).attr('y', -pH / 2)
           .attr('stroke-width', 1 / k);
+        if (hasIcon) {
+          const iconX = -pW / 2 + 7 / k + iconSize / 2;
+          // stroke-width stays constant — icon paths use vector-effect: non-scaling-stroke
+          badgeG.select('.gc-icon-svg')
+            .attr('transform', `translate(${iconX},0) scale(${iconSize / 24}) translate(-12,-12)`);
+          badgeG.select('text').attr('x', iconSize / 2 + iconGap / 2);
+        }
         badgeG.select('text').attr('font-size', `${8 / k}px`).attr('letter-spacing', 0.3 / k);
       }
       g.selectAll('.dist-leader').attr('stroke-width', 1 / k);
@@ -2226,8 +2240,11 @@ function buildDistrictD3Map(stateAbbr) {
     if (zoomTarget) {
       const [[bx0, by0], [bx1, by1]] = pathGen.bounds(zoomTarget);
       const bw = Math.max(bx1 - bx0, 1), bh = Math.max(by1 - by0, 1);
-      const pad = 60;
-      const scale = Math.min(10, Math.min((W - 2 * pad) / bw, (H - 2 * pad) / bh) * 0.55);
+      // Target the district's longest side at ~45% of the viewport, so there's still
+      // surrounding state/national context. Floor avoids zooming out past the
+      // national baseline; cap avoids absurd magnification on tiny/narrow districts.
+      const fitScale = Math.min(W / bw, H / bh);
+      const scale = Math.min(25, Math.max(1.2, fitScale * 0.45));
       const tx = W / 2 - scale * (bx0 + bx1) / 2;
       const ty = H / 2 - scale * (by0 + by1) / 2;
       svg.call(districtZoomBehavior.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
@@ -2394,17 +2411,93 @@ function buildDistrictD3Map(stateAbbr) {
         .attr('pointer-events', 'none');
     });
 
-    // Highlight the answer district in CMU red
+    // Highlight the answer district in CMU red (regardless of win/loss)
     const answerFeature = stateFeatures.find(f => f.properties['state-district'] === answerKey);
     if (answerFeature) {
-      g.append('path')
+      const won        = !!wonDist;
+      const finalFill   = dark ? 'rgba(196,18,48,0.55)' : 'rgba(196,18,48,0.30)';
+      const finalStroke = '#C41230';
+
+      const answerPath = g.append('path')
         .datum(answerFeature)
         .attr('d', pathGen)
-        .attr('fill', dark ? 'rgba(196,18,48,0.55)' : 'rgba(196,18,48,0.30)')
-        .attr('stroke', '#C41230')
+        .attr('fill', finalFill)
+        .attr('stroke', finalStroke)
         .attr('stroke-width', 2)
         .attr('vector-effect', 'non-scaling-stroke')
         .attr('pointer-events', 'none');
+
+      if (animateReveal) {
+        // Boundary "draws in" via stroke-dasharray, with a traveling spark (like someone
+        // tracing/welding the outline) riding the leading edge, then the fill fades in.
+        const node = answerPath.node();
+        const len  = node.getTotalLength ? node.getTotalLength() : 0;
+        if (len > 0) {
+          const sparkR = 2.5 / d3.zoomTransform(svg.node()).k;
+          const spark = g.append('circle')
+            .attr('r', sparkR)
+            .attr('fill', '#fff7d6')
+            .attr('pointer-events', 'none')
+            .style('filter', 'drop-shadow(0 0 3px #fff) drop-shadow(0 0 6px #ffb020)');
+          const startPt = node.getPointAtLength(0);
+          spark.attr('cx', startPt.x).attr('cy', startPt.y);
+
+          // Small ember particles spawned along the way, each fading independently
+          function emitEmber(x, y) {
+            const ang = Math.random() * Math.PI * 2;
+            const dist = (4 + Math.random() * 6) / d3.zoomTransform(svg.node()).k;
+            g.append('circle')
+              .attr('cx', x).attr('cy', y)
+              .attr('r', (1 + Math.random()) / d3.zoomTransform(svg.node()).k)
+              .attr('fill', '#ffb020')
+              .attr('pointer-events', 'none')
+              .style('filter', 'drop-shadow(0 0 2px #ffb020)')
+              .transition()
+                .duration(280 + Math.random() * 120)
+                .ease(d3.easeCubicOut)
+                .attr('cx', x + Math.cos(ang) * dist)
+                .attr('cy', y + Math.sin(ang) * dist)
+                .attr('r', 0)
+                .style('opacity', 0)
+                .remove();
+          }
+
+          answerPath
+            .attr('fill', 'none')
+            .attr('fill-opacity', 0)
+            .attr('stroke-dasharray', `${len} ${len}`)
+            .attr('stroke-dashoffset', len)
+            .transition()
+              .duration(650)
+              .ease(d3.easeCubicInOut)
+              .attrTween('stroke-dashoffset', () => {
+                const interp = d3.interpolateNumber(len, 0);
+                return t => {
+                  const off = interp(t);
+                  const pt = node.getPointAtLength(len - off);
+                  spark.attr('cx', pt.x).attr('cy', pt.y);
+                  if (Math.random() < 0.45) emitEmber(pt.x, pt.y);
+                  return off;
+                };
+              })
+              .on('end', () => {
+                spark.transition().duration(200).attr('r', 0).style('opacity', 0).remove();
+              })
+            .transition()
+              .duration(350)
+              .ease(d3.easeCubicOut)
+              .attr('fill', finalFill)
+              .attr('fill-opacity', 1)
+              .on('end', function () { d3.select(this).attr('stroke-dasharray', null); });
+        }
+        if (!won) {
+          // Shake the whole map to signal the loss
+          tilesEl.classList.add('gameover-loss-shake');
+        } else {
+          // Pulse ring to celebrate the win
+          tilesEl.classList.add('gameover-win-pulse');
+        }
+      }
 
       // Red circle with district number at inner point
       const sdKey = answerFeature.properties['state-district'];
@@ -2446,9 +2539,12 @@ function buildDistrictD3Map(stateAbbr) {
         .attr('data-dbx0', dbx0).attr('data-dbx1', dbx1)
         .attr('data-dby0', dby0).attr('data-dby1', dby1);
 
-      // Pill badge styled like the drag/zoom hint: dark translucent bg, white border
+      // Pill badge styled like the drag/zoom hint: CMU-red bg, white border.
+      // Includes a small check/x icon to indicate win vs loss without recoloring the badge.
+      const iconSize = 11 / initK;
+      const iconGap  = 3 / initK;
       const pillH  = 16 / initK;  // total height in SVG units
-      const pillW  = (answerLabel.length * 5.5 + 18) / initK;
+      const pillW  = (answerLabel.length * 5.5 + 18) / initK + iconSize + iconGap;
       const pillRx = pillH / 2;   // full pill rounding
       const badge = g.append('g').attr('class', 'dist-icons').attr('transform', `translate(${bx},${by})`);
       badge.append('rect')
@@ -2457,7 +2553,24 @@ function buildDistrictD3Map(stateAbbr) {
         .attr('fill', 'rgba(196,18,48,0.82)')
         .attr('stroke', 'rgba(255,255,255,0.35)')
         .attr('stroke-width', 1 / initK);
+
+      const iconX = -pillW / 2 + 7 / initK + iconSize / 2;
+      const iconScale = iconSize / 24;
+      const iconG = badge.append('g')
+        .attr('class', 'gc-icon-svg')
+        // Icon geometry is centered at (12,12) in its 24x24 viewBox — recenter to
+        // the origin BEFORE scaling, since scale() applies around (0,0).
+        .attr('transform', `translate(${iconX},0) scale(${iconScale}) translate(-12,-12)`)
+        .attr('fill', 'none')
+        .attr('stroke', '#fff')
+        .attr('stroke-width', 2)
+        .attr('stroke-linecap', 'round')
+        .attr('stroke-linejoin', 'round')
+        .html(wonDist ? ICON_PATHS.checkCircle : ICON_PATHS.xCircle);
+      iconG.selectAll('path, circle, line, polyline').attr('vector-effect', 'non-scaling-stroke');
+
       badge.append('text')
+        .attr('x', iconSize / 2 + iconGap / 2)
         .attr('text-anchor', 'middle')
         .attr('dominant-baseline', 'central')
         .attr('font-size', `${8 / initK}px`)
@@ -2652,7 +2765,7 @@ function endGame(won) {
   }
   // Always rebuild district tiles at game-over so the answer district gets the highlight
   // showDistrictD3Map updates the label correctly for game-over state
-  showDistrictD3Map(todayDistrict.properties.state, true);
+  showDistrictD3Map(todayDistrict.properties.state, true, true);
   document.getElementById('game-section')?.classList.add('map-collapsed');
   renderClues();
   renderGuessHistory();
@@ -2660,7 +2773,11 @@ function endGame(won) {
   if (won) guessCount += 1;
   // Save stats BEFORE showResult so renderInlinePersonalStats shows current game
   savePersonalStats(won, guessCount, elapsedSeconds);
-  showResult(won);
+  lastGameWon = won;
+  // Render result content now, but don't auto-open the modal — let the user watch the
+  // map-ref reveal animation (boundary draw-in + shake/pulse) on the game-over screen,
+  // then open results via the "View Result" banner button when ready.
+  showResult(won, false);
 
   // Auto-prompt feedback every 5 games if not already prompted at this count
   const _fbStats = loadPersonalStats();
@@ -2874,16 +2991,31 @@ function launchConfetti() {
   frame = requestAnimationFrame(tick);
 }
 
-function showResult(won) {
+// Opens the (already-populated) result modal and fires confetti once per game on a win.
+// Used by the "View Result" banner button and "Review Result" welcome-splash button —
+// the actual content is rendered ahead of time by showResult(won, false) in endGame().
+function openResultModal() {
+  document.getElementById('result-modal').classList.remove('hidden');
+  switchResultTab('result');
+  if (lastGameWon && !_resultConfettiFired) {
+    _resultConfettiFired = true;
+    setTimeout(launchConfetti, 200);
+  }
+}
+
+function showResult(won, autoOpen = true) {
   const modal = document.getElementById('result-modal');
   // Don't auto-open the result modal if the welcome splash is still up —
   // the user will reach it via the "Review Result" button on that screen.
   const welcomeVisible = !document.getElementById('welcome-modal')?.classList.contains('hidden');
-  if (!welcomeVisible) {
+  if (autoOpen && !welcomeVisible) {
     modal.classList.remove('hidden');
     switchResultTab('result');
+    if (won && !_resultConfettiFired) {
+      _resultConfettiFired = true;
+      setTimeout(launchConfetti, 300);
+    }
   }
-  if (won) setTimeout(launchConfetti, 300);
 
   const answer    = todayDistrict.properties['state-district'];
   const stateName = STATE_NAMES[todayDistrict.properties.state] || todayDistrict.properties.state;
@@ -3092,6 +3224,7 @@ function restoreGame(saved) {
     }
     buildDistrictD3Map(todayDistrict.properties.state);
     document.getElementById('game-section')?.classList.add('map-collapsed');
+    lastGameWon = saved.won;
     showResult(saved.won);
     fetchAndRenderCensusPanel(districtDataFor(todayDistrict));
   }
@@ -3137,6 +3270,7 @@ function resetGame(newIdx) {
   eliminatedStates    = new Set();
   _distLocked         = false;
   _guessLocked        = false;
+  _resultConfettiFired = false;
 
   // Pick the new district
   todayDistrict = districts[newIdx];
@@ -3404,10 +3538,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Leaderboard
   document.getElementById('leaderboard-btn').addEventListener('click', openLeaderboard);
-  document.getElementById('show-results-btn').addEventListener('click', () => {
-    document.getElementById('result-modal').classList.remove('hidden');
-    switchResultTab('result');
-  });
+  document.getElementById('show-results-btn').addEventListener('click', openResultModal);
 
   // Result modal tabs
   document.querySelectorAll('.result-tab-btn').forEach(btn => {
@@ -3454,8 +3585,7 @@ document.addEventListener('DOMContentLoaded', () => {
       btnResult.textContent = 'Review Result';
       btnResult.addEventListener('click', () => {
         dismissAndStart();
-        document.getElementById('result-modal').classList.remove('hidden');
-        switchResultTab('result');
+        openResultModal();
       });
 
       container.appendChild(btnMap);
