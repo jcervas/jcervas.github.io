@@ -700,6 +700,25 @@ main:has(#already-played-banner:not(.hidden)) {
 #district-tiles.flash-correct { animation: flashCorrect 0.7s ease forwards; }
 #us-ref-map.flash-wrong,
 #district-tiles.flash-wrong   { animation: flashWrong   0.7s ease forwards; }
+
+/* Game-over loss: shake the whole map-ref area to signal "you didn't get it" */
+@keyframes gameoverLossShake {
+  0%, 100% { transform: translateX(0); }
+  15%      { transform: translateX(-7px) rotate(-0.6deg); }
+  30%      { transform: translateX(7px)  rotate(0.6deg); }
+  45%      { transform: translateX(-5px); }
+  60%      { transform: translateX(5px); }
+  75%      { transform: translateX(-2px); }
+}
+#district-tiles.gameover-loss-shake svg { animation: gameoverLossShake 0.5s ease 0.65s; }
+
+/* Game-over win: pulse ring around the map-ref area to celebrate the correct pick */
+@keyframes gameoverWinPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(196,18,48,0); }
+  40%  { box-shadow: 0 0 0 10px rgba(196,18,48,0.35); }
+  100% { box-shadow: 0 0 0 18px rgba(196,18,48,0); }
+}
+#district-tiles.gameover-win-pulse { animation: gameoverWinPulse 0.7s ease 0.65s; }
 /* ---- Result section ---- */
 /* ---- Result modal ---- */
 .result-modal-content {

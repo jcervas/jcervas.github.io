@@ -2,6 +2,72 @@
 
 ---
 
+## v1.4.21 — Spark Animation, Badge Zoom Fix & Game-Over Zoom Tuning
+
+- **Spark/ember boundary animation**: on game over, the answer district boundary now "draws in" like a welder tracing the outline — a glowing white spark rides the leading edge; `#ffb020` ember particles are emitted at ~45% probability per frame, flying outward and fading; after draw-in, the spark fades and the district fill fades in
+- **Badge pill zoom scaling fixed**: the zoom handler now accounts for the icon's width and gap when computing pill width (`pW`), and repositions both the icon `<g>` and the text offset correctly on every zoom event — pill no longer drifts or grows at non-default zoom levels
+- **Game-over zoom level reduced**: new formula `fitScale * 0.45` (capped 1.2–25×) replaces the old `Math.min(40, fitScale)` — district is shown with surrounding state/national context rather than filling the viewport
+- **Check/x icon stroke-width reduced** to match `gc-icon-svg` standard (was 2.4, now 2)
+- **Click-to-view results**: game over no longer auto-opens the result modal after a delay; a "View Results" button appears on the game screen so the user can inspect the highlighted district before viewing stats
+- **Confetti gated**: confetti fires only on first explicit "View Results" click, not on every modal open
+
+---
+
+## v1.4.20 — Game-Over Badge & Animation
+
+- **Badge pill on answer district**: after game over, a CMU-red pill badge appears at the answer district with a check (win) or × (loss) icon and the district label
+- **`animateReveal` pipeline**: `showDistrictD3Map` and `buildDistrictD3Map` thread an `animateReveal` flag; correct final guess triggers the full animation path
+- **Loss shake animation**: `gameover-loss-shake` CSS keyframe applied to `#district-tiles` on a loss
+- **`openResultModal()` helper**: centralizes confetti gating and tab switching for all "View Results"/"Review Results" entry points
+
+---
+
+## v1.4.16 — Fix Map Size After Dismissing Welcome Splash
+
+- **`map.invalidateSize()` on splash dismiss**: Leaflet's internal size cache was stale when the welcome modal was visible; `requestAnimationFrame(() => { map.invalidateSize(); map.fitBounds(...) })` in `dismissAndStart()` ensures the map fills its container correctly
+
+---
+
+## v1.4.15 — Wordmark Dark Mode
+
+- **Wordmark turns white in dark mode**: `wordmark.svg` loaded via `<img>` cannot inherit `currentColor`; fixed with `filter: brightness(0) invert(1)` applied in both `@media (prefers-color-scheme: dark)` and `body.dark-mode`
+
+---
+
+## v1.4.14 — Instant Force Simulation & No Correct-Pick Delay
+
+- **Force simulation synchronous**: `districtSimulation.stop().tick(N)` replaces the animated convergence — icons place instantly on first render and after zoom re-tune
+- **No delay after correct district pick**: `submitDistrictTile` calls `processDistrictGuessTile` immediately (removed 480 ms `setTimeout`)
+
+---
+
+## v1.4.13 — District Auto-Zoom Fix
+
+- **Skip auto-zoom for large remaining sets**: when the computed fit scale is ≤ 1.15 (remaining districts span most of the viewport), the auto-zoom is skipped entirely — prevents the map from zooming *out* and shifting the view unexpectedly
+
+---
+
+## v1.4.10 — Remove DC
+
+- **DC excluded**: `districts` filtered to `f.properties.state !== 'DC'`; state count display reads "X of 50"
+
+---
+
+## v1.4.9 — Result Modal & Map Collapse Polish
+
+- **Result modal buttons**: pill-style (`border-radius: 100px`) matching welcome-splash donate button style
+- **New Map → welcome first**: `startNewMap()` shows the welcome modal before resetting `#map`
+- **Thin bar on map collapse fixed**: `#game-section.map-collapsed #map` uses `transition: opacity 0s` so the shrinking sliver no longer flashes
+
+---
+
+## v1.4.8 — Welcome Splash Wordle Layout
+
+- **Logo/wordmark pushed down**: `.welcome-top-spacer` flex spacer above the logo gives the splash more top breathing room matching Wordle's proportions
+- **Narrower action buttons**: `max-width: 240px; min-width: 160px` on `.welcome-action-btn`
+
+---
+
 ## v1.4.7 — Force Simulation Performance Fix
 
 - **Fast simulation convergence**: raised D3 force simulation `alphaDecay` from the default `0.0228` (~300 ticks, ~5 s at 60 fps) to `0.12` (~35 ticks, < 1 s); `alphaMin` set to `0.01` — eliminates noticeable lag on large states like NY (26 districts)
