@@ -286,6 +286,7 @@ let districtPoints      = {};  // state-district key → [lon, lat] inner point
 const POINT_OVERRIDES = {};
 let topoRoads           = null;  // FeatureCollection from TopoJSON roads layer
 let topoUrban           = null;  // FeatureCollection from TopoJSON urban layer
+let topoCounties        = null;  // FeatureCollection of county boundary lines
 let topoStates          = {};    // state abbr → merged state Feature for clean outline drawing
 let rawTopo             = null;  // raw TopoJSON topology — kept for topojson.mesh() calls
 let adjMap              = new Map(); // state-district key → string[] of adjacent keys
@@ -2349,11 +2350,11 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
           .data(topoUrban.features)
           .join('path')
           .attr('d', pathGen)
-          .attr('fill', dark ? 'rgba(255,255,255,0.09)' : 'rgba(80,80,140,0.13)')
+          .attr('fill', dark ? 'rgba(255,255,255,0.06)' : 'rgba(80,80,140,0.08)')
           .attr('stroke', 'none');
       }
 
-      // Road network — very faint lines, clipped to US land (rendered below district lines)
+      // Road network — rendered above urban, below counties
       if (topoRoads) {
         g.append('g').attr('class', 'context-roads')
           .attr('clip-path', `url(#${clipId})`)
@@ -2363,8 +2364,24 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
           .join('path')
           .attr('d', pathGen)
           .attr('fill', 'none')
-          .attr('stroke', dark ? 'rgba(255,255,255,0.15)' : 'rgba(60,60,100,0.20)')
+          .attr('stroke', dark ? 'rgba(255,255,255,0.14)' : 'rgba(60,60,100,0.18)')
           .attr('stroke-width', 0.5)
+          .attr('vector-effect', 'non-scaling-stroke');
+      }
+
+      // County boundary lines — most visible of the three context layers
+      if (topoCounties) {
+        g.append('g').attr('class', 'context-counties')
+          .attr('clip-path', `url(#${clipId})`)
+          .attr('pointer-events', 'none')
+          .selectAll('path')
+          .data(topoCounties.features)
+          .join('path')
+          .attr('d', pathGen)
+          .attr('fill', 'none')
+          .attr('stroke', dark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.45)')
+          .attr('stroke-width', 0.5)
+          .attr('stroke-dasharray', '2 3')
           .attr('vector-effect', 'non-scaling-stroke');
       }
 
@@ -2435,7 +2452,11 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
           const k0 = d3.zoomTransform(svg.node()).k || 1;
           // 4 screen-pixels wide regardless of zoom
           const sparkR = 4 / k0;
-          const spark = g.append('circle')
+          // Dedicated layer for spark + embers — inserted here so the badge (appended later)
+          // always sits above it in z-order, even as embers are added dynamically.
+          const sparkLayer = g.append('g').attr('pointer-events', 'none');
+
+          const spark = sparkLayer.append('circle')
             .attr('r', sparkR)
             .attr('pointer-events', 'none')
             .attr('fill', '#fffbe8')
@@ -2447,7 +2468,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
             const k = d3.zoomTransform(svg.node()).k || 1;
             const ang  = Math.random() * Math.PI * 2;
             const dist = (6 + Math.random() * 9) / k;
-            g.append('circle')
+            sparkLayer.append('circle')
               .attr('cx', x).attr('cy', y)
               .attr('r', (1.5 + Math.random() * 1.2) / k)
               .attr('fill', Math.random() < 0.5 ? '#ffb020' : '#ff5500')
@@ -2579,6 +2600,9 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
         .attr('vector-effect', 'non-scaling-stroke')
         .attr('pointer-events', 'none');
     }
+    // Badge pill always above all other features (leader line behind it, both above spark layer)
+    g.select('.dist-leader').raise();
+    g.select('.dist-icons').raise();
     return;
   }
 
@@ -3386,6 +3410,15 @@ async function init() {
       if (topo.objects.urban) topoUrban = topojson.feature(topo, topo.objects.urban);
     })
     .catch(err => console.warn('Overlay load failed (non-fatal):', err));
+
+  // Lazy-load county boundary lines — used only on game-over screen.
+  fetch('./counties-lines.topojson')
+    .then(r => r.ok ? r.json() : Promise.reject(r.status))
+    .then(topo => {
+      const obj = topo.objects[Object.keys(topo.objects)[0]];
+      if (obj) topoCounties = topojson.feature(topo, obj);
+    })
+    .catch(err => console.warn('Counties load failed (non-fatal):', err));
 
   // Build state→district lookup
   stateDistrictMap = buildStateDistrictMap(districts);
