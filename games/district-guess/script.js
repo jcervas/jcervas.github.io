@@ -1311,36 +1311,39 @@ function submitDistrictTile(dist) {
 
   const tilesEl = document.getElementById('district-tiles');
 
+  const clickedTile = tilesEl.querySelector(`g.district-tile[data-dist="${dist}"]`);
+  const tileCircle  = clickedTile?.querySelector('circle');
+
   if (correct) {
-    // Animate the correct district shape: green fill fades in then out
-    const mainG = tilesEl.querySelector('svg > g');
-    const refPath = mainG?.querySelector(`path[data-key="${fullGuess}"]`);
-    if (mainG && refPath && window.d3) {
-      const overlay = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      overlay.setAttribute('d', refPath.getAttribute('d'));
-      overlay.setAttribute('fill', 'rgba(34,197,94,0.0)');
-      overlay.setAttribute('stroke', '#22c55e');
-      overlay.setAttribute('stroke-width', '2');
-      overlay.setAttribute('vector-effect', 'non-scaling-stroke');
-      overlay.setAttribute('pointer-events', 'none');
-      mainG.appendChild(overlay);
-      d3.select(overlay)
-        .transition().duration(120).ease(d3.easeQuadOut)
-        .attr('fill', 'rgba(34,197,94,0.55)')
-        .transition().duration(340).ease(d3.easeCubicIn)
-        .attr('fill', 'rgba(34,197,94,0.0)')
-        .attr('stroke', 'rgba(34,197,94,0.0)');
+    if (tileCircle) {
+      tileCircle.classList.add('tile-correct-pop');
+      // ✓ overlaid as SVG text in the group
+      const ns = 'http://www.w3.org/2000/svg';
+      const checkEl = document.createElementNS(ns, 'text');
+      checkEl.setAttribute('text-anchor', 'middle');
+      checkEl.setAttribute('dominant-baseline', 'central');
+      checkEl.setAttribute('font-size', '10');
+      checkEl.setAttribute('font-weight', '900');
+      checkEl.setAttribute('fill', '#1a1a1a');
+      checkEl.setAttribute('pointer-events', 'none');
+      checkEl.setAttribute('class', 'tile-correct-check');
+      checkEl.textContent = '✓';
+      clickedTile.appendChild(checkEl);
     }
   } else {
-    tilesEl.classList.add('flash-wrong');
+    if (tileCircle) {
+      tileCircle.classList.add('tile-wrong-shake');
+    }
   }
 
   if (correct) {
-    _distLocked = false;
-    processDistrictGuessTile(dist, fullGuess, true);
+    setTimeout(() => {
+      _distLocked = false;
+      processDistrictGuessTile(dist, fullGuess, true);
+    }, 650);
   } else {
     setTimeout(() => {
-      tilesEl.classList.remove('flash-wrong');
+      tileCircle?.classList.remove('tile-wrong-shake');
       _distLocked = false;
       processDistrictGuessTile(dist, fullGuess, false);
     }, 480);
@@ -2549,22 +2552,24 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
             tilesEl.classList.add('gameover-loss-shake');
           } else {
             tilesEl.classList.add('gameover-win-pulse');
-            // Confetti bursts sampled from the district boundary
+            // Confetti bursts after map collapse transition finishes (~300ms) + brief settle
             if (len > 0) {
-              const svgEl   = svg.node();
-              const svgRect = svgEl.getBoundingClientRect();
-              const { k, x: tx, y: ty } = d3.zoomTransform(svgEl);
-              const N = 60;
-              const origins = [];
-              for (let i = 0; i < N; i++) {
-                const pt = node.getPointAtLength((i / N) * len);
-                const sx = svgRect.left + tx + pt.x * k;
-                const sy = svgRect.top  + ty + pt.y * k;
-                if (sx >= 0 && sx <= window.innerWidth && sy >= 0 && sy <= window.innerHeight) {
-                  origins.push({ x: sx, y: sy });
+              setTimeout(() => {
+                const svgEl   = svg.node();
+                const svgRect = svgEl.getBoundingClientRect();
+                const { k, x: tx, y: ty } = d3.zoomTransform(svgEl);
+                const N = 60;
+                const origins = [];
+                for (let i = 0; i < N; i++) {
+                  const pt = node.getPointAtLength((i / N) * len);
+                  const sx = svgRect.left + tx + pt.x * k;
+                  const sy = svgRect.top  + ty + pt.y * k;
+                  if (sx >= 0 && sx <= window.innerWidth && sy >= 0 && sy <= window.innerHeight) {
+                    origins.push({ x: sx, y: sy });
+                  }
                 }
-              }
-              if (origins.length) launchBoundaryConfetti(origins);
+                if (origins.length) launchBoundaryConfetti(origins);
+              }, 800);
             }
           }
         }
@@ -2764,6 +2769,8 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false) {
 
     const grp = iconG.append('g')
       .attr('transform', `translate(${d.ox},${d.oy})`)
+      .attr('data-dist', d.dist)
+      .attr('class', 'district-tile')
       .style('cursor', disabled ? 'default' : 'pointer')
       .style('opacity', opacity);
 
