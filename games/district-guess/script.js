@@ -1333,7 +1333,9 @@ function submitDistrictTile(dist) {
       const checkEl = document.createElementNS(ns, 'text');
       checkEl.setAttribute('text-anchor', 'middle');
       checkEl.setAttribute('dominant-baseline', 'central');
-      checkEl.setAttribute('font-size', '10');
+      const svgEl = tilesEl.querySelector('svg');
+      const curK = svgEl ? d3.zoomTransform(svgEl).k : 1;
+      checkEl.setAttribute('font-size', String(10 / Math.max(curK, 1)));
       checkEl.setAttribute('font-weight', '900');
       checkEl.setAttribute('fill', '#1a1a1a');
       checkEl.setAttribute('pointer-events', 'none');
@@ -2063,12 +2065,15 @@ function showDistrictD3Map(stateAbbr, instant = false, animateReveal = false) {
 
   const zoomIn = !instant && !gameOver;
 
+  // Ensure tilesEl is visible before building so offsetWidth/offsetHeight are non-zero
+  tilesEl.classList.remove('hidden');
+  tilesEl.style.opacity = instant ? '1' : '0';
+
   // Build the D3 district map inside tilesEl
   buildDistrictD3Map(stateAbbr, animateReveal, zoomIn);
 
   if (instant) {
     mapEl.classList.add('hidden');
-    tilesEl.classList.remove('hidden');
     tilesEl.style.opacity = '1';
   } else if (zoomIn) {
     // Show immediately — the zoom animation handles the reveal
@@ -2276,7 +2281,9 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
     const pad = 50;
     const scaleX = (W - 2 * pad) / Math.max(sx1 - sx0, 1);
     const scaleY = (H - 2 * pad) / Math.max(sy1 - sy0, 1);
-    const targetScale = Math.min(scaleX, scaleY);
+    // Cap: at most fill the viewport — never exceed what scaleX/scaleY bound, but also
+    // cap at W/12 so tiny states on narrow mobile screens don't get absurd zoom levels.
+    const targetScale = Math.min(W / 12, scaleX, scaleY);
     const targetTx = W / 2 - targetScale * (sx0 + sx1) / 2;
     const targetTy = H / 2 - targetScale * (sy0 + sy1) / 2;
     const targetTransform = d3.zoomIdentity.translate(targetTx, targetTy).scale(targetScale);
@@ -3426,6 +3433,8 @@ function resetGame(newIdx) {
   _gameStarted        = true;   // Play Again always goes straight to game
   elapsedSeconds      = 0;
   districtGameOverTransform = null;
+  districtSavedTransform    = null;
+  districtUserZoomed        = false;
   document.querySelector('.mzb-fit')?.classList.add('hidden');
   document.querySelector('.mzb-fit')?.classList.remove('at-national');
   document.querySelector('.gameover-results-arrow')?.remove();
