@@ -1303,23 +1303,11 @@ function processStateGuess(abbr, correct) {
     // Always eliminate the guessed state
     eliminatedStates.add(abbr);
 
-    if (isAdjacent) {
-      // 🔥 Correct state IS a neighbor of the guessed state.
-      // Eliminate everything outside the guessed state's neighborhood, then also
-      // eliminate the neighbors themselves (except the correct state). Net effect:
-      // only the correct state survives, but the "hot" clue still confirms the
-      // answer is close — and any state adjacent to a wrong guess always drops.
-      const neighborsSet = new Set(neighbors);
-      for (const s of Object.keys(stateDistrictMap)) {
-        if (!neighborsSet.has(s)) eliminatedStates.add(s);
-      }
-      for (const n of neighbors) {
-        if (n !== correctState) eliminatedStates.add(n);
-      }
-    } else {
-      // ❄️ Correct state is NOT adjacent to the guessed state.
-      // Also eliminate all of the guessed state's neighbors (they can't be it either).
-      for (const n of neighbors) eliminatedStates.add(n);
+    // In both hot and cold cases, eliminate the guessed state's neighbors.
+    // Hot: the correct state IS a neighbor, so protect it from elimination.
+    // Cold: the correct state is NOT a neighbor, so all neighbors can drop.
+    for (const n of neighbors) {
+      if (n !== correctState) eliminatedStates.add(n);
     }
 
     const wrongCount = guessHistory.filter(g => !g.correct).length;
