@@ -1,5 +1,10 @@
 # TODO 🚧
 
+## Bugs
+
+- [] for some reason, at leadt on mobile but maybe everytijg, the confettinis super slow when it explodes. 
+- [] there are zoom and scale issues still 
+
 ## Major upgrades
 
 - [ ] Need to add database. Data base will hold user gameplay data, which will store user data that will be retrieved instead of locally. This allows for the play once per day. 
