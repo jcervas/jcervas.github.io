@@ -2,7 +2,8 @@
 
 ## Bugs
 
-- [] for some reason, at leadt on mobile but maybe everytijg, the confettinis super slow when it explodes. 
+- [ ] the beginning zoom on #map (at least on desktop) isnt xoomed properly st least some of rhe time. check FL-10
+- [] for some reason, at least on mobile but maybe everytijg, the confettinis super slow when it explodes. 
 - [] there are zoom and scale issues still 
 
 ## Major upgrades
