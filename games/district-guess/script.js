@@ -3230,11 +3230,13 @@ function buildShareText() {
   const won     = guessHistory.some(g => g.correct && g.phase === 'district');
   // guessCount already reflects wrong guesses + 1 for the win (added in endGame)
   const winNum  = won ? guessCount : null;
-  const grid = guessHistory.map(g => {
+  const usedSlots = guessHistory.map(g => {
     if (g.correct && g.phase === 'district') return '✓';
     if (g.correct && g.phase === 'state')    return '○';  // correct state — not a "wrong" guess
     return '✗';
-  }).join(' ');
+  });
+  const unusedCount = won ? MAX_GUESSES - guessCount : 0;
+  const grid = [...usedSlots, ...Array(unusedCount).fill('⬜')].join(' ');
   const outcome = won ? `solved in ${winNum}/${MAX_GUESSES} guesses` : `unsolved (${MAX_GUESSES}/${MAX_GUESSES})`;
   return `🗺️ Daily District\n📍 ${answer} — ${outcome}\n${grid}\nCan you identify it? https://jcervas.github.io/games/district-guess/`;
 }
