@@ -1175,16 +1175,19 @@ function updateGuessCounter() {
   const el = document.getElementById('guess-counter');
   if (!el) return;
 
+  // Build a counted-guess list: wrong guesses (both phases) + the winning guess if any.
+  // Excludes the correct-state transition (it doesn't cost a guess).
+  const countedGuesses = guessHistory.filter(g => !g.correct || g.phase === 'district');
   const dots = Array.from({ length: MAX_GUESSES }, (_, i) => {
-    const g = guessHistory[i];
+    const g = countedGuesses[i];
     if (!g) return '<span class="gc-dot gc-empty"></span>';
     if (g.correct) return `<span class="gc-dot gc-used gc-correct">${svgIcon('checkCircle','gc-icon-svg')}</span>`;
     return `<span class="gc-dot gc-used gc-wrong">${svgIcon('xCircle','gc-icon-svg')}</span>`;
   }).join('');
 
-  const used     = guessHistory.length;
-  const wonGame  = guessHistory.some(g => g.correct);
-  const label    = gameOver
+  const used    = guessCount;
+  const wonGame = guessHistory.some(g => g.correct);
+  const label   = gameOver
     ? (wonGame ? 'Solved!' : 'No more guesses')
     : used === 0
       ? `${MAX_GUESSES} guesses`
@@ -3223,13 +3226,13 @@ function showResult(won, autoOpen = true) {
 }
 
 function buildShareText() {
-  const answer   = todayDistrict.properties['state-district'];
-  const winGuess = guessHistory.findIndex(g => g.correct && g.phase === 'district');
-  const won      = winGuess !== -1;
-  const winNum   = won ? winGuess + 1 : null;
-  const result   = won ? `${winNum}/${MAX_GUESSES}` : `X/${MAX_GUESSES}`;
+  const answer  = todayDistrict.properties['state-district'];
+  const won     = guessHistory.some(g => g.correct && g.phase === 'district');
+  // guessCount already reflects wrong guesses + 1 for the win (added in endGame)
+  const winNum  = won ? guessCount : null;
   const grid = guessHistory.map(g => {
     if (g.correct && g.phase === 'district') return '✓';
+    if (g.correct && g.phase === 'state')    return '○';  // correct state — not a "wrong" guess
     return '✗';
   }).join(' ');
   const outcome = won ? `solved in ${winNum}/${MAX_GUESSES} guesses` : `unsolved (${MAX_GUESSES}/${MAX_GUESSES})`;
