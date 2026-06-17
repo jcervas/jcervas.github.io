@@ -1949,16 +1949,20 @@ function zoomUSRefMapToValid(animated = true) {
   const dy = y1 - y0;
   if (dx === 0 || dy === 0) return;
 
-  // Skip re-fitting if the target bbox hasn't changed since the last call —
-  // preserves the user's pan/zoom state when a guess doesn't change the valid set.
-  const bboxKey = `${x0.toFixed(1)},${y0.toFixed(1)},${x1.toFixed(1)},${y1.toFixed(1)}`;
-  if (_lastFitBBoxKey === bboxKey) return;
-  _lastFitBBoxKey = bboxKey;
-
   const padding = 28;
   // With slice mode, the visible viewBox region is determined by container aspect.
   // pxPerVb = max(cw/W, ch/H) (slice fills the larger axis, crops the other).
   const svgRect = usRefMap.getBoundingClientRect();
+
+  // Skip re-fitting if neither the target bbox NOR the container size has changed since the
+  // last call — preserves the user's pan/zoom when a guess doesn't change the valid set.
+  // Container size MUST be part of the key: the computed scale depends on it, so a resize
+  // (e.g. the initial fit ran behind the welcome modal at the wrong size, then the
+  // ResizeObserver fires once layout settles) must force a re-fit. Otherwise the stale
+  // initial scale persists until the first guess changes the bbox — looking like a zoom-out.
+  const bboxKey = `${x0.toFixed(1)},${y0.toFixed(1)},${x1.toFixed(1)},${y1.toFixed(1)}@${Math.round(svgRect.width)}x${Math.round(svgRect.height)}`;
+  if (_lastFitBBoxKey === bboxKey) return;
+  _lastFitBBoxKey = bboxKey;
   const pxPerVb = (svgRect.width > 0 && svgRect.height > 0)
     ? Math.max(svgRect.width / W, svgRect.height / H)
     : 1;
