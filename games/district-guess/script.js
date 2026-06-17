@@ -2357,9 +2357,21 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
       districtGameOverTransform = goTransform;
       svg.call(districtZoomBehavior.transform, goTransform);
     }
-  } else if (!gameOver && !zoomIn && districtSavedTransform) {
-    // Restore saved zoom (from zoomIn entry or user pan/zoom) across SVG rebuilds
-    svg.call(districtZoomBehavior.transform, districtSavedTransform);
+  } else if (!gameOver && !zoomIn) {
+    if (districtUserZoomed && districtSavedTransform) {
+      // User manually panned/zoomed — preserve their exact view across rebuilds.
+      svg.call(districtZoomBehavior.transform, districtSavedTransform);
+    } else {
+      // No eliminations and no manual zoom: recompute the whole-state fit for the CURRENT
+      // viewBox. (A stored absolute transform goes stale if the container resized between
+      // builds, leaving the state mis-centered and under-zoomed.)
+      const fitTransform = d3.zoomIdentity
+        .translate(W / 2, H / 2)
+        .scale(stateFitScale)
+        .translate(-(sfx0 + sfx1) / 2, -(sfy0 + sfy1) / 2);
+      svg.call(districtZoomBehavior.transform, fitTransform);
+      districtSavedTransform = fitTransform;
+    }
   }
 
   // During gameplay: fill all districts with panel background to hide internal SVG lines.
