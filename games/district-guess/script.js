@@ -97,17 +97,17 @@ const STATE_REGIONS = {
 //   correct NOT adjacent → eliminate guessed + all of its neighbors
 const STATE_ADJACENCY = {
   AL: ['FL','GA','MS','TN'],
-  AK: [],
+  AK: ['WA'],
   AZ: ['CA','CO','NM','NV','UT'],
   AR: ['LA','MO','MS','OK','TN','TX'],
-  CA: ['AZ','NV','OR'],
+  CA: ['AZ','HI','NV','OR'],
   CO: ['AZ','KS','NE','NM','OK','UT','WY'],
   CT: ['MA','NY','RI'],
   DC: ['MD','VA'],
   DE: ['MD','NJ','PA'],
   FL: ['AL','GA'],
   GA: ['AL','FL','NC','SC','TN'],
-  HI: [],
+  HI: [CA],
   ID: ['MT','NV','OR','UT','WA','WY'],
   IL: ['IN','IA','KY','MO','WI'],
   IN: ['IL','KY','MI','OH'],
@@ -143,7 +143,7 @@ const STATE_ADJACENCY = {
   UT: ['AZ','CO','ID','NM','NV','WY'],
   VT: ['MA','NH','NY'],
   VA: ['DC','KY','MD','NC','TN','WV'],
-  WA: ['ID','OR'],
+  WA: ['AK','ID','OR'],
   WV: ['KY','MD','OH','PA','VA'],
   WI: ['IL','IA','MI','MN'],
   WY: ['CO','ID','MT','NE','SD','UT'],
@@ -265,6 +265,11 @@ const FACT_DEFS = [
       const side = m > 0 ? `D+${absMar}%` : m < 0 ? `R+${absMar}%` : 'Even';
       return `${tag} — ${side} (${pctDem}D / ${pctRep}R)`;
     }
+  },
+  {
+    icon: 'clock',
+    label: 'Time zone',
+    fn: d => STATE_TIMEZONES[d.state] ? `${STATE_TIMEZONES[d.state]} Time` : '—'
   },
   {
     icon: 'mappin',
@@ -2297,8 +2302,8 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
       .call(districtZoomBehavior.transform, targetTransform);
   }
 
-  // Auto-zoom to the remaining possible districts (skip if a saved transform exists or user has zoomed)
-  if (!gameOver && !zoomIn && !districtSavedTransform && !districtUserZoomed && possibleKeys.size < stateFeatures.length) {
+  // Auto-zoom to the remaining possible districts (skip only if user has manually panned/zoomed)
+  if (!gameOver && !zoomIn && !districtUserZoomed && possibleKeys.size < stateFeatures.length) {
     const possFeatures = stateFeatures.filter(f => possibleKeys.has(f.properties['state-district']));
     if (possFeatures.length > 0) {
       const pb = d3.geoPath(projection).bounds({ type: 'FeatureCollection', features: possFeatures });
@@ -2306,14 +2311,16 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
       const pad = 30;
       const scaleX = (W - 2 * pad) / Math.max(px1 - px0, 1);
       const scaleY = (H - 2 * pad) / Math.max(py1 - py0, 1);
-      const scale  = Math.min(5, Math.min(scaleX, scaleY));
+      const scale  = Math.min(W / 12, Math.min(scaleX, scaleY));
       dbg(`auto-zoom possibleKeys=${possibleKeys.size}/${stateFeatures.length} bbox=[${px0.toFixed(0)},${py0.toFixed(0)},${px1.toFixed(0)},${py1.toFixed(0)}] scaleX=${scaleX.toFixed(2)} scaleY=${scaleY.toFixed(2)} scale=${scale.toFixed(2)}`);
       // Only zoom in — if remaining districts already fill most of the viewport, leave the view alone
       if (scale > 1.15) {
         const tx = (W - scale * (px0 + px1)) / 2;
         const ty = (H - scale * (py0 + py1)) / 2;
+        const autoTransform = d3.zoomIdentity.translate(tx, ty).scale(scale);
         dbg(`auto-zoom applying tx=${tx.toFixed(0)} ty=${ty.toFixed(0)} k=${scale.toFixed(2)}`);
-        svg.call(districtZoomBehavior.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
+        svg.call(districtZoomBehavior.transform, autoTransform);
+        districtSavedTransform = autoTransform;
       }
     }
   } else if (gameOver && !districtUserZoomed && todayDistrict) {
