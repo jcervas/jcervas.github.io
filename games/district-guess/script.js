@@ -2581,13 +2581,15 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
             tilesEl.classList.add('gameover-loss-shake');
           } else {
             tilesEl.classList.add('gameover-win-pulse');
-            // Confetti bursts after map collapse transition finishes (~300ms) + brief settle
+            // Confetti bursts after map collapse transition finishes (~300ms) + brief settle.
+            // Use rAF inside the timeout so we sample getBoundingClientRect after the
+            // browser has painted the settled layout (critical on slow mobile devices).
             if (len > 0) {
-              setTimeout(() => {
+              setTimeout(() => requestAnimationFrame(() => {
                 const svgEl   = svg.node();
                 const svgRect = svgEl.getBoundingClientRect();
                 const { k, x: tx, y: ty } = d3.zoomTransform(svgEl);
-                const N = 60;
+                const N = 120;
                 const origins = [];
                 for (let i = 0; i < N; i++) {
                   const pt = node.getPointAtLength((i / N) * len);
@@ -2597,8 +2599,12 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
                     origins.push({ x: sx, y: sy });
                   }
                 }
-                if (origins.length) launchBoundaryConfetti(origins);
-              }, 800);
+                // Fallback: if no boundary points are visible, burst from the SVG center
+                if (!origins.length) {
+                  origins.push({ x: svgRect.left + svgRect.width / 2, y: svgRect.top + svgRect.height / 2 });
+                }
+                launchBoundaryConfetti(origins);
+              }), 900);
             }
           }
         }
