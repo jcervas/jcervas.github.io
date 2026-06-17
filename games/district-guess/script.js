@@ -2953,7 +2953,7 @@ function endGame(won) {
 // ============================================================
 
 function _previewProjection(W, H, pad) {
-  // Features from TopoJSON are already CCW-wound — no winding fix needed.
+  // Use AlbersUSA so the district shape matches the district tile map and ref map.
   // For MultiPolygon, fit to the largest sub-polygon so small islands don't
   // blow out the extent.
   const geom = todayDistrict && todayDistrict.geometry;
@@ -2966,7 +2966,7 @@ function _previewProjection(W, H, pad) {
     });
     fitFeature = { type: 'Feature', geometry: { type: 'Polygon', coordinates: largest } };
   }
-  return d3.geoMercator().fitExtent([[pad, pad], [W - pad, H - pad]], fitFeature);
+  return d3.geoAlbersUsa().fitExtent([[pad, pad], [W - pad, H - pad]], fitFeature);
 }
 
 function _renderDistrictToBlob() {
