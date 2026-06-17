@@ -1300,14 +1300,28 @@ function processStateGuess(abbr, correct) {
     correctStateGuessed = true;
     lockStateDropdown(abbr);
   } else {
-    // Always eliminate the guessed state
+    // Eliminate the guessed state and narrow the pool to its neighborhood.
+    // Keep only states adjacent to the guessed state; everything else is too
+    // far away to be the answer. The correct answer is always protected.
     eliminatedStates.add(abbr);
+    const neighborSet = new Set(neighbors);
+    for (const s of [...getValidStates()]) {
+      if (s !== correctState && !neighborSet.has(s)) eliminatedStates.add(s);
+    }
 
-    // In both hot and cold cases, eliminate the guessed state's neighbors.
-    // Hot: the correct state IS a neighbor, so protect it from elimination.
-    // Cold: the correct state is NOT a neighbor, so all neighbors can drop.
-    for (const n of neighbors) {
-      if (n !== correctState) eliminatedStates.add(n);
+    // Dead-end cleanup: a state whose every adjacency neighbor is already
+    // eliminated can't be the answer — remove it. Repeat until stable.
+    let _changed = true;
+    while (_changed) {
+      _changed = false;
+      for (const s of [...getValidStates()]) {
+        if (s === correctState) continue;
+        const sN = STATE_ADJACENCY[s] || [];
+        if (sN.length > 0 && sN.every(n => eliminatedStates.has(n))) {
+          eliminatedStates.add(s);
+          _changed = true;
+        }
+      }
     }
 
     const wrongCount = guessHistory.filter(g => !g.correct).length;
