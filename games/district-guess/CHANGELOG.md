@@ -2,6 +2,17 @@
 
 ---
 
+## v1.8 — Architecture Streamline & Elimination Redesign
+
+- **Pre-built district tiles**: district map is built at page init (and after "New Map") so the state→district transition is a smooth reveal + zoom rather than a DOM rebuild mid-game — consistent starting point regardless of container size or scroll position
+- **Explicit game phase**: `gamePhase` variable tracks `'state'` / `'district'` / `'gameover'` and is updated at each transition; replaces scattered boolean checks across the codebase
+- **State elimination redesign**: wrong guess now narrows the remaining pool to only the guessed state's neighbors ("keep-only-neighbors"), then iteratively removes any state whose every adjacency neighbor is already eliminated ("dead-end cleanup") — example: guess MA → {CT, NH, NY, RI, VT} remain; then guess CT → only NY remains (RI auto-eliminated because both its neighbors CT and MA are gone)
+- **Confetti after animation**: confetti waits until the win-pulse animation completes (~1.4 s after game over) before firing — no more confetti mid-transition
+- **District tiles portrait-container fix**: district tiles SVG now uses `xMidYMid meet` instead of `slice`, preventing the NYC area from being clipped off-screen on narrow/portrait viewports
+- **Restore game replay fix**: `restoreGame` replays eliminations through the new keep-only-neighbors + dead-end logic instead of the old hot/cold adjacency code
+
+---
+
 ## v1.5 — Spark Animation Polish & Badge Sizing
 
 - **Spark always plays**: animation runs every time the game-over screen is shown (including on page reload after completing a game), not just on the first reveal
