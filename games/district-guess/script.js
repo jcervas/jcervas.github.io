@@ -421,6 +421,19 @@ function formatCurrency(n) {
   return '$' + parseInt(n, 10).toLocaleString();
 }
 
+// Observable zoom-to-bounding-box pattern (observablehq.com/@d3/zoom-to-bounding-box).
+// Returns a d3.ZoomTransform that centers the given bbox in a W×H viewport.
+// margin is a fraction of the viewport (0.85 = 15% padding around the constraining axis).
+function zoomToBBox([[x0, y0], [x1, y1]], W, H, { margin = 0.85, maxScale = Infinity, minScale = 0 } = {}) {
+  const bw = x1 - x0, bh = y1 - y0;
+  if (!(bw > 0) || !(bh > 0)) return d3.zoomIdentity;
+  const k = Math.min(maxScale, Math.max(minScale, margin / Math.max(bw / W, bh / H)));
+  return d3.zoomIdentity
+    .translate(W / 2, H / 2)
+    .scale(k)
+    .translate(-(x0 + x1) / 2, -(y0 + y1) / 2);
+}
+
 // ============================================================
 //  STORAGE
 // ============================================================
@@ -648,7 +661,7 @@ function renderDistrict(feature) {
   requestAnimationFrame(() => requestAnimationFrame(() => {
     map.invalidateSize();
     if (districtLayer) {
-      map.fitBounds(districtLayer.getBounds(), { padding: [40, 40], maxZoom: 10, animate: false });
+      map.fitBounds(districtLayer.getBounds(), { padding: [40, 40], animate: false });
     }
     renderMapD3(currentMapStage); // restore current stage (preserves urban/roads if already revealed)
   }));
@@ -1965,11 +1978,10 @@ function zoomUSRefMapToValid(animated = true) {
   const fit = containerAspect < vbAspect ? (minFit + maxFit) / 2 : minFit;
   // No minimum scale — allow zooming out to show the full US at game start.
   const scale = Math.max(0.3, fit);
-  const tx    = W / 2 - scale * (x0 + dx / 2);
-  const ty    = H / 2 - scale * (y0 + dy / 2);
+  const cx = x0 + dx / 2, cy = y0 + dy / 2;
 
   // Sync through d3.zoom so user pan/scroll starts from the correct position
-  const zTransform = d3.zoomIdentity.translate(tx, ty).scale(scale);
+  const zTransform = d3.zoomIdentity.translate(W / 2, H / 2).scale(scale).translate(-cx, -cy);
   if (usRefZoom && usRefSvgSel) {
     if (animated) {
       usRefSvgSel.transition().duration(700).ease(d3.easeCubicInOut)
@@ -2286,17 +2298,8 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
   // Zoom-in entry animation: start at national view, animate to state bounding box
   if (zoomIn) {
     const stateFC = { type: 'FeatureCollection', features: stateFeatures };
-    const [[sx0, sy0], [sx1, sy1]] = pathGen.bounds(stateFC);
-    const pad = 50;
-    const scaleX = (W - 2 * pad) / Math.max(sx1 - sx0, 1);
-    const scaleY = (H - 2 * pad) / Math.max(sy1 - sy0, 1);
-    // Cap: at most fill the viewport — never exceed what scaleX/scaleY bound, but also
-    // cap at W/12 so tiny states on narrow mobile screens don't get absurd zoom levels.
-    const targetScale = Math.min(W / 12, scaleX, scaleY);
-    const targetTx = W / 2 - targetScale * (sx0 + sx1) / 2;
-    const targetTy = H / 2 - targetScale * (sy0 + sy1) / 2;
-    const targetTransform = d3.zoomIdentity.translate(targetTx, targetTy).scale(targetScale);
-    dbg(`zoomIn target k=${targetScale.toFixed(2)} tx=${targetTx.toFixed(0)} ty=${targetTy.toFixed(0)}`);
+    const targetTransform = zoomToBBox(pathGen.bounds(stateFC), W, H, { margin: 0.85, maxScale: W / 12 });
+    dbg(`zoomIn target k=${targetTransform.k.toFixed(2)} x=${targetTransform.x.toFixed(0)} y=${targetTransform.y.toFixed(0)}`);
     // Save as the baseline so subsequent rebuilds restore the same zoom level
     districtSavedTransform = targetTransform;
     // Start at national view (identity), then animate in
@@ -2309,38 +2312,24 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
   if (!gameOver && !zoomIn && !districtUserZoomed && possibleKeys.size < stateFeatures.length) {
     const possFeatures = stateFeatures.filter(f => possibleKeys.has(f.properties['state-district']));
     if (possFeatures.length > 0) {
-      const pb = d3.geoPath(projection).bounds({ type: 'FeatureCollection', features: possFeatures });
-      const [[px0, py0], [px1, py1]] = pb;
-      const pad = 30;
-      const scaleX = (W - 2 * pad) / Math.max(px1 - px0, 1);
-      const scaleY = (H - 2 * pad) / Math.max(py1 - py0, 1);
-      const scale  = Math.min(W / 12, Math.min(scaleX, scaleY));
-      dbg(`auto-zoom possibleKeys=${possibleKeys.size}/${stateFeatures.length} bbox=[${px0.toFixed(0)},${py0.toFixed(0)},${px1.toFixed(0)},${py1.toFixed(0)}] scaleX=${scaleX.toFixed(2)} scaleY=${scaleY.toFixed(2)} scale=${scale.toFixed(2)}`);
+      const autoTransform = zoomToBBox(
+        d3.geoPath(projection).bounds({ type: 'FeatureCollection', features: possFeatures }),
+        W, H, { margin: 0.85, maxScale: W / 12, minScale: 1.15 }
+      );
+      dbg(`auto-zoom possibleKeys=${possibleKeys.size}/${stateFeatures.length} k=${autoTransform.k.toFixed(2)}`);
       // Only zoom in — if remaining districts already fill most of the viewport, leave the view alone
-      if (scale > 1.15) {
-        const tx = (W - scale * (px0 + px1)) / 2;
-        const ty = (H - scale * (py0 + py1)) / 2;
-        const autoTransform = d3.zoomIdentity.translate(tx, ty).scale(scale);
-        dbg(`auto-zoom applying tx=${tx.toFixed(0)} ty=${ty.toFixed(0)} k=${scale.toFixed(2)}`);
+      if (autoTransform.k > 1.15) {
         svg.call(districtZoomBehavior.transform, autoTransform);
         districtSavedTransform = autoTransform;
       }
     }
   } else if (gameOver && !districtUserZoomed && todayDistrict) {
-    // Game-over: zoom into the answer state so it's clearly visible against the national backdrop
+    // Game-over: zoom into the answer district at ~45% of the viewport so surrounding
+    // state/national context remains visible.
     const answerF = stateFeatures.find(f => f.properties['state-district'] === todayDistrict.properties['state-district']);
     const zoomTarget = answerF || (stateFeatures.length ? { type: 'FeatureCollection', features: stateFeatures } : null);
     if (zoomTarget) {
-      const [[bx0, by0], [bx1, by1]] = pathGen.bounds(zoomTarget);
-      const bw = Math.max(bx1 - bx0, 1), bh = Math.max(by1 - by0, 1);
-      // Target the district's longest side at ~45% of the viewport, so there's still
-      // surrounding state/national context. Floor avoids zooming out past the
-      // national baseline; cap avoids absurd magnification on tiny/narrow districts.
-      const fitScale = Math.min(W / bw, H / bh);
-      const scale = Math.min(25, Math.max(1.2, fitScale * 0.45));
-      const tx = W / 2 - scale * (bx0 + bx1) / 2;
-      const ty = H / 2 - scale * (by0 + by1) / 2;
-      const goTransform = d3.zoomIdentity.translate(tx, ty).scale(scale);
+      const goTransform = zoomToBBox(pathGen.bounds(zoomTarget), W, H, { margin: 0.45, maxScale: 25, minScale: 1.2 });
       districtGameOverTransform = goTransform;
       svg.call(districtZoomBehavior.transform, goTransform);
     }
@@ -2760,26 +2749,17 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
   // scale so icons are built at the right size before the zoom fires.
   let zoomK = 1;
   if (districtSavedTransform) {
-    // Use saved transform (set from zoomIn entry or user pan)
     zoomK = districtSavedTransform.k;
   } else if (zoomIn) {
-    // Pre-compute the zoomIn scale so circles are sized correctly on first render
     const stateFC2 = { type: 'FeatureCollection', features: stateFeatures };
-    const [[sx0, sy0], [sx1, sy1]] = pathGen.bounds(stateFC2);
-    const pad2 = 50;
-    const scaleX2 = (W - 2 * pad2) / Math.max(sx1 - sx0, 1);
-    const scaleY2 = (H - 2 * pad2) / Math.max(sy1 - sy0, 1);
-    zoomK = Math.min(W / 12, scaleX2, scaleY2);
+    zoomK = zoomToBBox(pathGen.bounds(stateFC2), W, H, { margin: 0.85, maxScale: W / 12 }).k;
   } else if (!gameOver && possibleKeys.size < stateFeatures.length) {
     const pf = stateFeatures.filter(f => possibleKeys.has(f.properties['state-district']));
     if (pf.length > 0) {
-      const pb = d3.geoPath(projection).bounds({ type: 'FeatureCollection', features: pf });
-      const [[px0, py0], [px1, py1]] = pb;
-      const pad = 30;
-      zoomK = Math.min(W / 12, Math.min(
-        (W - 2 * pad) / Math.max(px1 - px0, 1),
-        (H - 2 * pad) / Math.max(py1 - py0, 1)
-      ));
+      zoomK = zoomToBBox(
+        d3.geoPath(projection).bounds({ type: 'FeatureCollection', features: pf }),
+        W, H, { margin: 0.85, maxScale: W / 12 }
+      ).k;
     }
   }
   // Scale down radius for dense states (many districts) so circles don't pile up
@@ -3715,7 +3695,7 @@ document.addEventListener('DOMContentLoaded', () => {
       resetGame(newIdx);
       requestAnimationFrame(() => {
         map.invalidateSize();
-        if (districtLayer) map.fitBounds(districtLayer.getBounds(), { padding: [40, 40], maxZoom: 10, animate: false });
+        if (districtLayer) map.fitBounds(districtLayer.getBounds(), { padding: [40, 40], animate: false });
       });
     }, 350);
   }
@@ -3783,7 +3763,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // #map was sized while hidden behind the modal — Leaflet's cached size is stale
       requestAnimationFrame(() => {
         if (map) map.invalidateSize();
-        if (districtLayer) map.fitBounds(districtLayer.getBounds(), { padding: [40, 40], maxZoom: 10, animate: false });
+        if (districtLayer) map.fitBounds(districtLayer.getBounds(), { padding: [40, 40], animate: false });
         if (isFirstPlay) {
           updateThemeToggle();
           document.getElementById('settings-modal').classList.remove('hidden');

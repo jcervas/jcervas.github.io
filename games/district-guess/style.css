@@ -1628,9 +1628,12 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
   gap: clamp(10px, 1.8vh, 18px);
 }
 .welcome-beta-badge {
-  font-size: 0.85rem;
-  padding: 3px 8px;
+  padding: 4px 10px;
   border-radius: 7px;
+}
+.welcome-beta-badge .beta-label,
+.welcome-beta-badge .beta-version {
+  font-size: 0.75rem;
 }
 .welcome-wordmark-svg {
   height: clamp(28px, 5vh, 44px);
@@ -2110,8 +2113,8 @@ body.light-mode .welcome-wordmark-svg { filter: none; }
   .donate-btn { font-size: 0.72rem; padding: 5px 10px; }
   .donate-long { display: none; }
   .donate-short { display: inline; }
-  /* Progressive hiding: beta badge already small; logo hides first, then wordmark text */
-  .beta-badge { display: none; }
+  /* Progressive hiding: hide header beta badge on narrow screens, but keep it on welcome modal */
+  .header-inner .beta-badge { display: none; }
   @media (max-width: 360px) { .game-logo { display: none; } }
   @media (max-width: 300px) { .header-wordmark { display: none; } }
 
