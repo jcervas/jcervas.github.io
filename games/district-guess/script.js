@@ -338,6 +338,12 @@ let timerRunning        = false;
 let gameOver            = false;
 let lastGameWon         = false;  // outcome of the most recently finished game (for confetti gating)
 let _resultConfettiFired = false; // confetti fires once per game, the first time results are viewed
+let gamePhase            = 'state';  // 'state' | 'district' | 'gameover'
+let _districtBuiltState  = null;     // stateAbbr currently rendered in the tiles SVG
+let _districtSvgSel      = null;     // D3 selection of the tiles SVG (cached for zoom reuse)
+let _districtPathSnap    = null;     // pathGen cached from last build (for reveal zoom)
+let _districtStateFSnap  = null;     // stateFeatures cached from last build (for reveal zoom)
+let _gameOverTime        = 0;        // Date.now() when endGame() was called (confetti gate)
 let db                  = null;   // Firestore instance (if configured)
 let username            = '';
 let replayCount         = 0;      // increments each "Play Again" to pick a fresh district
@@ -2071,6 +2077,8 @@ function renderStateChips() {
 }
 
 function lockStateDropdown(stateAbbr, instant = false) {
+  gamePhase = 'district';
+
   // Update chips and US ref map to show only the confirmed state
   renderStateChips();
   updateUSRefMap();
@@ -2120,19 +2128,39 @@ function showDistrictD3Map(stateAbbr, instant = false, animateReveal = false) {
 
   const zoomIn = !instant && !gameOver;
 
+  // If tiles were pre-built at init for this state (and game is not over, which always
+  // needs a fresh build with answer highlight), reuse the existing SVG — just reveal
+  // it and apply the zoom-in animation without tearing down and rebuilding the DOM.
+  const preBuilt = !gameOver
+    && _districtBuiltState === stateAbbr
+    && tilesEl.querySelector('svg');
+
   // Ensure tilesEl is visible before building so offsetWidth/offsetHeight are non-zero
   tilesEl.classList.remove('hidden');
   tilesEl.style.opacity = instant ? '1' : '0';
+  tilesEl.style.pointerEvents = '';
 
-  // Build the D3 district map inside tilesEl
-  buildDistrictD3Map(stateAbbr, animateReveal, zoomIn);
+  if (preBuilt) {
+    // Apply zoom animation on the cached SVG so the entry feels smooth even without rebuild
+    if (zoomIn && _districtSvgSel && _districtPathSnap && _districtStateFSnap) {
+      const stateFC       = { type: 'FeatureCollection', features: _districtStateFSnap };
+      const stateBBox     = _districtPathSnap.bounds(stateFC);
+      const entryTransform = zoomToBBox(stateBBox, REF_VB_W, REF_VB_H, { margin: 0.85 });
+      const refStart      = usRefMap ? d3.zoomTransform(usRefMap) : d3.zoomIdentity;
+      districtSavedTransform = entryTransform;
+      _districtSvgSel.call(districtZoomBehavior.transform, refStart);
+      _districtSvgSel.transition().duration(700).ease(d3.easeCubicInOut)
+        .call(districtZoomBehavior.transform, entryTransform);
+    }
+  } else {
+    buildDistrictD3Map(stateAbbr, animateReveal, zoomIn);
+  }
 
   if (instant) {
     mapEl.classList.add('hidden');
     tilesEl.style.opacity = '1';
   } else {
     // Cross-fade: both maps share REF_VB coordinate space so they align during the fade.
-    // buildDistrictD3Map animates from the ref map's current zoom to the state-fit bbox.
     mapEl.style.opacity = '0';
     setTimeout(() => { mapEl.classList.add('hidden'); }, 370);
     tilesEl.style.opacity = '0';
@@ -2242,6 +2270,12 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
   const allStatesFC = { type: 'FeatureCollection', features: Object.values(topoStates).filter(Boolean) };
   projection = d3.geoAlbersUsa().fitExtent([[10, 10], [W - 10, H - 10]], allStatesFC);
   const pathGen = d3.geoPath().projection(projection);
+
+  // Cache for showDistrictD3Map to reuse on reveal without a full rebuild
+  _districtSvgSel      = svg;
+  _districtPathSnap    = pathGen;
+  _districtStateFSnap  = stateFeatures;
+  _districtBuiltState  = stateAbbr;
 
   const g = svg.append('g');
 
@@ -2905,6 +2939,8 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
 
 function endGame(won) {
   gameOver = true;
+  gamePhase = 'gameover';
+  if (won) _gameOverTime = Date.now();
   stopTimer();
   cluesRevealed = FACT_DEFS.length;   // reveal all text clues
   applyMapStage(0, true);
@@ -3225,8 +3261,17 @@ function openResultModal() {
   switchResultTab('result');
   if (lastGameWon && !_resultConfettiFired) {
     _resultConfettiFired = true;
-    setTimeout(launchConfetti, 200);
+    _launchConfettiAfterAnim();
   }
+}
+
+// Fire confetti only after the game-over win-pulse animation has completed.
+// The pulse runs with a 650ms delay + 700ms duration = ~1350ms total.
+// If the user opens results before then, we wait out the remainder first.
+function _launchConfettiAfterAnim() {
+  const WIN_ANIM_MS = 1400;
+  const wait = Math.max(0, WIN_ANIM_MS - (Date.now() - _gameOverTime));
+  setTimeout(launchConfetti, wait);
 }
 
 function showResult(won, autoOpen = true) {
@@ -3239,7 +3284,7 @@ function showResult(won, autoOpen = true) {
     switchResultTab('result');
     if (won && !_resultConfettiFired) {
       _resultConfettiFired = true;
-      setTimeout(launchConfetti, 300);
+      _launchConfettiAfterAnim();
     }
   }
 
@@ -3407,20 +3452,27 @@ function restoreGame(saved) {
   const tvElI = document.getElementById('timer-value-inline');
   if (tvElI) tvElI.textContent = formatTime(elapsedSeconds);
 
-  // Reconstruct adjacency-based eliminations from saved guess history
+  // Reconstruct eliminations by replaying each wrong state guess through the same
+  // "keep-only-neighbors + dead-end cleanup" logic used in processStateGuess.
   eliminatedStates = new Set();
+  const _rc = todayDistrict.properties.state; // correct state — always protected
   guessHistory.filter(g => g.phase === 'state' && !g.correct).forEach(g => {
     eliminatedStates.add(g.text);
-    const neighbors = STATE_ADJACENCY[g.text] || [];
-    if (g.adjacent === true) {
-      // Was "hot" — everything outside this state's neighbors was eliminated
-      const neighborsSet = new Set(neighbors);
+    const neighborSet = new Set(STATE_ADJACENCY[g.text] || []);
+    for (const s of Object.keys(stateDistrictMap)) {
+      if (s !== _rc && !neighborSet.has(s)) eliminatedStates.add(s);
+    }
+    // Dead-end cleanup
+    let changed = true;
+    while (changed) {
+      changed = false;
       for (const s of Object.keys(stateDistrictMap)) {
-        if (!neighborsSet.has(s)) eliminatedStates.add(s);
+        if (eliminatedStates.has(s) || s === _rc) continue;
+        const sN = STATE_ADJACENCY[s] || [];
+        if (sN.length > 0 && sN.every(n => eliminatedStates.has(n))) {
+          eliminatedStates.add(s); changed = true;
+        }
       }
-    } else {
-      // Was "cold" (or old save without adjacency data) — neighbors eliminated too
-      for (const n of neighbors) eliminatedStates.add(n);
     }
   });
 
@@ -3498,6 +3550,12 @@ function resetGame(newIdx) {
   districtGameOverTransform = null;
   districtSavedTransform    = null;
   districtUserZoomed        = false;
+  gamePhase                 = 'state';
+  _districtBuiltState       = null;
+  _districtSvgSel           = null;
+  _districtPathSnap         = null;
+  _districtStateFSnap       = null;
+  _gameOverTime             = 0;
   document.querySelector('.mzb-fit')?.classList.remove('at-national');
   document.querySelector('.gameover-results-arrow')?.remove();
   eliminatedStates    = new Set();
@@ -3562,6 +3620,16 @@ function resetGame(newIdx) {
   renderClues();
   renderGuessHistory();  // also calls updateGuessCounter()
   document.getElementById('guess-remaining').textContent = `${MAX_GUESSES} guesses`;
+
+  // Pre-build district tiles for the new district in the background so the
+  // state→district transition on correct guess is a reveal, not a rebuild.
+  requestAnimationFrame(() => {
+    const tilesEl = document.getElementById('district-tiles');
+    tilesEl.classList.remove('hidden');
+    tilesEl.style.opacity = '0';
+    tilesEl.style.pointerEvents = 'none';
+    buildDistrictD3Map(todayDistrict.properties.state, false, false);
+  });
 }
 
 // ============================================================
@@ -3675,6 +3743,17 @@ async function init() {
   // Leaflet caches container size at init; flex layout may not be settled yet
   setTimeout(() => { if (map) map.invalidateSize(); }, 50);
   initUSRefMap();   // start loading US states reference map
+
+  // Pre-build district tiles in the background so the state→district transition
+  // on first correct guess is a reveal+zoom rather than a DOM rebuild.
+  // The tiles start invisible (opacity 0, not hidden) so layout dimensions are real.
+  requestAnimationFrame(() => {
+    const tilesEl = document.getElementById('district-tiles');
+    tilesEl.classList.remove('hidden');
+    tilesEl.style.opacity = '0';
+    tilesEl.style.pointerEvents = 'none';
+    buildDistrictD3Map(todayDistrict.properties.state, false, false);
+  });
 
   // Check for saved game from today
   const saved = loadGameState();
