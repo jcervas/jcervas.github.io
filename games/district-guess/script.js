@@ -605,8 +605,8 @@ function renderMapD3(stage) {
     svg.append('rect').attr('width', W).attr('height', H).attr('fill', bg || '#f5f5f5');
   }
 
-  // Urban areas + roads at stage 1+
-  if (stage >= 1 && (topoUrban || topoRoads)) {
+  // Urban areas + roads only after game ends (not during gameplay — too revealing)
+  if (gameOver && (topoUrban || topoRoads)) {
     const [[bx0, by0], [bx1, by1]] = d3.geoBounds(todayDistrict);
     const mg = 0.1;
     const inBounds = f => {
@@ -2258,7 +2258,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
 
       // Re-tune simulation synchronously when zoom changes so icons jump to new positions instantly.
       if (districtSimulation && !gameOver && districtSimulation._applyIconPositions) {
-        const newCollide = 16 / k;
+        const newCollide = 16 / (k * densityScale);
         const newStrength = Math.min(0.98, 0.6 + (k - 1) * 0.15);
         districtSimulation
           .force('collide', d3.forceCollide(d => d.isCold ? newCollide * 0.25 : d.isHot ? newCollide * 0.45 : newCollide))
@@ -2759,21 +2759,32 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
   // For user-zoomed sessions, use the saved transform. For auto-zoom, pre-compute the expected
   // scale so icons are built at the right size before the zoom fires.
   let zoomK = 1;
-  if (districtUserZoomed && districtSavedTransform) {
+  if (districtSavedTransform) {
+    // Use saved transform (set from zoomIn entry or user pan)
     zoomK = districtSavedTransform.k;
+  } else if (zoomIn) {
+    // Pre-compute the zoomIn scale so circles are sized correctly on first render
+    const stateFC2 = { type: 'FeatureCollection', features: stateFeatures };
+    const [[sx0, sy0], [sx1, sy1]] = pathGen.bounds(stateFC2);
+    const pad2 = 50;
+    const scaleX2 = (W - 2 * pad2) / Math.max(sx1 - sx0, 1);
+    const scaleY2 = (H - 2 * pad2) / Math.max(sy1 - sy0, 1);
+    zoomK = Math.min(W / 12, scaleX2, scaleY2);
   } else if (!gameOver && possibleKeys.size < stateFeatures.length) {
     const pf = stateFeatures.filter(f => possibleKeys.has(f.properties['state-district']));
     if (pf.length > 0) {
       const pb = d3.geoPath(projection).bounds({ type: 'FeatureCollection', features: pf });
       const [[px0, py0], [px1, py1]] = pb;
       const pad = 30;
-      zoomK = Math.min(5, Math.min(
+      zoomK = Math.min(W / 12, Math.min(
         (W - 2 * pad) / Math.max(px1 - px0, 1),
         (H - 2 * pad) / Math.max(py1 - py0, 1)
       ));
     }
   }
-  const R = Math.max(1, 13 / zoomK);
+  // Scale down radius for dense states (many districts) so circles don't pile up
+  const densityScale = Math.max(1, Math.sqrt(nodes.length / 8));
+  const R = Math.max(1, 13 / (zoomK * densityScale));
 
   // Draw connector lines (initially at origin point, animated by simulation)
   const lineG = g.append('g').attr('class', 'dist-connectors');
@@ -2838,7 +2849,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
     return grp.node();
   });
 
-  const collide = 16 / zoomK;
+  const collide = 16 / (zoomK * densityScale);
   const forceStrength = Math.min(0.98, 0.6 + (zoomK - 1) * 0.15);
 
   function applyIconPositions() {
@@ -3696,16 +3707,17 @@ document.addEventListener('DOMContentLoaded', () => {
     buildWelcomeButtons();
     welcomeModal.classList.remove('hidden');
 
-    // Defer full reset until after the CSS collapse transition (0.3s) so Leaflet
-    // measures the correct map size when renderDistrict calls fitBounds.
+    // Remove map-collapsed immediately so the CSS flex expansion (300ms) starts.
+    // Then defer resetGame until after that transition so Leaflet measures the
+    // correct map height when renderDistrict calls fitBounds.
+    document.getElementById('game-section')?.classList.remove('map-collapsed');
     setTimeout(() => {
-      document.getElementById('game-section')?.classList.remove('map-collapsed');
       resetGame(newIdx);
       requestAnimationFrame(() => {
         map.invalidateSize();
         if (districtLayer) map.fitBounds(districtLayer.getBounds(), { padding: [40, 40], maxZoom: 10, animate: false });
       });
-    }, 320);
+    }, 350);
   }
   document.getElementById('play-again-btn').addEventListener('click', startNewMap);
   document.getElementById('banner-new-map-btn').addEventListener('click', startNewMap);
