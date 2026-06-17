@@ -204,7 +204,7 @@ const GAME_VERSION = (() => {
   const day = String(d.getDate()).padStart(2, '0');
   const h = String(d.getHours()).padStart(2, '0');
   const min = String(d.getMinutes()).padStart(2, '0');
-  return `Beta 1.3 (${y}-${m}-${day} ${h}:${min})`;
+  return `Beta 1.8 (${y}-${m}-${day} ${h}:${min})`;
 })();
 
 // Built at load time from GeoJSON: { 'TX': ['01','02',...], 'WY': ['01'], ... }
@@ -1315,15 +1315,20 @@ function processStateGuess(abbr, correct) {
       if (s !== correctState && !neighborSet.has(s)) eliminatedStates.add(s);
     }
 
-    // Dead-end cleanup: a state whose every adjacency neighbor is already
-    // eliminated can't be the answer — remove it. Repeat until stable.
+    // Dead-end cleanup: a state whose every adjacency neighbor has been explicitly
+    // guessed wrong (not just eliminated by the keep-only step) can't be the answer.
+    // We only use the set of intentional wrong guesses so that states eliminated as
+    // non-neighbors of a guess don't cascade into false dead-ends.
+    const wrongGuessed = new Set(
+      guessHistory.filter(g => g.phase === 'state' && !g.correct).map(g => g.text)
+    );
     let _changed = true;
     while (_changed) {
       _changed = false;
       for (const s of [...getValidStates()]) {
         if (s === correctState) continue;
         const sN = STATE_ADJACENCY[s] || [];
-        if (sN.length > 0 && sN.every(n => eliminatedStates.has(n))) {
+        if (sN.length > 0 && sN.every(n => wrongGuessed.has(n))) {
           eliminatedStates.add(s);
           _changed = true;
         }
@@ -3456,20 +3461,23 @@ function restoreGame(saved) {
   // "keep-only-neighbors + dead-end cleanup" logic used in processStateGuess.
   eliminatedStates = new Set();
   const _rc = todayDistrict.properties.state; // correct state — always protected
-  guessHistory.filter(g => g.phase === 'state' && !g.correct).forEach(g => {
+  const _wrongGuesses = guessHistory.filter(g => g.phase === 'state' && !g.correct);
+  const _wrongGuessedSoFar = new Set();
+  _wrongGuesses.forEach(g => {
+    _wrongGuessedSoFar.add(g.text);
     eliminatedStates.add(g.text);
     const neighborSet = new Set(STATE_ADJACENCY[g.text] || []);
     for (const s of Object.keys(stateDistrictMap)) {
       if (s !== _rc && !neighborSet.has(s)) eliminatedStates.add(s);
     }
-    // Dead-end cleanup
+    // Dead-end: only when ALL neighbors have been explicitly guessed wrong
     let changed = true;
     while (changed) {
       changed = false;
       for (const s of Object.keys(stateDistrictMap)) {
         if (eliminatedStates.has(s) || s === _rc) continue;
         const sN = STATE_ADJACENCY[s] || [];
-        if (sN.length > 0 && sN.every(n => eliminatedStates.has(n))) {
+        if (sN.length > 0 && sN.every(n => _wrongGuessedSoFar.has(n))) {
           eliminatedStates.add(s); changed = true;
         }
       }
