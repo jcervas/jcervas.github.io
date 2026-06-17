@@ -603,7 +603,7 @@ function renderMapD3(stage) {
   const pad = Math.min(W, H) * 0.1;
   const dark = isDarkMode();
 
-  const projection = _previewProjection(W, H, pad);
+  const projection = _previewProjection(W, H, pad, { centerOnCentroid: gameOver });
   const pathGen    = d3.geoPath(projection);
   const dPath      = pathGen(todayDistrict);
   if (!dPath) return;
@@ -2932,7 +2932,7 @@ function endGame(won) {
 //  RESULT & SHARE
 // ============================================================
 
-function _previewProjection(W, H, pad) {
+function _previewProjection(W, H, pad, { centerOnCentroid = false } = {}) {
   // Use AlbersUSA so the district shape matches the district tile map and ref map.
   // For MultiPolygon, fit to the largest sub-polygon so small islands don't
   // blow out the extent.
@@ -2946,7 +2946,18 @@ function _previewProjection(W, H, pad) {
     });
     fitFeature = { type: 'Feature', geometry: { type: 'Polygon', coordinates: largest } };
   }
-  return d3.geoAlbersUsa().fitExtent([[pad, pad], [W - pad, H - pad]], fitFeature);
+  const projection = d3.geoAlbersUsa().fitExtent([[pad, pad], [W - pad, H - pad]], fitFeature);
+  if (centerOnCentroid) {
+    // fitExtent centers the bounding box; shift translate so the geographic centroid
+    // lands at (W/2, H/2) instead, giving a more natural centered view.
+    const centroidGeo = d3.geoCentroid(fitFeature);
+    const projected = projection(centroidGeo);
+    if (projected) {
+      const [tx, ty] = projection.translate();
+      projection.translate([tx + (W / 2 - projected[0]), ty + (H / 2 - projected[1])]);
+    }
+  }
+  return projection;
 }
 
 function _renderDistrictToBlob() {
