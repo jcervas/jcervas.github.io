@@ -2198,11 +2198,14 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
   const isAtLarge = stateFeatures.length === 1;
 
   // Use the same REF_VB coordinate space as the ref map so the state→district cross-fade
-  // aligns geographically. With preserveAspectRatio="xMidYMid slice" the SVG fills the
-  // container; cssScale converts between viewBox units and CSS pixels for circle sizing.
+  // aligns geographically. "xMidYMid meet" (no clipping) is used here instead of "slice"
+  // so that portrait containers don't clip the right side of the viewBox where NYC lives.
+  // On landscape containers (the common desktop case) meet and slice produce identical
+  // scale factors, so circle sizing and cross-fade alignment are unaffected.
+  // cssScale = min so it matches the "meet" scaling (the constraining dimension wins).
   const cssW = tilesEl.offsetWidth  || REF_VB_W;
   const cssH = tilesEl.offsetHeight || REF_VB_H;
-  const cssScale = Math.max(cssW / REF_VB_W, cssH / REF_VB_H);
+  const cssScale = Math.min(cssW / REF_VB_W, cssH / REF_VB_H);
   const W = REF_VB_W;
   const H = REF_VB_H;
   const dark = isDarkMode();
@@ -2214,7 +2217,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
   const svg = d3.select(tilesEl)
     .append('svg')
     .attr('viewBox', `0 0 ${W} ${H}`)
-    .attr('preserveAspectRatio', 'xMidYMid slice')
+    .attr('preserveAspectRatio', 'xMidYMid meet')
     .attr('width', '100%')
     .attr('height', '100%')
     .style('display', 'block')
