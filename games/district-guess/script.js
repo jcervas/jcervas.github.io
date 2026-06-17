@@ -2295,18 +2295,24 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
     });
   svg.call(districtZoomBehavior).on('dblclick.zoom', null);
 
+  // Whole-state fit scale: the zoom level at which the entire state fills the viewport.
+  // Used for the zoom-in entry and as the ceiling for auto-zoom (so we never zoom in
+  // MORE than ~1.6× the state view — prevents absurd over-zoom on narrow states like NJ
+  // or when only a few clustered districts remain).
+  const stateFC = { type: 'FeatureCollection', features: stateFeatures };
+  const [[sfx0, sfy0], [sfx1, sfy1]] = pathGen.bounds(stateFC);
+  const stateFitScale = Math.min(
+    W / 12,
+    (W - 100) / Math.max(sfx1 - sfx0, 1),
+    (H - 100) / Math.max(sfy1 - sfy0, 1)
+  );
+
   // Zoom-in entry animation: start at national view, animate to state bounding box
   if (zoomIn) {
-    const stateFC = { type: 'FeatureCollection', features: stateFeatures };
-    const [[sx0, sy0], [sx1, sy1]] = pathGen.bounds(stateFC);
-    const pad = 50;
-    const scaleX = (W - 2 * pad) / Math.max(sx1 - sx0, 1);
-    const scaleY = (H - 2 * pad) / Math.max(sy1 - sy0, 1);
-    const targetScale = Math.min(W / 12, scaleX, scaleY);
     const targetTransform = d3.zoomIdentity
       .translate(W / 2, H / 2)
-      .scale(targetScale)
-      .translate(-(sx0 + sx1) / 2, -(sy0 + sy1) / 2);
+      .scale(stateFitScale)
+      .translate(-(sfx0 + sfx1) / 2, -(sfy0 + sfy1) / 2);
     dbg(`zoomIn target k=${targetTransform.k.toFixed(2)} x=${targetTransform.x.toFixed(0)} y=${targetTransform.y.toFixed(0)}`);
     districtSavedTransform = targetTransform;
     svg.call(districtZoomBehavior.transform, d3.zoomIdentity);
@@ -2322,8 +2328,9 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
       const pad = 30;
       const scaleX = (W - 2 * pad) / Math.max(px1 - px0, 1);
       const scaleY = (H - 2 * pad) / Math.max(py1 - py0, 1);
-      const scale  = Math.min(W / 12, scaleX, scaleY);
-      dbg(`auto-zoom possibleKeys=${possibleKeys.size}/${stateFeatures.length} scale=${scale.toFixed(2)}`);
+      // Cap at 1.6× the whole-state fit so clustered/few remaining districts don't blow up the zoom.
+      const scale  = Math.min(stateFitScale * 1.6, scaleX, scaleY);
+      dbg(`auto-zoom possibleKeys=${possibleKeys.size}/${stateFeatures.length} scale=${scale.toFixed(2)} stateFit=${stateFitScale.toFixed(2)}`);
       if (scale > 1.15) {
         const autoTransform = d3.zoomIdentity
           .translate(W / 2, H / 2)
@@ -2764,27 +2771,9 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
   // Determine effective zoom level so icon radius and collision match what will be displayed.
   // For user-zoomed sessions, use the saved transform. For auto-zoom, pre-compute the expected
   // scale so icons are built at the right size before the zoom fires.
-  let zoomK = 1;
-  if (districtSavedTransform) {
-    zoomK = districtSavedTransform.k;
-  } else if (zoomIn) {
-    const stateFC2 = { type: 'FeatureCollection', features: stateFeatures };
-    const [[sx0, sy0], [sx1, sy1]] = pathGen.bounds(stateFC2);
-    const pad2 = 50;
-    const scaleX2 = (W - 2 * pad2) / Math.max(sx1 - sx0, 1);
-    const scaleY2 = (H - 2 * pad2) / Math.max(sy1 - sy0, 1);
-    zoomK = Math.min(W / 12, scaleX2, scaleY2);
-  } else if (!gameOver && possibleKeys.size < stateFeatures.length) {
-    const pf = stateFeatures.filter(f => possibleKeys.has(f.properties['state-district']));
-    if (pf.length > 0) {
-      const [[px0, py0], [px1, py1]] = pathGen.bounds({ type: 'FeatureCollection', features: pf });
-      const pad = 30;
-      zoomK = Math.min(W / 12, Math.min(
-        (W - 2 * pad) / Math.max(px1 - px0, 1),
-        (H - 2 * pad) / Math.max(py1 - py0, 1)
-      ));
-    }
-  }
+  // The zoom blocks above already set districtSavedTransform (zoomIn target or auto-zoom),
+  // so its k is the scale that will actually be displayed. Fall back to stateFitScale.
+  const zoomK = districtSavedTransform ? districtSavedTransform.k : stateFitScale;
   // densityScale was computed early (see top of buildDistrictD3Map).
   const R = Math.max(1, 13 / (zoomK * densityScale));
 
