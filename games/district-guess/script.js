@@ -2122,6 +2122,11 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
   const stateFeatures = districts.filter(f => f.properties.state === stateAbbr);
   if (!stateFeatures.length) return;
 
+  // Scale down circle radius/collision for dense states (many districts) so circles
+  // don't pile up. Declared early because the zoom handler (set up below) references it
+  // and can fire synchronously before the circle-building section runs.
+  const densityScale = Math.max(1, Math.sqrt(stateFeatures.length / 8));
+
   const answerKey = todayDistrict?.properties['state-district'];
   const answerNeighbors = new Set(adjMap.get(answerKey) || []);
 
@@ -2780,8 +2785,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
       ));
     }
   }
-  // Scale down radius for dense states (many districts) so circles don't pile up
-  const densityScale = Math.max(1, Math.sqrt(nodes.length / 8));
+  // densityScale was computed early (see top of buildDistrictD3Map).
   const R = Math.max(1, 13 / (zoomK * densityScale));
 
   // Draw connector lines (initially at origin point, animated by simulation)
