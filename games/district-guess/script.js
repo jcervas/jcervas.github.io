@@ -1754,7 +1754,7 @@ function initUSRefMap() {
     btnWrap.className = 'map-zoom-btns';
     btnWrap.innerHTML = '<button class="mzb" data-dir="in" aria-label="Zoom in">+</button>'
                       + '<button class="mzb" data-dir="out" aria-label="Zoom out">−</button>'
-                      + '<button class="mzb mzb-fit hidden" data-dir="fit" aria-label="Toggle national / district view" title="Toggle national / district view">'
+                      + '<button class="mzb mzb-fit" data-dir="fit" aria-label="Fit view" title="Fit view">'
                       + svgIcon('maximize', 'mzb-icon') + '</button>';
     wrap.appendChild(btnWrap);
     btnWrap.addEventListener('click', e => {
@@ -1764,11 +1764,23 @@ function initUSRefMap() {
       const tilesHidden = document.getElementById('district-tiles').classList.contains('hidden');
 
       if (dir === 'fit') {
+        if (tilesHidden) {
+          // State phase: re-fit ref map to the current valid states
+          zoomUSRefMapToValid(true);
+          return;
+        }
         const tilesSvg = d3.select('#district-tiles svg');
         if (tilesSvg.empty() || !districtZoomBehavior) return;
+        if (!gameOver) {
+          // District gameplay: reset to the auto-zoom for remaining active districts
+          districtUserZoomed = false;
+          districtSavedTransform = null;
+          buildDistrictD3Map(todayDistrict?.properties?.state, false, false);
+          return;
+        }
+        // Game-over: toggle between district view and national view
         const atNational = btn.classList.contains('at-national');
         if (atNational) {
-          // Zoom back to district
           const target = districtGameOverTransform || d3.zoomIdentity;
           tilesSvg.transition().duration(600).ease(d3.easeCubicInOut)
             .call(districtZoomBehavior.transform, target);
@@ -1777,7 +1789,6 @@ function initUSRefMap() {
             Object.assign(document.createRange().createContextualFragment(svgIcon('maximize','mzb-icon')).firstChild)
           );
         } else {
-          // Zoom out to national view
           tilesSvg.transition().duration(600).ease(d3.easeCubicInOut)
             .call(districtZoomBehavior.transform, d3.zoomIdentity);
           btn.classList.add('at-national');
@@ -2108,16 +2119,9 @@ function showDistrictD3Map(stateAbbr, instant = false, animateReveal = false) {
   if (instant) {
     mapEl.classList.add('hidden');
     tilesEl.style.opacity = '1';
-  } else if (zoomIn) {
-    // Cross-fade: district tiles are pre-zoomed to state bbox, matching what the ref map shows
-    mapEl.style.opacity = '0';
-    setTimeout(() => { mapEl.classList.add('hidden'); }, 600);
-    tilesEl.classList.remove('hidden');
-    tilesEl.style.opacity = '0';
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      tilesEl.style.opacity = '1';
-    }));
   } else {
+    // Cross-fade: both maps share REF_VB coordinate space so they align during the fade.
+    // buildDistrictD3Map animates from the ref map's current zoom to the state-fit bbox.
     mapEl.style.opacity = '0';
     setTimeout(() => { mapEl.classList.add('hidden'); }, 370);
     tilesEl.style.opacity = '0';
@@ -2196,21 +2200,24 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
   const wonDistPart = wonDist ? wonDist.text.split('-').slice(1).join('-') : null;
   const isAtLarge = stateFeatures.length === 1;
 
-  // Use actual container dimensions so the projection and SVG fill all available space.
-  // #district-tiles is position:absolute/inset:0, so its dimensions equal the wrap.
-  const refProxy = document.getElementById('us-ref-map');
-  const srcEl    = (tilesEl.offsetWidth > 0) ? tilesEl : (refProxy || tilesEl);
-  const W = srcEl.offsetWidth  || REF_VB_W;
-  const H = srcEl.offsetHeight || REF_VB_H;
+  // Use the same REF_VB coordinate space as the ref map so the state→district cross-fade
+  // aligns geographically. With preserveAspectRatio="xMidYMid slice" the SVG fills the
+  // container; cssScale converts between viewBox units and CSS pixels for circle sizing.
+  const cssW = tilesEl.offsetWidth  || REF_VB_W;
+  const cssH = tilesEl.offsetHeight || REF_VB_H;
+  const cssScale = Math.max(cssW / REF_VB_W, cssH / REF_VB_H);
+  const W = REF_VB_W;
+  const H = REF_VB_H;
   const dark = isDarkMode();
 
   const stateCollection = { type: 'FeatureCollection', features: stateFeatures };
 
-  dbg(`SVG W=${W} H=${H} possibleKeys=${possibleKeys.size}/${stateFeatures.length}`);
+  dbg(`SVG W=${W} H=${H} cssScale=${cssScale.toFixed(2)} container=${cssW}×${cssH} possibleKeys=${possibleKeys.size}/${stateFeatures.length}`);
 
   const svg = d3.select(tilesEl)
     .append('svg')
     .attr('viewBox', `0 0 ${W} ${H}`)
+    .attr('preserveAspectRatio', 'xMidYMid slice')
     .attr('width', '100%')
     .attr('height', '100%')
     .style('display', 'block')
@@ -2226,11 +2233,13 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
 
   // Pan & zoom on the district tiles map
   districtZoomBehavior = d3.zoom()
-    .scaleExtent([0.1, 20])
+    .scaleExtent([0.1, 500])
     .on('zoom', event => {
       g.attr('transform', event.transform);
       const k = event.transform.k;
-      const rk = targetCirclePx / k;
+      // With preserveAspectRatio="xMidYMid slice", 1 viewBox unit = cssScale CSS pixels,
+      // so circle radius = targetCirclePx / (k * cssScale) keeps on-screen size constant.
+      const rk = targetCirclePx / (k * cssScale);
 
       // Gameplay circles: scale radius, stroke, and text
       g.select('.dist-icons').selectAll('circle')
@@ -2283,7 +2292,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
 
       // Re-tune simulation synchronously when zoom changes so icons jump to new positions instantly.
       if (districtSimulation && !gameOver && districtSimulation._applyIconPositions) {
-        const newCollide = 16 / (k * densityScale);
+        const newCollide = 16 / (k * cssScale * densityScale);
         const newStrength = Math.min(0.98, 0.6 + (k - 1) * 0.15);
         districtSimulation
           .force('collide', d3.forceCollide(d => d.isCold ? newCollide * 0.25 : d.isHot ? newCollide * 0.45 : newCollide))
@@ -2313,12 +2322,17 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
   const stateBBox = pathGen.bounds(stateFC);
   const stateFitTransform = zoomToBBox(stateBBox, W, H, { margin: 0.85, maxScale: W / 12 });
 
-  // On state→district entry, start pre-zoomed at state bbox — no national-view flash.
-  // The cross-fade in showDistrictD3Map handles the visual transition.
+  // On state→district entry, start at wherever the ref map is currently looking and
+  // animate to the state bbox — this gives the "zoom to bounding box" transition the
+  // user sees. Because both maps now share the same REF_VB coordinate space, the
+  // cross-fade in showDistrictD3Map aligns geographically.
   if (zoomIn) {
-    dbg(`zoomIn target k=${stateFitTransform.k.toFixed(2)} x=${stateFitTransform.x.toFixed(0)} y=${stateFitTransform.y.toFixed(0)}`);
+    const refStartTransform = usRefMap ? d3.zoomTransform(usRefMap) : d3.zoomIdentity;
+    dbg(`zoomIn start k=${refStartTransform.k.toFixed(2)} target k=${stateFitTransform.k.toFixed(2)} x=${stateFitTransform.x.toFixed(0)} y=${stateFitTransform.y.toFixed(0)}`);
     districtSavedTransform = stateFitTransform;
-    svg.call(districtZoomBehavior.transform, stateFitTransform);
+    svg.call(districtZoomBehavior.transform, refStartTransform);
+    svg.transition().duration(700).ease(d3.easeCubicInOut)
+      .call(districtZoomBehavior.transform, stateFitTransform);
   }
 
   if (gameOver && !districtUserZoomed && todayDistrict) {
@@ -2347,10 +2361,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
       const activeBBox   = possFeatures.length
         ? pathGen.bounds({ type: 'FeatureCollection', features: possFeatures })
         : stateBBox;
-      const activeTransform = zoomToBBox(activeBBox, W, H, {
-        margin:   0.85,
-        maxScale: stateFitTransform.k * 1.5,
-      });
+      const activeTransform = zoomToBBox(activeBBox, W, H, { margin: 0.85 });
       dbg(`active-zoom possibleKeys=${possibleKeys.size}/${stateFeatures.length} k=${activeTransform.k.toFixed(2)} stateFit=${stateFitTransform.k.toFixed(2)}`);
       svg.call(districtZoomBehavior.transform, activeTransform);
       districtSavedTransform = activeTransform;
@@ -2770,7 +2781,8 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
   // so its k is the scale that will actually be displayed. Fall back to stateFitTransform.
   const zoomK = districtSavedTransform ? districtSavedTransform.k : stateFitTransform.k;
   // densityScale was computed early (see top of buildDistrictD3Map).
-  const R = targetCirclePx / zoomK;
+  // cssScale accounts for preserveAspectRatio="xMidYMid slice" scaling.
+  const R = targetCirclePx / (zoomK * cssScale);
 
   // Draw connector lines (initially at origin point, animated by simulation)
   const lineG = g.append('g').attr('class', 'dist-connectors');
@@ -2835,7 +2847,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
     return grp.node();
   });
 
-  const collide = 16 / (zoomK * densityScale);
+  const collide = 16 / (zoomK * cssScale * densityScale);
   const forceStrength = Math.min(0.98, 0.6 + (zoomK - 1) * 0.15);
 
   function applyIconPositions() {
@@ -2879,8 +2891,7 @@ function endGame(won) {
   // Always rebuild district tiles at game-over so the answer district gets the highlight
   // showDistrictD3Map updates the label correctly for game-over state
   showDistrictD3Map(todayDistrict.properties.state, true, true);
-  // Show the fit-toggle button now that we're in game-over view
-  document.querySelector('.mzb-fit')?.classList.remove('hidden');
+  // Reset the fit-toggle button icon for game-over view
   document.querySelector('.mzb-fit')?.classList.remove('at-national');
   // Pulsing "View Results" arrow overlay on the map
   const tilesEl = document.getElementById('district-tiles');
@@ -3462,7 +3473,6 @@ function resetGame(newIdx) {
   districtGameOverTransform = null;
   districtSavedTransform    = null;
   districtUserZoomed        = false;
-  document.querySelector('.mzb-fit')?.classList.add('hidden');
   document.querySelector('.mzb-fit')?.classList.remove('at-national');
   document.querySelector('.gameover-results-arrow')?.remove();
   eliminatedStates    = new Set();

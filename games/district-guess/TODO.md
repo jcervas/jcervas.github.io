@@ -1,9 +1,11 @@
 # TODO 🚧
 
-## Bugs
+## Updates
 
 Gameflow: Welcome Splash -> Game Screen (district map, hints, reference map) -> game over screen -> results modal -> welcome splash
 Actual game: Select state (hints about state) -> Select a district (hints about district) -> Either win or lose
+
+Just drop out district tiles that are no longer active. currently get grayed out. Zoom to convex hull of remaining district-tiles (same as happens at the state level)
 
 ## Major upgrades
 
