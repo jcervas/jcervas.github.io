@@ -1733,7 +1733,7 @@ function initUSRefMap() {
 
   // D3 zoom — allow user to pan & scroll-zoom the reference map
   usRefZoom = d3.zoom()
-    .scaleExtent([0.7, 14])
+    .scaleExtent([0.7, Infinity])
     .on('zoom', (event) => {
       d3.select(usRefMapGroup).attr('transform', event.transform);
       _updateCalloutsForZoom(event.transform.k);
@@ -2233,7 +2233,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
 
   // Pan & zoom on the district tiles map
   districtZoomBehavior = d3.zoom()
-    .scaleExtent([0.1, 500])
+    .scaleExtent([0.3, Infinity])
     .on('zoom', event => {
       g.attr('transform', event.transform);
       const k = event.transform.k;
@@ -2249,7 +2249,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
         // Skip pill badge text — its parent g contains a rect
         if (this.parentNode && this.parentNode.querySelector('rect')) return;
         const baseSize = this.textContent.length > 2 ? 8 : 9;
-        d3.select(this).attr('font-size', `${baseSize / k}px`);
+        d3.select(this).attr('font-size', `${baseSize / (k * cssScale)}px`);
       });
 
       // Connector lines between inner points and icons
@@ -2260,18 +2260,19 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
       if (!leader.empty()) {
         const ldbx0 = +leader.attr('data-dbx0'), ldbx1 = +leader.attr('data-dbx1');
         const ldby0 = +leader.attr('data-dby0'), ldby1 = +leader.attr('data-dby1');
-        const screenGap = 20;
-        let nbx = ldbx1 + screenGap / k;
-        if (nbx > W * 0.88) nbx = ldbx0 - screenGap / k;
         const nby = (ldby0 + ldby1) / 2;
-        leader.attr('x2', nbx).attr('y2', nby).attr('stroke-width', 1 / k);
         const badgeG = g.select('.dist-icons');
-        badgeG.attr('transform', `translate(${nbx},${nby})`);
         const label = badgeG.select('text').text();
         const hasIcon = !badgeG.select('.gc-icon-svg').empty();
         const iconSize = 13 / k, iconGap = 4 / k;
         const pH = 20 / k;
         const pW = (label.length * 6.5 + 22) / k + (hasIcon ? iconSize + iconGap : 0);
+        // Offset badge center by half its width so its edge clears the district bbox
+        const screenGap = 10;
+        let nbx = ldbx1 + screenGap / k + pW / 2;
+        if (nbx + pW / 2 > W * 0.94) nbx = ldbx0 - screenGap / k - pW / 2;
+        leader.attr('x2', nbx).attr('y2', nby).attr('stroke-width', 1 / k);
+        badgeG.attr('transform', `translate(${nbx},${nby})`);
         const pRx = pH / 2;
         badgeG.select('rect')
           .attr('width', pW).attr('height', pH).attr('rx', pRx)
@@ -2323,16 +2324,21 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
   const stateFitTransform = zoomToBBox(stateBBox, W, H, { margin: 0.85, maxScale: W / 12 });
 
   // On state→district entry, start at wherever the ref map is currently looking and
-  // animate to the state bbox — this gives the "zoom to bounding box" transition the
-  // user sees. Because both maps now share the same REF_VB coordinate space, the
-  // cross-fade in showDistrictD3Map aligns geographically.
+  // animate to the active-districts bbox — same logic as the rebuild path so both first
+  // entry and subsequent guesses use consistent zoom levels. Both maps share REF_VB
+  // coordinate space so the cross-fade in showDistrictD3Map aligns geographically.
   if (zoomIn) {
     const refStartTransform = usRefMap ? d3.zoomTransform(usRefMap) : d3.zoomIdentity;
-    dbg(`zoomIn start k=${refStartTransform.k.toFixed(2)} target k=${stateFitTransform.k.toFixed(2)} x=${stateFitTransform.x.toFixed(0)} y=${stateFitTransform.y.toFixed(0)}`);
-    districtSavedTransform = stateFitTransform;
+    const possFeatures = stateFeatures.filter(f => possibleKeys.has(f.properties['state-district']));
+    const entryBBox    = possFeatures.length
+      ? pathGen.bounds({ type: 'FeatureCollection', features: possFeatures })
+      : stateBBox;
+    const entryTransform = zoomToBBox(entryBBox, W, H, { margin: 0.85 });
+    dbg(`zoomIn start k=${refStartTransform.k.toFixed(2)} target k=${entryTransform.k.toFixed(2)} x=${entryTransform.x.toFixed(0)} y=${entryTransform.y.toFixed(0)}`);
+    districtSavedTransform = entryTransform;
     svg.call(districtZoomBehavior.transform, refStartTransform);
     svg.transition().duration(700).ease(d3.easeCubicInOut)
-      .call(districtZoomBehavior.transform, stateFitTransform);
+      .call(districtZoomBehavior.transform, entryTransform);
   }
 
   if (gameOver && !districtUserZoomed && todayDistrict) {
