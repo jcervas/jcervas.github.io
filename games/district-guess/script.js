@@ -1326,6 +1326,19 @@ function processStateGuess(abbr, correct) {
   renderClues();        // also calls updateUSRefMap() + renderStateChips()
   zoomUSRefMapToValid(); // zoom D3 map to remaining valid states
   saveGameState();
+
+  // If elimination narrowed the field to exactly 1 state, auto-confirm it
+  const _autoRemaining = getValidStates();
+  if (_autoRemaining.size === 1 && !correctStateGuessed) {
+    const _onlyState = [..._autoRemaining][0];
+    setTimeout(() => {
+      guessHistory.push({ text: _onlyState, correct: true, phase: 'state', adjacent: false });
+      correctStateGuessed = true;
+      renderGuessHistory();
+      saveGameState();
+      lockStateDropdown(_onlyState);
+    }, 900);
+  }
 }
 
 // ── Phase 2: district tile input ──────────────────────────────
@@ -2096,11 +2109,14 @@ function showDistrictD3Map(stateAbbr, instant = false, animateReveal = false) {
     mapEl.classList.add('hidden');
     tilesEl.style.opacity = '1';
   } else if (zoomIn) {
-    // Show immediately — the zoom animation handles the reveal
+    // Cross-fade: district tiles are pre-zoomed to state bbox, matching what the ref map shows
     mapEl.style.opacity = '0';
-    setTimeout(() => { mapEl.classList.add('hidden'); }, 370);
+    setTimeout(() => { mapEl.classList.add('hidden'); }, 600);
     tilesEl.classList.remove('hidden');
-    tilesEl.style.opacity = '1';
+    tilesEl.style.opacity = '0';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      tilesEl.style.opacity = '1';
+    }));
   } else {
     mapEl.style.opacity = '0';
     setTimeout(() => { mapEl.classList.add('hidden'); }, 370);
@@ -2297,13 +2313,12 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
   const stateBBox = pathGen.bounds(stateFC);
   const stateFitTransform = zoomToBBox(stateBBox, W, H, { margin: 0.85, maxScale: W / 12 });
 
-  // Zoom-in entry animation: start at national view, animate to state bounding box
+  // On state→district entry, start pre-zoomed at state bbox — no national-view flash.
+  // The cross-fade in showDistrictD3Map handles the visual transition.
   if (zoomIn) {
     dbg(`zoomIn target k=${stateFitTransform.k.toFixed(2)} x=${stateFitTransform.x.toFixed(0)} y=${stateFitTransform.y.toFixed(0)}`);
     districtSavedTransform = stateFitTransform;
-    svg.call(districtZoomBehavior.transform, d3.zoomIdentity);
-    svg.transition().duration(900).ease(d3.easeCubicInOut)
-      .call(districtZoomBehavior.transform, stateFitTransform);
+    svg.call(districtZoomBehavior.transform, stateFitTransform);
   }
 
   if (gameOver && !districtUserZoomed && todayDistrict) {
@@ -2328,12 +2343,17 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
       // User manually panned/zoomed — preserve their exact view across rebuilds.
       svg.call(districtZoomBehavior.transform, districtSavedTransform);
     } else {
-      // Always show the full state so all remaining circles stay visible at a
-      // consistent scale.  Zooming into just the remaining districts caused circles
-      // to appear tiny relative to the over-zoomed district boundaries.
-      dbg(`rebuild-zoom stateFit k=${stateFitTransform.k.toFixed(2)}`);
-      svg.call(districtZoomBehavior.transform, stateFitTransform);
-      districtSavedTransform = stateFitTransform;
+      const possFeatures = stateFeatures.filter(f => possibleKeys.has(f.properties['state-district']));
+      const activeBBox   = possFeatures.length
+        ? pathGen.bounds({ type: 'FeatureCollection', features: possFeatures })
+        : stateBBox;
+      const activeTransform = zoomToBBox(activeBBox, W, H, {
+        margin:   0.85,
+        maxScale: stateFitTransform.k * 1.5,
+      });
+      dbg(`active-zoom possibleKeys=${possibleKeys.size}/${stateFeatures.length} k=${activeTransform.k.toFixed(2)} stateFit=${stateFitTransform.k.toFixed(2)}`);
+      svg.call(districtZoomBehavior.transform, activeTransform);
+      districtSavedTransform = activeTransform;
     }
   }
 
@@ -2714,7 +2734,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
 
   // Use pre-computed inner points (guaranteed inside polygon) from the TopoJSON points layer.
   // Fall back to d3.geoCentroid if no inner point is available.
-  const nodes = stateFeatures.map(f => {
+  const nodes = stateFeatures.filter(f => possibleKeys.has(f.properties['state-district'])).map(f => {
     const sdKey = f.properties['state-district'];
     const dist  = sdKey?.split('-').slice(1).join('-') || '00';
     const label = isAtLarge ? 'AL' : String(parseInt(dist, 10));
@@ -2834,7 +2854,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
   districtSimulation = d3.forceSimulation(nodes)
     .alphaDecay(0.12)
     .alphaMin(0.01)
-    .force('collide', d3.forceCollide(d => d.isCold ? collide * 0.25 : d.isHot ? collide * 0.45 : collide))
+    .force('collide', d3.forceCollide(collide))
     .force('x', d3.forceX(d => d.ox).strength(forceStrength))
     .force('y', d3.forceY(d => d.oy).strength(forceStrength))
     .stop();
