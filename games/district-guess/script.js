@@ -107,7 +107,7 @@ const STATE_ADJACENCY = {
   DE: ['MD','NJ','PA'],
   FL: ['AL','GA'],
   GA: ['AL','FL','NC','SC','TN'],
-  HI: [CA],
+  HI: ['CA'],
   ID: ['MT','NV','OR','UT','WA','WY'],
   IL: ['IN','IA','KY','MO','WI'],
   IN: ['IL','KY','MI','OH'],
