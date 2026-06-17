@@ -18,6 +18,7 @@
 
 ## Features
 
+- [ ] **Hint ordering / categorization**: Split hints into state-level (revealed before State is shown) and district-level (revealed after). Consider adding new district-specific hints (e.g. district number, neighboring districts, partisan lean relative to state average). Hint reveal order options: (1) random, (2) least-to-most revealing, (3) most-to-least revealing.
 - [ ] add Polsby-Popper (show district inside circle, white with black stroke)
 - [ ] add → Reock (draw circle with district comparison)
 - [ ] add other redistricting data like county splits
