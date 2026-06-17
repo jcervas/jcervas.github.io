@@ -2099,9 +2099,12 @@ function showDistrictD3Map(stateAbbr, instant = false, animateReveal = false) {
     }
   }
 
-  // Reset zoom state when entering a new state's district phase
-  districtUserZoomed     = false;
-  districtSavedTransform = null;
+  // Reset zoom state when entering district phase fresh; preserve it on game-over rebuild
+  // so a user who was already zoomed into NYC doesn't see a jarring re-zoom on correct guess.
+  if (!gameOver) {
+    districtUserZoomed     = false;
+    districtSavedTransform = null;
+  }
 
   // Dismiss the pan/zoom hint pill when entering district-pick phase
   const hintEl = document.getElementById('us-ref-hint');
@@ -2341,9 +2344,14 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
       .call(districtZoomBehavior.transform, entryTransform);
   }
 
-  if (gameOver && !districtUserZoomed && todayDistrict) {
-    // Game-over: zoom into the answer district at ~45% of the viewport so surrounding
-    // state/national context remains visible.
+  if (gameOver && districtUserZoomed && districtSavedTransform) {
+    // User was already zoomed in when game ended — stay where they were.
+    // Store as the game-over transform so the fit-button toggle works.
+    districtGameOverTransform = districtSavedTransform;
+    svg.call(districtZoomBehavior.transform, districtSavedTransform);
+  } else if (gameOver && !districtUserZoomed && todayDistrict) {
+    // Game-over with no manual zoom: zoom into the answer district at ~45% of the
+    // viewport so surrounding state/national context remains visible.
     const answerF = stateFeatures.find(f => f.properties['state-district'] === todayDistrict.properties['state-district']);
     const zoomTarget = answerF || (stateFeatures.length ? stateFC : null);
     if (zoomTarget) {
