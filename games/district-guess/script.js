@@ -190,6 +190,7 @@ const MAX_GUESSES = 6;
 const STORAGE_PREFIX = 'districtguess_';
 const HOW_TO_SEEN_KEY      = STORAGE_PREFIX + 'howToSeen';
 const WELCOME_SEEN_KEY     = STORAGE_PREFIX + 'welcomeSeen';
+const SETTINGS_SEEN_KEY    = STORAGE_PREFIX + 'settingsSeen';
 const FEEDBACK_PROMPTED_AT = STORAGE_PREFIX + 'feedbackAt'; // games-played count when last prompted
 const SESSION_REPLAY_KEY  = 'districtguess_replay';      // sessionStorage key
 const SESSION_RANDSEED_KEY = 'districtguess_randseed';  // seed for current random (non-daily) game
@@ -3741,16 +3742,22 @@ document.addEventListener('DOMContentLoaded', () => {
     if (slogan) slogan.textContent = 'Identify the district from its shape';
 
     function dismissAndStart() {
+      const isFirstPlay = !localStorage.getItem(SETTINGS_SEEN_KEY);
       _gameStarted = true;
       welcomeModal.classList.add('hidden');
       localStorage.setItem(WELCOME_SEEN_KEY, '1');
       localStorage.setItem(HOW_TO_SEEN_KEY, '1');
+      localStorage.setItem(SETTINGS_SEEN_KEY, '1');
       renderClues();
       renderGuessHistory();
       // #map was sized while hidden behind the modal — Leaflet's cached size is stale
       requestAnimationFrame(() => {
         if (map) map.invalidateSize();
         if (districtLayer) map.fitBounds(districtLayer.getBounds(), { padding: [40, 40], maxZoom: 10, animate: false });
+        if (isFirstPlay) {
+          updateThemeToggle();
+          document.getElementById('settings-modal').classList.remove('hidden');
+        }
       });
     }
 

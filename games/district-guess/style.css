@@ -1627,17 +1627,10 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
   align-items: center;
   gap: clamp(10px, 1.8vh, 18px);
 }
-.welcome-wordmark-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
 .welcome-beta-badge {
-  font-size: 0.9rem;
-  padding: 3px 7px;
+  font-size: 0.85rem;
+  padding: 3px 8px;
   border-radius: 7px;
-  vertical-align: middle;
 }
 .welcome-wordmark-svg {
   height: clamp(28px, 5vh, 44px);
@@ -2117,10 +2110,10 @@ body.light-mode .welcome-wordmark-svg { filter: none; }
   .donate-btn { font-size: 0.72rem; padding: 5px 10px; }
   .donate-long { display: none; }
   .donate-short { display: inline; }
-  /* Progressive hiding if still crowded: beta → logo → title text */
+  /* Progressive hiding: beta badge already small; logo hides first, then wordmark text */
   .beta-badge { display: none; }
-  @media (max-width: 360px) { .game-logo  { display: none; } }
-  @media (max-width: 310px) { .header-inner h1 > :not(.game-logo) { display: none; } }
+  @media (max-width: 360px) { .game-logo { display: none; } }
+  @media (max-width: 300px) { .header-wordmark { display: none; } }
 
   /* ── Game layout: fit in one screen ── */
   main { padding: 6px 8px; }
