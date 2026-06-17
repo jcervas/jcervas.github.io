@@ -2130,6 +2130,9 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
   // don't pile up. Declared early because the zoom handler (set up below) references it
   // and can fire synchronously before the circle-building section runs.
   const densityScale = Math.max(1, Math.sqrt(stateFeatures.length / 8));
+  // Desired on-screen circle radius in CSS pixels, density-adjusted.
+  // Clamp to [6, 14] so dense states (TX) stay readable and sparse states don't over-fill.
+  const targetCirclePx = Math.max(6, Math.min(14, 13 / densityScale));
 
   const answerKey = todayDistrict?.properties['state-district'];
   const answerNeighbors = new Set(adjMap.get(answerKey) || []);
@@ -2177,25 +2180,16 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
   const wonDistPart = wonDist ? wonDist.text.split('-').slice(1).join('-') : null;
   const isAtLarge = stateFeatures.length === 1;
 
-  // Use actual container dimensions so the projection fills all available space
-  // (tilesEl may still be display:none here, so read from the visible proxy)
+  // Use actual container dimensions so the projection and SVG fill all available space.
+  // #district-tiles is position:absolute/inset:0, so its dimensions equal the wrap.
   const refProxy = document.getElementById('us-ref-map');
   const srcEl    = (tilesEl.offsetWidth > 0) ? tilesEl : (refProxy || tilesEl);
-  const W      = srcEl.offsetWidth  || REF_VB_W;
-  const H_max  = srcEl.offsetHeight || REF_VB_H;
+  const W = srcEl.offsetWidth  || REF_VB_W;
+  const H = srcEl.offsetHeight || REF_VB_H;
   const dark = isDarkMode();
 
   const stateCollection = { type: 'FeatureCollection', features: stateFeatures };
 
-  // Compute the state's natural geographic aspect ratio (height/width) so the
-  // viewBox height adapts to the state shape rather than the container.
-  // Wide states (TN, KS) get a short SVG; tall states (CA) get a tall one.
-  const tempProj = d3.geoMercator().fitExtent([[20, 20], [W - 20, W - 20]], stateCollection);
-  const tempPath = d3.geoPath(tempProj);
-  const [[gx0, gy0], [gx1, gy1]] = tempPath.bounds(stateCollection);
-  const geoAspect = (gy1 - gy0) / Math.max(gx1 - gx0, 1); // height / width of rendered state
-  // Clamp: always at least 25% as tall as wide, never taller than container
-  const H = Math.min(H_max, Math.max(Math.round(W * geoAspect) + 40, Math.round(W * 0.25)));
   dbg(`SVG W=${W} H=${H} possibleKeys=${possibleKeys.size}/${stateFeatures.length}`);
 
   const svg = d3.select(tilesEl)
@@ -2203,7 +2197,6 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
     .attr('viewBox', `0 0 ${W} ${H}`)
     .attr('width', '100%')
     .attr('height', '100%')
-    .attr('preserveAspectRatio', 'xMidYMin meet')
     .style('display', 'block')
     .style('touch-action', 'none');  // let D3 zoom own all touch gestures
 
@@ -2221,7 +2214,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
     .on('zoom', event => {
       g.attr('transform', event.transform);
       const k = event.transform.k;
-      const rk = Math.max(1, 13 / k);
+      const rk = targetCirclePx / k;
 
       // Gameplay circles: scale radius, stroke, and text
       g.select('.dist-icons').selectAll('circle')
@@ -2299,56 +2292,25 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
     });
   svg.call(districtZoomBehavior).on('dblclick.zoom', null);
 
-  // Whole-state fit scale: the zoom level at which the entire state fills the viewport.
-  // Used for the zoom-in entry and as the ceiling for auto-zoom (so we never zoom in
-  // MORE than ~1.6× the state view — prevents absurd over-zoom on narrow states like NJ
-  // or when only a few clustered districts remain).
+  // Whole-state bbox — used for zoom-in entry and as the fallback active-tiles bbox.
   const stateFC = { type: 'FeatureCollection', features: stateFeatures };
-  const [[sfx0, sfy0], [sfx1, sfy1]] = pathGen.bounds(stateFC);
-  const stateFitScale = Math.min(
-    W / 12,
-    (W - 100) / Math.max(sfx1 - sfx0, 1),
-    (H - 100) / Math.max(sfy1 - sfy0, 1)
-  );
+  const stateBBox = pathGen.bounds(stateFC);
+  const stateFitTransform = zoomToBBox(stateBBox, W, H, { margin: 0.85, maxScale: W / 12 });
 
   // Zoom-in entry animation: start at national view, animate to state bounding box
   if (zoomIn) {
-    const targetTransform = d3.zoomIdentity
-      .translate(W / 2, H / 2)
-      .scale(stateFitScale)
-      .translate(-(sfx0 + sfx1) / 2, -(sfy0 + sfy1) / 2);
-    dbg(`zoomIn target k=${targetTransform.k.toFixed(2)} x=${targetTransform.x.toFixed(0)} y=${targetTransform.y.toFixed(0)}`);
-    districtSavedTransform = targetTransform;
+    dbg(`zoomIn target k=${stateFitTransform.k.toFixed(2)} x=${stateFitTransform.x.toFixed(0)} y=${stateFitTransform.y.toFixed(0)}`);
+    districtSavedTransform = stateFitTransform;
     svg.call(districtZoomBehavior.transform, d3.zoomIdentity);
     svg.transition().duration(900).ease(d3.easeCubicInOut)
-      .call(districtZoomBehavior.transform, targetTransform);
+      .call(districtZoomBehavior.transform, stateFitTransform);
   }
 
-  // Auto-zoom to the remaining possible districts (skip only if user has manually panned/zoomed)
-  if (!gameOver && !zoomIn && !districtUserZoomed && possibleKeys.size < stateFeatures.length) {
-    const possFeatures = stateFeatures.filter(f => possibleKeys.has(f.properties['state-district']));
-    if (possFeatures.length > 0) {
-      const [[px0, py0], [px1, py1]] = pathGen.bounds({ type: 'FeatureCollection', features: possFeatures });
-      const pad = 30;
-      const scaleX = (W - 2 * pad) / Math.max(px1 - px0, 1);
-      const scaleY = (H - 2 * pad) / Math.max(py1 - py0, 1);
-      // Cap at 1.6× the whole-state fit so clustered/few remaining districts don't blow up the zoom.
-      const scale  = Math.min(stateFitScale * 1.6, scaleX, scaleY);
-      dbg(`auto-zoom possibleKeys=${possibleKeys.size}/${stateFeatures.length} scale=${scale.toFixed(2)} stateFit=${stateFitScale.toFixed(2)}`);
-      if (scale > 1.15) {
-        const autoTransform = d3.zoomIdentity
-          .translate(W / 2, H / 2)
-          .scale(scale)
-          .translate(-(px0 + px1) / 2, -(py0 + py1) / 2);
-        svg.call(districtZoomBehavior.transform, autoTransform);
-        districtSavedTransform = autoTransform;
-      }
-    }
-  } else if (gameOver && !districtUserZoomed && todayDistrict) {
+  if (gameOver && !districtUserZoomed && todayDistrict) {
     // Game-over: zoom into the answer district at ~45% of the viewport so surrounding
     // state/national context remains visible.
     const answerF = stateFeatures.find(f => f.properties['state-district'] === todayDistrict.properties['state-district']);
-    const zoomTarget = answerF || (stateFeatures.length ? { type: 'FeatureCollection', features: stateFeatures } : null);
+    const zoomTarget = answerF || (stateFeatures.length ? stateFC : null);
     if (zoomTarget) {
       const [[bx0, by0], [bx1, by1]] = pathGen.bounds(zoomTarget);
       const bw = Math.max(bx1 - bx0, 1), bh = Math.max(by1 - by0, 1);
@@ -2366,15 +2328,12 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
       // User manually panned/zoomed — preserve their exact view across rebuilds.
       svg.call(districtZoomBehavior.transform, districtSavedTransform);
     } else {
-      // No eliminations and no manual zoom: recompute the whole-state fit for the CURRENT
-      // viewBox. (A stored absolute transform goes stale if the container resized between
-      // builds, leaving the state mis-centered and under-zoomed.)
-      const fitTransform = d3.zoomIdentity
-        .translate(W / 2, H / 2)
-        .scale(stateFitScale)
-        .translate(-(sfx0 + sfx1) / 2, -(sfy0 + sfy1) / 2);
-      svg.call(districtZoomBehavior.transform, fitTransform);
-      districtSavedTransform = fitTransform;
+      // Always show the full state so all remaining circles stay visible at a
+      // consistent scale.  Zooming into just the remaining districts caused circles
+      // to appear tiny relative to the over-zoomed district boundaries.
+      dbg(`rebuild-zoom stateFit k=${stateFitTransform.k.toFixed(2)}`);
+      svg.call(districtZoomBehavior.transform, stateFitTransform);
+      districtSavedTransform = stateFitTransform;
     }
   }
 
@@ -2788,10 +2747,10 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
   // For user-zoomed sessions, use the saved transform. For auto-zoom, pre-compute the expected
   // scale so icons are built at the right size before the zoom fires.
   // The zoom blocks above already set districtSavedTransform (zoomIn target or auto-zoom),
-  // so its k is the scale that will actually be displayed. Fall back to stateFitScale.
-  const zoomK = districtSavedTransform ? districtSavedTransform.k : stateFitScale;
+  // so its k is the scale that will actually be displayed. Fall back to stateFitTransform.
+  const zoomK = districtSavedTransform ? districtSavedTransform.k : stateFitTransform.k;
   // densityScale was computed early (see top of buildDistrictD3Map).
-  const R = Math.max(1, 13 / (zoomK * densityScale));
+  const R = targetCirclePx / zoomK;
 
   // Draw connector lines (initially at origin point, animated by simulation)
   const lineG = g.append('g').attr('class', 'dist-connectors');
@@ -3965,6 +3924,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('feedback-modal').classList.remove('hidden');
   });
 
+  document.getElementById('result-feedback-btn')?.addEventListener('click', () => {
+    document.getElementById('result-modal').classList.add('hidden');
+    document.getElementById('feedback-modal').classList.remove('hidden');
+  });
+
   // Wire Hard Mode toggle
   const hardToggle = document.getElementById('settings-hard-toggle');
   if (hardToggle) {
@@ -4023,14 +3987,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const comment  = val('fb-comment');
     const errEl    = document.getElementById('fb-error');
 
-    const missing = [];
-    if (!overall)   missing.push('Overall experience');
-    if (!diff)      missing.push('Difficulty');
-    if (!intuit)    missing.push('Ease of understanding');
-    if (!mechanic)  missing.push('Hot/Cold mechanic');
-    if (!freq)      missing.push('How often you’d play');
-    if (!recommend) missing.push('Would you recommend');
-    if (missing.length) { errEl.textContent = `Please answer: ${missing.join(', ')}.`; return; }
+    // All fields optional — submit whatever is filled in (useful for quick bug reports).
     errEl.textContent = '';
 
     const stats  = loadPersonalStats();

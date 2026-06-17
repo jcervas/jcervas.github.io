@@ -1592,8 +1592,13 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
 }
 
 /* ---- District D3 map (replaces US map once state is confirmed) ---- */
+/* Absolutely positioned to overlay the full wrap. If it were a flex sibling of
+   #us-ref-map, the two would split the wrap height 50/50 during the 370ms
+   cross-fade — the district map would build/zoom at half height and lock in a
+   too-low zoom (badly under-zoomed for tall, narrow states like NJ). */
 #district-tiles {
-  flex: 1;
+  position: absolute;
+  inset: 0;
   min-height: 0;
   transition: opacity 0.35s ease;
   overflow: hidden;

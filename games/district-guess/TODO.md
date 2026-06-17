@@ -2,9 +2,8 @@
 
 ## Bugs
 
-- [ ] the beginning zoom on #map (at least on desktop) isnt xoomed properly st least some of rhe time. check FL-10
-- [] for some reason, at least on mobile but maybe everytijg, the confettinis super slow when it explodes. 
-- [] there are zoom and scale issues still 
+Gameflow: Welcome Splash -> Game Screen (district map, hints, reference map) -> game over screen -> results modal -> welcome splash
+Actual game: Select state (hints about state) -> Select a district (hints about district) -> Either win or lose
 
 ## Major upgrades
 
