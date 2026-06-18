@@ -2388,7 +2388,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
       g.select('.dist-icons').selectAll('text').each(function() {
         // Skip pill badge text — its parent g contains a rect
         if (this.parentNode && this.parentNode.querySelector('rect')) return;
-        const baseSize = this.textContent.length > 2 ? 8 : 9;
+        const baseSize = Math.min(this.textContent.length > 2 ? 8 : 9, targetCirclePx);
         d3.select(this).attr('font-size', `${baseSize / (k * cssScale)}px`);
       });
 
@@ -2404,28 +2404,28 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
         const badgeG = g.select('.dist-icons');
         const label = badgeG.select('text').text();
         const hasIcon = !badgeG.select('.gc-icon-svg').empty();
-        const iconSize = 13 / k, iconGap = 4 / k;
-        const pH = 20 / k;
-        const pW = (label.length * 6.5 + 22) / k + (hasIcon ? iconSize + iconGap : 0);
+        const iconSize = 13 / (k * cssScale), iconGap = 4 / (k * cssScale);
+        const pH = 26 / (k * cssScale);
+        const pW = (label.length * 7.5 + 22) / (k * cssScale) + (hasIcon ? iconSize + iconGap : 0);
         // Offset badge center by half its width so its edge clears the district bbox
         const screenGap = 10;
-        let nbx = ldbx1 + screenGap / k + pW / 2;
-        if (nbx + pW / 2 > W * 0.94) nbx = ldbx0 - screenGap / k - pW / 2;
-        leader.attr('x2', nbx).attr('y2', nby).attr('stroke-width', 1 / k);
+        let nbx = ldbx1 + screenGap / (k * cssScale) + pW / 2;
+        if (nbx + pW / 2 > W * 0.94) nbx = ldbx0 - screenGap / (k * cssScale) - pW / 2;
+        leader.attr('x2', nbx).attr('y2', nby).attr('stroke-width', 1 / (k * cssScale));
         badgeG.attr('transform', `translate(${nbx},${nby})`);
         const pRx = pH / 2;
         badgeG.select('rect')
           .attr('width', pW).attr('height', pH).attr('rx', pRx)
           .attr('x', -pW / 2).attr('y', -pH / 2)
-          .attr('stroke-width', 1 / k);
+          .attr('stroke-width', 1 / (k * cssScale));
         if (hasIcon) {
-          const iconX = -pW / 2 + 7 / k + iconSize / 2;
+          const iconX = -pW / 2 + 7 / (k * cssScale) + iconSize / 2;
           // stroke-width stays constant — icon paths use vector-effect: non-scaling-stroke
           badgeG.select('.gc-icon-svg')
             .attr('transform', `translate(${iconX},0) scale(${iconSize / 24}) translate(-12,-12)`);
           badgeG.select('text').attr('x', iconSize / 2 + iconGap / 2);
         }
-        badgeG.select('text').attr('font-size', `${10 / k}px`).attr('letter-spacing', 0.3 / k);
+        badgeG.select('text').attr('font-size', `${12 / (k * cssScale)}px`).attr('letter-spacing', 0.3 / (k * cssScale));
       }
       g.selectAll('.dist-leader').attr('stroke-width', 1 / k);
       // Hide connector lines when zoomed in — icons sit close enough to their centroids
@@ -2445,8 +2445,8 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
       }
 
       // Fade context layers in with zoom: counties appear first, then roads, then urban
-      const countyOpacity = k > 1.5 ? Math.min(1, (k - 1.5) * 0.5) : 0;
-      const fadeOpacity   = k > 2   ? Math.min(1, (k - 2)   * 0.35) : 0;
+      const countyOpacity = k > 3 ? Math.min(0.65, (k - 3) * 0.25) : 0;
+      const fadeOpacity   = k > 2 ? Math.min(1,    (k - 2) * 0.35) : 0;
       g.select('.context-counties').attr('opacity', countyOpacity);
       g.select('.context-urban').attr('opacity', fadeOpacity);
       g.select('.context-roads').attr('opacity', fadeOpacity);
@@ -2623,8 +2623,8 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
       // Sync initial context-layer opacity to current zoom (zoom handler fires before elements exist)
       {
         const k0 = d3.zoomTransform(svg.node()).k || 1;
-        const cOp = k0 > 1.5 ? Math.min(1, (k0 - 1.5) * 0.5) : 0;
-        const fOp = k0 > 2   ? Math.min(1, (k0 - 2)   * 0.35) : 0;
+        const cOp = k0 > 3 ? Math.min(0.65, (k0 - 3) * 0.25) : 0;
+        const fOp = k0 > 2 ? Math.min(1,    (k0 - 2) * 0.35) : 0;
         g.select('.context-counties').attr('opacity', cOp);
         g.select('.context-roads').attr('opacity', fOp);
         g.select('.context-urban').attr('opacity', fOp);
@@ -2697,8 +2697,8 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
         const node = answerPath.node();
         const len  = node.getTotalLength ? node.getTotalLength() : 0;
 
-        // Reserve the spark layer here so it sits below the badge in z-order.
-        const sparkLayer = g.append('g').attr('pointer-events', 'none');
+        // Reserve the spark layer — will be raised to top after state outline is appended.
+        const sparkLayer = g.append('g').attr('class', 'spark-layer').attr('pointer-events', 'none');
 
         _gameOverAnimsCallback = function() {
           // Start the boundary spark trace.
@@ -2806,7 +2806,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
       // Gap is expressed in screen pixels (divided by zoom scale) so it looks
       // consistent at any zoom level — ~18px from the district edge on screen.
       const [[dbx0, dby0], [dbx1, dby1]] = pathGen.bounds(answerFeature);
-      const screenGap = 18 / initK;
+      const screenGap = 18 / (initK * cssScale);
       // Prefer right side; fall back to left if too close to SVG edge
       let bx = dbx1 + screenGap;
       let by = (dby0 + dby1) / 2;
@@ -2820,17 +2820,17 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
         .attr('x1', dbx1).attr('y1', by)
         .attr('x2', bx).attr('y2', by)
         .attr('stroke', dark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.4)')
-        .attr('stroke-width', 1 / initK)
+        .attr('stroke-width', 1 / (initK * cssScale))
         .attr('pointer-events', 'none')
         .attr('data-dbx0', dbx0).attr('data-dbx1', dbx1)
         .attr('data-dby0', dby0).attr('data-dby1', dby1);
 
       // Pill badge styled like the drag/zoom hint: CMU-red bg, white border.
       // Includes a small check/x icon to indicate win vs loss without recoloring the badge.
-      const iconSize = 13 / initK;
-      const iconGap  = 4 / initK;
-      const pillH  = 20 / initK;  // total height in SVG units
-      const pillW  = (answerLabel.length * 6.5 + 22) / initK + iconSize + iconGap;
+      const iconSize = 13 / (initK * cssScale);
+      const iconGap  = 4 / (initK * cssScale);
+      const pillH  = 26 / (initK * cssScale);  // total height in SVG units
+      const pillW  = (answerLabel.length * 7.5 + 22) / (initK * cssScale) + iconSize + iconGap;
       const pillRx = pillH / 2;   // full pill rounding
       const badge = g.append('g').attr('class', 'dist-icons').attr('transform', `translate(${bx},${by})`);
       badge.append('rect')
@@ -2838,9 +2838,9 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
         .attr('width', pillW).attr('height', pillH).attr('rx', pillRx)
         .attr('fill', 'rgba(196,18,48,0.82)')
         .attr('stroke', 'rgba(255,255,255,0.35)')
-        .attr('stroke-width', 1 / initK);
+        .attr('stroke-width', 1 / (initK * cssScale));
 
-      const iconX = -pillW / 2 + 7 / initK + iconSize / 2;
+      const iconX = -pillW / 2 + 7 / (initK * cssScale) + iconSize / 2;
       const iconScale = iconSize / 24;
       const iconG = badge.append('g')
         .attr('class', 'gc-icon-svg')
@@ -2859,10 +2859,10 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
         .attr('x', iconSize / 2 + iconGap / 2)
         .attr('text-anchor', 'middle')
         .attr('dominant-baseline', 'central')
-        .attr('font-size', `${10 / initK}px`)
+        .attr('font-size', `${12 / (initK * cssScale)}px`)
         .attr('font-weight', '600')
         .attr('fill', '#fff')
-        .attr('letter-spacing', 0.3 / initK)
+        .attr('letter-spacing', 0.3 / (initK * cssScale))
         .attr('pointer-events', 'none')
         .text(answerLabel);
     }
@@ -2879,9 +2879,10 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
         .attr('vector-effect', 'non-scaling-stroke')
         .attr('pointer-events', 'none');
     }
-    // Badge pill always above all other features (leader line behind it, both above spark layer)
+    // Badge above state outline; spark layer on top of everything so the trace is visible.
     g.select('.dist-leader').raise();
     g.select('.dist-icons').raise();
+    g.select('.spark-layer').raise();
     return;
   }
 
@@ -2983,7 +2984,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
     grp.append('text')
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'central')
-      .attr('font-size', `${(d.label.length > 2 ? 8 : 9) / (zoomK * cssScale)}px`)
+      .attr('font-size', `${Math.min(d.label.length > 2 ? 8 : 9, targetCirclePx) / (zoomK * cssScale)}px`)
       .attr('font-weight', '700')
       .attr('fill', textColor)
       .attr('pointer-events', 'none')
