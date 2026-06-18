@@ -854,12 +854,13 @@ circle.tile-wrong-shake {
 
 /* Win word cloud — scattered text inside the result-modal overlay */
 .win-word-cloud {
-  position: absolute;
+  position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
   overflow: visible;
+  z-index: 1001;
   animation: win-cloud-in 0.8s ease both;
 }
 @keyframes win-cloud-in {
@@ -879,7 +880,7 @@ circle.tile-wrong-shake {
   border-radius: 50%;
   animation: win-spin 0.75s linear infinite;
   pointer-events: none;
-  z-index: 9000;
+  z-index: 1002;
 }
 @keyframes win-spin {
   to { transform: rotate(360deg); }
