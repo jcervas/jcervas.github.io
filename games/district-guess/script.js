@@ -204,7 +204,7 @@ const GAME_VERSION = (() => {
   const day = String(d.getDate()).padStart(2, '0');
   const h = String(d.getHours()).padStart(2, '0');
   const min = String(d.getMinutes()).padStart(2, '0');
-  return `Beta 1.8.7 (${y}-${m}-${day} ${h}:${min})`;
+  return `Beta 1.8.8 (${y}-${m}-${day} ${h}:${min})`;
 })();
 
 // Built at load time from GeoJSON: { 'TX': ['01','02',...], 'WY': ['01'], ... }
@@ -318,6 +318,7 @@ let usRefMapGroup       = null;   // main <g> inside the SVG (holds all paths)
 let usRefLayers         = {};     // abbr → D3 path selection
 let usRefCallouts       = {};     // abbr → { group, circle, line, text, anchorX, anchorY, offX, offY } for small-state callouts
 let _lastFitBBoxKey     = null;   // dedupe key — skip zoomUSRefMapToValid when bbox unchanged
+let _usRefFullFitTransform = null; // full-US zoom saved on first state-phase fit; used by fit-toggle
 let usRefZoom           = null;   // d3.zoom instance
 let usRefSvgSel         = null;   // d3 selection of the SVG element
 let usRefPathGen        = null;   // reusable geoPath generator (set after projection.fitSize)
@@ -1352,6 +1353,7 @@ function processStateGuess(abbr, correct) {
   renderGuessHistory();
   renderClues();        // also calls updateUSRefMap() + renderStateChips()
   zoomUSRefMapToValid(); // zoom D3 map to remaining valid states
+  document.querySelector('.mzb-fit')?.classList.add('at-active-fit');
   saveGameState();
 
   // If elimination narrowed the field to exactly 1 state, auto-confirm it
@@ -1849,6 +1851,7 @@ function initUSRefMap() {
       if (event.sourceEvent) {
         const hint = document.getElementById('us-ref-hint');
         if (hint) hint.classList.add('dismissed');
+        document.querySelector('.mzb-fit')?.classList.remove('at-active-fit');
       }
     });
   svgSel.call(usRefZoom);
@@ -1873,8 +1876,18 @@ function initUSRefMap() {
 
       if (dir === 'fit') {
         if (tilesHidden) {
-          // State phase: re-fit ref map to the current valid states
-          zoomUSRefMapToValid(true);
+          const atActiveFit = btn.classList.contains('at-active-fit');
+          if (atActiveFit && _usRefFullFitTransform) {
+            // Second press: zoom out to full US view
+            usRefSvgSel?.transition().duration(500).ease(d3.easeCubicInOut)
+              .call(usRefZoom.transform, _usRefFullFitTransform);
+            _lastFitBBoxKey = null; // allow next valid-fit call to run
+            btn.classList.remove('at-active-fit');
+          } else {
+            // First press: zoom to remaining valid states
+            zoomUSRefMapToValid(true);
+            btn.classList.add('at-active-fit');
+          }
           return;
         }
         const tilesSvg = d3.select('#district-tiles svg');
@@ -2119,6 +2132,10 @@ function zoomUSRefMapToValid(animated = true) {
 
   // Sync through d3.zoom so user pan/scroll starts from the correct position
   const zTransform = d3.zoomIdentity.translate(W / 2, H / 2).scale(scale).translate(-cx, -cy);
+  // Save the full-US transform (when all states are valid) for fit-toggle zoom-out
+  if (targetSet.size === Object.keys(usRefLayers).length && !_usRefFullFitTransform) {
+    _usRefFullFitTransform = zTransform;
+  }
   if (usRefZoom && usRefSvgSel) {
     if (animated) {
       usRefSvgSel.transition().duration(700).ease(d3.easeCubicInOut)
@@ -2189,6 +2206,7 @@ function lockStateDropdown(stateAbbr, instant = false) {
 }
 
 function showDistrictD3Map(stateAbbr, instant = false, animateReveal = false) {
+  document.querySelector('.mzb-fit')?.classList.remove('at-active-fit');
   const mapEl   = document.getElementById('us-ref-map');
   const tilesEl = document.getElementById('district-tiles');
   const labelEl = document.getElementById('ref-label');
@@ -3555,9 +3573,10 @@ function resetGame(newIdx) {
   gameOver            = false;
   _gameStarted        = true;   // Play Again always goes straight to game
   elapsedSeconds      = 0;
-  districtGameOverTransform = null;
-  districtSavedTransform    = null;
-  districtUserZoomed        = false;
+  districtGameOverTransform  = null;
+  districtSavedTransform     = null;
+  districtUserZoomed         = false;
+  _usRefFullFitTransform     = null;
   gamePhase                 = 'state';
   _districtBuiltState       = null;
   _districtSvgSel           = null;
