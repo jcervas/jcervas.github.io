@@ -1454,6 +1454,12 @@ function processDistrictGuessTile(dist, fullGuess, correct) {
 
   // Non-game-over wrong guess: rebuild D3 district map after one frame so the compositing
   // layer from the first flash (in submitDistrictTile) has already settled.
+  // Clear saved transform so the rebuild re-fits to the remaining possible districts,
+  // unless the user has manually panned/zoomed (respect their view).
+  if (!districtUserZoomed) {
+    districtSavedTransform = null;
+    document.querySelector('.mzb-fit')?.classList.add('at-active-fit');
+  }
   requestAnimationFrame(() => buildDistrictD3Map(todayDistrict.properties.state));
 
   renderGuessHistory();
