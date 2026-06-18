@@ -204,7 +204,7 @@ const GAME_VERSION = (() => {
   const day = String(d.getDate()).padStart(2, '0');
   const h = String(d.getHours()).padStart(2, '0');
   const min = String(d.getMinutes()).padStart(2, '0');
-  return `Beta 1.8.2 (${y}-${m}-${day} ${h}:${min})`;
+  return `Beta 1.8.2.1 (${y}-${m}-${day} ${h}:${min})`;
 })();
 
 // Built at load time from GeoJSON: { 'TX': ['01','02',...], 'WY': ['01'], ... }
@@ -1494,7 +1494,7 @@ function startGameOverTransition(won, dist) {
     'transform:translate(-50%,-50%)',
     'pointer-events:none',
     'z-index:1000',
-    'transition:width 380ms ease-in, height 380ms ease-in',
+    'transition:width 180ms ease-in, height 180ms ease-in',
   ].join(';');
   document.body.appendChild(overlay);
 
@@ -1507,7 +1507,7 @@ function startGameOverTransition(won, dist) {
   // Trigger container resize while the circle is still expanding.
   setTimeout(() => {
     document.getElementById('game-section')?.classList.add('map-collapsed');
-  }, 80);
+  }, 10);
 
   // Once expansion finishes, build game-over content underneath, then collapse.
   setTimeout(() => {
@@ -1515,7 +1515,7 @@ function startGameOverTransition(won, dist) {
 
     // Brief settle so the newly-built game-over SVG paints before we uncover it.
     setTimeout(() => {
-      overlay.style.transition = 'width 420ms ease-out, height 420ms ease-out, opacity 260ms ease-out 180ms';
+      overlay.style.transition = 'width 120ms ease-out, height 120ms ease-out, opacity 60ms ease-out 40ms';
       overlay.style.width  = '0';
       overlay.style.height = '0';
       overlay.style.opacity = '0';
@@ -1527,9 +1527,9 @@ function startGameOverTransition(won, dist) {
           _gameOverAnimsCallback();
           _gameOverAnimsCallback = null;
         }
-      }, 440);
+      }, 240);
     }, 60);
-  }, 420);
+  }, 220);
 }
 
 // ============================================================
@@ -2512,8 +2512,9 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
       svg.call(districtZoomBehavior.transform, goTransform);
     }
   } else if (!gameOver && !zoomIn) {
-    if (districtUserZoomed && districtSavedTransform) {
-      // User manually panned/zoomed — preserve their exact view across rebuilds.
+    if (districtSavedTransform) {
+      // Preserve the current zoom across guess rebuilds (whether user-set or from initial entry).
+      // This prevents tiles from appearing to resize after each wrong guess.
       svg.call(districtZoomBehavior.transform, districtSavedTransform);
     } else {
       const possFeatures = stateFeatures.filter(f => possibleKeys.has(f.properties['state-district']));
