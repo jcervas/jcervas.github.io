@@ -3257,16 +3257,23 @@ function renderDistrictPreview(containerId = 'result-district-preview') {
 
 // Burst confetti outward from a set of screen-coordinate {x,y} origin points.
 function launchBoundaryConfetti(origins) {
+  // Touch devices have weaker GPUs — cap origins and reduce particles per burst.
+  const isMobile = navigator.maxTouchPoints > 0;
+  const maxOrigins = isMobile ? 20 : origins.length;
+  const step = origins.length > maxOrigins ? Math.ceil(origins.length / maxOrigins) : 1;
+  const sampledOrigins = origins.filter((_, i) => i % step === 0).slice(0, maxOrigins);
+
   const canvas = document.createElement('canvas');
-  canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999';
+  canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;will-change:transform;transform:translateZ(0)';
   document.body.appendChild(canvas);
   canvas.width  = window.innerWidth;
   canvas.height = window.innerHeight;
   const ctx = canvas.getContext('2d');
   const COLORS = ['#C41230','#ffffff','#ffb020','#ff7700','#fffbe8','#FDB515'];
+  const perOrigin = isMobile ? 4 : 8;
   const particles = [];
-  for (const o of origins) {
-    const count = 8 + Math.floor(Math.random() * 5);
+  for (const o of sampledOrigins) {
+    const count = perOrigin + Math.floor(Math.random() * (isMobile ? 2 : 5));
     for (let i = 0; i < count; i++) {
       const ang = Math.random() * Math.PI * 2;
       const spd = 3 + Math.random() * 7;
@@ -3278,44 +3285,47 @@ function launchBoundaryConfetti(origins) {
         vy: Math.sin(ang) * spd - 3,
         angle: Math.random() * Math.PI * 2,
         spin: (Math.random() - 0.5) * 0.25,
-        opacity: 1,
       });
     }
   }
+  // Sort by color so fillStyle switches are minimised across the draw loop.
+  particles.sort((a, b) => (a.color < b.color ? -1 : a.color > b.color ? 1 : 0));
   let frame, start;
   function tick(ts) {
     if (!start) start = ts;
     const elapsed = ts - start;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    let alive = false;
+    // All particles share the same opacity at any instant — set it once per frame.
+    const alpha = elapsed < 2200 ? 1 : Math.max(0, 1 - (elapsed - 2200) / 1200);
+    ctx.globalAlpha = alpha;
+    let lastColor = null;
     for (const p of particles) {
       p.x += p.vx; p.y += p.vy; p.vy += 0.10;
       p.angle += p.spin;
-      p.opacity = elapsed < 2200 ? 1 : Math.max(0, 1 - (elapsed - 2200) / 1200);
-      if (p.opacity > 0) alive = true;
-      ctx.save();
-      ctx.globalAlpha = p.opacity;
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.angle);
-      ctx.fillStyle = p.color;
+      if (p.color !== lastColor) { ctx.fillStyle = p.color; lastColor = p.color; }
+      // setTransform replaces save/translate/rotate/restore (4 calls → 1).
+      const cos = Math.cos(p.angle), sin = Math.sin(p.angle);
+      ctx.setTransform(cos, sin, -sin, cos, p.x, p.y);
       ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-      ctx.restore();
     }
-    if (alive) frame = requestAnimationFrame(tick);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    if (alpha > 0) frame = requestAnimationFrame(tick);
     else { cancelAnimationFrame(frame); canvas.remove(); }
   }
   frame = requestAnimationFrame(tick);
 }
 
 function launchConfetti() {
+  const isMobile = navigator.maxTouchPoints > 0;
   const canvas = document.createElement('canvas');
-  canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999';
+  canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;will-change:transform;transform:translateZ(0)';
   document.body.appendChild(canvas);
   const ctx = canvas.getContext('2d');
   canvas.width  = window.innerWidth;
   canvas.height = window.innerHeight;
   const COLORS = ['#C41230','#FDB515','#2563EB','#16a34a','#f97316','#8b5cf6'];
-  const particles = Array.from({length: 140}, () => ({
+  const count = isMobile ? 70 : 140;
+  const particles = Array.from({length: count}, () => ({
     x: Math.random() * canvas.width,
     y: -10 - Math.random() * 100,
     w: 6 + Math.random() * 6,
@@ -3325,27 +3335,26 @@ function launchConfetti() {
     vy: 2 + Math.random() * 4,
     angle: Math.random() * Math.PI * 2,
     spin: (Math.random() - 0.5) * 0.2,
-    opacity: 1,
   }));
+  particles.sort((a, b) => (a.color < b.color ? -1 : a.color > b.color ? 1 : 0));
   let frame, start;
   function tick(ts) {
     if (!start) start = ts;
     const elapsed = ts - start;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    let alive = false;
+    const alpha = elapsed < 2000 ? 1 : Math.max(0, 1 - (elapsed - 2000) / 800);
+    ctx.globalAlpha = alpha;
+    let alive = false, lastColor = null;
     for (const p of particles) {
       p.x += p.vx; p.y += p.vy; p.vy += 0.08;
       p.angle += p.spin;
-      p.opacity = elapsed < 2000 ? 1 : Math.max(0, 1 - (elapsed - 2000) / 800);
       if (p.y < canvas.height + 20) alive = true;
-      ctx.save();
-      ctx.globalAlpha = p.opacity;
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.angle);
-      ctx.fillStyle = p.color;
+      if (p.color !== lastColor) { ctx.fillStyle = p.color; lastColor = p.color; }
+      const cos = Math.cos(p.angle), sin = Math.sin(p.angle);
+      ctx.setTransform(cos, sin, -sin, cos, p.x, p.y);
       ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-      ctx.restore();
     }
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     if (alive && elapsed < 3500) frame = requestAnimationFrame(tick);
     else { cancelAnimationFrame(frame); canvas.remove(); }
   }
