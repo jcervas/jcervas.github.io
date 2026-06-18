@@ -197,6 +197,7 @@ const SESSION_RANDSEED_KEY = 'districtguess_randseed';  // seed for current rand
 // D3 US reference map coordinate space (viewBox dimensions)
 const REF_VB_W = 960;
 const REF_VB_H = 400;
+const VERSION_NUMBER = '1.9.0';
 const GAME_VERSION = (() => {
   const d = new Date();
   const y = d.getFullYear();
@@ -204,8 +205,9 @@ const GAME_VERSION = (() => {
   const day = String(d.getDate()).padStart(2, '0');
   const h = String(d.getHours()).padStart(2, '0');
   const min = String(d.getMinutes()).padStart(2, '0');
-  return `Beta 1.9.0 (${y}-${m}-${day} ${h}:${min})`;
+  return `Beta ${VERSION_NUMBER} (${y}-${m}-${day} ${h}:${min})`;
 })();
+document.querySelectorAll('.beta-version').forEach(el => { el.textContent = VERSION_NUMBER; });
 
 // Built at load time from GeoJSON: { 'TX': ['01','02',...], 'WY': ['01'], ... }
 let stateDistrictMap = {};
