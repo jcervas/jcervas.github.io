@@ -2887,7 +2887,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
       .attr('r', R)
       .attr('fill', fillColor)
       .attr('stroke', dark ? '#222' : '#fff')
-      .attr('stroke-width', 1.5);
+      .attr('stroke-width', 1.5 / zoomK);
 
     grp.append('text')
       .attr('text-anchor', 'middle')
