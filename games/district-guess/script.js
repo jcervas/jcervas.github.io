@@ -1512,10 +1512,6 @@ function startGameOverTransition(won, dist) {
   requestAnimationFrame(() => requestAnimationFrame(() => {
     overlay.style.width  = `${diameter}px`;
     overlay.style.height = `${diameter}px`;
-    if (won) {
-      _showWinWordCloud();
-      _showWinSpinner();
-    }
   }));
 
   // Trigger container resize while the circle is still expanding.
@@ -1529,12 +1525,8 @@ function startGameOverTransition(won, dist) {
 
     // Brief settle so the newly-built game-over SVG paints before we uncover it.
     setTimeout(() => {
-      overlay.style.transition = 'width 120ms ease-out, height 120ms ease-out, opacity 60ms ease-out 40ms';
-      overlay.style.width  = '0';
-      overlay.style.height = '0';
+      overlay.style.transition = 'opacity 200ms ease-out';
       overlay.style.opacity = '0';
-      document.querySelector('.win-word-cloud')?.remove();
-      document.querySelector('.win-spinner')?.remove();
 
       // Fire deferred animations (spark trace + pulse/shake + confetti) once revealed.
       setTimeout(() => {
@@ -1543,7 +1535,7 @@ function startGameOverTransition(won, dist) {
           _gameOverAnimsCallback();
           _gameOverAnimsCallback = null;
         }
-      }, 240);
+      }, 200);
     }, 60);
   }, 220);
 }
@@ -3218,44 +3210,6 @@ function launchConfetti() {
   frame = requestAnimationFrame(tick);
 }
 
-function _showWinWordCloud() {
-  if (document.querySelector('.win-word-cloud')) return;
-  const WORDS = [
-    'Winner!', 'Congrats!', 'Nailed it!', 'Bravo!', 'Well done!',
-    'Champion!', 'Brilliant!', 'Amazing!', 'Expert!', 'Ace!',
-    'Outstanding!', 'Superb!', 'Correct!', 'Spot on!', 'Genius!',
-    'Flawless!', 'Victory!', 'You got it!', 'Excellent!', 'Perfect!',
-  ];
-  const W = window.innerWidth, H = window.innerHeight;
-  const ns = 'http://www.w3.org/2000/svg';
-  const svg = document.createElementNS(ns, 'svg');
-  svg.className = 'win-word-cloud';
-  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-  svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
-  const COLORS = ['#ffffff', '#fff8e1', '#C41230', '#7a0a1a'];
-  const SIZES  = [11, 14, 17, 21, 26, 32, 40, 50];
-  const WEIGHTS = [400, 600, 700, 800, 900];
-  for (let i = 0; i < 48; i++) {
-    const word   = WORDS[Math.floor(Math.random() * WORDS.length)];
-    const size   = SIZES[Math.floor(Math.random() * SIZES.length)];
-    const weight = WEIGHTS[Math.floor(Math.random() * WEIGHTS.length)];
-    const color  = COLORS[Math.floor(Math.random() * COLORS.length)];
-    const alpha  = 0.15 + Math.random() * 0.35;
-    const rot    = (Math.random() - 0.5) * 32;
-    const x      = -W * 0.12 + Math.random() * W * 1.24;
-    const y      = -H * 0.08 + Math.random() * H * 1.16;
-    const t = document.createElementNS(ns, 'text');
-    t.textContent = word;
-    t.setAttribute('x', x); t.setAttribute('y', y);
-    t.setAttribute('font-size', size); t.setAttribute('font-weight', weight);
-    t.setAttribute('font-family', 'system-ui,sans-serif');
-    t.setAttribute('fill', color); t.setAttribute('opacity', alpha);
-    t.setAttribute('transform', `rotate(${rot},${x},${y})`);
-    t.setAttribute('aria-hidden', 'true');
-    svg.appendChild(t);
-  }
-  document.body.appendChild(svg);
-}
 
 // Opens the (already-populated) result modal and fires confetti once per game on a win.
 // Used by the "View Result" banner button and "Review Result" welcome-splash button —
@@ -3271,13 +3225,6 @@ function openResultModal() {
   }
 }
 
-function _showWinSpinner() {
-  document.querySelector('.win-spinner')?.remove();
-  const el = document.createElement('div');
-  el.className = 'win-spinner';
-  el.setAttribute('aria-label', 'Loading');
-  document.body.appendChild(el);
-}
 
 // Fire confetti only after the game-over win-pulse animation has completed.
 // The pulse runs with a 650ms delay + 700ms duration = ~1350ms total.
@@ -3286,8 +3233,6 @@ function _launchConfettiAfterAnim() {
   const WIN_ANIM_MS = 1400;
   const wait = Math.max(0, WIN_ANIM_MS - (Date.now() - _gameOverTime));
   setTimeout(() => {
-    document.querySelector('.win-spinner')?.remove();
-    document.querySelector('.win-word-cloud')?.remove();
     launchConfetti();
   }, wait);
 }
@@ -3609,7 +3554,6 @@ function resetGame(newIdx) {
   // Hide modals / banners
   document.getElementById('result-modal').classList.add('hidden');
   document.getElementById('already-played-banner').classList.add('hidden');
-  document.querySelector('.win-word-cloud')?.remove();
 
   // Timer
   const tvEl = document.getElementById('timer-value');
@@ -4055,7 +3999,6 @@ document.addEventListener('DOMContentLoaded', () => {
       // Re-show game-over banner whenever result modal is dismissed
       if (modal.id === 'result-modal' && gameOver) {
         document.getElementById('already-played-banner')?.classList.remove('hidden');
-        document.querySelector('.win-word-cloud')?.remove();
       }
       // Clear hints list when closing hints modal — populated lazily on open
       if (modal.id === 'hints-modal') {
@@ -4072,7 +4015,6 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.classList.add('hidden');
         if (modal.id === 'result-modal' && gameOver) {
           document.getElementById('already-played-banner')?.classList.remove('hidden');
-          document.querySelector('.win-word-cloud')?.remove();
         }
       }
     });
