@@ -15,7 +15,7 @@ const SESSION_RANDSEED_KEY = 'districtguess_randseed';  // seed for current rand
 // D3 US reference map coordinate space (viewBox dimensions)
 const REF_VB_W = 960;
 const REF_VB_H = 400;
-const VERSION_NUMBER = '1.9.2';
+const VERSION_NUMBER = '1.9.4';
 const GAME_VERSION = (() => {
   const d = new Date();
   const y = d.getFullYear();
@@ -319,17 +319,19 @@ let usRefMap            = null;   // US states reference map SVG element
 let usRefMapGroup       = null;   // main <g> inside the SVG (holds all paths)
 let usRefLayers         = {};     // abbr → D3 path selection
 let usRefCallouts       = {};     // abbr → { group, circle, line, text, anchorX, anchorY, offX, offY } for small-state callouts
-let _lastFitBBoxKey     = null;   // dedupe key — skip zoomUSRefMapToValid when bbox unchanged
-let _usRefFullFitTransform = null; // full-US zoom saved on first state-phase fit; used by fit-toggle
 let usRefZoom           = null;   // d3.zoom instance
 let usRefSvgSel         = null;   // d3 selection of the SVG element
+let usRefProjection     = null;   // d3.geoAlbersUsa() instance for inner-point bbox on ref map
+let _usRefFullFitTransform = null; // full-US zoom (all 435 pts) saved once; used by fit-toggle zoom-out
 let usRefPathGen        = null;   // reusable geoPath generator (set after projection.fitSize)
 let usDistLayers        = {};     // distPart ('01','02'…) → D3 path selection for district overlay
 let eliminatedStates    = new Set(); // all states removed from valid set (wrong guess + adjacency)
 let districtZoomBehavior    = null;   // saved d3.zoom instance for district tiles map
 let districtUserZoomed      = false;  // true once user manually pans/zooms district map
 let districtSavedTransform  = null;   // zoom transform preserved across rebuilds
-let districtStateFitTransform = null; // full-state zoom set on first gameplay build; used by fit-toggle
+let districtStateFitTransform = null; // full-state inner-point fit; used by fit-toggle second press
+let _districtProjection = null;   // AlbersUSA projection from most recent district ctx build
+let _districtCssScale   = 1;      // cssScale from most recent district ctx build
 let districtSimulation     = null;   // active force simulation — updated on zoom for centroid pull
 let _gameStarted        = false;   // true after welcome is dismissed; guards clue/guess DOM rendering
 let guessCount          = 0;
@@ -444,6 +446,81 @@ function zoomToBBox([[x0, y0], [x1, y1]], W, H, { margin = 0.85, maxScale = Infi
     .translate(W / 2, H / 2)
     .scale(k)
     .translate(-(x0 + x1) / 2, -(y0 + y1) / 2);
+}
+
+// ============================================================
+//  INNER-POINT ZOOM (single source of truth for all map zooms)
+// ============================================================
+
+// Compute SVG bbox from projected inner points of the given district keys.
+// tileR adds a radius pad so tiles aren't clipped at the edge.
+function innerPointBBox(projection, activeKeys, tileR = 0) {
+  if (!projection || !activeKeys?.size) return null;
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const key of activeKeys) {
+    const refPt = POINT_OVERRIDES[key] || districtPoints[key];
+    if (!refPt) continue;
+    const proj = projection(refPt);
+    if (!proj || !isFinite(proj[0])) continue;
+    const [px, py] = proj;
+    x0 = Math.min(x0, px - tileR); x1 = Math.max(x1, px + tileR);
+    y0 = Math.min(y0, py - tileR); y1 = Math.max(y1, py + tileR);
+  }
+  return isFinite(x0) ? [[x0, y0], [x1, y1]] : null;
+}
+
+// Zoom svgSel to fit activeKeys using their inner points.
+// Returns the computed ZoomTransform (or null if no points found).
+function fitToActiveKeys(svgSel, zoomBehavior, projection, W, H, activeKeys, {
+  animated = true, margin = 0.85, tileR = 0, duration = 500
+} = {}) {
+  const bbox = innerPointBBox(projection, activeKeys, tileR);
+  if (!bbox) return null;
+  const t = zoomToBBox(bbox, W, H, { margin });
+  if (svgSel && zoomBehavior) {
+    if (animated) {
+      svgSel.transition().duration(duration).ease(d3.easeCubicInOut)
+        .call(zoomBehavior.transform, t);
+    } else {
+      svgSel.call(zoomBehavior.transform, t);
+    }
+  }
+  return t;
+}
+
+// Return the set of active state-district keys for the current game phase:
+//   state phase   → all district keys of remaining valid states
+//   district phase → remaining valid district keys in the confirmed state (after eliminations)
+function getActiveDistrictKeys() {
+  if (gamePhase === 'district' && todayDistrict) {
+    const stateAbbr      = todayDistrict.properties.state;
+    const stateFeatures  = districts.filter(f => f.properties.state === stateAbbr);
+    const answerKey      = todayDistrict.properties['state-district'];
+    const answerNeighbors = new Set(adjMap.get(answerKey) || []);
+    const wrongGuesses   = guessHistory.filter(g => g.phase === 'district' && !g.correct);
+    let possible = new Set(stateFeatures.map(f => f.properties['state-district']));
+    for (const guess of wrongGuesses) {
+      const key = guess.text;
+      if (answerNeighbors.has(key)) {
+        const nbrSet = new Set(adjMap.get(key) || []);
+        for (const k of [...possible]) { if (k !== key && !nbrSet.has(k)) possible.delete(k); }
+        possible.delete(key);
+      } else {
+        possible.delete(key);
+        for (const nbr of (adjMap.get(key) || [])) possible.delete(nbr);
+      }
+    }
+    return possible;
+  }
+  // State phase
+  const validStates = correctStateGuessed && todayDistrict
+    ? new Set([todayDistrict.properties.state])
+    : getValidStates();
+  const keys = new Set();
+  for (const key of Object.keys(districtPoints)) {
+    if (validStates.has(key.split('-')[0])) keys.add(key);
+  }
+  return keys;
 }
 
 // ============================================================
@@ -1354,7 +1431,6 @@ function processStateGuess(abbr, correct) {
 
   renderGuessHistory();
   renderClues();        // also calls updateUSRefMap() + renderStateChips()
-  _lastFitBBoxKey = null; // force re-zoom even if bbox corners didn't change
   zoomUSRefMapToValid(); // zoom D3 map to remaining valid states
   saveGameState();
 
@@ -1454,92 +1530,110 @@ function processDistrictGuessTile(dist, fullGuess, correct) {
     return;
   }
 
-  // Non-game-over wrong guess: rebuild D3 district map after one frame so the compositing
-  // layer from the first flash (in submitDistrictTile) has already settled.
-  // Clear saved transform so the rebuild re-fits to the remaining possible districts,
-  // unless the user has manually panned/zoomed (respect their view).
-  if (!districtUserZoomed) {
-    districtSavedTransform = null;
-    document.querySelector('.mzb-fit')?.classList.add('at-active-fit');
-  }
-  requestAnimationFrame(() => buildDistrictD3Map(todayDistrict.properties.state));
+  // Non-game-over wrong guess: rebuild SVG, then immediately re-zoom to remaining active
+  // districts (unless the user has manually panned/zoomed — respect their view).
+  document.querySelector('.mzb-fit')?.classList.add('at-active-fit');
+  requestAnimationFrame(() => {
+    buildDistrictD3Map(todayDistrict.properties.state);
+    if (!districtUserZoomed && _districtProjection) {
+      const W = REF_VB_W, H = REF_VB_H;
+      const activeKeys = getActiveDistrictKeys();
+      const tileR = 14 / _districtCssScale;
+      const tilesSvg = d3.select('#district-tiles svg');
+      const t = fitToActiveKeys(tilesSvg, districtZoomBehavior, _districtProjection, W, H, activeKeys, {
+        animated: true, margin: 0.85, tileR, duration: 500,
+      });
+      if (t) districtSavedTransform = t;
+    }
+  });
 
   renderGuessHistory();
   renderClues();
   saveGameState();
 }
 
-// Animated game-over reveal: the clicked tile expands to cover the district-tiles container
-// (gold for win, CMU red for loss), the container transitions to game-over size underneath,
-// then the circle collapses to expose the pre-built game-over map. Spark/confetti fire after.
+// Animated game-over reveal: the clicked tile morphs from a circle into a full-viewport
+// rectangle via D3 shape tweening (4 cubic bezier segments, same structure on both ends
+// so numeric interpolation is smooth). Once the fill covers the screen, endGame() runs
+// under cover, then the shape fades out to reveal the result.
 function startGameOverTransition(won, dist) {
   const tilesEl = document.getElementById('district-tiles');
 
-  // Locate the clicked tile — get its center in fixed (viewport) coordinates.
+  // Tile center and radius in viewport (CSS pixel) coordinates.
   const tileG  = tilesEl?.querySelector(`g.district-tile[data-dist="${dist}"]`);
-  const circle = tileG?.querySelector('circle');
+  const circleEl = tileG?.querySelector('circle');
   let ox = window.innerWidth  / 2;
   let oy = window.innerHeight / 2;
-  if (circle) {
-    const cr = circle.getBoundingClientRect();
-    ox = cr.left + cr.width  / 2;
-    oy = cr.top  + cr.height / 2;
+  let tileR = 14; // fallback
+  if (circleEl) {
+    const cr = circleEl.getBoundingClientRect();
+    ox    = cr.left + cr.width  / 2;
+    oy    = cr.top  + cr.height / 2;
+    tileR = cr.width / 2;
   }
 
-  // Radius needed to cover every corner of the full viewport from (ox, oy).
-  // Using fixed positioning so the overlay is unaffected by container resizing.
-  const dx = Math.max(ox, window.innerWidth  - ox);
-  const dy = Math.max(oy, window.innerHeight - oy);
-  const diameter = Math.ceil(Math.sqrt(dx * dx + dy * dy)) * 2 + 20;
-
+  const W = window.innerWidth, H = window.innerHeight;
   const fillColor = won ? '#FDB515' : '#C41230';
 
-  const overlay = document.createElement('div');
-  overlay.style.cssText = [
-    'position:fixed',
-    `left:${ox}px`,
-    `top:${oy}px`,
-    'width:0',
-    'height:0',
-    'border-radius:50%',
-    `background:${fillColor}`,
-    'transform:translate(-50%,-50%)',
-    'pointer-events:none',
-    'z-index:1000',
-    'transition:width 150ms ease-in, height 150ms ease-in',
-  ].join(';');
-  document.body.appendChild(overlay);
+  // Full-viewport SVG overlay for the shape tween.
+  const svgEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svgEl.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svgEl.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:1000;pointer-events:none;overflow:visible';
+  document.body.appendChild(svgEl);
+  const pathEl = d3.select(svgEl).append('path').attr('fill', fillColor);
 
-  // Expand to cover the full viewport.
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    overlay.style.width  = `${diameter}px`;
-    overlay.style.height = `${diameter}px`;
-  }));
+  // Encode both shapes as 26 numbers: [startX, startY] + 4 × [c1x,c1y,c2x,c2y,ex,ey].
+  // Each uses 4 cubic bezier arcs of 90°.
+  //
+  // The circle starts at its DIAGONAL points (45°/135°/225°/315°), which map directly to
+  // the rectangle's CORNERS — making corners path *endpoints* (not control points) so the
+  // rectangle ends with sharp 90° corners instead of rounded ones.
+  //
+  // k = bezier magic number for 90° arc; D = 1/√2 (diagonal unit)
+  const k = 0.5522847498, D = 1 / Math.SQRT2;
+  const a = D, b = (1 + k) * D, c = (1 - k) * D, r = tileR;
 
-  // Trigger container resize while the circle is still expanding.
-  setTimeout(() => {
-    document.getElementById('game-section')?.classList.add('map-collapsed');
-  }, 10);
+  const circleNums = [
+    ox - r*a, oy - r*a,                                              // M  TL diagonal
+    ox - r*c, oy - r*b,  ox + r*c, oy - r*b,  ox + r*a, oy - r*a,  // C1 TL→TR (via top)
+    ox + r*b, oy - r*c,  ox + r*b, oy + r*c,  ox + r*a, oy + r*a,  // C2 TR→BR (via right)
+    ox + r*c, oy + r*b,  ox - r*c, oy + r*b,  ox - r*a, oy + r*a,  // C3 BR→BL (via bottom)
+    ox - r*b, oy + r*c,  ox - r*b, oy - r*c,  ox - r*a, oy - r*a,  // C4 BL→TL (via left)
+  ];
 
-  // Once expansion finishes, build game-over content underneath, then fade out.
-  setTimeout(() => {
-    endGame(won, { skipAnims: true });
+  // Corners are endpoints; control points lie on the edges → sharp 90° corners.
+  const rectNums = [
+    0,     0,                                // M  top-left corner
+    W/3,   0,    2*W/3, 0,    W,   0,       // C1 TL→TR along top edge
+    W,     H/3,  W,     2*H/3, W,  H,       // C2 TR→BR along right edge
+    2*W/3, H,    W/3,   H,    0,   H,       // C3 BR→BL along bottom edge
+    0,     2*H/3, 0,    H/3,  0,   0,       // C4 BL→TL along left edge
+  ];
 
-    // Brief settle so the newly-built game-over SVG paints before we uncover it.
-    setTimeout(() => {
-      overlay.style.transition = 'opacity 100ms ease-out';
-      overlay.style.opacity = '0';
+  const toPath = n =>
+    `M${n[0]},${n[1]}` +
+    `C${n[2]},${n[3]},${n[4]},${n[5]},${n[6]},${n[7]}` +
+    `C${n[8]},${n[9]},${n[10]},${n[11]},${n[12]},${n[13]}` +
+    `C${n[14]},${n[15]},${n[16]},${n[17]},${n[18]},${n[19]}` +
+    `C${n[20]},${n[21]},${n[22]},${n[23]},${n[24]},${n[25]}Z`;
 
-      // Fire deferred animations (spark trace + pulse/shake + confetti) once revealed.
-      setTimeout(() => {
-        overlay.remove();
-        if (_gameOverAnimsCallback) {
-          _gameOverAnimsCallback();
-          _gameOverAnimsCallback = null;
-        }
-      }, 100);
-    }, 20);
-  }, 160);
+  const interp = d3.interpolateNumberArray(circleNums, rectNums);
+
+  pathEl.attr('d', toPath(circleNums))
+    .transition()
+    .duration(400)
+    .ease(d3.easeCubicInOut)
+    .attrTween('d', () => t => toPath(interp(t)))
+    .on('end', () => {
+      document.getElementById('game-section')?.classList.add('map-collapsed');
+      endGame(won, { skipAnims: true });
+
+      svgEl.remove();
+      if (_gameOverAnimsCallback) {
+        _gameOverAnimsCallback();
+        _gameOverAnimsCallback = null;
+      }
+    });
 }
 
 // ============================================================
@@ -1884,34 +1978,38 @@ function initUSRefMap() {
         if (tilesHidden) {
           const atActiveFit = btn.classList.contains('at-active-fit');
           if (atActiveFit && _usRefFullFitTransform) {
-            // Second press: zoom out to full US view
+            // Second press: zoom out to full-US (all 435 inner points)
             usRefSvgSel?.transition().duration(500).ease(d3.easeCubicInOut)
               .call(usRefZoom.transform, _usRefFullFitTransform);
-            _lastFitBBoxKey = null; // allow next valid-fit call to run
             btn.classList.remove('at-active-fit');
           } else {
-            // First press: zoom to remaining valid states
+            // First press: zoom to remaining valid states (inner points)
             zoomUSRefMapToValid(true);
             btn.classList.add('at-active-fit');
           }
           return;
         }
         const tilesSvg = d3.select('#district-tiles svg');
-        if (tilesSvg.empty() || !districtZoomBehavior) return;
+        if (tilesSvg.empty() || !districtZoomBehavior || !_districtProjection) return;
         if (!gameOver) {
+          const W = REF_VB_W, H = REF_VB_H;
+          const tileR = 14 / _districtCssScale;
           const atActiveFit = btn.classList.contains('at-active-fit');
           if (atActiveFit && districtStateFitTransform) {
-            // Second press: zoom back out to the full-state view
-            districtSavedTransform = districtStateFitTransform;
+            // Second press: zoom out to full-state inner-point fit
             districtUserZoomed = false;
+            districtSavedTransform = districtStateFitTransform;
             tilesSvg.transition().duration(500).ease(d3.easeCubicInOut)
               .call(districtZoomBehavior.transform, districtStateFitTransform);
             btn.classList.remove('at-active-fit');
           } else {
-            // First press: zoom to remaining active districts
+            // First press: zoom to remaining active districts (inner points)
             districtUserZoomed = false;
-            districtSavedTransform = null;
-            buildDistrictD3Map(todayDistrict?.properties?.state, false, false);
+            const activeKeys = getActiveDistrictKeys();
+            const t = fitToActiveKeys(tilesSvg, districtZoomBehavior, _districtProjection, W, H, activeKeys, {
+              animated: true, margin: 0.85, tileR,
+            });
+            if (t) districtSavedTransform = t;
             btn.classList.add('at-active-fit');
           }
           return;
@@ -1949,7 +2047,8 @@ function initUSRefMap() {
     });
   }
 
-  const projection = d3.geoAlbersUsa();
+  usRefProjection  = d3.geoAlbersUsa(); // stored for inner-point bbox on the ref map
+  const projection = usRefProjection;
   const pathGen    = d3.geoPath().projection(projection);
 
   const tooltip = document.getElementById('us-ref-tooltip');
@@ -2067,91 +2166,17 @@ function initUSRefMap() {
   })();
 }
 
-// Zoom the D3 reference map to the bounding box of still-valid states.
+// Zoom the US ref map to fit the inner points of currently-active districts.
 // Pass animated=false for instant placement (e.g., on restore).
 function zoomUSRefMapToValid(animated = true) {
-  if (!usRefMapGroup || !usRefMap) return;
-
-  // Determine target state set
-  const targetSet = correctStateGuessed && todayDistrict
-    ? new Set([todayDistrict.properties.state])
-    : getValidStates();
-
-  if (targetSet.size === 0) return;
-
-  // Always use the viewBox coordinate space — not CSS pixel dimensions
-  const W = REF_VB_W;
-  const H = REF_VB_H;
-
-  // Compute bounding box in the group's LOCAL coordinate space
-  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
-  for (const [abbr, pathEl] of Object.entries(usRefLayers)) {
-    if (!targetSet.has(abbr)) continue;
-    const bb = pathEl.node().getBBox();
-    if (bb.width === 0 && bb.height === 0) continue;
-    x0 = Math.min(x0, bb.x);
-    y0 = Math.min(y0, bb.y);
-    x1 = Math.max(x1, bb.x + bb.width);
-    // Include callout bbox so offshore badges stay in frame
-    const co = usRefCallouts[abbr];
-    if (co) {
-      const cb = co.group.node().getBBox();
-      if (cb.width > 0 || cb.height > 0) {
-        x0 = Math.min(x0, cb.x);
-        y0 = Math.min(y0, cb.y);
-        x1 = Math.max(x1, cb.x + cb.width);
-        y1 = Math.max(y1, cb.y + cb.height);
-      }
-    }
-    y1 = Math.max(y1, bb.y + bb.height);
-  }
-  if (x0 === Infinity) return;
-
-  const dx = x1 - x0;
-  const dy = y1 - y0;
-  if (dx === 0 || dy === 0) return;
-
-  const padding = 28;
-  // With slice mode, the visible viewBox region is determined by container aspect.
-  // pxPerVb = max(cw/W, ch/H) (slice fills the larger axis, crops the other).
-  const svgRect = usRefMap.getBoundingClientRect();
-
-  // Skip re-fitting if neither the target bbox NOR the container size has changed since the
-  // last call — preserves the user's pan/zoom when a guess doesn't change the valid set.
-  // Container size MUST be part of the key: the computed scale depends on it, so a resize
-  // (e.g. the initial fit ran behind the welcome modal at the wrong size, then the
-  // ResizeObserver fires once layout settles) must force a re-fit. Otherwise the stale
-  // initial scale persists until the first guess changes the bbox — looking like a zoom-out.
-  const bboxKey = `${x0.toFixed(1)},${y0.toFixed(1)},${x1.toFixed(1)},${y1.toFixed(1)}@${Math.round(svgRect.width)}x${Math.round(svgRect.height)}`;
-  if (_lastFitBBoxKey === bboxKey) return;
-  _lastFitBBoxKey = bboxKey;
-  const pxPerVb = (svgRect.width > 0 && svgRect.height > 0)
-    ? Math.max(svgRect.width / W, svgRect.height / H)
-    : 1;
-  const visW = svgRect.width  > 0 ? svgRect.width  / pxPerVb : W;
-  const visH = svgRect.height > 0 ? svgRect.height / pxPerVb : H;
-  // Always use min-fit so neither axis overflows the visible region.
-  const fit = Math.min((visW - 2 * padding) / dx, (visH - 2 * padding) / dy);
-  // No minimum scale — allow zooming out to show the full US at game start.
-  const scale = Math.max(0.3, fit);
-  const cx = x0 + dx / 2, cy = y0 + dy / 2;
-
-  // Sync through d3.zoom so user pan/scroll starts from the correct position
-  const zTransform = d3.zoomIdentity.translate(W / 2, H / 2).scale(scale).translate(-cx, -cy);
-  // Save the full-US transform (when all states are valid) for fit-toggle zoom-out
-  if (targetSet.size === Object.keys(usRefLayers).length && !_usRefFullFitTransform) {
-    _usRefFullFitTransform = zTransform;
-  }
-  if (usRefZoom && usRefSvgSel) {
-    if (animated) {
-      usRefSvgSel.transition().duration(700).ease(d3.easeCubicInOut)
-        .call(usRefZoom.transform, zTransform);
-    } else {
-      usRefSvgSel.call(usRefZoom.transform, zTransform);
-    }
-  } else {
-    // Fallback if zoom not yet initialized
-    d3.select(usRefMapGroup).attr('transform', `translate(${tx},${ty}) scale(${scale})`);
+  if (!usRefSvgSel || !usRefZoom || !usRefProjection) return;
+  const W = REF_VB_W, H = REF_VB_H;
+  const activeKeys = getActiveDistrictKeys();
+  if (!activeKeys.size) return;
+  const t = fitToActiveKeys(usRefSvgSel, usRefZoom, usRefProjection, W, H, activeKeys, { animated, duration: 700 });
+  // Save the full-US transform once (all districts valid) for fit-toggle zoom-out.
+  if (t && !_usRefFullFitTransform && !correctStateGuessed && getValidStates().size >= 50) {
+    _usRefFullFitTransform = t;
   }
 }
 
@@ -2266,16 +2291,18 @@ function showDistrictD3Map(stateAbbr, instant = false, animateReveal = false) {
   tilesEl.style.pointerEvents = '';
 
   if (preBuilt) {
-    // Apply zoom animation on the cached SVG so the entry feels smooth even without rebuild
-    if (zoomIn && _districtSvgSel && _districtPathSnap && _districtStateFSnap) {
-      const stateFC       = { type: 'FeatureCollection', features: _districtStateFSnap };
-      const stateBBox     = _districtPathSnap.bounds(stateFC);
-      const entryTransform = zoomToBBox(stateBBox, REF_VB_W, REF_VB_H, { margin: 0.85 });
-      const refStart      = usRefMap ? d3.zoomTransform(usRefMap) : d3.zoomIdentity;
-      districtSavedTransform = entryTransform;
-      _districtSvgSel.call(districtZoomBehavior.transform, refStart);
-      _districtSvgSel.transition().duration(700).ease(d3.easeCubicInOut)
-        .call(districtZoomBehavior.transform, entryTransform);
+    // Apply zoom animation on the cached SVG using inner points, same as fresh build.
+    if (zoomIn && _districtSvgSel && _districtProjection) {
+      const activeKeys = getActiveDistrictKeys();
+      const tileR = 14 / _districtCssScale;
+      const entryTransform = fitToActiveKeys(null, null, _districtProjection, REF_VB_W, REF_VB_H, activeKeys, { margin: 0.85, tileR });
+      if (entryTransform) {
+        const refStart = usRefMap ? d3.zoomTransform(usRefMap) : d3.zoomIdentity;
+        districtSavedTransform = entryTransform;
+        _districtSvgSel.call(districtZoomBehavior.transform, refStart);
+        _districtSvgSel.transition().duration(700).ease(d3.easeCubicInOut)
+          .call(districtZoomBehavior.transform, entryTransform);
+      }
     }
   } else {
     buildDistrictD3Map(stateAbbr, animateReveal, zoomIn);
@@ -2380,6 +2407,8 @@ function _buildDistrictCtx(stateAbbr, tilesEl) {
   const stateFC  = { type: 'FeatureCollection', features: stateFeatures };
   const allStatesFC = { type: 'FeatureCollection', features: Object.values(topoStates).filter(Boolean) };
   const projection  = d3.geoAlbersUsa().fitExtent([[10, 10], [W - 10, H - 10]], allStatesFC);
+  _districtProjection = projection;  // stored for external zoom calls
+  _districtCssScale   = cssScale;
   const pathGen     = d3.geoPath().projection(projection);
   const stateBBox   = pathGen.bounds(stateFC);
   const stateFitTransform = zoomToBBox(stateBBox, W, H, { margin: 0.85, maxScale: W / 12 });
@@ -2493,49 +2522,28 @@ function _buildDistrictCtx(stateAbbr, tilesEl) {
 }
 
 // Decides and applies the initial zoom transform (zoomIn animation, game-over zoom,
-// or restore from saved state).  Must be called after _buildDistrictCtx.
-// Returns the SVG bbox [[x0,y0],[x1,y1]] covering all active tile centers (inner points),
-// extended by one tile-radius so no tile is clipped at the viewport edge.
-function _activeTileBBox(ctx) {
-  const { stateFeatures, possibleKeys, projection, cssScale, W, H } = ctx;
-  const R = 14 / cssScale; // tile radius in SVG units at zoom k=1
-  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
-  for (const f of stateFeatures) {
-    const key = f.properties['state-district'];
-    if (!possibleKeys.has(key)) continue;
-    const refPt  = POINT_OVERRIDES[key] || districtPoints[key] || d3.geoCentroid(f);
-    const proj   = projection(refPt);
-    if (!proj || !isFinite(proj[0])) continue;
-    const [px, py] = proj;
-    x0 = Math.min(x0, px - R); x1 = Math.max(x1, px + R);
-    y0 = Math.min(y0, py - R); y1 = Math.max(y1, py + R);
-  }
-  return isFinite(x0) ? [[x0, y0], [x1, y1]] : null;
-}
 
 function _applyDistrictZoom(ctx, zoomIn) {
-  const { svg, pathGen, stateFeatures, stateFC, stateBBox, possibleKeys, W, H } = ctx;
+  const { svg, pathGen, stateFeatures, stateFC, stateBBox, possibleKeys, W, H, cssScale } = ctx;
+  const tileR = 14 / cssScale;
 
   if (zoomIn) {
-    const refStartTransform = usRefMap ? d3.zoomTransform(usRefMap) : d3.zoomIdentity;
-    const entryBBox     = _activeTileBBox(ctx) || stateBBox;
-    const entryTransform = zoomToBBox(entryBBox, W, H, { margin: 1.0 });
-    dbg(`zoomIn start k=${refStartTransform.k.toFixed(2)} target k=${entryTransform.k.toFixed(2)} x=${entryTransform.x.toFixed(0)} y=${entryTransform.y.toFixed(0)}`);
-    districtSavedTransform = entryTransform;
+    // Entry animation: start from US ref map zoom level, animate to active districts.
+    const refStart = usRefMap ? d3.zoomTransform(usRefMap) : d3.zoomIdentity;
+    const t = fitToActiveKeys(null, null, _districtProjection, W, H, possibleKeys, { margin: 0.85, tileR })
+           || zoomToBBox(stateBBox, W, H, { margin: 0.85 });
+    districtSavedTransform = t;
     _tileZoomInAnimating = true;
-    svg.call(districtZoomBehavior.transform, refStartTransform);
+    svg.call(districtZoomBehavior.transform, refStart);
     svg.transition().duration(700).ease(d3.easeCubicInOut)
-      .call(districtZoomBehavior.transform, entryTransform)
+      .call(districtZoomBehavior.transform, t)
       .on('end', () => { _tileZoomInAnimating = false; });
 
   } else if (gameOver && todayDistrict) {
-    svg.interrupt(); // cancel any running zoomIn so game-over zoom wins
+    svg.interrupt();
     const answerF    = stateFeatures.find(f => f.properties['state-district'] === todayDistrict.properties['state-district']);
     const zoomTarget = answerF || (stateFeatures.length ? stateFC : null);
     if (zoomTarget) {
-      // Pad the district bbox by 1× the district's own extent, clamped to state borders.
-      // Using district-relative padding keeps small districts (e.g. CA-44) from zooming out
-      // to show the whole state when the state is large.
       const [[dx0, dy0], [dx1, dy1]] = pathGen.bounds(zoomTarget);
       const [[sx0, sy0], [sx1, sy1]] = pathGen.bounds(stateFC);
       const padX = (dx1 - dx0), padY = (dy1 - dy0);
@@ -2549,24 +2557,15 @@ function _applyDistrictZoom(ctx, zoomIn) {
     }
 
   } else {
-    // Lock in the full-state fit once — this is what the fit-toggle zooms out to.
-    // Must use stateBBox (not the active-district bbox) so pressing fit twice always
-    // restores the full state view even after districts are eliminated.
+    // Lock in full-state inner-point fit once for fit-toggle second press.
     if (!districtStateFitTransform) {
-      districtStateFitTransform = zoomToBBox(stateBBox, W, H, { margin: 0.85 });
+      const allKeys = new Set(stateFeatures.map(f => f.properties['state-district']));
+      districtStateFitTransform = fitToActiveKeys(null, null, _districtProjection, W, H, allKeys, { margin: 0.85, tileR })
+        || zoomToBBox(stateBBox, W, H, { margin: 0.85 });
     }
-
-    // Guess rebuild: preserve current zoom so tiles don't appear to resize.
-    // On the very first build with no saved transform, fit to the active districts.
-    if (districtSavedTransform) {
-      svg.call(districtZoomBehavior.transform, districtSavedTransform);
-    } else {
-      const activeBBox      = _activeTileBBox(ctx) || stateBBox;
-      const activeTransform = zoomToBBox(activeBBox, W, H, { margin: 1.0 });
-      dbg(`active-zoom possibleKeys=${ctx.possibleKeys.size}/${stateFeatures.length} k=${activeTransform.k.toFixed(2)}`);
-      svg.call(districtZoomBehavior.transform, activeTransform);
-      districtSavedTransform = activeTransform;
-    }
+    // Restore saved transform (user's manual zoom or previous auto-fit).
+    svg.call(districtZoomBehavior.transform, districtSavedTransform || districtStateFitTransform);
+    if (!districtSavedTransform) districtSavedTransform = districtStateFitTransform;
   }
 }
 
@@ -3552,6 +3551,7 @@ function resetGame(newIdx) {
   elapsedSeconds      = 0;
   districtGameOverTransform  = null;
   districtSavedTransform     = null;
+  districtStateFitTransform  = null;
   districtUserZoomed         = false;
   _usRefFullFitTransform     = null;
   gamePhase                 = 'state';
@@ -3602,7 +3602,6 @@ function resetGame(newIdx) {
   usRefMapGroup  = null;
   usRefLayers    = {};
   usRefCallouts  = {};
-  _lastFitBBoxKey = null;
   usRefZoom      = null;
   usRefSvgSel    = null;
 
