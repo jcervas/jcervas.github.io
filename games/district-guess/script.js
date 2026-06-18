@@ -344,7 +344,8 @@ let _districtSvgSel      = null;     // D3 selection of the tiles SVG (cached fo
 let _districtPathSnap    = null;     // pathGen cached from last build (for reveal zoom)
 let _districtStateFSnap  = null;     // stateFeatures cached from last build (for reveal zoom)
 let _gameOverTime        = 0;        // Date.now() when endGame() was called (confetti gate)
-let _gameOverAnimsCallback = null;   // deferred: pulse/shake/confetti, fired after reveal circle collapses
+let _gameOverAnimsCallback  = null;   // deferred: pulse/shake/confetti, fired after reveal circle collapses
+let _tileZoomInAnimating    = false;  // true during 700ms entry zoom-in so handler skips simulation re-runs
 let db                  = null;   // Firestore instance (if configured)
 let username            = '';
 let replayCount         = 0;      // increments each "Play Again" to pick a fresh district
@@ -2263,47 +2264,56 @@ function showDistrictD3Map(stateAbbr, instant = false, animateReveal = false) {
   }
 }
 
+// ─── District D3 Map ────────────────────────────────────────────────────────
+//
+// Split into four focused functions:
+//   buildDistrictD3Map   — thin coordinator: clears container, builds context, routes
+//   _buildDistrictCtx    — creates SVG, projection, zoom behavior; returns shared context
+//   _applyDistrictZoom   — picks and applies the correct initial transform
+//   _drawGameOverMap     — game-over render (answer highlight, badge, spark, context layers)
+//   _drawGameplayTiles   — gameplay render (clickable circles + force simulation)
+
 function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
   dbg(`buildDistrictD3Map state=${stateAbbr} gameOver=${gameOver} animateReveal=${animateReveal} zoomIn=${zoomIn} districtUserZoomed=${districtUserZoomed} savedK=${districtSavedTransform?.k?.toFixed(2)??'null'}`);
   const tilesEl = document.getElementById('district-tiles');
-
-  // Mark element so CSS can distinguish game-over national view from gameplay district view
   tilesEl.classList.toggle('gameover-context', !!gameOver);
   tilesEl.classList.remove('gameover-loss-shake', 'gameover-win-pulse');
-
-  // districtSavedTransform is kept current by the zoom event handler.
   tilesEl.innerHTML = '';
 
-  const stateFeatures = districts.filter(f => f.properties.state === stateAbbr);
-  if (!stateFeatures.length) return;
+  const ctx = _buildDistrictCtx(stateAbbr, tilesEl);
+  if (!ctx) return;
 
-  // Scale down circle radius/collision for dense states (many districts) so circles
-  // don't pile up. Declared early because the zoom handler (set up below) references it
-  // and can fire synchronously before the circle-building section runs.
-  const densityScale = Math.max(1, Math.sqrt(stateFeatures.length / 8));
-  // Desired on-screen circle radius in CSS pixels, density-adjusted.
-  // Clamp to [6, 14] so dense states (TX) stay readable and sparse states don't over-fill.
+  _applyDistrictZoom(ctx, zoomIn);
+
+  if (gameOver && todayDistrict) {
+    _drawGameOverMap(ctx, animateReveal);
+  } else {
+    _drawGameplayTiles(ctx);
+  }
+}
+
+// Creates the SVG, projection, and zoom behavior.  Returns a context object
+// shared by _applyDistrictZoom and the two render functions.
+function _buildDistrictCtx(stateAbbr, tilesEl) {
+  const stateFeatures = districts.filter(f => f.properties.state === stateAbbr);
+  if (!stateFeatures.length) return null;
+
+  // Density-aware circle sizing: dense states (TX, CA) get smaller circles.
+  const densityScale   = Math.max(1, Math.sqrt(stateFeatures.length / 8));
   const targetCirclePx = Math.max(6, Math.min(14, 13 / densityScale));
 
-  const answerKey = todayDistrict?.properties['state-district'];
+  // Hot/cold inference from guess history
+  const answerKey       = todayDistrict?.properties['state-district'];
   const answerNeighbors = new Set(adjMap.get(answerKey) || []);
+  const wrongGuesses    = guessHistory.filter(g => g.phase === 'district' && !g.correct);
 
-  const wrongGuesses = guessHistory.filter(g => g.phase === 'district' && !g.correct);
-
-  // Compute which districts are still possible answers using hot/cold inference.
-  // Hot guess X: answer is in X's neighbors → eliminate everything outside neighbors(X).
-  // Cold guess X: answer is not adjacent to X → eliminate X and all neighbors(X).
   let possibleKeys = new Set(stateFeatures.map(f => f.properties['state-district']));
-  const hotGuessKeys  = new Set(); // keys (dist part) of hot wrong guesses
-  const coldGuessKeys = new Set(); // keys (dist part) of cold wrong guesses
-
-  for (const g of wrongGuesses) {
-    const key  = g.text; // full 'ST-##'
+  const hotGuessKeys = new Set(), coldGuessKeys = new Set();
+  for (const guess of wrongGuesses) {
+    const key  = guess.text;
     const dist = key.split('-').slice(1).join('-');
-    const isHotGuess = answerNeighbors.has(key);
-    if (isHotGuess) {
+    if (answerNeighbors.has(key)) {
       hotGuessKeys.add(dist);
-      // Intersect possible with key's neighbors (key itself is wrong)
       const nbrSet = new Set(adjMap.get(key) || []);
       for (const k of [...possibleKeys]) {
         if (k !== key && !nbrSet.has(k)) possibleKeys.delete(k);
@@ -2311,40 +2321,36 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
       possibleKeys.delete(key);
     } else {
       coldGuessKeys.add(dist);
-      // Eliminate key and all its neighbors
       possibleKeys.delete(key);
       for (const nbr of (adjMap.get(key) || [])) possibleKeys.delete(nbr);
     }
   }
-
-  // Derive hotKeys / coldKeys for rendering (dist parts only)
   const hotKeys  = hotGuessKeys;
   const coldKeys = new Set(
-    stateFeatures
-      .map(f => f.properties['state-district'])
+    stateFeatures.map(f => f.properties['state-district'])
       .filter(k => !possibleKeys.has(k))
       .map(k => k.split('-').slice(1).join('-'))
       .filter(d => !hotGuessKeys.has(d))
   );
 
-  const wonDist = guessHistory.find(g => g.phase === 'district' && g.correct);
+  const wonDist     = guessHistory.find(g => g.phase === 'district' && g.correct);
   const wonDistPart = wonDist ? wonDist.text.split('-').slice(1).join('-') : null;
-  const isAtLarge = stateFeatures.length === 1;
+  const isAtLarge   = stateFeatures.length === 1;
 
-  // Use the same REF_VB coordinate space as the ref map so the state→district cross-fade
-  // aligns geographically. "xMidYMid meet" (no clipping) is used here instead of "slice"
-  // so that portrait containers don't clip the right side of the viewBox where NYC lives.
-  // On landscape containers (the common desktop case) meet and slice produce identical
-  // scale factors, so circle sizing and cross-fade alignment are unaffected.
-  // cssScale = min so it matches the "meet" scaling (the constraining dimension wins).
-  const cssW = tilesEl.offsetWidth  || REF_VB_W;
-  const cssH = tilesEl.offsetHeight || REF_VB_H;
+  // SVG coordinate space — matches the ref map's REF_VB so cross-fades align.
+  // cssScale = min(w/W, h/H) mirrors the browser's xMidYMid "meet" scaling.
+  const cssW    = tilesEl.offsetWidth  || REF_VB_W;
+  const cssH    = tilesEl.offsetHeight || REF_VB_H;
   const cssScale = Math.min(cssW / REF_VB_W, cssH / REF_VB_H);
-  const W = REF_VB_W;
-  const H = REF_VB_H;
+  const W = REF_VB_W, H = REF_VB_H;
   const dark = isDarkMode();
 
-  const stateCollection = { type: 'FeatureCollection', features: stateFeatures };
+  const stateFC  = { type: 'FeatureCollection', features: stateFeatures };
+  const allStatesFC = { type: 'FeatureCollection', features: Object.values(topoStates).filter(Boolean) };
+  const projection  = d3.geoAlbersUsa().fitExtent([[10, 10], [W - 10, H - 10]], allStatesFC);
+  const pathGen     = d3.geoPath().projection(projection);
+  const stateBBox   = pathGen.bounds(stateFC);
+  const stateFitTransform = zoomToBBox(stateBBox, W, H, { margin: 0.85, maxScale: W / 12 });
 
   dbg(`SVG W=${W} H=${H} cssScale=${cssScale.toFixed(2)} container=${cssW}×${cssH} possibleKeys=${possibleKeys.size}/${stateFeatures.length}`);
 
@@ -2352,93 +2358,74 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
     .append('svg')
     .attr('viewBox', `0 0 ${W} ${H}`)
     .attr('preserveAspectRatio', 'xMidYMid meet')
-    .attr('width', '100%')
-    .attr('height', '100%')
+    .attr('width', '100%').attr('height', '100%')
     .style('display', 'block')
-    .style('touch-action', 'none');  // let D3 zoom own all touch gestures
-
-  // Always use AlbersUSA so AK/HI appear correctly and the projection never changes between renders.
-  let projection;
-  const allStatesFC = { type: 'FeatureCollection', features: Object.values(topoStates).filter(Boolean) };
-  projection = d3.geoAlbersUsa().fitExtent([[10, 10], [W - 10, H - 10]], allStatesFC);
-  const pathGen = d3.geoPath().projection(projection);
-
-  // Cache for showDistrictD3Map to reuse on reveal without a full rebuild
-  _districtSvgSel      = svg;
-  _districtPathSnap    = pathGen;
-  _districtStateFSnap  = stateFeatures;
-  _districtBuiltState  = stateAbbr;
+    .style('touch-action', 'none');
 
   const g = svg.append('g');
 
-  // Suppresses simulation re-runs during the zoom-in entry animation so tiles don't
-  // drift between intermediate zoom levels while panning in from the ref map.
-  let zoomInAnimating = false;
+  // Cache for showDistrictD3Map to reuse on reveal without a full rebuild
+  _districtSvgSel     = svg;
+  _districtPathSnap   = pathGen;
+  _districtStateFSnap = stateFeatures;
+  _districtBuiltState = stateAbbr;
 
-  // Pan & zoom on the district tiles map
+  // Zoom behavior — defined here so the handler captures the context constants
+  // (densityScale, targetCirclePx, cssScale, W) without threading them explicitly.
   districtZoomBehavior = d3.zoom()
     .scaleExtent([0.3, Infinity])
     .on('zoom', event => {
       g.attr('transform', event.transform);
-      const k = event.transform.k;
-      // With preserveAspectRatio="xMidYMid slice", 1 viewBox unit = cssScale CSS pixels,
-      // so circle radius = targetCirclePx / (k * cssScale) keeps on-screen size constant.
+      const k  = event.transform.k;
       const rk = targetCirclePx / (k * cssScale);
 
-      // Gameplay circles: scale radius, stroke, and text
+      // Gameplay circles: radius, stroke, text
       g.select('.dist-icons').selectAll('circle')
         .attr('r', rk)
         .attr('stroke-width', 1.5 / k);
       g.select('.dist-icons').selectAll('text').each(function() {
-        // Skip pill badge text — its parent g contains a rect
-        if (this.parentNode && this.parentNode.querySelector('rect')) return;
+        if (this.parentNode && this.parentNode.querySelector('rect')) return; // skip badge text
         const baseSize = Math.min(this.textContent.length > 2 ? 8 : 9, targetCirclePx);
         d3.select(this).attr('font-size', `${baseSize / (k * cssScale)}px`);
       });
-
-      // Connector lines between inner points and icons
       g.select('.dist-connectors').selectAll('line').attr('stroke-width', 0.8 / k);
+      g.select('.dist-connectors').attr('display', k > 1.5 ? 'none' : null);
 
-      // Game-over pill badge: reposition and resize to maintain fixed screen size
+      // Game-over pill badge: reposition + resize so it stays fixed on screen
       const leader = g.select('.dist-leader');
       if (!leader.empty()) {
         const ldbx0 = +leader.attr('data-dbx0'), ldbx1 = +leader.attr('data-dbx1');
         const ldby0 = +leader.attr('data-dby0'), ldby1 = +leader.attr('data-dby1');
         const nby = (ldby0 + ldby1) / 2;
-        const badgeG = g.select('.dist-icons');
-        const label = badgeG.select('text').text();
-        const hasIcon = !badgeG.select('.gc-icon-svg').empty();
+        const badgeG   = g.select('.dist-icons');
+        const label    = badgeG.select('text').text();
+        const hasIcon  = !badgeG.select('.gc-icon-svg').empty();
         const iconSize = 13 / (k * cssScale), iconGap = 4 / (k * cssScale);
         const pH = 26 / (k * cssScale);
         const pW = (label.length * 7.5 + 22) / (k * cssScale) + (hasIcon ? iconSize + iconGap : 0);
-        // Offset badge center by half its width so its edge clears the district bbox
-        const screenGap = 10;
-        let nbx = ldbx1 + screenGap / (k * cssScale) + pW / 2;
-        if (nbx + pW / 2 > W * 0.94) nbx = ldbx0 - screenGap / (k * cssScale) - pW / 2;
+        let nbx = ldbx1 + 10 / (k * cssScale) + pW / 2;
+        if (nbx + pW / 2 > W * 0.94) nbx = ldbx0 - 10 / (k * cssScale) - pW / 2;
         leader.attr('x2', nbx).attr('y2', nby).attr('stroke-width', 1 / (k * cssScale));
+        g.selectAll('.dist-leader').attr('stroke-width', 1 / k);
         badgeG.attr('transform', `translate(${nbx},${nby})`);
-        const pRx = pH / 2;
         badgeG.select('rect')
-          .attr('width', pW).attr('height', pH).attr('rx', pRx)
+          .attr('width', pW).attr('height', pH).attr('rx', pH / 2)
           .attr('x', -pW / 2).attr('y', -pH / 2)
           .attr('stroke-width', 1 / (k * cssScale));
         if (hasIcon) {
           const iconX = -pW / 2 + 7 / (k * cssScale) + iconSize / 2;
-          // stroke-width stays constant — icon paths use vector-effect: non-scaling-stroke
           badgeG.select('.gc-icon-svg')
             .attr('transform', `translate(${iconX},0) scale(${iconSize / 24}) translate(-12,-12)`);
           badgeG.select('text').attr('x', iconSize / 2 + iconGap / 2);
         }
-        badgeG.select('text').attr('font-size', `${12 / (k * cssScale)}px`).attr('letter-spacing', 0.3 / (k * cssScale));
+        badgeG.select('text')
+          .attr('font-size', `${12 / (k * cssScale)}px`)
+          .attr('letter-spacing', 0.3 / (k * cssScale));
       }
-      g.selectAll('.dist-leader').attr('stroke-width', 1 / k);
-      // Hide connector lines when zoomed in — icons sit close enough to their centroids
-      g.select('.dist-connectors').attr('display', k > 1.5 ? 'none' : null);
 
-      // Re-tune simulation synchronously when zoom changes so icons jump to new positions instantly.
-      // Skip during the zoom-in entry animation — tiles are already at final positions.
-      if (districtSimulation && !gameOver && districtSimulation._applyIconPositions && !zoomInAnimating) {
-        const newCollide = 16 / (k * cssScale * densityScale);
+      // Retune simulation so tiles stay collision-free at the new zoom level
+      if (districtSimulation && !gameOver && districtSimulation._applyIconPositions && !_tileZoomInAnimating) {
+        const newCollide  = 16 / (k * cssScale * densityScale);
         const newStrength = Math.min(0.98, 0.6 + (k - 1) * 0.15);
         districtSimulation
           .force('collide', d3.forceCollide(d => d.isCold ? newCollide * 0.25 : d.isHot ? newCollide * 0.45 : newCollide))
@@ -2449,7 +2436,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
         districtSimulation._applyIconPositions();
       }
 
-      // Fade context layers in with zoom: counties appear first, then roads, then urban
+      // Context layers fade in with zoom
       const countyOpacity = k > 3 ? Math.min(0.65, (k - 3) * 0.25) : 0;
       const fadeOpacity   = k > 2 ? Math.min(1,    (k - 2) * 0.35) : 0;
       g.select('.context-counties').attr('opacity', countyOpacity);
@@ -2463,46 +2450,43 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
     });
   svg.call(districtZoomBehavior).on('dblclick.zoom', null);
 
-  // Whole-state bbox — used for zoom-in entry and as the fallback active-tiles bbox.
-  const stateFC = { type: 'FeatureCollection', features: stateFeatures };
-  const stateBBox = pathGen.bounds(stateFC);
-  const stateFitTransform = zoomToBBox(stateBBox, W, H, { margin: 0.85, maxScale: W / 12 });
+  return { svg, g, pathGen, projection, cssScale, W, H, dark, tilesEl, stateAbbr,
+           stateFeatures, stateFC, stateBBox, stateFitTransform,
+           densityScale, targetCirclePx,
+           possibleKeys, hotKeys, coldKeys,
+           wonDist, wonDistPart, isAtLarge, answerKey };
+}
 
-  // On state→district entry, start at wherever the ref map is currently looking and
-  // animate to the active-districts bbox — same logic as the rebuild path so both first
-  // entry and subsequent guesses use consistent zoom levels. Both maps share REF_VB
-  // coordinate space so the cross-fade in showDistrictD3Map aligns geographically.
+// Decides and applies the initial zoom transform (zoomIn animation, game-over zoom,
+// or restore from saved state).  Must be called after _buildDistrictCtx.
+function _applyDistrictZoom(ctx, zoomIn) {
+  const { svg, pathGen, stateFeatures, stateFC, stateBBox, possibleKeys, W, H } = ctx;
+
   if (zoomIn) {
     const refStartTransform = usRefMap ? d3.zoomTransform(usRefMap) : d3.zoomIdentity;
-    const possFeatures = stateFeatures.filter(f => possibleKeys.has(f.properties['state-district']));
-    const entryBBox    = possFeatures.length
+    const possFeatures  = stateFeatures.filter(f => possibleKeys.has(f.properties['state-district']));
+    const entryBBox     = possFeatures.length
       ? pathGen.bounds({ type: 'FeatureCollection', features: possFeatures })
       : stateBBox;
     const entryTransform = zoomToBBox(entryBBox, W, H, { margin: 0.85 });
     dbg(`zoomIn start k=${refStartTransform.k.toFixed(2)} target k=${entryTransform.k.toFixed(2)} x=${entryTransform.x.toFixed(0)} y=${entryTransform.y.toFixed(0)}`);
     districtSavedTransform = entryTransform;
-    zoomInAnimating = true;
+    _tileZoomInAnimating = true;
     svg.call(districtZoomBehavior.transform, refStartTransform);
     svg.transition().duration(700).ease(d3.easeCubicInOut)
       .call(districtZoomBehavior.transform, entryTransform)
-      .on('end', () => { zoomInAnimating = false; });
-  }
+      .on('end', () => { _tileZoomInAnimating = false; });
 
-  if (gameOver && todayDistrict) {
-    // Cancel any running zoomIn transition so the game-over zoom wins and confetti fires
-    // at the correct screen location (confetti reads getBoundingClientRect 900ms later).
-    svg.interrupt();
-    const answerF = stateFeatures.find(f => f.properties['state-district'] === todayDistrict.properties['state-district']);
+  } else if (gameOver && todayDistrict) {
+    svg.interrupt(); // cancel any running zoomIn so game-over zoom wins
+    const answerF    = stateFeatures.find(f => f.properties['state-district'] === todayDistrict.properties['state-district']);
     const zoomTarget = answerF || (stateFeatures.length ? stateFC : null);
     if (zoomTarget) {
-      // Pad the district bbox by a fraction of the STATE's extent in each axis, then
-      // clamp to state borders. This makes padding proportional to state shape:
-      // a tall narrow state (NJ, VT) adds vertical context; a wide short state (KS, NE)
-      // adds horizontal context; at-large districts fall back to showing the whole state.
+      // Pad the district bbox by 30% of the state extent in each axis, clamped to state borders.
+      // A tall state (NJ, VT) adds vertical context; a wide state (KS, NE) adds horizontal.
       const [[dx0, dy0], [dx1, dy1]] = pathGen.bounds(zoomTarget);
       const [[sx0, sy0], [sx1, sy1]] = pathGen.bounds(stateFC);
-      const padFrac = 0.30;
-      const padX = (sx1 - sx0) * padFrac, padY = (sy1 - sy0) * padFrac;
+      const padX = (sx1 - sx0) * 0.30, padY = (sy1 - sy0) * 0.30;
       const paddedBBox = [
         [Math.max(sx0, dx0 - padX), Math.max(sy0, dy0 - padY)],
         [Math.min(sx1, dx1 + padX), Math.min(sy1, dy1 + padY)],
@@ -2511,540 +2495,352 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
       districtGameOverTransform = goTransform;
       svg.call(districtZoomBehavior.transform, goTransform);
     }
-  } else if (!gameOver && !zoomIn) {
+
+  } else {
+    // Guess rebuild: preserve current zoom so tiles don't appear to resize.
+    // On the very first build with no saved transform, fit to possible districts.
     if (districtSavedTransform) {
-      // Preserve the current zoom across guess rebuilds (whether user-set or from initial entry).
-      // This prevents tiles from appearing to resize after each wrong guess.
       svg.call(districtZoomBehavior.transform, districtSavedTransform);
     } else {
-      const possFeatures = stateFeatures.filter(f => possibleKeys.has(f.properties['state-district']));
-      const activeBBox   = possFeatures.length
+      const possFeatures  = stateFeatures.filter(f => possibleKeys.has(f.properties['state-district']));
+      const activeBBox    = possFeatures.length
         ? pathGen.bounds({ type: 'FeatureCollection', features: possFeatures })
         : stateBBox;
       const activeTransform = zoomToBBox(activeBBox, W, H, { margin: 0.85 });
-      dbg(`active-zoom possibleKeys=${possibleKeys.size}/${stateFeatures.length} k=${activeTransform.k.toFixed(2)} stateFit=${stateFitTransform.k.toFixed(2)}`);
+      dbg(`active-zoom possibleKeys=${ctx.possibleKeys.size}/${stateFeatures.length} k=${activeTransform.k.toFixed(2)}`);
       svg.call(districtZoomBehavior.transform, activeTransform);
       districtSavedTransform = activeTransform;
     }
   }
+}
 
-  // During gameplay: fill all districts with panel background to hide internal SVG lines.
-  // At game-over: no fill — only the answer district gets colored.
-  if (!gameOver) {
-    // Draw other states as gray context behind the active state
-    const otherStateFills = Object.values(topoStates).filter(f => f && f.properties?.state !== stateAbbr);
-    g.append('g').attr('class', 'context-other-states')
-      .attr('pointer-events', 'none')
-      .selectAll('path')
-      .data(otherStateFills)
-      .join('path')
-      .attr('d', pathGen)
-      .attr('fill', dark ? 'rgba(255,255,255,0.05)' : 'rgba(160,160,175,0.25)')
-      .attr('stroke', dark ? 'rgba(255,255,255,0.12)' : 'rgba(130,130,150,0.45)')
-      .attr('stroke-width', 0.4)
-      .attr('vector-effect', 'non-scaling-stroke');
+// Renders the game-over view: national context, district boundary lines, answer highlight,
+// leader-line badge, and deferred spark/confetti animations.
+function _drawGameOverMap(ctx, animateReveal) {
+  const { svg, g, pathGen, projection, cssScale, W, H, dark, tilesEl, stateAbbr,
+          stateFeatures, stateFC, wonDist, wonDistPart, isAtLarge, answerKey } = ctx;
 
-    // Active state: white fill (dark mode: dark surface) to stand out from context
-    const fillG = g.append('g').attr('class', 'state-fill');
-    stateFeatures.forEach(f => {
-      fillG.append('path')
-        .datum(f)
-        .attr('d', pathGen)
-        .attr('style', 'fill: var(--surface);')
-        .attr('stroke', 'none')
-        .attr('pointer-events', 'none');
-    });
+  const answerLabel = isAtLarge ? stateAbbr : answerKey;
 
-  }
+  // ── National context layers ───────────────────────────────────────────────
+  if (rawTopo) {
+    const allStateFills = Object.values(topoStates).filter(f => f.properties?.state !== stateAbbr);
 
-  // Game-over view: show all district lines, highlight answer in white, red number badge
-  if (gameOver && todayDistrict) {
-    const answerKey  = todayDistrict.properties['state-district'];
-    const answerDist = answerKey?.split('-').slice(1).join('-') || '00';
-    const answerLabel = isAtLarge ? stateAbbr : answerKey;
+    g.append('g').attr('class', 'context-state-fills').attr('pointer-events', 'none')
+      .selectAll('path').data(allStateFills).join('path').attr('d', pathGen)
+      .attr('fill', dark ? 'rgba(255,255,255,0.06)' : 'rgba(100,100,120,0.12)')
+      .attr('stroke', 'none');
 
-    // ── Context: all US states as national backdrop ───────────────
-    if (rawTopo) {
-      const allStateFills = Object.values(topoStates).filter(f => f.properties?.state !== stateAbbr);
+    // Clip roads/urban to the US land boundary
+    const clipId = 'gameover-us-land-clip';
+    let defs = svg.select('defs');
+    if (defs.empty()) defs = svg.insert('defs', ':first-child');
+    defs.selectAll(`#${clipId}`).remove();
+    defs.append('clipPath').attr('id', clipId)
+      .append('path').datum(topojson.merge(rawTopo, rawTopo.objects.districts.geometries)).attr('d', pathGen);
 
-      // Fill all non-target states with a subtle tint so they read as "elsewhere"
-      g.append('g').attr('class', 'context-state-fills')
-        .attr('pointer-events', 'none')
-        .selectAll('path')
-        .data(allStateFills)
-        .join('path')
-        .attr('d', pathGen)
-        .attr('fill', dark ? 'rgba(255,255,255,0.06)' : 'rgba(100,100,120,0.12)')
-        .attr('stroke', 'none');
-
-      // Clip roads and urban to the US land boundary so they don't spill outside state edges
-      const clipId = 'gameover-us-land-clip';
-      let defs = svg.select('defs');
-      if (defs.empty()) defs = svg.insert('defs', ':first-child');
-      defs.selectAll(`#${clipId}`).remove();
-      const usLandMerge = topojson.merge(rawTopo, rawTopo.objects.districts.geometries);
-      defs.append('clipPath').attr('id', clipId)
-        .append('path').datum(usLandMerge).attr('d', pathGen);
-
-      // Urban areas — very faint filled polygons (rendered below district lines)
-      if (topoUrban) {
-        g.append('g').attr('class', 'context-urban')
-          .attr('clip-path', `url(#${clipId})`)
-          .attr('opacity', 0)
-          .attr('pointer-events', 'none')
-          .selectAll('path')
-          .data(topoUrban.features)
-          .join('path')
-          .attr('d', pathGen)
-          .attr('fill', dark ? 'rgba(255,255,255,0.06)' : 'rgba(80,80,140,0.08)')
-          .attr('stroke', 'none');
-      }
-
-      // Road network — rendered above urban, below counties
-      if (topoRoads) {
-        g.append('g').attr('class', 'context-roads')
-          .attr('clip-path', `url(#${clipId})`)
-          .attr('opacity', 0)
-          .attr('pointer-events', 'none')
-          .selectAll('path')
-          .data(topoRoads.features)
-          .join('path')
-          .attr('d', pathGen)
-          .attr('fill', 'none')
-          .attr('stroke', dark ? 'rgba(255,255,255,0.14)' : 'rgba(60,60,100,0.18)')
-          .attr('stroke-width', 0.5)
-          .attr('vector-effect', 'non-scaling-stroke');
-      }
-
-      // County boundary lines — most visible of the three context layers
-      if (topoCounties) {
-        g.append('g').attr('class', 'context-counties')
-          .attr('clip-path', `url(#${clipId})`)
-          .attr('opacity', 0)
-          .attr('pointer-events', 'none')
-          .selectAll('path')
-          .data(topoCounties.features)
-          .join('path')
-          .attr('d', pathGen)
-          .attr('fill', 'none')
-          .attr('stroke', dark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.45)')
-          .attr('stroke-width', 0.5)
-          .attr('stroke-dasharray', '2 3')
-          .attr('vector-effect', 'non-scaling-stroke');
-      }
-
-      // Sync initial context-layer opacity to current zoom (zoom handler fires before elements exist)
-      {
-        const k0 = d3.zoomTransform(svg.node()).k || 1;
-        const cOp = k0 > 3 ? Math.min(0.65, (k0 - 3) * 0.25) : 0;
-        const fOp = k0 > 2 ? Math.min(1,    (k0 - 2) * 0.35) : 0;
-        g.select('.context-counties').attr('opacity', cOp);
-        g.select('.context-roads').attr('opacity', fOp);
-        g.select('.context-urban').attr('opacity', fOp);
-      }
-
-      // District inner lines drawn on top of urban/roads so they remain visible
-      const distInnerMesh = topojson.mesh(
-        rawTopo, rawTopo.objects.districts,
-        (a, b) => a !== b
-          && a.properties?.state === b.properties?.state
-          && a.properties?.state !== stateAbbr
-      );
-      g.append('path')
-        .datum(distInnerMesh)
-        .attr('class', 'context-district-lines')
-        .attr('d', pathGen)
+    if (topoUrban) {
+      g.append('g').attr('class', 'context-urban')
+        .attr('clip-path', `url(#${clipId})`).attr('opacity', 0).attr('pointer-events', 'none')
+        .selectAll('path').data(topoUrban.features).join('path').attr('d', pathGen)
+        .attr('fill', dark ? 'rgba(255,255,255,0.06)' : 'rgba(80,80,140,0.08)').attr('stroke', 'none');
+    }
+    if (topoRoads) {
+      g.append('g').attr('class', 'context-roads')
+        .attr('clip-path', `url(#${clipId})`).attr('opacity', 0).attr('pointer-events', 'none')
+        .selectAll('path').data(topoRoads.features).join('path').attr('d', pathGen)
         .attr('fill', 'none')
-        .attr('stroke', dark ? 'rgba(255,255,255,0.22)' : 'rgba(60,60,90,0.50)')
-        .attr('stroke-width', 0.5)
-        .attr('vector-effect', 'non-scaling-stroke')
-        .attr('pointer-events', 'none');
-
-      // State outlines for all non-target states — slightly more visible than district lines
-      g.append('g').attr('class', 'context-state-borders')
-        .attr('pointer-events', 'none')
-        .selectAll('path')
-        .data(allStateFills)
-        .join('path')
-        .attr('d', pathGen)
+        .attr('stroke', dark ? 'rgba(255,255,255,0.14)' : 'rgba(60,60,100,0.18)')
+        .attr('stroke-width', 0.5).attr('vector-effect', 'non-scaling-stroke');
+    }
+    if (topoCounties) {
+      g.append('g').attr('class', 'context-counties')
+        .attr('clip-path', `url(#${clipId})`).attr('opacity', 0).attr('pointer-events', 'none')
+        .selectAll('path').data(topoCounties.features).join('path').attr('d', pathGen)
         .attr('fill', 'none')
-        .attr('stroke', dark ? 'rgba(255,255,255,0.30)' : 'rgba(40,40,60,0.60)')
-        .attr('stroke-width', 0.7)
-        .attr('vector-effect', 'non-scaling-stroke');
+        .attr('stroke', dark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.45)')
+        .attr('stroke-width', 0.5).attr('stroke-dasharray', '2 3').attr('vector-effect', 'non-scaling-stroke');
     }
 
-    // Draw target-state district boundaries (muted, no fill)
-    stateFeatures.forEach(f => {
-      g.append('path')
-        .datum(f)
-        .attr('data-key', f.properties['state-district'])
-        .attr('d', pathGen)
-        .attr('fill', 'none')
-        .attr('stroke', dark ? 'rgba(255,255,255,0.35)' : 'rgba(60,60,80,0.25)')
-        .attr('stroke-width', 0.8)
-        .attr('vector-effect', 'non-scaling-stroke')
-        .attr('pointer-events', 'none');
-    });
+    // Sync context-layer opacity to current zoom (zoom handler fired before these existed)
+    {
+      const k0 = d3.zoomTransform(svg.node()).k || 1;
+      const cOp = k0 > 3 ? Math.min(0.65, (k0 - 3) * 0.25) : 0;
+      const fOp = k0 > 2 ? Math.min(1,    (k0 - 2) * 0.35) : 0;
+      g.select('.context-counties').attr('opacity', cOp);
+      g.select('.context-roads').attr('opacity', fOp);
+      g.select('.context-urban').attr('opacity', fOp);
+    }
 
-    // Highlight the answer district in CMU red (regardless of win/loss)
-    const answerFeature = stateFeatures.find(f => f.properties['state-district'] === answerKey);
-    if (answerFeature) {
-      const won        = !!wonDist;
-      const finalFill   = dark ? 'rgba(196,18,48,0.55)' : 'rgba(196,18,48,0.30)';
-      const finalStroke = '#C41230';
+    g.append('path')
+      .datum(topojson.mesh(rawTopo, rawTopo.objects.districts,
+        (a, b) => a !== b && a.properties?.state === b.properties?.state && a.properties?.state !== stateAbbr))
+      .attr('class', 'context-district-lines').attr('d', pathGen)
+      .attr('fill', 'none')
+      .attr('stroke', dark ? 'rgba(255,255,255,0.22)' : 'rgba(60,60,90,0.50)')
+      .attr('stroke-width', 0.5).attr('vector-effect', 'non-scaling-stroke').attr('pointer-events', 'none');
 
-      const answerPath = g.append('path')
-        .datum(answerFeature)
-        .attr('d', pathGen)
-        .attr('fill', finalFill)
-        .attr('stroke', finalStroke)
-        .attr('stroke-width', 2)
-        .attr('vector-effect', 'non-scaling-stroke')
-        .attr('pointer-events', 'none');
+    g.append('g').attr('class', 'context-state-borders').attr('pointer-events', 'none')
+      .selectAll('path').data(allStateFills).join('path').attr('d', pathGen)
+      .attr('fill', 'none')
+      .attr('stroke', dark ? 'rgba(255,255,255,0.30)' : 'rgba(40,40,60,0.60)')
+      .attr('stroke-width', 0.7).attr('vector-effect', 'non-scaling-stroke');
+  }
 
-      // Spark trace + pulse/shake + confetti are all deferred: they fire via
-      // _gameOverAnimsCallback once the reveal circle finishes collapsing, so the
-      // user sees the trace start fresh on the already-visible game-over map.
-      // When animateReveal is true (theme change / restoreGame path), fire immediately.
-      {
-        const node = answerPath.node();
-        const len  = node.getTotalLength ? node.getTotalLength() : 0;
+  // ── Target-state district boundaries ─────────────────────────────────────
+  stateFeatures.forEach(f => {
+    g.append('path').datum(f)
+      .attr('data-key', f.properties['state-district']).attr('d', pathGen)
+      .attr('fill', 'none')
+      .attr('stroke', dark ? 'rgba(255,255,255,0.35)' : 'rgba(60,60,80,0.25)')
+      .attr('stroke-width', 0.8).attr('vector-effect', 'non-scaling-stroke').attr('pointer-events', 'none');
+  });
 
-        // Reserve the spark layer — will be raised to top after state outline is appended.
-        const sparkLayer = g.append('g').attr('class', 'spark-layer').attr('pointer-events', 'none');
+  // ── Answer district highlight + spark + badge ─────────────────────────────
+  const answerFeature = stateFeatures.find(f => f.properties['state-district'] === answerKey);
+  if (answerFeature) {
+    const won = !!wonDist;
 
-        _gameOverAnimsCallback = function() {
-          // Start the boundary spark trace.
-          if (len > 0) {
-            const k0 = d3.zoomTransform(svg.node()).k || 1;
-            const sparkR = 4 / k0;
-            const spark = sparkLayer.append('circle')
-              .attr('r', sparkR)
-              .attr('pointer-events', 'none')
-              .attr('fill', '#fffbe8')
-              .style('filter', 'drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px #ffb020) drop-shadow(0 0 16px #ff7700)');
-            const p0 = node.getPointAtLength(0);
-            spark.attr('cx', p0.x).attr('cy', p0.y);
+    const answerPath = g.append('path').datum(answerFeature).attr('d', pathGen)
+      .attr('fill',   dark ? 'rgba(196,18,48,0.55)' : 'rgba(196,18,48,0.30)')
+      .attr('stroke', '#C41230').attr('stroke-width', 2)
+      .attr('vector-effect', 'non-scaling-stroke').attr('pointer-events', 'none');
 
-            function emitEmber(x, y) {
-              const k = d3.zoomTransform(svg.node()).k || 1;
-              const ang  = Math.random() * Math.PI * 2;
-              const dist = (6 + Math.random() * 9) / k;
-              sparkLayer.append('circle')
-                .attr('cx', x).attr('cy', y)
-                .attr('r', (1.5 + Math.random() * 1.2) / k)
-                .attr('fill', Math.random() < 0.5 ? '#ffb020' : '#ff5500')
-                .attr('pointer-events', 'none')
-                .style('filter', 'drop-shadow(0 0 3px #ff8800)')
-                .transition()
-                  .duration(350 + Math.random() * 200).ease(d3.easeCubicOut)
-                  .attr('cx', x + Math.cos(ang) * dist).attr('cy', y + Math.sin(ang) * dist)
-                  .attr('r', 0).style('opacity', 0).remove();
+    const node = answerPath.node();
+    const len  = node.getTotalLength ? node.getTotalLength() : 0;
+    const sparkLayer = g.append('g').attr('class', 'spark-layer').attr('pointer-events', 'none');
+
+    // Spark trace + pulse/shake + confetti: deferred until the reveal circle collapses,
+    // or fired immediately when animateReveal is true (theme change / restore path).
+    _gameOverAnimsCallback = function() {
+      if (len > 0) {
+        const k0    = d3.zoomTransform(svg.node()).k || 1;
+        const spark = sparkLayer.append('circle')
+          .attr('r', 4 / k0).attr('pointer-events', 'none').attr('fill', '#fffbe8')
+          .style('filter', 'drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px #ffb020) drop-shadow(0 0 16px #ff7700)');
+        const p0 = node.getPointAtLength(0);
+        spark.attr('cx', p0.x).attr('cy', p0.y);
+
+        function emitEmber(x, y) {
+          const k   = d3.zoomTransform(svg.node()).k || 1;
+          const ang = Math.random() * Math.PI * 2;
+          const d   = (6 + Math.random() * 9) / k;
+          sparkLayer.append('circle')
+            .attr('cx', x).attr('cy', y).attr('r', (1.5 + Math.random() * 1.2) / k)
+            .attr('fill', Math.random() < 0.5 ? '#ffb020' : '#ff5500').attr('pointer-events', 'none')
+            .style('filter', 'drop-shadow(0 0 3px #ff8800)')
+            .transition().duration(350 + Math.random() * 200).ease(d3.easeCubicOut)
+              .attr('cx', x + Math.cos(ang) * d).attr('cy', y + Math.sin(ang) * d)
+              .attr('r', 0).style('opacity', 0).remove();
+        }
+
+        const LAPS = 5, LAP_MS = 3000, t0 = performance.now();
+        (function frame(now) {
+          const elapsed = now - t0;
+          const pt = node.getPointAtLength(((elapsed % LAP_MS) / LAP_MS) * len);
+          spark.attr('cx', pt.x).attr('cy', pt.y);
+          if (Math.random() < 0.45) emitEmber(pt.x, pt.y);
+          if (elapsed < LAPS * LAP_MS) requestAnimationFrame(frame);
+          else spark.transition().duration(300).attr('r', 0).style('opacity', 0).remove();
+        })(t0);
+      }
+
+      if (!won) {
+        tilesEl.classList.add('gameover-loss-shake');
+      } else {
+        tilesEl.classList.add('gameover-win-pulse');
+        if (len > 0) {
+          setTimeout(() => requestAnimationFrame(() => {
+            const svgEl   = svg.node();
+            const svgRect = svgEl.getBoundingClientRect();
+            const { k, x: tx, y: ty } = d3.zoomTransform(svgEl);
+            const xOff = (svgRect.width  - W * cssScale) / 2;
+            const yOff = (svgRect.height - H * cssScale) / 2;
+            const origins = [];
+            for (let i = 0; i < 120; i++) {
+              const pt = node.getPointAtLength((i / 120) * len);
+              const sx = svgRect.left + xOff + (tx + pt.x * k) * cssScale;
+              const sy = svgRect.top  + yOff + (ty + pt.y * k) * cssScale;
+              if (sx >= 0 && sx <= window.innerWidth && sy >= 0 && sy <= window.innerHeight)
+                origins.push({ x: sx, y: sy });
             }
-
-            const LAPS = 5, LAP_MS = 3000;
-            const t0 = performance.now();
-            (function frame(now) {
-              const elapsed = now - t0;
-              const lapT = (elapsed % LAP_MS) / LAP_MS;
-              const pt   = node.getPointAtLength(lapT * len);
-              spark.attr('cx', pt.x).attr('cy', pt.y);
-              if (Math.random() < 0.45) emitEmber(pt.x, pt.y);
-              if (elapsed < LAPS * LAP_MS) {
-                requestAnimationFrame(frame);
-              } else {
-                spark.transition().duration(300).attr('r', 0).style('opacity', 0).remove();
-              }
-            })(t0);
-          }
-
-          // Pulse / shake the container.
-          if (!won) {
-            tilesEl.classList.add('gameover-loss-shake');
-          } else {
-            tilesEl.classList.add('gameover-win-pulse');
-            // Sample boundary points after settled layout paints, then burst confetti.
-            if (len > 0) {
-              setTimeout(() => requestAnimationFrame(() => {
-                const svgEl   = svg.node();
-                const svgRect = svgEl.getBoundingClientRect();
-                const { k, x: tx, y: ty } = d3.zoomTransform(svgEl);
-                // SVG uses viewBox="0 0 960 400" with xMidYMid meet.
-                // cssScale converts viewBox units → CSS pixels; xOff/yOff are the centering margins.
-                const xOff = (svgRect.width  - W * cssScale) / 2;
-                const yOff = (svgRect.height - H * cssScale) / 2;
-                const N = 120;
-                const origins = [];
-                for (let i = 0; i < N; i++) {
-                  const pt = node.getPointAtLength((i / N) * len);
-                  const sx = svgRect.left + xOff + (tx + pt.x * k) * cssScale;
-                  const sy = svgRect.top  + yOff + (ty + pt.y * k) * cssScale;
-                  if (sx >= 0 && sx <= window.innerWidth && sy >= 0 && sy <= window.innerHeight) {
-                    origins.push({ x: sx, y: sy });
-                  }
-                }
-                if (!origins.length) {
-                  origins.push({ x: svgRect.left + svgRect.width / 2, y: svgRect.top + svgRect.height / 2 });
-                }
-                launchBoundaryConfetti(origins);
-              }), 900);
-            }
-          }
-        };
-
-        if (animateReveal) {
-          _gameOverAnimsCallback();
-          _gameOverAnimsCallback = null;
+            if (!origins.length)
+              origins.push({ x: svgRect.left + svgRect.width / 2, y: svgRect.top + svgRect.height / 2 });
+            launchBoundaryConfetti(origins);
+          }), 900);
         }
       }
+    };
+    if (animateReveal) { _gameOverAnimsCallback(); _gameOverAnimsCallback = null; }
 
-      // Red circle with district number at inner point
-      const sdKey = answerFeature.properties['state-district'];
-      const inner = POINT_OVERRIDES[sdKey] || districtPoints[sdKey];
-      let cx, cy;
-      if (inner) {
-        const p = projection(inner);
-        cx = p && isFinite(p[0]) ? p[0] : W / 2;
-        cy = p && isFinite(p[1]) ? p[1] : H / 2;
-      } else {
-        const p = projection(d3.geoCentroid(answerFeature));
-        cx = p && isFinite(p[0]) ? p[0] : W / 2;
-        cy = p && isFinite(p[1]) ? p[1] : H / 2;
-      }
-      // Read the zoom scale already applied so the badge is correctly sized on first render
-      const initK = d3.zoomTransform(svg.node()).k || 1;
-      const initR = Math.max(1, 13 / initK);
+    // ── Leader line + pill badge ──────────────────────────────────────────
+    const initK  = d3.zoomTransform(svg.node()).k || 1;
+    const initR  = Math.max(1, 13 / initK);
+    const [[dbx0, dby0], [dbx1, dby1]] = pathGen.bounds(answerFeature);
+    const screenGap = 18 / (initK * cssScale);
+    let bx = dbx1 + screenGap;
+    let by = (dby0 + dby1) / 2;
+    if (bx + initR > W - 4) bx = dbx0 - screenGap;
+    bx = Math.max(initR + 4, Math.min(W - initR - 4, bx));
+    by = Math.max(initR + 4, Math.min(H - initR - 4, by));
 
-      // Place badge outside the district bbox, connected by a leader line.
-      // Gap is expressed in screen pixels (divided by zoom scale) so it looks
-      // consistent at any zoom level — ~18px from the district edge on screen.
-      const [[dbx0, dby0], [dbx1, dby1]] = pathGen.bounds(answerFeature);
-      const screenGap = 18 / (initK * cssScale);
-      // Prefer right side; fall back to left if too close to SVG edge
-      let bx = dbx1 + screenGap;
-      let by = (dby0 + dby1) / 2;
-      if (bx + initR > W - 4) bx = dbx0 - screenGap;
-      bx = Math.max(initR + 4, Math.min(W - initR - 4, bx));
-      by = Math.max(initR + 4, Math.min(H - initR - 4, by));
+    g.append('line').attr('class', 'dist-leader')
+      .attr('x1', dbx1).attr('y1', by).attr('x2', bx).attr('y2', by)
+      .attr('stroke', dark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.4)')
+      .attr('stroke-width', 1 / (initK * cssScale)).attr('pointer-events', 'none')
+      .attr('data-dbx0', dbx0).attr('data-dbx1', dbx1)
+      .attr('data-dby0', dby0).attr('data-dby1', dby1);
 
-      // Leader line from east edge of district bbox to badge — avoids overlapping the district.
-      g.append('line')
-        .attr('class', 'dist-leader')
-        .attr('x1', dbx1).attr('y1', by)
-        .attr('x2', bx).attr('y2', by)
-        .attr('stroke', dark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.4)')
-        .attr('stroke-width', 1 / (initK * cssScale))
-        .attr('pointer-events', 'none')
-        .attr('data-dbx0', dbx0).attr('data-dbx1', dbx1)
-        .attr('data-dby0', dby0).attr('data-dby1', dby1);
+    const iconSize = 13 / (initK * cssScale), iconGap = 4 / (initK * cssScale);
+    const pillH = 26 / (initK * cssScale);
+    const pillW = (answerLabel.length * 7.5 + 22) / (initK * cssScale) + iconSize + iconGap;
+    const badge = g.append('g').attr('class', 'dist-icons').attr('transform', `translate(${bx},${by})`);
+    badge.append('rect')
+      .attr('x', -pillW / 2).attr('y', -pillH / 2).attr('width', pillW).attr('height', pillH)
+      .attr('rx', pillH / 2)
+      .attr('fill', 'rgba(196,18,48,0.82)').attr('stroke', 'rgba(255,255,255,0.35)')
+      .attr('stroke-width', 1 / (initK * cssScale));
 
-      // Pill badge styled like the drag/zoom hint: CMU-red bg, white border.
-      // Includes a small check/x icon to indicate win vs loss without recoloring the badge.
-      const iconSize = 13 / (initK * cssScale);
-      const iconGap  = 4 / (initK * cssScale);
-      const pillH  = 26 / (initK * cssScale);  // total height in SVG units
-      const pillW  = (answerLabel.length * 7.5 + 22) / (initK * cssScale) + iconSize + iconGap;
-      const pillRx = pillH / 2;   // full pill rounding
-      const badge = g.append('g').attr('class', 'dist-icons').attr('transform', `translate(${bx},${by})`);
-      badge.append('rect')
-        .attr('x', -pillW / 2).attr('y', -pillH / 2)
-        .attr('width', pillW).attr('height', pillH).attr('rx', pillRx)
-        .attr('fill', 'rgba(196,18,48,0.82)')
-        .attr('stroke', 'rgba(255,255,255,0.35)')
-        .attr('stroke-width', 1 / (initK * cssScale));
+    const iconX    = -pillW / 2 + 7 / (initK * cssScale) + iconSize / 2;
+    const iconScale = iconSize / 24;
+    const iconG = badge.append('g').attr('class', 'gc-icon-svg')
+      .attr('transform', `translate(${iconX},0) scale(${iconScale}) translate(-12,-12)`)
+      .attr('fill', 'none').attr('stroke', '#fff')
+      .attr('stroke-width', 2).attr('stroke-linecap', 'round').attr('stroke-linejoin', 'round')
+      .html(wonDist ? ICON_PATHS.checkCircle : ICON_PATHS.xCircle);
+    iconG.selectAll('path, circle, line, polyline').attr('vector-effect', 'non-scaling-stroke');
 
-      const iconX = -pillW / 2 + 7 / (initK * cssScale) + iconSize / 2;
-      const iconScale = iconSize / 24;
-      const iconG = badge.append('g')
-        .attr('class', 'gc-icon-svg')
-        // Icon geometry is centered at (12,12) in its 24x24 viewBox — recenter to
-        // the origin BEFORE scaling, since scale() applies around (0,0).
-        .attr('transform', `translate(${iconX},0) scale(${iconScale}) translate(-12,-12)`)
-        .attr('fill', 'none')
-        .attr('stroke', '#fff')
-        .attr('stroke-width', 2)
-        .attr('stroke-linecap', 'round')
-        .attr('stroke-linejoin', 'round')
-        .html(wonDist ? ICON_PATHS.checkCircle : ICON_PATHS.xCircle);
-      iconG.selectAll('path, circle, line, polyline').attr('vector-effect', 'non-scaling-stroke');
-
-      badge.append('text')
-        .attr('x', iconSize / 2 + iconGap / 2)
-        .attr('text-anchor', 'middle')
-        .attr('dominant-baseline', 'central')
-        .attr('font-size', `${12 / (initK * cssScale)}px`)
-        .attr('font-weight', '600')
-        .attr('fill', '#fff')
-        .attr('letter-spacing', 0.3 / (initK * cssScale))
-        .attr('pointer-events', 'none')
-        .text(answerLabel);
-    }
-
-    // State outline on top
-    const stateOutline = topoStates[stateAbbr];
-    if (stateOutline) {
-      g.append('path')
-        .datum(stateOutline)
-        .attr('d', pathGen)
-        .attr('fill', 'none')
-        .attr('stroke', dark ? '#aaa' : '#555')
-        .attr('stroke-width', 2)
-        .attr('vector-effect', 'non-scaling-stroke')
-        .attr('pointer-events', 'none');
-    }
-    // Badge above state outline; spark layer on top of everything so the trace is visible.
-    g.select('.dist-leader').raise();
-    g.select('.dist-icons').raise();
-    g.select('.spark-layer').raise();
-    return;
+    badge.append('text')
+      .attr('x', iconSize / 2 + iconGap / 2)
+      .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
+      .attr('font-size', `${12 / (initK * cssScale)}px`).attr('font-weight', '600')
+      .attr('fill', '#fff').attr('letter-spacing', 0.3 / (initK * cssScale))
+      .attr('pointer-events', 'none').text(answerLabel);
   }
 
-  const stateBorderColor = dark ? '#999' : '#555';
+  // ── State outline (topmost) ───────────────────────────────────────────────
   const stateOutline = topoStates[stateAbbr];
   if (stateOutline) {
-    g.append('path')
-      .datum(stateOutline)
-      .attr('class', 'state-border')
-      .attr('d', pathGen)
-      .attr('fill', 'none')
-      .attr('stroke', stateBorderColor)
-      .attr('stroke-width', 2)
-      .attr('vector-effect', 'non-scaling-stroke')
-      .attr('pointer-events', 'none');
+    g.append('path').datum(stateOutline).attr('d', pathGen)
+      .attr('fill', 'none').attr('stroke', dark ? '#aaa' : '#555')
+      .attr('stroke-width', 2).attr('vector-effect', 'non-scaling-stroke').attr('pointer-events', 'none');
+  }
+  g.select('.dist-leader').raise();
+  g.select('.dist-icons').raise();
+  g.select('.spark-layer').raise();
+}
+
+// Renders the gameplay tile view: state context fill, clickable circles with
+// hot/cold styling, connector lines, and a force-directed collision layout.
+function _drawGameplayTiles(ctx) {
+  const { svg, g, pathGen, projection, cssScale, W, H, dark, stateAbbr,
+          stateFeatures, stateFC, densityScale, targetCirclePx,
+          possibleKeys, hotKeys, coldKeys, wonDist, wonDistPart, isAtLarge,
+          stateFitTransform } = ctx;
+
+  // Other states as a muted context
+  const otherStateFills = Object.values(topoStates).filter(f => f && f.properties?.state !== stateAbbr);
+  g.append('g').attr('class', 'context-other-states').attr('pointer-events', 'none')
+    .selectAll('path').data(otherStateFills).join('path').attr('d', pathGen)
+    .attr('fill', dark ? 'rgba(255,255,255,0.05)' : 'rgba(160,160,175,0.25)')
+    .attr('stroke', dark ? 'rgba(255,255,255,0.12)' : 'rgba(130,130,150,0.45)')
+    .attr('stroke-width', 0.4).attr('vector-effect', 'non-scaling-stroke');
+
+  // Active state surface fill
+  const fillG = g.append('g').attr('class', 'state-fill');
+  stateFeatures.forEach(f => {
+    fillG.append('path').datum(f).attr('d', pathGen)
+      .attr('style', 'fill: var(--surface);').attr('stroke', 'none').attr('pointer-events', 'none');
+  });
+
+  // State border
+  const stateOutline = topoStates[stateAbbr];
+  if (stateOutline) {
+    g.append('path').datum(stateOutline).attr('class', 'state-border').attr('d', pathGen)
+      .attr('fill', 'none').attr('stroke', dark ? '#999' : '#555')
+      .attr('stroke-width', 2).attr('vector-effect', 'non-scaling-stroke').attr('pointer-events', 'none');
   }
 
-  // Use pre-computed inner points (guaranteed inside polygon) from the TopoJSON points layer.
-  // Fall back to d3.geoCentroid if no inner point is available.
+  // Build node data — only possible-answer districts get a tile
   const nodes = stateFeatures.filter(f => possibleKeys.has(f.properties['state-district'])).map(f => {
     const sdKey = f.properties['state-district'];
     const dist  = sdKey?.split('-').slice(1).join('-') || '00';
     const label = isAtLarge ? 'AL' : String(parseInt(dist, 10));
-    const isWrong   = hotKeys.has(dist) || coldKeys.has(dist);
-    const isCorrect = wonDistPart === dist;
-
-    let cx, cy;
-    // districtPoints are corrected at init time (water-body guard runs once on load)
-    const refPoint = POINT_OVERRIDES[sdKey] || districtPoints[sdKey] || d3.geoCentroid(f);
+    const isHot = hotKeys.has(dist), isCold = coldKeys.has(dist);
+    const refPoint  = POINT_OVERRIDES[sdKey] || districtPoints[sdKey] || d3.geoCentroid(f);
     const projected = projection(refPoint);
-    if (projected && isFinite(projected[0])) {
-      cx = projected[0]; cy = projected[1];
-    } else {
-      cx = W / 2; cy = H / 2;
-    }
-    const isHot   = hotKeys.has(dist);
-    const isCold  = coldKeys.has(dist);
-    return { dist, label, isWrong, isCorrect, isHot, isCold, x: cx, y: cy, ox: cx, oy: cy };
+    const [ox, oy]  = projected && isFinite(projected[0]) ? projected : [W / 2, H / 2];
+    return { dist, label, isWrong: isHot || isCold, isCorrect: wonDistPart === dist,
+             isHot, isCold, x: ox, y: oy, ox, oy };
   });
+  nodes.sort((a, b) => (a.isCold ? 0 : a.isHot ? 1 : 2) - (b.isCold ? 0 : b.isHot ? 1 : 2));
 
-  // Draw order: cold (back) → hot → remaining (front)
-  nodes.sort((a, b) => {
-    const rank = d => d.isCold ? 0 : d.isHot ? 1 : 2;
-    return rank(a) - rank(b);
-  });
-
-  // Scale icon radius inversely to zoom so circles stay the same visual size at any zoom level.
-  // At k=2 the viewBox is 2× bigger on screen, so halving R keeps icons at their default px size.
-  // Determine effective zoom level so icon radius and collision match what will be displayed.
-  // For user-zoomed sessions, use the saved transform. For auto-zoom, pre-compute the expected
-  // scale so icons are built at the right size before the zoom fires.
-  // The zoom blocks above already set districtSavedTransform (zoomIn target or auto-zoom),
-  // so its k is the scale that will actually be displayed. Fall back to stateFitTransform.
+  // zoomK is the scale that will actually be on screen — use it to size circles so they
+  // render correctly before any subsequent zoom event fires.
   const zoomK = districtSavedTransform ? districtSavedTransform.k : stateFitTransform.k;
-  // densityScale was computed early (see top of buildDistrictD3Map).
-  // cssScale accounts for preserveAspectRatio="xMidYMid slice" scaling.
-  const R = targetCirclePx / (zoomK * cssScale);
+  const R     = targetCirclePx / (zoomK * cssScale);
 
-  // Draw connector lines (initially at origin point, animated by simulation)
-  const lineG = g.append('g').attr('class', 'dist-connectors');
+  // Connector lines (drawn first so they appear behind circles)
+  const lineG   = g.append('g').attr('class', 'dist-connectors');
   const lineEls = nodes.map(d =>
     lineG.append('line')
-      .attr('x1', d.ox).attr('y1', d.oy)
-      .attr('x2', d.ox).attr('y2', d.oy)
-      .attr('stroke', dark ? '#666' : '#aaa')
-      .attr('stroke-width', 0.8)
-      .attr('stroke-opacity', 0)
-      .attr('pointer-events', 'none')
-      .node()
+      .attr('x1', d.ox).attr('y1', d.oy).attr('x2', d.ox).attr('y2', d.oy)
+      .attr('stroke', dark ? '#666' : '#aaa').attr('stroke-width', 0.8)
+      .attr('stroke-opacity', 0).attr('pointer-events', 'none').node()
   );
 
-  // Draw clickable icons (positioned at inner points, animated by simulation)
-  const iconG = g.append('g').attr('class', 'dist-icons');
+  // Clickable tile circles
+  const iconG   = g.append('g').attr('class', 'dist-icons');
   const iconEls = nodes.map(d => {
-    const disabled = d.isWrong || d.isCorrect || gameOver;
-    const fillColor = d.isCorrect
-      ? '#2563EB'
-      : d.isCold
-        ? (dark ? '#333' : '#bbb')
-        : d.isHot
-          ? (dark ? '#6b3030' : '#d4908a')
-          : '#C41230';
+    const disabled  = d.isWrong || d.isCorrect;
+    const fillColor = d.isCorrect ? '#2563EB'
+                    : d.isCold   ? (dark ? '#333' : '#bbb')
+                    : d.isHot    ? (dark ? '#6b3030' : '#d4908a')
+                    : '#C41230';
     const textColor = (d.isCold && !dark) ? '#888' : (d.isHot && !dark) ? '#7a2020' : '#fff';
     const opacity   = d.isCold ? 0.18 : d.isHot ? 0.32 : 1;
 
     const grp = iconG.append('g')
-      .attr('transform', `translate(${d.ox},${d.oy})`)
-      .attr('data-dist', d.dist)
-      .attr('class', 'district-tile')
-      .style('cursor', disabled ? 'default' : 'pointer')
+      .attr('transform', `translate(${d.ox},${d.oy})`).attr('data-dist', d.dist)
+      .attr('class', 'district-tile').style('cursor', disabled ? 'default' : 'pointer')
       .style('opacity', opacity);
-
-    grp.append('circle')
-      .attr('r', R)
-      .attr('fill', fillColor)
-      .attr('stroke', dark ? '#222' : '#fff')
-      .attr('stroke-width', 1.5 / zoomK);
-
+    grp.append('circle').attr('r', R)
+      .attr('fill', fillColor).attr('stroke', dark ? '#222' : '#fff').attr('stroke-width', 1.5 / zoomK);
     grp.append('text')
-      .attr('text-anchor', 'middle')
-      .attr('dominant-baseline', 'central')
+      .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
       .attr('font-size', `${Math.min(d.label.length > 2 ? 8 : 9, targetCirclePx) / (zoomK * cssScale)}px`)
-      .attr('font-weight', '700')
-      .attr('fill', textColor)
-      .attr('pointer-events', 'none')
+      .attr('font-weight', '700').attr('fill', textColor).attr('pointer-events', 'none')
       .text(d.label);
-
     if (!disabled) {
-      grp
-        .on('mouseover', function() {
-          d3.select(this).select('circle').attr('fill', dark ? '#a01025' : '#a01025');
-        })
-        .on('mouseout', function() {
-          d3.select(this).select('circle').attr('fill', fillColor);
-        })
-        .on('click', () => submitDistrictGuess(d.dist));
+      grp.on('mouseover', function() { d3.select(this).select('circle').attr('fill', '#a01025'); })
+         .on('mouseout',  function() { d3.select(this).select('circle').attr('fill', fillColor); })
+         .on('click',     () => submitDistrictGuess(d.dist));
     }
-
     return grp.node();
   });
 
-  const collide = 16 / (zoomK * cssScale * densityScale);
+  // Force simulation — run synchronously so tiles are at their final positions on first paint
+  const collide      = 16 / (zoomK * cssScale * densityScale);
   const forceStrength = Math.min(0.98, 0.6 + (zoomK - 1) * 0.15);
 
   function applyIconPositions() {
     nodes.forEach((d, i) => {
       d3.select(iconEls[i]).attr('transform', `translate(${d.x},${d.y})`);
       const dx = d.x - d.ox, dy = d.y - d.oy;
-      const dist = Math.sqrt(dx * dx + dy * dy);
       d3.select(lineEls[i])
-        .attr('x1', d.ox).attr('y1', d.oy)
-        .attr('x2', d.x).attr('y2', d.y)
-        .attr('stroke-opacity', dist > 4 ? 1 : 0);
+        .attr('x1', d.ox).attr('y1', d.oy).attr('x2', d.x).attr('y2', d.y)
+        .attr('stroke-opacity', Math.sqrt(dx * dx + dy * dy) > 4 ? 1 : 0);
     });
   }
 
-  // Run simulation synchronously — compute final layout instantly, no per-tick animation
   districtSimulation = d3.forceSimulation(nodes)
-    .alphaDecay(0.12)
-    .alphaMin(0.01)
+    .alphaDecay(0.12).alphaMin(0.01)
     .force('collide', d3.forceCollide(collide))
     .force('x', d3.forceX(d => d.ox).strength(forceStrength))
     .force('y', d3.forceY(d => d.oy).strength(forceStrength))
     .stop();
-
   districtSimulation.tick(Math.ceil(Math.log(districtSimulation.alphaMin() / districtSimulation.alpha()) / Math.log(1 - districtSimulation.alphaDecay())));
   applyIconPositions();
-
-  // Re-run synchronously when the user zooms (collision radius / strength change with zoom level)
   districtSimulation._applyIconPositions = applyIconPositions;
 }
 
