@@ -204,7 +204,7 @@ const GAME_VERSION = (() => {
   const day = String(d.getDate()).padStart(2, '0');
   const h = String(d.getHours()).padStart(2, '0');
   const min = String(d.getMinutes()).padStart(2, '0');
-  return `Beta 1.8.6 (${y}-${m}-${day} ${h}:${min})`;
+  return `Beta 1.8.7 (${y}-${m}-${day} ${h}:${min})`;
 })();
 
 // Built at load time from GeoJSON: { 'TX': ['01','02',...], 'WY': ['01'], ... }
@@ -2508,8 +2508,15 @@ function _applyDistrictZoom(ctx, zoomIn) {
     }
 
   } else {
+    // Lock in the full-state fit once — this is what the fit-toggle zooms out to.
+    // Must use stateBBox (not the active-district bbox) so pressing fit twice always
+    // restores the full state view even after districts are eliminated.
+    if (!districtStateFitTransform) {
+      districtStateFitTransform = zoomToBBox(stateBBox, W, H, { margin: 0.85 });
+    }
+
     // Guess rebuild: preserve current zoom so tiles don't appear to resize.
-    // On the very first build with no saved transform, fit to possible districts.
+    // On the very first build with no saved transform, fit to the active districts.
     if (districtSavedTransform) {
       svg.call(districtZoomBehavior.transform, districtSavedTransform);
     } else {
@@ -2520,8 +2527,7 @@ function _applyDistrictZoom(ctx, zoomIn) {
       const activeTransform = zoomToBBox(activeBBox, W, H, { margin: 0.85 });
       dbg(`active-zoom possibleKeys=${ctx.possibleKeys.size}/${stateFeatures.length} k=${activeTransform.k.toFixed(2)}`);
       svg.call(districtZoomBehavior.transform, activeTransform);
-      districtSavedTransform    = activeTransform;
-      districtStateFitTransform = activeTransform;
+      districtSavedTransform = activeTransform;
     }
   }
 }
@@ -3712,7 +3718,13 @@ async function init() {
     .then(r => r.ok ? r.json() : Promise.reject(r.status))
     .then(topo => {
       const obj = topo.objects[Object.keys(topo.objects)[0]];
-      if (obj) topoCounties = topojson.feature(topo, obj);
+      if (obj) {
+        topoCounties = topojson.feature(topo, obj);
+        // If already in district gameplay, rebuild so the county layer appears immediately
+        if (gamePhase === 'district' && !gameOver && todayDistrict) {
+          buildDistrictD3Map(todayDistrict.properties.state, false, false);
+        }
+      }
     })
     .catch(err => console.warn('Counties load failed (non-fatal):', err));
 
