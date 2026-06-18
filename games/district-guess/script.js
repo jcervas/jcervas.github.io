@@ -15,7 +15,7 @@ const SESSION_RANDSEED_KEY = 'districtguess_randseed';  // seed for current rand
 // D3 US reference map coordinate space (viewBox dimensions)
 const REF_VB_W = 960;
 const REF_VB_H = 400;
-const VERSION_NUMBER = '1.9.1';
+const VERSION_NUMBER = '1.9.2';
 const GAME_VERSION = (() => {
   const d = new Date();
   const y = d.getFullYear();
@@ -1506,7 +1506,7 @@ function startGameOverTransition(won, dist) {
     'transform:translate(-50%,-50%)',
     'pointer-events:none',
     'z-index:1000',
-    'transition:width 120ms ease-in, height 120ms ease-in',
+    'transition:width 150ms ease-in, height 150ms ease-in',
   ].join(';');
   document.body.appendChild(overlay);
 
@@ -1539,7 +1539,7 @@ function startGameOverTransition(won, dist) {
         }
       }, 100);
     }, 20);
-  }, 130);
+  }, 160);
 }
 
 // ============================================================
