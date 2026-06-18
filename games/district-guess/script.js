@@ -2371,6 +2371,10 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
 
   const g = svg.append('g');
 
+  // Suppresses simulation re-runs during the zoom-in entry animation so tiles don't
+  // drift between intermediate zoom levels while panning in from the ref map.
+  let zoomInAnimating = false;
+
   // Pan & zoom on the district tiles map
   districtZoomBehavior = d3.zoom()
     .scaleExtent([0.3, Infinity])
@@ -2432,7 +2436,8 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
       g.select('.dist-connectors').attr('display', k > 1.5 ? 'none' : null);
 
       // Re-tune simulation synchronously when zoom changes so icons jump to new positions instantly.
-      if (districtSimulation && !gameOver && districtSimulation._applyIconPositions) {
+      // Skip during the zoom-in entry animation — tiles are already at final positions.
+      if (districtSimulation && !gameOver && districtSimulation._applyIconPositions && !zoomInAnimating) {
         const newCollide = 16 / (k * cssScale * densityScale);
         const newStrength = Math.min(0.98, 0.6 + (k - 1) * 0.15);
         districtSimulation
@@ -2476,9 +2481,11 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
     const entryTransform = zoomToBBox(entryBBox, W, H, { margin: 0.85 });
     dbg(`zoomIn start k=${refStartTransform.k.toFixed(2)} target k=${entryTransform.k.toFixed(2)} x=${entryTransform.x.toFixed(0)} y=${entryTransform.y.toFixed(0)}`);
     districtSavedTransform = entryTransform;
+    zoomInAnimating = true;
     svg.call(districtZoomBehavior.transform, refStartTransform);
     svg.transition().duration(700).ease(d3.easeCubicInOut)
-      .call(districtZoomBehavior.transform, entryTransform);
+      .call(districtZoomBehavior.transform, entryTransform)
+      .on('end', () => { zoomInAnimating = false; });
   }
 
   if (gameOver && todayDistrict) {
