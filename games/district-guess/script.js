@@ -1353,7 +1353,6 @@ function processStateGuess(abbr, correct) {
   renderGuessHistory();
   renderClues();        // also calls updateUSRefMap() + renderStateChips()
   zoomUSRefMapToValid(); // zoom D3 map to remaining valid states
-  document.querySelector('.mzb-fit')?.classList.add('at-active-fit');
   saveGameState();
 
   // If elimination narrowed the field to exactly 1 state, auto-confirm it
