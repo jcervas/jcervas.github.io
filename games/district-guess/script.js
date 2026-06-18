@@ -2495,14 +2495,9 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
     const answerF = stateFeatures.find(f => f.properties['state-district'] === todayDistrict.properties['state-district']);
     const zoomTarget = answerF || (stateFeatures.length ? stateFC : null);
     if (zoomTarget) {
-      const [[bx0, by0], [bx1, by1]] = pathGen.bounds(zoomTarget);
-      const bw = Math.max(bx1 - bx0, 1), bh = Math.max(by1 - by0, 1);
-      const fitScale = Math.min(W / bw, H / bh);
-      const scale = Math.min(25, Math.max(1.2, fitScale * 0.55));
-      const goTransform = d3.zoomIdentity
-        .translate(W / 2, H / 2)
-        .scale(scale)
-        .translate(-(bx0 + bx1) / 2, -(by0 + by1) / 2);
+      // Fit the answer district with ~25% padding on each side (margin=0.75).
+      // maxScale=40 allows small urban districts to zoom in further than the old cap of 25.
+      const goTransform = zoomToBBox(pathGen.bounds(zoomTarget), W, H, { margin: 0.75, minScale: 1.2, maxScale: 40 });
       districtGameOverTransform = goTransform;
       svg.call(districtZoomBehavior.transform, goTransform);
     }
