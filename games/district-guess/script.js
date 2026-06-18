@@ -2394,21 +2394,19 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
       .call(districtZoomBehavior.transform, entryTransform);
   }
 
-  if (gameOver && districtUserZoomed && districtSavedTransform) {
-    // User was already zoomed in when game ended — stay where they were.
-    // Store as the game-over transform so the fit-button toggle works.
-    districtGameOverTransform = districtSavedTransform;
-    svg.call(districtZoomBehavior.transform, districtSavedTransform);
-  } else if (gameOver && !districtUserZoomed && todayDistrict) {
-    // Game-over with no manual zoom: zoom into the answer district at ~45% of the
-    // viewport so surrounding state/national context remains visible.
+  if (gameOver && todayDistrict) {
+    // Always auto-zoom to the answer district at game-over so the user sees where it is,
+    // regardless of whether they manually panned/zoomed during the district phase.
+    // (On mobile any touch fires the zoom handler and sets districtUserZoomed=true, which
+    // previously caused the game-over view to inherit a zoomed-out full-US view.)
+    // The fit-toggle button lets the user switch to national context view.
     const answerF = stateFeatures.find(f => f.properties['state-district'] === todayDistrict.properties['state-district']);
     const zoomTarget = answerF || (stateFeatures.length ? stateFC : null);
     if (zoomTarget) {
       const [[bx0, by0], [bx1, by1]] = pathGen.bounds(zoomTarget);
       const bw = Math.max(bx1 - bx0, 1), bh = Math.max(by1 - by0, 1);
       const fitScale = Math.min(W / bw, H / bh);
-      const scale = Math.min(25, Math.max(1.2, fitScale * 0.45));
+      const scale = Math.min(25, Math.max(1.2, fitScale * 0.55));
       const goTransform = d3.zoomIdentity
         .translate(W / 2, H / 2)
         .scale(scale)
@@ -3752,8 +3750,17 @@ async function init() {
   setTimeout(() => { if (map) map.invalidateSize(); }, 50);
   initUSRefMap();   // start loading US states reference map
 
-  // Pre-build district tiles in the background so the state→district transition
-  // on first correct guess is a reveal+zoom rather than a DOM rebuild.
+  // Check for saved game from today — must happen before the rAF pre-build so we can
+  // skip the pre-build when restoring (the rAF fires after restoreGame completes and
+  // would otherwise clobber the restored district tiles with opacity=0).
+  const saved = loadGameState();
+  if (saved) {
+    restoreGame(saved);
+    return;
+  }
+
+  // Fresh game: pre-build district tiles in the background so the state→district
+  // transition on first correct guess is a reveal+zoom rather than a DOM rebuild.
   // The tiles start invisible (opacity 0, not hidden) so layout dimensions are real.
   requestAnimationFrame(() => {
     const tilesEl = document.getElementById('district-tiles');
@@ -3762,13 +3769,6 @@ async function init() {
     tilesEl.style.pointerEvents = 'none';
     buildDistrictD3Map(todayDistrict.properties.state, false, false);
   });
-
-  // Check for saved game from today
-  const saved = loadGameState();
-  if (saved) {
-    restoreGame(saved);
-    return;
-  }
 
   // Fresh game — start immediately (username/login will be added later)
   renderDistrict(todayDistrict);
