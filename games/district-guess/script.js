@@ -1506,7 +1506,7 @@ function startGameOverTransition(won, dist) {
     'transform:translate(-50%,-50%)',
     'pointer-events:none',
     'z-index:1000',
-    'transition:width 180ms ease-in, height 180ms ease-in',
+    'transition:width 120ms ease-in, height 120ms ease-in',
   ].join(';');
   document.body.appendChild(overlay);
 
@@ -1521,13 +1521,13 @@ function startGameOverTransition(won, dist) {
     document.getElementById('game-section')?.classList.add('map-collapsed');
   }, 10);
 
-  // Once expansion finishes, build game-over content underneath, then collapse.
+  // Once expansion finishes, build game-over content underneath, then fade out.
   setTimeout(() => {
     endGame(won, { skipAnims: true });
 
     // Brief settle so the newly-built game-over SVG paints before we uncover it.
     setTimeout(() => {
-      overlay.style.transition = 'opacity 200ms ease-out';
+      overlay.style.transition = 'opacity 100ms ease-out';
       overlay.style.opacity = '0';
 
       // Fire deferred animations (spark trace + pulse/shake + confetti) once revealed.
@@ -1537,9 +1537,9 @@ function startGameOverTransition(won, dist) {
           _gameOverAnimsCallback();
           _gameOverAnimsCallback = null;
         }
-      }, 200);
-    }, 60);
-  }, 220);
+      }, 100);
+    }, 20);
+  }, 130);
 }
 
 // ============================================================
