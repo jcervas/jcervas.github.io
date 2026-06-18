@@ -2400,11 +2400,9 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
   }
 
   if (gameOver && todayDistrict) {
-    // Always auto-zoom to the answer district at game-over so the user sees where it is,
-    // regardless of whether they manually panned/zoomed during the district phase.
-    // (On mobile any touch fires the zoom handler and sets districtUserZoomed=true, which
-    // previously caused the game-over view to inherit a zoomed-out full-US view.)
-    // The fit-toggle button lets the user switch to national context view.
+    // Cancel any running zoomIn transition so the game-over zoom wins and confetti fires
+    // at the correct screen location (confetti reads getBoundingClientRect 900ms later).
+    svg.interrupt();
     const answerF = stateFeatures.find(f => f.properties['state-district'] === todayDistrict.properties['state-district']);
     const zoomTarget = answerF || (stateFeatures.length ? stateFC : null);
     if (zoomTarget) {
@@ -2725,10 +2723,10 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
       bx = Math.max(initR + 4, Math.min(W - initR - 4, bx));
       by = Math.max(initR + 4, Math.min(H - initR - 4, by));
 
-      // Leader line from district centroid to badge; store bbox for zoom handler repositioning
+      // Leader line from east edge of district bbox to badge — avoids overlapping the district.
       g.append('line')
         .attr('class', 'dist-leader')
-        .attr('x1', cx).attr('y1', cy)
+        .attr('x1', dbx1).attr('y1', by)
         .attr('x2', bx).attr('y2', by)
         .attr('stroke', dark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.4)')
         .attr('stroke-width', 1 / initK)
