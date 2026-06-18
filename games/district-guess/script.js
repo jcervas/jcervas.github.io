@@ -1352,6 +1352,7 @@ function processStateGuess(abbr, correct) {
 
   renderGuessHistory();
   renderClues();        // also calls updateUSRefMap() + renderStateChips()
+  _lastFitBBoxKey = null; // force re-zoom even if bbox corners didn't change
   zoomUSRefMapToValid(); // zoom D3 map to remaining valid states
   saveGameState();
 
