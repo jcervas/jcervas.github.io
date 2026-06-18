@@ -1,6 +1,32 @@
 // ============================================================
 //  District Guess — script.js
 // ============================================================
+// ============================================================
+//  GAME CONSTANTS
+// ============================================================
+const MAX_GUESSES = 6;
+const STORAGE_PREFIX = 'districtguess_';
+const HOW_TO_SEEN_KEY      = STORAGE_PREFIX + 'howToSeen';
+const WELCOME_SEEN_KEY     = STORAGE_PREFIX + 'welcomeSeen';
+const SETTINGS_SEEN_KEY    = STORAGE_PREFIX + 'settingsSeen';
+const FEEDBACK_PROMPTED_AT = STORAGE_PREFIX + 'feedbackAt'; // games-played count when last prompted
+const SESSION_REPLAY_KEY  = 'districtguess_replay';      // sessionStorage key
+const SESSION_RANDSEED_KEY = 'districtguess_randseed';  // seed for current random (non-daily) game
+// D3 US reference map coordinate space (viewBox dimensions)
+const REF_VB_W = 960;
+const REF_VB_H = 400;
+const VERSION_NUMBER = '1.9.1';
+const GAME_VERSION = (() => {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const h = String(d.getHours()).padStart(2, '0');
+  const min = String(d.getMinutes()).padStart(2, '0');
+  return `Beta ${VERSION_NUMBER} (${y}-${m}-${day} ${h}:${min})`;
+})();
+document.querySelectorAll('.beta-version').forEach(el => { el.textContent = VERSION_NUMBER; });
+
 
 // ---- FIREBASE CONFIGURATION (optional) ----------------------
 // To enable the global leaderboard:
@@ -182,32 +208,6 @@ function svgIcon(name, cls = 'icon') {
   const inner = ICON_PATHS[name] || '';
   return `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${inner}</svg>`;
 }
-
-// ============================================================
-//  GAME CONSTANTS
-// ============================================================
-const MAX_GUESSES = 6;
-const STORAGE_PREFIX = 'districtguess_';
-const HOW_TO_SEEN_KEY      = STORAGE_PREFIX + 'howToSeen';
-const WELCOME_SEEN_KEY     = STORAGE_PREFIX + 'welcomeSeen';
-const SETTINGS_SEEN_KEY    = STORAGE_PREFIX + 'settingsSeen';
-const FEEDBACK_PROMPTED_AT = STORAGE_PREFIX + 'feedbackAt'; // games-played count when last prompted
-const SESSION_REPLAY_KEY  = 'districtguess_replay';      // sessionStorage key
-const SESSION_RANDSEED_KEY = 'districtguess_randseed';  // seed for current random (non-daily) game
-// D3 US reference map coordinate space (viewBox dimensions)
-const REF_VB_W = 960;
-const REF_VB_H = 400;
-const VERSION_NUMBER = '1.9.0';
-const GAME_VERSION = (() => {
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  const h = String(d.getHours()).padStart(2, '0');
-  const min = String(d.getMinutes()).padStart(2, '0');
-  return `Beta ${VERSION_NUMBER} (${y}-${m}-${day} ${h}:${min})`;
-})();
-document.querySelectorAll('.beta-version').forEach(el => { el.textContent = VERSION_NUMBER; });
 
 // Built at load time from GeoJSON: { 'TX': ['01','02',...], 'WY': ['01'], ... }
 let stateDistrictMap = {};
@@ -2494,16 +2494,32 @@ function _buildDistrictCtx(stateAbbr, tilesEl) {
 
 // Decides and applies the initial zoom transform (zoomIn animation, game-over zoom,
 // or restore from saved state).  Must be called after _buildDistrictCtx.
+// Returns the SVG bbox [[x0,y0],[x1,y1]] covering all active tile centers (inner points),
+// extended by one tile-radius so no tile is clipped at the viewport edge.
+function _activeTileBBox(ctx) {
+  const { stateFeatures, possibleKeys, projection, cssScale, W, H } = ctx;
+  const R = 14 / cssScale; // tile radius in SVG units at zoom k=1
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const f of stateFeatures) {
+    const key = f.properties['state-district'];
+    if (!possibleKeys.has(key)) continue;
+    const refPt  = POINT_OVERRIDES[key] || districtPoints[key] || d3.geoCentroid(f);
+    const proj   = projection(refPt);
+    if (!proj || !isFinite(proj[0])) continue;
+    const [px, py] = proj;
+    x0 = Math.min(x0, px - R); x1 = Math.max(x1, px + R);
+    y0 = Math.min(y0, py - R); y1 = Math.max(y1, py + R);
+  }
+  return isFinite(x0) ? [[x0, y0], [x1, y1]] : null;
+}
+
 function _applyDistrictZoom(ctx, zoomIn) {
   const { svg, pathGen, stateFeatures, stateFC, stateBBox, possibleKeys, W, H } = ctx;
 
   if (zoomIn) {
     const refStartTransform = usRefMap ? d3.zoomTransform(usRefMap) : d3.zoomIdentity;
-    const possFeatures  = stateFeatures.filter(f => possibleKeys.has(f.properties['state-district']));
-    const entryBBox     = possFeatures.length
-      ? pathGen.bounds({ type: 'FeatureCollection', features: possFeatures })
-      : stateBBox;
-    const entryTransform = zoomToBBox(entryBBox, W, H, { margin: 0.85 });
+    const entryBBox     = _activeTileBBox(ctx) || stateBBox;
+    const entryTransform = zoomToBBox(entryBBox, W, H, { margin: 1.0 });
     dbg(`zoomIn start k=${refStartTransform.k.toFixed(2)} target k=${entryTransform.k.toFixed(2)} x=${entryTransform.x.toFixed(0)} y=${entryTransform.y.toFixed(0)}`);
     districtSavedTransform = entryTransform;
     _tileZoomInAnimating = true;
@@ -2545,11 +2561,8 @@ function _applyDistrictZoom(ctx, zoomIn) {
     if (districtSavedTransform) {
       svg.call(districtZoomBehavior.transform, districtSavedTransform);
     } else {
-      const possFeatures  = stateFeatures.filter(f => possibleKeys.has(f.properties['state-district']));
-      const activeBBox    = possFeatures.length
-        ? pathGen.bounds({ type: 'FeatureCollection', features: possFeatures })
-        : stateBBox;
-      const activeTransform = zoomToBBox(activeBBox, W, H, { margin: 0.85 });
+      const activeBBox      = _activeTileBBox(ctx) || stateBBox;
+      const activeTransform = zoomToBBox(activeBBox, W, H, { margin: 1.0 });
       dbg(`active-zoom possibleKeys=${ctx.possibleKeys.size}/${stateFeatures.length} k=${activeTransform.k.toFixed(2)}`);
       svg.call(districtZoomBehavior.transform, activeTransform);
       districtSavedTransform = activeTransform;
@@ -2771,6 +2784,18 @@ function _drawGameplayTiles(ctx) {
           stateFeatures, stateFC, densityScale, targetCirclePx,
           possibleKeys, hotKeys, coldKeys, wonDist, wonDistPart, isAtLarge,
           stateFitTransform } = ctx;
+
+  // Invisible anchor circles for every district in the state — used only as position
+  // markers so the zoom-to-active-tiles bbox is always grounded in real projected coords.
+  const phantomG = g.append('g').attr('class', 'phantom-anchors').attr('pointer-events', 'none');
+  stateFeatures.forEach(f => {
+    const key    = f.properties['state-district'];
+    const refPt  = POINT_OVERRIDES[key] || districtPoints[key] || d3.geoCentroid(f);
+    const proj   = projection(refPt);
+    if (!proj || !isFinite(proj[0])) return;
+    phantomG.append('circle').attr('cx', proj[0]).attr('cy', proj[1])
+      .attr('r', 14 / cssScale).attr('opacity', 0);
+  });
 
   // Other states as a muted context
   const otherStateFills = Object.values(topoStates).filter(f => f && f.properties?.state !== stateAbbr);
