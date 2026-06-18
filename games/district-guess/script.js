@@ -1463,31 +1463,28 @@ function processDistrictGuessTile(dist, fullGuess, correct) {
 function startGameOverTransition(won, dist) {
   const tilesEl = document.getElementById('district-tiles');
 
-  // Locate the clicked tile and get its center in container-local coordinates.
+  // Locate the clicked tile — get its center in fixed (viewport) coordinates.
   const tileG  = tilesEl?.querySelector(`g.district-tile[data-dist="${dist}"]`);
   const circle = tileG?.querySelector('circle');
-  let ox = (tilesEl?.offsetWidth  ?? window.innerWidth)  / 2;
-  let oy = (tilesEl?.offsetHeight ?? window.innerHeight) / 2;
+  let ox = window.innerWidth  / 2;
+  let oy = window.innerHeight / 2;
   if (circle) {
     const cr = circle.getBoundingClientRect();
-    const tr = tilesEl.getBoundingClientRect();
-    ox = cr.left + cr.width  / 2 - tr.left;
-    oy = cr.top  + cr.height / 2 - tr.top;
+    ox = cr.left + cr.width  / 2;
+    oy = cr.top  + cr.height / 2;
   }
 
-  // Radius needed to cover every corner of the container from (ox, oy).
-  const W = tilesEl?.offsetWidth  ?? 400;
-  const H = tilesEl?.offsetHeight ?? 300;
-  const dx = Math.max(ox, W - ox);
-  const dy = Math.max(oy, H - oy);
+  // Radius needed to cover every corner of the full viewport from (ox, oy).
+  // Using fixed positioning so the overlay is unaffected by container resizing.
+  const dx = Math.max(ox, window.innerWidth  - ox);
+  const dy = Math.max(oy, window.innerHeight - oy);
   const diameter = Math.ceil(Math.sqrt(dx * dx + dy * dy)) * 2 + 20;
 
   const fillColor = won ? '#FDB515' : '#C41230';
 
-  // Overlay lives inside #district-tiles so overflow:hidden clips it to the container.
   const overlay = document.createElement('div');
   overlay.style.cssText = [
-    'position:absolute',
+    'position:fixed',
     `left:${ox}px`,
     `top:${oy}px`,
     'width:0',
@@ -1496,12 +1493,12 @@ function startGameOverTransition(won, dist) {
     `background:${fillColor}`,
     'transform:translate(-50%,-50%)',
     'pointer-events:none',
-    'z-index:10',
+    'z-index:1000',
     'transition:width 380ms ease-in, height 380ms ease-in',
   ].join(';');
-  tilesEl.appendChild(overlay);
+  document.body.appendChild(overlay);
 
-  // Expand to cover the container.
+  // Expand to cover the full viewport.
   requestAnimationFrame(() => requestAnimationFrame(() => {
     overlay.style.width  = `${diameter}px`;
     overlay.style.height = `${diameter}px`;
@@ -2759,12 +2756,16 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
                 const svgEl   = svg.node();
                 const svgRect = svgEl.getBoundingClientRect();
                 const { k, x: tx, y: ty } = d3.zoomTransform(svgEl);
+                // SVG uses viewBox="0 0 960 400" with xMidYMid meet.
+                // cssScale converts viewBox units → CSS pixels; xOff/yOff are the centering margins.
+                const xOff = (svgRect.width  - W * cssScale) / 2;
+                const yOff = (svgRect.height - H * cssScale) / 2;
                 const N = 120;
                 const origins = [];
                 for (let i = 0; i < N; i++) {
                   const pt = node.getPointAtLength((i / N) * len);
-                  const sx = svgRect.left + tx + pt.x * k;
-                  const sy = svgRect.top  + ty + pt.y * k;
+                  const sx = svgRect.left + xOff + (tx + pt.x * k) * cssScale;
+                  const sy = svgRect.top  + yOff + (ty + pt.y * k) * cssScale;
                   if (sx >= 0 && sx <= window.innerWidth && sy >= 0 && sy <= window.innerHeight) {
                     origins.push({ x: sx, y: sy });
                   }
