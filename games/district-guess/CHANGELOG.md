@@ -2,6 +2,26 @@
 
 ---
 
+## v1.8.2 — Mobile Polish & Confetti Performance
+
+- **Confetti performance**: replaced per-particle `save/translate/rotate/restore` (4 canvas state calls) with a single `setTransform` call; set `globalAlpha` once per frame; sort particles by color to batch `fillStyle` switches; add `will-change: transform` to promote canvas to GPU layer — significantly faster on mobile GPUs
+- **Fewer particles on touch devices**: `launchConfetti` drops from 140 → 70 particles; boundary confetti caps at 20 origins (evenly subsampled) with 4 particles each instead of 8
+- **County borders at national zoom**: threshold raised from k > 1.5 to k > 3 and max opacity capped at 0.65 — county lines are invisible at national/state-level game-over zoom and only emerge when zoomed into a single district
+- **Game-over badge size**: badge dimensions now divide by `k × cssScale` instead of `k` alone, making the pill a fixed 26 px tall in CSS pixels regardless of device pixel ratio — was ~9 px on mobile
+- **Spark trace z-order**: spark layer raised above the state outline so the trace is never obscured by district or state lines
+- **District tile text scaling**: font size capped at `targetCirclePx` so labels never overflow their circles in dense-state layouts (CA, TX, etc.)
+
+---
+
+## v1.8.1 — Game-Over Circle Reveal
+
+- **Circle reveal transition**: on game over the selected district tile expands gold/red to fill the screen, the container resizes to game-over layout, then the circle collapses to reveal the already-built game-over map; spark and confetti fire after the reveal
+- **Circle coverage fix**: switched overlay from `position: absolute` inside the tiles panel to `position: fixed` on `<body>` with viewport-diagonal sizing so it always covers the full screen
+- **Confetti location fix**: corrected coordinate formula with `cssScale` and `xMidYMid meet` centering offsets so confetti origins land on the district boundary
+- **Stroke-width fix at high zoom**: district tile circle `stroke-width` now scales as `1.5 / k` so stroke doesn't overwhelm fill at high auto-zoom levels (dense urban districts)
+
+---
+
 ## v1.8 — Architecture Streamline & Elimination Redesign
 
 - **Pre-built district tiles**: district map is built at page init (and after "New Map") so the state→district transition is a smooth reveal + zoom rather than a DOM rebuild mid-game — consistent starting point regardless of container size or scroll position
