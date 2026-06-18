@@ -1306,19 +1306,24 @@ function processStateGuess(abbr, correct) {
     correctStateGuessed = true;
     lockStateDropdown(abbr);
   } else {
-    // Eliminate the guessed state and narrow the pool to its neighborhood.
-    // Keep only states adjacent to the guessed state; everything else is too
-    // far away to be the answer. The correct answer is always protected.
     eliminatedStates.add(abbr);
-    const neighborSet = new Set(neighbors);
-    for (const s of [...getValidStates()]) {
-      if (s !== correctState && !neighborSet.has(s)) eliminatedStates.add(s);
+
+    if (isAdjacent) {
+      // HOT: correct state is adjacent to this guess — keep only neighbors.
+      const neighborSet = new Set(neighbors);
+      for (const s of [...getValidStates()]) {
+        if (s !== correctState && !neighborSet.has(s)) eliminatedStates.add(s);
+      }
+    } else {
+      // COLD: correct state is not adjacent — eliminate this guess and all its neighbors.
+      for (const n of neighbors) {
+        if (n !== correctState) eliminatedStates.add(n);
+      }
     }
 
     // Dead-end cleanup: a state whose every adjacency neighbor has been explicitly
-    // guessed wrong (not just eliminated by the keep-only step) can't be the answer.
-    // We only use the set of intentional wrong guesses so that states eliminated as
-    // non-neighbors of a guess don't cascade into false dead-ends.
+    // guessed wrong can't be the answer. Only uses intentional wrong guesses so
+    // cold-eliminated neighbors don't cascade into false dead-ends.
     const wrongGuessed = new Set(
       guessHistory.filter(g => g.phase === 'state' && !g.correct).map(g => g.text)
     );
@@ -3464,9 +3469,18 @@ function restoreGame(saved) {
   _wrongGuesses.forEach(g => {
     _wrongGuessedSoFar.add(g.text);
     eliminatedStates.add(g.text);
-    const neighborSet = new Set(STATE_ADJACENCY[g.text] || []);
-    for (const s of Object.keys(stateDistrictMap)) {
-      if (s !== _rc && !neighborSet.has(s)) eliminatedStates.add(s);
+    const _nbrs = STATE_ADJACENCY[g.text] || [];
+    if (g.adjacent) {
+      // HOT restore: keep only neighbors
+      const neighborSet = new Set(_nbrs);
+      for (const s of Object.keys(stateDistrictMap)) {
+        if (s !== _rc && !neighborSet.has(s)) eliminatedStates.add(s);
+      }
+    } else {
+      // COLD restore: eliminate guess and its neighbors
+      for (const n of _nbrs) {
+        if (n !== _rc) eliminatedStates.add(n);
+      }
     }
     // Dead-end: only when ALL neighbors have been explicitly guessed wrong
     let changed = true;
