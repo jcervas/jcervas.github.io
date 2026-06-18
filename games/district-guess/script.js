@@ -204,7 +204,7 @@ const GAME_VERSION = (() => {
   const day = String(d.getDate()).padStart(2, '0');
   const h = String(d.getHours()).padStart(2, '0');
   const min = String(d.getMinutes()).padStart(2, '0');
-  return `Beta 1.8.2.1 (${y}-${m}-${day} ${h}:${min})`;
+  return `Beta 1.8.4 (${y}-${m}-${day} ${h}:${min})`;
 })();
 
 // Built at load time from GeoJSON: { 'TX': ['01','02',...], 'WY': ['01'], ... }
@@ -323,9 +323,10 @@ let usRefSvgSel         = null;   // d3 selection of the SVG element
 let usRefPathGen        = null;   // reusable geoPath generator (set after projection.fitSize)
 let usDistLayers        = {};     // distPart ('01','02'…) → D3 path selection for district overlay
 let eliminatedStates    = new Set(); // all states removed from valid set (wrong guess + adjacency)
-let districtZoomBehavior   = null;   // saved d3.zoom instance for district tiles map
-let districtUserZoomed     = false;  // true once user manually pans/zooms district map
-let districtSavedTransform = null;   // zoom transform preserved across rebuilds
+let districtZoomBehavior    = null;   // saved d3.zoom instance for district tiles map
+let districtUserZoomed      = false;  // true once user manually pans/zooms district map
+let districtSavedTransform  = null;   // zoom transform preserved across rebuilds
+let districtStateFitTransform = null; // full-state zoom set on first gameplay build; used by fit-toggle
 let districtSimulation     = null;   // active force simulation — updated on zoom for centroid pull
 let _gameStarted        = false;   // true after welcome is dismissed; guards clue/guess DOM rendering
 let guessCount          = 0;
@@ -1868,7 +1869,7 @@ function initUSRefMap() {
       const btn = e.target.closest('.mzb');
       if (!btn) return;
       const dir = btn.dataset.dir;
-      const tilesHidden = document.getElementById('district-tiles').classList.contains('hidden');
+      const tilesHidden = gamePhase === 'state';
 
       if (dir === 'fit') {
         if (tilesHidden) {
@@ -1879,10 +1880,21 @@ function initUSRefMap() {
         const tilesSvg = d3.select('#district-tiles svg');
         if (tilesSvg.empty() || !districtZoomBehavior) return;
         if (!gameOver) {
-          // District gameplay: reset to the auto-zoom for remaining active districts
-          districtUserZoomed = false;
-          districtSavedTransform = null;
-          buildDistrictD3Map(todayDistrict?.properties?.state, false, false);
+          const atActiveFit = btn.classList.contains('at-active-fit');
+          if (atActiveFit && districtStateFitTransform) {
+            // Second press: zoom back out to the full-state view
+            districtSavedTransform = districtStateFitTransform;
+            districtUserZoomed = false;
+            tilesSvg.transition().duration(500).ease(d3.easeCubicInOut)
+              .call(districtZoomBehavior.transform, districtStateFitTransform);
+            btn.classList.remove('at-active-fit');
+          } else {
+            // First press: zoom to remaining active districts
+            districtUserZoomed = false;
+            districtSavedTransform = null;
+            buildDistrictD3Map(todayDistrict?.properties?.state, false, false);
+            btn.classList.add('at-active-fit');
+          }
           return;
         }
         // Game-over: toggle between district view and national view
@@ -2099,13 +2111,8 @@ function zoomUSRefMapToValid(animated = true) {
     : 1;
   const visW = svgRect.width  > 0 ? svgRect.width  / pxPerVb : W;
   const visH = svgRect.height > 0 ? svgRect.height / pxPerVb : H;
-  const containerAspect = svgRect.height > 0 ? svgRect.width / svgRect.height : (W / H);
-  const vbAspect = W / H;
-  const minFit = Math.min((visW - 2 * padding) / dx, (visH - 2 * padding) / dy);
-  const maxFit = Math.max((visW - 2 * padding) / dx, (visH - 2 * padding) / dy);
-  // On portrait containers, blend min/max fit so the US fills well in both axes.
-  // On landscape containers, just use min-fit so nothing is cropped.
-  const fit = containerAspect < vbAspect ? (minFit + maxFit) / 2 : minFit;
+  // Always use min-fit so neither axis overflows the visible region.
+  const fit = Math.min((visW - 2 * padding) / dx, (visH - 2 * padding) / dy);
   // No minimum scale — allow zooming out to show the full US at game start.
   const scale = Math.max(0.3, fit);
   const cx = x0 + dx / 2, cy = y0 + dy / 2;
@@ -2211,8 +2218,9 @@ function showDistrictD3Map(stateAbbr, instant = false, animateReveal = false) {
   // Reset zoom state when entering district phase fresh; preserve it on game-over rebuild
   // so a user who was already zoomed into NYC doesn't see a jarring re-zoom on correct guess.
   if (!gameOver) {
-    districtUserZoomed     = false;
-    districtSavedTransform = null;
+    districtUserZoomed        = false;
+    districtSavedTransform    = null;
+    districtStateFitTransform = null;
   }
 
   // Dismiss the pan/zoom hint pill when entering district-pick phase
@@ -2436,16 +2444,19 @@ function _buildDistrictCtx(stateAbbr, tilesEl) {
         districtSimulation._applyIconPositions();
       }
 
-      // Context layers fade in with zoom
-      const countyOpacity = k > 3 ? Math.min(0.65, (k - 3) * 0.25) : 0;
-      const fadeOpacity   = k > 2 ? Math.min(1,    (k - 2) * 0.35) : 0;
-      g.select('.context-counties').attr('opacity', countyOpacity);
+      // Context layers fade in with zoom (game-over only for counties; gameplay keeps fixed opacity)
+      if (gameOver) {
+        const countyOpacity = k > 3 ? Math.min(0.65, (k - 3) * 0.25) : 0;
+        g.select('.context-counties').attr('opacity', countyOpacity);
+      }
+      const fadeOpacity = k > 2 ? Math.min(1, (k - 2) * 0.35) : 0;
       g.select('.context-urban').attr('opacity', fadeOpacity);
       g.select('.context-roads').attr('opacity', fadeOpacity);
 
       if (event.sourceEvent) {
         districtUserZoomed     = true;
         districtSavedTransform = event.transform;
+        document.querySelector('.mzb-fit')?.classList.remove('at-active-fit');
       }
     });
   svg.call(districtZoomBehavior).on('dblclick.zoom', null);
@@ -2509,7 +2520,8 @@ function _applyDistrictZoom(ctx, zoomIn) {
       const activeTransform = zoomToBBox(activeBBox, W, H, { margin: 0.85 });
       dbg(`active-zoom possibleKeys=${ctx.possibleKeys.size}/${stateFeatures.length} k=${activeTransform.k.toFixed(2)}`);
       svg.call(districtZoomBehavior.transform, activeTransform);
-      districtSavedTransform = activeTransform;
+      districtSavedTransform    = activeTransform;
+      districtStateFitTransform = activeTransform;
     }
   }
 }
@@ -2649,26 +2661,17 @@ function _drawGameOverMap(ctx, animateReveal) {
         tilesEl.classList.add('gameover-loss-shake');
       } else {
         tilesEl.classList.add('gameover-win-pulse');
-        if (len > 0) {
-          setTimeout(() => requestAnimationFrame(() => {
-            const svgEl   = svg.node();
-            const svgRect = svgEl.getBoundingClientRect();
-            const { k, x: tx, y: ty } = d3.zoomTransform(svgEl);
-            const xOff = (svgRect.width  - W * cssScale) / 2;
-            const yOff = (svgRect.height - H * cssScale) / 2;
-            const origins = [];
-            for (let i = 0; i < 120; i++) {
-              const pt = node.getPointAtLength((i / 120) * len);
-              const sx = svgRect.left + xOff + (tx + pt.x * k) * cssScale;
-              const sy = svgRect.top  + yOff + (ty + pt.y * k) * cssScale;
-              if (sx >= 0 && sx <= window.innerWidth && sy >= 0 && sy <= window.innerHeight)
-                origins.push({ x: sx, y: sy });
-            }
-            if (!origins.length)
-              origins.push({ x: svgRect.left + svgRect.width / 2, y: svgRect.top + svgRect.height / 2 });
-            launchBoundaryConfetti(origins);
-          }), 900);
-        }
+        setTimeout(() => requestAnimationFrame(() => {
+          const svgEl   = svg.node();
+          const svgRect = svgEl.getBoundingClientRect();
+          const { k, x: tx, y: ty } = d3.zoomTransform(svgEl);
+          const xOff = (svgRect.width  - W * cssScale) / 2;
+          const yOff = (svgRect.height - H * cssScale) / 2;
+          const [dcx, dcy] = answerFeature ? pathGen.centroid(answerFeature) : [W / 2, H / 2];
+          const sx = svgRect.left + xOff + (tx + dcx * k) * cssScale;
+          const sy = svgRect.top  + yOff + (ty + dcy * k) * cssScale;
+          launchBoundaryConfetti([{ x: sx, y: sy }]);
+        }), 900);
       }
     };
     if (animateReveal) { _gameOverAnimsCallback(); _gameOverAnimsCallback = null; }
@@ -2753,8 +2756,22 @@ function _drawGameplayTiles(ctx) {
       .attr('style', 'fill: var(--surface);').attr('stroke', 'none').attr('pointer-events', 'none');
   });
 
-  // State border
+  // County lines — always visible in gameplay (no zoom threshold), clipped to active state
   const stateOutline = topoStates[stateAbbr];
+  if (topoCounties && stateOutline) {
+    const clipId = `gameplay-county-clip-${stateAbbr}`;
+    svg.append('defs').append('clipPath').attr('id', clipId)
+      .append('path').attr('d', pathGen(stateOutline));
+    g.append('g').attr('class', 'context-counties').attr('pointer-events', 'none')
+      .attr('clip-path', `url(#${clipId})`).attr('opacity', 0.45)
+      .selectAll('path').data(topoCounties.features).join('path').attr('d', pathGen)
+      .attr('fill', 'none')
+      .attr('stroke', dark ? 'rgba(255,255,255,0.30)' : 'rgba(0,0,0,0.35)')
+      .attr('stroke-width', 0.5).attr('stroke-dasharray', '2 3')
+      .attr('vector-effect', 'non-scaling-stroke');
+  }
+
+  // State border
   if (stateOutline) {
     g.append('path').datum(stateOutline).attr('class', 'state-border').attr('d', pathGen)
       .attr('fill', 'none').attr('stroke', dark ? '#999' : '#555')
@@ -3066,12 +3083,7 @@ function renderDistrictPreview(containerId = 'result-district-preview') {
 
 // Burst confetti outward from a set of screen-coordinate {x,y} origin points.
 function launchBoundaryConfetti(origins) {
-  // Touch devices have weaker GPUs — cap origins and reduce particles per burst.
   const isMobile = navigator.maxTouchPoints > 0;
-  const maxOrigins = isMobile ? 20 : origins.length;
-  const step = origins.length > maxOrigins ? Math.ceil(origins.length / maxOrigins) : 1;
-  const sampledOrigins = origins.filter((_, i) => i % step === 0).slice(0, maxOrigins);
-
   const canvas = document.createElement('canvas');
   canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;will-change:transform;transform:translateZ(0)';
   document.body.appendChild(canvas);
@@ -3079,19 +3091,19 @@ function launchBoundaryConfetti(origins) {
   canvas.height = window.innerHeight;
   const ctx = canvas.getContext('2d');
   const COLORS = ['#C41230','#ffffff','#ffb020','#ff7700','#fffbe8','#FDB515'];
-  const perOrigin = isMobile ? 4 : 8;
+  const perOrigin = isMobile ? 40 : 80;
   const particles = [];
-  for (const o of sampledOrigins) {
-    const count = perOrigin + Math.floor(Math.random() * (isMobile ? 2 : 5));
+  for (const o of origins) {
+    const count = perOrigin + Math.floor(Math.random() * (isMobile ? 10 : 20));
     for (let i = 0; i < count; i++) {
       const ang = Math.random() * Math.PI * 2;
-      const spd = 3 + Math.random() * 7;
+      const spd = 4 + Math.random() * 10;
       particles.push({
         x: o.x, y: o.y,
         w: 5 + Math.random() * 6, h: 2.5 + Math.random() * 3.5,
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
         vx: Math.cos(ang) * spd,
-        vy: Math.sin(ang) * spd - 3,
+        vy: Math.sin(ang) * spd - 4,
         angle: Math.random() * Math.PI * 2,
         spin: (Math.random() - 0.5) * 0.25,
       });
@@ -3170,17 +3182,70 @@ function launchConfetti() {
   frame = requestAnimationFrame(tick);
 }
 
+function _showWinWordCloud() {
+  const modal = document.getElementById('result-modal');
+  if (!modal || modal.querySelector('.win-word-cloud')) return;
+  const WORDS = [
+    'Winner!', 'Congrats!', 'Nailed it!', 'Bravo!', 'Well done!',
+    'Champion!', 'Brilliant!', 'Amazing!', 'Expert!', 'Ace!',
+    'Outstanding!', 'Superb!', 'Correct!', 'Spot on!', 'Genius!',
+    'Flawless!', 'Victory!', 'You got it!', 'Excellent!', 'Perfect!',
+  ];
+  const W = window.innerWidth, H = window.innerHeight;
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns, 'svg');
+  svg.className = 'win-word-cloud';
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+  const COLORS = ['#C41230', '#FDB515', '#d97706', '#92400e', '#b45309', '#78350f'];
+  const SIZES  = [11, 14, 17, 21, 26, 32, 40, 50];
+  const WEIGHTS = [400, 600, 700, 800, 900];
+  for (let i = 0; i < 48; i++) {
+    const word   = WORDS[Math.floor(Math.random() * WORDS.length)];
+    const size   = SIZES[Math.floor(Math.random() * SIZES.length)];
+    const weight = WEIGHTS[Math.floor(Math.random() * WEIGHTS.length)];
+    const color  = COLORS[Math.floor(Math.random() * COLORS.length)];
+    const alpha  = 0.07 + Math.random() * 0.20;
+    const rot    = (Math.random() - 0.5) * 32;
+    const x      = -W * 0.12 + Math.random() * W * 1.24;
+    const y      = -H * 0.08 + Math.random() * H * 1.16;
+    const t = document.createElementNS(ns, 'text');
+    t.textContent = word;
+    t.setAttribute('x', x); t.setAttribute('y', y);
+    t.setAttribute('font-size', size); t.setAttribute('font-weight', weight);
+    t.setAttribute('font-family', 'system-ui,sans-serif');
+    t.setAttribute('fill', color); t.setAttribute('opacity', alpha);
+    t.setAttribute('transform', `rotate(${rot},${x},${y})`);
+    t.setAttribute('aria-hidden', 'true');
+    svg.appendChild(t);
+  }
+  modal.insertBefore(svg, modal.firstChild);
+}
+
 // Opens the (already-populated) result modal and fires confetti once per game on a win.
 // Used by the "View Result" banner button and "Review Result" welcome-splash button —
 // the actual content is rendered ahead of time by showResult(won, false) in endGame().
 function openResultModal() {
   document.querySelector('.gameover-results-arrow')?.remove();
-  document.getElementById('result-modal').classList.remove('hidden');
+  const modal = document.getElementById('result-modal');
+  modal.classList.remove('hidden');
   switchResultTab('result');
-  if (lastGameWon && !_resultConfettiFired) {
-    _resultConfettiFired = true;
-    _launchConfettiAfterAnim();
+  if (lastGameWon) {
+    _showWinWordCloud();
+    if (!_resultConfettiFired) {
+      _resultConfettiFired = true;
+      _showWinSpinner();
+      _launchConfettiAfterAnim();
+    }
   }
+}
+
+function _showWinSpinner() {
+  document.querySelector('.win-spinner')?.remove();
+  const el = document.createElement('div');
+  el.className = 'win-spinner';
+  el.setAttribute('aria-label', 'Loading');
+  document.getElementById('result-modal')?.appendChild(el);
 }
 
 // Fire confetti only after the game-over win-pulse animation has completed.
@@ -3189,7 +3254,10 @@ function openResultModal() {
 function _launchConfettiAfterAnim() {
   const WIN_ANIM_MS = 1400;
   const wait = Math.max(0, WIN_ANIM_MS - (Date.now() - _gameOverTime));
-  setTimeout(launchConfetti, wait);
+  setTimeout(() => {
+    document.querySelector('.win-spinner')?.remove();
+    launchConfetti();
+  }, wait);
 }
 
 function showResult(won, autoOpen = true) {
@@ -3200,9 +3268,13 @@ function showResult(won, autoOpen = true) {
   if (autoOpen && !welcomeVisible) {
     modal.classList.remove('hidden');
     switchResultTab('result');
-    if (won && !_resultConfettiFired) {
-      _resultConfettiFired = true;
-      _launchConfettiAfterAnim();
+    if (won) {
+      _showWinWordCloud();
+      if (!_resultConfettiFired) {
+        _resultConfettiFired = true;
+        _showWinSpinner();
+        _launchConfettiAfterAnim();
+      }
     }
   }
 
@@ -3635,7 +3707,7 @@ async function init() {
     })
     .catch(err => console.warn('Overlay load failed (non-fatal):', err));
 
-  // Lazy-load county boundary lines — used only on game-over screen.
+  // Lazy-load county boundary lines — used on district gameplay and game-over screens.
   fetch('./counties-lines.topojson')
     .then(r => r.ok ? r.json() : Promise.reject(r.status))
     .then(topo => {
