@@ -2889,7 +2889,7 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
     grp.append('text')
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'central')
-      .attr('font-size', `${(d.label.length > 2 ? 8 : 9) / zoomK}px`)
+      .attr('font-size', `${(d.label.length > 2 ? 8 : 9) / (zoomK * cssScale)}px`)
       .attr('font-weight', '700')
       .attr('fill', textColor)
       .attr('pointer-events', 'none')
