@@ -344,6 +344,7 @@ let _districtSvgSel      = null;     // D3 selection of the tiles SVG (cached fo
 let _districtPathSnap    = null;     // pathGen cached from last build (for reveal zoom)
 let _districtStateFSnap  = null;     // stateFeatures cached from last build (for reveal zoom)
 let _gameOverTime        = 0;        // Date.now() when endGame() was called (confetti gate)
+let _gameOverAnimsCallback = null;   // deferred: pulse/shake/confetti, fired after reveal circle collapses
 let db                  = null;   // Firestore instance (if configured)
 let username            = '';
 let replayCount         = 0;      // increments each "Play Again" to pick a fresh district
@@ -1431,23 +1432,107 @@ function processDistrictGuessTile(dist, fullGuess, correct) {
   dbg(`processDistrictGuessTile guess=${fullGuess} correct=${correct} guessCount=${guessCount}`);
 
   if (correct) {
-    endGame(true);
+    startGameOverTransition(true, dist);
     return;
   }
-
-  // Rebuild D3 district map after one frame so the compositing layer
-  // from the first flash (in submitDistrictTile) has already settled.
-  requestAnimationFrame(() => buildDistrictD3Map(todayDistrict.properties.state));
 
   const wrongCount = guessHistory.filter(g => !g.correct).length;
   if (!hardMode) cluesRevealed = Math.min(wrongCount, FACT_DEFS.length);
   applyMapStage(wrongCount);
 
-  if (guessCount >= MAX_GUESSES) { endGame(false); return; }
+  if (guessCount >= MAX_GUESSES) {
+    renderGuessHistory();
+    renderClues();
+    saveGameState();
+    startGameOverTransition(false, dist);
+    return;
+  }
+
+  // Non-game-over wrong guess: rebuild D3 district map after one frame so the compositing
+  // layer from the first flash (in submitDistrictTile) has already settled.
+  requestAnimationFrame(() => buildDistrictD3Map(todayDistrict.properties.state));
 
   renderGuessHistory();
   renderClues();
   saveGameState();
+}
+
+// Animated game-over reveal: the clicked tile expands to cover the district-tiles container
+// (gold for win, CMU red for loss), the container transitions to game-over size underneath,
+// then the circle collapses to expose the pre-built game-over map. Spark/confetti fire after.
+function startGameOverTransition(won, dist) {
+  const tilesEl = document.getElementById('district-tiles');
+
+  // Locate the clicked tile and get its center in container-local coordinates.
+  const tileG  = tilesEl?.querySelector(`g.district-tile[data-dist="${dist}"]`);
+  const circle = tileG?.querySelector('circle');
+  let ox = (tilesEl?.offsetWidth  ?? window.innerWidth)  / 2;
+  let oy = (tilesEl?.offsetHeight ?? window.innerHeight) / 2;
+  if (circle) {
+    const cr = circle.getBoundingClientRect();
+    const tr = tilesEl.getBoundingClientRect();
+    ox = cr.left + cr.width  / 2 - tr.left;
+    oy = cr.top  + cr.height / 2 - tr.top;
+  }
+
+  // Radius needed to cover every corner of the container from (ox, oy).
+  const W = tilesEl?.offsetWidth  ?? 400;
+  const H = tilesEl?.offsetHeight ?? 300;
+  const dx = Math.max(ox, W - ox);
+  const dy = Math.max(oy, H - oy);
+  const diameter = Math.ceil(Math.sqrt(dx * dx + dy * dy)) * 2 + 20;
+
+  const fillColor = won ? '#FDB515' : '#C41230';
+
+  // Overlay lives inside #district-tiles so overflow:hidden clips it to the container.
+  const overlay = document.createElement('div');
+  overlay.style.cssText = [
+    'position:absolute',
+    `left:${ox}px`,
+    `top:${oy}px`,
+    'width:0',
+    'height:0',
+    'border-radius:50%',
+    `background:${fillColor}`,
+    'transform:translate(-50%,-50%)',
+    'pointer-events:none',
+    'z-index:10',
+    'transition:width 380ms ease-in, height 380ms ease-in',
+  ].join(';');
+  tilesEl.appendChild(overlay);
+
+  // Expand to cover the container.
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    overlay.style.width  = `${diameter}px`;
+    overlay.style.height = `${diameter}px`;
+  }));
+
+  // Trigger container resize while the circle is still expanding.
+  setTimeout(() => {
+    document.getElementById('game-section')?.classList.add('map-collapsed');
+  }, 80);
+
+  // Once expansion finishes, build game-over content underneath, then collapse.
+  setTimeout(() => {
+    endGame(won, { skipAnims: true });
+
+    // Brief settle so the newly-built game-over SVG paints before we uncover it.
+    setTimeout(() => {
+      overlay.style.transition = 'width 420ms ease-out, height 420ms ease-out, opacity 260ms ease-out 180ms';
+      overlay.style.width  = '0';
+      overlay.style.height = '0';
+      overlay.style.opacity = '0';
+
+      // Fire deferred animations (spark trace + pulse/shake + confetti) once revealed.
+      setTimeout(() => {
+        overlay.remove();
+        if (_gameOverAnimsCallback) {
+          _gameOverAnimsCallback();
+          _gameOverAnimsCallback = null;
+        }
+      }, 440);
+    }, 60);
+  }, 420);
 }
 
 // ============================================================
@@ -2607,67 +2692,68 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
         .attr('vector-effect', 'non-scaling-stroke')
         .attr('pointer-events', 'none');
 
-      // Spark always runs when game is over (every time this screen is shown).
+      // Spark trace + pulse/shake + confetti are all deferred: they fire via
+      // _gameOverAnimsCallback once the reveal circle finishes collapsing, so the
+      // user sees the trace start fresh on the already-visible game-over map.
+      // When animateReveal is true (theme change / restoreGame path), fire immediately.
       {
         const node = answerPath.node();
         const len  = node.getTotalLength ? node.getTotalLength() : 0;
-        if (len > 0) {
-          const k0 = d3.zoomTransform(svg.node()).k || 1;
-          // 4 screen-pixels wide regardless of zoom
-          const sparkR = 4 / k0;
-          // Dedicated layer for spark + embers — inserted here so the badge (appended later)
-          // always sits above it in z-order, even as embers are added dynamically.
-          const sparkLayer = g.append('g').attr('pointer-events', 'none');
 
-          const spark = sparkLayer.append('circle')
-            .attr('r', sparkR)
-            .attr('pointer-events', 'none')
-            .attr('fill', '#fffbe8')
-            .style('filter', 'drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px #ffb020) drop-shadow(0 0 16px #ff7700)');
-          const p0 = node.getPointAtLength(0);
-          spark.attr('cx', p0.x).attr('cy', p0.y);
+        // Reserve the spark layer here so it sits below the badge in z-order.
+        const sparkLayer = g.append('g').attr('pointer-events', 'none');
 
-          function emitEmber(x, y) {
-            const k = d3.zoomTransform(svg.node()).k || 1;
-            const ang  = Math.random() * Math.PI * 2;
-            const dist = (6 + Math.random() * 9) / k;
-            sparkLayer.append('circle')
-              .attr('cx', x).attr('cy', y)
-              .attr('r', (1.5 + Math.random() * 1.2) / k)
-              .attr('fill', Math.random() < 0.5 ? '#ffb020' : '#ff5500')
+        _gameOverAnimsCallback = function() {
+          // Start the boundary spark trace.
+          if (len > 0) {
+            const k0 = d3.zoomTransform(svg.node()).k || 1;
+            const sparkR = 4 / k0;
+            const spark = sparkLayer.append('circle')
+              .attr('r', sparkR)
               .attr('pointer-events', 'none')
-              .style('filter', 'drop-shadow(0 0 3px #ff8800)')
-              .transition()
-                .duration(350 + Math.random() * 200).ease(d3.easeCubicOut)
-                .attr('cx', x + Math.cos(ang) * dist).attr('cy', y + Math.sin(ang) * dist)
-                .attr('r', 0).style('opacity', 0).remove();
+              .attr('fill', '#fffbe8')
+              .style('filter', 'drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px #ffb020) drop-shadow(0 0 16px #ff7700)');
+            const p0 = node.getPointAtLength(0);
+            spark.attr('cx', p0.x).attr('cy', p0.y);
+
+            function emitEmber(x, y) {
+              const k = d3.zoomTransform(svg.node()).k || 1;
+              const ang  = Math.random() * Math.PI * 2;
+              const dist = (6 + Math.random() * 9) / k;
+              sparkLayer.append('circle')
+                .attr('cx', x).attr('cy', y)
+                .attr('r', (1.5 + Math.random() * 1.2) / k)
+                .attr('fill', Math.random() < 0.5 ? '#ffb020' : '#ff5500')
+                .attr('pointer-events', 'none')
+                .style('filter', 'drop-shadow(0 0 3px #ff8800)')
+                .transition()
+                  .duration(350 + Math.random() * 200).ease(d3.easeCubicOut)
+                  .attr('cx', x + Math.cos(ang) * dist).attr('cy', y + Math.sin(ang) * dist)
+                  .attr('r', 0).style('opacity', 0).remove();
+            }
+
+            const LAPS = 5, LAP_MS = 3000;
+            const t0 = performance.now();
+            (function frame(now) {
+              const elapsed = now - t0;
+              const lapT = (elapsed % LAP_MS) / LAP_MS;
+              const pt   = node.getPointAtLength(lapT * len);
+              spark.attr('cx', pt.x).attr('cy', pt.y);
+              if (Math.random() < 0.45) emitEmber(pt.x, pt.y);
+              if (elapsed < LAPS * LAP_MS) {
+                requestAnimationFrame(frame);
+              } else {
+                spark.transition().duration(300).attr('r', 0).style('opacity', 0).remove();
+              }
+            })(t0);
           }
 
-          // 5 laps around the boundary at ~4000 ms/lap = 20 s total
-          const LAPS   = 5;
-          const LAP_MS = 3000;
-          const t0 = performance.now();
-          (function frame(now) {
-            const elapsed = now - t0;
-            const lapT = (elapsed % LAP_MS) / LAP_MS;
-            const pt   = node.getPointAtLength(lapT * len);
-            spark.attr('cx', pt.x).attr('cy', pt.y);
-            if (Math.random() < 0.45) emitEmber(pt.x, pt.y);
-            if (elapsed < LAPS * LAP_MS) {
-              requestAnimationFrame(frame);
-            } else {
-              spark.transition().duration(300).attr('r', 0).style('opacity', 0).remove();
-            }
-          })(t0);
-        }
-        if (animateReveal) {
+          // Pulse / shake the container.
           if (!won) {
             tilesEl.classList.add('gameover-loss-shake');
           } else {
             tilesEl.classList.add('gameover-win-pulse');
-            // Confetti bursts after map collapse transition finishes (~300ms) + brief settle.
-            // Use rAF inside the timeout so we sample getBoundingClientRect after the
-            // browser has painted the settled layout (critical on slow mobile devices).
+            // Sample boundary points after settled layout paints, then burst confetti.
             if (len > 0) {
               setTimeout(() => requestAnimationFrame(() => {
                 const svgEl   = svg.node();
@@ -2683,7 +2769,6 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
                     origins.push({ x: sx, y: sy });
                   }
                 }
-                // Fallback: if no boundary points are visible, burst from the SVG center
                 if (!origins.length) {
                   origins.push({ x: svgRect.left + svgRect.width / 2, y: svgRect.top + svgRect.height / 2 });
                 }
@@ -2691,6 +2776,11 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
               }), 900);
             }
           }
+        };
+
+        if (animateReveal) {
+          _gameOverAnimsCallback();
+          _gameOverAnimsCallback = null;
         }
       }
 
@@ -2943,7 +3033,9 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
   districtSimulation._applyIconPositions = applyIconPositions;
 }
 
-function endGame(won) {
+// skipAnims: true when called from startGameOverTransition — animations are deferred
+// until the reveal circle finishes collapsing (_gameOverAnimsCallback fires then).
+function endGame(won, { skipAnims = false } = {}) {
   gameOver = true;
   gamePhase = 'gameover';
   if (won) _gameOverTime = Date.now();
@@ -2957,7 +3049,7 @@ function endGame(won) {
   }
   // Always rebuild district tiles at game-over so the answer district gets the highlight
   // showDistrictD3Map updates the label correctly for game-over state
-  showDistrictD3Map(todayDistrict.properties.state, true, true);
+  showDistrictD3Map(todayDistrict.properties.state, true, !skipAnims);
   // Reset the fit-toggle button icon for game-over view
   document.querySelector('.mzb-fit')?.classList.remove('at-national');
   // Pulsing "View Results" arrow overlay on the map
@@ -2970,7 +3062,7 @@ function endGame(won) {
     arrow.addEventListener('click', () => { openResultModal(); });
     tilesEl.appendChild(arrow);
   }
-  document.getElementById('game-section')?.classList.add('map-collapsed');
+  if (!skipAnims) document.getElementById('game-section')?.classList.add('map-collapsed');
   renderClues();
   renderGuessHistory();
   // Add 1 for the winning guess itself; wrong guesses are already counted
@@ -3579,7 +3671,8 @@ function resetGame(newIdx) {
   eliminatedStates    = new Set();
   _distLocked         = false;
   _guessLocked        = false;
-  _resultConfettiFired = false;
+  _resultConfettiFired  = false;
+  _gameOverAnimsCallback = null;
 
   // Pick the new district
   todayDistrict = districts[newIdx];
