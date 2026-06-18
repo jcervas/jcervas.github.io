@@ -2495,9 +2495,19 @@ function buildDistrictD3Map(stateAbbr, animateReveal = false, zoomIn = false) {
     const answerF = stateFeatures.find(f => f.properties['state-district'] === todayDistrict.properties['state-district']);
     const zoomTarget = answerF || (stateFeatures.length ? stateFC : null);
     if (zoomTarget) {
-      // Fit the answer district with ~25% padding on each side (margin=0.75).
-      // maxScale=40 allows small urban districts to zoom in further than the old cap of 25.
-      const goTransform = zoomToBBox(pathGen.bounds(zoomTarget), W, H, { margin: 0.75, minScale: 1.2, maxScale: 40 });
+      // Pad the district bbox by a fraction of the STATE's extent in each axis, then
+      // clamp to state borders. This makes padding proportional to state shape:
+      // a tall narrow state (NJ, VT) adds vertical context; a wide short state (KS, NE)
+      // adds horizontal context; at-large districts fall back to showing the whole state.
+      const [[dx0, dy0], [dx1, dy1]] = pathGen.bounds(zoomTarget);
+      const [[sx0, sy0], [sx1, sy1]] = pathGen.bounds(stateFC);
+      const padFrac = 0.30;
+      const padX = (sx1 - sx0) * padFrac, padY = (sy1 - sy0) * padFrac;
+      const paddedBBox = [
+        [Math.max(sx0, dx0 - padX), Math.max(sy0, dy0 - padY)],
+        [Math.min(sx1, dx1 + padX), Math.min(sy1, dy1 + padY)],
+      ];
+      const goTransform = zoomToBBox(paddedBBox, W, H, { minScale: 1.2, maxScale: 40 });
       districtGameOverTransform = goTransform;
       svg.call(districtZoomBehavior.transform, goTransform);
     }
