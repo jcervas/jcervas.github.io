@@ -204,7 +204,7 @@ const GAME_VERSION = (() => {
   const day = String(d.getDate()).padStart(2, '0');
   const h = String(d.getHours()).padStart(2, '0');
   const min = String(d.getMinutes()).padStart(2, '0');
-  return `Beta 1.8.4 (${y}-${m}-${day} ${h}:${min})`;
+  return `Beta 1.8.5 (${y}-${m}-${day} ${h}:${min})`;
 })();
 
 // Built at load time from GeoJSON: { 'TX': ['01','02',...], 'WY': ['01'], ... }
@@ -2307,8 +2307,8 @@ function _buildDistrictCtx(stateAbbr, tilesEl) {
   if (!stateFeatures.length) return null;
 
   // Density-aware circle sizing: dense states (TX, CA) get smaller circles.
-  const densityScale   = Math.max(1, Math.sqrt(stateFeatures.length / 8));
-  const targetCirclePx = Math.max(6, Math.min(14, 13 / densityScale));
+  const densityScale   = 1; // reserved; circles are always the same screen size
+  const targetCirclePx = 14;
 
   // Hot/cold inference from guess history
   const answerKey       = todayDistrict?.properties['state-district'];
