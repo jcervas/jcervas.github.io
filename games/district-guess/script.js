@@ -2515,11 +2515,12 @@ function _applyDistrictZoom(ctx, zoomIn) {
     const answerF    = stateFeatures.find(f => f.properties['state-district'] === todayDistrict.properties['state-district']);
     const zoomTarget = answerF || (stateFeatures.length ? stateFC : null);
     if (zoomTarget) {
-      // Pad the district bbox by 30% of the state extent in each axis, clamped to state borders.
-      // A tall state (NJ, VT) adds vertical context; a wide state (KS, NE) adds horizontal.
+      // Pad the district bbox by 1× the district's own extent, clamped to state borders.
+      // Using district-relative padding keeps small districts (e.g. CA-44) from zooming out
+      // to show the whole state when the state is large.
       const [[dx0, dy0], [dx1, dy1]] = pathGen.bounds(zoomTarget);
       const [[sx0, sy0], [sx1, sy1]] = pathGen.bounds(stateFC);
-      const padX = (sx1 - sx0) * 0.30, padY = (sy1 - sy0) * 0.30;
+      const padX = (dx1 - dx0), padY = (dy1 - dy0);
       const paddedBBox = [
         [Math.max(sx0, dx0 - padX), Math.max(sy0, dy0 - padY)],
         [Math.min(sx1, dx1 + padX), Math.min(sy1, dy1 + padY)],
