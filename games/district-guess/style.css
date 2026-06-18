@@ -1686,8 +1686,8 @@ body.dark-mode .welcome-wordmark-svg { filter: brightness(0) invert(1); }
 body.light-mode .welcome-wordmark-svg { filter: none; }
 .welcome-back-text {
   font-family: 'Barlow Condensed', 'Barlow', system-ui, sans-serif;
-  font-size: clamp(1.5rem, 4vh, 2.2rem);
-  font-weight: 800;
+  font-size: clamp(1.1rem, 3vh, 1.6rem);
+  font-weight: 500;
   letter-spacing: -0.012em;
   color: var(--text);
   text-align: center;
