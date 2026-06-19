@@ -3063,10 +3063,43 @@ function buildGameoverMap() {
       .attr('fill', fillColor).attr('stroke', strokeColor).attr('stroke-width', 2)
       .style('vector-effect', 'non-scaling-stroke');
 
-    // zoomToBBox works in viewBox (REF_VB) coordinate space — same as district tiles
-    _goZoomInitial = zoomToBBox(pathGen.bounds(answerF), W, H, { margin: 0.6, minScale: 1.2, maxScale: 40 });
+    _goZoomInitial = zoomToBBox(pathGen.bounds(answerF), W, H, { margin: 0.85, maxScale: 40 });
+
+    // Pill badge — sized to appear ~26px tall at the initial zoom
+    const initK = _goZoomInitial.k;
+    const [[dbx0, dby0], [dbx1, dby1]] = pathGen.bounds(answerF);
+    const screenGap = 18 / initK;
+    let bx = dbx1 + screenGap;
+    let by = (dby0 + dby1) / 2;
+    if (bx > W - 10 / initK) bx = dbx0 - screenGap;
+    bx = Math.max(10 / initK, Math.min(W - 10 / initK, bx));
+    by = Math.max(10 / initK, Math.min(H - 10 / initK, by));
+
+    const pillH = 26 / initK;
+    const pillW = (answerKey.length * 7.5 + 28) / initK;
+    const fs    = 12 / initK;
+    const badge = g.append('g').attr('class', 'go-badge').attr('transform', `translate(${bx},${by})`);
+    badge.append('rect')
+      .attr('x', -pillW / 2).attr('y', -pillH / 2).attr('width', pillW).attr('height', pillH)
+      .attr('rx', pillH / 2)
+      .attr('fill', 'rgba(196,18,48,0.88)').attr('stroke', 'rgba(255,255,255,0.4)')
+      .attr('stroke-width', 1 / initK).style('vector-effect', 'non-scaling-stroke');
+    badge.append('text')
+      .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
+      .attr('font-size', `${fs}px`).attr('font-weight', '700')
+      .attr('fill', '#fff').attr('letter-spacing', 0.5 / initK)
+      .attr('pointer-events', 'none').text(answerKey);
   } else {
     _goZoomInitial = d3.zoomIdentity;
+  }
+
+  // State outline on top
+  const stateOutline = topoStates[stateAbbr];
+  if (stateOutline) {
+    g.append('path').datum(stateOutline).attr('d', pathGen)
+      .attr('fill', 'none')
+      .attr('stroke', dark ? '#aaa' : '#555').attr('stroke-width', 1.5)
+      .style('vector-effect', 'non-scaling-stroke').attr('pointer-events', 'none');
   }
 
   _goZoom = d3.zoom().scaleExtent([0.3, Infinity])
