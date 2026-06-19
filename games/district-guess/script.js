@@ -3121,7 +3121,6 @@ function buildGameoverMap() {
     ? zoomToBBox(pathGen.bounds(answerF), W, H, { margin: 0.85, maxScale: 40 })
     : d3.zoomIdentity;
 
-  // Opacity-vs-zoom update (mirrors gameplay map thresholds)
   function _updateGoLayers(k) {
     const cOp = k > 3  ? Math.min(0.9, (k - 3)  * 0.3)  : 0;
     const fOp = k > 2  ? Math.min(1,   (k - 2)  * 0.4)  : 0;
@@ -3137,35 +3136,16 @@ function buildGameoverMap() {
     });
   svg.call(_goZoom).on('dblclick.zoom', null);
 
-  // Start at identity (full US), then animate into district bbox
-  svg.call(_goZoom.transform, d3.zoomIdentity);
-  _updateGoLayers(1);
+  // Set zoom directly to district view — no animation
+  svg.call(_goZoom.transform, _goZoomInitial);
+  _updateGoLayers(_goZoomInitial.k);
 
-  // Top-level badge layer — NOT inside the zoom group so it doesn't scale with zoom
-  const badgeLayer = svg.append('g').attr('class', 'go-badge-layer').attr('opacity', 0);
-
-  // Direct k/x/y interpolation avoids interpolateZoom's wide arc for large zoom ranges
-  const t0 = d3.zoomIdentity;
-  const t1 = _goZoomInitial;
-  svg.transition().duration(900).ease(d3.easeCubicInOut)
-    .tween('zoom.go', () => t => {
-      const k = t0.k + (t1.k - t0.k) * t;
-      const x = t0.x + (t1.x - t0.x) * t;
-      const y = t0.y + (t1.y - t0.y) * t;
-      const tr = d3.zoomIdentity.translate(x, y).scale(k);
-      svg.call(_goZoom.transform, tr);
-    });
-
-  setTimeout(() => {
-    if (!svg.node().isConnected) return;
-    _updateGoLayers(_goZoomInitial.k);
-
-    if (!answerF) return;
-    const gT = d3.zoomTransform(svg.node());
+  // ── Badge (placed at correct position immediately since zoom is already set) ─
+  if (answerF) {
+    const gT = _goZoomInitial;
     const [[dbx0, dby0], [dbx1, dby1]] = pathGen.bounds(answerF);
     const svgX = gT.applyX(dbx1);
     const svgY = gT.applyY((dby0 + dby1) / 2);
-
     const pillH = 28, pillW = answerKey.length * 10 + 28;
     const gap = 12;
     let bx = svgX + gap;
@@ -3173,9 +3153,8 @@ function buildGameoverMap() {
     bx = Math.max(pillW / 2 + 4, Math.min(W - pillW / 2 - 4, bx));
     const by = Math.max(pillH / 2 + 4, Math.min(H - pillH / 2 - 4, svgY));
 
-    badgeLayer
-      .attr('transform', `translate(${bx},${by})`)
-      .attr('opacity', 0);
+    const badgeLayer = svg.append('g').attr('class', 'go-badge-layer')
+      .attr('transform', `translate(${bx},${by})`);
     badgeLayer.append('rect')
       .attr('x', -pillW / 2).attr('y', -pillH / 2).attr('width', pillW).attr('height', pillH)
       .attr('rx', pillH / 2)
@@ -3186,9 +3165,7 @@ function buildGameoverMap() {
       .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
       .attr('font-size', '14px').attr('font-weight', '700').attr('fill', '#fff')
       .attr('letter-spacing', '0.5').attr('pointer-events', 'none').text(answerKey);
-
-    badgeLayer.node().setAttribute('opacity', '1');
-  }, 1050);
+  }
 }
 
 function showGameoverModal() {
@@ -3231,9 +3208,29 @@ function showGameoverModal() {
   const timeEl = document.getElementById('gameover-time');
   if (timeEl) timeEl.textContent = formatTime(elapsedSeconds);
 
+  // Flash overlay: full-viewport color burst that fades while map fades in
+  const flashColor = won ? '#FDB515' : '#C41230';
+  const flash = document.createElement('div');
+  flash.style.cssText = `position:fixed;inset:0;z-index:9999;background:${flashColor};pointer-events:none;`;
+  document.body.appendChild(flash);
+
   modal.classList.remove('hidden');
-  // Build map after modal is visible so offsetWidth/offsetHeight are real
-  requestAnimationFrame(() => buildGameoverMap());
+  const mapWrap = document.getElementById('gameover-map-wrap');
+  if (mapWrap) mapWrap.style.opacity = '0';
+
+  // Build map (synchronous zoom, no animation), then cross-fade
+  requestAnimationFrame(() => {
+    buildGameoverMap();
+    requestAnimationFrame(() => {
+      flash.style.transition = 'opacity 0.9s ease';
+      flash.style.opacity = '0';
+      if (mapWrap) {
+        mapWrap.style.transition = 'opacity 0.9s ease';
+        mapWrap.style.opacity = '1';
+      }
+      setTimeout(() => flash.remove(), 1000);
+    });
+  });
 }
 
 function _renderDistrictToBlob() {
@@ -4033,6 +4030,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('gameover-modal')?.classList.add('hidden');
     const goMapEl = document.getElementById('gameover-map');
     if (goMapEl) goMapEl.innerHTML = '';
+    const goMapWrap = document.getElementById('gameover-map-wrap');
+    if (goMapWrap) { goMapWrap.style.transition = ''; goMapWrap.style.opacity = ''; }
     _goZoom = null; _goZoomInitial = null;
     gameOver = false;
     guessCount = 0;
