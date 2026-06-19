@@ -1538,10 +1538,9 @@ function processDistrictGuessTile(dist, fullGuess, correct) {
     if (!districtUserZoomed && _districtProjection) {
       const W = REF_VB_W, H = REF_VB_H;
       const activeKeys = getActiveDistrictKeys();
-      const tileR = 14 / _districtCssScale;
       const tilesSvg = d3.select('#district-tiles svg');
       const t = fitToActiveKeys(tilesSvg, districtZoomBehavior, _districtProjection, W, H, activeKeys, {
-        animated: true, margin: 0.85, tileR, duration: 500,
+        animated: true, margin: 0.85, duration: 500,
       });
       if (t) districtSavedTransform = t;
     }
@@ -2294,8 +2293,7 @@ function showDistrictD3Map(stateAbbr, instant = false, animateReveal = false) {
     // Apply zoom animation on the cached SVG using inner points, same as fresh build.
     if (zoomIn && _districtSvgSel && _districtProjection) {
       const activeKeys = getActiveDistrictKeys();
-      const tileR = 14 / _districtCssScale;
-      const entryTransform = fitToActiveKeys(null, null, _districtProjection, REF_VB_W, REF_VB_H, activeKeys, { margin: 0.85, tileR });
+      const entryTransform = fitToActiveKeys(null, null, _districtProjection, REF_VB_W, REF_VB_H, activeKeys, { margin: 0.85 });
       if (entryTransform) {
         const refStart = usRefMap ? d3.zoomTransform(usRefMap) : d3.zoomIdentity;
         districtSavedTransform = entryTransform;
@@ -2524,13 +2522,12 @@ function _buildDistrictCtx(stateAbbr, tilesEl) {
 // Decides and applies the initial zoom transform (zoomIn animation, game-over zoom,
 
 function _applyDistrictZoom(ctx, zoomIn) {
-  const { svg, pathGen, stateFeatures, stateFC, stateBBox, possibleKeys, W, H, cssScale } = ctx;
-  const tileR = 14 / cssScale;
+  const { svg, stateFeatures, stateFC, stateBBox, possibleKeys, W, H } = ctx;
 
   if (zoomIn) {
     // Entry animation: start from US ref map zoom level, animate to active districts.
     const refStart = usRefMap ? d3.zoomTransform(usRefMap) : d3.zoomIdentity;
-    const t = fitToActiveKeys(null, null, _districtProjection, W, H, possibleKeys, { margin: 0.85, tileR })
+    const t = fitToActiveKeys(null, null, _districtProjection, W, H, possibleKeys, { margin: 0.85 })
            || zoomToBBox(stateBBox, W, H, { margin: 0.85 });
     districtSavedTransform = t;
     _tileZoomInAnimating = true;
@@ -2541,26 +2538,18 @@ function _applyDistrictZoom(ctx, zoomIn) {
 
   } else if (gameOver && todayDistrict) {
     svg.interrupt();
-    const answerF    = stateFeatures.find(f => f.properties['state-district'] === todayDistrict.properties['state-district']);
-    const zoomTarget = answerF || (stateFeatures.length ? stateFC : null);
-    if (zoomTarget) {
-      const [[dx0, dy0], [dx1, dy1]] = pathGen.bounds(zoomTarget);
-      const [[sx0, sy0], [sx1, sy1]] = pathGen.bounds(stateFC);
-      const padX = (dx1 - dx0), padY = (dy1 - dy0);
-      const paddedBBox = [
-        [Math.max(sx0, dx0 - padX), Math.max(sy0, dy0 - padY)],
-        [Math.min(sx1, dx1 + padX), Math.min(sy1, dy1 + padY)],
-      ];
-      const goTransform = zoomToBBox(paddedBBox, W, H, { minScale: 1.2, maxScale: 40 });
-      districtGameOverTransform = goTransform;
-      svg.call(districtZoomBehavior.transform, goTransform);
-    }
+    const answerKey = todayDistrict.properties['state-district'];
+    const answerKeys = new Set([answerKey]);
+    const goTransform = fitToActiveKeys(null, null, _districtProjection, W, H, answerKeys, { margin: 0.5 })
+      || zoomToBBox(stateBBox, W, H, { margin: 0.85 });
+    districtGameOverTransform = goTransform;
+    svg.call(districtZoomBehavior.transform, goTransform);
 
   } else {
     // Lock in full-state inner-point fit once for fit-toggle second press.
     if (!districtStateFitTransform) {
       const allKeys = new Set(stateFeatures.map(f => f.properties['state-district']));
-      districtStateFitTransform = fitToActiveKeys(null, null, _districtProjection, W, H, allKeys, { margin: 0.85, tileR })
+      districtStateFitTransform = fitToActiveKeys(null, null, _districtProjection, W, H, allKeys, { margin: 0.85 })
         || zoomToBBox(stateBBox, W, H, { margin: 0.85 });
     }
     // Restore saved transform (user's manual zoom or previous auto-fit).
