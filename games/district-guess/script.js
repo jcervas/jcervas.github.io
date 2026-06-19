@@ -3015,22 +3015,26 @@ function buildGameoverMap() {
   if (!container) return;
   container.innerHTML = '';
 
+  // Use the same 960×400 viewBox coordinate space as all other district maps.
+  // AlbersUSA is landscape-oriented; fitting to actual pixel dimensions on a portrait
+  // phone produces a letterboxed projection where every district is tiny, causing
+  // extreme zoom values. ViewBox + preserveAspectRatio:meet handles scaling correctly.
+  const W = REF_VB_W, H = REF_VB_H;
+  const dark         = isDarkMode();
   const stateAbbr    = todayDistrict.properties.state;
   const stateFeatures = districts.filter(f => f.properties.state === stateAbbr);
   const answerKey    = todayDistrict.properties['state-district'];
   const answerF      = stateFeatures.find(f => f.properties['state-district'] === answerKey);
   const won          = guessHistory.some(g => g.correct && g.phase === 'district');
-  const dark         = isDarkMode();
-
-  const W = container.offsetWidth  || 400;
-  const H = container.offsetHeight || 300;
 
   const allStatesFC  = { type: 'FeatureCollection', features: Object.values(topoStates).filter(Boolean) };
   const projection   = d3.geoAlbersUsa().fitExtent([[10, 10], [W - 10, H - 10]], allStatesFC);
   const pathGen      = d3.geoPath().projection(projection);
 
   const svg = d3.select(container).append('svg')
-    .attr('width', W).attr('height', H)
+    .attr('viewBox', `0 0 ${W} ${H}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet')
+    .attr('width', '100%').attr('height', '100%')
     .style('display', 'block').style('touch-action', 'none');
   const g = svg.append('g');
 
@@ -3058,16 +3062,8 @@ function buildGameoverMap() {
     g.append('path').datum(answerF).attr('d', pathGen)
       .attr('fill', fillColor).attr('stroke', strokeColor).attr('stroke-width', 2);
 
-    // Compute initial zoom: fit answer district with margin
-    const [[bx0, by0], [bx1, by1]] = pathGen.bounds(answerF);
-    const bw = bx1 - bx0, bh = by1 - by0;
-    if (bw > 0 && bh > 0) {
-      const k  = 0.6 / Math.max(bw / W, bh / H);
-      const cx = (bx0 + bx1) / 2, cy = (by0 + by1) / 2;
-      _goZoomInitial = d3.zoomIdentity.translate(W / 2, H / 2).scale(k).translate(-cx, -cy);
-    } else {
-      _goZoomInitial = d3.zoomIdentity;
-    }
+    // zoomToBBox works in viewBox (REF_VB) coordinate space — same as district tiles
+    _goZoomInitial = zoomToBBox(pathGen.bounds(answerF), W, H, { margin: 0.6, minScale: 1.2, maxScale: 40 });
   } else {
     _goZoomInitial = d3.zoomIdentity;
   }
