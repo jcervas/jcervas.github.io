@@ -3121,6 +3121,41 @@ function buildGameoverMap() {
     ? zoomToBBox(pathGen.bounds(answerF), W, H, { margin: 0.85, maxScale: 40 })
     : d3.zoomIdentity;
 
+  // ── Badge inside zoom group — pans/zooms with map, scale(1/k) keeps it constant size ─
+  // Badge is anchored at district right-edge in data (projection) space.
+  let badgeLayer = null;
+  let badgeDataX = 0, badgeDataY = 0;
+  if (answerF) {
+    const [[dbx0, dby0], [dbx1, dby1]] = pathGen.bounds(answerF);
+    badgeDataX = dbx1;
+    badgeDataY = (dby0 + dby1) / 2;
+
+    // Badge local space: 1 unit = 1 screen pixel (scale(1/k) cancels zoom, /renderScale converts viewBox→screen)
+    const svgBB = svg.node().getBoundingClientRect();
+    const renderScale = svgBB.width > 0 ? Math.min(svgBB.width / W, svgBB.height / H) : 1;
+    const pillPx = 30 / renderScale, pillWPx = (answerKey.length * 8 + 28) / renderScale, gapPx = 10 / renderScale;
+    const fontPx = 13 / renderScale;
+
+    badgeLayer = g.append('g').attr('class', 'go-badge-layer');
+    // rect/text live in local space where 1 unit = 1 screen px (achieved via scale(1/k))
+    badgeLayer.append('rect')
+      .attr('x', gapPx).attr('y', -pillPx / 2).attr('width', pillWPx).attr('height', pillPx)
+      .attr('rx', pillPx / 2)
+      .attr('fill', 'rgba(196,18,48,0.92)').attr('stroke', '#fff')
+      .attr('stroke-width', 2).style('vector-effect', 'non-scaling-stroke')
+      .style('filter', 'drop-shadow(0 1px 3px rgba(0,0,0,0.4))');
+    badgeLayer.append('text')
+      .attr('x', gapPx + pillWPx / 2).attr('y', 0)
+      .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
+      .attr('font-size', `${fontPx}px`).attr('font-weight', '700').attr('fill', '#fff')
+      .attr('letter-spacing', '0.5').attr('pointer-events', 'none').text(answerKey);
+  }
+
+  function _updateBadge(k) {
+    if (!badgeLayer) return;
+    badgeLayer.attr('transform', `translate(${badgeDataX},${badgeDataY}) scale(${1 / k})`);
+  }
+
   function _updateGoLayers(k) {
     const cOp = k > 3  ? Math.min(0.9, (k - 3)  * 0.3)  : 0;
     const fOp = k > 2  ? Math.min(1,   (k - 2)  * 0.4)  : 0;
@@ -3133,48 +3168,14 @@ function buildGameoverMap() {
     .on('zoom', event => {
       g.attr('transform', event.transform);
       _updateGoLayers(event.transform.k);
+      _updateBadge(event.transform.k);
     });
   svg.call(_goZoom).on('dblclick.zoom', null);
 
   // Set zoom directly to district view — no animation
   svg.call(_goZoom.transform, _goZoomInitial);
   _updateGoLayers(_goZoomInitial.k);
-
-  // ── Badge (placed at correct position immediately since zoom is already set) ─
-  if (answerF) {
-    const gT = _goZoomInitial;
-    const [[dbx0, dby0], [dbx1, dby1]] = pathGen.bounds(answerF);
-    const svgX = gT.applyX(dbx1);
-    const svgY = gT.applyY((dby0 + dby1) / 2);
-
-    // Compute viewBox→screen scale so badge is 30px tall regardless of device
-    const svgEl = svg.node();
-    const bb = svgEl.getBoundingClientRect();
-    const renderScale = bb.width > 0 ? Math.min(bb.width / W, bb.height / H) : 1;
-    const targetPx = 30;
-    const pillH = targetPx / renderScale;
-    const pillW = (answerKey.length * 8 + 24) / renderScale;
-    const fontSize = 13 / renderScale;
-
-    const gap = 10 / renderScale;
-    let bx = svgX + gap;
-    if (bx + pillW / 2 > W - 4) bx = gT.applyX(dbx0) - gap;
-    bx = Math.max(pillW / 2 + 4, Math.min(W - pillW / 2 - 4, bx));
-    const by = Math.max(pillH / 2 + 4, Math.min(H - pillH / 2 - 4, svgY));
-
-    const badgeLayer = svg.append('g').attr('class', 'go-badge-layer')
-      .attr('transform', `translate(${bx},${by})`);
-    badgeLayer.append('rect')
-      .attr('x', -pillW / 2).attr('y', -pillH / 2).attr('width', pillW).attr('height', pillH)
-      .attr('rx', pillH / 2)
-      .attr('fill', 'rgba(196,18,48,0.92)').attr('stroke', '#fff')
-      .attr('stroke-width', 2 / renderScale).style('vector-effect', 'non-scaling-stroke')
-      .style('filter', 'drop-shadow(0 1px 3px rgba(0,0,0,0.4))');
-    badgeLayer.append('text')
-      .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
-      .attr('font-size', `${fontSize}px`).attr('font-weight', '700').attr('fill', '#fff')
-      .attr('letter-spacing', '0.5').attr('pointer-events', 'none').text(answerKey);
-  }
+  _updateBadge(_goZoomInitial.k);
 }
 
 function showGameoverModal() {
