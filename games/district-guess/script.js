@@ -3015,97 +3015,180 @@ function buildGameoverMap() {
   if (!container) return;
   container.innerHTML = '';
 
-  // Use the same 960×400 viewBox coordinate space as all other district maps.
-  // AlbersUSA is landscape-oriented; fitting to actual pixel dimensions on a portrait
-  // phone produces a letterboxed projection where every district is tiny, causing
-  // extreme zoom values. ViewBox + preserveAspectRatio:meet handles scaling correctly.
+  // Use REF_VB coordinate space (960×400) — AlbersUSA is landscape-oriented.
+  // ViewBox + preserveAspectRatio:meet handles portrait screens correctly.
   const W = REF_VB_W, H = REF_VB_H;
-  const dark         = isDarkMode();
-  const stateAbbr    = todayDistrict.properties.state;
+  const dark        = isDarkMode();
+  const stateAbbr   = todayDistrict.properties.state;
   const stateFeatures = districts.filter(f => f.properties.state === stateAbbr);
-  const answerKey    = todayDistrict.properties['state-district'];
-  const answerF      = stateFeatures.find(f => f.properties['state-district'] === answerKey);
-  const won          = guessHistory.some(g => g.correct && g.phase === 'district');
+  const answerKey   = todayDistrict.properties['state-district'];
+  const answerF     = stateFeatures.find(f => f.properties['state-district'] === answerKey);
 
-  const allStatesFC  = { type: 'FeatureCollection', features: Object.values(topoStates).filter(Boolean) };
-  const projection   = d3.geoAlbersUsa().fitExtent([[10, 10], [W - 10, H - 10]], allStatesFC);
-  const pathGen      = d3.geoPath().projection(projection);
+  const allStatesFC = { type: 'FeatureCollection', features: Object.values(topoStates).filter(Boolean) };
+  const projection  = d3.geoAlbersUsa().fitExtent([[10, 10], [W - 10, H - 10]], allStatesFC);
+  const pathGen     = d3.geoPath().projection(projection);
 
   const svg = d3.select(container).append('svg')
     .attr('viewBox', `0 0 ${W} ${H}`)
     .attr('preserveAspectRatio', 'xMidYMid meet')
     .attr('width', '100%').attr('height', '100%')
     .style('display', 'block').style('touch-action', 'none');
+
+  // Clip path on the answer state so overlay layers (roads/urban/counties) don't
+  // bleed outside the state boundary.
+  const stateOutline = topoStates[stateAbbr];
+  const clipId = 'go-state-clip';
+  const defs = svg.append('defs');
+  if (stateOutline) {
+    defs.append('clipPath').attr('id', clipId)
+      .append('path').datum(stateOutline).attr('d', pathGen);
+  }
+
   const g = svg.append('g');
 
-  // Other states — faded national context
+  // ── Layer 1: Other states (faded national context) ──────────────────────
   const otherStates = Object.values(topoStates).filter(f => f.properties?.state !== stateAbbr);
   if (otherStates.length) {
-    g.append('g').attr('class', 'go-context-states')
+    g.append('g').attr('class', 'go-other-states')
       .selectAll('path').data(otherStates).join('path').attr('d', pathGen)
-      .attr('fill', dark ? 'rgba(255,255,255,0.06)' : 'rgba(100,100,120,0.12)')
+      .attr('fill', dark ? 'rgba(255,255,255,0.06)' : 'rgba(100,100,120,0.10)')
+      .attr('stroke', dark ? 'rgba(255,255,255,0.08)' : 'rgba(130,130,140,0.25)')
+      .attr('stroke-width', 0.5).style('vector-effect', 'non-scaling-stroke');
+  }
+
+  // ── Layer 2: State fill (answer state background) ───────────────────────
+  if (stateOutline) {
+    g.append('path').attr('class', 'go-state-fill').datum(stateOutline).attr('d', pathGen)
+      .attr('fill', dark ? 'rgba(255,255,255,0.04)' : 'rgba(220,220,228,0.5)')
+      .attr('stroke', 'none').attr('pointer-events', 'none');
+  }
+
+  // ── Layer 3: Urban areas — clipped to state, fade in at mid zoom ─────────
+  if (topoUrban) {
+    g.append('g').attr('class', 'go-urban').attr('opacity', 0).attr('pointer-events', 'none')
+      .attr('clip-path', stateOutline ? `url(#${clipId})` : null)
+      .selectAll('path').data(topoUrban.features).join('path').attr('d', pathGen)
+      .attr('fill', dark ? 'rgba(255,255,255,0.07)' : 'rgba(80,80,140,0.09)')
       .attr('stroke', 'none');
   }
 
-  // All districts in the answer state (grey outlines, non-scaling stroke)
-  g.append('g').attr('class', 'go-all-districts')
-    .selectAll('path').data(stateFeatures).join('path').attr('d', pathGen)
-    .attr('fill', dark ? 'rgba(255,255,255,0.08)' : 'rgba(180,180,190,0.25)')
-    .attr('stroke', dark ? 'rgba(255,255,255,0.25)' : 'rgba(100,100,110,0.5)')
-    .attr('stroke-width', 1)
-    .style('vector-effect', 'non-scaling-stroke');
-
-  // Answer district — always red/accent, non-scaling stroke
-  if (answerF) {
-    const fillColor   = dark ? 'rgba(255,80,80,0.5)' : 'rgba(196,18,48,0.65)';
-    const strokeColor = '#C41230';
-    g.append('path').datum(answerF).attr('d', pathGen)
-      .attr('fill', fillColor).attr('stroke', strokeColor).attr('stroke-width', 2)
-      .style('vector-effect', 'non-scaling-stroke');
-
-    _goZoomInitial = zoomToBBox(pathGen.bounds(answerF), W, H, { margin: 0.85, maxScale: 40 });
-
-    // Pill badge — sized to appear ~26px tall at the initial zoom
-    const initK = _goZoomInitial.k;
-    const [[dbx0, dby0], [dbx1, dby1]] = pathGen.bounds(answerF);
-    const screenGap = 18 / initK;
-    let bx = dbx1 + screenGap;
-    let by = (dby0 + dby1) / 2;
-    if (bx > W - 10 / initK) bx = dbx0 - screenGap;
-    bx = Math.max(10 / initK, Math.min(W - 10 / initK, bx));
-    by = Math.max(10 / initK, Math.min(H - 10 / initK, by));
-
-    const pillH = 26 / initK;
-    const pillW = (answerKey.length * 7.5 + 28) / initK;
-    const fs    = 12 / initK;
-    const badge = g.append('g').attr('class', 'go-badge').attr('transform', `translate(${bx},${by})`);
-    badge.append('rect')
-      .attr('x', -pillW / 2).attr('y', -pillH / 2).attr('width', pillW).attr('height', pillH)
-      .attr('rx', pillH / 2)
-      .attr('fill', 'rgba(196,18,48,0.88)').attr('stroke', 'rgba(255,255,255,0.4)')
-      .attr('stroke-width', 1 / initK).style('vector-effect', 'non-scaling-stroke');
-    badge.append('text')
-      .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
-      .attr('font-size', `${fs}px`).attr('font-weight', '700')
-      .attr('fill', '#fff').attr('letter-spacing', 0.5 / initK)
-      .attr('pointer-events', 'none').text(answerKey);
-  } else {
-    _goZoomInitial = d3.zoomIdentity;
+  // ── Layer 4: Roads — clipped to state, fade in at mid zoom ───────────────
+  if (topoRoads) {
+    g.append('g').attr('class', 'go-roads').attr('opacity', 0).attr('pointer-events', 'none')
+      .attr('clip-path', stateOutline ? `url(#${clipId})` : null)
+      .selectAll('path').data(topoRoads.features).join('path').attr('d', pathGen)
+      .attr('fill', 'none')
+      .attr('stroke', dark ? 'rgba(255,255,255,0.14)' : 'rgba(60,60,100,0.18)')
+      .attr('stroke-width', 0.5).style('vector-effect', 'non-scaling-stroke');
   }
 
-  // State outline on top
-  const stateOutline = topoStates[stateAbbr];
-  if (stateOutline) {
-    g.append('path').datum(stateOutline).attr('d', pathGen)
+  // ── Layer 5: County lines — clipped to state, fade in at higher zoom ──────
+  if (topoCounties) {
+    g.append('g').attr('class', 'go-counties').attr('opacity', 0).attr('pointer-events', 'none')
+      .attr('clip-path', stateOutline ? `url(#${clipId})` : null)
+      .selectAll('path').data(topoCounties.features).join('path').attr('d', pathGen)
       .attr('fill', 'none')
-      .attr('stroke', dark ? '#aaa' : '#555').attr('stroke-width', 1.5)
+      .attr('stroke', dark ? 'rgba(255,255,255,0.30)' : 'rgba(0,0,0,0.35)')
+      .attr('stroke-width', 0.5).attr('stroke-dasharray', '2 3')
+      .style('vector-effect', 'non-scaling-stroke');
+  }
+
+  // ── Layer 6: District fills + outlines for answer state ─────────────────
+  g.append('g').attr('class', 'go-all-districts')
+    .selectAll('path').data(stateFeatures).join('path').attr('d', pathGen)
+    .attr('fill', dark ? 'rgba(255,255,255,0.05)' : 'rgba(180,180,190,0.18)')
+    .attr('stroke', dark ? 'rgba(255,255,255,0.22)' : 'rgba(90,90,110,0.45)')
+    .attr('stroke-width', 1).style('vector-effect', 'non-scaling-stroke');
+
+  // ── Layer 7: Answer district highlight ──────────────────────────────────
+  if (answerF) {
+    g.append('path').attr('class', 'go-answer-district').datum(answerF).attr('d', pathGen)
+      .attr('fill', dark ? 'rgba(255,80,80,0.5)' : 'rgba(196,18,48,0.65)')
+      .attr('stroke', '#C41230').attr('stroke-width', 2)
+      .style('vector-effect', 'non-scaling-stroke');
+  }
+
+  // ── Layer 8: State border (bold, on top of all fills) ──────────────────
+  if (stateOutline) {
+    g.append('path').attr('class', 'go-state-border').datum(stateOutline).attr('d', pathGen)
+      .attr('fill', 'none')
+      .attr('stroke', dark ? '#bbb' : '#222').attr('stroke-width', 1.5)
       .style('vector-effect', 'non-scaling-stroke').attr('pointer-events', 'none');
   }
 
-  _goZoom = d3.zoom().scaleExtent([0.3, Infinity])
-    .on('zoom', event => { g.attr('transform', event.transform); });
+  // ── Zoom setup ──────────────────────────────────────────────────────────
+  _goZoomInitial = answerF
+    ? zoomToBBox(pathGen.bounds(answerF), W, H, { margin: 0.85, maxScale: 40 })
+    : d3.zoomIdentity;
+
+  // Opacity-vs-zoom update (mirrors gameplay map thresholds)
+  function _updateGoLayers(k) {
+    const cOp = k > 3  ? Math.min(0.9, (k - 3)  * 0.3)  : 0;
+    const fOp = k > 2  ? Math.min(1,   (k - 2)  * 0.4)  : 0;
+    g.select('.go-counties').attr('opacity', cOp);
+    g.select('.go-roads').attr('opacity', fOp);
+    g.select('.go-urban').attr('opacity', fOp * 0.7);
+  }
+
+  _goZoom = d3.zoom().scaleExtent([0.01, Infinity])
+    .on('zoom', event => {
+      g.attr('transform', event.transform);
+      _updateGoLayers(event.transform.k);
+    });
   svg.call(_goZoom).on('dblclick.zoom', null);
-  svg.call(_goZoom.transform, _goZoomInitial);
+
+  // Start at identity (full US), then animate into district bbox
+  svg.call(_goZoom.transform, d3.zoomIdentity);
+  _updateGoLayers(1);
+
+  // Top-level badge layer — NOT inside the zoom group so it doesn't scale with zoom
+  const badgeLayer = svg.append('g').attr('class', 'go-badge-layer').attr('opacity', 0);
+
+  // Direct k/x/y interpolation avoids interpolateZoom's wide arc for large zoom ranges
+  const t0 = d3.zoomIdentity;
+  const t1 = _goZoomInitial;
+  svg.transition().duration(900).ease(d3.easeCubicInOut)
+    .tween('zoom.go', () => t => {
+      const k = t0.k + (t1.k - t0.k) * t;
+      const x = t0.x + (t1.x - t0.x) * t;
+      const y = t0.y + (t1.y - t0.y) * t;
+      const tr = d3.zoomIdentity.translate(x, y).scale(k);
+      svg.call(_goZoom.transform, tr);
+    });
+
+  setTimeout(() => {
+    if (!svg.node().isConnected) return;
+    _updateGoLayers(_goZoomInitial.k);
+
+    if (!answerF) return;
+    const gT = d3.zoomTransform(svg.node());
+    const [[dbx0, dby0], [dbx1, dby1]] = pathGen.bounds(answerF);
+    const svgX = gT.applyX(dbx1);
+    const svgY = gT.applyY((dby0 + dby1) / 2);
+
+    const pillH = 28, pillW = answerKey.length * 10 + 28;
+    const gap = 12;
+    let bx = svgX + gap;
+    if (bx + pillW / 2 > W - 4) bx = gT.applyX(dbx0) - gap;
+    bx = Math.max(pillW / 2 + 4, Math.min(W - pillW / 2 - 4, bx));
+    const by = Math.max(pillH / 2 + 4, Math.min(H - pillH / 2 - 4, svgY));
+
+    badgeLayer
+      .attr('transform', `translate(${bx},${by})`)
+      .attr('opacity', 0);
+    badgeLayer.append('rect')
+      .attr('x', -pillW / 2).attr('y', -pillH / 2).attr('width', pillW).attr('height', pillH)
+      .attr('rx', pillH / 2)
+      .attr('fill', 'rgba(196,18,48,0.92)').attr('stroke', '#fff')
+      .attr('stroke-width', 2.5).style('vector-effect', 'non-scaling-stroke')
+      .style('filter', 'drop-shadow(0 1px 3px rgba(0,0,0,0.4))');
+    badgeLayer.append('text')
+      .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
+      .attr('font-size', '14px').attr('font-weight', '700').attr('fill', '#fff')
+      .attr('letter-spacing', '0.5').attr('pointer-events', 'none').text(answerKey);
+
+    badgeLayer.node().setAttribute('opacity', '1');
+  }, 1050);
 }
 
 function showGameoverModal() {
