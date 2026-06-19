@@ -3214,23 +3214,24 @@ function showGameoverModal() {
   flash.style.cssText = `position:fixed;inset:0;z-index:9999;background:${flashColor};pointer-events:none;`;
   document.body.appendChild(flash);
 
+  document.getElementById('game-section')?.classList.add('hidden');
+
   modal.classList.remove('hidden');
   const mapWrap = document.getElementById('gameover-map-wrap');
   if (mapWrap) mapWrap.style.opacity = '0';
 
-  // Build map (synchronous zoom, no animation), then cross-fade
-  requestAnimationFrame(() => {
-    buildGameoverMap();
-    requestAnimationFrame(() => {
-      flash.style.transition = 'opacity 0.9s ease';
-      flash.style.opacity = '0';
-      if (mapWrap) {
-        mapWrap.style.transition = 'opacity 0.9s ease';
-        mapWrap.style.opacity = '1';
-      }
-      setTimeout(() => flash.remove(), 1000);
-    });
-  });
+  // Build map asynchronously; fade the flash out after a brief hold (100ms),
+  // independent of how long SVG rendering takes
+  requestAnimationFrame(() => buildGameoverMap());
+  setTimeout(() => {
+    flash.style.transition = 'opacity 0.75s ease';
+    flash.style.opacity = '0';
+    if (mapWrap) {
+      mapWrap.style.transition = 'opacity 0.75s ease 0.1s';
+      mapWrap.style.opacity = '1';
+    }
+    setTimeout(() => flash.remove(), 900);
+  }, 100);
 }
 
 function _renderDistrictToBlob() {
@@ -4043,7 +4044,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Remove map-collapsed immediately so the CSS flex expansion (300ms) starts.
     // Then defer resetGame until after that transition so Leaflet measures the
     // correct map height when renderDistrict calls fitBounds.
-    document.getElementById('game-section')?.classList.remove('map-collapsed');
+    document.getElementById('game-section')?.classList.remove('map-collapsed', 'hidden');
     setTimeout(() => {
       resetGame(newIdx);
       requestAnimationFrame(() => {
@@ -4058,10 +4059,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Game-over modal controls
   document.getElementById('gameover-result-btn')?.addEventListener('click', openResultModal);
   document.getElementById('gameover-new-map-btn')?.addEventListener('click', startNewMap);
-  document.getElementById('gameover-dismiss-btn')?.addEventListener('click', () => {
-    document.getElementById('gameover-modal')?.classList.add('hidden');
-  });
-
   // Zoom buttons inside gameover-modal
   document.getElementById('gameover-modal')?.addEventListener('click', e => {
     const btn = e.target.closest('.mzb-go');

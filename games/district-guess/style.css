@@ -1711,52 +1711,6 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
 }
 #gameover-new-map-btn:hover { background: var(--accent); color: white; }
 
-.gameover-map-zoom-btns {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  z-index: 10;
-}
-.mzb-go {
-  width: 30px;
-  height: 30px;
-  border-radius: 6px;
-  border: 1px solid var(--border, rgba(0,0,0,0.15));
-  background: var(--surface, #fff);
-  color: var(--fg);
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-  opacity: 0.88;
-}
-.mzb-go:hover { opacity: 1; }
-.gameover-dismiss-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: 1px solid var(--border, rgba(0,0,0,0.15));
-  background: var(--surface, #fff);
-  color: var(--fg);
-  font-size: 1.1rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-  opacity: 0.88;
-}
-.gameover-dismiss-btn:hover { opacity: 1; }
 
 /* ---- Welcome / splash modal ---- */
 .welcome-modal-content {
