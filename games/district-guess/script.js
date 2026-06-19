@@ -4072,8 +4072,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const dir = btn.dataset.dir;
     if (dir === 'in')  svgSel.transition().duration(250).call(_goZoom.scaleBy, 1.6);
     else if (dir === 'out') svgSel.transition().duration(250).call(_goZoom.scaleBy, 1 / 1.6);
-    else if (dir === 'fit') svgSel.transition().duration(500).ease(d3.easeCubicInOut)
-      .call(_goZoom.transform, _goZoomInitial || d3.zoomIdentity);
+    else if (dir === 'fit') {
+      const cur = d3.zoomTransform(svgSel.node());
+      const atDistrict = _goZoomInitial && Math.abs(cur.k - _goZoomInitial.k) / _goZoomInitial.k < 0.15;
+      const t1 = atDistrict ? d3.zoomIdentity : (_goZoomInitial || d3.zoomIdentity);
+      const t0k = cur.k, t0x = cur.x, t0y = cur.y;
+      const t1k = t1.k, t1x = t1.x, t1y = t1.y;
+      const dur = 700, ease = d3.easeCubicInOut;
+      const start = performance.now();
+      const svgNode = svgSel.node();
+      (function frame() {
+        const elapsed = performance.now() - start;
+        const t = ease(Math.min(elapsed / dur, 1));
+        const tr = d3.zoomIdentity.translate(t0x + (t1x - t0x) * t, t0y + (t1y - t0y) * t).scale(t0k + (t1k - t0k) * t);
+        _goZoom.transform(svgSel, tr);
+        if (elapsed < dur) requestAnimationFrame(frame);
+      })();
+    }
   });
 
   // Post to X / Twitter
