@@ -3047,20 +3047,21 @@ function buildGameoverMap() {
       .attr('stroke', 'none');
   }
 
-  // All districts in the answer state (grey outlines)
+  // All districts in the answer state (grey outlines, non-scaling stroke)
   g.append('g').attr('class', 'go-all-districts')
     .selectAll('path').data(stateFeatures).join('path').attr('d', pathGen)
     .attr('fill', dark ? 'rgba(255,255,255,0.08)' : 'rgba(180,180,190,0.25)')
-    .attr('stroke', dark ? 'rgba(255,255,255,0.25)' : 'rgba(100,100,110,0.4)')
-    .attr('stroke-width', 0.5);
+    .attr('stroke', dark ? 'rgba(255,255,255,0.25)' : 'rgba(100,100,110,0.5)')
+    .attr('stroke-width', 1)
+    .style('vector-effect', 'non-scaling-stroke');
 
-  // Answer district — highlighted
+  // Answer district — always red/accent, non-scaling stroke
   if (answerF) {
-    const fillColor   = won ? (dark ? 'rgba(253,181,21,0.55)' : 'rgba(253,181,21,0.7)')
-                             : (dark ? 'rgba(255,80,80,0.5)'  : 'rgba(196,18,48,0.65)');
-    const strokeColor = won ? '#FDB515' : '#C41230';
+    const fillColor   = dark ? 'rgba(255,80,80,0.5)' : 'rgba(196,18,48,0.65)';
+    const strokeColor = '#C41230';
     g.append('path').datum(answerF).attr('d', pathGen)
-      .attr('fill', fillColor).attr('stroke', strokeColor).attr('stroke-width', 2);
+      .attr('fill', fillColor).attr('stroke', strokeColor).attr('stroke-width', 2)
+      .style('vector-effect', 'non-scaling-stroke');
 
     // zoomToBBox works in viewBox (REF_VB) coordinate space — same as district tiles
     _goZoomInitial = zoomToBBox(pathGen.bounds(answerF), W, H, { margin: 0.6, minScale: 1.2, maxScale: 40 });
