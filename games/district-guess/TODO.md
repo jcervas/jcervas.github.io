@@ -6,6 +6,12 @@ Gameflow: Welcome Splash -> Game Screen (district map, hints, reference map) -> 
 Actual game: Select state (hints about state) -> Select a district (hints about district) -> Either win or lose
 
 - [ ] Drop out district tiles that are no longer active (currently grayed out — should be removed). Zoom to convex hull of remaining active district tiles (same behavior as state-level zoom to remaining states).
+- [x] Gameover modal: flash overlay reveal (gold/red viewport-fill fades out while map fades in), no animated zoom
+- [x] Gameover badge: pill positioned inside zoom group at district data coordinates, tracks pan/zoom, correct size on mobile
+- [x] Gameover fit button: toggles between district zoom and national context
+- [x] Gameover zoom buttons: match `.mzb` gameplay style; dismiss button removed
+- [x] `#game-section` hidden on gameover, restored on New Map
+- [x] Gameover grid: unused slots show `□` not `⊗`
 
 ## Major upgrades
 

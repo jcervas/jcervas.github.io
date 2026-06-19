@@ -2,6 +2,22 @@
 
 ---
 
+## v1.11 — Gameover Modal Rewrite
+
+- **Flash overlay reveal**: on game over, a full-viewport gold (win) or red (loss) overlay fades out while the gameover map fades in — no animated zoom, instant district context
+- **Gameover map set directly**: zoom is set to district-fit transform immediately via `_goZoomInitial`; no D3 transition animation
+- **Badge inside zoom group**: answer district label pill is now a child of the D3 zoom `<g>`, positioned at data coordinates `(dbx1, dby_center)` from `pathGen.bounds()`, with `scale(1/k)` counteracting zoom so the pill stays constant screen size during pan/zoom
+- **Badge screen-size fix on mobile**: badge dimensions computed as `targetPx / renderScale` where `renderScale = min(containerW/960, containerH/400)`, so the pill is correctly sized on portrait mobile where the 960×400 viewBox renders at ~0.4× scale
+- **Badge tracking**: badge updates `scale(1/k)` on every zoom event; previously was in the top-level SVG and did not follow map pan/zoom
+- **Fit button toggle**: clicking the fit button alternates between district zoom and national zoom; uses a direct rAF loop with `performance.now()` (D3 transition tween was silently failing)
+- **Zoom button style unified**: gameover zoom buttons now use `.mzb` class matching the gameplay map button style; removed separate `.mzb-go` CSS
+- **Dismiss button removed**: `gameover-dismiss-btn` removed from index.html and CSS
+- **`#game-section` hidden on gameover**: game section is hidden when gameover modal shows; restored (`hidden` class removed) when New Map starts
+- **Gameover grid empty slots**: unused guess slots now show `□` instead of `⊗`; only slots used in a loss show `⊗`
+- **`scaleExtent` expanded**: gameover zoom scaleExtent changed from `[0.3, Infinity]` to `[0.01, Infinity]` to prevent clamping during fit animation
+
+---
+
 ## v1.8.2 — Mobile Polish & Confetti Performance
 
 - **Confetti performance**: replaced per-particle `save/translate/rotate/restore` (4 canvas state calls) with a single `setTransform` call; set `globalAlpha` once per frame; sort particles by color to batch `fillStyle` switches; add `will-change: transform` to promote canvas to GPU layer — significantly faster on mobile GPUs
