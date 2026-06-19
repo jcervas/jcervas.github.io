@@ -13,11 +13,12 @@ chmod +x cv_build.sh
 ##### Revised April 2026
 
 ::: {custom-style="Address"}
-Carnegie Mellon University, Dietrich College of Humanities and Social Sciences
-
-5000 Forbes Ave, Pittsburgh, PA 15213
-
-Office: 412-268-4519 · Email: <cervas@cmu.edu> · Homepage: <https://jonathancervas.com>
+Carnegie Mellon University  
+Dietrich College of Humanities and Social Sciences  
+5000 Forbes Ave, Pittsburgh, PA 15213   
+Office: 412-268-4519  
+Email: <cervas@cmu.edu>   
+Homepage: <https://jonathancervas.com>  
 :::
 
 
