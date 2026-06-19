@@ -15,7 +15,7 @@ const SESSION_RANDSEED_KEY = 'districtguess_randseed';  // seed for current rand
 // D3 US reference map coordinate space (viewBox dimensions)
 const REF_VB_W = 960;
 const REF_VB_H = 400;
-const VERSION_NUMBER = '1.9.5';
+const VERSION_NUMBER = '1.10';
 const GAME_VERSION = (() => {
   const d = new Date();
   const y = d.getFullYear();
@@ -3084,13 +3084,30 @@ function showGameoverModal() {
 
   const won       = guessHistory.some(g => g.correct && g.phase === 'district');
   const answerKey = todayDistrict?.properties['state-district'] || '?';
-  const hl        = document.getElementById('gameover-headline');
+
+  // Headline
+  const hl = document.getElementById('gameover-headline');
   if (hl) {
-    hl.innerHTML  = won
-      ? `You got it! <strong>${answerKey}</strong>`
-      : `The answer was <strong>${answerKey}</strong>`;
-    hl.className  = 'gameover-headline ' + (won ? 'won' : 'lost');
+    hl.textContent = won ? `You got it! ${answerKey}` : `Answer: ${answerKey}`;
+    hl.className   = 'gameover-headline ' + (won ? 'won' : 'lost');
   }
+
+  // Guess grid (✓ ○ ✗ · style)
+  const usedSlots = guessHistory.map(g => {
+    if (g.correct && g.phase === 'district') return '✓';
+    if (g.correct && g.phase === 'state')    return '○';
+    return '✗';
+  });
+  const unusedCount = won ? MAX_GUESSES - guessCount : 0;
+  const gridStr = [...usedSlots, ...Array(unusedCount).fill('·')].join(' ');
+  const gridEl = document.getElementById('gameover-grid');
+  if (gridEl) gridEl.textContent = gridStr;
+
+  // Time + separator
+  const timeEl = document.getElementById('gameover-time');
+  const sepEl  = document.getElementById('gameover-sep');
+  if (timeEl) timeEl.textContent = formatTime(elapsedSeconds);
+  if (sepEl)  sepEl.textContent  = elapsedSeconds > 0 ? '·' : '';
 
   modal.classList.remove('hidden');
   // Build map after modal is visible so offsetWidth/offsetHeight are real

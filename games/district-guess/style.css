@@ -1633,50 +1633,47 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
   inset: 0;
   background: var(--bg);
 }
+/* Game-over footer ribbon — inherits .banner vars, just override layout */
 .gameover-footer {
   flex-shrink: 0;
-  padding: 14px 20px 20px;
-  background: var(--surface);
-  border-top: 1px solid var(--border);
+  border-radius: 0;          /* full-width strip, no rounded corners */
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+}
+/* Buttons inherit .banner button styles; "New Map" gets the outlined treatment */
+#gameover-new-map-btn {
+  background: transparent;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+}
+#gameover-new-map-btn:hover { background: var(--accent); color: white; }
+.gameover-info {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  align-items: center;
+  gap: 3px;
+  min-width: 0;
 }
 .gameover-headline {
-  font-size: 1.05rem;
+  font-size: 0.9rem;
   font-weight: 700;
-  text-align: center;
-  line-height: 1.3;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.gameover-headline.won { color: var(--accent, #C41230); }
-.gameover-headline.lost { color: var(--muted); }
-.gameover-actions {
+.gameover-headline.won { color: var(--green, #2e7d32); }
+.gameover-headline.lost { color: var(--text); }
+.gameover-meta {
+  font-size: 0.8rem;
+  color: var(--muted);
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
 }
-.gameover-btn-primary {
-  padding: 10px 24px;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 0.95rem;
-  background: #C41230;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-}
-.gameover-btn-secondary {
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  background: var(--surface-alt, #eee);
-  color: var(--fg);
-  border: 1px solid var(--border);
-  cursor: pointer;
-}
+.gameover-grid { letter-spacing: 0.15em; font-size: 0.78rem; }
+.gameover-sep  { opacity: 0.5; }
 .gameover-map-zoom-btns {
   position: absolute;
   top: 10px;
