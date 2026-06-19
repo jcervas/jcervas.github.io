@@ -441,7 +441,9 @@ function formatCurrency(n) {
 // Returns a d3.ZoomTransform that centers the given bbox in a W×H viewport.
 // margin is a fraction of the viewport (0.85 = 15% padding around the constraining axis).
 function zoomToBBox([[x0, y0], [x1, y1]], W, H, { margin = 0.85, maxScale = Infinity, minScale = 0 } = {}) {
-  const bw = x1 - x0, bh = y1 - y0;
+  let bw = x1 - x0, bh = y1 - y0;
+  // Single point (one district remaining): expand to a minimum bbox so zoom stays local
+  if (!(bw > 0) || !(bh > 0)) { bw = Math.max(bw, 20); bh = Math.max(bh, 20); x0 -= bw / 2; x1 += bw / 2; y0 -= bh / 2; y1 += bh / 2; }
   if (!(bw > 0) || !(bh > 0)) return d3.zoomIdentity;
   const k = Math.min(maxScale, Math.max(minScale, margin / Math.max(bw / W, bh / H)));
   return d3.zoomIdentity
@@ -1448,7 +1450,7 @@ function processStateGuess(abbr, correct) {
     const wrongCount = guessHistory.filter(g => !g.correct).length;
     if (!hardMode) cluesRevealed = Math.min(wrongCount, FACT_DEFS.length);
     applyMapStage(wrongCount);
-    if (guessCount >= MAX_GUESSES) { endGame(false); return; }
+    if (guessCount >= MAX_GUESSES) { endGame(false); showGameoverModal(); return; }
   }
 
   renderGuessHistory();
