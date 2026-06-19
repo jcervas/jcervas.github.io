@@ -1952,7 +1952,7 @@ function initUSRefMap() {
     .attr('viewBox', `0 0 ${W} ${H}`)
     .attr('width', '100%')
     .attr('height', '100%')
-    .attr('preserveAspectRatio', 'xMidYMid meet')
+    .attr('preserveAspectRatio', 'xMidYMid slice')
     .style('display', 'block')
     .style('background', 'transparent')
     .style('touch-action', 'none');  // let D3 zoom own all touch gestures (pinch, two-finger)
