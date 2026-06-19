@@ -676,13 +676,15 @@ function districtStyle() {
   return { color: 'transparent', weight: 0, fillOpacity: 0 };
 }
 
-// Build a D3 projection that matches Leaflet's current WebMercator viewport.
-// This ensures the D3 district overlay aligns pixel-perfectly with Leaflet tiles.
+// Build a D3-compatible transform that matches Leaflet's current WebMercator viewport.
+// d3.geoTransform wraps a point-stream function so d3.geoPath can consume it.
 function _leafletProjection() {
-  return ([lng, lat]) => {
-    const pt = map.latLngToContainerPoint(L.latLng(lat, lng));
-    return [pt.x, pt.y];
-  };
+  return d3.geoTransform({
+    point(lng, lat) {
+      const pt = map.latLngToContainerPoint(L.latLng(lat, lng));
+      this.stream.point(pt.x, pt.y);
+    }
+  });
 }
 
 function renderMapD3(stage) {
@@ -2508,8 +2510,8 @@ function _buildDistrictCtx(stateAbbr, tilesEl) {
           .force('collide', d3.forceCollide(d => d.isCold ? newCollide * 0.25 : d.isHot ? newCollide * 0.45 : newCollide))
           .force('x', d3.forceX(d => d.ox).strength(newStrength))
           .force('y', d3.forceY(d => d.oy).strength(newStrength))
-          .alpha(1).stop();
-        districtSimulation.tick(Math.ceil(Math.log(districtSimulation.alphaMin() / districtSimulation.alpha()) / Math.log(1 - districtSimulation.alphaDecay())));
+          .alpha(0.3).stop();
+        districtSimulation.tick(20);
         districtSimulation._applyIconPositions();
       }
 
@@ -2540,7 +2542,7 @@ function _buildDistrictCtx(stateAbbr, tilesEl) {
 // Decides and applies the initial zoom transform (zoomIn animation, game-over zoom,
 
 function _applyDistrictZoom(ctx, zoomIn) {
-  const { svg, stateFeatures, stateFC, stateBBox, possibleKeys, W, H } = ctx;
+  const { svg, pathGen, stateFeatures, stateFC, stateBBox, possibleKeys, W, H } = ctx;
 
   if (zoomIn) {
     // Entry animation: start from US ref map zoom level, animate to active districts.
@@ -2556,12 +2558,14 @@ function _applyDistrictZoom(ctx, zoomIn) {
 
   } else if (gameOver && todayDistrict) {
     svg.interrupt();
-    const answerKey = todayDistrict.properties['state-district'];
-    const answerKeys = new Set([answerKey]);
-    const goTransform = fitToActiveKeys(null, null, _districtProjection, W, H, answerKeys, { margin: 0.5 })
-      || zoomToBBox(stateBBox, W, H, { margin: 0.85 });
-    districtGameOverTransform = goTransform;
-    svg.call(districtZoomBehavior.transform, goTransform);
+    const answerF = stateFeatures.find(f => f.properties['state-district'] === todayDistrict.properties['state-district']);
+    if (answerF) {
+      const goTransform = zoomToBBox(pathGen.bounds(answerF), W, H, { margin: 0.6, minScale: 1.2, maxScale: 40 });
+      districtGameOverTransform = goTransform;
+      svg.call(districtZoomBehavior.transform, goTransform);
+    } else {
+      svg.call(districtZoomBehavior.transform, zoomToBBox(stateBBox, W, H, { margin: 0.85 }));
+    }
 
   } else {
     // Lock in full-state inner-point fit once for fit-toggle second press.
