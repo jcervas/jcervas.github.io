@@ -351,6 +351,8 @@ let _districtPathSnap    = null;     // pathGen cached from last build (for reve
 let _districtStateFSnap  = null;     // stateFeatures cached from last build (for reveal zoom)
 let _gameOverTime        = 0;        // Date.now() when endGame() was called (confetti gate)
 let _gameOverAnimsCallback  = null;   // deferred: pulse/shake/confetti, fired after reveal circle collapses
+let _goZoom         = null;   // gameover map zoom behavior
+let _goZoomInitial  = null;   // gameover map initial fit transform
 let _tileZoomInAnimating    = false;  // true during 700ms entry zoom-in so handler skips simulation re-runs
 let db                  = null;   // Firestore instance (if configured)
 let username            = '';
@@ -1644,10 +1646,9 @@ function startGameOverTransition(won, dist) {
     .ease(d3.easeCubicInOut)
     .attrTween('d', () => t => toPath(interp(t)))
     .on('end', () => {
-      document.getElementById('game-section')?.classList.add('map-collapsed');
       endGame(won, { skipAnims: true });
-
       svgEl.remove();
+      showGameoverModal();
       if (_gameOverAnimsCallback) {
         _gameOverAnimsCallback();
         _gameOverAnimsCallback = null;
@@ -2315,9 +2316,8 @@ function showDistrictD3Map(stateAbbr, instant = false, animateReveal = false) {
       const activeKeys = getActiveDistrictKeys();
       const entryTransform = fitToActiveKeys(null, null, _districtProjection, REF_VB_W, REF_VB_H, activeKeys, { margin: 0.85 });
       if (entryTransform) {
-        const refStart = usRefMap ? d3.zoomTransform(usRefMap) : d3.zoomIdentity;
         districtSavedTransform = entryTransform;
-        _districtSvgSel.call(districtZoomBehavior.transform, refStart);
+        _districtSvgSel.call(districtZoomBehavior.transform, districtStateFitTransform || d3.zoomIdentity);
         _districtSvgSel.transition().duration(700).ease(d3.easeCubicInOut)
           .call(districtZoomBehavior.transform, entryTransform);
       }
@@ -2542,11 +2542,11 @@ function _buildDistrictCtx(stateAbbr, tilesEl) {
 // Decides and applies the initial zoom transform (zoomIn animation, game-over zoom,
 
 function _applyDistrictZoom(ctx, zoomIn) {
-  const { svg, pathGen, stateFeatures, stateFC, stateBBox, possibleKeys, W, H } = ctx;
+  const { svg, pathGen, stateFeatures, stateFC, stateBBox, possibleKeys, W, H, stateFitTransform } = ctx;
 
   if (zoomIn) {
-    // Entry animation: start from US ref map zoom level, animate to active districts.
-    const refStart = usRefMap ? d3.zoomTransform(usRefMap) : d3.zoomIdentity;
+    // Entry animation: start from full-state fit in the district tile's own coordinate space.
+    const refStart = stateFitTransform || d3.zoomIdentity;
     const t = fitToActiveKeys(null, null, _districtProjection, W, H, possibleKeys, { margin: 0.85 })
            || zoomToBBox(stateBBox, W, H, { margin: 0.85 });
     districtSavedTransform = t;
@@ -2946,17 +2946,6 @@ function endGame(won, { skipAnims = false } = {}) {
   showDistrictD3Map(todayDistrict.properties.state, true, !skipAnims);
   // Reset the fit-toggle button icon for game-over view
   document.querySelector('.mzb-fit')?.classList.remove('at-national');
-  // Pulsing "View Results" arrow overlay on the map
-  const tilesEl = document.getElementById('district-tiles');
-  if (tilesEl && !tilesEl.querySelector('.gameover-results-arrow')) {
-    const arrow = document.createElement('button');
-    arrow.className = 'gameover-results-arrow';
-    arrow.setAttribute('aria-label', 'View results');
-    arrow.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>`;
-    arrow.addEventListener('click', () => { openResultModal(); });
-    tilesEl.appendChild(arrow);
-  }
-  if (!skipAnims) document.getElementById('game-section')?.classList.add('map-collapsed');
   renderClues();
   renderGuessHistory();
   // Add 1 for the winning guess itself; wrong guesses are already counted
@@ -2982,16 +2971,6 @@ function endGame(won, { skipAnims = false } = {}) {
     }
   }
   saveGameState();
-
-  // Show the game-over banner so "View Result" / "New Map" are accessible after modal close
-  const banner = document.getElementById('already-played-banner');
-  const bannerMsg = document.getElementById('banner-msg');
-  if (banner) {
-    if (bannerMsg) bannerMsg.textContent = won
-      ? `You got it — ${todayDistrict.properties['state-district']}!`
-      : `The answer was ${todayDistrict.properties['state-district']}.`;
-    banner.classList.remove('hidden');
-  }
 
   // Submit to Firebase and render census data
   submitScore(won, guessCount, elapsedSeconds);
@@ -3028,6 +3007,94 @@ function _previewProjection(W, H, pad, { centerOnCentroid = false } = {}) {
     }
   }
   return projection;
+}
+
+function buildGameoverMap() {
+  if (!todayDistrict || !rawTopo) return;
+  const container = document.getElementById('gameover-map');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const stateAbbr    = todayDistrict.properties.state;
+  const stateFeatures = districts.filter(f => f.properties.state === stateAbbr);
+  const answerKey    = todayDistrict.properties['state-district'];
+  const answerF      = stateFeatures.find(f => f.properties['state-district'] === answerKey);
+  const won          = guessHistory.some(g => g.correct && g.phase === 'district');
+  const dark         = isDarkMode();
+
+  const W = container.offsetWidth  || 400;
+  const H = container.offsetHeight || 300;
+
+  const allStatesFC  = { type: 'FeatureCollection', features: Object.values(topoStates).filter(Boolean) };
+  const projection   = d3.geoAlbersUsa().fitExtent([[10, 10], [W - 10, H - 10]], allStatesFC);
+  const pathGen      = d3.geoPath().projection(projection);
+
+  const svg = d3.select(container).append('svg')
+    .attr('width', W).attr('height', H)
+    .style('display', 'block').style('touch-action', 'none');
+  const g = svg.append('g');
+
+  // Other states — faded national context
+  const otherStates = Object.values(topoStates).filter(f => f.properties?.state !== stateAbbr);
+  if (otherStates.length) {
+    g.append('g').attr('class', 'go-context-states')
+      .selectAll('path').data(otherStates).join('path').attr('d', pathGen)
+      .attr('fill', dark ? 'rgba(255,255,255,0.06)' : 'rgba(100,100,120,0.12)')
+      .attr('stroke', 'none');
+  }
+
+  // All districts in the answer state (grey outlines)
+  g.append('g').attr('class', 'go-all-districts')
+    .selectAll('path').data(stateFeatures).join('path').attr('d', pathGen)
+    .attr('fill', dark ? 'rgba(255,255,255,0.08)' : 'rgba(180,180,190,0.25)')
+    .attr('stroke', dark ? 'rgba(255,255,255,0.25)' : 'rgba(100,100,110,0.4)')
+    .attr('stroke-width', 0.5);
+
+  // Answer district — highlighted
+  if (answerF) {
+    const fillColor   = won ? (dark ? 'rgba(253,181,21,0.55)' : 'rgba(253,181,21,0.7)')
+                             : (dark ? 'rgba(255,80,80,0.5)'  : 'rgba(196,18,48,0.65)');
+    const strokeColor = won ? '#FDB515' : '#C41230';
+    g.append('path').datum(answerF).attr('d', pathGen)
+      .attr('fill', fillColor).attr('stroke', strokeColor).attr('stroke-width', 2);
+
+    // Compute initial zoom: fit answer district with margin
+    const [[bx0, by0], [bx1, by1]] = pathGen.bounds(answerF);
+    const bw = bx1 - bx0, bh = by1 - by0;
+    if (bw > 0 && bh > 0) {
+      const k  = 0.6 / Math.max(bw / W, bh / H);
+      const cx = (bx0 + bx1) / 2, cy = (by0 + by1) / 2;
+      _goZoomInitial = d3.zoomIdentity.translate(W / 2, H / 2).scale(k).translate(-cx, -cy);
+    } else {
+      _goZoomInitial = d3.zoomIdentity;
+    }
+  } else {
+    _goZoomInitial = d3.zoomIdentity;
+  }
+
+  _goZoom = d3.zoom().scaleExtent([0.3, Infinity])
+    .on('zoom', event => { g.attr('transform', event.transform); });
+  svg.call(_goZoom).on('dblclick.zoom', null);
+  svg.call(_goZoom.transform, _goZoomInitial);
+}
+
+function showGameoverModal() {
+  const modal = document.getElementById('gameover-modal');
+  if (!modal) return;
+
+  const won       = guessHistory.some(g => g.correct && g.phase === 'district');
+  const answerKey = todayDistrict?.properties['state-district'] || '?';
+  const hl        = document.getElementById('gameover-headline');
+  if (hl) {
+    hl.innerHTML  = won
+      ? `You got it! <strong>${answerKey}</strong>`
+      : `The answer was <strong>${answerKey}</strong>`;
+    hl.className  = 'gameover-headline ' + (won ? 'won' : 'lost');
+  }
+
+  modal.classList.remove('hidden');
+  // Build map after modal is visible so offsetWidth/offsetHeight are real
+  requestAnimationFrame(() => buildGameoverMap());
 }
 
 function _renderDistrictToBlob() {
@@ -3507,18 +3574,9 @@ function restoreGame(saved) {
   renderClues();
 
   if (gameOver) {
-    const banner    = document.getElementById('already-played-banner');
-    const bannerMsg = document.getElementById('banner-msg');
-    if (banner && bannerMsg) {
-      bannerMsg.textContent = saved.won
-        ? `You got it — ${todayDistrict.properties['state-district']}!`
-        : `The answer was ${todayDistrict.properties['state-district']}.`;
-      banner.classList.remove('hidden');
-    }
-    buildDistrictD3Map(todayDistrict.properties.state);
-    document.getElementById('game-section')?.classList.add('map-collapsed');
     lastGameWon = saved.won;
-    showResult(saved.won);
+    showResult(saved.won, false);      // populate result modal content but don't open it
+    showGameoverModal();               // show the game-over modal directly
     fetchAndRenderCensusPanel(districtDataFor(todayDistrict));
   }
 }
@@ -3833,6 +3891,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Show welcome splash immediately (before map refresh) so user never sees
     // the new district flash in behind the closing result modal.
     document.getElementById('result-modal')?.classList.add('hidden');
+    document.getElementById('gameover-modal')?.classList.add('hidden');
     gameOver = false;
     guessCount = 0;
     correctStateGuessed = false;
@@ -3854,6 +3913,26 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   document.getElementById('play-again-btn').addEventListener('click', startNewMap);
   document.getElementById('banner-new-map-btn').addEventListener('click', startNewMap);
+
+  // Game-over modal controls
+  document.getElementById('gameover-result-btn')?.addEventListener('click', openResultModal);
+  document.getElementById('gameover-new-map-btn')?.addEventListener('click', startNewMap);
+  document.getElementById('gameover-dismiss-btn')?.addEventListener('click', () => {
+    document.getElementById('gameover-modal')?.classList.add('hidden');
+  });
+
+  // Zoom buttons inside gameover-modal
+  document.getElementById('gameover-modal')?.addEventListener('click', e => {
+    const btn = e.target.closest('.mzb-go');
+    if (!btn || !_goZoom) return;
+    const svgSel = d3.select('#gameover-map svg');
+    if (svgSel.empty()) return;
+    const dir = btn.dataset.dir;
+    if (dir === 'in')  svgSel.transition().duration(250).call(_goZoom.scaleBy, 1.6);
+    else if (dir === 'out') svgSel.transition().duration(250).call(_goZoom.scaleBy, 1 / 1.6);
+    else if (dir === 'fit') svgSel.transition().duration(500).ease(d3.easeCubicInOut)
+      .call(_goZoom.transform, _goZoomInitial || d3.zoomIdentity);
+  });
 
   // Post to X / Twitter
   document.getElementById('post-x-btn').addEventListener('click', async () => {
@@ -3928,13 +4007,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const btnMap = document.createElement('button');
       btnMap.className = 'welcome-action-btn';
       btnMap.textContent = 'Back to Map';
-      btnMap.addEventListener('click', dismissAndStart);
+      btnMap.addEventListener('click', () => {
+        welcomeModal.classList.add('hidden');
+        showGameoverModal();
+      });
 
       const btnResult = document.createElement('button');
       btnResult.className = 'welcome-action-btn secondary';
       btnResult.textContent = 'Review Result';
       btnResult.addEventListener('click', () => {
-        dismissAndStart();
+        welcomeModal.classList.add('hidden');
+        showGameoverModal();
         openResultModal();
       });
 
@@ -4031,9 +4114,9 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => {
       const modal = btn.closest('.modal');
       modal.classList.add('hidden');
-      // Re-show game-over banner whenever result modal is dismissed
+      // Re-show game-over modal whenever result modal is dismissed during game-over
       if (modal.id === 'result-modal' && gameOver) {
-        document.getElementById('already-played-banner')?.classList.remove('hidden');
+        document.getElementById('gameover-modal')?.classList.remove('hidden');
       }
       // Clear hints list when closing hints modal — populated lazily on open
       if (modal.id === 'hints-modal') {
@@ -4049,7 +4132,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (e.target === modal) {
         modal.classList.add('hidden');
         if (modal.id === 'result-modal' && gameOver) {
-          document.getElementById('already-played-banner')?.classList.remove('hidden');
+          document.getElementById('gameover-modal')?.classList.remove('hidden');
         }
       }
     });

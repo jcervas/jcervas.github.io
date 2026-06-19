@@ -392,6 +392,28 @@
 
   </div>
 
+  <!-- ===== GAME OVER MODAL ===== -->
+  <div id="gameover-modal" class="modal hidden">
+    <div class="gameover-modal-content">
+      <div id="gameover-map-wrap">
+        <div id="gameover-map"></div>
+        <div class="gameover-map-zoom-btns">
+          <button class="mzb-go" data-dir="in" aria-label="Zoom in">+</button>
+          <button class="mzb-go" data-dir="out" aria-label="Zoom out">−</button>
+          <button class="mzb-go mzb-go-fit" data-dir="fit" aria-label="Fit to district" title="Fit to district"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="14" height="14"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
+        </div>
+        <button class="gameover-dismiss-btn" id="gameover-dismiss-btn" aria-label="Back to game">×</button>
+      </div>
+      <div class="gameover-footer">
+        <div id="gameover-headline" class="gameover-headline"></div>
+        <div class="gameover-actions">
+          <button id="gameover-result-btn" class="gameover-btn-primary">View Result</button>
+          <button id="gameover-new-map-btn" class="gameover-btn-secondary">New Map</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Result modal (opens on game end or "View Result" click) -->
   <div id="result-modal" class="modal hidden">
     <div class="modal-content result-modal-content">
