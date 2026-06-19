@@ -645,6 +645,9 @@ function initMap() {
   }).addTo(map);
 
   L.control.attribution({ position: 'bottomright', prefix: false }).addTo(map);
+
+  // Re-sync D3 overlay whenever Leaflet repositions (fitBounds fires moveend)
+  map.on('moveend zoomend', () => renderMapD3(currentMapStage));
 }
 
 function applyMapStage(wrongGuesses, gameEnded = false) {
@@ -673,9 +676,18 @@ function districtStyle() {
   return { color: 'transparent', weight: 0, fillOpacity: 0 };
 }
 
+// Build a D3 projection that matches Leaflet's current WebMercator viewport.
+// This ensures the D3 district overlay aligns pixel-perfectly with Leaflet tiles.
+function _leafletProjection() {
+  return ([lng, lat]) => {
+    const pt = map.latLngToContainerPoint(L.latLng(lat, lng));
+    return [pt.x, pt.y];
+  };
+}
+
 function renderMapD3(stage) {
   const mapEl = document.getElementById('map');
-  if (!mapEl || !todayDistrict || !window.d3) return;
+  if (!mapEl || !todayDistrict || !window.d3 || !map) return;
 
   let overlayEl = document.getElementById('map-d3-overlay');
   if (!overlayEl) {
@@ -689,19 +701,24 @@ function renderMapD3(stage) {
 
   const W = mapEl.offsetWidth  || 400;
   const H = mapEl.offsetHeight || 300;
-  const pad = Math.min(W, H) * 0.1;
   const dark = isDarkMode();
 
-  const projection = _previewProjection(W, H, pad, { centerOnCentroid: gameOver });
-  const pathGen    = d3.geoPath(projection);
-  const dPath      = pathGen(todayDistrict);
+  // Use Leaflet's projection when tiles are visible (stage ≥ 2) so the D3 district
+  // outline aligns with the WebMercator tile background. At stage 0-1 (plain background)
+  // use a fitted AlbersUSA so the shape fills the available space nicely.
+  const useTileProjection = stage >= 2 && map.getZoom;
+  const projection = useTileProjection
+    ? _leafletProjection()
+    : _previewProjection(W, H, Math.min(W, H) * 0.1, { centerOnCentroid: gameOver });
+  const pathGen = d3.geoPath(projection);
+  const dPath   = pathGen(todayDistrict);
   if (!dPath) return;
 
   const svg = d3.select(overlayEl).append('svg')
     .attr('width', W).attr('height', H)
     .style('display', 'block');
 
-  // Opaque background for stages 0-1 (no tile basemap visible); matches --bg like us-ref-map
+  // Opaque background for stages 0-1 (no tile basemap visible)
   if (stage < 2) {
     const bg = getComputedStyle(document.body).getPropertyValue('--bg').trim();
     svg.append('rect').attr('width', W).attr('height', H).attr('fill', bg || '#f5f5f5');
@@ -1199,7 +1216,8 @@ function startTimer() {
     if (tv) tv.textContent = t;
     const tvi = document.getElementById('timer-value-inline');
     if (tvi) tvi.textContent = t;
-    saveGameState();
+    // Persist every 30s instead of every second to avoid thrashing localStorage
+    if (elapsedSeconds % 30 === 0) saveGameState();
   }, 1000);
 }
 
@@ -1932,7 +1950,7 @@ function initUSRefMap() {
     .attr('viewBox', `0 0 ${W} ${H}`)
     .attr('width', '100%')
     .attr('height', '100%')
-    .attr('preserveAspectRatio', 'xMidYMid slice')
+    .attr('preserveAspectRatio', 'xMidYMid meet')
     .style('display', 'block')
     .style('background', 'transparent')
     .style('touch-action', 'none');  // let D3 zoom own all touch gestures (pinch, two-finger)
