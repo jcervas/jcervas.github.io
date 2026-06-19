@@ -3914,6 +3914,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // the new district flash in behind the closing result modal.
     document.getElementById('result-modal')?.classList.add('hidden');
     document.getElementById('gameover-modal')?.classList.add('hidden');
+    const goMapEl = document.getElementById('gameover-map');
+    if (goMapEl) goMapEl.innerHTML = '';
+    _goZoom = null; _goZoomInitial = null;
     gameOver = false;
     guessCount = 0;
     correctStateGuessed = false;
