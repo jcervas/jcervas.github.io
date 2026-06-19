@@ -3196,7 +3196,7 @@ function showGameoverModal() {
     return '⊗';
   });
   const unusedCount = won ? MAX_GUESSES - guessCount : 0;
-  const gridStr = [...usedSlots, ...Array(unusedCount).fill('⊗')].join(' ');
+  const gridStr = [...usedSlots, ...Array(unusedCount).fill('□')].join(' ');
   const gridEl = document.getElementById('gameover-grid');
   if (gridEl) gridEl.textContent = gridStr;
 
