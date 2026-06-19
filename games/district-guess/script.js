@@ -3080,30 +3080,39 @@ function showGameoverModal() {
 
   const won       = guessHistory.some(g => g.correct && g.phase === 'district');
   const answerKey = todayDistrict?.properties['state-district'] || '?';
+  const districtNum = todayDistrict?.properties['district'] || todayDistrict?.properties['CD118FP'] || '';
+  const stateName   = todayDistrict?.properties['state-name'] || todayDistrict?.properties['NAME'] || '';
 
-  // Headline
+  // Top ribbon: "The answer was CA-31." / "You got it! CA-31."
+  const ribbonEl = document.getElementById('gameover-ribbon-text');
+  if (ribbonEl) ribbonEl.textContent = won ? `You got it! ${answerKey}.` : `The answer was ${answerKey}.`;
+
+  // Card header headline: "Answer was: CA-31 — District 31"
   const hl = document.getElementById('gameover-headline');
   if (hl) {
-    hl.textContent = won ? `You got it! ${answerKey}` : `Answer: ${answerKey}`;
+    const districtLabel = districtNum ? ` — District ${+districtNum || districtNum}` : '';
+    hl.textContent = `Answer was: ${answerKey}${districtLabel}`;
     hl.className   = 'gameover-headline ' + (won ? 'won' : 'lost');
   }
 
-  // Guess grid (✓ ○ ✗ · style)
+  // Guess grid (⊗ ⊙ ✓ style matching screenshot)
   const usedSlots = guessHistory.map(g => {
     if (g.correct && g.phase === 'district') return '✓';
-    if (g.correct && g.phase === 'state')    return '○';
-    return '✗';
+    if (g.correct && g.phase === 'state')    return '⊙';
+    return '⊗';
   });
   const unusedCount = won ? MAX_GUESSES - guessCount : 0;
-  const gridStr = [...usedSlots, ...Array(unusedCount).fill('·')].join(' ');
+  const gridStr = [...usedSlots, ...Array(unusedCount).fill('⊗')].join(' ');
   const gridEl = document.getElementById('gameover-grid');
   if (gridEl) gridEl.textContent = gridStr;
 
-  // Time + separator
+  // "Solved!" label only when won
+  const solvedEl = document.getElementById('gameover-solved-label');
+  if (solvedEl) solvedEl.textContent = won ? 'Solved!' : '';
+
+  // Time
   const timeEl = document.getElementById('gameover-time');
-  const sepEl  = document.getElementById('gameover-sep');
   if (timeEl) timeEl.textContent = formatTime(elapsedSeconds);
-  if (sepEl)  sepEl.textContent  = elapsedSeconds > 0 ? '·' : '';
 
   modal.classList.remove('hidden');
   // Build map after modal is visible so offsetWidth/offsetHeight are real

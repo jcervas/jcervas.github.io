@@ -1621,7 +1621,76 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  background: var(--bg);
 }
+
+/* Top ribbon */
+.gameover-ribbon {
+  flex-shrink: 0;
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+}
+.gameover-ribbon-text {
+  font-size: 0.95rem;
+  font-weight: 600;
+  min-width: 0;
+  flex: 1;
+}
+
+/* White card below ribbon */
+.gameover-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  border-radius: 10px;
+  background: var(--surface, #fff);
+  overflow: hidden;
+  min-height: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.gameover-card-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border, rgba(0,0,0,0.1));
+  min-width: 0;
+}
+.gameover-headline {
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1;
+}
+.gameover-headline.won { color: var(--green, #2e7d32); }
+.gameover-headline.lost { color: var(--text); }
+.gameover-stats {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.gameover-grid { letter-spacing: 0.12em; }
+.gameover-solved-label { font-weight: 600; color: var(--green, #2e7d32); }
+.gameover-time-wrap {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.gameover-time-wrap svg { opacity: 0.65; flex-shrink: 0; }
+
+/* Map fills card */
 #gameover-map-wrap {
   flex: 1;
   position: relative;
@@ -1633,47 +1702,15 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
   inset: 0;
   background: var(--bg);
 }
-/* Game-over footer ribbon — inherits .banner vars, just override layout */
-.gameover-footer {
-  flex-shrink: 0;
-  border-radius: 0;          /* full-width strip, no rounded corners */
-  border-left: none;
-  border-right: none;
-  border-bottom: none;
-}
-/* Buttons inherit .banner button styles; "New Map" gets the outlined treatment */
+
+/* "New Map" outlined */
 #gameover-new-map-btn {
   background: transparent;
   color: var(--accent);
   border: 1.5px solid var(--accent);
 }
 #gameover-new-map-btn:hover { background: var(--accent); color: white; }
-.gameover-info {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  min-width: 0;
-}
-.gameover-headline {
-  font-size: 0.9rem;
-  font-weight: 700;
-  line-height: 1.2;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.gameover-headline.won { color: var(--green, #2e7d32); }
-.gameover-headline.lost { color: var(--text); }
-.gameover-meta {
-  font-size: 0.8rem;
-  color: var(--muted);
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  white-space: nowrap;
-}
-.gameover-grid { letter-spacing: 0.15em; font-size: 0.78rem; }
-.gameover-sep  { opacity: 0.5; }
+
 .gameover-map-zoom-btns {
   position: absolute;
   top: 10px;

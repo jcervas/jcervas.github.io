@@ -395,27 +395,35 @@
   <!-- ===== GAME OVER MODAL ===== -->
   <div id="gameover-modal" class="modal hidden">
     <div class="gameover-modal-content">
-      <div id="gameover-map-wrap">
-        <div id="gameover-map"></div>
-        <div class="gameover-map-zoom-btns">
-          <button class="mzb-go" data-dir="in" aria-label="Zoom in">+</button>
-          <button class="mzb-go" data-dir="out" aria-label="Zoom out">−</button>
-          <button class="mzb-go mzb-go-fit" data-dir="fit" aria-label="Fit to district" title="Fit to district"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="14" height="14"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
-        </div>
-        <button class="gameover-dismiss-btn" id="gameover-dismiss-btn" aria-label="Back to game">×</button>
-      </div>
-      <div class="gameover-footer banner">
-        <div class="gameover-info">
-          <div id="gameover-headline" class="gameover-headline"></div>
-          <div class="gameover-meta">
-            <span id="gameover-grid" class="gameover-grid"></span>
-            <span class="gameover-sep" id="gameover-sep"></span>
-            <span id="gameover-time" class="gameover-time"></span>
-          </div>
-        </div>
+      <!-- Top ribbon: simple answer + action buttons -->
+      <div class="gameover-ribbon banner">
+        <span id="gameover-ribbon-text" class="gameover-ribbon-text"></span>
         <div class="banner-actions">
           <button id="gameover-result-btn">View Result</button>
           <button id="gameover-new-map-btn">New Map</button>
+        </div>
+      </div>
+      <!-- White card: info header + map -->
+      <div class="gameover-card">
+        <div class="gameover-card-header">
+          <span id="gameover-headline" class="gameover-headline"></span>
+          <div class="gameover-stats">
+            <span id="gameover-grid" class="gameover-grid"></span>
+            <span id="gameover-solved-label" class="gameover-solved-label"></span>
+            <span class="gameover-time-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="13" height="13"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span id="gameover-time" class="gameover-time"></span>
+            </span>
+          </div>
+        </div>
+        <div id="gameover-map-wrap">
+          <div id="gameover-map"></div>
+          <div class="gameover-map-zoom-btns">
+            <button class="mzb-go" data-dir="in" aria-label="Zoom in">+</button>
+            <button class="mzb-go" data-dir="out" aria-label="Zoom out">−</button>
+            <button class="mzb-go mzb-go-fit" data-dir="fit" aria-label="Fit to district" title="Fit to district"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="14" height="14"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
+          </div>
+          <button class="gameover-dismiss-btn" id="gameover-dismiss-btn" aria-label="Back to game">×</button>
         </div>
       </div>
     </div>
