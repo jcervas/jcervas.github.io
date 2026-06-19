@@ -3146,8 +3146,17 @@ function buildGameoverMap() {
     const [[dbx0, dby0], [dbx1, dby1]] = pathGen.bounds(answerF);
     const svgX = gT.applyX(dbx1);
     const svgY = gT.applyY((dby0 + dby1) / 2);
-    const pillH = 28, pillW = answerKey.length * 10 + 28;
-    const gap = 12;
+
+    // Compute viewBox→screen scale so badge is 30px tall regardless of device
+    const svgEl = svg.node();
+    const bb = svgEl.getBoundingClientRect();
+    const renderScale = bb.width > 0 ? Math.min(bb.width / W, bb.height / H) : 1;
+    const targetPx = 30;
+    const pillH = targetPx / renderScale;
+    const pillW = (answerKey.length * 8 + 24) / renderScale;
+    const fontSize = 13 / renderScale;
+
+    const gap = 10 / renderScale;
     let bx = svgX + gap;
     if (bx + pillW / 2 > W - 4) bx = gT.applyX(dbx0) - gap;
     bx = Math.max(pillW / 2 + 4, Math.min(W - pillW / 2 - 4, bx));
@@ -3159,11 +3168,11 @@ function buildGameoverMap() {
       .attr('x', -pillW / 2).attr('y', -pillH / 2).attr('width', pillW).attr('height', pillH)
       .attr('rx', pillH / 2)
       .attr('fill', 'rgba(196,18,48,0.92)').attr('stroke', '#fff')
-      .attr('stroke-width', 2.5).style('vector-effect', 'non-scaling-stroke')
+      .attr('stroke-width', 2 / renderScale).style('vector-effect', 'non-scaling-stroke')
       .style('filter', 'drop-shadow(0 1px 3px rgba(0,0,0,0.4))');
     badgeLayer.append('text')
       .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
-      .attr('font-size', '14px').attr('font-weight', '700').attr('fill', '#fff')
+      .attr('font-size', `${fontSize}px`).attr('font-weight', '700').attr('fill', '#fff')
       .attr('letter-spacing', '0.5').attr('pointer-events', 'none').text(answerKey);
   }
 }
