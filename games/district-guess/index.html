@@ -53,7 +53,7 @@
 </header>
 
 <!-- ===== WELCOME / SPLASH MODAL ===== -->
-<div id="welcome-modal" class="modal hidden">
+<div id="welcome-modal" class="modal">
   <div class="modal-content welcome-modal-content">
     <div class="welcome-top-spacer"></div>
     <div class="welcome-logo-wrap">
@@ -67,7 +67,7 @@
     <div class="welcome-slogan">Identify the district from its shape</div>
     <div class="welcome-mid-spacer"></div>
     <div class="welcome-buttons" id="welcome-buttons">
-      <!-- populated by JS -->
+      <div class="welcome-loading-spinner"></div>
     </div>
     <div class="welcome-meta">
       <div id="welcome-date-line" class="welcome-date-line"></div>
@@ -82,6 +82,9 @@
     </a>
   </div>
 </div>
+<script>
+(function(){var E=new Date('2025-01-20T00:00:00-05:00'),n=new Date(),p=Math.floor((n-E)/864e5)+1,d=n.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}),dl=document.getElementById('welcome-date-line'),nl=document.getElementById('welcome-puzzle-num');if(dl)dl.textContent=d;if(nl)nl.textContent='No. '+p;})();
+</script>
 
 <!-- ===== SETTINGS MODAL ===== -->
 <div id="settings-modal" class="modal hidden">

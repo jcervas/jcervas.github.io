@@ -3811,9 +3811,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const numLine  = document.getElementById('welcome-puzzle-num');
     if (dateLine) dateLine.textContent = dateStr;
     if (numLine)  numLine.textContent  = `No. ${puzzleNum}`;
-    document.getElementById('welcome-buttons').innerHTML =
-      '<div class="welcome-loading-spinner"></div>';
-    wm.classList.remove('hidden');
   })();
 
   const _initPromise = init();
