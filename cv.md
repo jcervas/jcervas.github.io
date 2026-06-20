@@ -39,7 +39,7 @@ Homepage: <https://jonathancervas.com>
     Dissertation Committee: Bernard Grofman (Chair), Michael Tesler, Carole Uhlaner  
     Dissertation: *A Quantitative Assessment of the U.S. Electoral College, 1790–2020*  
     Fields: American Politics, Political Methodology, Comparative Politics
-  
+
 - **M.A., Political Science, December 2018**
 
 ## University of Nevada, Las Vegas
