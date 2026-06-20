@@ -15,7 +15,7 @@ const SESSION_RANDSEED_KEY = 'districtguess_randseed';  // seed for current rand
 // D3 US reference map coordinate space (viewBox dimensions)
 const REF_VB_W = 960;
 const REF_VB_H = 400;
-const VERSION_NUMBER = '1.12';
+const VERSION_NUMBER = '1.12.1';
 const GAME_VERSION = (() => {
   const d = new Date();
   const y = d.getFullYear();
@@ -2777,64 +2777,6 @@ function _drawGameOverMap(ctx, animateReveal) {
       .attr('stroke', '#C41230').attr('stroke-width', 2)
       .attr('vector-effect', 'non-scaling-stroke').attr('pointer-events', 'none');
 
-    const node = answerPath.node();
-    const len  = node.getTotalLength ? node.getTotalLength() : 0;
-    const sparkLayer = g.append('g').attr('class', 'spark-layer').attr('pointer-events', 'none');
-
-    // Spark trace + pulse/shake + confetti: deferred until the reveal circle collapses,
-    // or fired immediately when animateReveal is true (theme change / restore path).
-    _gameOverAnimsCallback = function() {
-      if (len > 0) {
-        const k0    = d3.zoomTransform(svg.node()).k || 1;
-        const spark = sparkLayer.append('circle')
-          .attr('r', 4 / k0).attr('pointer-events', 'none').attr('fill', '#fffbe8')
-          .style('filter', 'drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px #ffb020) drop-shadow(0 0 16px #ff7700)');
-        const p0 = node.getPointAtLength(0);
-        spark.attr('cx', p0.x).attr('cy', p0.y);
-
-        function emitEmber(x, y) {
-          const k   = d3.zoomTransform(svg.node()).k || 1;
-          const ang = Math.random() * Math.PI * 2;
-          const d   = (6 + Math.random() * 9) / k;
-          sparkLayer.append('circle')
-            .attr('cx', x).attr('cy', y).attr('r', (1.5 + Math.random() * 1.2) / k)
-            .attr('fill', Math.random() < 0.5 ? '#ffb020' : '#ff5500').attr('pointer-events', 'none')
-            .style('filter', 'drop-shadow(0 0 3px #ff8800)')
-            .transition().duration(350 + Math.random() * 200).ease(d3.easeCubicOut)
-              .attr('cx', x + Math.cos(ang) * d).attr('cy', y + Math.sin(ang) * d)
-              .attr('r', 0).style('opacity', 0).remove();
-        }
-
-        const LAPS = 5, LAP_MS = 3000, t0 = performance.now();
-        (function frame(now) {
-          const elapsed = now - t0;
-          const pt = node.getPointAtLength(((elapsed % LAP_MS) / LAP_MS) * len);
-          spark.attr('cx', pt.x).attr('cy', pt.y);
-          if (Math.random() < 0.45) emitEmber(pt.x, pt.y);
-          if (elapsed < LAPS * LAP_MS) requestAnimationFrame(frame);
-          else spark.transition().duration(300).attr('r', 0).style('opacity', 0).remove();
-        })(t0);
-      }
-
-      if (!won) {
-        tilesEl.classList.add('gameover-loss-shake');
-      } else {
-        tilesEl.classList.add('gameover-win-pulse');
-        setTimeout(() => requestAnimationFrame(() => {
-          const svgEl   = svg.node();
-          const svgRect = svgEl.getBoundingClientRect();
-          const { k, x: tx, y: ty } = d3.zoomTransform(svgEl);
-          const xOff = (svgRect.width  - W * cssScale) / 2;
-          const yOff = (svgRect.height - H * cssScale) / 2;
-          const [dcx, dcy] = answerFeature ? pathGen.centroid(answerFeature) : [W / 2, H / 2];
-          const sx = svgRect.left + xOff + (tx + dcx * k) * cssScale;
-          const sy = svgRect.top  + yOff + (ty + dcy * k) * cssScale;
-          launchBoundaryConfetti([{ x: sx, y: sy }]);
-        }), 900);
-      }
-    };
-    if (animateReveal) { _gameOverAnimsCallback(); _gameOverAnimsCallback = null; }
-
     // ── Leader line + pill badge ──────────────────────────────────────────
     const initK  = d3.zoomTransform(svg.node()).k || 1;
     const initR  = Math.max(1, 13 / initK);
@@ -3211,6 +3153,64 @@ function buildGameoverMap() {
       .attr('fill', dark ? 'rgba(255,80,80,0.5)' : 'rgba(196,18,48,0.65)')
       .attr('stroke', '#C41230').attr('stroke-width', 2)
       .style('vector-effect', 'non-scaling-stroke');
+
+    // Spark trace — fires after the flash overlay fades (~900ms)
+    const sparkLayer = g.append('g').attr('class', 'go-spark-layer').attr('pointer-events', 'none');
+    const svgNode = svg.node();
+    setTimeout(() => {
+      sparkLayer.raise(); // above state border layer
+      const answerNode = container.querySelector('.go-answer-district');
+      if (!answerNode) return;
+      const len = answerNode.getTotalLength ? answerNode.getTotalLength() : 0;
+      if (!(len > 0)) return;
+
+      const wonGame = guessHistory.some(gh => gh.correct && gh.phase === 'district');
+      const glow1 = wonGame ? '#FDB515' : '#ff6060';
+      const glow2 = wonGame ? '#ffb020' : '#C41230';
+
+      if (wonGame) {
+        const svgRect = svgNode.getBoundingClientRect();
+        const { k, x: tx, y: ty } = d3.zoomTransform(svgNode);
+        const [dcx, dcy] = pathGen.centroid(answerF);
+        const renderScale = svgRect.width > 0 ? Math.min(svgRect.width / W, svgRect.height / H) : 1;
+        const xOff = (svgRect.width  - W * renderScale) / 2;
+        const yOff = (svgRect.height - H * renderScale) / 2;
+        const sx = svgRect.left + xOff + (tx + dcx * k) * renderScale;
+        const sy = svgRect.top  + yOff + (ty + dcy * k) * renderScale;
+        launchBoundaryConfetti([{ x: sx, y: sy }]);
+      }
+
+      function getK() { return d3.zoomTransform(svgNode).k || 1; }
+      const spark = sparkLayer.append('circle')
+        .attr('r', 4 / getK()).attr('pointer-events', 'none')
+        .attr('fill', wonGame ? '#fffbe8' : '#fff')
+        .style('filter', `drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px ${glow1}) drop-shadow(0 0 16px ${glow2})`);
+      const p0 = answerNode.getPointAtLength(0);
+      spark.attr('cx', p0.x).attr('cy', p0.y);
+
+      function emitEmber(x, y) {
+        const k = getK();
+        const ang = Math.random() * Math.PI * 2;
+        const d = (6 + Math.random() * 9) / k;
+        sparkLayer.append('circle')
+          .attr('cx', x).attr('cy', y).attr('r', (1.5 + Math.random() * 1.2) / k)
+          .attr('fill', Math.random() < 0.5 ? glow1 : glow2).attr('pointer-events', 'none')
+          .style('filter', `drop-shadow(0 0 3px ${glow2})`)
+          .transition().duration(350 + Math.random() * 200).ease(d3.easeCubicOut)
+            .attr('cx', x + Math.cos(ang) * d).attr('cy', y + Math.sin(ang) * d)
+            .attr('r', 0).style('opacity', 0).remove();
+      }
+
+      const LAPS = 5, LAP_MS = 3000, t0 = performance.now();
+      (function frame(now) {
+        const elapsed = now - t0;
+        const pt = answerNode.getPointAtLength(((elapsed % LAP_MS) / LAP_MS) * len);
+        spark.attr('cx', pt.x).attr('cy', pt.y).attr('r', 4 / getK());
+        if (Math.random() < 0.45) emitEmber(pt.x, pt.y);
+        if (elapsed < LAPS * LAP_MS) requestAnimationFrame(frame);
+        else spark.transition().duration(300).attr('r', 0).style('opacity', 0).remove();
+      })(t0);
+    }, 300);
   }
 
   // ── Layer 8: State border (bold, on top of all fills) ──────────────────
@@ -3324,28 +3324,12 @@ function showGameoverModal() {
   const timeEl = document.getElementById('gameover-time');
   if (timeEl) timeEl.textContent = formatTime(elapsedSeconds);
 
-  // Flash overlay: full-viewport color burst that fades while map fades in
-  const flashColor = won ? '#FDB515' : '#C41230';
-  const flash = document.createElement('div');
-  flash.style.cssText = `position:fixed;inset:0;z-index:9999;background:${flashColor};pointer-events:none;`;
-  document.body.appendChild(flash);
-
   const mapWrap = document.getElementById('gameover-map-wrap');
-  if (mapWrap) mapWrap.style.opacity = '0';
 
-  // Build map asynchronously; fade the flash out after a brief hold (100ms),
-  // independent of how long SVG rendering takes
-  requestAnimationFrame(() => buildGameoverMap());
-  setTimeout(() => {
-    flash.style.transition = 'opacity 0.75s ease';
-    flash.style.opacity = '0';
-    if (mapWrap) {
-      mapWrap.style.transition = 'opacity 0.75s ease 0.1s';
-      mapWrap.style.opacity = '1';
-      mapWrap.classList.add(won ? 'gameover-win-pulse' : 'gameover-loss-shake');
-    }
-    setTimeout(() => flash.remove(), 900);
-  }, 100);
+  requestAnimationFrame(() => {
+    buildGameoverMap();
+    if (mapWrap) mapWrap.classList.add(won ? 'gameover-win-pulse' : 'gameover-loss-shake');
+  });
 }
 
 // ── Share image helpers ──────────────────────────────────────────────────────
