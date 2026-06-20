@@ -2,6 +2,25 @@
 
 ---
 
+## v1.12 — Dynamic DOM, Navigation & Share Polish
+
+- **Dynamic `#game-section` and `#gameover-modal`**: both elements removed from HTML and created/destroyed by JS — no hidden stale DOM between screens
+- **Gameover screen sits below header**: `#gameover-modal` is a flex child of `<main>` (not a fixed overlay), so the sticky header remains visible
+- **Click gameover to open results**: tapping anywhere on the gameover screen (except zoom buttons) opens the result modal
+- **"Back to Map" returns to gameover**: closing the result modal reveals the already-built gameover screen underneath; gameover div is never rebuilt on dismiss
+- **Welcome splash "Back to Map" / "Review Result"**: no longer recreates the gameover div — just hides the splash
+- **`result-district-preview` size fix**: preview is re-rendered inside `openResultModal()` after the modal is visible, so `offsetWidth/Height` reflect real dimensions
+- **US ref map geo bbox in state phase**: when no states are eliminated, the ref map shows the full national geographic view (`zoomIdentity`) instead of fitting to inner district points
+- **Single remaining district zoom fix**: `zoomToBBox` now expands a zero-extent point to a 20×20 minimum bbox, preventing snap to national view when one district remains
+- **State-phase loss shows gameover modal**: exhausting guesses before identifying the state now correctly triggers `showGameoverModal()`
+- **Win/loss animations on correct screen**: `gameover-loss-shake` and `gameover-win-pulse` applied to `#gameover-map-wrap`, not the hidden `#district-tiles`
+- **Rich share images**: landscape (800×450) and Instagram (1080×1350) share images now include urban areas, roads, and exterior dim mask matching the result preview style
+- **Share watermark**: landscape share image includes `Daily District` watermark — no district key (spoiler-free)
+- **Instagram share button**: new portrait 1080×1350 share image with map (top 60%) and details panel (bottom 40%); uses native share sheet on mobile, downloads PNG on desktop
+- **Spoiler-free sharing**: district key and state name removed from all share text and images
+
+---
+
 ## v1.11 — Gameover Modal Rewrite
 
 - **Flash overlay reveal**: on game over, a full-viewport gold (win) or red (loss) overlay fades out while the gameover map fades in — no animated zoom, instant district context

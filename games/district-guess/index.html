@@ -352,81 +352,7 @@
     </div>
   </div>
 
-  <!-- Game -->
-  <div id="game-section">
-    <div id="map"></div>
-
-    <!-- Hint cards row -->
-    <div id="game-controls">
-      <div id="hint-bar" role="list" aria-label="Hints"></div>
-    </div>
-
-    <div id="map-panel">
-
-      <!-- Clickable US states map — zooms to state once confirmed; replaced by D3 district map -->
-      <div id="map-view">
-        <div class="map-view-header">
-          <div class="ref-label" id="ref-label">Click a state to select it</div>
-          <div id="guess-counter" class="guess-counter"></div>
-        </div>
-        <div id="confirm-hint">Tap again to confirm</div>
-        <div class="us-ref-map-wrap">
-          <div id="us-ref-map"></div>
-          <div id="district-tiles" class="hidden"></div>
-          <div class="us-ref-hint" id="us-ref-hint">
-            <span class="hint-desktop">Drag to pan · Scroll to zoom</span>
-            <span class="hint-mobile">Drag · Pinch to zoom</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- State chips: greyed out as clues eliminate states -->
-      <div id="state-chips-section">
-        <div class="ref-label">
-          Possible states: <span id="state-match-count">all 51</span>
-          <span id="state-chips-hint">(click to select)</span>
-        </div>
-        <div id="state-chips"></div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ===== GAME OVER MODAL ===== -->
-  <div id="gameover-modal" class="modal hidden">
-    <div class="gameover-modal-content">
-      <!-- Top ribbon: simple answer + action buttons -->
-      <div class="gameover-ribbon banner">
-        <span id="gameover-ribbon-text" class="gameover-ribbon-text"></span>
-        <div class="banner-actions">
-          <button id="gameover-result-btn">View Result</button>
-          <button id="gameover-new-map-btn">New Map</button>
-        </div>
-      </div>
-      <!-- White card: info header + map -->
-      <div class="gameover-card">
-        <div class="gameover-card-header">
-          <span id="gameover-headline" class="gameover-headline"></span>
-          <div class="gameover-stats">
-            <span id="gameover-grid" class="gameover-grid"></span>
-            <span id="gameover-solved-label" class="gameover-solved-label"></span>
-            <span class="gameover-time-wrap">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="13" height="13"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              <span id="gameover-time" class="gameover-time"></span>
-            </span>
-          </div>
-        </div>
-        <div id="gameover-map-wrap">
-          <div id="gameover-map"></div>
-          <div class="map-zoom-btns">
-            <button class="mzb mzb-go" data-dir="in" aria-label="Zoom in">+</button>
-            <button class="mzb mzb-go" data-dir="out" aria-label="Zoom out">−</button>
-            <button class="mzb mzb-go mzb-go-fit" data-dir="fit" aria-label="Fit to district" title="Fit to district"><svg class="mzb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="14" height="14"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- #game-section and #gameover-modal are created dynamically by script.js -->
 
   <!-- Result modal (opens on game end or "View Result" click) -->
   <div id="result-modal" class="modal hidden">
@@ -451,6 +377,10 @@
           <button id="post-x-btn" class="post-x-btn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:1em;height:1em;vertical-align:middle;margin-right:5px"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
             Share
+          </button>
+          <button id="share-ig-btn" class="post-x-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:1em;height:1em;vertical-align:middle;margin-right:5px"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            Instagram
           </button>
           <button id="play-again-btn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:1em;height:1em;vertical-align:middle;margin-right:5px"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>

@@ -10,8 +10,11 @@ Actual game: Select state (hints about state) -> Select a district (hints about 
 - [x] Gameover badge: pill positioned inside zoom group at district data coordinates, tracks pan/zoom, correct size on mobile
 - [x] Gameover fit button: toggles between district zoom and national context
 - [x] Gameover zoom buttons: match `.mzb` gameplay style; dismiss button removed
-- [x] `#game-section` hidden on gameover, restored on New Map
+- [x] `#game-section` and `#gameover-modal` created/destroyed dynamically — no hidden DOM between screens
 - [x] Gameover grid: unused slots show `□` not `⊗`
+- [x] Clicking gameover screen opens result modal; "Back to Map" returns to gameover without rebuilding
+- [x] Win/loss animations (shake/pulse) now fire on the gameover map, not hidden district-tiles
+- [x] Share images: rich style (urban, roads, exterior mask); Instagram portrait format; spoiler-free (no district key)
 
 ## Major upgrades
 
