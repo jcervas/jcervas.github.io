@@ -15,7 +15,7 @@ const SESSION_RANDSEED_KEY = 'districtguess_randseed';  // seed for current rand
 // D3 US reference map coordinate space (viewBox dimensions)
 const REF_VB_W = 960;
 const REF_VB_H = 400;
-const VERSION_NUMBER = '1.12.1';
+const VERSION_NUMBER = '1.12.2';
 const GAME_VERSION = (() => {
   const d = new Date();
   const y = d.getFullYear();
@@ -2549,8 +2549,10 @@ function _buildDistrictCtx(stateAbbr, tilesEl) {
 
   // SVG coordinate space uses the actual container dimensions so the projection
   // fills the container without letterboxing (matches Observable zoom-to-bbox behavior).
-  const cssW    = tilesEl.offsetWidth  || REF_VB_W;
-  const cssH    = tilesEl.offsetHeight || REF_VB_H;
+  // Read from the parent wrap if tilesEl is display:none (offsetWidth/Height = 0).
+  const _wrap   = tilesEl.parentElement;
+  const cssW    = tilesEl.offsetWidth  || _wrap?.offsetWidth  || REF_VB_W;
+  const cssH    = tilesEl.offsetHeight || _wrap?.offsetHeight || REF_VB_H;
   const cssScale = 1;   // viewBox = container, 1 viewBox unit = 1 CSS pixel
   const W = cssW, H = cssH;
   _districtW = W; _districtH = H;
@@ -3452,7 +3454,7 @@ function _renderDistrictToBlob() {
 }
 
 // Portrait share image (1080×1350) — map top 60%, details panel bottom 40%.
-function _renderInstagramBlob() {
+function _renderShareBlob() {
   if (!todayDistrict || !window.d3) return Promise.reject('no district');
   const W = 1080, H = 1350, mapH = 810, panelH = 540, pad = 60;
   const dark = isDarkMode();
@@ -4329,10 +4331,10 @@ document.addEventListener('DOMContentLoaded', () => {
     window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text), '_blank', 'noopener,noreferrer');
   });
 
-  // Instagram share — portrait 1080×1350, map + details panel
-  document.getElementById('share-ig-btn').addEventListener('click', async () => {
+  // Share — portrait 1080×1350, map + details panel
+  document.getElementById('share-btn').addEventListener('click', async () => {
     try {
-      const blob = await _renderInstagramBlob();
+      const blob = await _renderShareBlob();
       const fname = `daily-district-${todayDistrict?.properties['state-district'] || 'share'}.png`;
       const file = new File([blob], fname, { type: 'image/png' });
       if (navigator.canShare?.({ files: [file] })) {
@@ -4346,7 +4348,7 @@ document.addEventListener('DOMContentLoaded', () => {
       a.click();
       setTimeout(() => URL.revokeObjectURL(a.href), 10000);
     } catch (err) {
-      if (err?.name !== 'AbortError') console.warn('Instagram share failed:', err);
+      if (err?.name !== 'AbortError') console.warn('Share failed:', err);
     }
   });
 
