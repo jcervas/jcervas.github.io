@@ -2132,7 +2132,7 @@ function initUSRefMap() {
               .call(districtZoomBehavior.transform, districtStateFitTransform);
             btn.classList.remove('at-active-fit');
           } else {
-            // First press: zoom to remaining active districts' geographic bbox
+            // First press: zoom to geographic bbox of remaining eligible districts
             districtUserZoomed = false;
             const activeKeys = getActiveDistrictKeys();
             const activeFeatures = (_districtStateFeatures || [])
@@ -2140,13 +2140,7 @@ function initUSRefMap() {
             let t = districtStateFitTransform;
             if (activeFeatures.length > 0 && _districtPathGen) {
               const geoBBox = _districtPathGen.bounds({ type: 'FeatureCollection', features: activeFeatures });
-              const innerBBox = innerPointBBox(_districtProjection, activeKeys);
-              const gW = geoBBox[1][0] - geoBBox[0][0], gH = geoBBox[1][1] - geoBBox[0][1];
-              const isLandscape = (gW / gH) > (W / H) * 0.5;
-              t = (isLandscape
-                ? zoomToGeoBBoxCenteredOnPoints(geoBBox, innerBBox, W, H, { margin: 0.9 })
-                : fitToActiveKeys(null, null, _districtProjection, W, H, activeKeys, { margin: 0.9 }))
-               || zoomToBBox(geoBBox, W, H, { margin: 0.9 });
+              t = zoomToBBox(geoBBox, W, H, { margin: 0.9 });
             }
             if (t) {
               tilesSvg.transition().duration(500).ease(d3.easeCubicInOut)
@@ -2683,24 +2677,12 @@ function _buildDistrictCtx(stateAbbr, tilesEl) {
 function _applyDistrictZoom(ctx, zoomIn) {
   const { svg, pathGen, stateFeatures, stateFC, stateBBox, possibleKeys, W, H, stateFitTransform } = ctx;
 
-  // Choose zoom strategy based on the state bbox's aspect ratio vs the viewBox ratio.
-  // A "landscape" state (TX, FL, NC) has bbox that matches the 2.4:1 viewBox well —
-  // geographic bounds fills the view usefully. A "portrait" state (CA, WA, OR) would
-  // leave 2/3 of the width empty when fit to geographic height — use inner points instead.
-  const allKeys = new Set(stateFeatures.map(f => f.properties['state-district']));
-  const bboxW = stateBBox[1][0] - stateBBox[0][0];
-  const bboxH = stateBBox[1][1] - stateBBox[0][1];
-  const stateIsLandscape = (bboxW / bboxH) > (W / H) * 0.5;  // bbox ratio > half of viewBox ratio
-  const stateInnerBBox = innerPointBBox(_districtProjection, allKeys);
-  const stateFit = stateIsLandscape
-    ? (zoomToGeoBBoxCenteredOnPoints(stateBBox, stateInnerBBox, W, H, { margin: 0.9 })
-       || zoomToBBox(stateBBox, W, H, { margin: 0.9 }))
-    : (fitToActiveKeys(null, null, _districtProjection, W, H, allKeys, { margin: 0.9 })
-       || zoomToBBox(stateBBox, W, H, { margin: 0.9 }));
+  // State fit: geographic bbox of all state districts (the "zoomed out" reference).
+  const stateFit = zoomToBBox(stateBBox, W, H, { margin: 0.9 });
   districtStateFitTransform = stateFit;
 
   if (zoomIn) {
-    // Entry: animate from the ctx stateFitTransform position into the state fit.
+    // Entry animation: slide from ref-map position into the state bbox fit.
     const refStart = stateFitTransform || d3.zoomIdentity;
     districtSavedTransform = stateFit;
     _tileZoomInAnimating = true;
@@ -2717,35 +2699,19 @@ function _applyDistrictZoom(ctx, zoomIn) {
       districtGameOverTransform = goTransform;
       svg.call(districtZoomBehavior.transform, goTransform);
     } else {
-      svg.call(districtZoomBehavior.transform, zoomToBBox(stateBBox, W, H, { margin: 0.85 }));
+      svg.call(districtZoomBehavior.transform, stateFit);
     }
 
   } else {
-    // After a wrong district guess: compute geographic bbox of remaining active districts.
-    // If that bbox requires zooming out from the current view, auto-apply it.
+    // After a wrong guess: zoom to the geographic bbox of remaining eligible districts.
     const activeFeatures = stateFeatures.filter(f => possibleKeys.has(f.properties['state-district']));
-    const activeFC = { type: 'FeatureCollection', features: activeFeatures };
-    const activeGeoBBox = activeFeatures.length > 0 ? pathGen.bounds(activeFC) : stateBBox;
-    const activeInnerBBox = innerPointBBox(_districtProjection, possibleKeys);
-    const activeW = activeGeoBBox[1][0] - activeGeoBBox[0][0];
-    const activeH = activeGeoBBox[1][1] - activeGeoBBox[0][1];
-    const activeIsLandscape = (activeW / activeH) > (W / H) * 0.5;
-    const activeFit = (activeIsLandscape
-      ? zoomToGeoBBoxCenteredOnPoints(activeGeoBBox, activeInnerBBox, W, H, { margin: 0.9 })
-      : fitToActiveKeys(null, null, _districtProjection, W, H, possibleKeys, { margin: 0.9 }))
-      || zoomToBBox(activeGeoBBox, W, H, { margin: 0.9 })
-      || stateFit;
-    const currentK = districtSavedTransform?.k ?? stateFit.k;
-    if (activeFit.k < currentK - 0.01) {
-      // Remaining districts don't fit current view — zoom out to them.
-      districtSavedTransform = activeFit;
-      svg.transition().duration(500).ease(d3.easeCubicInOut)
-        .call(districtZoomBehavior.transform, activeFit);
-    } else {
-      // Current zoom is already tight enough — restore saved transform.
-      svg.call(districtZoomBehavior.transform, districtSavedTransform || stateFit);
-      if (!districtSavedTransform) districtSavedTransform = stateFit;
-    }
+    const activeBBox = activeFeatures.length > 0
+      ? pathGen.bounds({ type: 'FeatureCollection', features: activeFeatures })
+      : stateBBox;
+    const activeFit = zoomToBBox(activeBBox, W, H, { margin: 0.9 });
+    districtSavedTransform = activeFit;
+    svg.transition().duration(500).ease(d3.easeCubicInOut)
+      .call(districtZoomBehavior.transform, activeFit);
   }
 }
 
