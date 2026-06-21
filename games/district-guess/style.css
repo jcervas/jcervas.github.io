@@ -743,19 +743,19 @@ circle.tile-correct-pop {
   to   { opacity: 1; }
 }
 
-/* Wrong district tile: shake */
+/* Wrong district tile: subtle shake */
 @keyframes tileWrongShake {
   0%, 100% { transform: translateX(0); }
-  18%      { transform: translateX(-4px); }
-  36%      { transform: translateX(4px); }
-  54%      { transform: translateX(-3px); }
-  72%      { transform: translateX(3px); }
-  88%      { transform: translateX(-1px); }
+  18%      { transform: translateX(-2px); }
+  36%      { transform: translateX(2px); }
+  54%      { transform: translateX(-1.5px); }
+  72%      { transform: translateX(1.5px); }
+  88%      { transform: translateX(-0.5px); }
 }
 circle.tile-wrong-shake {
   transform-box: fill-box;
   transform-origin: center;
-  animation: tileWrongShake 0.42s ease;
+  animation: tileWrongShake 0.35s ease;
   fill: #c41230 !important;
 }
 

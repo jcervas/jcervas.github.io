@@ -1664,20 +1664,12 @@ function processDistrictGuessTile(dist, fullGuess, correct) {
     return;
   }
 
-  // Non-game-over wrong guess: rebuild SVG, then immediately re-zoom to remaining active
-  // districts (unless the user has manually panned/zoomed — respect their view).
+  // Non-game-over wrong guess: rebuild SVG. _applyDistrictZoom (called inside
+  // buildDistrictD3Map) snaps to the current zoom then smoothly transitions to the
+  // new active-district bbox — no flash, no competing second transition.
   document.querySelector('.mzb-fit')?.classList.add('at-active-fit');
   requestAnimationFrame(() => {
     buildDistrictD3Map(todayDistrict.properties.state);
-    if (!districtUserZoomed && _districtProjection) {
-      const W = _districtW, H = _districtH;
-      const activeKeys = getActiveDistrictKeys();
-      const tilesSvg = d3.select('#district-tiles svg');
-      const t = fitToActiveKeys(tilesSvg, districtZoomBehavior, _districtProjection, W, H, activeKeys, {
-        animated: true, margin: 0.85, duration: 500,
-      });
-      if (t) districtSavedTransform = t;
-    }
   });
 
   renderGuessHistory();
@@ -2708,7 +2700,11 @@ function _applyDistrictZoom(ctx, zoomIn) {
     }
 
   } else {
-    // After a wrong guess: zoom to the geographic bbox of remaining eligible districts.
+    // After a wrong guess: snap the new SVG to the previous zoom instantly (no flash),
+    // then smoothly animate to the geographic bbox of remaining eligible districts.
+    const startTransform = districtSavedTransform || stateFit;
+    svg.call(districtZoomBehavior.transform, startTransform);
+
     const activeFeatures = stateFeatures.filter(f => possibleKeys.has(f.properties['state-district']));
     const activeBBox = activeFeatures.length > 0
       ? pathGen.bounds({ type: 'FeatureCollection', features: activeFeatures })
