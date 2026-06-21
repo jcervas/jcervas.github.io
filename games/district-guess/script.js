@@ -1911,7 +1911,7 @@ function _applyCalloutStyle(abbr) {
     .attr('fill', s.fill)
     .attr('fill-opacity', s.opacity)
     .attr('stroke', stroke)
-    .attr('stroke-width', 1.25)
+    .attr('stroke-width', 0.25)
     .style('cursor', clickable ? 'pointer' : 'default');
   co.line
     .attr('stroke', s.fill)
@@ -1927,7 +1927,7 @@ let _usRefZoomK = 1;
 const CALLOUT_STATES = ['VT', 'NH', 'MA', 'RI', 'CT', 'NJ', 'DE', 'MD'];
 const CALLOUT_RX = 14;   // ellipse horizontal radius
 const CALLOUT_RY = 8.5;  // ellipse vertical radius
-const CALLOUT_GAP = 2;   // vertical pixel gap between stacked ellipses
+const CALLOUT_GAP = 8;   // vertical pixel gap between stacked ellipses
 
 function _addStateCallouts(g, geojson, pathGen, fipsToFeature) {
   // Collect, sorted north-to-south by each state's bbox upper bound (min y in projection).
@@ -1946,7 +1946,7 @@ function _addStateCallouts(g, geojson, pathGen, fipsToFeature) {
   items.sort((a, b) => a.topY - b.topY);
 
   // Stack left-aligned at a common X just east of the eastmost state's edge.
-  const stackX = maxEast + 18 + CALLOUT_RX;
+  const stackX = maxEast + 28 + CALLOUT_RX;
 
   const layer = g.append('g').attr('class', 'us-ref-callouts');
 
@@ -2047,7 +2047,7 @@ function initUSRefMap() {
     .attr('viewBox', `0 0 ${W} ${H}`)
     .attr('width', '100%')
     .attr('height', '100%')
-    .attr('preserveAspectRatio', 'xMidYMid slice')
+    .attr('preserveAspectRatio', 'xMidYMid meet')
     .style('display', 'block')
     .style('background', 'transparent')
     .style('touch-action', 'none');  // let D3 zoom own all touch gestures (pinch, two-finger)
@@ -2286,10 +2286,13 @@ function zoomUSRefMapToValid(animated = true) {
   if (!usRefSvgSel || !usRefZoom || !usRefProjection) return;
   const W = REF_VB_W, H = REF_VB_H;
 
-  // In state phase with no eliminations, use the geographic full-US view (zoomIdentity)
-  // instead of fitting to inner district points, which over-zooms.
+  // In state phase with no eliminations, fit the full US geographic bounds to the
+  // actual container dimensions instead of using identity (which crops on mobile with slice).
   if (gamePhase === 'state' && eliminatedStates.size === 0) {
-    const t = d3.zoomIdentity;
+    const allKeys = new Set(Object.keys(districtPoints));
+    const bbox = innerPointBBox(usRefProjection, allKeys);
+    const t = bbox ? zoomToBBox(bbox, W, H, { margin: 0.95 * 1.6 }) : d3.zoomIdentity;
+    usRefZoom.scaleExtent([t.k, Infinity]);
     if (animated) {
       usRefSvgSel.transition().duration(700).ease(d3.easeCubicInOut).call(usRefZoom.transform, t);
     } else {
@@ -2652,8 +2655,9 @@ function _applyDistrictZoom(ctx, zoomIn) {
   if (zoomIn) {
     // Entry animation: start from full-state fit in the district tile's own coordinate space.
     const refStart = stateFitTransform || d3.zoomIdentity;
-    const t = fitToActiveKeys(null, null, _districtProjection, W, H, possibleKeys, { margin: 0.85 })
-           || zoomToBBox(stateBBox, W, H, { margin: 0.85 });
+    const tileR = 14 / (ctx.cssScale || 1);
+    const t = fitToActiveKeys(null, null, _districtProjection, W, H, possibleKeys, { margin: 0.95, tileR })
+           || zoomToBBox(stateBBox, W, H, { margin: 0.95 });
     districtSavedTransform = t;
     _tileZoomInAnimating = true;
     svg.call(districtZoomBehavior.transform, refStart);
