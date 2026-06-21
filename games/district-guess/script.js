@@ -215,6 +215,22 @@ let stateDistrictMap = {};
 // District facts — Fact 0 is always visible; one more unlocks per wrong guess.
 // fn receives districtDataFor(todayDistrict) = {state, district}
 const FACT_DEFS = [
+  // State-level hints first — narrow the state before drilling into district specifics
+  {
+    icon: 'building',
+    label: 'State delegation size',
+    fn: d => {
+      const count = stateDistrictMap[d.state]?.length || 1;
+      if (count === 1) return 'At-large: only congressional district in its state';
+      return `One of ${count} congressional districts in its state`;
+    }
+  },
+  {
+    icon: 'clock',
+    label: 'Time zone',
+    fn: d => STATE_TIMEZONES[d.state] ? `${STATE_TIMEZONES[d.state]} Time` : '—'
+  },
+  // District-level hints
   {
     icon: 'ruler',
     label: 'District size',
@@ -226,25 +242,6 @@ const FACT_DEFS = [
       if (areaMi2 < 15000) return `Mid-size: ~${areaMi2.toLocaleString()} sq mi`;
       return `Large: ~${areaMi2.toLocaleString()} sq mi`;
     }
-  },
-  {
-    icon: 'building',
-    label: 'State delegation size',
-    fn: d => {
-      const count = stateDistrictMap[d.state]?.length || 1;
-      if (count === 1) return 'At-large: only congressional district in its state';
-      return `One of ${count} congressional districts in its state`;
-    }
-  },
-  {
-    icon: 'dollar',
-    label: 'Median household income',
-    fn: async d => fetchCensus(d, 'income')
-  },
-  {
-    icon: 'people',
-    label: 'Largest racial/ethnic group',
-    fn: async d => fetchCensus(d, 'plurality')
   },
   {
     icon: 'flag',
@@ -269,10 +266,16 @@ const FACT_DEFS = [
     }
   },
   {
-    icon: 'clock',
-    label: 'Time zone',
-    fn: d => STATE_TIMEZONES[d.state] ? `${STATE_TIMEZONES[d.state]} Time` : '—'
+    icon: 'dollar',
+    label: 'Median household income',
+    fn: async d => fetchCensus(d, 'income')
   },
+  {
+    icon: 'people',
+    label: 'Largest racial/ethnic group',
+    fn: async d => fetchCensus(d, 'plurality')
+  },
+  // State name last — most revealing state-level clue
   {
     icon: 'mappin',
     label: 'State',
