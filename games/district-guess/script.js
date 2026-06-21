@@ -2655,9 +2655,8 @@ function _applyDistrictZoom(ctx, zoomIn) {
   if (zoomIn) {
     // Entry animation: start from full-state fit in the district tile's own coordinate space.
     const refStart = stateFitTransform || d3.zoomIdentity;
-    const tileR = 14 / (ctx.cssScale || 1);
-    const t = fitToActiveKeys(null, null, _districtProjection, W, H, possibleKeys, { margin: 0.95, tileR })
-           || zoomToBBox(stateBBox, W, H, { margin: 0.95 });
+    const t = fitToActiveKeys(null, null, _districtProjection, W, H, possibleKeys, { margin: 0.9 })
+           || zoomToBBox(stateBBox, W, H, { margin: 0.9 });
     districtSavedTransform = t;
     _tileZoomInAnimating = true;
     svg.call(districtZoomBehavior.transform, refStart);
