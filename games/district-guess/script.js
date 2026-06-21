@@ -334,6 +334,8 @@ let _districtProjection    = null;   // AlbersUSA projection from most recent di
 let _districtCssScale      = 1;      // cssScale from most recent district ctx build
 let _districtPathGen       = null;   // d3.geoPath from most recent district ctx build
 let _districtStateFeatures = null;   // all features for the current state
+let _districtW             = REF_VB_W; // viewBox width from most recent district ctx build
+let _districtH             = REF_VB_H; // viewBox height from most recent district ctx build
 let districtSimulation     = null;   // active force simulation — updated on zoom for centroid pull
 let _gameStarted        = false;   // true after welcome is dismissed; guards clue/guess DOM rendering
 let guessCount          = 0;
@@ -1668,7 +1670,7 @@ function processDistrictGuessTile(dist, fullGuess, correct) {
   requestAnimationFrame(() => {
     buildDistrictD3Map(todayDistrict.properties.state);
     if (!districtUserZoomed && _districtProjection) {
-      const W = REF_VB_W, H = REF_VB_H;
+      const W = _districtW, H = _districtH;
       const activeKeys = getActiveDistrictKeys();
       const tilesSvg = d3.select('#district-tiles svg');
       const t = fitToActiveKeys(tilesSvg, districtZoomBehavior, _districtProjection, W, H, activeKeys, {
@@ -2122,7 +2124,7 @@ function initUSRefMap() {
         const tilesSvg = d3.select('#district-tiles svg');
         if (tilesSvg.empty() || !districtZoomBehavior || !_districtProjection) return;
         if (!gameOver) {
-          const W = REF_VB_W, H = REF_VB_H;
+          const W = _districtW, H = _districtH;
           const atActiveFit = btn.classList.contains('at-active-fit');
           if (atActiveFit && districtStateFitTransform) {
             // Second press: zoom out to full state geographic bbox
@@ -2445,7 +2447,7 @@ function showDistrictD3Map(stateAbbr, instant = false, animateReveal = false) {
     // Apply zoom animation on the cached SVG using inner points, same as fresh build.
     if (zoomIn && _districtSvgSel && _districtProjection) {
       const activeKeys = getActiveDistrictKeys();
-      const entryTransform = fitToActiveKeys(null, null, _districtProjection, REF_VB_W, REF_VB_H, activeKeys, { margin: 0.85 });
+      const entryTransform = fitToActiveKeys(null, null, _districtProjection, _districtW, _districtH, activeKeys, { margin: 0.85 });
       if (entryTransform) {
         districtSavedTransform = entryTransform;
         _districtSvgSel.call(districtZoomBehavior.transform, districtStateFitTransform || d3.zoomIdentity);
@@ -2545,12 +2547,13 @@ function _buildDistrictCtx(stateAbbr, tilesEl) {
   const wonDistPart = wonDist ? wonDist.text.split('-').slice(1).join('-') : null;
   const isAtLarge   = stateFeatures.length === 1;
 
-  // SVG coordinate space — matches the ref map's REF_VB so cross-fades align.
-  // cssScale = min(w/W, h/H) mirrors the browser's xMidYMid "meet" scaling.
+  // SVG coordinate space uses the actual container dimensions so the projection
+  // fills the container without letterboxing (matches Observable zoom-to-bbox behavior).
   const cssW    = tilesEl.offsetWidth  || REF_VB_W;
   const cssH    = tilesEl.offsetHeight || REF_VB_H;
-  const cssScale = Math.min(cssW / REF_VB_W, cssH / REF_VB_H);
-  const W = REF_VB_W, H = REF_VB_H;
+  const cssScale = 1;   // viewBox = container, 1 viewBox unit = 1 CSS pixel
+  const W = cssW, H = cssH;
+  _districtW = W; _districtH = H;
   const dark = isDarkMode();
 
   const stateFC  = { type: 'FeatureCollection', features: stateFeatures };
