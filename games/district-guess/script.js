@@ -15,7 +15,7 @@ const SESSION_RANDSEED_KEY = 'districtguess_randseed';  // seed for current rand
 // D3 US reference map coordinate space (viewBox dimensions)
 const REF_VB_W = 960;
 const REF_VB_H = 400;
-const VERSION_NUMBER = '1.12.2';
+const VERSION_NUMBER = '1.12.3';
 const GAME_VERSION = (() => {
   const d = new Date();
   const y = d.getFullYear();
@@ -339,6 +339,8 @@ let _districtPathGen       = null;   // d3.geoPath from most recent district ctx
 let _districtStateFeatures = null;   // all features for the current state
 let _districtW             = REF_VB_W; // viewBox width from most recent district ctx build
 let _districtH             = REF_VB_H; // viewBox height from most recent district ctx build
+let _usRefW                = REF_VB_W; // viewBox width of the US reference map SVG
+let _usRefH                = REF_VB_H; // viewBox height of the US reference map SVG
 let districtSimulation     = null;   // active force simulation — updated on zoom for centroid pull
 let _gameStarted        = false;   // true after welcome is dismissed; guards clue/guess DOM rendering
 let guessCount          = 0;
@@ -1977,7 +1979,7 @@ function _addStateCallouts(g, geojson, pathGen, fipsToFeature) {
   const meanAnchorY = nodes.reduce((s, n) => s + n.anchorY, 0) / nodes.length;
   const totalH  = (nodes.length - 1) * minSpacing;
   const startY  = Math.max(CALLOUT_RY + 2,
-                    Math.min(REF_VB_H - CALLOUT_RY - totalH - 2,
+                    Math.min(_usRefH - CALLOUT_RY - totalH - 2,
                       meanAnchorY - totalH / 2));
   nodes.forEach((n, i) => { n.y = startY + i * minSpacing; });
 
@@ -2052,8 +2054,10 @@ function initUSRefMap() {
   if (usRefMap) return;
   const container = document.getElementById('us-ref-map');
 
-  // Use a fixed coordinate space (viewBox) so the SVG scales with CSS
-  const W = REF_VB_W, H = REF_VB_H;
+  // Use actual container dimensions so the projection fills the container without letterboxing.
+  const W = container.offsetWidth  || REF_VB_W;
+  const H = container.offsetHeight || REF_VB_H;
+  _usRefW = W; _usRefH = H;
 
   const svgSel = d3.select(container)
     .append('svg')
@@ -2304,7 +2308,7 @@ function initUSRefMap() {
 // Pass animated=false for instant placement (e.g., on restore).
 function zoomUSRefMapToValid(animated = true) {
   if (!usRefSvgSel || !usRefZoom || !usRefProjection) return;
-  const W = REF_VB_W, H = REF_VB_H;
+  const W = _usRefW, H = _usRefH;
 
   // In state phase with no eliminations, fit the full US geographic bounds to the
   // actual container dimensions instead of using identity (which crops on mobile with slice).
@@ -2324,7 +2328,7 @@ function zoomUSRefMapToValid(animated = true) {
 
   const activeKeys = getActiveDistrictKeys();
   if (!activeKeys.size) return;
-  const t = fitToActiveKeys(usRefSvgSel, usRefZoom, usRefProjection, W, H, activeKeys, { animated, duration: 700 });
+  const t = fitToActiveKeys(usRefSvgSel, usRefZoom, usRefProjection, W, H, activeKeys, { animated, duration: 700, margin: 0.95 * 1.6 });
   if (t && !_usRefFullFitTransform) _usRefFullFitTransform = t;
 }
 
@@ -4180,7 +4184,13 @@ async function init() {
   initMap();
   // Leaflet caches container size at init; flex layout may not be settled yet
   setTimeout(() => { if (map) map.invalidateSize(); }, 50);
-  initUSRefMap();   // start loading US states reference map
+  // Defer initUSRefMap one frame so flex layout is settled — same reason as the
+  // Leaflet invalidateSize() setTimeout above.  zoomUSRefMapToValid is called inside
+  // so the map is positioned correctly the first time it's drawn.
+  requestAnimationFrame(() => {
+    initUSRefMap();
+    zoomUSRefMapToValid(false);
+  });
 
   // Check for saved game from today — must happen before the rAF pre-build so we can
   // skip the pre-build when restoring (the rAF fires after restoreGame completes and
