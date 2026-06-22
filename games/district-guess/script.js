@@ -15,7 +15,7 @@ const SESSION_RANDSEED_KEY = 'districtguess_randseed';  // seed for current rand
 // D3 US reference map coordinate space (viewBox dimensions)
 const REF_VB_W = 960;
 const REF_VB_H = 400;
-const VERSION_NUMBER = '1.12.3';
+const VERSION_NUMBER = '1.13';
 const GAME_VERSION = (() => {
   const d = new Date();
   const y = d.getFullYear();
@@ -3261,6 +3261,9 @@ function buildGameoverMap() {
       const p0 = answerNode.getPointAtLength(0);
       spark.attr('cx', p0.x).attr('cy', p0.y);
 
+      // Embers are plain bright circles — no per-element drop-shadow filter, which
+      // forces an expensive GPU repaint every frame for each of the ~dozen embers
+      // alive at once. The lead spark keeps its glow; embers are too small to need it.
       function emitEmber(x, y) {
         const k = getK();
         const ang = Math.random() * Math.PI * 2;
@@ -3268,18 +3271,20 @@ function buildGameoverMap() {
         sparkLayer.append('circle')
           .attr('cx', x).attr('cy', y).attr('r', (1.5 + Math.random() * 1.2) / k)
           .attr('fill', Math.random() < 0.5 ? glow1 : glow2).attr('pointer-events', 'none')
-          .style('filter', `drop-shadow(0 0 3px ${glow2})`)
           .transition().duration(350 + Math.random() * 200).ease(d3.easeCubicOut)
             .attr('cx', x + Math.cos(ang) * d).attr('cy', y + Math.sin(ang) * d)
             .attr('r', 0).style('opacity', 0).remove();
       }
 
-      const LAPS = 5, LAP_MS = 3000, t0 = performance.now();
+      const LAPS = 3, LAP_MS = 3000, t0 = performance.now();
+      let emberToggle = false;
       (function frame(now) {
         const elapsed = now - t0;
         const pt = answerNode.getPointAtLength(((elapsed % LAP_MS) / LAP_MS) * len);
         spark.attr('cx', pt.x).attr('cy', pt.y).attr('r', 4 / getK());
-        if (Math.random() < 0.45) emitEmber(pt.x, pt.y);
+        // Emit at most one ember every other frame (~30/s) instead of ~45% of frames.
+        emberToggle = !emberToggle;
+        if (emberToggle) emitEmber(pt.x, pt.y);
         if (elapsed < LAPS * LAP_MS) requestAnimationFrame(frame);
         else spark.transition().duration(300).attr('r', 0).style('opacity', 0).remove();
       })(t0);
