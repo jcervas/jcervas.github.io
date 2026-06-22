@@ -1043,7 +1043,10 @@ function switchResultTab(tab) {
   if (pane) pane.classList.add('active');
   if (btn)  btn.classList.add('active');
   if (tab === 'census') renderTabHeader('census-header');
-  if (tab === 'guesses') renderTabHeader('guesses-header');
+  if (tab === 'guesses') {
+    renderTabHeader('guesses-header');
+    renderGuessHistory();
+  }
 }
 
 async function fetchAndRenderCensusPanel(districtData) {
