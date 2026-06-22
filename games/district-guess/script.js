@@ -209,6 +209,24 @@ function svgIcon(name, cls = 'icon') {
   return `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${inner}</svg>`;
 }
 
+// State boundary SVG cache
+const statesvgCache = new Map();
+async function getStateSvg(stateAbbr) {
+  const lowerAbbr = stateAbbr.toLowerCase();
+  if (statesvgCache.has(lowerAbbr)) {
+    return statesvgCache.get(lowerAbbr);
+  }
+  try {
+    const response = await fetch(`state-svgs/${lowerAbbr}.svg`);
+    if (!response.ok) return null;
+    const svg = await response.text();
+    statesvgCache.set(lowerAbbr, svg);
+    return svg;
+  } catch (e) {
+    return null;
+  }
+}
+
 // Built at load time from GeoJSON: { 'TX': ['01','02',...], 'WY': ['01'], ... }
 let stateDistrictMap = {};
 
@@ -1356,23 +1374,25 @@ function renderGuessHistory() {
   const el = document.getElementById('guess-history');
   const answerKey = todayDistrict?.properties['state-district'];
   const answerNeighbors = new Set(adjMap.get(answerKey) || []);
-  el.innerHTML = guessHistory.map(g => {
+  el.innerHTML = guessHistory.map((g, idx) => {
     const iconName = g.correct ? 'checkCircle' : 'xCircle';
     const cls      = g.correct ? 'correct' : 'wrong';
 
     if (g.phase === 'state') {
       const label = STATE_NAMES[g.text] || g.text;
+      const stateAbbr = g.text.substring(0, 2).toUpperCase();
+
       if (!g.correct) {
         const hint = g.adjacent
           ? `<span class="guess-hint hot">${svgIcon('flame','hint-icon')} Adjacent</span>`
           : `<span class="guess-hint cold">${svgIcon('snowflake','hint-icon')} Not adjacent</span>`;
         return `<div class="guess-row ${cls}">
-          <span class="guess-icon">${svgIcon(iconName,'guess-icon-svg')}</span>
+          <span class="guess-icon guess-icon-state-slot" data-state="${stateAbbr}">${svgIcon(iconName,'guess-icon-svg')}</span>
           <span class="guess-label">${label}</span>${hint}
         </div>`;
       }
       return `<div class="guess-row ${cls}">
-        <span class="guess-icon">${svgIcon(iconName,'guess-icon-svg')}</span>
+        <span class="guess-icon guess-icon-state-slot" data-state="${stateAbbr}">${svgIcon(iconName,'guess-icon-svg')}</span>
         <span class="guess-label">${label}</span>
         <span class="guess-hint hot">Correct state!</span>
       </div>`;
@@ -1409,6 +1429,18 @@ function renderGuessHistory() {
   }
 
   updateGuessCounter();
+
+  // Load state SVGs asynchronously for state guesses
+  el.querySelectorAll('.guess-icon-state-slot').forEach(slot => {
+    const stateAbbr = slot.dataset.state;
+    if (stateAbbr) {
+      getStateSvg(stateAbbr).then(svg => {
+        if (svg) {
+          slot.innerHTML = `<div class="state-svg-container">${svg}</div>`;
+        }
+      });
+    }
+  });
 }
 
 /** Render the small dot-row guess progress indicator in the reference panel. */
@@ -3321,7 +3353,7 @@ function buildGameoverMap() {
   _updateBadge(_goZoomInitial.k);
 }
 
-function showGameoverModal() {
+async function showGameoverModal() {
   destroyGameSection();
   _gameOverAnimsCallback = null;  // animations ran on district-tiles which is now gone
   buildGameoverDiv();
@@ -3343,16 +3375,58 @@ function showGameoverModal() {
     hl.className   = 'gameover-headline ' + (won ? 'won' : 'lost');
   }
 
-  // Guess grid (⊗ ⊙ ✓ style matching screenshot)
-  const usedSlots = guessHistory.map(g => {
-    if (g.correct && g.phase === 'district') return '✓';
-    if (g.correct && g.phase === 'state')    return '⊙';
-    return '⊗';
-  });
-  const unusedCount = won ? MAX_GUESSES - guessCount : 0;
-  const gridStr = [...usedSlots, ...Array(unusedCount).fill('□')].join(' ');
+  // Guess grid with state SVGs
   const gridEl = document.getElementById('gameover-grid');
-  if (gridEl) gridEl.textContent = gridStr;
+  if (gridEl) {
+    gridEl.innerHTML = '';
+
+    // Render each guess slot (SVG for correct state guesses, icon for others)
+    const gridPromises = guessHistory.map(async (g, idx) => {
+      const slot = document.createElement('div');
+      slot.className = 'gameover-grid-slot';
+
+      // Extract state from guess text
+      const stateAbbr = g.text.substring(0, 2).toUpperCase();
+
+      if (g.correct && g.phase === 'state') {
+        // Correct state: show state boundary SVG
+        const svg = await getStateSvg(stateAbbr);
+        if (svg) {
+          slot.className += ' guess-correct-state';
+          slot.innerHTML = `<div class="state-svg-container">${svg}</div>`;
+        } else {
+          slot.textContent = '⊙';
+        }
+      } else if (g.correct && g.phase === 'district') {
+        // Correct district: show checkmark + state SVG
+        slot.className += ' guess-correct-district';
+        const svg = await getStateSvg(stateAbbr);
+        if (svg) {
+          slot.innerHTML = `<div class="state-svg-container">${svg}</div><span class="guess-overlay">✓</span>`;
+        } else {
+          slot.textContent = '✓';
+        }
+      } else {
+        // Wrong guess: show X
+        slot.className += ' guess-wrong';
+        slot.textContent = '⊗';
+      }
+
+      gridEl.appendChild(slot);
+    });
+
+    // Render unused slots (only if won)
+    const unusedCount = won ? MAX_GUESSES - guessCount : 0;
+    for (let i = 0; i < unusedCount; i++) {
+      const slot = document.createElement('div');
+      slot.className = 'gameover-grid-slot guess-unused';
+      slot.textContent = '□';
+      gridEl.appendChild(slot);
+    }
+
+    // Wait for all async SVG loads
+    await Promise.all(gridPromises);
+  }
 
   // "Solved!" label only when won
   const solvedEl = document.getElementById('gameover-solved-label');

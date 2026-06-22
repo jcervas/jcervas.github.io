@@ -155,6 +155,30 @@ body:has(.modal:not(.hidden)) { overflow: hidden; }
 }
 .guess-row.correct .guess-icon-svg { color: var(--green); }
 .guess-row.wrong   .guess-icon-svg { color: var(--red); }
+/* State boundary SVG for state guesses */
+.guess-icon-state-slot {
+  width: 1.5rem;
+  height: 1.5rem;
+  position: relative;
+}
+.guess-icon-state-slot .state-svg-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.guess-icon-state-slot svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.guess-row.correct .guess-icon-state-slot svg path {
+  stroke: var(--green) !important;
+}
+.guess-row.wrong .guess-icon-state-slot svg path {
+  stroke: var(--red) !important;
+}
 /* Hot/cold hint icons */
 .hint-icon {
   width: 0.85rem;
@@ -1686,7 +1710,60 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
   color: var(--muted);
   white-space: nowrap;
 }
-.gameover-grid { letter-spacing: 0.12em; }
+.gameover-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+.gameover-grid-slot {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 4px;
+  background: var(--surface-alt);
+}
+.gameover-grid-slot.guess-wrong {
+  color: var(--red, #d32f2f);
+  background: var(--surface-alt);
+}
+.gameover-grid-slot.guess-correct-state {
+  background: rgba(46, 125, 50, 0.1);
+  border: 2px solid var(--green, #2e7d32);
+}
+.gameover-grid-slot.guess-correct-district {
+  background: var(--green, #2e7d32);
+  color: white;
+  border: 2px solid var(--green, #2e7d32);
+}
+.gameover-grid-slot.guess-unused {
+  opacity: 0.5;
+}
+.state-svg-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.state-svg-container svg {
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+}
+.guess-overlay {
+  position: absolute;
+  font-size: 20px;
+  font-weight: 700;
+  text-shadow: 0 0 4px rgba(0,0,0,0.3);
+}
 .gameover-solved-label { font-weight: 600; color: var(--green, #2e7d32); }
 .gameover-time-wrap {
   display: flex;
