@@ -3375,58 +3375,16 @@ async function showGameoverModal() {
     hl.className   = 'gameover-headline ' + (won ? 'won' : 'lost');
   }
 
-  // Guess grid with state SVGs
+  // Guess grid
+  const usedSlots = guessHistory.map(g => {
+    if (g.correct && g.phase === 'district') return '✓';
+    if (g.correct && g.phase === 'state')    return '⊙';
+    return '⊗';
+  });
+  const unusedCount = won ? MAX_GUESSES - guessCount : 0;
+  const gridStr = [...usedSlots, ...Array(unusedCount).fill('□')].join(' ');
   const gridEl = document.getElementById('gameover-grid');
-  if (gridEl) {
-    gridEl.innerHTML = '';
-
-    // Render each guess slot (SVG for correct state guesses, icon for others)
-    const gridPromises = guessHistory.map(async (g, idx) => {
-      const slot = document.createElement('div');
-      slot.className = 'gameover-grid-slot';
-
-      // Extract state from guess text
-      const stateAbbr = g.text.substring(0, 2).toUpperCase();
-
-      if (g.correct && g.phase === 'state') {
-        // Correct state: show state boundary SVG
-        const svg = await getStateSvg(stateAbbr);
-        if (svg) {
-          slot.className += ' guess-correct-state';
-          slot.innerHTML = `<div class="state-svg-container">${svg}</div>`;
-        } else {
-          slot.textContent = '⊙';
-        }
-      } else if (g.correct && g.phase === 'district') {
-        // Correct district: show checkmark + state SVG
-        slot.className += ' guess-correct-district';
-        const svg = await getStateSvg(stateAbbr);
-        if (svg) {
-          slot.innerHTML = `<div class="state-svg-container">${svg}</div><span class="guess-overlay">✓</span>`;
-        } else {
-          slot.textContent = '✓';
-        }
-      } else {
-        // Wrong guess: show X
-        slot.className += ' guess-wrong';
-        slot.textContent = '⊗';
-      }
-
-      gridEl.appendChild(slot);
-    });
-
-    // Render unused slots (only if won)
-    const unusedCount = won ? MAX_GUESSES - guessCount : 0;
-    for (let i = 0; i < unusedCount; i++) {
-      const slot = document.createElement('div');
-      slot.className = 'gameover-grid-slot guess-unused';
-      slot.textContent = '□';
-      gridEl.appendChild(slot);
-    }
-
-    // Wait for all async SVG loads
-    await Promise.all(gridPromises);
-  }
+  if (gridEl) gridEl.textContent = gridStr;
 
   // "Solved!" label only when won
   const solvedEl = document.getElementById('gameover-solved-label');
