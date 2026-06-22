@@ -213,123 +213,17 @@ PYEOF
 
 # ── State boundary SVGs: for gameover-grid and guess-icon-svg ────────────────
 echo ""
-echo "Step 6/6  Generating state boundary SVGs..."
+echo "Step 6/6  Generating state boundary SVGs with mapshaper..."
 mkdir -p "$STATE_SVGS"
 
-# Extract states layer to GeoJSON
-mapshaper "$STATES" name=states -o "$TMPWORK/states_extract.json"
-
-python3 - "$TMPWORK/states_extract.json" "$STATE_SVGS" <<'PYEOF'
-import json
-import sys
-import subprocess
-import tempfile
-import os
-import math
-
-states_file = sys.argv[1]
-output_dir = sys.argv[2]
-
-with open(states_file) as f:
-    fc = json.load(f)
-
-state_names = {
-    'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas',
-    'CA': 'California', 'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware',
-    'FL': 'Florida', 'GA': 'Georgia', 'HI': 'Hawaii', 'ID': 'Idaho',
-    'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa', 'KS': 'Kansas',
-    'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
-    'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi',
-    'MO': 'Missouri', 'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada',
-    'NH': 'New Hampshire', 'NJ': 'New Jersey', 'NM': 'New Mexico', 'NY': 'New York',
-    'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio', 'OK': 'Oklahoma',
-    'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
-    'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah',
-    'VT': 'Vermont', 'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia',
-    'WI': 'Wisconsin', 'WY': 'Wyoming'
-}
-
-def geojson_to_svg_path(geometry):
-    """Convert GeoJSON geometry to SVG path string"""
-    if geometry['type'] == 'Polygon':
-        coords_list = [geometry['coordinates']]
-    elif geometry['type'] == 'MultiPolygon':
-        coords_list = geometry['coordinates']
-    else:
-        return None
-
-    paths = []
-    for polygon in coords_list:
-        for ring_idx, ring in enumerate(polygon):
-            if len(ring) < 2:
-                continue
-            # Start with M (moveto), then L (lineto) for remaining points, Z (closepath)
-            path_parts = [f"M {ring[0][0]},{ring[0][1]}"]
-            for point in ring[1:]:
-                path_parts.append(f"L {point[0]},{point[1]}")
-            path_parts.append("Z")
-            paths.append(" ".join(path_parts))
-
-    return " ".join(paths)
-
-def get_bounds(geometry):
-    """Get bounding box of geometry"""
-    coords = []
-    if geometry['type'] == 'Polygon':
-        for ring in geometry['coordinates']:
-            coords.extend(ring)
-    elif geometry['type'] == 'MultiPolygon':
-        for polygon in geometry['coordinates']:
-            for ring in polygon:
-                coords.extend(ring)
-
-    if not coords:
-        return 0, 0, 100, 100
-
-    lons = [c[0] for c in coords]
-    lats = [c[1] for c in coords]
-
-    min_lon, max_lon = min(lons), max(lons)
-    min_lat, max_lat = min(lats), max(lats)
-
-    # Add 10% padding
-    width = max_lon - min_lon
-    height = max_lat - min_lat
-    padding = max(width, height) * 0.1
-
-    return min_lon - padding, min_lat - padding, max_lon + padding, max_lat + padding
-
-for feature in fc.get('features', []):
-    state = feature.get('properties', {}).get('state')
-    if not state or state not in state_names:
-        continue
-
-    geometry = feature.get('geometry')
-    if not geometry:
-        continue
-
-    path = geojson_to_svg_path(geometry)
-    if not path:
-        continue
-
-    bounds = get_bounds(geometry)
-    x_min, y_min, x_max, y_max = bounds
-
-    width = x_max - x_min
-    height = y_max - y_min
-
-    # Flip Y axis for SVG (SVG origin is top-left, GeoJSON is lat/lon)
-    svg_content = f'''<svg viewBox="{x_min} {-y_max} {width} {height}" xmlns="http://www.w3.org/2000/svg">
-  <path d="{path}" fill="none" stroke="black" stroke-width="1" vector-effect="non-scaling-stroke"/>
-</svg>'''
-
-    svg_path = os.path.join(output_dir, f"{state.lower()}.svg")
-    with open(svg_path, 'w') as f:
-        f.write(svg_content)
-
-    print(f"  {state} ({state_names[state]})")
-
-print(f"\nGenerated {len([f for f in os.listdir(output_dir) if f.endswith('.svg')])} state SVGs in {output_dir}")
-PYEOF
+# Use mapshaper to filter each state and export as SVG
+for state in AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY; do
+  state_lower=$(echo "$state" | tr '[:upper:]' '[:lower:]')
+  svg_file="$STATE_SVGS/${state_lower}.svg"
+  mapshaper "$STATES" name=state \
+    -filter "state === '$state'" \
+    -style fill=none stroke=currentColor stroke-width=1 \
+    -o "$svg_file" format=svg 2>/dev/null && echo "  $state"
+done
 
 echo "State SVGs written to $STATE_SVGS/"
