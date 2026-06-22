@@ -1718,7 +1718,10 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
 body.auth-locked main,
 body.auth-locked #welcome-buttons { display: none !important; }
 #welcome-signin-btn { display: none; }
-body.auth-locked #welcome-signin-btn { display: inline-flex; }
+body.auth-locked #welcome-signin-btn {
+  display: block;
+  margin: 0 auto clamp(16px, 3vh, 28px);
+}
 
 .login-close {
   position: absolute; top: 10px; right: 12px;
@@ -1812,6 +1815,11 @@ body.auth-locked #welcome-signin-btn { display: inline-flex; }
   color: var(--text, #111);
 }
 .login-error { color: var(--red, #C41230); font-size: 0.85rem; min-height: 1em; }
+.login-privacy {
+  font-size: 0.72rem; line-height: 1.4; color: var(--muted);
+  text-align: center; margin: 12px 0 0;
+}
+.login-privacy a { color: var(--muted); text-decoration: underline; }
 
 .gameover-grid { letter-spacing: 0.12em; }
 .gameover-grid .go-slot-state {

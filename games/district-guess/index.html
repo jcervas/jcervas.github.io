@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=48" />
+  <link rel="stylesheet" href="style.css?v=49" />
   <!-- Preload the core map data so fetch starts before JS executes -->
   <link rel="preload" href="districts-core.topojson" as="fetch" />
 </head>
@@ -86,6 +86,9 @@
       <button type="submit" class="login-submit" id="login-signin">Sign in</button>
       <button type="button" class="login-secondary" id="login-signup">Create an account</button>
     </form>
+    <p class="login-privacy">By continuing you agree to our
+      <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.
+      We collect basic device info (screen size, browser) to improve the game.</p>
   </div>
 </div>
 
@@ -484,6 +487,6 @@
 <script src="globe.js" defer></script>
 <script src="backend.js?v=4" defer></script>
 <script src="login.js?v=6" defer></script>
-<script src="script.js?v=1.13.2" defer></script>
+<script src="script.js?v=1.13.3" defer></script>
 </body>
 </html>

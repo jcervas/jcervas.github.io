@@ -4653,14 +4653,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Close modal on backdrop click
+  // Close modal on backdrop click — but never while the auth gate is up (the
+  // welcome splash + login form must not be dismissable into a blank locked
+  // screen; the login form has its own × button instead).
   document.querySelectorAll('.modal').forEach(modal => {
     modal.addEventListener('click', e => {
-      if (e.target === modal) {
-        modal.classList.add('hidden');
-        if (modal.id === 'result-modal' && gameOver) {
-          document.getElementById('gameover-modal')?.classList.remove('hidden');
-        }
+      if (e.target !== modal) return;
+      if (document.body.classList.contains('auth-locked')) return;
+      modal.classList.add('hidden');
+      if (modal.id === 'result-modal' && gameOver) {
+        document.getElementById('gameover-modal')?.classList.remove('hidden');
       }
     });
   });
