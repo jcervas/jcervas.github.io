@@ -3906,61 +3906,41 @@ function escapeHtml(str) {
 async function openLeaderboard() {
   document.getElementById('leaderboard-modal').classList.remove('hidden');
   document.getElementById('lb-district-label').textContent =
-    gameOver ? `${todayDistrict.properties['state-district']} · ${todayKey}` : todayKey;
+    (gameOver && todayDistrict) ? `${todayDistrict.properties['state-district']} · ${todayKey}` : todayKey;
 
-  // Today's scores
-  const todayEl = document.getElementById('today-scores');
-  const todayData = await loadTodayScores();
-  if (todayData === null) {
-    todayEl.innerHTML = `<div class="lb-empty">Global leaderboard requires Firebase setup.<br>See script.js for instructions.</div>`;
-  } else if (todayData.length === 0) {
-    todayEl.innerHTML = `<div class="lb-empty">No scores yet today. Be the first!</div>`;
-  } else {
-    todayEl.innerHTML = todayData.map((e, i) => renderScoreRow(e, i+1, e.username === username)).join('');
-  }
+  const todayEl    = document.getElementById('today-scores');
+  const alltimeEl  = document.getElementById('alltime-scores');
+  const personalEl = document.getElementById('personal-stats');
+  todayEl.innerHTML = alltimeEl.innerHTML = personalEl.innerHTML = '<div class="lb-empty">Loading…</div>';
 
-  // All-time scores
-  const alltimeEl = document.getElementById('alltime-scores');
-  const alltimeData = await loadAlltimeScores();
-  if (alltimeData === null) {
-    alltimeEl.innerHTML = `<div class="lb-empty">Global leaderboard requires Firebase setup.</div>`;
-  } else if (alltimeData.length === 0) {
-    alltimeEl.innerHTML = `<div class="lb-empty">No scores yet.</div>`;
-  } else {
-    alltimeEl.innerHTML = alltimeData.map((e, i) => `
-      <div class="score-row ${e.username === username ? 'me' : ''}">
-        <span class="rank ${i===0?'gold':i===1?'silver':i===2?'bronze':''}">${i+1}</span>
-        <span class="name">${escapeHtml(e.username)}${e.username===username?' (you)':''}</span>
-        <span class="guesses">avg ${e.avgGuesses.toFixed(1)}</span>
-        <span class="time-val">${e.wins}W</span>
-      </div>`).join('');
-  }
-
-  // Personal stats
-  renderPersonalStats();
-}
-
-function renderPersonalStats() {
-  const el    = document.getElementById('personal-stats');
-  const stats = loadPersonalStats();
-  if (!stats || stats.played === 0) {
-    el.innerHTML = '<div class="lb-empty">No games played yet.</div>';
+  if (!window.DistrictBackend) {
+    todayEl.innerHTML = alltimeEl.innerHTML = personalEl.innerHTML =
+      '<div class="lb-empty">Leaderboard unavailable.</div>';
     return;
   }
-  const winRate  = Math.round(stats.won / stats.played * 100);
-  const dist     = stats.guessDist || {};
-  const maxBar   = Math.max(...Object.values(dist).map(Number), 1);
-  const wonToday = guessHistory.some(g => g.correct && g.phase === 'district');
-  const avgSecs  = stats.won > 0 ? Math.round((stats.totalWonTime || 0) / stats.won) : null;
-  const avgLabel = avgSecs !== null ? formatTime(avgSecs) : '—';
-  const totalWonGuesses = [1,2,3,4,5,6].reduce((s, k) => s + k * (dist[k] || 0), 0);
-  const totalWonCount   = [1,2,3,4,5,6].reduce((s, k) => s + (dist[k] || 0), 0);
-  const avgGuesses = totalWonCount > 0 ? (totalWonGuesses / totalWonCount).toFixed(1) : '—';
 
-  const bars = [1, 2, 3, 4, 5, 6, 'X'].map(k => {
-    const count = dist[k] || 0;
+  try {
+    // All stats come from the database — nothing local.
+    const lb = await window.DistrictBackend.leaderboard();
+    todayEl.innerHTML   = renderAggregatePanel(lb.today,   "No one has finished today's puzzle yet.");
+    alltimeEl.innerHTML = renderAggregatePanel(lb.allTime, 'No games recorded yet.');
+    personalEl.innerHTML = (lb.user && lb.user.played > 0)
+      ? renderUserStats(lb.user)
+      : '<div class="lb-empty">Sign in and play to track your personal stats.</div>';
+  } catch (e) {
+    todayEl.innerHTML = alltimeEl.innerHTML = personalEl.innerHTML =
+      '<div class="lb-empty">Couldn’t load the leaderboard.</div>';
+  }
+}
+
+// Guess-distribution bars, shared by the aggregate and personal panels.
+function renderDistBars(dist, highlightKey) {
+  const keys = [1, 2, 3, 4, 5, 6, 'X'];
+  const maxBar = Math.max(...keys.map(k => Number(dist?.[k]) || 0), 1);
+  return keys.map(k => {
+    const count = Number(dist?.[k]) || 0;
     const pct   = count > 0 ? Math.max(Math.round(count / maxBar * 100), 12) : 0;
-    const hi    = gameOver && ((wonToday && k === guessCount) || (!wonToday && k === 'X'));
+    const hi    = highlightKey != null && k === highlightKey;
     return `<div class="rdist-row">
       <span class="rdist-n">${k}</span>
       <div class="rdist-bar-wrap">
@@ -3970,19 +3950,45 @@ function renderPersonalStats() {
       </div>
     </div>`;
   }).join('');
+}
 
-  el.innerHTML = `
+// Today / All Time — aggregate across ALL players.
+function renderAggregatePanel(d, emptyMsg) {
+  const headCount = d ? (d.games != null ? d.games : d.players) : 0;
+  if (!d || !headCount) return `<div class="lb-empty">${emptyMsg}</div>`;
+  const avgGuesses = d.avgGuessesWin != null ? Number(d.avgGuessesWin).toFixed(1) : '—';
+  const avgTime    = d.avgSeconds != null ? formatTime(d.avgSeconds) : '—';
+  const headLabel  = d.games != null ? 'Games' : 'Players';
+  return `
     <div class="personal-grid">
-      <div class="stat-card"><div class="stat-val">${stats.played}</div><div class="stat-label">Played</div></div>
-      <div class="stat-card"><div class="stat-val">${winRate}%</div><div class="stat-label">Win Rate</div></div>
-      <div class="stat-card"><div class="stat-val">${stats.streak}</div><div class="stat-label">Current Streak</div></div>
-      <div class="stat-card"><div class="stat-val">${stats.maxStreak}</div><div class="stat-label">Max Streak</div></div>
+      <div class="stat-card"><div class="stat-val">${headCount}</div><div class="stat-label">${headLabel}</div></div>
+      <div class="stat-card"><div class="stat-val">${d.winPct ?? 0}%</div><div class="stat-label">Win Rate</div></div>
+      <div class="stat-card"><div class="stat-val">${avgGuesses}</div><div class="stat-label">Avg Guesses</div></div>
+      <div class="stat-card"><div class="stat-val">${avgTime}</div><div class="stat-label">Avg Time</div></div>
+    </div>
+    <div class="result-dist">
+      <h4>Guess Distribution · all players</h4>
+      ${renderDistBars(d.dist)}
+    </div>`;
+}
+
+// My Stats — the signed-in player only (distribution + avg guesses + streaks).
+function renderUserStats(u) {
+  const avgGuesses = u.avgGuessesWin != null ? Number(u.avgGuessesWin).toFixed(1) : '—';
+  const wonToday = gameOver && guessHistory.some(g => g.correct && g.phase === 'district');
+  const hiKey = gameOver ? (wonToday ? guessCount : 'X') : null;
+  return `
+    <div class="personal-grid">
+      <div class="stat-card"><div class="stat-val">${u.played}</div><div class="stat-label">Played</div></div>
+      <div class="stat-card"><div class="stat-val">${u.winPct ?? 0}%</div><div class="stat-label">Win Rate</div></div>
+      <div class="stat-card"><div class="stat-val">${u.curStreak ?? 0}</div><div class="stat-label">Current Streak</div></div>
+      <div class="stat-card"><div class="stat-val">${u.maxStreak ?? 0}</div><div class="stat-label">Max Streak</div></div>
     </div>
     <div class="result-dist">
       <h4>Guess Distribution</h4>
-      ${bars}
+      ${renderDistBars(u.dist, hiKey)}
     </div>
-    <div class="rstat-avg-time">Avg. guesses (wins): <strong>${avgGuesses}</strong> &nbsp;&middot;&nbsp; Avg. time: <strong>${avgLabel}</strong></div>`;
+    <div class="rstat-avg-time">Avg. guesses (wins): <strong>${avgGuesses}</strong></div>`;
 }
 
 // ============================================================

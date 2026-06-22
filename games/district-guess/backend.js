@@ -70,12 +70,21 @@
     return data; // { correct, adjacent, phase, guesses, guessesLeft, completed, won, clues, answer }
   }
 
+  // Leaderboard: { user, today, allTime }. `user` is the signed-in player's own
+  // stats (null if signed out); today/allTime are aggregates across all players.
+  // Callable by anon, so aggregates show even when signed out.
+  async function leaderboard() {
+    const { data, error } = await client().rpc('get_leaderboard');
+    if (error) throw error;
+    return data;
+  }
+
   window.DistrictBackend = {
     ENABLED,
     SUPABASE_URL,
     client,
     getUser, onAuthChange,
     signInWithOAuth, signInWithEmail, signUpWithEmail, signOut,
-    today, guess,
+    today, guess, leaderboard,
   };
 })();
