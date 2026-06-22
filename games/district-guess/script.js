@@ -4399,6 +4399,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Shared launch: show the splash, rebuild the game section, then start at idx.
   function launchGameAtIndex(newIdx, archive, meta) {
     isArchiveGame = !!archive;
+    document.getElementById('archive-badge')?.classList.toggle('hidden', !archive);
     document.getElementById('result-modal')?.classList.add('hidden');
     document.getElementById('archive-modal')?.classList.add('hidden');
     destroyGameoverDiv();
@@ -4436,13 +4437,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const today = new Date(); today.setHours(0, 0, 0, 0);
     const todayNum = Math.floor((Date.now() - ARCHIVE_EPOCH) / 86400000) + 1;
     let html = '';
+    let curMonth = '';
     for (let k = 1; k < todayNum; k++) {
       const d = new Date(today); d.setDate(today.getDate() - k);
       const num = todayNum - k;
       const seed = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
-      const label = d.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
-      html += `<button class="archive-item" data-seed="${seed}" data-num="${num}" data-label="${label}">` +
-              `<span class="archive-num">No. ${num}</span><span class="archive-date">${label}</span></button>`;
+      const month = d.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+      if (month !== curMonth) { curMonth = month; html += `<div class="archive-month">${month}</div>`; }
+      const dayLabel  = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+      const fullLabel = d.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+      html += `<button class="archive-item" data-seed="${seed}" data-num="${num}" data-label="${fullLabel}">` +
+              `<span class="archive-num">No. ${num}</span><span class="archive-date">${dayLabel}</span></button>`;
     }
     list.innerHTML = html || '<div class="lb-empty">No past puzzles yet.</div>';
     document.getElementById('result-modal')?.classList.add('hidden');

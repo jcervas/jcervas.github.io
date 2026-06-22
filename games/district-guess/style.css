@@ -1760,6 +1760,20 @@ body.auth-locked #welcome-signin-btn {
 }
 .account-menu-item:hover { background: var(--hover, #f3f3f3); }
 
+/* ===== Archive: in-game unofficial badge + month headers ===== */
+.archive-badge {
+  position: fixed; top: 60px; left: 50%; transform: translateX(-50%);
+  z-index: 150; pointer-events: none;
+  background: var(--muted, #555); color: #fff;
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+  padding: 4px 12px; border-radius: 100px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.archive-badge.hidden { display: none; }
+.archive-month {
+  font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--muted); padding: 12px 4px 4px;
+}
+
 /* ===== Archive picker ===== */
 .archive-note { font-size: 0.85rem; color: var(--muted); margin: 0 0 12px; }
 .archive-list { display: flex; flex-direction: column; gap: 6px; max-height: 55vh; overflow-y: auto; }
