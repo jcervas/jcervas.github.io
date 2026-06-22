@@ -31,6 +31,26 @@ ACS_CSV="$CREATEMAPS/acs_by_district.csv"
 OUT="$SCRIPT_DIR/districts.topojson"
 
 SIMPLIFY="20%"
+STATE_SVGS="$SCRIPT_DIR/state-svgs"
+
+# ── State EPSG codes (from createMaps/compactness/compactness.sh) ─────────────
+state_epsg() {
+  case "$1" in
+    AL) echo 2759 ;; AK) echo 3338 ;; AZ) echo 2762 ;; AR) echo 2764 ;;
+    CA) echo 3311 ;; CO) echo 2773 ;; CT) echo 2775 ;; DE) echo 2776 ;;
+    FL) echo 2777 ;; GA) echo 2780 ;; HI) echo 2784 ;; ID) echo 2788 ;;
+    IL) echo 2790 ;; IN) echo 2792 ;; IA) echo 2794 ;; KS) echo 2796 ;;
+    KY) echo 2798 ;; LA) echo 2800 ;; ME) echo 2802 ;; MD) echo 2804 ;;
+    MA) echo 2805 ;; MI) echo 2808 ;; MN) echo 2811 ;; MS) echo 2813 ;;
+    MO) echo 2816 ;; MT) echo 2818 ;; NE) echo 2819 ;; NV) echo 2821 ;;
+    NH) echo 2823 ;; NJ) echo 2824 ;; NM) echo 2826 ;; NY) echo 2829 ;;
+    NC) echo 3358 ;; ND) echo 2832 ;; OH) echo 2834 ;; OK) echo 2836 ;;
+    OR) echo 2838 ;; PA) echo 3362 ;; RI) echo 2840 ;; SC) echo 3360 ;;
+    SD) echo 2841 ;; TN) echo 2843 ;; TX) echo 2845 ;; UT) echo 2850 ;;
+    VT) echo 2852 ;; VA) echo 2853 ;; WA) echo 2855 ;; WV) echo 2857 ;;
+    WI) echo 2860 ;; WY) echo 2863 ;; *) echo "" ;;
+  esac
+}
 
 echo "=== district-guess map builder ==="
 echo "  Input:    $DISTRICTS_SRC"
@@ -190,3 +210,87 @@ for name, obj in topo.get('objects', {}).items():
     n = len(obj.get('geometries', []))
     print(f"  {name:<14} {n} geometries")
 PYEOF
+
+# ── State boundary SVGs: for gameover-grid and guess-icon-svg ────────────────
+echo ""
+echo "Step 6/6  Generating state boundary SVGs..."
+mkdir -p "$STATE_SVGS"
+
+# Extract states layer to GeoJSON
+mapshaper "$STATES" name=states -o "$TMPWORK/states_extract.json"
+
+python3 - "$TMPWORK/states_extract.json" "$STATE_SVGS" <<'PYEOF'
+import json
+import sys
+import subprocess
+import tempfile
+import os
+
+states_file = sys.argv[1]
+output_dir = sys.argv[2]
+
+with open(states_file) as f:
+    fc = json.load(f)
+
+state_names = {
+    'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas',
+    'CA': 'California', 'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware',
+    'FL': 'Florida', 'GA': 'Georgia', 'HI': 'Hawaii', 'ID': 'Idaho',
+    'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa', 'KS': 'Kansas',
+    'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
+    'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi',
+    'MO': 'Missouri', 'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada',
+    'NH': 'New Hampshire', 'NJ': 'New Jersey', 'NM': 'New Mexico', 'NY': 'New York',
+    'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio', 'OK': 'Oklahoma',
+    'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
+    'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah',
+    'VT': 'Vermont', 'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia',
+    'WI': 'Wisconsin', 'WY': 'Wyoming'
+}
+
+state_epsg = {
+    'AL': 2759, 'AK': 3338, 'AZ': 2762, 'AR': 2764, 'CA': 3311, 'CO': 2773,
+    'CT': 2775, 'DE': 2776, 'FL': 2777, 'GA': 2780, 'HI': 2784, 'ID': 2788,
+    'IL': 2790, 'IN': 2792, 'IA': 2794, 'KS': 2796, 'KY': 2798, 'LA': 2800,
+    'ME': 2802, 'MD': 2804, 'MA': 2805, 'MI': 2808, 'MN': 2811, 'MS': 2813,
+    'MO': 2816, 'MT': 2818, 'NE': 2819, 'NV': 2821, 'NH': 2823, 'NJ': 2824,
+    'NM': 2826, 'NY': 2829, 'NC': 3358, 'ND': 2832, 'OH': 2834, 'OK': 2836,
+    'OR': 2838, 'PA': 3362, 'RI': 2840, 'SC': 3360, 'SD': 2841, 'TN': 2843,
+    'TX': 2845, 'UT': 2850, 'VT': 2852, 'VA': 2853, 'WA': 2855, 'WV': 2857,
+    'WI': 2860, 'WY': 2863
+}
+
+for feature in fc.get('features', []):
+    state = feature.get('properties', {}).get('state')
+    if not state or state not in state_names:
+        continue
+
+    # Create single-state GeoJSON
+    single_state_fc = {'type': 'FeatureCollection', 'features': [feature]}
+
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as tmp:
+        json.dump(single_state_fc, tmp)
+        tmp_path = tmp.name
+
+    try:
+        epsg = state_epsg.get(state)
+
+        # Generate SVG with mapshaper: simplify, style with no fill and black stroke
+        svg_path = os.path.join(output_dir, f"{state.lower()}.svg")
+
+        cmd = [
+            'mapshaper', tmp_path,
+            '-simplify', '2%', 'keep-shapes',
+            '-o', svg_path, 'format=svg',
+            'stroke=black', 'stroke-width=1', 'fill=none'
+        ]
+
+        subprocess.run(cmd, check=False, capture_output=True)
+        print(f"  {state} ({state_names[state]})")
+    finally:
+        os.unlink(tmp_path)
+
+print(f"\nGenerated {len([f for f in os.listdir(output_dir) if f.endswith('.svg')])} state SVGs in {output_dir}")
+PYEOF
+
+echo "State SVGs written to $STATE_SVGS/"
