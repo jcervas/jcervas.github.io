@@ -1712,6 +1712,34 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
   color: var(--muted);
   white-space: nowrap;
 }
+/* ===== Account menu (initials avatar + dropdown) ===== */
+.account-wrap { position: relative; display: inline-flex; }
+.account-btn {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: none; cursor: pointer; padding: 0;
+  background: var(--red, #C41230); color: #fff;
+  font-weight: 700; font-size: 0.8rem; letter-spacing: 0.02em;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.account-btn:hover { filter: brightness(1.08); }
+.account-menu {
+  position: absolute; top: calc(100% + 8px); left: 0;
+  min-width: 210px; padding: 6px;
+  background: var(--card, #fff);
+  border: 1px solid var(--border, #ddd); border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+  z-index: 400;
+}
+.account-menu-header { padding: 8px 10px 10px; border-bottom: 1px solid var(--border, #eee); margin-bottom: 4px; }
+.account-menu-name { font-weight: 700; font-size: 0.9rem; }
+.account-menu-email { font-size: 0.8rem; color: var(--muted); word-break: break-all; }
+.account-menu-item {
+  display: block; width: 100%; text-align: left;
+  padding: 9px 10px; border: none; background: none; cursor: pointer;
+  font: inherit; color: var(--text, #111); border-radius: 7px;
+}
+.account-menu-item:hover { background: var(--hover, #f3f3f3); }
+
 /* ===== Login modal ===== */
 /* Sits above the welcome splash (z-index 200) so the sign-in gate shows first. */
 #login-modal { z-index: 300; }

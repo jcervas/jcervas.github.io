@@ -1,7 +1,10 @@
 // ============================================================
-// login.js — drives the login modal when the server backend is enabled.
-// No-op in legacy client-only mode (DistrictBackend.ENABLED === false), so the
-// existing game is untouched until an auth provider is configured.
+// login.js — auth UI: the login gate, the account menu (initials → dropdown),
+// and the profile modal (collect on first sign-in, edit anytime).
+//
+// The account menu + profile editing run whenever a user is signed in, in any
+// mode. The forced login gate only appears when the backend is active
+// (DistrictBackend.ENABLED, or the ?login=1 test hatch).
 // ============================================================
 (function () {
   function ready(fn) {
@@ -9,70 +12,58 @@
     else document.addEventListener('DOMContentLoaded', fn);
   }
 
+  function initialsFor(profile, user) {
+    const name = (profile && (profile.display_name || profile.username)) || '';
+    if (name.trim()) {
+      const parts = name.trim().split(/\s+/);
+      return (parts.length > 1 ? parts[0][0] + parts[1][0] : parts[0].slice(0, 2)).toUpperCase();
+    }
+    const email = (profile && profile.email) || (user && user.email) || '';
+    return (email[0] || '?').toUpperCase();
+  }
+
   ready(async function () {
     const B = window.DistrictBackend;
     if (!B) return;
-    // Active when the backend is switched on, OR via ?login=1 — a test hatch so
-    // login/auth can be exercised on the live site without enabling it for everyone.
+
+    const $ = (id) => document.getElementById(id);
     const active = B.ENABLED || new URLSearchParams(location.search).get('login') === '1';
-    if (!active) return; // legacy mode — do nothing
 
-    const modal = document.getElementById('login-modal');
-    const err = document.getElementById('login-error');
-    const show = () => modal.classList.remove('hidden');
-    const hide = () => modal.classList.add('hidden');
-    const fail = (e) => { err.textContent = (e && e.message) || 'Something went wrong'; };
-
-    modal.querySelectorAll('.login-provider-btn').forEach((btn) => {
-      btn.addEventListener('click', async () => {
-        err.textContent = '';
-        try { await B.signInWithOAuth(btn.dataset.provider); } catch (e) { fail(e); }
-      });
-    });
-
-    const form = document.getElementById('login-email-form');
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      err.textContent = '';
-      const email = document.getElementById('login-email').value.trim();
-      const pw = document.getElementById('login-password').value;
-      try {
-        const { error } = await B.signInWithEmail(email, pw);
-        if (error) throw error;
-      } catch (ex) { fail(ex); }
-    });
-
-    document.getElementById('login-signup').addEventListener('click', async () => {
-      err.textContent = '';
-      const email = document.getElementById('login-email').value.trim();
-      const pw = document.getElementById('login-password').value;
-      if (!email || pw.length < 6) { err.textContent = 'Enter an email and a 6+ character password.'; return; }
-      try {
-        const { error } = await B.signUpWithEmail(email, pw);
-        if (error) throw error;
-        err.textContent = 'Check your email to confirm, then sign in.';
-      } catch (ex) { fail(ex); }
-    });
-
-    // ---- Profile collection: shown once after sign-in if not yet filled ----
-    const pModal = document.getElementById('profile-modal');
-    const pErr = document.getElementById('profile-error');
+    // ---- Profile modal (shared: first-time collection + later editing) ------
+    const pModal = $('profile-modal');
+    const pErr = $('profile-error');
     const hideProfile = () => pModal.classList.add('hidden');
 
-    async function maybeShowProfile() {
+    function fillProfileForm(prof) {
+      $('profile-display-name').value = (prof && prof.display_name) || '';
+      $('profile-phone').value   = (prof && prof.phone)   || '';
+      $('profile-city').value    = (prof && prof.city)    || '';
+      $('profile-region').value  = (prof && prof.region)  || '';
+      $('profile-country').value = (prof && prof.country) || '';
+      $('profile-marketing').checked = !!(prof && prof.marketing_opt_in);
+    }
+    async function openProfile(isEdit) {
+      pErr.textContent = '';
+      let prof = null;
+      try { prof = await B.getProfile(); } catch (_) {}
+      fillProfileForm(prof);
+      $('profile-skip').textContent = isEdit ? 'Cancel' : 'Skip for now';
+      pModal.classList.remove('hidden');
+    }
+    // Shown once after first sign-in if profile not yet filled.
+    async function maybePromptProfile() {
       if (localStorage.getItem('dd_profile_done') === '1') return;
       let prof;
       try { prof = await B.getProfile(); } catch (_) { return; }
       if (!prof) return;
       if (prof.city || prof.phone) { localStorage.setItem('dd_profile_done', '1'); return; }
-      if (prof.display_name) document.getElementById('profile-display-name').value = prof.display_name;
-      pModal.classList.remove('hidden');
+      openProfile(false);
     }
 
-    document.getElementById('profile-form').addEventListener('submit', async (e) => {
+    $('profile-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       pErr.textContent = '';
-      const val = (id) => document.getElementById(id).value.trim() || null;
+      const val = (id) => $(id).value.trim() || null;
       try {
         await B.updateProfile({
           display_name: val('profile-display-name'),
@@ -80,24 +71,99 @@
           city: val('profile-city'),
           region: val('profile-region'),
           country: val('profile-country'),
-          marketing_opt_in: document.getElementById('profile-marketing').checked,
+          marketing_opt_in: $('profile-marketing').checked,
         });
         localStorage.setItem('dd_profile_done', '1');
         hideProfile();
+        refreshAccount();
       } catch (ex) { pErr.textContent = (ex && ex.message) || 'Could not save'; }
     });
-    document.getElementById('profile-skip').addEventListener('click', () => {
+    $('profile-skip').addEventListener('click', () => {
       localStorage.setItem('dd_profile_done', '1');
       hideProfile();
     });
 
-    // Show the gate until signed in; broadcast sign-in so the game can start.
+    // ---- Account menu (initials avatar → dropdown) --------------------------
+    const accBtn = $('account-btn');
+    const accMenu = $('account-menu');
+    const closeMenu = () => { accMenu.classList.add('hidden'); accBtn.setAttribute('aria-expanded', 'false'); };
+
+    accBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const open = accMenu.classList.toggle('hidden') === false;
+      accBtn.setAttribute('aria-expanded', String(open));
+    });
+    document.addEventListener('click', (e) => {
+      if (!accMenu.classList.contains('hidden') && !accMenu.contains(e.target) && e.target !== accBtn) closeMenu();
+    });
+    $('account-edit').addEventListener('click', () => { closeMenu(); openProfile(true); });
+    $('account-signout').addEventListener('click', async () => {
+      closeMenu();
+      try { await B.signOut(); } catch (_) {}
+    });
+
+    async function refreshAccount() {
+      const user = await B.getUser();
+      if (!user) { accBtn.classList.add('hidden'); closeMenu(); return; }
+      let prof = null;
+      try { prof = await B.getProfile(); } catch (_) {}
+      $('account-initials').textContent = initialsFor(prof, user);
+      $('account-name').textContent  = (prof && (prof.display_name || prof.username)) || '';
+      $('account-email').textContent = (prof && prof.email) || user.email || '';
+      accBtn.classList.remove('hidden');
+    }
+
+    // ---- Login gate (only when active) --------------------------------------
+    let showGate = () => {}, hideGate = () => {};
+    if (active) {
+      const modal = $('login-modal');
+      const err = $('login-error');
+      showGate = () => modal.classList.remove('hidden');
+      hideGate = () => modal.classList.add('hidden');
+      const fail = (e) => { err.textContent = (e && e.message) || 'Something went wrong'; };
+
+      modal.querySelectorAll('.login-provider-btn').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          err.textContent = '';
+          try { await B.signInWithOAuth(btn.dataset.provider); } catch (e) { fail(e); }
+        });
+      });
+      $('login-email-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        err.textContent = '';
+        try {
+          const { error } = await B.signInWithEmail($('login-email').value.trim(), $('login-password').value);
+          if (error) throw error;
+        } catch (ex) { fail(ex); }
+      });
+      $('login-signup').addEventListener('click', async () => {
+        err.textContent = '';
+        const email = $('login-email').value.trim();
+        const pw = $('login-password').value;
+        if (!email || pw.length < 6) { err.textContent = 'Enter an email and a 6+ character password.'; return; }
+        try {
+          const { error } = await B.signUpWithEmail(email, pw);
+          if (error) throw error;
+          err.textContent = 'Check your email to confirm, then sign in.';
+        } catch (ex) { fail(ex); }
+      });
+    }
+
+    // ---- React to auth state ------------------------------------------------
     B.onAuthChange((user) => {
-      if (user) { hide(); maybeShowProfile(); window.dispatchEvent(new CustomEvent('district-auth', { detail: { user } })); }
-      else show();
+      refreshAccount();
+      if (user) {
+        hideGate();
+        maybePromptProfile();
+        window.dispatchEvent(new CustomEvent('district-auth', { detail: { user } }));
+      } else if (active) {
+        showGate();
+      }
     });
 
     const user = await B.getUser();
-    if (user) { hide(); maybeShowProfile(); } else show();
+    refreshAccount();
+    if (user) maybePromptProfile();
+    else if (active) showGate();
   });
 })();
