@@ -1713,6 +1713,8 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
   white-space: nowrap;
 }
 /* ===== Login modal ===== */
+/* Sits above the welcome splash (z-index 200) so the sign-in gate shows first. */
+#login-modal { z-index: 300; }
 .login-modal-content {
   max-width: 360px;
   text-align: center;

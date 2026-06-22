@@ -11,7 +11,11 @@
 
   ready(async function () {
     const B = window.DistrictBackend;
-    if (!B || !B.ENABLED) return; // legacy mode — do nothing
+    if (!B) return;
+    // Active when the backend is switched on, OR via ?login=1 — a test hatch so
+    // login/auth can be exercised on the live site without enabling it for everyone.
+    const active = B.ENABLED || new URLSearchParams(location.search).get('login') === '1';
+    if (!active) return; // legacy mode — do nothing
 
     const modal = document.getElementById('login-modal');
     const err = document.getElementById('login-error');
