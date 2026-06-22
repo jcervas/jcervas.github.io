@@ -28,6 +28,8 @@ DISTRICTS_SRC="$CREATEMAPS/national/output/national-cd-2026.geojson"
 URBAN_SRC="$CREATEMAPS/us-urban.json"
 ROADS_SRC="$CREATEMAPS/us_can_roads.json"
 ACS_CSV="$CREATEMAPS/acs_by_district.csv"
+STATE_ACS_CSV="$CREATEMAPS/acs_by_state.csv"   # produced by createMaps/acs_by_state.R
+STATE_ACS_JSON="$SCRIPT_DIR/state-acs.json"
 OUT="$SCRIPT_DIR/districts.topojson"
 
 SIMPLIFY="20%"
@@ -213,7 +215,7 @@ PYEOF
 
 # ── State boundary SVGs: for gameover-grid and guess-icon-svg ────────────────
 echo ""
-echo "Step 6/6  Generating state boundary SVGs with mapshaper..."
+echo "Step 6/7  Generating state boundary SVGs with mapshaper..."
 mkdir -p "$STATE_SVGS"
 
 # Intrinsic fallback size (px) for the root <svg>. This is only a fallback so the
@@ -274,3 +276,29 @@ EOF
 done
 
 echo "State SVGs written to $STATE_SVGS/"
+
+# ── State-level ACS clues: CSV → compact JSON keyed by state abbr ─────────────
+echo ""
+echo "Step 7/7  Building state-level ACS clue JSON..."
+if [ -f "$STATE_ACS_CSV" ]; then
+  STATE_ACS_CSV="$STATE_ACS_CSV" STATE_ACS_JSON="$STATE_ACS_JSON" python3 - <<'PYEOF'
+import csv, json, os
+src = os.environ["STATE_ACS_CSV"]
+out = os.environ["STATE_ACS_JSON"]
+num = {"pop": int, "whiteNH_pct": float, "black_pct": float, "asian_pct": float,
+       "hispanic_pct": float, "foreignBorn_pct": float, "medianRent": int,
+       "bachPlus_pct": float, "meanTravelTime": float, "landAreaSqMi": int}
+data = {}
+with open(src) as f:
+    for row in csv.DictReader(f):
+        rec = {"name": row["name"]}
+        for k, cast in num.items():
+            rec[k] = cast(row[k])
+        data[row["state"]] = rec
+with open(out, "w") as f:
+    json.dump(data, f, separators=(",", ":"), sort_keys=True)
+print(f"  Wrote {len(data)} states to {os.path.basename(out)}")
+PYEOF
+else
+  echo "  ⚠ $STATE_ACS_CSV not found — run createMaps/acs_by_state.R first. Skipping."
+fi

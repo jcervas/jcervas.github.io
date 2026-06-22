@@ -227,6 +227,25 @@ async function getStateSvg(stateAbbr) {
   }
 }
 
+// State-level ACS clue data (QuickFacts-style), loaded once from state-acs.json.
+// Keyed by state abbr: { pop, whiteNH_pct, foreignBorn_pct, medianRent,
+// bachPlus_pct, meanTravelTime, landAreaSqMi, ... }. Built by build-map.sh from
+// createMaps/acs_by_state.R.
+let _stateAcs = null;
+let _stateAcsPromise = null;
+async function getStateAcs(stateAbbr) {
+  if (!_stateAcs) {
+    if (!_stateAcsPromise) {
+      _stateAcsPromise = fetch('state-acs.json')
+        .then(r => (r.ok ? r.json() : {}))
+        .then(j => { _stateAcs = j; return j; })
+        .catch(() => { _stateAcs = {}; return {}; });
+    }
+    await _stateAcsPromise;
+  }
+  return stateAbbr ? (_stateAcs[stateAbbr] || null) : _stateAcs;
+}
+
 // Built at load time from GeoJSON: { 'TX': ['01','02',...], 'WY': ['01'], ... }
 let stateDistrictMap = {};
 
@@ -247,6 +266,52 @@ const FACT_DEFS = [
     icon: 'clock',
     label: 'Time zone',
     fn: d => STATE_TIMEZONES[d.state] ? `${STATE_TIMEZONES[d.state]} Time` : '—'
+  },
+  {
+    icon: 'ruler',
+    label: 'State land area',
+    fn: async d => {
+      const s = await getStateAcs(d.state);
+      if (!s) return '—';
+      const mi = s.landAreaSqMi;
+      const band = mi <  10000 ? 'Small state'
+                 : mi <  50000 ? 'Mid-size state'
+                 : mi < 100000 ? 'Large state'
+                 : 'Very large state';
+      return `${band} — ~${mi.toLocaleString()} sq mi`;
+    }
+  },
+  {
+    icon: 'people',
+    label: 'Foreign-born residents (state)',
+    fn: async d => {
+      const s = await getStateAcs(d.state);
+      return s ? `${s.foreignBorn_pct}% born outside the U.S.` : '—';
+    }
+  },
+  {
+    icon: 'dollar',
+    label: 'Median gross rent (state)',
+    fn: async d => {
+      const s = await getStateAcs(d.state);
+      return s ? `${formatCurrency(s.medianRent)}/mo` : '—';
+    }
+  },
+  {
+    icon: 'clock',
+    label: 'Average commute (state)',
+    fn: async d => {
+      const s = await getStateAcs(d.state);
+      return s ? `${s.meanTravelTime} min to work` : '—';
+    }
+  },
+  {
+    icon: 'building',
+    label: 'College-educated (state)',
+    fn: async d => {
+      const s = await getStateAcs(d.state);
+      return s ? `${s.bachPlus_pct}% hold a bachelor's degree or higher` : '—';
+    }
   },
   // District-level hints
   {
