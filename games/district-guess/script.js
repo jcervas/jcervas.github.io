@@ -3100,9 +3100,9 @@ function buildGameoverMap() {
   if (!container) return;
   container.innerHTML = '';
 
-  // Use REF_VB coordinate space (960×400) — AlbersUSA is landscape-oriented.
-  // ViewBox + preserveAspectRatio:meet handles portrait screens correctly.
-  const W = REF_VB_W, H = REF_VB_H;
+  // Use actual container dimensions for responsive viewBox
+  const W = container.clientWidth || REF_VB_W;
+  const H = container.clientHeight || REF_VB_H;
   const dark        = isDarkMode();
   const stateAbbr   = todayDistrict.properties.state;
   const stateFeatures = districts.filter(f => f.properties.state === stateAbbr);
