@@ -3907,6 +3907,7 @@ function renderPersonalStats() {
 //  RESTORE SAVED GAME
 // ============================================================
 function restoreGame(saved) {
+  _gameStarted   = true;
   guessCount     = saved.guessCount;
   guessHistory   = saved.guessHistory;
   cluesRevealed  = saved.cluesRevealed;
