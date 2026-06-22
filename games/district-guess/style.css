@@ -159,6 +159,8 @@ body:has(.modal:not(.hidden)) { overflow: hidden; }
 .guess-icon-state-slot {
   width: 1.5rem;
   height: 1.5rem;
+  display: inline-flex;
+  flex-shrink: 0;
   position: relative;
 }
 .guess-icon-state-slot .state-svg-container {
@@ -1715,22 +1717,24 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
   display: inline-flex;
   align-items: center;
   vertical-align: middle;
-}
-.gameover-grid .go-slot-state .state-svg-container svg {
   width: 1.3em;
   height: 1.3em;
 }
-.guess-icon-state-slot {
+
+/* State boundary SVG — the displayed size is ALWAYS set by CSS via the slot the
+   SVG sits in, never the SVG's own intrinsic dimensions. The container and the
+   svg simply fill that slot. */
+.state-svg-container {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-}
-.state-svg-container {
-  display: inline-flex;
+  width: 100%;
+  height: 100%;
 }
 .state-svg-container svg {
   display: block;
+  width: 100%;
+  height: 100%;
 }
 .state-svg-container svg path {
   stroke: currentColor !important;

@@ -216,12 +216,14 @@ echo ""
 echo "Step 6/6  Generating state boundary SVGs with mapshaper..."
 mkdir -p "$STATE_SVGS"
 
-# Target rendered size (px) for the inline icons.
-SVG_PX=20
+# Intrinsic fallback size (px) for the root <svg>. This is only a fallback so the
+# SVG never collapses to 0px when no CSS size applies — the ACTUAL displayed size
+# is controlled by CSS in the browser (per usage: guess-history, gameover-grid…).
+SVG_PX=200
 
 # Use mapshaper to filter each state and export as SVG, then post-process so the
-# SVG has a SQUARE viewBox (no distortion) and explicit pixel width/height (so it
-# never collapses to 0px inside flex containers).
+# SVG has a SQUARE viewBox (no distortion) and a non-scaling stroke (the outline
+# stays a crisp ~1px line at whatever size CSS renders it).
 for state in AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY; do
   state_lower=$(echo "$state" | tr '[:upper:]' '[:lower:]')
   svg_file="$STATE_SVGS/${state_lower}.svg"
@@ -238,7 +240,7 @@ for state in AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI M
       SVG_PX="$SVG_PX" python3 - "$svg_file" <<'EOF'
 import os, re, sys
 svg_path = sys.argv[1]
-px = float(os.environ.get("SVG_PX", "200"))
+px = float(os.environ.get("SVG_PX", "20"))
 with open(svg_path) as f:
     content = f.read()
 m = re.search(r'viewBox="([0-9.eE+-]+)\s+([0-9.eE+-]+)\s+([0-9.eE+-]+)\s+([0-9.eE+-]+)"', content)
@@ -259,9 +261,11 @@ if m:
     content = re.sub(r'<svg ',
                      f'<svg width="{px:g}" height="{px:g}" ',
                      content, count=1)
-    # Scale stroke to viewBox units so the outline stays ~1px when rendered.
-    sw = side_p / px
-    content = re.sub(r'stroke-width="[^"]*"', f'stroke-width="{sw:.3f}"', content)
+    # Use a non-scaling stroke so the outline renders at a constant ~1px no matter
+    # what size CSS displays the SVG at. stroke-width is then in final device px.
+    content = re.sub(r'stroke-width="[^"]*"', 'stroke-width="1"', content)
+    content = re.sub(r'(<path\b)(?![^>]*vector-effect)',
+                     r'\1 vector-effect="non-scaling-stroke"', content)
     with open(svg_path, 'w') as f:
         f.write(content)
 EOF
