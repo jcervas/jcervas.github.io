@@ -2,7 +2,7 @@
 
 ---
 
-## v1.14 — State Outlines, Loading Globe & Confetti Perf
+## v1.13 — State Outlines, Loading Globe & Confetti Perf
 
 ### State boundary outlines
 - **State SVG pipeline (mapshaper)**: `build-map.sh` Step 6 generates a boundary SVG per state directly with mapshaper, replacing the earlier hand-rolled Python GeoJSON→SVG conversion

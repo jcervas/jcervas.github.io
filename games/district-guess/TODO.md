@@ -6,18 +6,6 @@ Gameflow: Welcome Splash -> Game Screen (district map, hints, reference map) -> 
 Actual game: Select state (hints about state) -> Select a district (hints about district) -> Either win or lose
 
 - [ ] Drop out district tiles that are no longer active (currently grayed out — should be removed). Zoom to convex hull of remaining active district tiles (same behavior as state-level zoom to remaining states).
-- [x] Gameover modal: flash overlay reveal (gold/red viewport-fill fades out while map fades in), no animated zoom
-- [x] Gameover badge: pill positioned inside zoom group at district data coordinates, tracks pan/zoom, correct size on mobile
-- [x] Gameover fit button: toggles between district zoom and national context
-- [x] Gameover zoom buttons: match `.mzb` gameplay style; dismiss button removed
-- [x] `#game-section` and `#gameover-modal` created/destroyed dynamically — no hidden DOM between screens
-- [x] Gameover grid: unused slots show `□` not `⊗`
-- [x] Clicking gameover screen opens result modal; "Back to Map" returns to gameover without rebuilding
-- [x] Win/loss animations (shake/pulse) now fire on the gameover map, not hidden district-tiles
-- [x] Share images: rich style (urban, roads, exterior mask); Instagram portrait format; spoiler-free (no district key)
-- [x] Loading: replace spinner with spinning tartan globe (`globe.js`, Carnegie Red threads) + "Loading…" caption
-- [x] State boundary outlines: per-state SVGs (mapshaper + per-state EPSG projection), shown in guess history and the gameover grid's correct-state slot; browser-controlled sizing with non-scaling stroke
-- [x] Win confetti/spark performance: drop per-ember drop-shadow filters, cut laps 5→3, throttle ember emission
 
 ## Major upgrades
 
@@ -28,11 +16,7 @@ Actual game: Select state (hints about state) -> Select a district (hints about 
 ## UI
 
 - [ ] When a user plays in hard mode, we should differentiate when they share. Eventually we will have a database with all this information and will need to record it there, too.
-- [x] The first time a user plays the game, they should be able to set the settings. Perhaps it can pop up after closing the How to Play modal (but only after the first time.)
-- [x] clicking "Daily District" in the header should take a user to the welcome splash
 - [ ] clicking the timer should pop open a modal that has a recent history of the puzzle speeds. It can look alot like the "guesses" tab on the results modal. Colors and symbols can be used to differentiate those correct from those incorrect puzzles. clicking on it can open the "game over" screen with that map shown.
-- [x] New England state callout labels: force collision avoidance (iterative relaxation from centroid Y positions) so labels never overlap at any viewport size
-- [x] Result modal: reduce rstat-avg-time padding/prominence; add background pill to result-time-line; move avg stats below guess distribution; add avg guesses (among wins) alongside avg time; hide result-message on short viewports (max-height: 720px); clamp result-answer-code font size
 
 ## Features
 
