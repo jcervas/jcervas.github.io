@@ -1433,17 +1433,18 @@ function renderGuessHistory() {
 
   updateGuessCounter();
 
-  // Load state SVGs asynchronously for state guesses
-  el.querySelectorAll('.guess-icon-state-slot').forEach(slot => {
-    const stateAbbr = slot.dataset.state;
-    if (stateAbbr) {
-      getStateSvg(stateAbbr).then(svg => {
-        if (svg) {
-          slot.innerHTML = `<div class="state-svg-container">${svg}</div>`;
-        }
-      });
-    }
-  });
+  // State SVGs disabled due to rendering issues; guesses display correctly without them
+  // TODO: Fix SVG rendering at small scales
+  // el.querySelectorAll('.guess-icon-state-slot').forEach(slot => {
+  //   const stateAbbr = slot.dataset.state;
+  //   if (stateAbbr) {
+  //     getStateSvg(stateAbbr).then(svg => {
+  //       if (svg) {
+  //         slot.innerHTML = `<div class="state-svg-container">${svg}</div>`;
+  //       }
+  //     });
+  //   }
+  // });
 }
 
 /** Render the small dot-row guess progress indicator in the reference panel. */
