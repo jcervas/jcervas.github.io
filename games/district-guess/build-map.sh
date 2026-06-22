@@ -225,14 +225,20 @@ SVG_PX=20
 for state in AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY; do
   state_lower=$(echo "$state" | tr '[:upper:]' '[:lower:]')
   svg_file="$STATE_SVGS/${state_lower}.svg"
+  epsg=$(state_epsg "$state")
+  # Reproject each state into its own state-plane/Albers CRS so the outline shape
+  # is undistorted; fall back to unprojected lat/lon if no EPSG is defined.
+  proj_step=""
+  [ -n "$epsg" ] && proj_step="-proj crs=epsg:$epsg"
   mapshaper "$STATES" name=state \
     -filter "state === '$state'" \
+    $proj_step \
     -style fill=none stroke=currentColor stroke-width=1 \
     -o "$svg_file" format=svg 2>/dev/null && {
       SVG_PX="$SVG_PX" python3 - "$svg_file" <<'EOF'
 import os, re, sys
 svg_path = sys.argv[1]
-px = float(os.environ.get("SVG_PX", "20"))
+px = float(os.environ.get("SVG_PX", "200"))
 with open(svg_path) as f:
     content = f.read()
 m = re.search(r'viewBox="([0-9.eE+-]+)\s+([0-9.eE+-]+)\s+([0-9.eE+-]+)\s+([0-9.eE+-]+)"', content)
