@@ -1712,12 +1712,13 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
 }
 .gameover-grid { letter-spacing: 0.12em; }
 .state-svg-container {
-  width: 1em;
-  height: 1em;
+  width: 1.2em;
+  height: 1.2em;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow: visible;
+  flex-shrink: 0;
 }
 .state-svg-container svg {
   width: 100%;
@@ -1725,6 +1726,8 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
 }
 .state-svg-container svg path {
   stroke: currentColor !important;
+  stroke-width: 0.5 !important;
+  fill: none !important;
 }
 .gameover-solved-label { font-weight: 600; color: var(--green, #2e7d32); }
 .gameover-time-wrap {

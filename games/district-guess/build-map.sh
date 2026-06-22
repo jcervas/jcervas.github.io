@@ -216,6 +216,29 @@ echo ""
 echo "Step 6/6  Generating state boundary SVGs with mapshaper..."
 mkdir -p "$STATE_SVGS"
 
+# Python post-processor to normalize SVG viewBox
+python3 - "$STATE_SVGS" <<'PEOF'
+import os, re
+def normalize_svg_viewbox(svg_path):
+    with open(svg_path, 'r') as f:
+        content = f.read()
+    # Match viewBox="x y width height" and extract the numbers
+    match = re.search(r'viewBox="([0-9.-]+)\s+([0-9.-]+)\s+([0-9.-]+)\s+([0-9.-]+)"', content)
+    if match:
+        x, y, w, h = [float(m) for m in match.groups()]
+        # Add 5% padding
+        pad = max(w, h) * 0.05
+        new_x, new_y = x - pad, y - pad
+        new_w, new_h = w + pad*2, h + pad*2
+        new_viewbox = f'viewBox="{new_x} {new_y} {new_w} {new_h}"'
+        content = re.sub(r'viewBox="[^"]*"', new_viewbox, content)
+        # Remove width/height attributes to let CSS size it
+        content = re.sub(r'\s+width="[^"]*"', '', content)
+        content = re.sub(r'\s+height="[^"]*"', '', content)
+        with open(svg_path, 'w') as f:
+            f.write(content)
+PEOF
+
 # Use mapshaper to filter each state and export as SVG
 for state in AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY; do
   state_lower=$(echo "$state" | tr '[:upper:]' '[:lower:]')
@@ -223,7 +246,27 @@ for state in AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI M
   mapshaper "$STATES" name=state \
     -filter "state === '$state'" \
     -style fill=none stroke=currentColor stroke-width=1 \
-    -o "$svg_file" format=svg 2>/dev/null && echo "  $state"
+    -o "$svg_file" format=svg 2>/dev/null && {
+      python3 - "$svg_file" <<'EOF'
+import os, re, sys
+svg_path = sys.argv[1]
+with open(svg_path, 'r') as f:
+    content = f.read()
+match = re.search(r'viewBox="([0-9.-]+)\s+([0-9.-]+)\s+([0-9.-]+)\s+([0-9.-]+)"', content)
+if match:
+    x, y, w, h = [float(m) for m in match.groups()]
+    pad = max(w, h) * 0.05
+    new_x, new_y = x - pad, y - pad
+    new_w, new_h = w + pad*2, h + pad*2
+    new_viewbox = f'viewBox="{new_x} {new_y} {new_w} {new_h}"'
+    content = re.sub(r'viewBox="[^"]*"', new_viewbox, content)
+    content = re.sub(r'\s+width="[^"]*"', '', content)
+    content = re.sub(r'\s+height="[^"]*"', '', content)
+    with open(svg_path, 'w') as f:
+        f.write(content)
+EOF
+      echo "  $state"
+    }
 done
 
 echo "State SVGs written to $STATE_SVGS/"
