@@ -1711,6 +1711,15 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
   white-space: nowrap;
 }
 .gameover-grid { letter-spacing: 0.12em; }
+.gameover-grid .go-slot-state {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+.gameover-grid .go-slot-state .state-svg-container svg {
+  width: 1.3em;
+  height: 1.3em;
+}
 .guess-icon-state-slot {
   display: inline-flex;
   align-items: center;

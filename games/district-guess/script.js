@@ -3378,16 +3378,28 @@ async function showGameoverModal() {
     hl.className   = 'gameover-headline ' + (won ? 'won' : 'lost');
   }
 
-  // Guess grid
+  // Guess grid — the correct-state slot (⊙) shows the actual state boundary SVG
+  const correctStateAbbr = todayDistrict?.properties?.state || '';
   const usedSlots = guessHistory.map(g => {
-    if (g.correct && g.phase === 'district') return '✓';
-    if (g.correct && g.phase === 'state')    return '⊙';
-    return '⊗';
+    if (g.correct && g.phase === 'district') return '<span class="go-slot">✓</span>';
+    if (g.correct && g.phase === 'state')    return `<span class="go-slot go-slot-state" data-state="${correctStateAbbr}">⊙</span>`;
+    return '<span class="go-slot">⊗</span>';
   });
   const unusedCount = won ? MAX_GUESSES - guessCount : 0;
-  const gridStr = [...usedSlots, ...Array(unusedCount).fill('□')].join(' ');
+  const gridHtml = [...usedSlots, ...Array(unusedCount).fill('<span class="go-slot">□</span>')].join(' ');
   const gridEl = document.getElementById('gameover-grid');
-  if (gridEl) gridEl.textContent = gridStr;
+  if (gridEl) {
+    gridEl.innerHTML = gridHtml;
+    // Swap the correct-state slot's symbol for the state's boundary outline
+    gridEl.querySelectorAll('.go-slot-state').forEach(slot => {
+      const abbr = slot.dataset.state;
+      if (abbr) {
+        getStateSvg(abbr).then(svg => {
+          if (svg) slot.innerHTML = `<span class="state-svg-container">${svg}</span>`;
+        });
+      }
+    });
+  }
 
   // "Solved!" label only when won
   const solvedEl = document.getElementById('gameover-solved-label');
