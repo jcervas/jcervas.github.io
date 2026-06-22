@@ -225,6 +225,7 @@ import sys
 import subprocess
 import tempfile
 import os
+import math
 
 states_file = sys.argv[1]
 output_dir = sys.argv[2]
@@ -248,47 +249,85 @@ state_names = {
     'WI': 'Wisconsin', 'WY': 'Wyoming'
 }
 
-state_epsg = {
-    'AL': 2759, 'AK': 3338, 'AZ': 2762, 'AR': 2764, 'CA': 3311, 'CO': 2773,
-    'CT': 2775, 'DE': 2776, 'FL': 2777, 'GA': 2780, 'HI': 2784, 'ID': 2788,
-    'IL': 2790, 'IN': 2792, 'IA': 2794, 'KS': 2796, 'KY': 2798, 'LA': 2800,
-    'ME': 2802, 'MD': 2804, 'MA': 2805, 'MI': 2808, 'MN': 2811, 'MS': 2813,
-    'MO': 2816, 'MT': 2818, 'NE': 2819, 'NV': 2821, 'NH': 2823, 'NJ': 2824,
-    'NM': 2826, 'NY': 2829, 'NC': 3358, 'ND': 2832, 'OH': 2834, 'OK': 2836,
-    'OR': 2838, 'PA': 3362, 'RI': 2840, 'SC': 3360, 'SD': 2841, 'TN': 2843,
-    'TX': 2845, 'UT': 2850, 'VT': 2852, 'VA': 2853, 'WA': 2855, 'WV': 2857,
-    'WI': 2860, 'WY': 2863
-}
+def geojson_to_svg_path(geometry):
+    """Convert GeoJSON geometry to SVG path string"""
+    if geometry['type'] == 'Polygon':
+        coords_list = [geometry['coordinates']]
+    elif geometry['type'] == 'MultiPolygon':
+        coords_list = geometry['coordinates']
+    else:
+        return None
+
+    paths = []
+    for polygon in coords_list:
+        for ring_idx, ring in enumerate(polygon):
+            if len(ring) < 2:
+                continue
+            # Start with M (moveto), then L (lineto) for remaining points, Z (closepath)
+            path_parts = [f"M {ring[0][0]},{ring[0][1]}"]
+            for point in ring[1:]:
+                path_parts.append(f"L {point[0]},{point[1]}")
+            path_parts.append("Z")
+            paths.append(" ".join(path_parts))
+
+    return " ".join(paths)
+
+def get_bounds(geometry):
+    """Get bounding box of geometry"""
+    coords = []
+    if geometry['type'] == 'Polygon':
+        for ring in geometry['coordinates']:
+            coords.extend(ring)
+    elif geometry['type'] == 'MultiPolygon':
+        for polygon in geometry['coordinates']:
+            for ring in polygon:
+                coords.extend(ring)
+
+    if not coords:
+        return 0, 0, 100, 100
+
+    lons = [c[0] for c in coords]
+    lats = [c[1] for c in coords]
+
+    min_lon, max_lon = min(lons), max(lons)
+    min_lat, max_lat = min(lats), max(lats)
+
+    # Add 10% padding
+    width = max_lon - min_lon
+    height = max_lat - min_lat
+    padding = max(width, height) * 0.1
+
+    return min_lon - padding, min_lat - padding, max_lon + padding, max_lat + padding
 
 for feature in fc.get('features', []):
     state = feature.get('properties', {}).get('state')
     if not state or state not in state_names:
         continue
 
-    # Create single-state GeoJSON
-    single_state_fc = {'type': 'FeatureCollection', 'features': [feature]}
+    geometry = feature.get('geometry')
+    if not geometry:
+        continue
 
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as tmp:
-        json.dump(single_state_fc, tmp)
-        tmp_path = tmp.name
+    path = geojson_to_svg_path(geometry)
+    if not path:
+        continue
 
-    try:
-        epsg = state_epsg.get(state)
+    bounds = get_bounds(geometry)
+    x_min, y_min, x_max, y_max = bounds
 
-        # Generate SVG with mapshaper: simplify, style with no fill and black stroke
-        svg_path = os.path.join(output_dir, f"{state.lower()}.svg")
+    width = x_max - x_min
+    height = y_max - y_min
 
-        cmd = [
-            'mapshaper', tmp_path,
-            '-simplify', '2%', 'keep-shapes',
-            '-o', svg_path, 'format=svg',
-            'stroke=black', 'stroke-width=1', 'fill=none'
-        ]
+    # Flip Y axis for SVG (SVG origin is top-left, GeoJSON is lat/lon)
+    svg_content = f'''<svg viewBox="{x_min} {-y_max} {width} {height}" xmlns="http://www.w3.org/2000/svg">
+  <path d="{path}" fill="none" stroke="black" stroke-width="1" vector-effect="non-scaling-stroke"/>
+</svg>'''
 
-        subprocess.run(cmd, check=False, capture_output=True)
-        print(f"  {state} ({state_names[state]})")
-    finally:
-        os.unlink(tmp_path)
+    svg_path = os.path.join(output_dir, f"{state.lower()}.svg")
+    with open(svg_path, 'w') as f:
+        f.write(svg_content)
+
+    print(f"  {state} ({state_names[state]})")
 
 print(f"\nGenerated {len([f for f in os.listdir(output_dir) if f.endswith('.svg')])} state SVGs in {output_dir}")
 PYEOF
