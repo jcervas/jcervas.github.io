@@ -120,41 +120,45 @@
       accBtn.classList.remove('hidden');
     }
 
-    // ---- Login gate (only when active) --------------------------------------
-    let showGate = () => {}, hideGate = () => {};
-    if (active) {
-      const modal = $('login-modal');
-      const err = $('login-error');
-      showGate = () => modal.classList.remove('hidden');
-      hideGate = () => modal.classList.add('hidden');
-      const fail = (e) => { err.textContent = (e && e.message) || 'Something went wrong'; };
+    // ---- Login form (opened on demand from the welcome splash) --------------
+    // The splash is the always-present fallback, so the login form is dismissable.
+    const modal = $('login-modal');
+    const err = $('login-error');
+    const showGate = () => modal.classList.remove('hidden');
+    const hideGate = () => modal.classList.add('hidden');
+    const fail = (e) => { err.textContent = (e && e.message) || 'Something went wrong'; };
 
-      modal.querySelectorAll('.login-provider-btn').forEach((btn) => {
-        btn.addEventListener('click', async () => {
-          err.textContent = '';
-          try { await B.signInWithOAuth(btn.dataset.provider); } catch (e) { fail(e); }
-        });
-      });
-      $('login-email-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
+    modal.querySelectorAll('.login-provider-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
         err.textContent = '';
-        try {
-          const { error } = await B.signInWithEmail($('login-email').value.trim(), $('login-password').value);
-          if (error) throw error;
-        } catch (ex) { fail(ex); }
+        try { await B.signInWithOAuth(btn.dataset.provider); } catch (e) { fail(e); }
       });
-      $('login-signup').addEventListener('click', async () => {
-        err.textContent = '';
-        const email = $('login-email').value.trim();
-        const pw = $('login-password').value;
-        if (!email || pw.length < 6) { err.textContent = 'Enter an email and a 6+ character password.'; return; }
-        try {
-          const { error } = await B.signUpWithEmail(email, pw);
-          if (error) throw error;
-          err.textContent = 'Check your email to confirm, then sign in.';
-        } catch (ex) { fail(ex); }
-      });
-    }
+    });
+    $('login-email-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      err.textContent = '';
+      try {
+        const { error } = await B.signInWithEmail($('login-email').value.trim(), $('login-password').value);
+        if (error) throw error;
+      } catch (ex) { fail(ex); }
+    });
+    $('login-signup').addEventListener('click', async () => {
+      err.textContent = '';
+      const email = $('login-email').value.trim();
+      const pw = $('login-password').value;
+      if (!email || pw.length < 6) { err.textContent = 'Enter an email and a 6+ character password.'; return; }
+      try {
+        const { error } = await B.signUpWithEmail(email, pw);
+        if (error) throw error;
+        err.textContent = 'Check your email to confirm, then sign in.';
+      } catch (ex) { fail(ex); }
+    });
+    // Close returns to the welcome splash (which still has the Sign-in button).
+    $('login-close').addEventListener('click', () => { err.textContent = ''; hideGate(); });
+    $('welcome-signin-btn').addEventListener('click', () => { err.textContent = ''; showGate(); });
+
+    // When locked, make sure the welcome splash is the visible fallback.
+    const showSplash = () => $('welcome-modal').classList.remove('hidden');
 
     // ---- React to auth state ------------------------------------------------
     B.onAuthChange((user) => {
@@ -166,13 +170,14 @@
         window.dispatchEvent(new CustomEvent('district-auth', { detail: { user } }));
       } else if (active) {
         lock();
-        showGate();
+        hideGate();
+        showSplash();
       }
     });
 
     const user = await B.getUser();
     refreshAccount();
     if (user) { unlock(); maybePromptProfile(); }
-    else if (active) { lock(); showGate(); }
+    else if (active) { lock(); showSplash(); }
   });
 })();

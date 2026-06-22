@@ -1712,9 +1712,22 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
   color: var(--muted);
   white-space: nowrap;
 }
-/* ===== Auth lock: hide the game + splash until signed in ===== */
+/* ===== Auth lock: block the game until signed in, fall back to the splash ===== */
+/* Hide the game itself, plus the splash's Play buttons; the welcome splash stays
+   visible and shows a Sign-in button so there's always a way to log in. */
 body.auth-locked main,
-body.auth-locked #welcome-modal { display: none !important; }
+body.auth-locked #welcome-buttons { display: none !important; }
+#welcome-signin-btn { display: none; }
+body.auth-locked #welcome-signin-btn { display: inline-flex; }
+
+.login-close {
+  position: absolute; top: 10px; right: 12px;
+  width: 32px; height: 32px; padding: 0;
+  border: none; background: none; cursor: pointer;
+  font-size: 1.6rem; line-height: 1; color: var(--muted, #888);
+}
+.login-close:hover { color: var(--text, #111); }
+.login-modal-content { position: relative; }
 
 /* ===== Account menu (initials avatar + dropdown) ===== */
 .account-wrap { position: relative; display: inline-flex; }

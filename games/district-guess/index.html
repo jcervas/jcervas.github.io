@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=47" />
+  <link rel="stylesheet" href="style.css?v=48" />
   <!-- Preload the core map data so fetch starts before JS executes -->
   <link rel="preload" href="districts-core.topojson" as="fetch" />
 </head>
@@ -68,6 +68,7 @@
 <!-- ===== LOGIN MODAL (shown only when DistrictBackend.ENABLED) ===== -->
 <div id="login-modal" class="modal hidden">
   <div class="modal-content login-modal-content">
+    <button class="login-close" id="login-close" aria-label="Close">&times;</button>
     <div class="login-logo" aria-hidden="true"></div>
     <h2 class="login-title">Daily District</h2>
     <p class="login-subtitle">Sign in to play today's puzzle.</p>
@@ -127,6 +128,7 @@
         <div class="welcome-loading-text">Loading...</div>
       </div>
     </div>
+    <button id="welcome-signin-btn" class="welcome-action-btn">Sign in to Play</button>
     <div class="welcome-meta">
       <div id="welcome-date-line" class="welcome-date-line"></div>
       <div id="welcome-puzzle-num" class="welcome-puzzle-num"></div>
@@ -481,7 +483,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="globe.js" defer></script>
 <script src="backend.js?v=4" defer></script>
-<script src="login.js?v=5" defer></script>
+<script src="login.js?v=6" defer></script>
 <script src="script.js?v=1.13.2" defer></script>
 </body>
 </html>
