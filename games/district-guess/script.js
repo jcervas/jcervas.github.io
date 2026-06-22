@@ -449,6 +449,7 @@ let _tileZoomInAnimating    = false;  // true during 700ms entry zoom-in so hand
 let db                  = null;   // Firestore instance (if configured)
 let username            = '';
 let replayCount         = 0;      // increments each "Play Again" to pick a fresh district
+let isArchiveGame       = false;  // true while playing a past puzzle from the archive — unofficial, not saved or counted
 
 // ============================================================
 //  HELPERS
@@ -637,6 +638,9 @@ function getActiveDistrictKeys() {
 //  STORAGE
 // ============================================================
 function saveGameState() {
+  // Archive (past-puzzle) games are unofficial: never persist them, so the
+  // official daily save is never overwritten.
+  if (isArchiveGame) return;
   const state = {
     key: todayKey,
     guessCount,
@@ -761,7 +765,7 @@ function buildGameoverDiv() {
         <span id="gameover-ribbon-text" class="gameover-ribbon-text"></span>
         <div class="banner-actions">
           <button id="gameover-result-btn">View Result</button>
-          <button id="gameover-new-map-btn">New Map</button>
+          <button id="gameover-new-map-btn">Play Archive</button>
         </div>
       </div>
       <div class="gameover-card">
@@ -3135,8 +3139,9 @@ function endGame(won, { skipAnims = false } = {}) {
   renderGuessHistory();
   // Add 1 for the winning guess itself; wrong guesses are already counted
   if (won) guessCount += 1;
-  // Save stats BEFORE showResult so renderInlinePersonalStats shows current game
-  savePersonalStats(won, guessCount, elapsedSeconds);
+  // Save stats BEFORE showResult so renderInlinePersonalStats shows current game.
+  // Archive games are unofficial — never counted.
+  if (!isArchiveGame) savePersonalStats(won, guessCount, elapsedSeconds);
   lastGameWon = won;
   // Render result content now, but don't auto-open the modal — let the user watch the
   // map-ref reveal animation (boundary draw-in + shake/pulse) on the game-over screen,
@@ -4127,8 +4132,9 @@ function resetGame(newIdx) {
   // Pick the new district
   todayDistrict = districts[newIdx];
 
-  // Remove saved game so restoreGame() won't trigger on this key
-  localStorage.removeItem(STORAGE_PREFIX + 'today');
+  // Remove saved game so restoreGame() won't trigger on this key.
+  // Skip for archive games so the official daily save is preserved.
+  if (!isArchiveGame) localStorage.removeItem(STORAGE_PREFIX + 'today');
 
   // Clear census cache so District Profile loads fresh data for the new district
   _cachePromise = null;
@@ -4376,17 +4382,25 @@ document.addEventListener('DOMContentLoaded', () => {
     submitDistrictTile(tile.dataset.dist);
   });
 
-  // New Map — pick a new district (both from result modal button AND banner button)
-  function startNewMap() {
-    replayCount++;
-    sessionStorage.setItem(SESSION_REPLAY_KEY, String(replayCount));
-    const randSeed = Date.now() ^ (Math.random() * 0xffffffff | 0);
-    sessionStorage.setItem(SESSION_RANDSEED_KEY, String(randSeed));
-    const newIdx = seededIndex(randSeed, districts.length);
+  // ── Play Archive — replay a past daily puzzle (unofficial, not counted) ────
+  // Same epoch the welcome splash uses, so puzzle numbers match exactly.
+  const ARCHIVE_EPOCH = new Date('2025-01-20T00:00:00-05:00');
 
-    // Show welcome splash immediately (before map refresh) so user never sees
-    // the new district flash in behind the closing result modal.
+  // Stamp the welcome splash meta for an archive puzzle (re-applied at each stage
+  // because the deferred resetGame/render path otherwise restamps today's number).
+  function applyArchiveMeta(meta) {
+    if (!meta) return;
+    const numLine  = document.getElementById('welcome-puzzle-num');
+    const dateLine = document.getElementById('welcome-date-line');
+    if (numLine)  numLine.textContent  = `No. ${meta.num} · Archive`;
+    if (dateLine) dateLine.textContent = meta.label;
+  }
+
+  // Shared launch: show the splash, rebuild the game section, then start at idx.
+  function launchGameAtIndex(newIdx, archive, meta) {
+    isArchiveGame = !!archive;
     document.getElementById('result-modal')?.classList.add('hidden');
+    document.getElementById('archive-modal')?.classList.add('hidden');
     destroyGameoverDiv();
     gameOver = false;
     guessCount = 0;
@@ -4394,6 +4408,7 @@ document.addEventListener('DOMContentLoaded', () => {
     _gameStarted = false;
     buildWelcomeButtons();
     welcomeModal.classList.remove('hidden');
+    applyArchiveMeta(meta);
 
     buildGameSection();
     initMap();
@@ -4401,19 +4416,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setTimeout(() => {
       resetGame(newIdx);
+      applyArchiveMeta(meta);
       requestAnimationFrame(() => {
         if (map) map.invalidateSize();
         if (districtLayer) map.fitBounds(districtLayer.getBounds(), { padding: [40, 40], animate: false });
+        applyArchiveMeta(meta);
       });
     }, 350);
   }
-  document.getElementById('play-again-btn').addEventListener('click', startNewMap);
-  document.getElementById('banner-new-map-btn').addEventListener('click', startNewMap);
+
+  // Start a chosen archive puzzle. The seed reproduces that date's daily answer.
+  function startArchiveGame(seed, num, label) {
+    launchGameAtIndex(seededIndex(seed, districts.length), true, { num, label });
+  }
+
+  // Build + open the archive list: every past daily (newest first).
+  function openArchive() {
+    const list = document.getElementById('archive-list');
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const todayNum = Math.floor((Date.now() - ARCHIVE_EPOCH) / 86400000) + 1;
+    let html = '';
+    for (let k = 1; k < todayNum; k++) {
+      const d = new Date(today); d.setDate(today.getDate() - k);
+      const num = todayNum - k;
+      const seed = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+      const label = d.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+      html += `<button class="archive-item" data-seed="${seed}" data-num="${num}" data-label="${label}">` +
+              `<span class="archive-num">No. ${num}</span><span class="archive-date">${label}</span></button>`;
+    }
+    list.innerHTML = html || '<div class="lb-empty">No past puzzles yet.</div>';
+    document.getElementById('result-modal')?.classList.add('hidden');
+    document.getElementById('archive-modal').classList.remove('hidden');
+  }
+
+  document.getElementById('archive-list').addEventListener('click', (e) => {
+    const item = e.target.closest('.archive-item');
+    if (!item) return;
+    startArchiveGame(parseInt(item.dataset.seed, 10), parseInt(item.dataset.num, 10), item.dataset.label);
+  });
+  document.getElementById('archive-close').addEventListener('click', () => {
+    document.getElementById('archive-modal').classList.add('hidden');
+  });
+  document.getElementById('play-again-btn').addEventListener('click', openArchive);
+  document.getElementById('banner-new-map-btn').addEventListener('click', openArchive);
 
   // Game-over modal controls — delegated from document so they survive div recreation
   document.addEventListener('click', e => {
     if (e.target.closest('#gameover-result-btn')) { openResultModal(); return; }
-    if (e.target.closest('#gameover-new-map-btn')) { startNewMap(); return; }
+    if (e.target.closest('#gameover-new-map-btn')) { openArchive(); return; }
     // Clicking anywhere on the gameover screen (except zoom buttons) opens results
     if (e.target.closest('#gameover-modal') && !e.target.closest('.mzb-go')) {
       openResultModal(); return;

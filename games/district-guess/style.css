@@ -1760,6 +1760,19 @@ body.auth-locked #welcome-signin-btn {
 }
 .account-menu-item:hover { background: var(--hover, #f3f3f3); }
 
+/* ===== Archive picker ===== */
+.archive-note { font-size: 0.85rem; color: var(--muted); margin: 0 0 12px; }
+.archive-list { display: flex; flex-direction: column; gap: 6px; max-height: 55vh; overflow-y: auto; }
+.archive-item {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding: 11px 14px; font: inherit; cursor: pointer;
+  background: var(--card, #fff); color: var(--text, #111);
+  border: 1px solid var(--border, #e3e3e3); border-radius: 9px;
+}
+.archive-item:hover { background: var(--hover, #f3f3f3); border-color: var(--muted, #bbb); }
+.archive-num { font-weight: 700; }
+.archive-date { color: var(--muted); font-size: 0.9rem; }
+
 /* ===== Login modal ===== */
 /* Sits above the welcome splash (z-index 200) so the sign-in gate shows first. */
 #login-modal { z-index: 300; }
