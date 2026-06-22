@@ -216,30 +216,12 @@ echo ""
 echo "Step 6/6  Generating state boundary SVGs with mapshaper..."
 mkdir -p "$STATE_SVGS"
 
-# Python post-processor to normalize SVG viewBox
-python3 - "$STATE_SVGS" <<'PEOF'
-import os, re
-def normalize_svg_viewbox(svg_path):
-    with open(svg_path, 'r') as f:
-        content = f.read()
-    # Match viewBox="x y width height" and extract the numbers
-    match = re.search(r'viewBox="([0-9.-]+)\s+([0-9.-]+)\s+([0-9.-]+)\s+([0-9.-]+)"', content)
-    if match:
-        x, y, w, h = [float(m) for m in match.groups()]
-        # Add 5% padding
-        pad = max(w, h) * 0.05
-        new_x, new_y = x - pad, y - pad
-        new_w, new_h = w + pad*2, h + pad*2
-        new_viewbox = f'viewBox="{new_x} {new_y} {new_w} {new_h}"'
-        content = re.sub(r'viewBox="[^"]*"', new_viewbox, content)
-        # Remove width/height attributes to let CSS size it
-        content = re.sub(r'\s+width="[^"]*"', '', content)
-        content = re.sub(r'\s+height="[^"]*"', '', content)
-        with open(svg_path, 'w') as f:
-            f.write(content)
-PEOF
+# Target rendered size (px) for the inline icons.
+SVG_PX=20
 
-# Use mapshaper to filter each state and export as SVG
+# Use mapshaper to filter each state and export as SVG, then post-process so the
+# SVG has a SQUARE viewBox (no distortion) and explicit pixel width/height (so it
+# never collapses to 0px inside flex containers).
 for state in AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY; do
   state_lower=$(echo "$state" | tr '[:upper:]' '[:lower:]')
   svg_file="$STATE_SVGS/${state_lower}.svg"
@@ -247,21 +229,33 @@ for state in AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI M
     -filter "state === '$state'" \
     -style fill=none stroke=currentColor stroke-width=1 \
     -o "$svg_file" format=svg 2>/dev/null && {
-      python3 - "$svg_file" <<'EOF'
+      SVG_PX="$SVG_PX" python3 - "$svg_file" <<'EOF'
 import os, re, sys
 svg_path = sys.argv[1]
-with open(svg_path, 'r') as f:
+px = float(os.environ.get("SVG_PX", "20"))
+with open(svg_path) as f:
     content = f.read()
-match = re.search(r'viewBox="([0-9.-]+)\s+([0-9.-]+)\s+([0-9.-]+)\s+([0-9.-]+)"', content)
-if match:
-    x, y, w, h = [float(m) for m in match.groups()]
-    pad = max(w, h) * 0.05
-    new_x, new_y = x - pad, y - pad
-    new_w, new_h = w + pad*2, h + pad*2
-    new_viewbox = f'viewBox="{new_x} {new_y} {new_w} {new_h}"'
-    content = re.sub(r'viewBox="[^"]*"', new_viewbox, content)
-    content = re.sub(r'\s+width="[^"]*"', '', content)
-    content = re.sub(r'\s+height="[^"]*"', '', content)
+m = re.search(r'viewBox="([0-9.eE+-]+)\s+([0-9.eE+-]+)\s+([0-9.eE+-]+)\s+([0-9.eE+-]+)"', content)
+if m:
+    x, y, w, h = [float(v) for v in m.groups()]
+    # Make a square viewBox by expanding the smaller dimension symmetrically.
+    side = max(w, h)
+    pad = side * 0.08            # breathing room so the stroke isn't clipped
+    side_p = side + pad * 2
+    cx, cy = x + w / 2, y + h / 2
+    nx, ny = cx - side_p / 2, cy - side_p / 2
+    content = re.sub(r'viewBox="[^"]*"',
+                     f'viewBox="{nx:.3f} {ny:.3f} {side_p:.3f} {side_p:.3f}"',
+                     content)
+    # Force explicit pixel dimensions on the root <svg> so it has intrinsic size.
+    content = re.sub(r'\s+width="[^"]*"',  '', content, count=1)
+    content = re.sub(r'\s+height="[^"]*"', '', content, count=1)
+    content = re.sub(r'<svg ',
+                     f'<svg width="{px:g}" height="{px:g}" ',
+                     content, count=1)
+    # Scale stroke to viewBox units so the outline stays ~1px when rendered.
+    sw = side_p / px
+    content = re.sub(r'stroke-width="[^"]*"', f'stroke-width="{sw:.3f}"', content)
     with open(svg_path, 'w') as f:
         f.write(content)
 EOF
