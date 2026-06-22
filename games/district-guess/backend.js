@@ -79,6 +79,66 @@
     return data;
   }
 
+  // ── Telemetry (write-only; no PII — viewport / device class / locale) ──────
+  function sessionId() {
+    try {
+      let s = sessionStorage.getItem('dd_session');
+      if (!s) { s = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()); sessionStorage.setItem('dd_session', s); }
+      return s;
+    } catch (_) { return null; }
+  }
+  function deviceInfo() {
+    const w = window.innerWidth, h = window.innerHeight;
+    const ua = navigator.userAgent || '';
+    const touch = (navigator.maxTouchPoints || 0) > 0;
+    const minDim = Math.min(w, h);
+    let device = 'desktop';
+    if (/iPad|Tablet/i.test(ua) || (touch && minDim >= 600 && minDim < 900)) device = 'tablet';
+    else if (/Mobi|Android|iPhone|iPod/i.test(ua) || (touch && minDim < 600)) device = 'mobile';
+    let tz = null; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (_) {}
+    return {
+      device, viewport_w: w, viewport_h: h,
+      dpr: Math.round((window.devicePixelRatio || 1) * 100) / 100,
+      user_agent: ua.slice(0, 2048),
+      language: navigator.language || null,
+      timezone: tz,
+      referrer: (document.referrer || '').slice(0, 2048) || null,
+    };
+  }
+  // event: one of session_start|game_start|game_guess|game_complete|share|error
+  async function logTelemetry(event, opts = {}) {
+    try {
+      const { data } = await client().auth.getUser();
+      await client().from('telemetry').insert({
+        user_id: data?.user?.id ?? null,
+        session_id: sessionId(),
+        event,
+        puzzle_date: opts.puzzleDate ?? null,
+        ...deviceInfo(),
+        payload: opts.payload ?? {},
+      });
+    } catch (_) { /* best-effort; never disrupt gameplay */ }
+  }
+
+  // ── Profile (standard fields; all optional, user-editable) ─────────────────
+  async function getProfile() {
+    const { data: { user } } = await client().auth.getUser();
+    if (!user) return null;
+    const { data, error } = await client().from('profiles').select('*').eq('user_id', user.id).single();
+    if (error) throw error;
+    return data;
+  }
+  async function updateProfile(fields) {
+    const { data: { user } } = await client().auth.getUser();
+    if (!user) throw new Error('not signed in');
+    const allowed = ['username', 'display_name', 'phone', 'city', 'region', 'country', 'marketing_opt_in'];
+    const patch = { updated_at: new Date().toISOString() };
+    for (const k of allowed) if (k in fields) patch[k] = fields[k];
+    const { data, error } = await client().from('profiles').update(patch).eq('user_id', user.id).select().single();
+    if (error) throw error;
+    return data;
+  }
+
   window.DistrictBackend = {
     ENABLED,
     SUPABASE_URL,
@@ -86,5 +146,10 @@
     getUser, onAuthChange,
     signInWithOAuth, signInWithEmail, signUpWithEmail, signOut,
     today, guess, leaderboard,
+    logTelemetry, getProfile, updateProfile,
   };
+
+  // Best-effort session telemetry on load (no PII). Runs for everyone.
+  if (document.readyState !== 'loading') logTelemetry('session_start');
+  else document.addEventListener('DOMContentLoaded', () => logTelemetry('session_start'));
 })();

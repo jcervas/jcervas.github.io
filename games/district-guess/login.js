@@ -54,13 +54,50 @@
       } catch (ex) { fail(ex); }
     });
 
+    // ---- Profile collection: shown once after sign-in if not yet filled ----
+    const pModal = document.getElementById('profile-modal');
+    const pErr = document.getElementById('profile-error');
+    const hideProfile = () => pModal.classList.add('hidden');
+
+    async function maybeShowProfile() {
+      if (localStorage.getItem('dd_profile_done') === '1') return;
+      let prof;
+      try { prof = await B.getProfile(); } catch (_) { return; }
+      if (!prof) return;
+      if (prof.city || prof.phone) { localStorage.setItem('dd_profile_done', '1'); return; }
+      if (prof.display_name) document.getElementById('profile-display-name').value = prof.display_name;
+      pModal.classList.remove('hidden');
+    }
+
+    document.getElementById('profile-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      pErr.textContent = '';
+      const val = (id) => document.getElementById(id).value.trim() || null;
+      try {
+        await B.updateProfile({
+          display_name: val('profile-display-name'),
+          phone: val('profile-phone'),
+          city: val('profile-city'),
+          region: val('profile-region'),
+          country: val('profile-country'),
+          marketing_opt_in: document.getElementById('profile-marketing').checked,
+        });
+        localStorage.setItem('dd_profile_done', '1');
+        hideProfile();
+      } catch (ex) { pErr.textContent = (ex && ex.message) || 'Could not save'; }
+    });
+    document.getElementById('profile-skip').addEventListener('click', () => {
+      localStorage.setItem('dd_profile_done', '1');
+      hideProfile();
+    });
+
     // Show the gate until signed in; broadcast sign-in so the game can start.
     B.onAuthChange((user) => {
-      if (user) { hide(); window.dispatchEvent(new CustomEvent('district-auth', { detail: { user } })); }
+      if (user) { hide(); maybeShowProfile(); window.dispatchEvent(new CustomEvent('district-auth', { detail: { user } })); }
       else show();
     });
 
     const user = await B.getUser();
-    if (user) hide(); else show();
+    if (user) { hide(); maybeShowProfile(); } else show();
   });
 })();

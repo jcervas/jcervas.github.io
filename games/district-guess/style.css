@@ -1715,6 +1715,12 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
 /* ===== Login modal ===== */
 /* Sits above the welcome splash (z-index 200) so the sign-in gate shows first. */
 #login-modal { z-index: 300; }
+#profile-modal { z-index: 320; }
+.profile-checkbox {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.85rem; color: var(--muted); cursor: pointer; padding: 2px 0;
+}
+.profile-checkbox input { width: auto; }
 .login-modal-content {
   max-width: 360px;
   text-align: center;

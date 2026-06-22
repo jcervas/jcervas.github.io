@@ -43,6 +43,26 @@ Functions read it with `service_role` and return only what the player has earned
 - `results(user_id, puzzle_date) PK, won, completed, guesses, seconds,
   guess_history, started_at, completed_at` — RLS: read own only; writes via the
   Edge Function (service_role).
+- `profiles` also carries optional standard fields: `email, display_name, phone,
+  city, region, country, marketing_opt_in, updated_at`. `email`/`display_name`
+  are captured from auth on signup; the rest are user-entered via the profile
+  modal (`getProfile`/`updateProfile`). RLS: read/update own only.
+- `telemetry(id, user_id?, session_id, event, puzzle_date, device, viewport_w,
+  viewport_h, dpr, user_agent, language, timezone, referrer, payload, created_at)`
+  — **write-only** UI analytics, no PII. RLS: INSERT only (constrained: caller may
+  only attribute to self/anon, known event types); no client read. `DistrictBackend.logTelemetry()`
+  fires `session_start` on load for everyone. Read aggregates via service_role/SQL.
+
+### Stats / leaderboard
+- `get_leaderboard()` RPC (SECURITY DEFINER, anon-callable) → `{ user, today,
+  allTime }`. `user` = caller's own stats (auth.uid); today/allTime = aggregates
+  across all players (aggregate numbers only). The leaderboard UI is fully
+  DB-backed (no local stats).
+
+### Privacy note
+`telemetry` fires for **all** visitors and `profiles` stores phone/city — pair
+this with a short privacy notice / consent line before/at launch (GDPR/CCPA).
+Telemetry can be gated behind login or a consent toggle if preferred.
 
 ## Edge Functions
 
