@@ -12,7 +12,7 @@
 (function(){
   var TWO=Math.PI*2, D2R=Math.PI/180;
   var CARNEGIE_RED=[196,18,48];
-  var THREADS=[[253,181,21],[0,150,71],[0,143,145],[0,123,192],[239,58,71]];
+  var THREADS=[[220,80,110],[196,18,48],[160,10,40],[130,5,25],[240,120,140]];
   var THREAD_PROB=0.2;
   var CORNERS={ 'top-right':[0.7071,-0.7071],'top-left':[-0.7071,-0.7071],
                 'bottom-right':[0.7071,0.7071],'bottom-left':[-0.7071,0.7071] };
