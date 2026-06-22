@@ -1712,6 +1712,10 @@ body.light-mode .state-chip { background: #e5e5ea; color: var(--muted); }
   color: var(--muted);
   white-space: nowrap;
 }
+/* ===== Auth lock: hide the game + splash until signed in ===== */
+body.auth-locked main,
+body.auth-locked #welcome-modal { display: none !important; }
+
 /* ===== Account menu (initials avatar + dropdown) ===== */
 .account-wrap { position: relative; display: inline-flex; }
 .account-btn {

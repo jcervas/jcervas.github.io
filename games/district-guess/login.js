@@ -29,6 +29,13 @@
     const $ = (id) => document.getElementById(id);
     const active = B.ENABLED || new URLSearchParams(location.search).get('login') === '1';
 
+    // When login is required, hide the game (and welcome splash) until signed in
+    // so there is nothing to interact with behind the gate. Locked synchronously
+    // up front to avoid a flash of the game before the auth check resolves.
+    const lock = () => document.body.classList.add('auth-locked');
+    const unlock = () => document.body.classList.remove('auth-locked');
+    if (active) lock();
+
     // ---- Profile modal (shared: first-time collection + later editing) ------
     const pModal = $('profile-modal');
     const pErr = $('profile-error');
@@ -153,17 +160,19 @@
     B.onAuthChange((user) => {
       refreshAccount();
       if (user) {
+        unlock();
         hideGate();
         maybePromptProfile();
         window.dispatchEvent(new CustomEvent('district-auth', { detail: { user } }));
       } else if (active) {
+        lock();
         showGate();
       }
     });
 
     const user = await B.getUser();
     refreshAccount();
-    if (user) maybePromptProfile();
-    else if (active) showGate();
+    if (user) { unlock(); maybePromptProfile(); }
+    else if (active) { lock(); showGate(); }
   });
 })();

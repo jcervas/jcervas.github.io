@@ -14,8 +14,8 @@
   // Publishable (anon) key — safe to ship in client code.
   const SUPABASE_ANON_KEY = 'sb_publishable_r1e40mdMFg02saEW_xNq2A_iTGELUcU';
 
-  // Master switch. Keep false until OAuth/email providers are configured.
-  const ENABLED = false;
+  // Login required for everyone. (Google + email providers are configured.)
+  const ENABLED = true;
 
   let _client = null;
   function client() {
