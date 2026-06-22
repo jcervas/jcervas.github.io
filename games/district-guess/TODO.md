@@ -15,6 +15,9 @@ Actual game: Select state (hints about state) -> Select a district (hints about 
 - [x] Clicking gameover screen opens result modal; "Back to Map" returns to gameover without rebuilding
 - [x] Win/loss animations (shake/pulse) now fire on the gameover map, not hidden district-tiles
 - [x] Share images: rich style (urban, roads, exterior mask); Instagram portrait format; spoiler-free (no district key)
+- [x] Loading: replace spinner with spinning tartan globe (`globe.js`, Carnegie Red threads) + "Loading…" caption
+- [x] State boundary outlines: per-state SVGs (mapshaper + per-state EPSG projection), shown in guess history and the gameover grid's correct-state slot; browser-controlled sizing with non-scaling stroke
+- [x] Win confetti/spark performance: drop per-ember drop-shadow filters, cut laps 5→3, throttle ember emission
 
 ## Major upgrades
 
@@ -24,7 +27,6 @@ Actual game: Select state (hints about state) -> Select a district (hints about 
 
 ## UI
 
-- [x] Use system default should be below "Dark Theme", not next to it.
 - [ ] When a user plays in hard mode, we should differentiate when they share. Eventually we will have a database with all this information and will need to record it there, too.
 - [x] The first time a user plays the game, they should be able to set the settings. Perhaps it can pop up after closing the How to Play modal (but only after the first time.)
 - [x] clicking "Daily District" in the header should take a user to the welcome splash

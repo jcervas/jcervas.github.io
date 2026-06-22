@@ -2,6 +2,31 @@
 
 ---
 
+## v1.14 — State Outlines, Loading Globe & Confetti Perf
+
+### State boundary outlines
+- **State SVG pipeline (mapshaper)**: `build-map.sh` Step 6 generates a boundary SVG per state directly with mapshaper, replacing the earlier hand-rolled Python GeoJSON→SVG conversion
+- **Per-state projection**: each state SVG is reprojected into its own state-plane/Albers CRS via `-proj crs=epsg:$epsg` (codes from `state_epsg()`), so outlines render undistorted instead of sheared raw lat/lon
+- **Square viewBox + intrinsic fallback**: SVGs export with a centered square viewBox and `width/height="200"` as an intrinsic fallback so they never collapse to 0px inside flex containers
+- **Browser-controlled sizing**: displayed size is set entirely by CSS per usage (guess-history slot `1.5rem`, gameover-grid correct-state slot `1.3em`); SVG carries `vector-effect="non-scaling-stroke"` so the outline stays a crisp ~1px at any size
+- **Dark-mode safe**: paths stroke with `currentColor` (correct/wrong guesses tint green/red in guess history)
+- **Guess history**: state guesses show the state's boundary outline beside the label
+- **Gameover grid**: the correct-state slot (`⊙`) is replaced with the answer state's boundary outline
+
+### Loading animation
+- **Spinning tartan globe**: welcome/loading spinner replaced with a canvas-rendered tartan globe (`globe.js`) using Carnegie Red thread shades; "Loading…" caption beneath
+
+### Performance
+- **Win spark-trace de-jank**: removed the per-ember `drop-shadow` SVG filter (a per-frame GPU repaint for each of ~dozen live embers), cut the boundary spark from 5→3 laps, and throttled ember emission to every other frame — fixes the slow/stuttery confetti on win, especially on integrated GPUs. The lead spark keeps its glow.
+
+### Fixes
+- **Guesses render on tab open**: switching to the results-modal "Guesses" tab now calls `renderGuessHistory()` (guesses were previously blank)
+- **Guesses survive reload**: `restoreGame()` sets `_gameStarted = true`, so `renderGuessHistory()` no longer early-returns after a page reload
+- **Ref map viewBox**: US reference map uses the container's real dimensions instead of a hardcoded 960×400; prevents zoom-out on state elimination
+- **Gameover map viewBox**: uses container dimensions rather than hardcoded 960×400
+
+---
+
 ## v1.12 — Dynamic DOM, Navigation & Share Polish
 
 - **Dynamic `#game-section` and `#gameover-modal`**: both elements removed from HTML and created/destroyed by JS — no hidden stale DOM between screens
