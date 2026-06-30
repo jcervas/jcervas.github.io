@@ -187,6 +187,12 @@ Homepage: <https://jonathancervas.com>
 
 
 
+# Public Engagement & Digital Projects
+
+- *[Daily District (Better Know a District)](https://daily-district.com)* — Creator and Lead Developer (2026–present). A Wordle-style educational web game in which players identify all 435 U.S. House districts from their geography, designed to build civic and geographic literacy for a broad public audience.
+
+
+
 # Professional Experience
 
 - Special Master
@@ -218,7 +224,7 @@ Homepage: <https://jonathancervas.com>
 
 # Talks (Invited and Conference)
 
-- *Congressional Briefing on Redistricting Reform* — invited to Washington, D.C., to brief several dozen members of Congress. June 2026.
+- *Congressional Briefing on Redistricting Reform* — invited to Washington, D.C., to brief several dozen members of Congress. Problem Solvers Caucus, Hosted by Rep. Tom Suozzi and Rep. Brian Fitzpatrick. June 2026.
 - *Reshaping Government:  Possibilities and Perils.  Congressional Redistricting Frenzy* - University of Pittsburgh, The Dick Thornburgh Forum for Law & Public Policy. Pittsburgh, Pennsylvania. June 4, 2026.
 - *Redistricting: Drawing the Maps, Presentation and demonstration of how redistricting maps are drawn, including the data and inputs that go into making maps.* - National Conference of State Legislatures. Pittsburgh, Pennsylvania. May 29, 2026. 
 - *Racial Equality after Callais: Strategies for Implementing Electoral Systems Reform* - Harvard Law School (Charles Hamilton Houston Institute for Race & Justice). Cambridge, Massachusetts. April 16 - 17, 2026.
