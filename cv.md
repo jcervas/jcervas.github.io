@@ -84,15 +84,21 @@ Homepage: <https://jonathancervas.com>
 
 ## Publications
 
-*A note on authorship and contribution: Because this is my own curriculum vitae, my name is omitted from the citations below; co-authors are noted in parentheses. Much of my published research is co-authored, most often with Bernard Grofman. As is standard in political science, the order of authors does not necessarily reflect the relative size of each author's contribution. Across these collaborations I have consistently led the empirical work—research design, data construction, statistical and geographic analysis, and modeling—and contributed substantially to the writing. A description of my specific role on any individual paper is available on request.*
+*My contribution in joint papers are typically the data construction, statistical and geographic analysis, and modeling. I contributed substantially to the writing, and on the law reviews, to legal research.*
 
-### Peer-Reviewed Articles
+15\. "[Partisan Gerrymandering](https://www.elgaronline.com/view/book/9781802207750/chapter68.xml)." In *Elgar Encyclopedia of Public Choice*, edited by Richard Jong-A-Pin and Christian Bjørnskov (2025) (with Bernard Grofman).
 
-11\. "[Statistical Fallacies in Claims about 'Massive and Widespread Fraud' in the 2020 Presidential Election](https://www.tandfonline.com/doi/full/10.1080/2330443X.2023.2289529)." *Statistics and Public Policy* 11, no. 1 (2023) (with Bernard Grofman).
+14\. "[Partisan Gerrymandering Cases in State Supreme Courts in the 2020s Redistricting Round](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4617664)." *Albany Law Review* 87, no. 4 (2024) (with Bernard Grofman, Scott Matsuda, and Justine Kawa).
 
-10\. "[Using Folded Seats-Votes Curves to Compare Partisan Bias in the 2020 Presidential Election with Other 21st Century Elections](https://onlinelibrary.wiley.com/doi/10.1111/psq.12788)." *Presidential Studies Quarterly* (2022) (with Bernard Grofman).
+13\. "[Statistical Fallacies in Claims about 'Massive and Widespread Fraud' in the 2020 Presidential Election](https://www.tandfonline.com/doi/full/10.1080/2330443X.2023.2289529)." *Statistics and Public Policy* 11, no. 1 (2023) (with Bernard Grofman).
 
-9\. "[Why Donald Trump Should Be a Fervent Advocate of Using Ranked-Choice Voting in 2024](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3832051)." *PS: Political Science & Politics* 55, no. 1 (2022) (with Bernard Grofman).
+12\. "[The Role of State Courts in Constraining Partisan Gerrymandering in Congressional Elections](https://scholars.unh.edu/unh_lr/vol21/iss2/7/)." *University of New Hampshire Law Review* 21, no. 2 (2023): 421 (with Bernard Grofman and Scott Matsuda).
+
+11\. "[Using Folded Seats-Votes Curves to Compare Partisan Bias in the 2020 Presidential Election with Other 21st Century Elections](https://onlinelibrary.wiley.com/doi/10.1111/psq.12788)." *Presidential Studies Quarterly* (2022) (with Bernard Grofman).
+
+10\. "[Why Donald Trump Should Be a Fervent Advocate of Using Ranked-Choice Voting in 2024](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3832051)." *PS: Political Science & Politics* 55, no. 1 (2022) (with Bernard Grofman).
+
+9\. "[Turning Communities of Interest into a Rigorous Standard for Fair Districting](https://law.stanford.edu/wp-content/uploads/2022/02/Chen_01.31.22_PRINT.pdf)." *Stanford Journal of Civil Rights & Civil Liberties* 18 (2022): 101 (with Sam Wang, Sandra Chen, Richard Ober, Bernard Grofman, and Kyle Barnes).
 
 8\. "[A Systems Framework for Remedying Distortions in U.S. Democracy](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3800433)." *Proceedings of the National Academy of Sciences* 118, no. 50 (2021): e2102154118 (with Sam Wang, Bernard Grofman, and Keena Lipsitz).
 
@@ -110,22 +116,12 @@ Homepage: <https://jonathancervas.com>
 
 1\. "[Why Noncompetitive States Matter: The Electoral College 1868–2016](http://jonathancervas.com/2017/PC/noncompetitiveelections.pdf)." *Public Choice* 173, no. 3–4 (2017): 251–265 (with Bernard Grofman).
 
-### Law Review Articles and Editor-Reviewed Chapters
-
-4\. "[Partisan Gerrymandering](https://www.elgaronline.com/view/book/9781802207750/chapter68.xml)." In *Elgar Encyclopedia of Public Choice*, edited by Richard Jong-A-Pin and Christian Bjørnskov (2025) (with Bernard Grofman).
-
-3\. "[Partisan Gerrymandering Cases in State Supreme Courts in the 2020s Redistricting Round](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4617664)." *Albany Law Review* 87, no. 4 (2024) (with Bernard Grofman, Scott Matsuda, and Justine Kawa).
-
-2\. "[The Role of State Courts in Constraining Partisan Gerrymandering in Congressional Elections](https://scholars.unh.edu/unh_lr/vol21/iss2/7/)." *University of New Hampshire Law Review* 21, no. 2 (2023): 421 (with Bernard Grofman and Scott Matsuda).
-
-1\. "[Turning Communities of Interest into a Rigorous Standard for Fair Districting](https://law.stanford.edu/wp-content/uploads/2022/02/Chen_01.31.22_PRINT.pdf)." *Stanford Journal of Civil Rights & Civil Liberties* 18 (2022): 101 (with Sam Wang, Sandra Chen, Richard Ober, Bernard Grofman, and Kyle Barnes).
-
 
 ### Op-Eds and Public Commentary
 
 "[The Effects of Mid-Decade Redistricting on Electoral Outcomes](https://medium.com/@cervas/the-effects-of-mid-decade-redistricting-on-electoral-outcomes-d870c772942b)," *Medium*, 2025.
 
-"[Trump the Wrestler and the 2024 Grudge Match](https://scholar.google.com/scholar?oi=bibs&cluster=18401211417413276692&btnI=1&hl=en)," 2024 (with Bernard Grofman).
+"[Trump the Wrestler and the 2024 Grudge Match](https://cervas.medium.com/trump-the-wrestler-and-the-2024-grudge-match-995b982ca73b?sharedUserId=cervas)," *Medium*, 2024 (with Bernard Grofman).
 
 "[Fracking: A Contiguity-Related Redistricting Metric](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3918044)," *Election Law Blog*, 2021 (with Bernard Grofman).
 
@@ -185,13 +181,9 @@ Homepage: <https://jonathancervas.com>
 - Trump the wrestler and the 2024 grudge match
 - Waiting For Godez
 
-
-
 # Public Engagement & Digital Projects
 
 - *[Daily District (Better Know a District)](https://daily-district.com)* — Creator and Lead Developer (2026–present). A Wordle-style educational web game in which players identify all 435 U.S. House districts from their geography, designed to build civic and geographic literacy for a broad public audience.
-
-
 
 # Professional Experience
 
@@ -265,18 +257,15 @@ Homepage: <https://jonathancervas.com>
 
 # Service to Carnegie Mellon
 
-## Institute for Politics and Strategy (CMIST)
-
-<!-- TODO (per reviewer): add department-level (CMIST) service here — committee work, admissions/hiring, curriculum, advising, event organizing, etc. Currently no department-level service is listed. -->
-
 - Faculty Senate, CMIST Representative (2025)
-
-## University
-
 - Constitution Day, Committee Member (2025–Present)
 - Democracy Day, Co-Chair (2025)
 - Democracy Day, Committee Member (2024–Present)
 - Deeper Conversations, Speaker (2024): *Bridging the Divide: Understanding and Addressing Political Polarization in America* [Website](https://www.heinz.cmu.edu/media/2024/November/cmu-community-engages-on-election-issues-through-deeper-conversations)
+- Speaker, Heinz School of Public Policy, Policy and Politics Group (2025)
+- Committee, American Politics and Law Minor
+- Committee, Undergraduate Honors Thesis
+- Letters of Recommendations (9 in 2026, 6 in 2025, 8 in 2024, 10 in 2023)
 
 
 # Service to the Discipline
