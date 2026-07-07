@@ -123,7 +123,7 @@ Degree GPA: 3.277
 
 ## Publications
 
-*My contribution in joint papers are typically the data construction, statistical and geographic analysis, and modeling. I contributed substantially to the writing, and on the law reviews, to legal research.*
+*My contributions in joint papers are typically the data construction, statistical and geographic analysis, and modeling. I contributed substantially to the writing, and on the law reviews, to legal research.*
 
 15\. "**[Partisan Gerrymandering](https://www.elgaronline.com/view/book/9781802207750/chapter68.xml)**." In *Elgar Encyclopedia of Public Choice*, edited by Richard Jong-A-Pin and Christian Bjørnskov (2025) (with Bernard Grofman).
 
