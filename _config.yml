@@ -1,4 +1,33 @@
 title: "Jonathan Cervas"
+tagline: "Assistant Teaching Professor, Carnegie Mellon University"
+description: >-
+  Jonathan Cervas is an Assistant Teaching Professor at Carnegie Mellon
+  University who studies redistricting, voting rights, and American political
+  institutions. He has served as a court-appointed Special Master, consultant,
+  and expert witness in redistricting and voting-rights cases nationwide.
 url: "https://jonathancervas.com"   # canonical
+author: "Jonathan Cervas"
+email: "cervas@cmu.edu"
 markdown: kramdown
-# If you also publish project sites from other repos, set baseurl in THOSE repos only.
+
+# Primary navigation (edit here to change the menu everywhere)
+nav:
+  - title: Home
+    url: /
+  - title: Publications
+    url: /publications/
+  - title: Redistricting
+    url: /redistricting/
+  - title: Media
+    url: /media/
+  - title: CV
+    url: /cv.pdf
+
+# Files Jekyll should ignore when building the site
+exclude:
+  - README.md
+  - cv-reference.docx
+  - cv_build.sh
+  - cmu-media.csv
+  - old-index.html
+  - "*.sh"

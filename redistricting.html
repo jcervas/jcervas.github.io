@@ -1,0 +1,28 @@
+---
+layout: page
+title: Redistricting &amp; Legal Work
+permalink: /redistricting/
+description: "Jonathan Cervas's court-appointed work as Special Master, consultant, and expert witness in redistricting and voting-rights cases, with reports and maps."
+---
+
+<p class="section-lead">
+  Court-appointed roles as Special Master, consultant, and expert witness in redistricting and
+  voting-rights cases across the United States. Reports, maps, and case materials are linked below.
+</p>
+
+<div class="case-grid">
+  {% for c in site.data.cases %}
+  <div class="case">
+    <img src="{{ c.image | relative_url }}" alt="{{ c.name }} redistricting map">
+    <div class="case__body">
+      <h3>{{ c.name }}</h3>
+      <div class="case__sub">{{ c.case }}</div>
+      <p>{{ c.body }}
+        {% if c.links and c.links.size > 0 %}
+        {% for l in c.links %}<a href="{{ l.url | relative_url }}">{{ l.label }}</a>{% unless forloop.last %} &middot; {% endunless %}{% endfor %}
+        {% endif %}
+      </p>
+    </div>
+  </div>
+  {% endfor %}
+</div>

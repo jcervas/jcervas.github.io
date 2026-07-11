@@ -824,3 +824,16 @@ color: inherit;
     /* Shift background to create highlight animation effect */
     background-position: -100%;
 }
+
+/* Short introductory line shown under a section <h2> */
+.jc-section-intro {
+    max-width: 720px;
+    margin: 0.25rem auto 1.75rem;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    opacity: 0.85;
+}
+
+.jc-container-alt .jc-section-intro {
+    color: #ffffff;
+}

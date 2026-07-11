@@ -1,130 +1,51 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>{% if page.title %}{{ page.title }} · {% endif %}{{ site.title }}</title>
-  <link rel="canonical" href="{{ page.url | absolute_url }}" />
+  <title>{% if page.title and page.url != "/" %}{{ page.title }} · {% endif %}{{ site.title }}</title>
+  <meta name="description" content="{{ page.description | default: site.description | strip_newlines }}">
+  <link rel="canonical" href="{{ page.url | absolute_url }}">
 
-  <!-- Bootstrap (kept as in your current page) -->
-  <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-  <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-        crossorigin="anonymous">
+  <!-- Open Graph / social sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ site.title }}">
+  <meta property="og:title" content="{{ page.title | default: site.title }}">
+  <meta property="og:description" content="{{ page.description | default: site.description | strip_newlines }}">
+  <meta property="og:url" content="{{ page.url | absolute_url }}">
+  <meta name="twitter:card" content="summary">
 
-  <!-- Your styles (use relative_url so links work on both domains) -->
-  <link href="{{ '/css/cd-words.css' | relative_url }}" rel="stylesheet" />
-  <link href="{{ '/css/jc-pubs.css'  | relative_url }}" rel="stylesheet" />
-  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- <link href="{{ '/css/main.6.7.min.css'  | relative_url }}" rel="stylesheet" /> -->
-
-  <link href="{{ '/css/css_gf_Zl2dPwco75fUTBXG04UvjMCMMQ5Rr7tMrQ0Tsva0.css?delta=0&language=en&theme=cmu_base&include=eJxtj1EOwiAQRC-EcCSyhS1QgSUMpO3t1Sbqh_69vExmMgTwsKlu7IZ04wC9n0j7GWwqwfLRqFZvo4w1HcqVaRcCm5BloXzDOHOq4fIvZvMh5aSz8X02ypo2OlSjTqFTi3jrr9GztrnkhMheNZgGfbVAQVyibAv7RPY5dodZpQ7aGVJYOylNKtfxL_ir9IhcWOHE4GJeVx5jZ2WW'   | relative_url }}" rel="stylesheet" />
-  <link href="{{ '/css/css_uf-_vfJVFy-aJFovcCHusmUk4h-UohTQw2pcbaYcoEs.css?delta=3&language=en&theme=cmu_base&include=eJxtj1EOwiAQRC-EcCSyhS1QgSUMpO3t1Sbqh_69vExmMgTwsKlu7IZ04wC9n0j7GWwqwfLRqFZvo4w1HcqVaRcCm5BloXzDOHOq4fIvZvMh5aSz8X02ypo2OlSjTqFTi3jrr9GztrnkhMheNZgGfbVAQVyibAv7RPY5dodZpQ7aGVJYOylNKtfxL_ir9IhcWOHE4GJeVx5jZ2WW'   | relative_url }}" rel="stylesheet" />
-
-  <link href="{{ '/css/cervas.css'   | relative_url }}" rel="stylesheet" />
-
+  <link rel="stylesheet" href="{{ '/css/site.css' | relative_url }}">
 </head>
-<body class="{{ page.body_class }}">
-  {% include header.html %}
+<body>
+  <header class="site-header">
+    <div class="wrap site-header__inner">
+      <a class="site-brand" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+      <input type="checkbox" id="nav-toggle" class="nav-toggle">
+      <label for="nav-toggle" class="nav-toggle-label" aria-label="Toggle menu"><span></span></label>
+      <nav class="site-nav">
+        {% for item in site.nav %}
+          <a href="{{ item.url | relative_url }}"{% if page.url == item.url %} class="active" aria-current="page"{% endif %}>{{ item.title }}</a>
+        {% endfor %}
+      </nav>
+    </div>
+  </header>
 
-  <main id="main-content">
+  <main id="main">
     {{ content }}
   </main>
 
-  {% include footer.html %}
-
-
-<script src="/js/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
-<script src="/js/pubs.js"></script>
-<script src="/trips/trips2019.js"></script>
-<script src="/js/word-change.js"></script>
-<script src="/js/script.js?v=10.5.1" type="module"></script>
-<script src="https://kit.fontawesome.com/14968d1d1c.js" crossorigin="anonymous"></script>
-<!-- Resource jQuery -->
-<!--
-        Inline script to obfuscate the email address and reduce the risk of email harvesting by bots.
-        This script dynamically inserts the email address into the page after DOM content is loaded.
-    -->
-<script>
-    // Email obfuscation: This script dynamically constructs and inserts the email address into the page after the DOM is loaded,
-    // helping to prevent email harvesting by bots that scrape static HTML for email addresses.
-    document.addEventListener("DOMContentLoaded", function () {
-        var user = "cervas";
-        var domain = "cmu.edu";
-        var email = user + "@" + domain;
-        var emailSpan = document.getElementById("email");
-        if (emailSpan) {
-            emailSpan.innerHTML = '<a href="mailto:' + email + '">' + email + "</a>";
-        }
-    });
-</script>
-
-<script type="text/javascript" id="gtm-scroll-tracking"
-    charset="">(function (f, l, e) {
-            function n() { if (!f.querySelector || !f.body.getBoundingClientRect) return !1; e.dataLayerName = e.dataLayerName || "dataLayer"; e.distances = e.distances || {}; r(); p(l, "scroll", y(r, 500)) } function t(a, d, b, c, h) { var k; for (k = 0; k < d.length; k++) { var g = parseInt(d[k], 10), m = "%" !== b ? g + h : g / 100 * c + h; g += b; m <= c + h && (a[g] = m) } return a } function u(a, d) { a = parseInt(a, 10); d /= a; var b = [], c; for (c = 1; c < d + 1; c++)b.push(c * a); return b } function r() {
-                var a = v(e.bottom), d = v(e.top), b = f.body, c = f.documentElement; b = Math.max(b.scrollHeight,
-                    b.offsetHeight, c.clientHeight, c.scrollHeight, c.offsetHeight); d && (b -= d); a && (b = a - (d || 0)); a = b - 5; d = d || 0; b = {}; c = []; var h = []; if (e.distances.percentages && (e.distances.percentages.each && (c = c.concat(e.distances.percentages.each)), e.distances.percentages.every)) { var k = u(e.distances.percentages.every, 100); c = c.concat(k) } e.distances.pixels && (e.distances.pixels.each && (h = h.concat(e.distances.pixels.each)), e.distances.pixels.every && (k = u(e.distances.pixels.every, a), h = h.concat(k))); b = t(b, c, "%", a, d); a = b = t(b, h, "px",
-                        a, d); d = void 0 !== l.pageXOffset; b = "CSS1Compat" === (f.compatMode || ""); d = d ? l.pageYOffset : b ? f.documentElement.scrollTop : f.body.scrollTop; d = parseInt(d, 10); b = parseInt; c = "CSS1Compat" === f.compatMode ? f.documentElement : f.body; c = c.clientHeight; d += b(c, 10); for (var g in a) if (d > a[g] && !w[g]) if (w[g] = !0, b = g, c = l.GoogleAnalyticsObject, "undefined" === typeof l[e.dataLayerName] || e.forceSyntax) if ("function" === typeof l[c] && "function" === typeof l[c].getAll && 2 !== e.forceSyntax) l[c]("send", "event", e.category, b, e.label, { nonInteraction: 1 });
-                        else "undefined" !== typeof l._gaq && 1 !== e.forceSyntax && l._gaq.push(["_trackEvent", e.category, b, e.label, 0, !0]); else l[e.dataLayerName].push({ event: "scrollTracking", attributes: { distance: b, label: e.label } })
-            } function v(a) { if ("number" === typeof a || parseInt(a, 10)) return parseInt(a, 10); try { var d = 1 === a.nodeType ? a : f.querySelector(a), b = f.body.getBoundingClientRect().top, c = Math.floor(d.getBoundingClientRect().top - b); return c } catch (h) { } } function y(a, d) {
-                var b, c, h, k = null, g = 0, m = function () {
-                    g = new Date; k = null; h = a.apply(b,
-                        c)
-                }; return function () { var q = new Date; g || (g = q); var x = d - (q - g); b = this; c = arguments; 0 >= x ? (clearTimeout(k), k = null, g = q, h = a.apply(b, c)) : k || (k = setTimeout(m, x)); return h }
-            } function p(a, d, b) { if (a.addEventListener) a.addEventListener(d, b); else if (a.attachEvent) a.attachEvent("on" + d, function (c) { b.call(a, c) }); else if ("undefined" === typeof a["on" + d] || null === a["on" + d]) a["on" + d] = function (c) { b.call(a, c) } } var w = {}; "loading" !== f.readyState ? n() : f.addEventListener ? p(f, "DOMContentLoaded", n) : p(l, "load", n)
-        })(document, window,
-            { forceSyntax: !1, dataLayerName: !1, distances: { percentages: { each: [10, 90], every: 25 }, pixels: { each: [], every: null } }, top: null, bottom: null, category: "Scroll Tracking", label: document.location.pathname });</script>
-</div>
-
-<div class="container_first">
-    <div class="frosted-box">
-        <div class="jc-wordmark">
-            <?xml version="1.0" encoding="UTF-8"?>
-            <svg id="two-line" xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 1366 453.5">
-                <g>
-                    <path
-                        d="M137.56,148.8c.03,27.86-5.35,58.7-33.42,71.25-37.08,16.07-95.45,4.44-101.77-43.79l43.64-10.68c.95,15.64,22.78,24.81,34.18,14.8,6.59-5.87,8.63-14.66,9.31-23.5,.65,.82,.46-147.09,.46-151.81h47.6V148.8Z" />
-                    <path
-                        d="M116.19,113.1C113.78,24.8,202.4-20.59,279.45,7.52c93.17,31.55,93.18,179.62,0,211.16-77.05,28.09-165.68-17.27-163.26-105.58Zm49.44,0c-1.72,51.69,48.16,83.09,94.75,64.39,52.74-20.47,52.71-108.24,0-128.77-46.69-18.71-96.37,12.73-94.75,64.39Z" />
-                    <path
-                        d="M331.02,5.07h64.69l91.85,150.14h.61V5.07h47.6V221.12h-62.25l-94.29-153.8h-.61V221.12h-47.6V5.07Z" />
-                    <path
-                        d="M600.16,5.07h39.36l93.99,216.05h-53.71l-18.61-45.77h-83.92l-18,45.77h-52.49L600.16,5.07Zm18.31,62.86l-26.24,67.13h52.79l-26.55-67.13Z" />
-                    <path d="M718.26,47.19h-61.64V5.07h170.89V47.19h-61.64V221.12h-47.6V47.19Z" />
-                    <path d="M800.95,5.07h47.6V85.63h92.46V5.07h47.6V221.12h-47.6V127.75h-92.46v93.38h-47.6V5.07Z" />
-                    <path
-                        d="M1053,5.07h39.36l93.99,216.05h-53.71l-18.62-45.77h-83.92l-18,45.77h-52.49L1053,5.07Zm18.31,62.86l-26.24,67.13h52.79l-26.55-67.13Z" />
-                    <path
-                        d="M1157.37,5.07h64.69l91.85,150.14h.61V5.07h47.6V221.12h-62.25l-94.29-153.8h-.61V221.12h-47.6V5.07Z" />
-                </g>
-                <g>
-                    <path
-                        d="M155.26,283.64c-14.89-18.86-44.42-22.12-65.76-12.51-24.69,11-37.94,37.54-37.69,64.39-.25,26.84,12.76,53.07,37.08,64.39,23.48,11.07,54.53,4.36,68.51-18l39.67,29.6c-27.03,39.32-83.69,45.03-124.81,29.6C27.83,425.32,1.57,382.75,2.38,335.52c-.81-47.22,25.46-89.8,69.88-105.58,38.48-14.16,91.99-11.21,119.62,23.8l-36.62,29.91Z" />
-                    <path
-                        d="M185.16,227.49h146.78v43.94h-99.17v40.28h93.68v43.94h-93.68v43.94h104.67v43.94H185.16V227.49Z" />
-                    <path
-                        d="M335.91,227.49c37.31,2.6,108.77-8.59,140.83,13.88,39.97,26.67,29.98,104.54-22.43,110.92l54.93,91.24h-57.06l-45.16-86.36h-23.5v86.36h-47.6V227.49Zm47.6,89.41c21.74-2.21,67.44,9.58,68.05-24.11-.32-33.67-46.28-23.29-68.05-25.02v49.13Z" />
-                    <path
-                        d="M472.61,227.49h54.32l53.4,141.59h.61l54.32-141.59h50.96l-89.11,216.05h-38.14l-86.36-216.05Z" />
-                    <path
-                        d="M694.46,227.49h39.36l93.99,216.05h-53.71l-18.62-45.77h-83.92l-18,45.77h-52.49l93.38-216.05Zm18.31,62.86l-26.24,67.13h52.79l-26.55-67.13Z" />
-                    <path
-                        d="M916.61,280.29c-12.87-15.2-38.33-18.29-55.54-9.31-12.48,5.37-15.11,24.6-3.66,32.19,18.67,12.91,46.67,13.82,66.37,26.55,36.23,19.58,32.51,79.21,.91,101.92-38.12,27.12-96.87,22.57-131.06-9.76l33.87-37.23c27.18,38.47,98.2,16.23,66.98-17.55-18.77-13.82-47.44-15.36-67.59-28.23-36.87-19.41-32.83-76.45-1.07-99.18,35.02-25.58,90.41-23.76,123.43,4.88l-32.65,35.7Z" />
-                </g>
-            </svg>
-        </div>
-<!--        <script src="/js/list.min.js" type="text/javascript"></script>
-        <script src="/js/main.6.7.min.js" type="text/javascript"></script> -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>&copy; {{ site.time | date: "%Y" }} {{ site.author }} &middot;
+        <a href="mailto:{{ site.email }}">{{ site.email }}</a> &middot;
+        <a href="{{ '/cv.pdf' | relative_url }}">CV</a></p>
+    </div>
+  </footer>
 </body>
 </html>

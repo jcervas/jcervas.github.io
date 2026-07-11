@@ -1,0 +1,32 @@
+---
+layout: page
+title: Publications
+permalink: /publications/
+description: "Peer-reviewed articles, book chapters, and public commentary by Jonathan Cervas on redistricting, voting rights, the Electoral College, and representation."
+---
+
+<p class="section-lead">
+  Peer-reviewed research on redistricting, the Electoral College, and representation, published
+  across political science, law, economics, and geography journals. My contributions in joint
+  papers are typically the data construction, statistical and geographic analysis, and modeling.
+</p>
+
+<h2>Peer-Reviewed Articles &amp; Chapters</h2>
+<ul class="pub-list">
+  {% for pub in site.data.publications.articles %}
+  <li>
+    <span class="pub-title"><a href="{{ pub.url }}">{{ pub.title }}</a></span>
+    <div class="pub-meta">{{ pub.authors }}. <em>{{ pub.venue }}</em>, <span class="pub-year">{{ pub.year }}</span>.</div>
+  </li>
+  {% endfor %}
+</ul>
+
+<h2>Op-Eds &amp; Public Commentary</h2>
+<ul class="pub-list">
+  {% for pub in site.data.publications.op_eds %}
+  <li>
+    <span class="pub-title"><a href="{{ pub.url }}">{{ pub.title }}</a></span>
+    <div class="pub-meta">{{ pub.authors }}. <em>{{ pub.venue }}</em>, <span class="pub-year">{{ pub.year }}</span>.</div>
+  </li>
+  {% endfor %}
+</ul>

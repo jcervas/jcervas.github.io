@@ -1,0 +1,631 @@
+# Media coverage. Edit this file to add or update entries.
+# featured: curated highlights (title, outlet, summary, url).
+# mentions_by_year: add an item under the matching year (display_date, outlet,
+#   title, url, optional author, optional quotes list). Newest first.
+# nydn: New York Daily News editorials / others.
+---
+featured:
+- title: How a Mapmaker Became New York’s Most Unexpected Power Broker
+  outlet: The New York Times
+  summary: Jonathan Cervas, a Pittsburgh-born postdoctoral fellow and independent
+    redistricting expert, was appointed as special master to redraw New York’s congressional
+    and state senate maps after the Democratic-drawn maps were struck down as unconstitutional.
+    His maps, praised by Republicans and anti-gerrymandering groups but criticized
+    by Democrats, have upended the political landscape by forcing tough primaries
+    and reshaping minority representation in New York City. Though thrust into the
+    spotlight, Cervas insists he was simply applying the law and serving democracy,
+    not politics.
+  url: https://www.nytimes.com/2022/05/28/nyregion/jonathan-cervas-redistricting-maps-ny.html?unlocked_article_code=1.ek8.vcQB.1MWKUMJCGO5R&smid=url-share
+- title: Jonathan Cervas’ quest to make government represent the voters
+  outlet: Pittsburgh Post-Gazette
+  summary: Jonathan Cervas, a postdoctoral fellow at Carnegie Mellon, has quickly
+    risen to prominence as a redistricting specialist, playing key roles in both Pennsylvania’s
+    legislative maps and New York’s high-stakes congressional and state senate redrawing.
+    Trained under noted scholar Bernard Grofman, Cervas emphasizes fairness, neutrality,
+    and voter empowerment, viewing redistricting as both art and science in balancing
+    competing democratic values. Though criticized by some politicians, he sees his
+    work as vital to protecting undiluted votes and strengthening democracy at a moment
+    when gerrymandering and partisan manipulation threaten it.
+  url: https://www.post-gazette.com/news/politics-state/2022/09/04/jonathan-cervas-carnegie-mellon-census-redistricting-pa-legislative-districts/stories/202208310151
+- title: What to know about Bernard Grofman and Jonathan Cervas, Wisconsin's new map
+    consultants
+  outlet: Milwaukee Journal Sentinel
+  summary: Bernard Grofman, a UC-Irvine political scientist, and Jonathan Cervas,
+    a Carnegie Mellon postdoctoral fellow and redistricting expert, were appointed
+    by the Wisconsin Supreme Court to review and possibly redraw the state’s legislative
+    maps. Both are regarded as nonpartisan specialists with extensive experience in
+    redistricting cases across the country, including Virginia, Pennsylvania, and
+    New York. Tasked with ensuring population equality, compliance with the Voting
+    Rights Act, and neutrality regarding partisan advantage, they could recommend
+    adjustments to submitted proposals-or create their own maps—though their role
+    has sparked criticism from some justices who argue the decision hands too much
+    power to unelected outsiders.
+  url: https://www.jsonline.com/story/news/politics/2024/01/02/wisconsins-new-maps-could-come-down-to-two-experts-who-are-they/72048291007/
+- title: Who is the man tasked with redrawing New York’s new district lines?
+  outlet: City & State New York
+  summary: Jonathan Cervas, a Carnegie Mellon postdoctoral fellow and redistricting
+    expert, was appointed by a New York court as special master to redraw the state’s
+    congressional and senate maps after the previous ones were struck down. Though
+    not widely known, he brings extensive experience from redistricting work in Pennsylvania,
+    Utah, Virginia, and Georgia, where he earned praise for fairness and technical
+    skill. This marks his first time leading the process solo, and his academic background
+    in political science and mapping technology underscores his reputation as a nonpartisan
+    specialist focused on strengthening democracy.
+  url: https://www.cityandstateny.com/politics/2022/04/who-man-tasked-redrawing-new-yorks-new-district-lines/366253/
+- title: New York’s Redistricting Master Holds Key to Congressional Power
+  outlet: Bloomberg Government
+  summary: Jonathan Cervas was appointed by a New York court as special master to
+    redraw the state’s congressional and state Senate district lines after the Democratic-drawn
+    maps were struck down. With a tight deadline and high national stakes-since New
+    York’s maps could influence control of the U.S. House-Cervas is tasked with producing
+    constitutionally sound, ostensibly neutral districts that will last a decade.
+    Drawing on his background working on redistricting cases in several states under
+    renowned expert Bernard Grofman, Cervas is widely described by scholars, advocates,
+    and attorneys as nonpartisan, technically skilled, and attentive to legal constraints
+    and public input. While his past work has not satisfied all political actors,
+    observers largely expect him to act as an “honest broker,” consistent with the
+    broader pattern of court-appointed special masters producing relatively fair maps.
+  url: https://about.bgov.com/insights/news/new-yorks-redistricting-master-holds-key-to-congressional-power/
+mentions_by_year:
+- year: 2026
+  items:
+  - display_date: May 27, 2026
+    outlet: Bloomberg Government
+    title: South Carolina GOP Ran Into Electoral Reality on Redistricting
+    url: https://news.bgov.com/bloomberg-government-news/south-carolina-gop-ran-into-electoral-reality-on-redistricting
+    author: Alexandra Samuels
+  - display_date: May 19, 2026
+    outlet: The Globe and Mail
+    title: Mapping how Alberta’s electoral boundary changes could reshape the political
+      landscape
+    url: https://www.theglobeandmail.com/canada/alberta/article-alberta-electoral-boundary-changes-ridings-political-landscape/
+    author: Matthew Scace, Dexter Mcmillan, and Graphics By Murat Yükselir
+  - display_date: May 13, 2026
+    outlet: Bloomberg Government
+    title: Clyburn District Survives for Now as S.C. Republicans Buck Trump
+    url: https://news.bgov.com/bloomberg-government-news/clyburn-district-survives-for-now-as-s-c-republicans-buck-trump?context=search&index=0
+    author: Greg Giroux
+  - display_date: May 6, 2026
+    outlet: Bloomberg Government
+    title: Tennessee Republicans Pitch House Map to Oust Lone Democrat
+    url: https://www.bgov.com/news/TEMMU0KGZAK0
+    author: Alexandra Samuels and Andrew Oxford
+  - display_date: May 4, 2026
+    outlet: AP News
+    title: Redistricting war accelerates winner-take-all political combat that’s straining
+      American democracy
+    url: https://apnews.com/article/donald-trump-supreme-court-redistricting-democracy-d8fcd9fd2dd60cb2233e8003fadc6300
+    author: Nicholas Riccardi
+  - display_date: May 4, 2026
+    outlet: Votebeat
+    title: Here’s where redistricting stands after Florida’s new congressional map
+      and the Supreme Court’s Callais decision
+    url: https://www.votebeat.org/national/2026/05/04/florida-redistricting-supreme-court-louisiana-callais-gerrymander-2026-election/
+    author: Nathaniel Rakich
+  - display_date: April 30, 2026
+    outlet: AP News
+    title: Supreme Court ruling will reshape American politics. The only question
+      is when
+    url: https://apnews.com/article/supreme-court-voting-rights-redistricting-congress-b2e730330fa39f139f74c443320567ff
+    author: Nicholas Riccardi
+  - display_date: April 30, 2026
+    outlet: AP News
+    title: Supreme Court weakens the Voting Rights Act and aids GOP efforts to control
+      the House
+    url: https://apnews.com/article/supreme-court-voting-rights-redistricting-congress-b2e730330fa39f139f74c443320567ff
+    author: Mark Sherman
+  - display_date: January 30, 2026
+    outlet: Harlem World
+    title: 'Coastal Power Shift: New York, California Set To Lose Six Congressional
+      Seats Post‑2030'
+    url: https://www.harlemworldmagazine.com/coastal-power-shift-new-york-california-set-to-lose-six-congressional-seats-post-2030/
+  - display_date: January 29, 2026
+    outlet: Deseret News
+    title: How population growth is quietly redrawing America’s political map
+    url: https://www.deseret.com/politics/2026/01/29/census-bureau-population-data-shows-republican-states-gaining-electoral-college-votes-after-2030/
+    author: Brigham Tomco
+  - display_date: January 28, 2026
+    outlet: Politico
+    title: Democrats could face an uphill Electoral College after 2030, new projections
+      show
+    url: https://www.politico.com/news/2026/01/28/2030-electoral-college-projections-00750488
+    author: Andrew Howard
+  - display_date: January 28, 2026
+    outlet: Fox News
+    title: Bombshell Census projections show Republicans could win White House without
+      Rust Belt ‘Blue Wall’
+    url: https://www.foxnews.com/politics/bombshell-census-projections-show-republicans-could-win-white-house-without-rust-belt-blue-wall.print
+    author: Paul Steinhauser
+  - display_date: January 28, 2026
+    outlet: The Christian Post
+    title: 'Red states vs. blue states: Who will gain seats after the next Census'
+    url: https://www.christianpost.com/news/red-states-vs-blue-states-who-will-gain-seats-after-2030-census.html?utm_source=dlvr.it&utm_medium=facebook
+    author: Ryan Foley
+  - display_date: January 28, 2026
+    outlet: Target 12 (WPRI)
+    title: https://www.wpri.com/target-12/charts-migration-fuels-ris-population-growth-as-deaths-outnumber-births/
+    url: https://www.wpri.com/target-12/charts-migration-fuels-ris-population-growth-as-deaths-outnumber-births/
+    author: Eli Sherman, Ted Nesi
+  - display_date: January 28, 2026
+    outlet: The Center Square
+    title: Census projections show red states to see gains in U.S. House seats, electoral
+      college
+    url: https://www.thecentersquare.com/national/article_ee8f2031-b5e0-4cba-a414-d3ca0d4d788d.html
+    author: Andrew Rice
+- year: 2025
+  items:
+  - display_date: April 29, 2025
+    outlet: New York Post
+    title: 'California’s Prop 50 plans thrown into chaos after bombshell Supreme Court
+      ruling in Louisiana: experts'
+    url: https://nypost.com/2026/04/29/us-news/supreme-court-ruling-on-louisiana-maps-throws-californias-gerrymandering-into-chaos/
+    author: Titus Wu
+  - display_date: December 11, 2025
+    outlet: VOTEBEAT
+    title: 'A big question looming over future redistricting: Who should count? A
+      Republican push to exclude all or some noncitizens raises important questions
+      about political power and representation, especially in Texas.'
+    url: https://projects.votebeat.org/2025/redistricting-noncitizens-who-counts-census-citizenship-question-apportionment/
+    author: Natalia Contreras
+  - display_date: December 04, 2025
+    outlet: Dan Abrams (((SiriusXM)))
+    title: Gerrymandering Backfire? National Expert Declares Democrats Actually Winning
+      Redistrict War
+    url: https://youtu.be/s8_8gIXqREo?si=wlrYysOzTRBiBkGi
+  - display_date: November 30, 2025
+    outlet: ABC News
+    title: Republicans started the redistricting war, but will they win it?
+    url: https://abcnews.go.com/Politics/republicans-started-redistricting-war-win/story?id=127962734
+    author: Benjamin Siegel
+    quotes:
+    - Cervas also criticized both parties for revisiting maps for political gain in
+      ways that could leave voters with fewer competitive districts in which to cast
+      votes. "The people are losing. Every time we gerrymander for partisan gain,
+      voters are worse off," he added. "A minus plus a minus is a bigger minus."
+  - display_date: November 19, 2025
+    outlet: AP
+    title: Why Trump’s plan to help GOP keep control of the House could backfire
+    url: https://apnews.com/article/trump-redistricting-gerrymandering-congress-texas-california-2c5587f38df6428953c15ed43d631e53
+    author: Nicholas Riccardi
+    quotes:
+    - Incumbents also don’t like losing voters who have supported them or getting
+      wholly new communities drawn into their districts, said Jonathan Cervas, who
+      teaches redistricting at Carnegie Mellon University and has drawn new maps for
+      courts.
+    - Cervas said that’s why it was striking to watch Trump push Republicans to dive
+      into mid-decade redistricting. “The idea they’d go along to get along is basically
+      crazy,” he said.
+  - display_date: Oct 16, 2025
+    outlet: AP
+    title: Supreme Court case could lead to loss of Black representation in Congress,
+      but the scope is unknown
+    url: https://apnews.com/article/supreme-court-voting-rights-congress-black-districts-e3c2d1077f97800bfc3a1708c812a7e1
+    author: Matt Brown, Gary Fields, and Nicholas Riccardi
+    quotes:
+    - Even without the Voting Rights Act, Cervas said, there is no way for Republicans
+      to make that Memphis seat red. If they scattered the city's voters among neighboring
+      GOP-heavy districts, they might make those competitive.
+    - He said some other GOP-controlled states, such as Missouri and South Carolina,
+      are in similar binds with their lone, heavily Democratic seats that were drawn
+      to comply with the voting law. Others, like Georgia, are so politically competitive
+      that it’s likely Republicans couldn't erase a Democratic seat in one part of
+      the state without jeopardizing one of their own.
+    - Still other GOP-controlled states, such as Mississippi, may have an easier time
+      eliminating their lone Democratic, Voting Rights Act-mandated seat. And in larger
+      states such as North Carolina and Florida, Republicans would have a freer hand
+      to redraw the maps to favor their party without having to preserve majority-minority
+      seats held by Democrats.
+  - display_date: Oct 7, 2025
+    outlet: AP
+    title: Democrats could have a slight shot at flipping a US House seat in Utah
+      under a new congressional map
+    url: https://apnews.com/article/utah-congressional-map-redistricting-democrats-5247fd0d90b5414fbfb393b3ff4e0bdd
+    author: Hannah Schoenbaum
+    quotes:
+    - Jonathan Cervas, a redistricting expert at Carnegie Mellon University, ran data
+      from past elections in Utah against the redrawn map and found that Democrats
+      would lose every time. That indicates that the map is uncompetitive, he said.
+    - "“Although it’s not as competitive as I think the plaintiffs would want, I think
+      it’s far better than the map that currently exists - a stark improvement,” Cervas
+      said."
+  - display_date: Oct 1, 2025
+    outlet: City & State PA
+    title: What America’s ongoing redistricting war could mean for Pennsylvania Pennsylvania
+      is unlikely to redraw congressional maps mid-decade, but that doesn’t negate
+      the need for redistricting reforms, advocates say.
+    url: https://www.cityandstatepa.com/politics/2025/10/what-americas-ongoing-redistricting-war-could-mean-pennsylvania/408527/?oref=cspa-homepage-river
+    quotes:
+    - "“There’s one special reason why there’s not going to be anything in Pennsylvania,
+      and that’s because Pennsylvania is one of only, I think, two states in the country
+      that has a divided government,” said Jonathan Cervas, a professor at Carnegie
+      Mellon University who specializes in redistricting and voting rights. “There’s
+      been a stalemate on even passing the basic state budget. So the idea that we
+      would have an agreement from both branches of the legislature and the governor
+      on a new redistricting plan seems very unlikely – exceedingly unlikely.”"
+    - "“You could imagine that maybe Republicans pick up a couple of seats in the
+      House, and they're running a formidable candidate for governor, Stacy Garrity.
+      She could win, and then they would have a united government,” Cervas said. He
+      added that such a dynamic in Harrisburg could change the appetite for exploring
+      the possibility of a new map in the middle of the decade. However, that scenario
+      wouldn’t be feasible until after the 2026 midterms, and redrawing congressional
+      districts before then would do little to help vulnerable incumbents."
+  - display_date: Aug 23, 2025
+    outlet: Straight Arrow News
+    title: Texas’ new congressional map heads to Gov. Abbott’s desk
+    url: https://san.com/cc/texas-new-congressional-map-heads-to-gov-abbotts-desk/
+    quotes:
+    - "“In addition to a potential violation of the Voting Rights Act, this might
+      be viewed in federal court as an intentional act to decrease minority representation,
+      which would be a violation of the 14th Amendment,” Cervas said."
+    - Cervas described the new map as “perhaps the most biased map in modern American
+      history.” … “Nearly 100% of the population growth in Texas has come from minority
+      populations,” Cervas said…
+  - display_date: Aug 21, 2025
+    outlet: The Texas Tribune
+    title: Lawmakers are debating GOP congressional maps. What does redistricting
+      mean for Texans?
+    url: https://www.texastribune.org/2025/08/21/texas-redistricting-congressional-map-texans/
+  - display_date: Aug 8, 2025
+    outlet: Salon
+    title: GOP power grab puts voting rights advocates in a bind
+    url: https://www.salon.com/2025/08/08/gop-power-grab-puts-anti-gerrymandering-advocates-in-a-bind/
+  - display_date: Aug 5, 2025
+    outlet: The Hill
+    title: California, New York signal they’re moving forward with redistricting
+    url: https://thehill.com/homenews/campaign/5437566-california-new-york-redistricting/
+  - display_date: Jul 15, 2025
+    outlet: Here & Now, NPR
+    title: Texas is weighing a new plan for redistricting as part of a special summer
+      session
+    url: https://www.wbur.org/hereandnow/2025/07/15/texas-redistricting
+  - display_date: Mar 20, 2025
+    outlet: Pittsburgh Post-Gazette
+    title: 'PG Politics: What 2021 turnout…'
+    url: https://www.post-gazette.com/news/politics-local/2025/03/20/pittsburgh-mayor-primary-voter-turnout/stories/202503190073?cid=search
+  - display_date: Mar 6, 2025
+    outlet: Pittsburgh Post-Gazette
+    title: 'PG Politics: What to make of…'
+    url: https://www.post-gazette.com/news/politics-local/2025/03/06/pittsburgh-mayor-gainey-oconnor-donors/stories/202503060093
+- year: 2024
+  items:
+  - display_date: Sep 19, 2024
+    outlet: Pittsburgh Post-Gazette
+    title: Curiosity and controversy…
+    url: https://www.post-gazette.com/news/election-2024/2024/09/19/pittsburgh-college-voters-pitt-carnegie-mellon-duquesne/stories/202409170220?cid=search
+  - display_date: Dec 10, 2024
+    title: 'Across Political Divides: Jonathan Cervas Bridges Ideological Differences
+      with Discussions and Data'
+    url: https://www.cmu.edu/cmist/news-events/news/2024/december/across-political-divides-jonathan-cervas-bridges-ideological-differences.html
+  - display_date: Oct 6, 2024
+    outlet: Pittsburgh Post-Gazette
+    title: How to avoid getting misled by political polls
+    url: https://www.post-gazette.com/news/election-2024/2024/10/06/political-polling-stories-margin-or-error-candidate-leads/stories/202410040076?cid=search
+  - display_date: Jun 24, 2024
+    outlet: PBS Wisconsin
+    title: Wisconsin taxpayers to pay half of redistricting consultant costs.
+    url: https://pbswisconsin.org/news-item/wisconsin-taxpayers-to-pay-half-of-redistricting-consultant-costs/
+  - display_date: Feb 9, 2024
+    outlet: WPR
+    title: Wisconsin Republicans seek to subpoena Supreme Court redistricting consultants.
+    url: https://www.wpr.org/news/wisconsin-republicans-seek-to-subpoena-supreme-court-redistricting-consultants
+  - display_date: Feb 1, 2024
+    outlet: PBS Wisconsin
+    title: Redistricting experts tell Wisconsin Supreme Court that Republican district
+      map proposals are gerrymanders.
+    url: https://pbswisconsin.org/news-item/redistricting-experts-tell-wisconsin-supreme-court-that-republican-district-map-proposals-are-gerrymanders/
+  - display_date: Feb 1, 2024
+    outlet: AP News
+    title: Redistricting experts submit $128K bill for review of Wisconsin legislative
+      maps
+    url: https://apnews.com/article/wisconsin-redistricting-consultant-fee-9a9ef7b77cd058e1251edea330b89191.
+  - display_date: Jan 4, 2024
+    outlet: WPR
+    title: Consultants hired to oversee Wisconsin redistricting could get up to $100K
+      apiece.
+    url: https://www.wpr.org/justice/consultants-hired-wisconsin-redistricting-maps-100k
+  - display_date: Jan 23, 2024
+    title: 'Redrawing Lines: Jonathan Cervas Evaluates Wisconsin''s Legislative Maps'
+    url: https://www.cmu.edu/cmist/news-events/news/2024/january/redrawing-lines-jonathan-cervas-evaluates-wisconsins-legislative-maps.html
+- year: 2023
+  items:
+  - display_date: Dec 22, 2023
+    outlet: WPR
+    title: Wisconsin Supreme Court overturns Republican-drawn legislative maps
+  - display_date: Aug 18, 2023
+    outlet: Pittsburgh Post-Gazette
+    title: Strange bedfellows…
+    url: https://www.post-gazette.com/news/politics-local/2023/08/18/district-attorney-race-zappala-dugan-election-republican-democrat-forward/stories/202308180104?cid=search
+  - display_date: May 14, 2023
+    outlet: Pittsburgh Post-Gazette
+    title: The race for Allegheny County executive…
+    url: https://www.post-gazette.com/news/politics-local/2023/05/14/sara-innamorato-2023-allegheny-county-executive-race/stories/202305140104?cid=search
+  - display_date: Feb 1, 2023
+    outlet: Pittsburgh Post-Gazette
+    title: The 2023 primary elections…
+    url: https://www.post-gazette.com/news/politics-local/2023/02/01/pittsburgh-allegheny-county-2023-primary-elections-voters/stories/202301310119?cid=search
+- year: 2022
+  items:
+  - display_date: Sep 4, 2022
+    outlet: Pittsburgh Post-Gazette
+    title: Jonathan Cervas’ quest to make government represent the voters.
+    url: https://www.post-gazette.com/news/politics-state/2022/09/04/jonathan-cervas-carnegie-mellon-census-redistricting-pa-legislative-districts/stories/202208310151
+  - display_date: Jul 19, 2022
+    outlet: Washington Monthly
+    title: The Man Behind New York’s Controversial Congressional Map.
+    url: https://washingtonmonthly.com/2022/07/19/the-man-behind-new-yorks-controversial-congressional-map/
+  - display_date: Jun 3, 2022
+    outlet: Albany Times Union
+    title: State to pay $147,000…
+    url: https://www.timesunion.com/state/article/State-to-pay-147-000-for-special-master-and-17213013.php
+  - display_date: May 29, 2022
+    outlet: The Hill
+    title: Gerrymandering, a legal form of vote stealing, more entrenched now than
+      ever
+    url: https://thehill.com/opinion/campaign/3505157-gerrymandering-a-legal-form-of-vote-stealing-more-entrenched-now-than-ever/
+  - display_date: May 21, 2022
+    outlet: THE CITY
+    title: Final New York District Maps…
+    url: https://www.thecity.nyc/politics/2022/5/21/23136032/final-new-york-district-maps-chaotic-election-season
+  - display_date: May 21, 2022
+    outlet: PoliticsNY
+    title: Final congressional and senate district maps set.
+    url: https://politicsny.com/2022/05/21/final-congressional-and-senate-district-maps-set/
+  - display_date: May 17, 2022
+    outlet: Wall Street Journal
+    title: New York’s Gerrymander Boomerang…
+    url: https://www.wsj.com/opinion/new-yorks-gerrymander-boomerang-albany-special-master-redistricting-map-jonathan-cervas-democrats-11652818602
+  - display_date: May 16, 2022
+    outlet: THE CITY
+    title: Special Master Carves Up…
+    url: https://www.thecity.nyc/politics/2022/5/16/23100628/special-master-carves-up-new-york-congressional-state-senate-seats-new-maps
+  - display_date: May 16, 2022
+    outlet: NY1
+    title: New congressional maps shake up New York politics.
+    url: https://www.ny1.com/nyc/all-boroughs/politics/2022/05/16/new-congressional-maps-shake-up-new-york-politics
+  - display_date: May 9, 2022
+    outlet: Bloomberg Government
+    title: New York’s Redistricting Master Holds Key…
+    url: https://about.bgov.com/insights/news/new-yorks-redistricting-master-holds-key-to-congressional-power/
+  - display_date: Apr 29, 2022
+    outlet: NY1
+    title: Special master has to act fast…
+    url: https://www.ny1.com/nyc/all-boroughs/politics/2022/04/29/special-master-has-to-act-fast-on-new-legislative-maps
+  - display_date: Apr 28, 2022
+    outlet: City & State New York
+    title: Who is the man tasked with redrawing New York’s new district lines?
+    url: https://www.cityandstateny.com/politics/2022/04/who-man-tasked-redrawing-new-yorks-new-district-lines/365858/
+  - display_date: Apr 28, 2022
+    outlet: New York Post
+    title: Control of Congress could hinge on this redistricting ‘special master’
+      in NY
+    url: https://nypost.com/2022/04/28/control-of-congress-could-hinge-on-this-redistricting-special-master-in-ny/
+    quotes:
+    - "“I am thrilled to assist the New York courts in delivering constitutional maps
+      that will provide equal representation for all New York residents for the next
+      decade,” Cervas said in a brief statement to The Post."
+  - display_date: April 27, 2022
+    outlet: The New York Times
+    title: Democrats Lose Control of N.Y. Election Maps, as Top Court Rejects Appeal
+    url: https://www.nytimes.com/2022/04/27/nyregion/redistricting-congress-gerrymander-ny.html?unlocked_article_code=1.AlA.I3nT.5Nuj-BFaIAVI&smid=url-share
+    author: Nicholas Fandos
+    quotes:
+    - Justice McAllister has already appointed Jonathan Cervas, a postdoctoral fellow
+      at Carnegie Mellon University, as special master to draw the congressional and
+      State Senate lines by late May.
+  - display_date: Apr 21, 2022
+    outlet: UC Irvine Social Sciences
+    title: 'Meet the scholar redistricting New York: UCI alumnus Jonathan Cervas named
+      special master.'
+    url: https://www.socsci.uci.edu/newsevents/news/2022/2022-04-21-cervas.php
+- year: 2021
+  items:
+  - display_date: Oct 28, 2021
+    outlet: Pittsburgh Post-Gazette
+    title: Despite transparency vows…
+    url: https://www.post-gazette.com/news/politics-state/2021/10/28/pennsylvania-congressional-redistricting-2021-nordenberg-pa-transparency/stories/202110280118?cid=search
+  - display_date: Jul 13, 2021
+    outlet: Pennsylvania LRC (official)
+    title: Appointment of Dr. Jonathan R. Cervas as mapping consultant.
+    url: https://www.redistricting.state.pa.us/Resources/GIS/2021-07-13%20LRC%20Appointment%20of%20Dr%20Jonathan%20R%20Cervas.pdf
+  - display_date: Aug 2021
+    outlet: Pennsylvania Capital-Star
+    title: Pa. redistricting is poised to be transparent…
+    url: https://www.penncapital-star.com/government-politics/pa-redistricting-is-poised-to-be-transparent-will-it-be-fair/
+  - display_date: Aug. 11, 2021
+    outlet: The New York Times
+    title: Let the Gerrymandering (and the Legal Battles) Begin
+    url: https://www.nytimes.com/2021/08/11/us/politics/census-redistricting-data-gerrymandering.html?unlocked_article_code=1.AlA.8Xku.RrDn88w-eml6&smid=url-share
+    author: Nick Corasaniti
+    quotes:
+    - "“I am up late at night often, unable to sleep, pondering how bad or how aggressive
+      some of those states might be in undoing the protections that were granted from
+      Section 5 that no longer are in effect,” said Jonathan Cervas, a postdoctoral
+      fellow at Carnegie Mellon University who studies gerrymandering. “And I can
+      imagine that a particularly aggressive legislature, where it benefits them,
+      may not draw minority districts.”"
+    - While diluting the votes of minority communities remains illegal, Mr. Cervas
+      said that without preclearance, such tactics could be used anyway, and that
+      the resulting legal challenges were increasingly unlikely to be resolved in
+      time to affect the 2022 elections.
+  - display_date: Jan 31, 2021
+    outlet: The New York Times
+    title: House Mapping Is Next Conflict In Power Battle (Also found under the headline
+      "The Gerrymander Battles Loom, as G.O.P. Looks to Press Its Advantage")
+    url: https://www.nytimes.com/2021/01/31/us/politics/gerrymander-census-democrats-republicans.html?unlocked_article_code=1.AlA.cQN8.nclCLq7E4YjT&smid=url-share
+    author: Reid J. Epstein and Nick Corasaniti
+    quotes:
+    - "\"Some election experts argued that Republicans were so successful at drawing
+      gerrymandered maps 10 years ago that it would be difficult for them to add to
+      their advantage now."
+    - “The Democrats were able to win the House in 2018 despite the fact that there
+      were some very gerrymandered states,” said Jonathan Cervas, a postdoctoral fellow
+      at Carnegie Mellon University who studies gerrymandering."
+- year: 2020
+  items:
+  - display_date: Oct 25, 2020
+    outlet: Pittsburgh Post-Gazette
+    title: In race between Conor Lamb and Sean Parnell…
+    url: https://www.post-gazette.com/news/politics-nation/2020/10/25/Conor-Lamb-Sean-Parnell-17th-Congressional-District-Trump-Pelosi/stories/202010250003?cid=search
+- year: 2018
+  items:
+  - display_date: November 2, 2018
+    outlet: USA Today
+    title: 'Midterms: Races for governor, statehouses will help decide control of
+      Congress for a decade'
+    url: https://www.usatoday.com/story/news/politics/elections/2018/11/02/midterm-elections-redistricting-gerrymandering-governor-statehouse-congress-republican-democrat/1726798002/
+    author: Gregory Korte
+nydn:
+  editorials:
+  - display_date: March 9, 2026
+    outlet: New York Daily News
+    title: 'A Supreme Court win for a fair map: The Staten Island congressional district
+      stays in place'
+    url: https://www.nydailynews.com/2026/03/09/a-supreme-court-win-for-a-fair-map/
+  - display_date: May 17, 2022
+    outlet: New York Daily News
+    title: 'What democracy looks like: New lines for Congress and state Senate are
+      far superior'
+    url: https://www.nydailynews.com/2022/05/17/what-democracy-looks-like-new-lines-for-congress-and-state-senate-are-far-superior/
+  - display_date: April 20, 2022
+    outlet: New York Daily News
+    title: 'Draw a line, judges: A five-jurist appellate panel must strike down hyperpartisan
+      maps'
+    url: https://www.nydailynews.com/2022/04/20/draw-a-line-judges-a-five-jurist-appellate-panel-must-strike-down-hyperpartisan-maps/?clearUserState=true
+  - display_date: May 19, 2022
+    outlet: New York Daily News
+    title: 'Power to the voters: Newly drawn districts are a boon to New Yorkers'
+    url: https://www.nydailynews.com/2022/05/19/power-to-the-voters-newly-drawn-districts-are-a-boon-to-new-yorkers/
+  - display_date: May 22, 2022
+    outlet: New York Daily News
+    title: 'Mapping a fair election: The new congressional and state Senate districts
+      enhance democracy'
+    url: https://www.nydailynews.com/2022/05/22/mapping-a-fair-election-the-new-congressional-and-state-senate-districts-enhance-democracy/
+  - display_date: May 23, 2022
+    outlet: New York Daily News
+    title: 'Love the Constitution, not politics: Justice Larry Love must void the
+      Assembly maps pronto'
+    url: https://www.nydailynews.com/2022/05/23/love-the-constitution-not-politics-justice-larry-love-must-void-the-assembly-maps-pronto/
+  - display_date: June 8, 2022
+    outlet: New York Daily News
+    title: 'Draw new lines now: The courts must finish the job and order redrawn state
+      Assembly maps'
+    url: https://www.nydailynews.com/2022/06/08/draw-new-lines-now-the-courts-must-finish-the-job-and-order-redrawn-state-assembly-maps/
+  - display_date: June 15, 2022
+    outlet: New York Daily News
+    title: 'N.Y.’s unconstitutional Assembly: Albany’s brazen ploy against the voters
+      and the law'
+    url: https://www.nydailynews.com/2022/06/15/nys-unconstitutional-assembly-albanys-brazen-ploy-against-the-voters-and-the-law/
+  - display_date: September 16, 2022
+    outlet: New York Daily News
+    title: 'Drawing the Assembly lines: It’s a job for the courts, not a disbanded
+      ‘independent’ commission'
+    url: https://www.nydailynews.com/2022/09/16/drawing-the-assembly-lines-its-a-job-for-the-courts-not-a-disbanded-independent-commission/
+  - display_date: November 11, 2022
+    outlet: New York Daily News
+    title: 'Tripping on the lines: New York’s overreaching Democratic redistricters
+      have only themselves to blame for Tuesday’s results'
+    url: https://www.nydailynews.com/2022/11/11/tripping-on-the-lines-new-yorks-overreaching-democratic-redistricters-have-only-themselves-to-blame-for-tuesdays-results/
+  - display_date: November 15, 2023
+    outlet: New York Daily News
+    title: 'Leave the maps alone: The N.Y. Court of Appeals should be hands off on
+      redistricting'
+    url: https://www.nydailynews.com/2023/11/15/leave-the-maps-alone-the-n-y-court-of-appeals-should-be-hands-off-on-redistricting/
+  - display_date: February 16, 2024
+    outlet: New York Daily News
+    title: 'Leave the maps alone: N.Y. congressional districts should stay about the
+      same'
+    url: https://www.nydailynews.com/2024/02/16/leave-the-maps-alone-n-y-congressional-districts-should-stay-about-the-same/
+  - display_date: February 29, 2024
+    outlet: New York Daily News
+    title: 'Redistricting’s final chapter: The Dems fought a damaging and costly fight
+      for nothing'
+    url: https://www.nydailynews.com/2024/02/29/redistrictings-final-chapter-the-dems-fought-a-damaging-and-costly-fight-for-nothing/
+  - display_date: October 1, 2024
+    outlet: New York Daily News
+    title: 'The fairest in the land: New York has the most competitive House districts
+      in America'
+    url: https://www.nydailynews.com/2024/10/01/the-fairest-in-the-land-new-york-has-the-most-competitive-house-districts-in-america/
+  - display_date: November 11, 2024
+    outlet: New York Daily News
+    title: 'Fair lines, fair elections: Flipped results with repeat candidates makes
+      the case'
+    url: https://www.nydailynews.com/2024/11/11/fair-lines-fair-elections-flipped-results-with-repeat-candidates-makes-the-case/
+  - display_date: August 4, 2025
+    outlet: New York Daily News
+    title: 'N.Y. must skip the Texas two-step: Don’t fool with mid-decade redistricting'
+    url: https://www.nydailynews.com/2025/08/04/n-y-must-skip-the-texas-two-step/
+  - display_date: January 23, 2026
+    outlet: New York Daily News
+    title: 'No redistricting for Staten Island: Leave the current lines in place'
+    url: https://www.nydailynews.com/2026/01/23/no-redistricting-for-staten-island/
+  - display_date: February 23, 2026
+    outlet: New York Daily News
+    title: 'Don’t mess with N.Y.’s elections: U.S. Supreme Court has to end congressional
+      redistricting'
+    url: https://www.nydailynews.com/2026/02/23/dont-mess-with-n-y-s-elections/
+  others:
+  - display_date: May 17, 2022
+    outlet: New York Daily News
+    title: New York’s redrawn congressional maps spark interest among state lawmakers
+    url: https://www.nydailynews.com/2022/05/17/new-yorks-redrawn-congressional-maps-spark-interest-among-state-lawmakers/
+  - display_date: April 28, 2022
+    outlet: New York Daily News
+    title: New York GOP politicians cheer court for tossing Democratic-friendly redistricting
+      map
+    url: https://www.nydailynews.com/2022/04/28/new-york-gop-politicians-cheer-court-for-tossing-democratic-friendly-redistricting-map/
+  - display_date: April 28, 2022
+    outlet: New York Daily News
+    title: The Court of Appeals tossed New York’s congressional maps and threw the
+      primary season into turmoil. What’s next?
+    url: https://www.nydailynews.com/2022/04/28/the-court-of-appeals-tossed-new-yorks-congressional-maps-and-threw-the-primary-season-into-turmoil-whats-next/
+  - display_date: April 29, 2022
+    outlet: New York Daily News
+    title: New lawsuit to call on courts to also toss New York’s Democratic-drawn
+      Assembly districts
+    url: https://www.nydailynews.com/2022/04/29/exclusive-new-lawsuit-to-call-on-courts-to-also-toss-new-yorks-democratic-drawn-assembly-districts/
+  - display_date: April 29, 2022
+    outlet: New York Daily News
+    title: N.Y. state senate and congressional primaries move to August 23
+    url: https://www.nydailynews.com/2022/04/29/ny-state-senate-and-congressional-primaries-move-to-august-23/
+  - display_date: May 2, 2022
+    outlet: New York Daily News
+    title: Judge to review additional legal challenge against New York’s Dem-drawn
+      Assembly maps
+    url: https://www.nydailynews.com/2022/05/02/judge-to-review-additional-legal-challenge-against-new-yorks-dem-drawn-assembly-maps/
+  - display_date: May 6, 2022
+    outlet: New York Daily News
+    title: N.Y. voters, lawyers make final arguments as ‘special master’ set to redraw
+      state election maps
+    url: https://www.nydailynews.com/2022/05/06/ny-voters-lawyers-make-final-arguments-as-special-master-set-to-redraw-state-election-maps/
+  - display_date: May 11, 2022
+    outlet: New York Daily News
+    title: New York Assembly map upheld for 2022 elections, faring better than congressional
+      map
+    url: https://www.nydailynews.com/2022/05/11/new-york-assembly-map-upheld-for-2022-elections-faring-better-than-congressional-map/
+  - display_date: May 16, 2022
+    outlet: New York Daily News
+    title: Map mayhem for New York Democrats as new congressional and state Senate
+      boundaries revealed
+    url: https://www.nydailynews.com/2022/05/16/map-mayhem-for-new-york-democrats-as-new-congressional-and-state-senate-boundaries-revealed/
+  - display_date: May 17, 2022
+    outlet: New York Daily News
+    title: New York should be angry about these new congressional maps
+    url: https://www.nydailynews.com/2022/05/17/new-york-should-be-angry-about-these-new-congressional-maps/
+  - display_date: May 17, 2022
+    outlet: New York Daily News
+    title: New York’s redrawn congressional maps spark interest among state lawmakers
+    url: https://www.nydailynews.com/2022/05/17/new-yorks-redrawn-congressional-maps-spark-interest-among-state-lawmakers/
+  - display_date: May 18, 2022
+    outlet: New York Daily News
+    title: Former NYC Mayor Bill de Blasio poised to run for Congress, announces exploratory
+      committee
+    url: https://www.nydailynews.com/2022/05/18/former-nyc-mayor-bill-de-blasio-poised-to-run-for-congress-announces-exploratory-committee/
+  - display_date: May 21, 2022
+    outlet: New York Daily News
+    title: New York congressional and state Senate maps finalized by upstate court
+    url: https://www.nydailynews.com/2022/05/21/new-york-congressional-and-state-senate-maps-finalized-by-upstate-court/
+  - display_date: May 21, 2022
+    outlet: New York Daily News
+    title: Redrawn congressional lines dividing Democrats, ‘earthquake’ for New York
+      politics
+    url: https://www.nydailynews.com/2022/05/21/redrawn-congressional-lines-dividing-democrats-earthquake-for-new-york-politics/
