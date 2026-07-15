@@ -10,6 +10,9 @@ author: "Jonathan Cervas"
 email: "cervas@cmu.edu"
 markdown: kramdown
 
+plugins:
+  - jekyll-sitemap   # auto-generates /sitemap.xml at build time
+
 # Primary navigation (edit here to change the menu everywhere)
 nav:
   - title: Home
