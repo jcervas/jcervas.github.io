@@ -1,11 +1,9 @@
 ---
 layout: subpage
-title: "About"
+title: "About Jonathan Cervas"
+permalink: /about/
+description: "About Jonathan Cervas — Assistant Teaching Professor at Carnegie Mellon University, redistricting and voting-rights scholar, court-appointed Special Master and expert witness."
 ---
-
-<div class="Section__header flush">
-<h2 class="h2">About Jonathan Cervas</h2>
-</div>
 
 I am **Jonathan Cervas**, Assistant Teaching Professor in the Institute for Strategy and Technology (Political Science) at Carnegie Mellon University, where I teach graduate and undergraduate courses on American politics, research methods, representation, and voting rights. I am also a contributor with the Electoral Innovation Lab at Princeton University and to the non-partisan Princeton Gerrymandering Project.
 

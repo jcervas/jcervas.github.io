@@ -29,5 +29,4 @@ exclude:
   - cv-reference.docx
   - cv_build.sh
   - cmu-media.csv
-  - old-index.html
   - "*.sh"
