@@ -29,6 +29,20 @@ description: "News coverage and media mentions of Jonathan Cervas's redistrictin
   {% endfor %}
 </div>
 
+<h2>Collections</h2>
+<div class="collection-grid">
+  <article class="collection">
+    <h3><a href="{{ '/media/ny-2022/' | relative_url }}">New York 2022 &mdash; Special Master</a></h3>
+    <p>100+ articles covering the 2022 New York congressional and State Senate redistricting, when I served as Special Master.</p>
+    <a class="more-link" href="{{ '/media/ny-2022/' | relative_url }}">View collection &rarr;</a>
+  </article>
+  <article class="collection">
+    <h3><a href="{{ '/media/new-york-daily-news/' | relative_url }}">New York Daily News</a></h3>
+    <p>Editorials and reporting from the <em>New York Daily News</em> on New York's redistricting and the court-drawn maps.</p>
+    <a class="more-link" href="{{ '/media/new-york-daily-news/' | relative_url }}">View collection &rarr;</a>
+  </article>
+</div>
+
 <h2>Media Mentions</h2>
 {% for group in site.data.media.mentions_by_year %}
 <h3 class="media-year">{{ group.year }}</h3>
@@ -48,16 +62,4 @@ description: "News coverage and media mentions of Jonathan Cervas's redistrictin
 </ul>
 {% endfor %}
 
-<h2>New York Daily News</h2>
-<h3 class="media-year">Editorials</h3>
-<ul class="media-list">
-  {% for m in site.data.media.nydn.editorials %}
-  <li><span class="media-date">{{ m.display_date }}</span> &mdash; <a href="{{ m.url }}">{{ m.title }}</a></li>
-  {% endfor %}
-</ul>
-<h3 class="media-year">Other Coverage</h3>
-<ul class="media-list">
-  {% for m in site.data.media.nydn.others %}
-  <li><span class="media-date">{{ m.display_date }}</span> &mdash; <a href="{{ m.url }}">{{ m.title }}</a>{% if m.author %}, {{ m.author }}{% endif %}</li>
-  {% endfor %}
-</ul>
+<p class="media-more"><a href="{{ '/media/new-york-daily-news/' | relative_url }}">See also: New York Daily News coverage &rarr;</a></p>
