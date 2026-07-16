@@ -10,7 +10,7 @@ description: "Jonathan Cervas's court-appointed work as Special Master, consulta
   voting-rights cases across the United States. Select a case for reports, maps, and details.
 </p>
 
-{% assign cases = site.cases | sort: "order" %}
+{% assign cases = site.cases | where_exp: "c", "c.order" | sort: "order" %}
 <div class="case-grid">
   {% for c in cases %}
   <div class="case">

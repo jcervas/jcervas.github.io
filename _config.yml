@@ -42,6 +42,7 @@ nav:
 # Files Jekyll should ignore when building the site
 exclude:
   - README.md
+  - _cases/README.md   # docs for authors; must stay excluded or it becomes a case page
   - cv-reference.docx
   - cv_build.sh
   - cmu-media.csv

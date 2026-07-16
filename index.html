@@ -68,7 +68,7 @@ title: Home
       Court-appointed roles as Special Master, consultant, and expert witness in redistricting and
       voting-rights cases across the United States.
     </p>
-    {% assign cases = site.cases | sort: "order" %}
+    {% assign cases = site.cases | where_exp: "c", "c.order" | sort: "order" %}
     <ul class="case-highlights">
       {% for c in cases limit:5 %}
       <li><a href="{{ c.url | relative_url }}"><strong>{{ c.title }}</strong></a> &mdash;
