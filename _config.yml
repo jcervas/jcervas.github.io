@@ -11,7 +11,8 @@ email: "cervas@cmu.edu"
 markdown: kramdown
 
 plugins:
-  - jekyll-sitemap   # auto-generates /sitemap.xml at build time
+  - jekyll-sitemap        # auto-generates /sitemap.xml at build time
+  - jekyll-redirect-from  # serves legacy URLs (see redirect_from: in page front matter)
 
 # Primary navigation (edit here to change the menu everywhere)
 nav:

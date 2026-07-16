@@ -2,6 +2,8 @@
 layout: subpage
 title: "About Jonathan Cervas"
 permalink: /about/
+redirect_from:
+  - /about.html
 description: "About Jonathan Cervas — Assistant Teaching Professor at Carnegie Mellon University, redistricting and voting-rights scholar, court-appointed Special Master and expert witness."
 ---
 
