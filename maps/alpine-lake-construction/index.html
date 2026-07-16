@@ -4,9 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Alpine Lake &mdash; New Construction Over Time (1970&ndash;2025)</title>
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem('alt-theme');
+    if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+})();
+</script>
 <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
 <style>
-  .viz-root {
+  /* Custom properties live on :root (not .viz-root) so ancestors like
+     <html>/<body> resolve them too — otherwise body's background falls
+     back to the browser default (white) since vars don't cascade upward. */
+  :root {
     color-scheme: light;
     --surface-1:      #fcfcfb;
     --page-plane:     #f9f9f7;
@@ -29,7 +40,7 @@
     --sequential-450: #2a78d6;
   }
   @media (prefers-color-scheme: dark) {
-    :root:where(:not([data-theme="light"])) .viz-root {
+    :root:not([data-theme="light"]) {
       color-scheme: dark;
       --surface-1:      #1a1a19;
       --page-plane:     #0d0d0d;
@@ -52,7 +63,7 @@
       --sequential-450: #3987e5;
     }
   }
-  :root[data-theme="dark"] .viz-root {
+  :root[data-theme="dark"] {
     color-scheme: dark;
     --surface-1:      #1a1a19;
     --page-plane:     #0d0d0d;
@@ -104,6 +115,21 @@
     line-height: 1.5;
     max-width: 65ch;
   }
+  .page-head-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+  .theme-toggle {
+    display: flex; align-items: center; gap: 6px; flex: none;
+    padding: 6px 10px; margin-top: 1px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--surface-1); color: var(--text-secondary);
+    font-size: 12px; font-family: inherit; cursor: pointer; white-space: nowrap;
+  }
+  .theme-toggle:hover { background: var(--page-plane); }
+  .theme-toggle .swatch {
+    width: 12px; height: 12px; border-radius: 999px; flex: none;
+    background: linear-gradient(90deg, #fff 50%, #23232a 50%);
+    border: 1px solid var(--border);
+  }
+  .theme-toggle[data-mode="light"] .swatch { background: #fff; }
+  .theme-toggle[data-mode="dark"] .swatch { background: #23232a; }
 
   .layout {
     display: grid;
@@ -339,8 +365,13 @@
 <body>
 <div class="viz-root">
   <header class="page-head">
-    <h1>Alpine Lake &mdash; New Construction Over Time</h1>
-    <p>Every parcel in the Alpine Lake tax district (CODIST 3907, Preston County, WV), animated from the first recorded year a home was built through the present. Each parcel lights up in the year its structure was built, per county tax assessment records.</p>
+    <div class="page-head-row">
+      <div>
+        <h1>Alpine Lake &mdash; New Construction Over Time</h1>
+        <p>Every parcel in the Alpine Lake tax district (CODIST 3907, Preston County, WV), animated from the first recorded year a home was built through the present. Each parcel lights up in the year its structure was built, per county tax assessment records.</p>
+      </div>
+      <button class="theme-toggle" id="themeToggle" type="button"></button>
+    </div>
   </header>
 
   <div class="layout">
@@ -438,12 +469,49 @@ const DATA = {"type":"FeatureCollection","features":[{"type":"Feature","properti
     maxZoom: 18,
   });
 
-  const tileVariant = isDarkMode() ? 'dark_all' : 'light_all';
-  L.tileLayer(`https://{s}.basemaps.cartocdn.com/${tileVariant}/{z}/{x}/{y}{r}.png`, {
+  function cartoUrl(dark) {
+    return `https://{s}.basemaps.cartocdn.com/${dark ? 'dark_all' : 'light_all'}/{z}/{x}/{y}{r}.png`;
+  }
+  const tileLayer = L.tileLayer(cartoUrl(isDarkMode()), {
     attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     subdomains: 'abcd',
     maxZoom: 20,
   }).addTo(map);
+
+  // Theme toggle: cycles Auto -> Light -> Dark, persisted, and swaps the basemap to match.
+  const THEME_KEY = 'alt-theme';
+  const themeToggle = document.getElementById('themeToggle');
+  const THEME_LABELS = { auto: 'Auto', light: 'Light', dark: 'Dark' };
+  function currentThemeMode() {
+    const t = localStorage.getItem(THEME_KEY);
+    return (t === 'dark' || t === 'light') ? t : 'auto';
+  }
+  function updateToggleUI(mode) {
+    themeToggle.setAttribute('data-mode', mode);
+    themeToggle.setAttribute('aria-label', `Theme: ${THEME_LABELS[mode]}. Click to change.`);
+    themeToggle.innerHTML = `<span class="swatch"></span>${THEME_LABELS[mode]}`;
+  }
+  function applyThemeMode(mode) {
+    if (mode === 'auto') {
+      document.documentElement.removeAttribute('data-theme');
+      try { localStorage.removeItem(THEME_KEY); } catch (e) {}
+    } else {
+      document.documentElement.setAttribute('data-theme', mode);
+      try { localStorage.setItem(THEME_KEY, mode); } catch (e) {}
+    }
+    updateToggleUI(mode);
+    tileLayer.setUrl(cartoUrl(isDarkMode()));
+  }
+  themeToggle.addEventListener('click', () => {
+    const order = ['auto', 'light', 'dark'];
+    applyThemeMode(order[(order.indexOf(currentThemeMode()) + 1) % order.length]);
+  });
+  updateToggleUI(currentThemeMode());
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      if (currentThemeMode() === 'auto') tileLayer.setUrl(cartoUrl(isDarkMode()));
+    });
+  }
 
   function tooltipHtml(p) {
     const catTag = (p.cat === 2 || p.cat === 3) ? 'common' : (p.yb > 0 ? 'built' : 'vacant');
