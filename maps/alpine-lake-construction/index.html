@@ -280,6 +280,13 @@
   .detail-backdrop { display: none; }
 
   @media (max-width: 860px) {
+    /* display:contents unwraps .side so its children become direct grid items
+       of .layout and can be reordered independently of the map panel. */
+    .side { display: contents; }
+    .controls { order: 1; }
+    .map-panel { order: 2; }
+    .chart-panel { order: 3; }
+
     .detail-panel {
       position: fixed; left: 0; right: 0; bottom: 0; z-index: 1001;
       max-height: 78vh; overflow-y: auto;
@@ -619,6 +626,7 @@ const DATA = {"type":"FeatureCollection","features":[{"type":"Feature","properti
   }).addTo(map);
 
   map.fitBounds(geoLayer.getBounds(), { padding: [12, 12] });
+  map.setZoom(map.getZoom() + 1);
 
   const parcels = DATA.features.map(f => f.properties);
 
