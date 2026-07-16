@@ -68,12 +68,12 @@ title: Home
       Court-appointed roles as Special Master, consultant, and expert witness in redistricting and
       voting-rights cases across the United States.
     </p>
-    <ul>
-      <li><strong>Wisconsin</strong> &mdash; Court co-consultant, <em>Clarke v. WEC</em> (2024)</li>
-      <li><strong>New York</strong> &mdash; Special Master, <em>Harkenrider v. Hochul</em> (2022)</li>
-      <li><strong>Pennsylvania</strong> &mdash; Consultant, Legislative Reapportionment Commission (2021&ndash;2022)</li>
-      <li><strong>Alabama</strong> &mdash; Remedial plans, <em>Allen v. Milligan</em> (2023)</li>
-      <li><strong>Nassau County, NY</strong> &mdash; Expert witness, <em>NY Communities for Change v. Nassau</em> (2025)</li>
+    {% assign cases = site.cases | sort: "order" %}
+    <ul class="case-highlights">
+      {% for c in cases limit:5 %}
+      <li><a href="{{ c.url | relative_url }}"><strong>{{ c.title }}</strong></a> &mdash;
+        {{ c.role }}, <em>{{ c.case }}</em></li>
+      {% endfor %}
     </ul>
     <a class="more-link" href="{{ '/redistricting/' | relative_url }}">All cases &rarr;</a>
   </div>

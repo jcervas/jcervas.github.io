@@ -1,0 +1,28 @@
+---
+layout: default
+---
+<article class="wrap page">
+  <p class="case-back"><a href="{{ '/redistricting/' | relative_url }}">&larr; All redistricting cases</a></p>
+
+  <h1 class="page-title">{{ page.title }}</h1>
+  <div class="case-detail__sub">{{ page.case }}{% if page.role %} &middot; {{ page.role }}{% endif %}</div>
+
+  {% if page.image %}
+  <img class="case-detail__img" src="{{ page.image | relative_url }}"
+       alt="{{ page.title }} district map">
+  {% endif %}
+
+  {{ content }}
+
+  {% if page.resources %}
+  <h2>Documents &amp; Maps</h2>
+  <ul class="resource-list">
+    {% for r in page.resources %}
+    <li>
+      <span class="resource-label">{{ r.label }}</span>
+      {% for l in r.links %}<a href="{{ l.url | relative_url }}">{{ l.text }}</a>{% unless forloop.last %} <span class="sep">&middot;</span> {% endunless %}{% endfor %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</article>

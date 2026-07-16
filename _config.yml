@@ -14,6 +14,18 @@ plugins:
   - jekyll-sitemap        # auto-generates /sitemap.xml at build time
   - jekyll-redirect-from  # serves legacy URLs (see redirect_from: in page front matter)
 
+# Each file in _cases/ becomes its own page at /redistricting/<filename>/
+collections:
+  cases:
+    output: true
+    permalink: /redistricting/:name/
+
+defaults:
+  - scope:
+      type: cases
+    values:
+      layout: case
+
 # Primary navigation (edit here to change the menu everywhere)
 nav:
   - title: Home

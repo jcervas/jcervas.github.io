@@ -7,21 +7,21 @@ description: "Jonathan Cervas's court-appointed work as Special Master, consulta
 
 <p class="section-lead">
   Court-appointed roles as Special Master, consultant, and expert witness in redistricting and
-  voting-rights cases across the United States. Reports, maps, and case materials are linked below.
+  voting-rights cases across the United States. Select a case for reports, maps, and details.
 </p>
 
+{% assign cases = site.cases | sort: "order" %}
 <div class="case-grid">
-  {% for c in site.data.cases %}
+  {% for c in cases %}
   <div class="case">
-    <img src="{{ c.image | relative_url }}" alt="{{ c.name }} redistricting map">
+    <a href="{{ c.url | relative_url }}" class="case__img-link">
+      <img src="{{ c.image | relative_url }}" alt="{{ c.title }} district map">
+    </a>
     <div class="case__body">
-      <h3>{{ c.name }}</h3>
+      <h3><a href="{{ c.url | relative_url }}">{{ c.title }}</a></h3>
       <div class="case__sub">{{ c.case }}</div>
-      <p>{{ c.body }}
-        {% if c.links and c.links.size > 0 %}
-        {% for l in c.links %}<a href="{{ l.url | relative_url }}">{{ l.label }}</a>{% unless forloop.last %} &middot; {% endunless %}{% endfor %}
-        {% endif %}
-      </p>
+      <p>{{ c.summary }}</p>
+      <a class="more-link" href="{{ c.url | relative_url }}">Case details &rarr;</a>
     </div>
   </div>
   {% endfor %}
