@@ -1,0 +1,26 @@
+---
+layout: page
+title: Teaching
+permalink: /teaching/
+description: "Courses taught by Jonathan Cervas at Carnegie Mellon University on American politics, representation, voting rights, constitutional law, elections, and quantitative methods."
+---
+
+<p class="section-lead">
+  I teach undergraduate and graduate courses at Carnegie Mellon University on American politics,
+  representation and voting rights, constitutional law, elections, and quantitative methods. Several
+  serve as Dietrich College general-education courses.
+</p>
+
+<div class="course-list">
+  {% for c in site.data.teaching.courses %}
+  <article class="course">
+    <h3 class="course__title">{{ c.title }}</h3>
+    <div class="course__tags">
+      <span class="course__num">{{ c.number }}</span>
+      {% if c.level %}<span class="course__tag">{{ c.level }}</span>{% endif %}
+      {% if c.gened %}<span class="course__tag course__tag--gened">Gen Ed &middot; {{ c.gened }}</span>{% endif %}
+    </div>
+    <p class="course__terms"><strong>Taught:</strong> {{ c.terms }}</p>
+  </article>
+  {% endfor %}
+</div>

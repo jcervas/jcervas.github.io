@@ -1,0 +1,37 @@
+# Courses taught, shown on /teaching/. Add or edit entries freely.
+# Fields: title, number, level, gened (optional), terms.
+courses:
+  - title: "Representation and Voting Rights"
+    number: "84-352 / 652"
+    level: "Undergraduate & Graduate"
+    gened: "Perspectives on Justice & Injustice"
+    terms: "Spring 2021, 2022, 2023, 2024, 2026"
+
+  - title: "Introduction to U.S. Constitutional Law"
+    number: "84-120"
+    level: "Undergraduate"
+    gened: "Humanities"
+    terms: "Spring 2026"
+
+  - title: "American Political Divides and Great Debates"
+    number: "84-309 / 609"
+    level: "Undergraduate & Graduate"
+    gened: "Perspectives on Justice & Injustice"
+    terms: "Fall 2024, 2025"
+
+  - title: "Democracy's Data: Analytics and Insights into American Elections"
+    number: "84-355 / 655"
+    level: "Undergraduate & Graduate"
+    gened: "Contextual Thinking"
+    terms: "Fall 2024, 2025"
+
+  - title: "Regression Analysis for Political Science II"
+    number: "84-702"
+    level: "Graduate"
+    gened: "Scientific Inquiry"
+    terms: "Spring 2023, 2024"
+
+  - title: "American Politics Graduate Seminar / Advanced Topics in American Politics"
+    number: "84-421 / 721"
+    level: "Undergraduate & Graduate"
+    terms: "Fall 2020, 2021, 2022, 2023"
