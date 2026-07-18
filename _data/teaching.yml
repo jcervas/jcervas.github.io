@@ -6,24 +6,28 @@ courses:
     level: "Undergraduate & Graduate"
     gened: "Perspectives on Justice & Injustice"
     terms: "Spring 2021, 2022, 2023, 2024, 2026"
+    materials: "https://github.com/jcervas/teaching/tree/main/2025-2026/class-cmu-2026-84-352"
 
   - title: "Introduction to U.S. Constitutional Law"
     number: "84-120"
     level: "Undergraduate"
     gened: "Humanities"
     terms: "Spring 2026"
+    materials: "https://github.com/jcervas/teaching/tree/main/2025-2026/class-cmu-2026-84-120"
 
   - title: "American Political Divides and Great Debates"
     number: "84-309 / 609"
     level: "Undergraduate & Graduate"
     gened: "Perspectives on Justice & Injustice"
     terms: "Fall 2024, 2025"
+    materials: "https://github.com/jcervas/teaching/tree/main/2025-2026/class-cmu-2025-84-309"
 
   - title: "Democracy's Data: Analytics and Insights into American Elections"
     number: "84-355 / 655"
     level: "Undergraduate & Graduate"
     gened: "Contextual Thinking"
     terms: "Fall 2024, 2025"
+    materials: "https://github.com/jcervas/teaching/tree/main/2025-2026/class-cmu-2025-84-355"
 
   - title: "Regression Analysis for Political Science II"
     number: "84-702"

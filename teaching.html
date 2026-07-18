@@ -21,6 +21,7 @@ description: "Courses taught by Jonathan Cervas at Carnegie Mellon University on
       {% if c.gened %}<span class="course__tag course__tag--gened">Gen Ed &middot; {{ c.gened }}</span>{% endif %}
     </div>
     <p class="course__terms"><strong>Taught:</strong> {{ c.terms }}</p>
+    {% if c.materials %}<a class="more-link course__materials" href="{{ c.materials }}">Course materials &rarr;</a>{% endif %}
   </article>
   {% endfor %}
 </div>
