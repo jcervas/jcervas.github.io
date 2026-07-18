@@ -72,7 +72,7 @@ articles group under the same chip. The taxonomies currently in use:
 - **`media.yml` (national mentions + NYDN):** `Voting Rights Act`,
   `Electoral College`, `Census & 2030`, `Mid-Decade Fights`, `Reform & Commentary`
 - **`media_ny2022.yml`:** `Appointment`, `Court Ruling`, `Draft & Final Maps`,
-  `Primaries & Calendar`, `Public Input & Hearings`, `Assembly & Litigation`,
+  `Primaries & Calendar`, `Public Input & Hearings`, `Litigation & Challenges`,
   `Analysis & Impact`, `Coverage`
 
 You can invent a new topic just by using it — a new chip appears automatically.
