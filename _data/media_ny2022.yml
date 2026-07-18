@@ -1,0 +1,645 @@
+# NY 2022 Special Master media coverage (source: NY-2022-Special-Master-Media-Coverage.xlsx).
+# Powers the sortable table on /media/ny-2022/. Add rows or fix a `topic:` freely.
+# topic values were auto-classified from titles — review and adjust as you like.
+
+items:
+- date: '2022-04-03'
+  title: NY to move some primaries to August after court tosses maps
+  outlet: AP News
+  url: https://apnews.com/article/2022-midterm-elections-new-york-redistricting-congress-ac3b7f8e20e7b7f14b50f3c67981248d
+  topic: Court Ruling
+- date: '2022-04-03'
+  title: NY moves some primaries to August after a judge tosses maps
+  outlet: NPR
+  url: https://www.npr.org/2022/04/29/1095657939/new-york-voting-august
+  topic: Court Ruling
+- date: '2022-04-03'
+  title: Judge delays some New York primaries after court tosses maps
+  outlet: WCAX
+  url: https://www.wcax.com/2022/04/29/judge-delays-some-new-york-primaries-after-court-tosses-maps/
+  topic: Court Ruling
+- date: '2022-04-03'
+  title: NY to move some primaries to August after court tosses maps
+  outlet: WBNG
+  url: https://www.wbng.com/2022/04/29/ny-move-some-primaries-august-after-court-tosses-maps/
+  topic: Court Ruling
+- date: '2022-04-03'
+  title: Judge delays some New York primaries after court tosses maps
+  outlet: Charlotte Observer
+  url: https://www.charlotteobserver.com/news/nation-world/national/article260907512.html
+  topic: Court Ruling
+- date: '2022-04-03'
+  title: Judge overseeing redistricting moves Congressional and state Senate primaries to August
+  outlet: WXXI News
+  url: https://www.wxxinews.org/2022-04-29/judge-overseeing-redistricting-moves-congressional-and-state-senate-primaries-to-august
+  topic: Primaries & Calendar
+- date: '2022-04-03'
+  title: Judge Shifts Some New York Primaries To August After Court Scraps Voting Maps
+  outlet: Forbes
+  url: https://www.forbes.com/sites/zacharysmith/2022/04/29/judge-shifts-some-new-york-primaries-to-august-after-court-scraps-voting-maps/?sh=414ae263273e
+  topic: Court Ruling
+- date: '2022-04-03'
+  title: NY to move some primaries to August after court tosses maps
+  outlet: Democrat and Chronicle
+  url: https://www.democratandchronicle.com/story/news/2022/04/29/ny-move-some-primaries-august-after-court-tosses-maps/9589866002/
+  topic: Court Ruling
+- date: '2022-04-03'
+  title: City Council wades into garbage fight
+  outlet: Politico
+  url: https://www.politico.com/newsletters/new-york-playbook/2022/04/29/council-wades-into-garbage-fight-00028880
+  topic: Coverage
+- date: '2022-04-03'
+  title: Judge delays some New York primaries after court tosses maps
+  outlet: KTAR.com
+  url: https://ktar.com/story/5032786/ny-to-move-some-primaries-to-august-after-court-tosses-maps/
+  topic: Court Ruling
+- date: '2022-04-18'
+  title: Judge appoints special master as New York redistricting suit continues
+  outlet: Spectrum News
+  url: https://spectrumlocalnews.com/nys/rochester/ny-state-of-politics/2022/04/18/judge-appoints-special-master-as-redistricting-suit-continues
+  topic: Appointment
+- date: '2022-04-19'
+  title: Judge appoints expert to redraw N.Y. district lines as court case proceeds
+  outlet: silive.com
+  url: https://www.silive.com/politics/2022/04/judge-appoints-expert-to-redraw-ny-district-lines-as-court-case-proceeds.html
+  topic: Appointment
+- date: '2022-04-19'
+  title: Petitioners suing over New York redistricting maps optimistic of outcome
+  outlet: Spectrum News 1
+  url: https://spectrumlocalnews.com/nys/buffalo/politics/2022/04/19/redistricting-suit-continues--outside-expert-will-draw-contingent-maps
+  topic: Coverage
+- date: '2022-04-19'
+  title: Expect New York Redistricting Battle To Reach State's Highest Court
+  outlet: The New York Sun
+  url: https://www.nysun.com/article/expect-new-york-redistricting-battle-to-reach-states-highest-court
+  topic: Coverage
+- date: '2022-04-19'
+  title: Continuation of Suit redistricting in New York
+  outlet: Bollyinside
+  url: https://www.bollyinside.com/news/continuation-of-suit-redistricting-in-new-york
+  topic: Coverage
+- date: '2022-04-20'
+  title: 'Draw a line, judges: A five-jurist appellate panel must strike down hyperpartisan maps'
+  outlet: New York Daily News
+  url: https://www.nydailynews.com/opinion/ny-edit-redistricting-20220420-2pt2qp5y3zb33jyoxc2bpfd7ku-story.html
+  topic: Court Ruling
+- date: '2022-04-20'
+  title: New York redistricting special master gets good reviews from Pennsylvania official
+  outlet: Spectrum News 1
+  url: https://spectrumlocalnews.com/nys/buffalo/politics/2022/04/20/new-ny-redistricting-special-master-gets-good-reviews-from-pennsylvania-chair
+  topic: Appointment
+- date: '2022-04-24'
+  title: Congressional Redistricting Goes to Albany High Court
+  outlet: PoliticsNY
+  url: https://politicsny.com/2022/04/24/congressional-redistricting-goes-to-albany-high-court/
+  topic: Coverage
+- date: '2022-04-25'
+  title: Redistricting legal challenge could present 'a real mess' for New York voters
+  outlet: Election Law Blog
+  url: https://electionlawblog.org/?p=128973
+  topic: Assembly & Litigation
+- date: '2022-04-26'
+  title: Michael Li live tweeted the NY redistricting case at the Court of Appeals
+  outlet: Twitter (Michael Li / @mcpli)
+  url: https://twitter.com/mcpli/status/1518969388178759680
+  topic: Coverage
+- date: '2022-04-26'
+  title: New York Democrats Make Last-Ditch Bid to Save New Congressional Maps
+  outlet: New York Times
+  url: https://www.nytimes.com/2022/04/26/nyregion/redistricting-court-appeals-ny.html
+  topic: Draft & Final Maps
+- date: '2022-04-27'
+  title: NY's top court rejects congressional district maps, primaries likely delayed
+  outlet: Gothamist
+  url: https://gothamist.com/news/back-to-the-drawing-board-nys-top-court-rejects-congressional-district-maps
+  topic: Court Ruling
+- date: '2022-04-27'
+  title: 'Back to the drawing board: appeals court nixes Dem-drawn maps'
+  outlet: PoliticsNY
+  url: https://politicsny.com/2022/04/27/back-to-the-drawing-board-appeals-court-nixes-dem-drawn-maps/
+  topic: Court Ruling
+- date: '2022-04-27'
+  title: Democrats Lose Control of N.Y. Election Maps, as Top Court Rejects Appeal
+  outlet: New York Times
+  url: https://www.nytimes.com/2022/04/27/nyregion/redistricting-congress-gerrymander-ny.html
+  topic: Court Ruling
+- date: '2022-04-27'
+  title: New York Redistricting Ruling Deals House Democrats Major Blow
+  outlet: Cook Political Report
+  url: https://www.cookpolitical.com/analysis/house/redistricting/new-york-redistricting-ruling-deals-house-democrats-major-blow
+  topic: Analysis & Impact
+- date: '2022-04-27'
+  title: 'Redistricting redo: Court of Appeals strikes down district lines'
+  outlet: Queens Daily Eagle
+  url: https://queenseagle.com/all/2022/4/27/redistricting-redo-court-of-appeals-strikes-down-district-lines
+  topic: Court Ruling
+- date: '2022-04-28'
+  title: Poof! New York's maps are toast
+  outlet: Politico
+  url: https://www.politico.com/newsletters/new-york-playbook/2022/04/28/poof-new-yorks-maps-are-toast-00028508
+  topic: Coverage
+- date: '2022-04-28'
+  title: What the redistricting ruling means for New York state
+  outlet: Spectrum News 1
+  url: https://spectrumlocalnews.com/nys/central-ny/ny-state-of-politics/2022/04/27/what-the-redistricting-ruling-means-for-new-york-state
+  topic: Coverage
+- date: '2022-04-28'
+  title: NY Court of Appeals strikes down congressional maps, primary elections pushed back to August
+  outlet: New York Daily News
+  url: https://www.nydailynews.com/news/politics/new-york-elections-government/ny-redistricting-congressional-maps-gerrymandering-court-of-appeals-20220427-ho6gnfsumjd6zdjfzgfwrasigm-story.html
+  topic: Court Ruling
+- date: '2022-04-28'
+  title: NY State top court throws out Dems' gerrymandered congressional redistricting plan
+  outlet: American Thinker
+  url: https://www.americanthinker.com/blog/2022/04/ny_state_top_court_throws_out_dems_gerrymandered_congressional_redistricting_plan.html
+  topic: Court Ruling
+- date: '2022-04-28'
+  title: Control of Congress could hinge on this redistricting 'special master' in NY
+  outlet: New York Post
+  url: https://nypost.com/2022/04/28/control-of-congress-could-hinge-on-this-redistricting-special-master-in-ny/
+  topic: Appointment
+- date: '2022-04-28'
+  title: Who is the man tasked with redrawing New York's new district lines?
+  outlet: City & State New York
+  url: https://www.cityandstateny.com/politics/2022/04/who-man-tasked-redrawing-new-yorks-new-district-lines/366253/
+  topic: Appointment
+- date: '2022-04-28'
+  title: Special master has just three weeks to draw up New York's new legislative maps
+  outlet: NY1
+  url: https://www.ny1.com/nyc/all-boroughs/politics/2022/04/29/special-master-has-to-act-fast-on-new-legislative-maps
+  topic: Appointment
+- date: '2022-04-28'
+  title: Task of drawing NY political maps falls to judge and scholar
+  outlet: AP News
+  url: https://apnews.com/article/2022-midterm-elections-kathy-hochul-us-supreme-court-new-york-redistricting-f2bdcd501f7c4f0272da27b59fe82a33
+  topic: Appointment
+- date: '2022-04-28'
+  title: Candidates will face new challenges after New York's high court strikes new district lines
+  outlet: WXXI News
+  url: https://www.wxxinews.org/capitol-bureau/2022-04-28/candidates-will-face-new-challenges-after-new-yorks-high-court-strikes-new-district-lines
+  topic: Court Ruling
+- date: '2022-04-28'
+  title: Send us your questions about New York's redistricting process
+  outlet: Democrat & Chronicle
+  url: https://www.democratandchronicle.com/story/news/2022/04/28/ny-redistricting-maps-what-happens-next/9569991002/
+  topic: Coverage
+- date: '2022-04-28'
+  title: Task of drawing NY political maps falls to judge and scholar
+  outlet: Washington Post
+  url: https://www.washingtonpost.com/politics/task-of-drawing-ny-political-maps-falls-to-judge-and-scholar/2022/04/28/53f19490-c744-11ec-8cff-33b059f4c1b7_story.html
+  topic: Appointment
+- date: '2022-04-28'
+  title: The Court of Appeals tossed New York's congressional maps and threw the primary season into disarray
+  outlet: New York Daily News
+  url: https://www.nydailynews.com/news/politics/new-york-elections-government/ny-redistricting-court-of-appeals-congressional-maps-democrats-repuplicans-20220428-hrs772i3gjg67o7i7nf5snib7q-story.html
+  topic: Court Ruling
+- date: '2022-04-29'
+  title: Task of drawing NY political maps falls to judge & scholar
+  outlet: WWNY
+  url: https://www.wwnytv.com/2022/04/29/task-drawing-ny-political-maps-falls-judge-scholar/
+  topic: Appointment
+- date: '2022-04-29'
+  title: Candidates, election officials left in limbo after NY redistricting ruling
+  outlet: Gothamist
+  url: https://gothamist.com/news/candidates-election-officials-left-in-limbo-after-ny-redistricting-ruling
+  topic: Analysis & Impact
+- date: '2022-04-29'
+  title: New York's new district maps will be decided by state judge, independent expert
+  outlet: FingerLakes1
+  url: https://www.fingerlakes1.com/2022/04/29/new-yorks-new-district-maps-will-be-decided-by-state-judge-independent-expert/
+  topic: Draft & Final Maps
+- date: '2022-04-30'
+  title: NY to move some primaries to August after court tosses maps
+  outlet: Detroit News
+  url: https://www.detroitnews.com/story/news/politics/2022/04/29/ny-move-some-primaries-august-after-court-tosses-maps/9589672002/
+  topic: Court Ruling
+- date: '2022-04-30'
+  title: Congressional and state senate primary to be held August 23rd, judge rules
+  outlet: Gothamist
+  url: https://gothamist.com/news/congressional-and-state-senate-primary-to-be-held-august-23rd-judge-rules
+  topic: Primaries & Calendar
+- date: '2022-04-30'
+  title: NY Supreme Court judge orders August date for state Senate, congressional primaries
+  outlet: News 12 Bronx
+  url: https://bronx.news12.com/ny-supreme-court-judge-orders-august-date-for-state-senate-congressional-primaries
+  topic: Primaries & Calendar
+- date: '2022-04-30'
+  title: NY to move some primaries to August after court tosses maps
+  outlet: WPXI
+  url: https://www.wpxi.com/news/ny-move-some/DCMBKBUSTYMDYB5GWRQDWJGWG4/
+  topic: Court Ruling
+- date: '2022-04-30'
+  title: Judge delays some New York primaries after court tosses maps
+  outlet: Greenwich Time
+  url: https://www.greenwichtime.com/news/article/NY-to-move-some-primaries-to-August-after-court-17137361.php
+  topic: Court Ruling
+- date: '2022-04-30'
+  title: Judge delays New York congressional primaries
+  outlet: Press-Republican (pressrepublican.com)
+  url: https://www.pressrepublican.com/news/judge-delays-new-york-congressional-primaries/article_d82aa10e-c846-11ec-8da0-57cd8d99c525.html
+  topic: Primaries & Calendar
+- date: '2022-04-30'
+  title: 'Cruel summer: Gerrymander pushes some NY primaries to late August'
+  outlet: New York Post
+  url: https://nypost.com/2022/04/29/gerrymander-pushes-some-ny-primaries-to-late-august/
+  topic: Primaries & Calendar
+- date: '2022-05-01'
+  title: East End Redistricting To Be Revised After Court Ruling
+  outlet: Dan's Papers
+  url: https://www.danspapers.com/2022/04/east-end-redistricting-to-be-revised-after-court-ruling/
+  topic: Coverage
+- date: '2022-05-02'
+  title: NY Young Republican Club leader files motion to stop Assembly redistricting
+  outlet: New York Post
+  url: https://nypost.com/2022/05/02/ny-young-republican-club-leader-files-motion-to-stop-assembly-redistricting/
+  topic: Assembly & Litigation
+- date: '2022-05-03'
+  title: Lawsuits to Invalidate State Assembly District Maps Being Filed
+  outlet: WRFA-LP 107.9 FM
+  url: https://www.wrfalp.com/lawsuits-to-invalidate-state-assembly-district-maps-being-filed/
+  topic: Court Ruling
+- date: '2022-05-03'
+  title: Judge to review additional legal challenge against New York's Dem-drawn Assembly maps
+  outlet: New York Daily News
+  url: https://www.nydailynews.com/news/politics/new-york-elections-government/ny-lawsuit-court-of-appeals-assembly-redistricting-void-20220502-og5qxutguvcerjtlzwpmd6vu74-story.html
+  topic: Assembly & Litigation
+- date: '2022-05-03'
+  title: Future of new Queens Senate district in limbo
+  outlet: Queens Daily Eagle
+  url: https://queenseagle.com/all/2022/5/2/future-of-new-queens-senate-district-in-limbo
+  topic: Analysis & Impact
+- date: '2022-05-03'
+  title: 'On Politics: State court tries to take the politics out of political mapping'
+  outlet: Crain's New York Business
+  url: https://www.crainsnewyork.com/politics/new-yorks-court-appeals-rejects-house-and-state-senate-maps-drawn-new-york-democrats
+  topic: Coverage
+- date: '2022-05-03'
+  title: 'New York Pushing Back Primaries: Why Elections Are Being Put on Hold'
+  outlet: Radio NB
+  url: https://radionb.com/news/fox-news-radio/article122955/new-york-pushing-back-primaries-why-elections-are-being-put-hold
+  topic: Primaries & Calendar
+- date: '2022-05-03'
+  title: NY Young Republican Club leader files motion to stop Assembly redistricting
+  outlet: Report Door
+  url: https://www.reportdoor.com/ny-young-republican-club-leader-files-motion-to-stop-assembly-redistricting/
+  topic: Assembly & Litigation
+- date: '2022-05-03'
+  title: Assembly maps challenged as court begins redrawing congressional, state Senate districts
+  outlet: WSKG
+  url: https://wskg.org/assembly-maps-challenged-as-court-begins-redrawing-congressional-state-senate-districts/
+  topic: Assembly & Litigation
+- date: '2022-05-03'
+  title: Judge to review additional legal challenge against New York's Democratic-drawn Assembly maps
+  outlet: Finger Lakes Times
+  url: https://www.fltimes.com/news/nation/judge-to-review-additional-legal-challenge-against-new-york-s-democratic-drawn-assembly-maps/article_5b3e19f9-701d-59f6-91d8-78778d3beb6c.html
+  topic: Assembly & Litigation
+- date: '2022-05-04'
+  title: Redistricting maps rejected, delaying primaries
+  outlet: The Photo News
+  url: https://www.thephoto-news.com/home/redistricting-maps-rejected-delaying-primaries-CC2051141
+  topic: Court Ruling
+- date: '2022-05-04'
+  title: Democrats lose 'Hail Mary' bid to reinstate gerrymander of House lines
+  outlet: New York Post
+  url: https://nypost.com/2022/05/04/democrats-lose-hail-mary-bid-to-reinstate-house-gerrymander/
+  topic: Court Ruling
+- date: '2022-05-05'
+  title: One more former City Council member joins the Adams administration
+  outlet: City & State New York
+  url: https://www.cityandstateny.com/politics/2022/05/one-more-former-city-council-member-joins-adams-administration/366592/
+  topic: Coverage
+- date: '2022-05-05'
+  title: Moving forward with new election maps
+  outlet: Herald Community Newspapers
+  url: https://www.liherald.com/glenhead/stories/moving-forward-with-new-election-maps,140652
+  topic: Coverage
+- date: '2022-05-05'
+  title: Maps Tossed, Primaries Postponed
+  outlet: The East Hampton Star
+  url: https://www.easthamptonstar.com/government/202255/maps-tossed-primaries-postponed
+  topic: Court Ruling
+- date: '2022-05-06'
+  title: How to avoid another district map debacle
+  outlet: The Riverdale Press
+  url: https://www.riverdalepress.com/stories/how-to-avoid-another-district-map-debacle,78575
+  topic: Court Ruling
+- date: '2022-05-06'
+  title: Senate candidates keep on running
+  outlet: The Riverdale Press
+  url: https://www.riverdalepress.com/stories/senate-candidates-keep-on-running,78565
+  topic: Coverage
+- date: '2022-05-07'
+  title: NY voters, lawyers make final arguments as 'special master' set to redraw state election maps
+  outlet: New York Daily News
+  url: https://www.nydailynews.com/news/politics/new-york-elections-government/ny-voter-lawyers-special-master-redraw-state-election-maps-20220506-db6mwkkgdfh6lnls2vk4q7p5se-story.html
+  topic: Appointment
+- date: '2022-05-07'
+  title: New York special master listens to recommendations for redistricting maps
+  outlet: Spectrum News
+  url: https://spectrumlocalnews.com/nys/buffalo/politics/2022/05/06/ny-special-master-listens-to-recommendations-for-redistricting
+  topic: Appointment
+- date: '2022-05-07'
+  title: 'Michael Li: Special master on New York redistricting has a lot of power'
+  outlet: Spectrum News
+  url: https://spectrumlocalnews.com/nys/buffalo/politics/2022/05/06/michael-li--special-master-on-new-york-redistricting-has-a-lot-of-power
+  topic: Appointment
+- date: '2022-05-07'
+  title: State Senate candidates continue maneuvering despite district murkiness
+  outlet: The Ithaca Voice
+  url: https://ithacavoice.com/2022/05/state-senate-candidates-continue-maneuvering-despite-district-murkiness/
+  topic: Analysis & Impact
+- date: '2022-05-07'
+  title: Calls for more public input on new NY political maps
+  outlet: Times Union
+  url: https://www.timesunion.com/news/article/Calls-for-more-public-input-on-new-NY-political-17154786.php
+  topic: Public Input & Hearings
+- date: '2022-05-07'
+  title: 'NY redistricting: Voters flock to Steuben County to comment on future of New York''s legislative maps'
+  outlet: WSKG
+  url: https://wskg.org/ny-redistricting-dems-ask-federal-court-to-restore-gerrymandered-maps-keep-primary-in-june/
+  topic: Public Input & Hearings
+- date: '2022-05-07'
+  title: Special master hears arguments in redistricting case
+  outlet: City & State New York
+  url: https://www.cityandstateny.com/policy/2022/05/special-master-hears-arguments-redistricting-case/366643/
+  topic: Appointment
+- date: '2022-05-07'
+  title: Calls for more public input on new NY political maps
+  outlet: Washington Post
+  url: https://www.washingtonpost.com/politics/calls-for-more-public-input-on-new-ny-political-maps/2022/05/06/957e153e-cd69-11ec-b7ee-74f09d827ca6_story.html
+  topic: Public Input & Hearings
+- date: '2022-05-07'
+  title: Calls for more public input on new NY political maps
+  outlet: Midland Reporter-Telegram
+  url: https://www.mrt.com/news/article/Calls-for-more-public-input-on-new-NY-political-17154786.php
+  topic: Public Input & Hearings
+- date: '2022-05-07'
+  title: NY voters, lawyers make final arguments as 'special master' set to redraw state election maps
+  outlet: The Derrick
+  url: https://www.thederrick.com/ap/politics/ny-voters-lawyers-make-final-arguments-as-special-master-set-to-redraw-state-election-maps/article_1ddac40b-f097-5bf3-acab-1184d71c85e1.html
+  topic: Appointment
+- date: '2022-05-07'
+  title: NYC-area advocates dominate redistricting court hearing
+  outlet: kpvi.com
+  url: https://www.kpvi.com/news/national_news/nyc-area-advocates-dominate-redistricting-court-hearing/article_6e63b6e3-c0fa-5b35-80e0-4b0d062d34f7.html
+  topic: Public Input & Hearings
+- date: '2022-05-07'
+  title: Calls for more public input on new NY political maps
+  outlet: The Chestnut Post
+  url: https://thechestnutpost.com/calls-for-more-public-input-on-new-ny-political-maps-12095.html
+  topic: Public Input & Hearings
+- date: '2022-05-09'
+  title: New York's Redistricting Master Holds Key to Congressional Power
+  outlet: Bloomberg Government
+  url: https://about.bgov.com/news/new-yorks-redistricting-master-holds-key-to-congressional-power/
+  topic: Analysis & Impact
+- date: '2022-05-10'
+  title: 'Auburn mayor to NY court: Keep city whole in congressional, state Senate districts'
+  outlet: Auburn Citizen (auburnpub.com)
+  url: https://auburnpub.com/news/local/govt-and-politics/auburn-mayor-to-ny-court-keep-city-whole-in-congressional-state-senate-districts/article_a991220d-528c-5acf-b226-21e495eb23df.html
+  topic: Coverage
+- date: '2022-05-10'
+  title: Redistricting Master Holds Key to Congressional Power
+  outlet: Political Wire
+  url: https://politicalwire.com/2022/05/09/redistricting-master-holds-key-to-congressional-power/
+  topic: Analysis & Impact
+- date: '2022-05-10'
+  title: 'You ask, we answer: What happens next with redistricting in New York?'
+  outlet: Democrat and Chronicle
+  url: https://www.democratandchronicle.com/story/news/2022/05/10/new-york-redistricting-map-what-what-happens-next-midterm-elections/9676556002/
+  topic: Coverage
+- date: '2022-05-10'
+  title: 'Redistricting Will Oust an Incumbent Today: Ballots & Boundaries'
+  outlet: Bloomberg Government
+  url: https://about.bgov.com/news/redistricting-will-oust-an-incumbent-today-ballots-boundaries/
+  topic: Analysis & Impact
+- date: '2022-05-11'
+  title: How Common Cause drew its own redistricting maps of New York
+  outlet: Spectrum News
+  url: https://spectrumlocalnews.com/nys/jamestown/politics/2022/05/10/how-common-cause-drew-its-own-redistricting-maps-of-new-york
+  topic: Coverage
+- date: '2022-05-11'
+  title: State judge weighs adding Assembly to redistricting effort
+  outlet: Buffalo News (buffalonews.com)
+  url: https://buffalonews.com/news/local/govt-and-politics/state-judge-weighs-adding-assembly-to-redistricting-effort/article_59f505a6-d07d-11ec-88d7-77c8694d1bef.html
+  topic: Public Input & Hearings
+- date: '2022-05-11'
+  title: Public had one opportunity to comment on new maps
+  outlet: observer-review.com
+  url: https://www.observer-review.com/public-had-one-opportunity-to-comment-on-new-maps-cms-7401
+  topic: Draft & Final Maps
+- date: '2022-05-11'
+  title: The town that will decide New York redistricting for the next decade
+  outlet: Politico
+  url: https://www.politico.com/news/2022/05/11/new-york-redistricting-bath-00031096
+  topic: Public Input & Hearings
+- date: '2022-05-11'
+  title: New York Assembly map upheld for 2022 elections, faring better than congressional map
+  outlet: New York Daily News
+  url: https://www.nydailynews.com/news/politics/new-york-elections-government/ny-judge-no-change-to-new-york-assembly-map-20220511-fuw2bu6trrahzkxeo6husis7oy-story.html
+  topic: Assembly & Litigation
+- date: '2022-05-12'
+  title: New York judge sets petitioning process for Aug. 23 primary
+  outlet: Spectrum News
+  url: https://spectrumlocalnews.com/nys/central-ny/ny-state-of-politics/2022/05/11/new-york-judge-sets-petitioning-process-for-aug--23-primary
+  topic: Primaries & Calendar
+- date: '2022-05-12'
+  title: Cathy Young mentioned as possible congressional candidate as Reed exits
+  outlet: Buffalo News
+  url: https://buffalonews.com/news/local/govt-and-politics/cathy-young-mentioned-as-possible-congressional-candidate-as-reed-exits/article_19c710f8-d13d-11ec-acba-6b6ab343509f.html
+  topic: Coverage
+- date: '2022-05-13'
+  title: Districts — and Campaigns — In Limbo
+  outlet: Our Town Downtown
+  url: https://www.otdowntown.com/news/districts-and-campaigns-in-limbo-FB2065986
+  topic: Analysis & Impact
+- date: '2022-05-13'
+  title: A timeline on New York's chaotic redistricting process
+  outlet: City & State New York
+  url: https://www.cityandstateny.com/politics/2022/05/timeline-new-yorks-chaotic-redistricting-process/366934/
+  topic: Coverage
+- date: '2022-05-15'
+  title: New district maps are in the making
+  outlet: The Riverdale Press
+  url: https://www.riverdalepress.com/stories/new-district-maps-are-in-the-making,78641
+  topic: Draft & Final Maps
+- date: '2022-05-16'
+  title: Democrats' Hopes in New York House Races Hurt by New District Maps
+  outlet: New York Times
+  url: https://www.nytimes.com/2022/05/16/nyregion/ny-redistricting-congressional-map.html
+  topic: Draft & Final Maps
+- date: '2022-05-16'
+  title: Draft of new New York congressional lines released by special master
+  outlet: Politico
+  url: https://www.politico.com/news/2022/05/16/draft-new-new-york-congressional-lines-00032704
+  topic: Appointment
+- date: '2022-05-16'
+  title: NY Dems forced to fight each other for survival after gerrymander redo
+  outlet: New York Post
+  url: https://nypost.com/2022/05/16/special-master-cervas-releases-new-ny-congressional-lines/
+  topic: Coverage
+- date: '2022-05-16'
+  title: Special Master Carves Up New York's Congressional Seats With a More Competitive Map
+  outlet: THE CITY
+  url: https://www.thecity.nyc/2022/5/16/23075226/special-master-new-york-city-redistricting-maps
+  topic: Appointment
+- date: '2022-05-16'
+  title: Draft house maps released by special master
+  outlet: City & State New York
+  url: https://www.cityandstateny.com/politics/2022/05/draft-house-maps-released-special-master/366964/
+  topic: Appointment
+- date: '2022-05-16'
+  title: Special master releases new draft New York congressional maps
+  outlet: Spectrum News
+  url: https://spectrumlocalnews.com/nys/central-ny/politics/2022/05/16/special-master-releases-new-new-york-congressional-maps
+  topic: Appointment
+- date: '2022-05-16'
+  title: Court-appointed master releases New York state Senate lines
+  outlet: Spectrum News
+  url: https://spectrumlocalnews.com/nys/central-ny/politics/2022/05/16/court-appointed-master-releases-new-state-senate-lines
+  topic: Appointment
+- date: '2022-05-16'
+  title: Democrats would face upheaval under redrawn New York congressional map
+  outlet: Washington Post
+  url: https://www.washingtonpost.com/politics/2022/05/16/new-york-redistricting-map/
+  topic: Draft & Final Maps
+- date: '2022-05-16'
+  title: New draft Congressional plans evens odds for the GOP
+  outlet: PoliticsNY
+  url: https://politicsny.com/2022/05/16/new-draft-congressional-plans-evens-odds-for-the-gop/
+  topic: Draft & Final Maps
+- date: '2022-05-16'
+  title: Special Master shakes up Brooklyn congressional races
+  outlet: Brooklyn Paper
+  url: https://www.brooklynpaper.com/special-master-shakes-up-brooklyn-congressional-maps/
+  topic: Appointment
+- date: '2022-05-16'
+  title: New NY Congress maps a blow to Democrats, boon for GOP
+  outlet: Newsday
+  url: https://www.newsday.com/long-island/politics/new-york-congress-senate-district-maps-acln6q13
+  topic: Analysis & Impact
+- date: '2022-05-17'
+  title: GOP could dent Dems Senate supermajority with new Cervas drawn maps
+  outlet: PoliticsNY
+  url: https://politicsny.com/2022/05/16/66195/
+  topic: Analysis & Impact
+- date: '2022-05-17'
+  title: Candidates adjust campaigns to new House maps
+  outlet: The Daily Star (thedailystar.com)
+  url: https://www.thedailystar.com/news/local_news/candidates-adjust-campaigns-to-new-house-maps/article_efdfa052-4268-5f55-bec3-d9fb07598871.html
+  topic: Coverage
+- date: '2022-05-17'
+  title: Court-Drawn Congressional Maps Bring Big Changes to Queens
+  outlet: Forest Hills Post
+  url: https://foresthillspost.com/court-drawn-congressional-maps-bring-big-changes-to-queens
+  topic: Analysis & Impact
+- date: '2022-05-17'
+  title: New Draft of Congressional Map Evens Odds for the GOP
+  outlet: Long Island Press
+  url: https://www.longislandpress.com/2022/05/16/new-draft-of-congressional-map-evens-odds-for-the-gop/
+  topic: Draft & Final Maps
+- date: '2022-05-17'
+  title: Nadler, Maloney could face off in primary with redrawn district
+  outlet: Yahoo News
+  url: https://news.yahoo.com/nadler-maloney-could-face-off-213913752.html
+  topic: Primaries & Calendar
+- date: '2022-05-17'
+  title: Democrats face tougher election prospects under newly released draft maps
+  outlet: WSKG
+  url: https://wskg.org/democrats-face-tougher-election-prospects-under-newly-released-draft-maps/
+  topic: Draft & Final Maps
+- date: '2022-05-17'
+  title: New York Court Map Leans Into Competitiveness, Enhancing GOP Opportunities
+  outlet: Cook Political Report
+  url: https://www.cookpolitical.com/analysis/house/redistricting/new-york-court-map-leans-competitiveness-enhancing-gop-opportunities
+  topic: Analysis & Impact
+- date: '2022-05-17'
+  title: New State Senate District Doesn't Do Utica or New Hartford any Favors
+  outlet: WIBX 950
+  url: https://wibx950.com/new-state-senate-district-doesnt-do-utica-or-new-hartford-any-favors/
+  topic: Draft & Final Maps
+- date: '2022-05-17'
+  title: Court-Drawn Congressional Maps Bring Big Changes to Queens
+  outlet: LIC Post
+  url: https://licpost.com/court-drawn-congressional-maps-bring-big-changes-to-queens
+  topic: Analysis & Impact
+- date: '2022-05-17'
+  title: 'What democracy looks like: New lines for Congress and state Senate are far superior'
+  outlet: New York Daily News
+  url: https://www.nydailynews.com/opinion/ny-edit-assembly-lines-20220517-6ttch5ghpbgatc6z77wefvxrlu-story.html
+  topic: Draft & Final Maps
+- date: '2022-05-17'
+  title: The key Jewish takeaways of redrawn NY congressional maps
+  outlet: The Forward
+  url: https://forward.com/news/502615/nadler-maloney-ny-congressional-maps/
+  topic: Draft & Final Maps
+- date: '2022-05-17'
+  title: Court-appointed expert releases draft of New York's redrawn congressional district maps
+  outlet: FingerLakes1.com
+  url: https://www.fingerlakes1.com/2022/05/17/court-appointed-expert-releases-draft-of-new-yorks-redrawn-congressional-district-maps/
+  topic: Appointment
+- date: '2022-05-17'
+  title: Queens sees major changes under new congressional draft maps released by special master
+  outlet: Queens Daily Eagle
+  url: https://queenseagle.com/all/2022/5/17/queens-sees-major-changes-under-new-congressional-draft-maps-released-by-special-master
+  topic: Appointment
+- date: '2022-05-17'
+  title: Ryan and Molinaro run for Congress, Gallagher available to move up
+  outlet: Hudson Valley One
+  url: https://hudsonvalleyone.com/2022/05/17/ryan-and-molinaro-run-for-congress-gallagher-available-to-move-up/
+  topic: Coverage
+- date: '2022-05-17'
+  title: Democrats Face Tougher Election Prospects Under Newly Released Draft Maps
+  outlet: New York NOW (WMHT)
+  url: https://nynow.wmht.org/blogs/politics/democrats-face-tougher-election-prospects-under-newly-released-draft-maps/
+  topic: Draft & Final Maps
+- date: '2022-05-17'
+  title: New congressional map upends 2022 plans for New York politicians
+  outlet: Jewish Insider
+  url: https://jewishinsider.com/2022/05/new-york-redistricting-primary-congressional-map/
+  topic: Draft & Final Maps
+- date: '2022-05-17'
+  title: New preliminary congressional district map released
+  outlet: MyChamplainValley.com (Local 22/44 News)
+  url: https://www.mychamplainvalley.com/news/new-york/new-preliminary-congressional-district-map-released/
+  topic: Draft & Final Maps
+- date: ''
+  title: Michael Li Tweet on Plaintiff's Map and public comments
+  outlet: Twitter (Michael Li / @mcpli)
+  url: https://twitter.com/mcpli/status/1517893932407046145
+  topic: Public Input & Hearings
+- date: ''
+  title: Michael Li Tweet on Unity Coalition map and public comments
+  outlet: Twitter (Michael Li / @mcpli)
+  url: https://twitter.com/mcpli/status/1517633763043389441
+  topic: Public Input & Hearings
+- date: ''
+  title: RRH Elections tweet on petitioner's map (orthodox Jewish district in Brooklyn and Nassau)
+  outlet: Twitter (RRH Elections)
+  url: https://twitter.com/RRHElections/status/1518665171337682945
+  topic: Analysis & Impact
+- date: ''
+  title: Nick Stephanopoulos comments on partisanship of a fair New York Congressional Map
+  outlet: Twitter (@Redistrict)
+  url: https://twitter.com/Redistrict/status/1519413181642334208
+  topic: Public Input & Hearings
+- date: ''
+  title: Dave Wasserman on what a neutral map entails
+  outlet: Twitter (@Redistrict)
+  url: https://twitter.com/Redistrict/status/1519515645209190401
+  topic: Coverage
+- date: ''
+  title: Public perception and comments of NY Democrats' proposed congressional map
+  outlet: Twitter (@cinyc9)
+  url: https://twitter.com/cinyc9/status/1520511947325779968
+  topic: Public Input & Hearings
+- date: ''
+  title: Michael Li comments on legislature's enacted map regarding NY-10
+  outlet: Twitter (Michael Li / @mcpli)
+  url: https://twitter.com/mcpli/status/1520559634217684992
+  topic: Public Input & Hearings
+- date: ''
+  title: Twitter Responses to Jonathan Cervas Proposed Congressional and Senate Map
+  outlet: Google Docs
+  url: https://docs.google.com/document/d/1L_MuqjlFLepltpxELLvulP32BwxG71DCxvJ5Mf2I_NY/edit
+  topic: Coverage

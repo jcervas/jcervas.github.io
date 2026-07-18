@@ -44,22 +44,8 @@ description: "News coverage and media mentions of Jonathan Cervas's redistrictin
 </div>
 
 <h2>Media Mentions</h2>
-{% for group in site.data.media.mentions_by_year %}
-<h3 class="media-year">{{ group.year }}</h3>
-<ul class="media-list">
-  {% for m in group.items %}
-  <li>
-    <span class="media-date">{{ m.display_date }}</span> &mdash;
-    <span class="media-src">{{ m.outlet }}</span>:
-    {% if m.url %}<a href="{{ m.url }}">{{ m.title }}</a>{% else %}{{ m.title }}{% endif %}{% if m.author %}, by {{ m.author }}{% endif %}
-    {% if m.quotes %}
-    <ul class="media-quotes">
-      {% for q in m.quotes %}<li>{{ q }}</li>{% endfor %}
-    </ul>
-    {% endif %}
-  </li>
-  {% endfor %}
-</ul>
-{% endfor %}
+<p class="section-lead">Sort by any column, filter by topic or outlet, or search the titles.</p>
+
+{% include media-table.html items=site.data.media.mentions facets="topic,outlet" columns="date,title,outlet" %}
 
 <p class="media-more"><a href="{{ '/media/new-york-daily-news/' | relative_url }}">See also: New York Daily News coverage &rarr;</a></p>
