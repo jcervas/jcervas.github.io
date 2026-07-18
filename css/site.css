@@ -223,7 +223,7 @@ img { max-width: 100%; height: auto; }
 }
 .mtable__table thead th {
   border-bottom: 2px solid var(--line); font-size: .82rem; text-transform: uppercase;
-  letter-spacing: .03em; color: var(--muted); white-space: nowrap; position: sticky; top: 60px; background: var(--bg);
+  letter-spacing: .03em; color: var(--muted); white-space: nowrap; background: var(--bg);
 }
 .mtable__table th.is-sortable { cursor: pointer; user-select: none; }
 .mtable__table th.is-sortable:hover { color: var(--red); }
@@ -241,7 +241,6 @@ img { max-width: 100%; height: auto; }
 .mtable__table tbody tr:hover { background: var(--bg-alt); }
 
 @media (max-width: 600px) {
-  .mtable__table thead th { position: static; }
   .mt-outlet { white-space: normal; }
 }
 
