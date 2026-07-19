@@ -44,10 +44,11 @@ title: Home
   <div class="inner">
     <h2>Selected Publications</h2>
     <p class="section-lead">Recent peer-reviewed work.</p>
+    {% assign recent = site.publications | where: "kind", "article" | sort: "order" %}
     <ul class="pub-list">
-      {% for pub in site.data.publications.articles limit:5 %}
+      {% for pub in recent limit:5 %}
       <li>
-        <span class="pub-title"><a href="{{ pub.url }}">{{ pub.title }}</a></span>
+        <span class="pub-title"><a href="{{ pub.url | relative_url }}">{{ pub.title }}</a></span>
         <div class="pub-meta">{{ pub.authors }}. <em>{{ pub.venue }}</em>, <span class="pub-year">{{ pub.year }}</span>.</div>
       </li>
       {% endfor %}

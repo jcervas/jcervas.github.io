@@ -133,6 +133,12 @@ img { max-width: 100%; height: auto; }
 .course-body { margin-top: 1.25rem; }
 .course-body h2 { font-size: 1.3rem; margin: 1.75rem 0 .5rem; }
 
+/* ---------- Publication detail page ---------- */
+.pub-detail__title { font-size: 1.8rem; margin: 0 0 .75rem; line-height: 1.25; }
+.pub-detail__cite { color: var(--muted); margin: 0 0 1rem; font-size: 1.02rem; }
+.pub-detail__summary { margin-top: 1.5rem; }
+.pub-detail__summary h2 { font-size: 1.1rem; margin: 0 0 .5rem; }
+
 /* ---------- Publications ---------- */
 .pub-list { list-style: none; margin: 0; padding: 0; }
 .pub-list li { padding: .9rem 0; border-bottom: 1px solid var(--line); }

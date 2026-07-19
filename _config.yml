@@ -22,6 +22,9 @@ collections:
   courses:
     output: true
     permalink: /teaching/:name/
+  publications:
+    output: true
+    permalink: /publications/:name/
 
 defaults:
   - scope:
@@ -32,6 +35,10 @@ defaults:
       type: courses
     values:
       layout: course
+  - scope:
+      type: publications
+    values:
+      layout: publication
 
 # Primary navigation (edit here to change the menu everywhere)
 nav:
@@ -52,7 +59,8 @@ nav:
 exclude:
   - README.md
   - _cases/README.md     # docs for authors; must stay excluded or it becomes a case page
-  - _courses/README.md   # docs for authors; must stay excluded or it becomes a course page
+  - _courses/README.md        # docs for authors; must stay excluded or it becomes a course page
+  - _publications/README.md   # same — keep excluded or it becomes a publication page
   - cv-reference.docx
   - cv_build.sh
   - cmu-media.csv

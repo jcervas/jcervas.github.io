@@ -27,20 +27,22 @@ description: "Peer-reviewed articles, book chapters, and public commentary by Jo
 </p>
 
 <h2>Peer-Reviewed Articles &amp; Chapters</h2>
+{% assign articles = site.publications | where: "kind", "article" | sort: "order" %}
 <ul class="pub-list">
-  {% for pub in site.data.publications.articles %}
+  {% for pub in articles %}
   <li>
-    <span class="pub-title"><a href="{{ pub.url }}">{{ pub.title }}</a></span>
+    <span class="pub-title"><a href="{{ pub.url | relative_url }}">{{ pub.title }}</a></span>
     <div class="pub-meta">{{ pub.authors }}. <em>{{ pub.venue }}</em>, <span class="pub-year">{{ pub.year }}</span>.</div>
   </li>
   {% endfor %}
 </ul>
 
 <h2>Op-Eds &amp; Public Commentary</h2>
+{% assign opeds = site.publications | where: "kind", "op-ed" | sort: "order" %}
 <ul class="pub-list">
-  {% for pub in site.data.publications.op_eds %}
+  {% for pub in opeds %}
   <li>
-    <span class="pub-title"><a href="{{ pub.url }}">{{ pub.title }}</a></span>
+    <span class="pub-title"><a href="{{ pub.url | relative_url }}">{{ pub.title }}</a></span>
     <div class="pub-meta">{{ pub.authors }}. <em>{{ pub.venue }}</em>, <span class="pub-year">{{ pub.year }}</span>.</div>
   </li>
   {% endfor %}
