@@ -1,33 +1,68 @@
 # Courses taught, shown on /teaching/. Add or edit entries freely.
-# Fields: title, number, level, gened (optional), terms.
+# Fields: title, number, level, gened (optional), terms, description (optional).
+# `description` appears as an expandable "Course description" on the card.
 courses:
   - title: "Representation and Voting Rights"
     number: "84-352 / 652"
     level: "Undergraduate & Graduate"
     gened: "Perspectives on Justice & Injustice"
     terms: "Spring 2021, 2022, 2023, 2024, 2026"
-    materials: "https://github.com/jcervas/teaching/tree/main/2025-2026/class-cmu-2026-84-352"
 
   - title: "Introduction to U.S. Constitutional Law"
     number: "84-120"
     level: "Undergraduate"
     gened: "Humanities"
     terms: "Spring 2026"
-    materials: "https://github.com/jcervas/teaching/tree/main/2025-2026/class-cmu-2026-84-120"
 
   - title: "American Political Divides and Great Debates"
     number: "84-309 / 609"
     level: "Undergraduate & Graduate"
     gened: "Perspectives on Justice & Injustice"
     terms: "Fall 2024, 2025"
-    materials: "https://github.com/jcervas/teaching/tree/main/2025-2026/class-cmu-2025-84-309"
+    description: >-
+      This course explores political polarization in the United States. It's not
+      just learning about the extent of political polarization; it's about active
+      engagement in analyzing some of the most contentious issues facing the nation
+      today, such as the 2nd Amendment, abortion rights, crime, and immigration
+      policy. Throughout the semester, students participate in a variety of learning
+      activities, including critical readings, in-depth discussions, and live
+      debates. These components are designed to foster a deep understanding of the
+      multifaceted nature of American political divides. Students are challenged to
+      explore and argue from diverse viewpoints, broadening their perspectives and
+      cultivating empathy for opposing arguments. The course provides an opportunity
+      to deeply engage with the current political climate, delve into the roots of
+      American political divides, and develop essential skills for civic engagement
+      and discourse. It's ideal for students interested in political science,
+      history, law, and social justice, and for anyone seeking a deeper comprehension
+      of the complex political landscape of the United States and its implications
+      for justice and injustice in society.
 
   - title: "Democracy's Data: Analytics and Insights into American Elections"
     number: "84-355 / 655"
     level: "Undergraduate & Graduate"
     gened: "Contextual Thinking"
     terms: "Fall 2024, 2025"
-    materials: "https://github.com/jcervas/teaching/tree/main/2025-2026/class-cmu-2025-84-355"
+    description: >-
+      In the aftermath of the 2024 U.S. presidential election, understanding the
+      intricacies of electoral processes has become paramount. This course is a blend
+      of political science and data analytics, focusing on the U.S. electoral system
+      with special emphasis on the 2024 election and the upcoming midterm and local
+      elections. History demonstrates that elections can have profound and enduring
+      impacts — from the pivotal election of 1876, which concluded Reconstruction and
+      reshaped the nation for a century, to the razor-thin margins of the 1960 Kennedy
+      election and the 2000 Bush-Gore contest. Throughout the semester, students
+      actively engage in data collection, statistical analysis, and interpretation,
+      applying these techniques to election trends, voter demographics, and the
+      influence of technology on political campaigns. The course also explores how
+      data analytics can assess the health of democracy, examining metrics such as
+      voter turnout, electoral competitiveness, and public trust in electoral
+      institutions. As the course progresses, students use analytical tools to make
+      informed predictions about the 2026 midterm elections and delve into odd-year
+      elections in various states and localities. Additional subjects include
+      political advertising, campaign finance, media bias, partisanship,
+      nationalization, mobilization strategies, vote suppression, election security,
+      voter knowledge, racially polarized voting, gerrymandering, forecasting models,
+      and public opinion polling.
 
   - title: "Regression Analysis for Political Science II"
     number: "84-702"
