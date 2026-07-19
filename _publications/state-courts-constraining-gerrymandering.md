@@ -5,7 +5,7 @@ authors: Jonathan R. Cervas, Bernard Grofman, and Scott Matsuda
 venue: University of New Hampshire Law Review 21, no. 2
 year: 2023
 kind: article
-order: 4
+date: 2023-06-01
 link: https://scholars.unh.edu/unh_lr/vol21/iss2/7/
 ---
 

@@ -5,7 +5,7 @@ authors: Sandra J. Chen, Samuel S.-H. Wang, Bernard Grofman, Richard F. Ober, Ky
 venue: Stanford Journal of Civil Rights &amp; Civil Liberties 18
 year: 2022
 kind: article
-order: 7
+date: 2022-01-01
 link: https://law.stanford.edu/wp-content/uploads/2022/02/Chen_01.31.22_PRINT.pdf
 ---
 

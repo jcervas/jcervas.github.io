@@ -4,7 +4,7 @@ authors: Jonathan R. Cervas and Bernard Grofman
 venue: Social Science Quarterly 102, no. 5
 year: 2021
 kind: article
-order: 9
+date: 2021-09-01
 link: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3898284
 ---
 

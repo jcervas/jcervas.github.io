@@ -5,7 +5,7 @@ authors: Jonathan R. Cervas and Bernard Grofman
 venue: Social Science Quarterly 100, no. 4
 year: 2019
 kind: article
-order: 13
+date: 2019-06-01
 link: https://jonathancervas.com/2019/SSQ/inversions.pdf
 ---
 

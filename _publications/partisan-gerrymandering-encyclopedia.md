@@ -4,7 +4,7 @@ authors: Bernard Grofman and Jonathan R. Cervas
 venue: Elgar Encyclopedia of Public Choice (book chapter)
 year: 2025
 kind: article
-order: 1
+date: 2025-01-01
 link: https://www.elgaronline.com/view/book/9781802207750/chapter68.xml
 ---
 

@@ -4,7 +4,7 @@ authors: Jonathan R. Cervas and Bernard Grofman
 venue: Medium
 year: 2024
 kind: op-ed
-order: 2
+date: 2024-01-01
 link: https://cervas.medium.com/trump-the-wrestler-and-the-2024-grudge-match-995b982ca73b
 ---
 

@@ -4,7 +4,7 @@ authors: Samuel S.-H. Wang and Jonathan R. Cervas
 venue: The Washington Post
 year: 2021
 kind: op-ed
-order: 4
+date: 2021-05-01
 link: https://www.washingtonpost.com/outlook/2021/05/01/hispanics-census-undercount-house-seats/
 ---
 

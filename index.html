@@ -44,7 +44,7 @@ title: Home
   <div class="inner">
     <h2>Selected Publications</h2>
     <p class="section-lead">Recent peer-reviewed work.</p>
-    {% assign recent = site.publications | where: "kind", "article" | sort: "order" %}
+    {% assign recent = site.publications | where: "kind", "article" | sort: "date" | reverse %}
     <ul class="pub-list">
       {% for pub in recent limit:5 %}
       <li>

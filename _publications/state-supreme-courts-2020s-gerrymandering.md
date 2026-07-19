@@ -5,7 +5,7 @@ authors: Jonathan R. Cervas, Bernard Grofman, Scott Matsuda, and Justine Kawa
 venue: Albany Law Review 87, no. 4
 year: 2024
 kind: article
-order: 2
+date: 2024-01-01
 link: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4617664
 ---
 

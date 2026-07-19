@@ -5,7 +5,7 @@ authors: Jonathan R. Cervas and Bernard Grofman
 venue: Public Choice 173, no. 3&ndash;4
 year: 2017
 kind: article
-order: 15
+date: 2017-06-01
 link: https://jonathancervas.com/2017/PC/noncompetitiveelections.pdf
 ---
 

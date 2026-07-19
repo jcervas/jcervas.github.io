@@ -4,7 +4,7 @@ authors: Jonathan R. Cervas
 venue: Medium
 year: 2025
 kind: op-ed
-order: 1
+date: 2025-01-01
 link: https://medium.com/@cervas/the-effects-of-mid-decade-redistricting-on-electoral-outcomes-d870c772942b
 ---
 

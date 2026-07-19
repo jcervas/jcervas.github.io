@@ -5,7 +5,7 @@ authors: Jonathan R. Cervas and Bernard Grofman
 venue: Political Geography 76
 year: 2020
 kind: article
-order: 12
+date: 2020-03-01
 link: https://linkinghub.elsevier.com/retrieve/pii/S0962629818303342
 ---
 

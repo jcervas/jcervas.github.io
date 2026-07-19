@@ -5,7 +5,7 @@ authors: Jonathan R. Cervas and Bernard Grofman
 venue: The Washington Post
 year: 2018
 kind: op-ed
-order: 8
+date: 2018-02-09
 link: https://www.washingtonpost.com/news/monkey-cage/wp/2018/02/09/now-pennsylvania-has-to-draw-new-house-districts-but-getting-rid-of-gerrymandering-is-harder-than-you-think/
 ---
 

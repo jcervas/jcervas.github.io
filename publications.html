@@ -27,7 +27,7 @@ description: "Peer-reviewed articles, book chapters, and public commentary by Jo
 </p>
 
 <h2>Peer-Reviewed Articles &amp; Chapters</h2>
-{% assign articles = site.publications | where: "kind", "article" | sort: "order" %}
+{% assign articles = site.publications | where: "kind", "article" | sort: "date" | reverse %}
 <ul class="pub-list">
   {% for pub in articles %}
   <li>
@@ -38,7 +38,7 @@ description: "Peer-reviewed articles, book chapters, and public commentary by Jo
 </ul>
 
 <h2>Op-Eds &amp; Public Commentary</h2>
-{% assign opeds = site.publications | where: "kind", "op-ed" | sort: "order" %}
+{% assign opeds = site.publications | where: "kind", "op-ed" | sort: "date" | reverse %}
 <ul class="pub-list">
   {% for pub in opeds %}
   <li>

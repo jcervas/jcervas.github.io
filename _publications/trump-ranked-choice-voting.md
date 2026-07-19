@@ -5,7 +5,7 @@ authors: Jonathan R. Cervas and Bernard Grofman
 venue: 'PS: Political Science &amp; Politics 55, no. 1'
 year: 2022
 kind: article
-order: 6
+date: 2022-03-01
 link: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3832051
 ---
 

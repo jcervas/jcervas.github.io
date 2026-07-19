@@ -4,7 +4,7 @@ authors: Jonathan R. Cervas, Anjali Akula, and Elsie Goren
 venue: Medium (3Streams)
 year: 2021
 kind: op-ed
-order: 5
+date: 2021-03-01
 link: https://medium.com/3streams/a-more-equitable-voting-system-in-maine-ranked-choice-voting-864cb3367468
 ---
 

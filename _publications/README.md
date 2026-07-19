@@ -19,7 +19,7 @@ authors: "Jonathan R. Cervas and Bernard Grofman"
 venue: "Journal Name 12, no. 3"      # journal + volume/issue, or "Medium", etc.
 year: 2026
 kind: article                        # "article" or "op-ed" (controls which list)
-order: 1                             # sort position within its list; 1 = top (newest)
+date: 2026-03-15                     # publication date; lists sort newest-first by this
 link: "https://doi.org/..."          # link to the article itself
 ---
 
@@ -37,7 +37,7 @@ shows the citation and link).
 | `venue` | Journal + volume/issue, or outlet name for op-eds. |
 | `year` | Publication year. |
 | `kind` | `article` → "Peer-Reviewed Articles & Chapters"; `op-ed` → "Op-Eds & Public Commentary". |
-| `order` | Lowest = first. The home page shows the five lowest-`order` articles. |
+| `date` | `YYYY-MM-DD`. Lists sort newest-first; the home page shows the five most recent articles. Day/month can be approximate if you only know the year. |
 | `link` | URL to the article. Omit to show no "Read the article" link. |
 
 The **summary is the body** (below the front matter), so it can be as long as you

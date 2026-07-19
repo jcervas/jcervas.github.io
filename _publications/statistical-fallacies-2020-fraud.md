@@ -5,7 +5,7 @@ authors: Bernard Grofman and Jonathan R. Cervas
 venue: Statistics and Public Policy 11, no. 1
 year: 2023
 kind: article
-order: 3
+date: 2023-12-01
 link: https://www.tandfonline.com/doi/full/10.1080/2330443X.2023.2289529
 ---
 

@@ -5,7 +5,7 @@ authors: Jonathan R. Cervas and Angela Ocampo
 venue: Medium (3Streams)
 year: 2020
 kind: op-ed
-order: 7
+date: 2020-03-01
 link: https://medium.com/3streams/political-consequences-of-excluding-undocumented-immigrants-from-apportionment-eccdd098219d
 ---
 

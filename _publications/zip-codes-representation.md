@@ -4,7 +4,7 @@ authors: Bernard Grofman and Jonathan R. Cervas
 venue: Election Law Journal
 year: 2021
 kind: article
-order: 10
+date: 2021-06-01
 link: https://jonathancervas.com/2020/zipcodes/ZIP.pdf
 ---
 
