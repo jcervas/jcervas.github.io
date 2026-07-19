@@ -7,12 +7,35 @@ courses:
     level: "Undergraduate & Graduate"
     gened: "Perspectives on Justice & Injustice"
     terms: "Spring 2021, 2022, 2023, 2024, 2026"
+    description: >-
+      What does it mean to be represented in a democracy? Who has a voice, and who is
+      left out? This course explores political representation — both as an ideal and
+      as a lived reality. We examine the design of American democratic institutions,
+      the impact of the Voting Rights Act, and the ongoing role of courts in shaping
+      who gets represented. A central theme is how race and racial attitudes continue
+      to shape political power and outcomes. Along the way, we ask hard questions:
+      Does representation translate into policies that reflect public preferences? How
+      fair are the systems we use to draw voting districts? And what are the
+      consequences of unequal representation for the health of American democracy?
 
   - title: "Introduction to U.S. Constitutional Law"
     number: "84-120"
     level: "Undergraduate"
     gened: "Humanities"
     terms: "Spring 2026"
+    description: >-
+      This course provides an introduction to the United States Constitution and the
+      principles of constitutional law. Using landmark Supreme Court cases that have
+      shaped the development of constitutional law in the United States, students gain
+      familiarity with legal arguments and understand the historical, political,
+      social, and moral dimensions of the American constitutional structure. The
+      course explores the structure of the Constitution, the powers of the federal
+      government, and the relationship between the federal government and the states.
+      It also covers the Bill of Rights and the Fourteenth Amendment — including Due
+      Process and Equal Protection — examining the protections these amendments afford
+      and the ways they have been interpreted by the Supreme Court. Throughout,
+      students engage with key constitutional concepts including federalism,
+      separation of powers, and individual rights.
 
   - title: "American Political Divides and Great Debates"
     number: "84-309 / 609"
