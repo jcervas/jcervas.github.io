@@ -128,13 +128,10 @@ img { max-width: 100%; height: auto; }
 }
 .course__tag--gened { color: var(--ink); }
 .course__terms { margin: 0; font-size: .92rem; color: var(--muted); }
-.course__desc { margin-top: .7rem; }
-.course__desc summary {
-  cursor: pointer; font-weight: 600; color: var(--red); font-size: .92rem;
-  list-style-position: inside;
-}
-.course__desc summary:hover { color: var(--red-dark); }
-.course__desc p { margin: .6rem 0 0; font-size: .95rem; }
+.course__summary { margin: .6rem 0 .8rem; font-size: .95rem; }
+.course-detail__tags { margin: -.25rem 0 .6rem; }
+.course-body { margin-top: 1.25rem; }
+.course-body h2 { font-size: 1.3rem; margin: 1.75rem 0 .5rem; }
 
 /* ---------- Publications ---------- */
 .pub-list { list-style: none; margin: 0; padding: 0; }

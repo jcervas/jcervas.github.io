@@ -6,27 +6,25 @@ description: "Courses taught by Jonathan Cervas at Carnegie Mellon University on
 ---
 
 <p class="section-lead">
-  I teach undergraduate and graduate courses at Carnegie Mellon University on American politics,
-  representation and voting rights, constitutional law, elections, and quantitative methods. Several
-  serve as Dietrich College general-education courses.
+  I teach undergraduate and graduate courses at Carnegie Mellon University on American
+  politics, representation and voting rights, constitutional law, elections, and quantitative
+  methods. Several serve as Dietrich College general-education courses. Select a course for
+  details.
 </p>
 
+{% assign courses = site.courses | where_exp: "c", "c.order" | sort: "order" %}
 <div class="course-list">
-  {% for c in site.data.teaching.courses %}
+  {% for c in courses %}
   <article class="course">
-    <h3 class="course__title">{{ c.title }}</h3>
+    <h3 class="course__title"><a href="{{ c.url | relative_url }}">{{ c.title }}</a></h3>
     <div class="course__tags">
       <span class="course__num">{{ c.number }}</span>
       {% if c.level %}<span class="course__tag">{{ c.level }}</span>{% endif %}
       {% if c.gened %}<span class="course__tag course__tag--gened">Gen Ed &middot; {{ c.gened }}</span>{% endif %}
     </div>
     <p class="course__terms"><strong>Taught:</strong> {{ c.terms }}</p>
-    {% if c.description %}
-    <details class="course__desc">
-      <summary>Course description</summary>
-      <p>{{ c.description }}</p>
-    </details>
-    {% endif %}
+    {% if c.summary %}<p class="course__summary">{{ c.summary }}</p>{% endif %}
+    <a class="more-link" href="{{ c.url | relative_url }}">Course details &rarr;</a>
   </article>
   {% endfor %}
 </div>

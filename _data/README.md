@@ -10,7 +10,6 @@ page rebuilds automatically — no code changes.
 | File | Powers |
 |---|---|
 | `publications.yml` | `/publications/` and the home-page "Selected Publications" |
-| `teaching.yml` | `/teaching/` (course list) — fields: title, number, level, gened, terms, description (optional, shown as an expandable) |
 | `media.yml` | `/media/` (featured cards + mentions table) and `/media/new-york-daily-news/` |
 | `media_ny2022.yml` | `/media/ny-2022/` (the 128-article Special Master archive) |
 

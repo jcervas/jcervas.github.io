@@ -19,12 +19,19 @@ collections:
   cases:
     output: true
     permalink: /redistricting/:name/
+  courses:
+    output: true
+    permalink: /teaching/:name/
 
 defaults:
   - scope:
       type: cases
     values:
       layout: case
+  - scope:
+      type: courses
+    values:
+      layout: course
 
 # Primary navigation (edit here to change the menu everywhere)
 nav:
@@ -44,7 +51,8 @@ nav:
 # Files Jekyll should ignore when building the site
 exclude:
   - README.md
-  - _cases/README.md   # docs for authors; must stay excluded or it becomes a case page
+  - _cases/README.md     # docs for authors; must stay excluded or it becomes a case page
+  - _courses/README.md   # docs for authors; must stay excluded or it becomes a course page
   - cv-reference.docx
   - cv_build.sh
   - cmu-media.csv
