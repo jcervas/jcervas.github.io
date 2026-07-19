@@ -61,6 +61,27 @@ items:
     topic: "Draft & Final Maps"
 ```
 
+### A featured card → `media.yml`, under `featured:`
+
+Curated highlight cards at the top of `/media/`. Fields: `title`, `outlet`,
+`summary`, `url`, plus optional `image` (a thumbnail) and `credit` (a caption
+under it):
+
+```yaml
+featured:
+  - title: "Headline"
+    outlet: "The Outlet"
+    summary: "A sentence or two."
+    url: "https://..."
+    image: /assets/photos/your-photo.jpg   # optional
+    credit: "Photo: CMU / Jane Smith"       # optional caption
+```
+
+> **Only use images you have the right to publish** — your own photos,
+> CMU-provided images, or ones you've licensed / are public domain. An outlet's
+> article photo requires the outlet's permission; adding a `credit` is **not** a
+> substitute for a license.
+
 ---
 
 ## Topics (the `topic:` field)

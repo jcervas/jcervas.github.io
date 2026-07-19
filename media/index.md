@@ -21,7 +21,12 @@ description: "News coverage and media mentions of Jonathan Cervas's redistrictin
 <div class="media-featured">
   {% for f in site.data.media.featured %}
   <article class="media-feature{% if f.image %} media-feature--has-img{% endif %}">
-    {% if f.image %}<img class="media-feature__img" src="{{ f.image | relative_url }}" alt="{{ f.title | escape }}">{% endif %}
+    {% if f.image %}
+    <figure class="media-feature__figure">
+      <img class="media-feature__img" src="{{ f.image | relative_url }}" alt="{{ f.title | escape }}">
+      {% if f.credit %}<figcaption class="media-feature__credit">{{ f.credit }}</figcaption>{% endif %}
+    </figure>
+    {% endif %}
     <div class="media-feature__body">
       <h3><a href="{{ f.url }}">{{ f.title }}</a></h3>
       <div class="media-outlet">{{ f.outlet }}</div>
