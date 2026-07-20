@@ -3,9 +3,9 @@ title: Statistical Fallacies in Claims about &ldquo;Massive and Widespread Fraud
   in the 2020 Presidential Election
 authors: Bernard Grofman and Jonathan R. Cervas
 venue: Statistics and Public Policy 11, no. 1
-year: 2023
+year: 2024
 kind: article
-date: 2023-12-01
+date: 2024-01-05
 link: https://www.tandfonline.com/doi/full/10.1080/2330443X.2023.2289529
 ---
 

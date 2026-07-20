@@ -5,7 +5,7 @@ authors: Jonathan R. Cervas and Bernard Grofman
 venue: Presidential Studies Quarterly
 year: 2022
 kind: article
-date: 2022-09-01
+date: 2022-06-01
 link: https://onlinelibrary.wiley.com/doi/10.1111/psq.12788
 ---
 

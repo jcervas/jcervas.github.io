@@ -4,7 +4,7 @@ authors: Jonathan R. Cervas and Bernard Grofman
 venue: Social Science Quarterly 101, no. 6
 year: 2020
 kind: article
-date: 2020-12-01
+date: 2020-10-01
 link: https://jonathancervas.com/2020/SSQ/malapportionment.pdf
 ---
 
