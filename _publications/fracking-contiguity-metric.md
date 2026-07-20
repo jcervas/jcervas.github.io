@@ -6,6 +6,7 @@ year: 2021
 kind: op-ed
 date: 2021-09-01
 link: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3918044
+bibtex: '@misc{cervas2021fracking, author={Jonathan R. Cervas and Bernard Grofman}, title={Fracking: A Contiguity-Related Redistricting Metric}, howpublished={Election Law Blog}, year={2021}, url={https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3918044} }'
 ---
 
 Introduces “fracking” as a contiguity-related redistricting metric — a way to think about how the splitting of geographies bears on the evaluation of district maps.

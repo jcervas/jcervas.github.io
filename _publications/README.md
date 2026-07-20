@@ -39,6 +39,9 @@ shows the citation and link).
 | `kind` | `article` → "Peer-Reviewed Articles & Chapters"; `op-ed` → "Op-Eds & Public Commentary". |
 | `date` | `YYYY-MM-DD`. Lists sort newest-first; the home page shows the five most recent articles. Day/month can be approximate if you only know the year. |
 | `link` | URL to the article. Omit to show no "Read the article" link. |
+| `is_abstract` | Optional. `true` labels the body section "Abstract" (verbatim) instead of "Summary". |
+| `bibtex` | Optional one-line BibTeX string. Powers the **Copy BibTeX** / **Download .bib** buttons; omit to hide them. Easiest source: `curl -LH "Accept: application/x-bibtex" https://doi.org/<DOI>`. |
 
 The **summary is the body** (below the front matter), so it can be as long as you
-like and use Markdown. An empty body just hides the Summary section.
+like and use Markdown. An empty body just hides the Summary section. If the body
+is the paper's verbatim abstract, set `is_abstract: true`.

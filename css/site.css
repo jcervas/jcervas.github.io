@@ -110,6 +110,20 @@ img { max-width: 100%; height: auto; }
 .section-lead { color: var(--muted); margin-top: -.25rem; }
 .more-link { display: inline-block; margin-top: 1rem; font-weight: 600; }
 
+/* ---------- Publication detail: cite actions ---------- */
+.pub-actions {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.25rem;
+  margin: 1rem 0 1.5rem;
+}
+.cite-actions { display: inline-flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.btn-cite {
+  font: inherit; font-size: .85rem; cursor: pointer;
+  padding: .3rem .75rem; border: 1px solid var(--red); border-radius: 999px;
+  background: #fff; color: var(--red); transition: background .15s, color .15s;
+}
+.btn-cite:hover { background: var(--red); color: #fff; }
+.cite-status { font-size: .82rem; color: var(--muted); }
+
 /* ---------- Teaching ---------- */
 .course-list { display: grid; gap: 1.25rem; }
 .course {

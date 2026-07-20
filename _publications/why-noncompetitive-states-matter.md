@@ -1,12 +1,13 @@
 ---
-title: Why Noncompetitive States Are So Important for Understanding the Outcome of
-  Presidential Elections
+title: Why Noncompetitive States Are So Important for Understanding the Outcome of Presidential Elections
 authors: Jonathan R. Cervas and Bernard Grofman
 venue: Public Choice 173, no. 3&ndash;4
 year: 2017
 kind: article
 date: 2017-12-01
 link: https://jonathancervas.com/2017/PC/noncompetitiveelections.pdf
+bibtex: '@article{Cervas_2017, title={Why noncompetitive states are so important for understanding the outcomes of competitive elections: the Electoral College 1868–2016}, volume={173}, ISSN={1573-7101}, url={http://dx.doi.org/10.1007/s11127-017-0474-4}, DOI={10.1007/s11127-017-0474-4}, number={3-4}, journal={Public Choice}, publisher={Springer Science and Business Media LLC}, author={Cervas, Jonathan R. and Grofman, Bernard}, year={2017}, month=Sept, pages={251–265} }'
+is_abstract: true
 ---
 
-Argues that noncompetitive states, often set aside in Electoral College analysis, can decisively shape outcomes and candidate strategy — especially when there is asymmetry in the partisan balance of the safe states.
+Brams and Kilgour (Public Choice 170:99–113, 2017) begin their recent essay on the Electoral College (EC) by pointing out the obvious, but nonetheless regularly neglected fact that noncompetitive states may have a decisive impact on EC outcomes and shape the electoral strategies of the candidates in the competitive states, especially if there is asymmetry in the partisan balances in the non-competitive states. Their contribution is to offer combinatorics insights into the implications of such asymmetries in the form of three new indicators: Winningness, Vulnerability, and Fragility. They then explore the magnitude and effects of these three measures for the presidential elections of 2000, 2004, 2008 and 2012. The major contribution of this note is to extend their analyses of these measures to an additional 34 elections: every election in the modern two-party post-Civil War era from 1868 to 2016. We ﬁnd the Winningness measure to predict very well over the entire set of 38 presidential elections. Inspired by their work, we also offer a new and simpler metric for partisan asymmetries in noncompetitive states and show how it can predict the expected closeness of EC outcomes as well or better than the more complex combinatorics measures they propose.

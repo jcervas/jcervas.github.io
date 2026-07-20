@@ -6,6 +6,7 @@ year: 2024
 kind: op-ed
 date: 2024-01-01
 link: https://cervas.medium.com/trump-the-wrestler-and-the-2024-grudge-match-995b982ca73b
+bibtex: '@misc{cervas2024trump, author={Jonathan R. Cervas and Bernard Grofman}, title={Trump the Wrestler and the 2024 Grudge Match}, howpublished={Medium}, year={2024}, url={https://cervas.medium.com/trump-the-wrestler-and-the-2024-grudge-match-995b982ca73b} }'
 ---
 
 A political essay drawing an analogy between the theater of professional wrestling and the 2024 Trump campaign.
