@@ -135,6 +135,8 @@
     const gConnect = svg.append('g').attr('class', 'layer-connectors');
     const gTiles = svg.append('g').attr('class', 'layer-tiles');
 
+    // Tiles only for states with seat values; the name is added only where a new
+    // map is actually in place for 2026 (proposed/blocked states stay unlabeled)
     const nodes = rows.filter(r => r.exp != null && anchors.has(r.abbr)).map(r => {
       const [ax, ay] = anchors.get(r.abbr);
       const ox = ax + r.dx, oy = ay + r.dy;
@@ -146,6 +148,12 @@
       const g = gTiles.append('g')
         .attr('class', 'tile' + (excluded ? ' excluded' : ''));
       const size = Math.max(15, Math.min(30, 13 + d.r.exp * 2.8));
+      if (d.r.status === 'enacted') g.append('text')
+        .attr('class', 'tile-name')
+        .attr('text-anchor', 'middle')
+        .attr('font-size', '9.5px')
+        .attr('y', -size * 0.9 - 2)
+        .text(d.r.name.toUpperCase());
       const value = g.append('text')
         .attr('class', 'tile-value st-' + d.r.party)
         .attr('text-anchor', 'middle')
@@ -173,10 +181,12 @@
             .attr('y1', y).attr('y2', y);
         });
       }
-      // Collision radius from the rendered bbox; vertically center the group
+      // Collision radius from the rendered bbox; vertically center the group.
+      // Wide-but-short name labels get a sub-half-width radius so they don't
+      // push neighbors further than they visually need.
       const bb = g.node().getBBox();
       d.shiftY = -(bb.y + bb.height / 2);
-      d.collide = Math.max(bb.width, bb.height) / 2 + 4;
+      d.collide = Math.max(bb.height * 0.62, bb.width * 0.38) + 3;
       return g;
     });
 
@@ -246,7 +256,7 @@
     const callaisStates = rows.filter(r => r.callais && anchors.has(r.abbr));
     if (callaisStates.length) {
       const ann = svg.append('g').attr('class', 'annotation');
-      const ax = W - 218, ay = H * 0.55;
+      const ax = W - 218, ay = H * 0.58;
       const lines = ['Several states have taken', 'steps to change their maps', 'after Callais'];
       lines.forEach((line, i) => {
         const t = ann.append('text').attr('x', ax).attr('y', ay + i * 19);
@@ -267,7 +277,7 @@
       const my = (sy + ty) / 2 - (tx - sx) * 0.45;
       ann.append('path')
         .attr('class', 'connector')
-        .attr('d', `M${sx},${sy} Q${mx},${my} ${tx + 8},${ty - 2}`)
+        .attr('d', `M${sx},${sy} Q${mx},${my} ${tx + 22},${ty + 14}`)
         .attr('marker-end', 'url(#arrowhead)');
     }
 

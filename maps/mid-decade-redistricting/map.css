@@ -192,6 +192,13 @@ html[data-theme="light"] .theme-toggle .icon-sun { display: none; }
 .tile .tile-value.st-dem { fill: var(--dem-text); }
 .tile .tile-value.st-gop { fill: var(--gop-text); }
 
+.tile .tile-name {
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  fill: var(--text-muted);
+  stroke-width: 2.5px;
+}
+
 .tile .tile-range {
   font-weight: 700;
   fill: var(--tile-range);
