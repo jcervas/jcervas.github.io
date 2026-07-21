@@ -1,17 +1,10 @@
-/* Mid-decade redistricting map — standalone page styles.
-   Theme keys off html[data-theme], shared with the main site (localStorage 'theme'). */
+/* Mid-decade redistricting map — page-specific styles.
+   Page chrome (fonts, header/footer, theme toggle) comes from the site layout
+   and css/site.css; this file only adds map colors and components. Base colors
+   reuse the site's variables (--ink, --muted, --line, --bg) so the map follows
+   the site's light/dark theme automatically. */
 
 :root {
-  --bg:            #ffffff;
-  --text:          #1a1a1a;
-  --text-muted:    #666666;
-  --rule:          #e2e2e2;
-
-  /* Map colors (light) */
-  --state-base:    #f7f7f6;
-  --state-border:  #c5c5c5;
-  --us-outline:    #b5b5b5;
-
   --dem-fill:      rgba(115, 181, 234, 0.55);
   --dem-border:    rgb(115, 181, 234);
   --dem-text:      #4d94d4;
@@ -19,23 +12,16 @@
   --gop-border:    rgb(238, 141, 140);
   --gop-text:      #e0595e;
 
+  --state-base:    #f7f7f6;
+  --state-border:  #c5c5c5;
+  --us-outline:    #b5b5b5;
   --hatch-a:       #dddddd;
   --hatch-b:       #eeeeee;
-  --halo:          #ffffff;
   --connector:     #333333;
   --tile-range:    #111111;
 }
 
-html[data-theme="dark"] {
-  --bg:            #161618;
-  --text:          #ececec;
-  --text-muted:    #9a9a9a;
-  --rule:          #333336;
-
-  --state-base:    #232326;
-  --state-border:  #3d3d42;
-  --us-outline:    #4a4a50;
-
+:root[data-theme="dark"] {
   --dem-fill:      rgba(115, 181, 234, 0.38);
   --dem-border:    rgb(101, 165, 219);
   --dem-text:      #7db8e8;
@@ -43,46 +29,34 @@ html[data-theme="dark"] {
   --gop-border:    rgb(224, 122, 121);
   --gop-text:      #ef8a8e;
 
+  --state-base:    #232326;
+  --state-border:  #3d3d42;
+  --us-outline:    #4a4a50;
   --hatch-a:       #3a3a3e;
   --hatch-b:       #2b2b2f;
-  --halo:          #161618;
   --connector:     #c7c7c7;
   --tile-range:    #f0f0f0;
 }
 
-* { box-sizing: border-box; }
-
-html, body {
-  margin: 0;
-  padding: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Barlow', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
-.page {
+/* Wider than the site's default 860px wrap — the map needs the room */
+.map-wrap {
   max-width: 1080px;
   margin: 0 auto;
-  padding: 28px 20px 40px;
+  padding: 2.5rem 1.25rem 1rem;
 }
 
-.map-header h1 {
-  margin: 0 0 6px;
-  font-size: clamp(1.4rem, 3.4vw, 2rem);
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
+.map-header .page-title { margin: 0 0 .35rem; }
 
 .subtitle {
   margin: 0;
   font-size: clamp(0.95rem, 2.2vw, 1.1rem);
-  color: var(--text-muted);
+  color: var(--muted);
 }
 
 .updated {
   margin: 6px 0 0;
   font-size: 0.85rem;
-  color: var(--text-muted);
+  color: var(--muted);
 }
 
 .map-figure {
@@ -99,41 +73,12 @@ html, body {
 .map-note {
   margin-top: 10px;
   padding-top: 10px;
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid var(--line);
   font-size: 0.85rem;
   line-height: 1.5;
-  color: var(--text-muted);
+  color: var(--muted);
   max-width: 70ch;
 }
-
-.map-footer {
-  margin-top: 24px;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-.map-footer a { color: inherit; }
-
-/* ---------- Theme toggle (matches main site header button) ---------- */
-.theme-toggle {
-  position: fixed;
-  top: 14px;
-  right: 14px;
-  z-index: 10;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  border: 1px solid var(--rule);
-  border-radius: 50%;
-  background: var(--bg);
-  color: var(--text);
-  cursor: pointer;
-}
-.theme-toggle:hover { border-color: var(--text-muted); }
-html[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
-html[data-theme="light"] .theme-toggle .icon-sun { display: none; }
 
 /* ---------- SVG map ---------- */
 
@@ -179,9 +124,9 @@ html[data-theme="light"] .theme-toggle .icon-sun { display: none; }
 .tile { pointer-events: none; }
 
 .tile text {
-  font-family: 'Barlow', sans-serif;
+  font-family: var(--font);
   paint-order: stroke fill;
-  stroke: var(--halo);
+  stroke: var(--bg);
   stroke-linejoin: round;
 }
 
@@ -195,7 +140,7 @@ html[data-theme="light"] .theme-toggle .icon-sun { display: none; }
 .tile .tile-name {
   font-weight: 600;
   letter-spacing: 0.06em;
-  fill: var(--text-muted);
+  fill: var(--muted);
   stroke-width: 2.5px;
 }
 
@@ -220,17 +165,17 @@ html[data-theme="light"] .theme-toggle .icon-sun { display: none; }
 
 /* ---------- Legend & annotation (SVG) ---------- */
 
-.legend text { font-family: 'Barlow', sans-serif; }
-.legend .legend-label { font-size: 21px; font-weight: 700; fill: var(--text); }
+.legend text { font-family: var(--font); }
+.legend .legend-label { font-size: 21px; font-weight: 700; fill: var(--ink); }
 .legend .legend-value { font-size: 21px; font-weight: 700; }
 .legend .legend-value.st-dem { fill: var(--dem-text); }
 .legend .legend-value.st-gop { fill: var(--gop-text); }
-.legend .legend-rule { stroke: var(--rule); stroke-width: 1; }
+.legend .legend-rule { stroke: var(--line); stroke-width: 1; }
 
 .annotation text {
-  font-family: 'Barlow', sans-serif;
+  font-family: var(--font);
   font-size: 14.5px;
-  fill: var(--text);
+  fill: var(--ink);
 }
 .annotation .em { font-style: italic; }
 
@@ -240,8 +185,8 @@ html[data-theme="light"] .theme-toggle .icon-sun { display: none; }
   position: absolute;
   pointer-events: none;
   background: var(--bg);
-  color: var(--text);
-  border: 1px solid var(--rule);
+  color: var(--ink);
+  border: 1px solid var(--line);
   border-radius: 6px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
   padding: 8px 10px;
@@ -251,11 +196,11 @@ html[data-theme="light"] .theme-toggle .icon-sun { display: none; }
   z-index: 5;
 }
 .tooltip .tt-name { font-weight: 700; }
-.tooltip .tt-status { color: var(--text-muted); }
+.tooltip .tt-status { color: var(--muted); }
 .tooltip .tt-exp { font-weight: 600; }
 .tooltip .tt-exp.st-dem { color: var(--dem-text); }
 .tooltip .tt-exp.st-gop { color: var(--gop-text); }
 
 @media (max-width: 640px) {
-  .page { padding: 20px 12px 28px; }
+  .map-wrap { padding: 1.5rem 0.75rem 1rem; }
 }

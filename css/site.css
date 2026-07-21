@@ -139,6 +139,16 @@ img { max-width: 100%; height: auto; }
 .section-lead { color: var(--muted); margin-top: -.25rem; }
 .more-link { display: inline-block; margin-top: 1rem; font-weight: 600; }
 
+/* Highlighted link to a featured page (e.g. interactive maps) */
+.feature-banner {
+  margin: 1.25rem 0 1.75rem; padding: .8rem 1rem;
+  background: var(--bg-alt); border: 1px solid var(--line);
+  border-left: 3px solid var(--red); border-radius: 6px;
+}
+.feature-banner a { text-decoration: none; color: var(--ink); }
+.feature-banner a:hover strong { color: var(--red); }
+.feature-banner strong { color: var(--red); }
+
 /* ---------- Publication detail: cite actions ---------- */
 .pub-actions {
   display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.25rem;

@@ -10,6 +10,13 @@ description: "Jonathan Cervas's court-appointed work as Special Master, consulta
   voting-rights cases across the United States. Select a case for reports, maps, and details.
 </p>
 
+<p class="feature-banner">
+  <a href="{{ '/maps/mid-decade-redistricting/' | relative_url }}">
+    <strong>Interactive map:</strong> Mid-decade congressional redistricting &mdash;
+    expected partisan seat shifts from newly enacted 2026 maps &rarr;
+  </a>
+</p>
+
 {% assign cases = site.cases | where_exp: "c", "c.order" | sort: "order" %}
 <div class="case-grid">
   {% for c in cases %}
