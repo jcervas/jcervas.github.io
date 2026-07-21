@@ -161,13 +161,17 @@
           .attr('y', 13)
           .text(`(${fmtInt(d.r.lo)}–${fmtInt(d.r.hi)})`);
       }
-      // Manual strike line over the range for blocked maps (SVG text-decoration
+      // Manual strike lines over both texts for blocked maps (SVG text-decoration
       // support is inconsistent across browsers)
-      if (excluded && range) {
-        const bb = range.node().getBBox();
-        g.append('line').attr('class', 'strike')
-          .attr('x1', bb.x - 1).attr('x2', bb.x + bb.width + 1)
-          .attr('y1', bb.y + bb.height / 2 + 1).attr('y2', bb.y + bb.height / 2 + 1);
+      if (excluded) {
+        [value, range].filter(Boolean).forEach(t => {
+          const bb = t.node().getBBox();
+          const y = bb.y + bb.height / 2 + (t === value ? 2 : 1);
+          g.append('line').attr('class', 'strike')
+            .attr('stroke-width', t === value ? 2.2 : 1.4)
+            .attr('x1', bb.x - 1).attr('x2', bb.x + bb.width + 1)
+            .attr('y1', y).attr('y2', y);
+        });
       }
       // Collision radius from the rendered bbox; vertically center the group
       const bb = g.node().getBBox();
@@ -256,12 +260,14 @@
         .map(r => ({ r, pt: anchors.get(r.abbr) }))
         .sort((a, b) => Math.hypot(a.pt[0] - ax, a.pt[1] - ay) - Math.hypot(b.pt[0] - ax, b.pt[1] - ay))[0];
       const [tx, ty] = target.pt;
-      const sx = ax - 8, sy = ay + 12;
-      const mx = (sx + tx) / 2 - (ty - sy) * 0.3;
-      const my = (sy + ty) / 2 + (tx - sx) * 0.3;
+      // Start below the text block and bow the curve away from the map (to the
+      // south-east) so it doesn't cross the value tiles north of the target
+      const sx = ax + 24, sy = ay + lines.length * 19 - 6;
+      const mx = (sx + tx) / 2 + (ty - sy) * 0.45;
+      const my = (sy + ty) / 2 - (tx - sx) * 0.45;
       ann.append('path')
         .attr('class', 'connector')
-        .attr('d', `M${sx},${sy} Q${mx},${my} ${tx + 10},${ty}`)
+        .attr('d', `M${sx},${sy} Q${mx},${my} ${tx + 8},${ty - 2}`)
         .attr('marker-end', 'url(#arrowhead)');
     }
 
