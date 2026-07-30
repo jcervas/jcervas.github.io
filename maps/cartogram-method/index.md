@@ -15,6 +15,9 @@ permalink: /maps/cartogram-method/
   <a href="{{ '/maps/cartogram-method/matching/' | relative_url }}">Matching cells to districts</a>
   <a href="https://github.com/jcervas/cartograms">Source on GitHub</a></nav>
 
+Published at
+[jonathancervas.com/maps/cartogram-method/](https://jonathancervas.com/maps/cartogram-method/).
+
 How the pipeline works, in the order it runs. Every figure is generated from the
 build artefacts by `R/40_doc_figures.R` and `R/41_method_figures.R`, so the
 documentation cannot drift from the code: if the pipeline changes, re-running
