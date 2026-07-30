@@ -26,7 +26,7 @@
     const r=document.createElementNS(NS,"rect");
     r.setAttribute("x",s.lx); r.setAttribute("y",s.ly);
     r.setAttribute("width",s.rw); r.setAttribute("height",s.rh);
-    r.setAttribute("fill","var(--accent-soft)"); r.setAttribute("stroke","var(--accent)");
+    r.setAttribute("fill","var(--pl-accent-soft)"); r.setAttribute("stroke","var(--pl-accent)");
     r.setAttribute("stroke-width",.8); r.setAttribute("opacity",0);
     gSlots.appendChild(r); s._slot=r;
   });
@@ -35,8 +35,8 @@
     const g=document.createElementNS(NS,"g");
     const p=document.createElementNS(NS,"path");
     p.setAttribute("d",s.d);
-    p.setAttribute("fill","var(--wash)");
-    p.setAttribute("stroke","var(--ink-2)");
+    p.setAttribute("fill","var(--pl-wash)");
+    p.setAttribute("stroke","var(--pl-ink-2)");
     p.setAttribute("stroke-width",.6);
     p.setAttribute("stroke-linejoin","round");
     g.appendChild(p); gStates.appendChild(g);
@@ -56,7 +56,7 @@
     });
     gDetail.appendChild(g); return g;
   }
-  const discMD=discGroup(DATA.md,"var(--accent)"), discVA=discGroup(DATA.va,"var(--warn)");
+  const discMD=discGroup(DATA.md,"var(--pl-accent)"), discVA=discGroup(DATA.va,"var(--pl-warn)");
 
   // Each stage is an affine per state, so moving between stages is interpolation.
   //   geographic : identity
@@ -93,8 +93,8 @@
   STEPS.forEach((s,i)=>{
     const li=document.createElement("li");
     li.tabIndex=0;
-    li.innerHTML='<span class="num">STEP '+(i+1)+'</span><h3>'+s.t+'</h3><p>'+s.b+'</p>'+
-      (s.f?'<div class="formula mono">'+s.f+'</div>':'');
+    li.innerHTML='<span class="pl-num">STEP '+(i+1)+'</span><h3>'+s.t+'</h3><p>'+s.b+'</p>'+
+      (s.f?'<div class="pl-formula">'+s.f+'</div>':'');
     li.addEventListener("click",()=>go(i));
     li.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go(i);}});
     ol.appendChild(li); s._li=li;
@@ -122,7 +122,7 @@
     discMD.setAttribute("opacity",det); discVA.setAttribute("opacity",det);
     DATA.s.forEach(s=>{
       const focus = det>0.4 && (s.st==="MD"||s.st==="VA");
-      s._p.setAttribute("fill", focus ? (s.st==="MD"?"var(--accent-soft)":"var(--warn-soft)") : "var(--wash)");
+      s._p.setAttribute("fill", focus ? (s.st==="MD"?"var(--pl-accent-soft)":"var(--pl-warn-soft)") : "var(--pl-wash)");
     });
     // zoom to the Maryland / Virginia detail on the last step
     const md=DATA.s.find(x=>x.st==="MD"), va=DATA.s.find(x=>x.st==="VA");

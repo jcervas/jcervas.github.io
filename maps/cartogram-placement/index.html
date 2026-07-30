@@ -4,95 +4,101 @@ title: How the cartogram places its states
 description: "A stepped walkthrough of how the cartogram pipeline sizes every state to its seat count, moves it into a hand-drawn slot, and pushes the map apart until nothing overlaps. Drawn from the real build geometry."
 ---
 
-<link rel="stylesheet" href="{{ '/maps/cartogram-placement/placement.css' | relative_url }}?v=f2a0d2d3">
+<link rel="stylesheet" href="{{ '/maps/cartogram-placement/placement.css' | relative_url }}?v=d8f14054">
 
 <div class="pl" id="pl" data-src="{{ '/maps/cartogram-placement/placement.json' | relative_url }}?v=8643e5af">
-<header>
-  <div class="eyebrow">Cartogram pipeline &middot; placement</div>
-  <h1>How 50 states find their places</h1>
-  <p class="lede">Each state is resized until its <em>area</em> matches its <em>seat count</em>,
-  then moved into a hand-drawn slot, then pushed apart until nothing touches. Step through it
-  below &mdash; the map is the real geometry the build produces, not a diagram of it.</p>
-  <div class="meta">
-    <div><span class="k">Frame</span><span class="v mono" id="pl-m-frame"></span></div>
-    <div><span class="k">States</span><span class="v mono">50 &middot; one rigid body each</span></div>
-    <div><span class="k">Largest scale</span><span class="v mono" id="pl-m-max"></span></div>
-    <div><span class="k">Smallest scale</span><span class="v mono" id="pl-m-min"></span></div>
-  </div>
-</header>
-
-<div class="layout">
-  <div class="stage">
-    <svg id="pl-map" viewBox="0 0 1152 749" role="img"
-         aria-label="Map of US states moving through the placement stages"></svg>
-    <div class="stagebar">
-      <span class="lab" id="pl-stage-label"></span>
-      <span class="val mono" id="pl-stage-val"></span>
+  <div class="pl-header">
+    <div class="pl-eyebrow">Cartogram pipeline &middot; placement</div>
+    <h1>How 50 states find their places</h1>
+    <p class="pl-lede">Each state is resized until its <em>area</em> matches its
+    <em>seat count</em>, then moved into a hand-drawn slot, then pushed apart until
+    nothing touches. Step through it below &mdash; the map is the real geometry the
+    build produces, not a diagram of it.</p>
+    <div class="pl-meta">
+      <div><span class="pl-k">Frame</span><span class="pl-v" id="pl-m-frame"></span></div>
+      <div><span class="pl-k">States</span><span class="pl-v">50 &middot; one rigid body each</span></div>
+      <div><span class="pl-k">Largest scale</span><span class="pl-v" id="pl-m-max"></span></div>
+      <div><span class="pl-k">Smallest scale</span><span class="pl-v" id="pl-m-min"></span></div>
     </div>
   </div>
 
-  <div>
-    <ol class="steps" id="pl-steps"></ol>
-    <div class="nav">
-      <button id="pl-prev" type="button">&larr; Back</button>
-      <button id="pl-next" type="button">Next &rarr;</button>
-      <span style="align-self:center;margin-left:6px"><kbd>&larr;</kbd> <kbd>&rarr;</kbd></span>
+  <div class="pl-layout">
+    <div class="pl-stage">
+      <svg id="pl-map" viewBox="0 0 1152 749" role="img"
+           aria-label="Map of US states moving through the placement stages"></svg>
+      <div class="pl-stagebar">
+        <span class="pl-lab" id="pl-stage-label"></span>
+        <span class="pl-val" id="pl-stage-val"></span>
+        <span class="pl-nav">
+          <button id="pl-prev" type="button">&larr; Back</button>
+          <button id="pl-next" type="button">Next &rarr;</button>
+        </span>
+      </div>
+    </div>
+
+    <div>
+      <ol class="pl-steps" id="pl-steps"></ol>
     </div>
   </div>
-</div>
 
-<div class="section">
-  <h2>Why the collision test is the whole problem</h2>
-  <p>Once states are sized to their seat counts they collide, and something has to push them
-  apart. Every reasonable solver does roughly the same thing; what decides the outcome is
-  <strong>what you call a collision</strong>. Measured over the same 1,225 state pairs:</p>
-  <table>
-    <thead><tr><th>Collision test</th><th>Pairs it flags</th><th>States moved</th><th>Result</th></tr></thead>
-    <tbody>
-      <tr><td>One circle per state <span class="mono" style="color:var(--ink-2)">(d3.forceCollide)</span></td>
-          <td class="n">80</td><td class="n">&mdash;</td>
-          <td class="bad">Demands 117px of separation. The country comes apart.</td></tr>
-      <tr><td>One box per state <span class="mono" style="color:var(--ink-2)">(rectangle cartogram)</span></td>
-          <td class="n">34</td><td class="n">37 of 50</td>
-          <td class="bad">Tennessee ends up between Kentucky and North Carolina.</td></tr>
-      <tr><td>The outlines themselves</td>
-          <td class="n">1</td><td class="n">2&ndash;4</td>
-          <td>Correct, but the gap is whatever falls out.</td></tr>
-      <tr><td>A chain of discs along each outline</td>
-          <td class="n">1</td><td class="n">3&ndash;11</td>
-          <td class="win">Correct, and the gap is a number you set.</td></tr>
-    </tbody>
-  </table>
-  <p style="margin-top:16px">California is why. It is a diagonal sliver whose bounding circle has a
-  148px radius against a 155px width, so a circle test believes it collides with half the West.
-  Its bounding box overlaps Nevada's while the shapes come nowhere near each other.</p>
-</div>
-
-<div class="section">
-  <h2>Where placement sits in the build</h2>
-  <p>Placement is one stage of a longer pipeline. mapshaper owns anything topological &mdash;
-  projection, simplification, dissolve, polygon intersection. Base R owns everything numerical,
-  with no packages beyond what ships with R.</p>
-  <div class="pipeline">
-    <span>census boundaries</span><b>&rarr;</b>
-    <span>project + simplify</span><b>&rarr;</b>
-    <span class="r">scale to seats</span><b>&rarr;</b>
-    <span class="r">place in slots</span><b>&rarr;</b>
-    <span class="r">push apart</span><b>&rarr;</b>
-    <span>carve into cells</span><b>&rarr;</b>
-    <span>match cells to districts</span><b>&rarr;</b>
-    <span>JSON</span>
+  <div class="pl-section">
+    <h2>Why the collision test is the whole problem</h2>
+    <p>Once states are sized to their seat counts they collide, and something has
+    to push them apart. Every reasonable solver does roughly the same thing; what
+    decides the outcome is <strong>what you call a collision</strong>. Measured
+    over the same 1,225 state pairs:</p>
+    <div class="pl-tablewrap">
+      <table>
+        <thead><tr><th>Collision test</th><th>Pairs it flags</th><th>States moved</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td>One circle per state <span class="pl-mono">(d3.forceCollide)</span></td>
+              <td class="pl-n">80</td><td class="pl-n">&mdash;</td>
+              <td class="pl-bad">Demands 117px of separation. The country comes apart.</td></tr>
+          <tr><td>One box per state <span class="pl-mono">(rectangle cartogram)</span></td>
+              <td class="pl-n">34</td><td class="pl-n">37 of 50</td>
+              <td class="pl-bad">Tennessee ends up between Kentucky and North Carolina.</td></tr>
+          <tr><td>The outlines themselves</td>
+              <td class="pl-n">1</td><td class="pl-n">2&ndash;4</td>
+              <td>Correct, but the gap is whatever falls out.</td></tr>
+          <tr><td>A chain of discs along each outline</td>
+              <td class="pl-n">1</td><td class="pl-n">3&ndash;11</td>
+              <td class="pl-win">Correct, and the gap is a number you set.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>California is why. It is a diagonal sliver whose bounding circle has a
+    148px radius against a 155px width, so a circle test believes it collides with
+    half the West. Its bounding box overlaps Nevada's while the shapes come nowhere
+    near each other.</p>
   </div>
-  <p style="margin-top:14px">The three highlighted steps are what this page covers. Everything
-  downstream &mdash; subdividing each state into equal-area district cells, matching those cells to
-  real districts &mdash; happens inside the shapes once they have stopped moving.</p>
+
+  <div class="pl-section">
+    <h2>Where placement sits in the build</h2>
+    <p>Placement is one stage of a longer pipeline. mapshaper owns anything
+    topological &mdash; projection, simplification, dissolve, polygon intersection.
+    Base R owns everything numerical, with no packages beyond what ships with R.</p>
+    <div class="pl-pipeline">
+      <span>census boundaries</span><b>&rarr;</b>
+      <span>project + simplify</span><b>&rarr;</b>
+      <span class="pl-r">scale to seats</span><b>&rarr;</b>
+      <span class="pl-r">place in slots</span><b>&rarr;</b>
+      <span class="pl-r">push apart</span><b>&rarr;</b>
+      <span>carve into cells</span><b>&rarr;</b>
+      <span>match cells to districts</span><b>&rarr;</b>
+      <span>JSON</span>
+    </div>
+    <p>The three highlighted steps are what this page covers. Everything
+    downstream &mdash; subdividing each state into equal-area district cells,
+    matching those cells to real districts &mdash; happens inside the shapes once
+    they have stopped moving.</p>
+  </div>
+
+  <div class="pl-footer">
+    Generated from the build artefacts, so the map above is the same geometry the
+    pipeline emits. Placement lives in <span class="pl-mono">R/10_build_cells.R</span>,
+    <span class="pl-mono">R/lib_discs.R</span> and
+    <span class="pl-mono">R/statepos_tweaks.R</span>.
+  </div>
 </div>
 
-<footer>
-  Generated from the build artefacts, so the map above is the same geometry the pipeline emits.
-  Placement lives in <span class="mono">R/10_build_cells.R</span>,
-  <span class="mono">R/lib_discs.R</span> and <span class="mono">R/statepos_tweaks.R</span>.
-</footer>
-</div>
-
-<script src="{{ '/maps/cartogram-placement/placement.js' | relative_url }}?v=2339f5e4" defer></script>
+<script src="{{ '/maps/cartogram-placement/placement.js' | relative_url }}?v=c2bb0a20" defer></script>
