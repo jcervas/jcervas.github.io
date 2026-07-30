@@ -37,11 +37,13 @@ description: "Jonathan Cervas's court-appointed work as Special Master, consulta
 </p>
 
 <p class="feature-banner">
-  <a href="{{ '/maps/cartogram-placement/' | relative_url }}">
-    <strong>How these maps are built:</strong> step through the placement algorithm &mdash;
-    sizing each state to its seat count, fitting it to the layout, and pushing the
-    country apart until nothing overlaps &rarr;
-  </a>
+  <strong>How these maps are built:</strong> sizing each state to its seat count,
+  carving it into equal-area districts, and matching those to the real ones.
+  <span class="banner-links">
+    <a href="{{ '/maps/cartogram-placement/' | relative_url }}">Step through the placement</a>
+    <span class="banner-sep">&middot;</span>
+    <a href="{{ '/maps/cartogram-method/' | relative_url }}">Read the method</a>
+  </span>
 </p>
 
 {% assign cases = site.cases | where_exp: "c", "c.order" | sort: "order" %}
