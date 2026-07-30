@@ -555,10 +555,17 @@
       });
       var build = performance.now() - t0;
 
+      /* Time a real steady-state frame with the interpolators warm, then put the
+       * view back where it WAS -- not at 0. An incoming #cartogram hash has
+       * already moved it by this point, and hard-coding 0 here silently undid
+       * that, leaving the slider and the geometry disagreeing. */
+      var restore = progress;
       var t1 = performance.now();
-      draw(0.5, false);
+      draw(restore === 0.5 ? 0.45 : 0.5, false);
       var frame = performance.now() - t1;
-      draw(0, false);
+      draw(restore, false);
+      slider.value = String(restore);
+      if (focus >= 0) setViewBox(targetBox());
 
       status.textContent = DATA.states.length + " states, " + flat.length +
         " districts · " + frame.toFixed(0) + " ms/frame · " +
