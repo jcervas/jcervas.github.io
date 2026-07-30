@@ -36,6 +36,14 @@ description: "Jonathan Cervas's court-appointed work as Special Master, consulta
   </span>
 </p>
 
+<p class="feature-banner">
+  <a href="{{ '/maps/cartogram-placement/' | relative_url }}">
+    <strong>How these maps are built:</strong> step through the placement algorithm &mdash;
+    sizing each state to its seat count, fitting it to the layout, and pushing the
+    country apart until nothing overlaps &rarr;
+  </a>
+</p>
+
 {% assign cases = site.cases | where_exp: "c", "c.order" | sort: "order" %}
 <div class="case-grid">
   {% for c in cases %}
