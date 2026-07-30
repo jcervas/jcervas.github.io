@@ -148,6 +148,14 @@ img { max-width: 100%; height: auto; }
 .feature-banner a { text-decoration: none; color: var(--ink); }
 .feature-banner a:hover strong { color: var(--red); }
 .feature-banner strong { color: var(--red); }
+/* A banner listing several maps needs its inline links to read as links, which
+   the rule above deliberately suppresses for whole-line banner links. */
+.feature-banner .banner-links { display: block; margin-top: .35rem; }
+.feature-banner .banner-links a {
+  color: var(--red); text-decoration: underline; text-underline-offset: 2px;
+}
+.feature-banner .banner-links a:hover { text-decoration-thickness: 2px; }
+.feature-banner .banner-sep { color: var(--muted); margin: 0 .5rem; }
 
 /* ---------- Publication detail: cite actions ---------- */
 .pub-actions {

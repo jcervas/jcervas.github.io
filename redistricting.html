@@ -25,17 +25,15 @@ description: "Jonathan Cervas's court-appointed work as Special Master, consulta
 </p>
 
 <p class="feature-banner">
-  <a href="{{ '/maps/apportionment-2010-2020/' | relative_url }}">
-    <strong>Interactive map:</strong> Change in House apportionment, 2010 to 2020 &mdash;
-    the seven seats that moved, and the thirteen states that gained or lost them &rarr;
-  </a>
-</p>
-
-<p class="feature-banner">
-  <a href="{{ '/maps/apportionment-2000-2010/' | relative_url }}">
-    <strong>Interactive map:</strong> Change in House apportionment, 2000 to 2010 &mdash;
-    a larger reshuffle: twelve seats across eighteen states, Texas gaining four &rarr;
-  </a>
+  <strong>Interactive maps:</strong> Change in House apportionment &mdash;
+  which states gained and lost seats, and how many.
+  <span class="banner-links">
+    <a href="{{ '/maps/apportionment-2020-2030/' | relative_url }}">2020 to 2030 (projected)</a>
+    <span class="banner-sep">&middot;</span>
+    <a href="{{ '/maps/apportionment-2010-2020/' | relative_url }}">2010 to 2020</a>
+    <span class="banner-sep">&middot;</span>
+    <a href="{{ '/maps/apportionment-2000-2010/' | relative_url }}">2000 to 2010</a>
+  </span>
 </p>
 
 {% assign cases = site.cases | where_exp: "c", "c.order" | sort: "order" %}

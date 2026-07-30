@@ -286,7 +286,9 @@
     [DATA.meta.from, DATA.meta.to].forEach(function (y) {
       var b = document.createElement("button");
       b.type = "button";
-      b.textContent = String(y);
+      // never let a projected year read as a settled result
+      b.textContent = String(y) +
+        (DATA.meta.projected && y === DATA.meta.to ? " (proj.)" : "");
       b.setAttribute("data-year", y);
       b.addEventListener("click", function () {
         year = y;
@@ -352,6 +354,10 @@
       " &middot; state outlines from the createMaps pipeline, cells built with mapshaper and base R" +
       (DATA.meta.districtsAttached === false
         ? " &middot; cells are not matched to district lines for this pair"
+        : "") +
+      (DATA.meta.projected
+        ? '<br><b>' + DATA.meta.to + " is a projection, not a result.</b> " +
+          (DATA.meta.projection ? DATA.meta.projection.note.replace(/^The \d+ column is a projection, not a result\. /, "") : "")
         : "");
 
     $("ap-legend").innerHTML = [
