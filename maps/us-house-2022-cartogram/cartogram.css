@@ -114,13 +114,23 @@
 .cg-legend { display: flex; gap: 16px; flex-wrap: wrap; }
 .cg-key { display: inline-flex; align-items: center; font-size: 13px; font-variant-numeric: tabular-nums; }
 .cg-sw {
-  display: inline-block;
-  width: 11px; height: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 11px; height: 11px;
+  padding: 0 2px;
   margin-right: 6px;
   border-radius: 2px;
   vertical-align: -1px;
   flex: none;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
 }
+/* The election legend and both tooltips use bare swatches with no glyph; keep
+   those square rather than letting the padding above widen them. */
+.cg-sw:empty { min-width: 11px; width: 11px; padding: 0; }
 
 .cg-status { color: var(--cg-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
 
@@ -226,7 +236,12 @@
 
 /* a cell that does not exist in the selected year: outline only */
 .cg-cell { cursor: pointer; }
-.cg-cell.cg-absent { fill: none !important; stroke-dasharray: 2 2; opacity: 0.55; }
+/* A cell that does not exist in the selected year. The stroke colour is set
+   inline by the viewer to the cell's own status colour: the rule below paints
+   every cell's stroke in the page background so neighbours read as separate,
+   which left an absent cell as white-on-white in light mode -- invisible, and
+   contradicting the legend. */
+.cg-cell.cg-absent { fill: none !important; stroke-dasharray: 2.5 2; opacity: 1; }
 .cg-cells path { stroke: var(--cg-bg); stroke-linejoin: round; transition: opacity 0.25s; }
 .cg-cells path:hover { stroke: var(--cg-fg); }
 

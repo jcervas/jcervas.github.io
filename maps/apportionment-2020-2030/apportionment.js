@@ -116,7 +116,6 @@
     // ---------------------------------------------------------------- render --
 
     var year = DATA.meta.to;     // which apportionment is shown
-    var showBoth = false;        // ignore presence, draw every cell solid
     var focus = -1;
     var vb = [0, 0, W, H];
     var zoomK = 1;
@@ -145,9 +144,10 @@
     }
 
     /* Does a cell exist in the shown year? A lost cell existed in the from-year
-     * and not the to-year; a gained cell the other way round. */
+     * and not the to-year; a gained cell the other way round. Either view shows
+     * every change -- one side solid, the other dashed -- so there is nothing a
+     * "show both" mode would add. */
     function present(status) {
-      if (showBoth) return true;
       if (status === "retained") return true;
       if (status === "lost") return year === DATA.meta.from;
       return year === DATA.meta.to;                       // gained
@@ -159,7 +159,12 @@
         s.node.setAttribute(
           "transform", "translate(" + s.tx + "," + s.ty + ") scale(" + s.scale + ")");
         for (var j = 0; j < s.paths.length; j++) {
-          s.paths[j].classList.toggle("cg-absent", !present(s.status[j]));
+          var absent = !present(s.status[j]);
+          s.paths[j].classList.toggle("cg-absent", absent);
+          /* Inline, so it beats the stylesheet rule that paints every cell's
+           * stroke in the page background. Without this an absent cell is drawn
+           * white on white in light mode. */
+          s.paths[j].style.stroke = absent ? s.paths[j].getAttribute("fill") : "";
         }
       }
       applyScales();
@@ -288,12 +293,11 @@
       b.type = "button";
       // never let a projected year read as a settled result
       b.textContent = String(y) +
-        (DATA.meta.projected && y === DATA.meta.to ? " (proj.)" : "");
+        " &middot; the year switch shows which seats existed then; the others are dashed" +
+      (DATA.meta.projected && y === DATA.meta.to ? " (proj.)" : "");
       b.setAttribute("data-year", y);
       b.addEventListener("click", function () {
         year = y;
-        $("ap-both").checked = false;
-        showBoth = false;
         draw();
         writeHash();
       });
@@ -303,15 +307,10 @@
     function updateYearButtons() {
       var bs = seg.children;
       for (var i = 0; i < bs.length; i++) {
-        var y = +bs[i].getAttribute("data-year");
-        bs[i].setAttribute("aria-pressed", !showBoth && y === year ? "true" : "false");
+        bs[i].setAttribute("aria-pressed",
+          +bs[i].getAttribute("data-year") === year ? "true" : "false");
       }
     }
-
-    $("ap-both").addEventListener("change", function (e) {
-      showBoth = e.target.checked;
-      draw();
-    });
 
     // --------------------------------------------------------------- tooltip --
 
@@ -355,18 +354,21 @@
       (DATA.meta.districtsAttached === false
         ? " &middot; cells are not matched to district lines for this pair"
         : "") +
+      " &middot; the year switch shows which seats existed then; the others are dashed" +
       (DATA.meta.projected
         ? '<br><b>' + DATA.meta.to + " is a projection, not a result.</b> " +
           (DATA.meta.projection ? DATA.meta.projection.note.replace(/^The \d+ column is a projection, not a result\. /, "") : "")
         : "");
 
+    /* The swatch carries a +1 / -1 glyph as well as a colour, matching the label
+     * drawn on the cell itself, so the encoding never rests on colour alone. */
     $("ap-legend").innerHTML = [
-      ["gained", "gained a seat"],
-      ["lost", "lost a seat"],
-      ["retained", "held"]
+      ["gained", "+1", "gained a seat"],
+      ["lost", "\u22121", "lost a seat"],
+      ["retained", "", "held"]
     ].map(function (p) {
       return '<span class="cg-key"><span class="cg-sw" style="background:' +
-        DATA.palette[p[0]] + '"></span>' + p[1] + "</span>";
+        DATA.palette[p[0]] + '">' + p[1] + "</span>" + p[2] + "</span>";
     }).join("");
 
     /* One chip per state that changed, biggest movers first, each a shortcut to
