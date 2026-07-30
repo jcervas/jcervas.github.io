@@ -17,6 +17,13 @@ description: "Jonathan Cervas's court-appointed work as Special Master, consulta
   </a>
 </p>
 
+<p class="feature-banner">
+  <a href="{{ '/maps/us-house-2022-cartogram/' | relative_url }}">
+    <strong>Interactive map:</strong> The 2022 U.S. House on an equal-area cartogram &mdash;
+    every district drawn the same size, morphing to and from the geographic map &rarr;
+  </a>
+</p>
+
 {% assign cases = site.cases | where_exp: "c", "c.order" | sort: "order" %}
 <div class="case-grid">
   {% for c in cases %}
