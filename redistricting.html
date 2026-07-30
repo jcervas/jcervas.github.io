@@ -24,6 +24,13 @@ description: "Jonathan Cervas's court-appointed work as Special Master, consulta
   </a>
 </p>
 
+<p class="feature-banner">
+  <a href="{{ '/maps/apportionment-2010-2020/' | relative_url }}">
+    <strong>Interactive map:</strong> Change in House apportionment, 2010 to 2020 &mdash;
+    the seven seats that moved, and the thirteen states that gained or lost them &rarr;
+  </a>
+</p>
+
 {% assign cases = site.cases | where_exp: "c", "c.order" | sort: "order" %}
 <div class="case-grid">
   {% for c in cases %}
