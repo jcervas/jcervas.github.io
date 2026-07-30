@@ -82,10 +82,10 @@ Degree GPA: 3.277
 - "[Brief of Amicus Curiae](https://jonathancervas.com/2020/maine.pdf)," Maine ranked-choice voting, 2020 (with the Princeton Electoral Innovation Lab).
 
 ### Expert Witness
-- *Sherman v. Hargett* 26-cv-616
-- *Driver v. Houston County* Civil Action No. 5:25-cv-25. [Expert Report](http://jonathancervas.com/2026/Houston-County/expert.pdf), [Rebuttal Report](http://jonathancervas.com/2026/Houston-County/rebuttal.pdf)
-- *Wise v. State of Missouri* (2026) Case No. 2516-CV29597. [Expert Report](http://jonathancervas.com/2026/Missouri/expert-amended.pdf), [Rebuttal Report](http://jonathancervas.com/2026/Missouri/rebuttal.pdf)
-- *New York Communities for Change v. County of Nassau* (2025). [Expert Report](http://jonathancervas.com/2025/Nassau/expert.pdf), [Reply Report](http://jonathancervas.com/2025/Nassau/reply.pdf)
+- *Sherman v. Hargett*, 3:26-cv-00616, (M.D. Tenn. Jul 23, 2026)
+- *Driver v. Houston County*, Civil Action No. 5:25-cv-25. [Expert Report](http://jonathancervas.com/2026/Houston-County/expert.pdf), [Rebuttal Report](http://jonathancervas.com/2026/Houston-County/rebuttal.pdf)
+- *Wise v. State of Missouri*, Case No. 2516-CV29597, (2026) [Expert Report](http://jonathancervas.com/2026/Missouri/expert-amended.pdf), [Rebuttal Report](http://jonathancervas.com/2026/Missouri/rebuttal.pdf)
+- *New York Communities for Change v. County of Nassau*, (2025). [Expert Report](http://jonathancervas.com/2025/Nassau/expert.pdf), [Reply Report](http://jonathancervas.com/2025/Nassau/reply.pdf)
 - *Moore v. Lee*, Tennessee Chancery Court (2022). Reports [1](http://jonathancervas.com/2022/TN/tn1.pdf), [2](http://jonathancervas.com/2022/TN/tn2.pdf), [3](http://jonathancervas.com/2022/TN/tn3.pdf), [4](http://jonathancervas.com/2022/TN/tn4.pdf), [5](http://jonathancervas.com/2022/TN/tn5.pdf).
 
 ### Consultant
