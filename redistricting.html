@@ -31,6 +31,13 @@ description: "Jonathan Cervas's court-appointed work as Special Master, consulta
   </a>
 </p>
 
+<p class="feature-banner">
+  <a href="{{ '/maps/apportionment-2000-2010/' | relative_url }}">
+    <strong>Interactive map:</strong> Change in House apportionment, 2000 to 2010 &mdash;
+    a larger reshuffle: twelve seats across eighteen states, Texas gaining four &rarr;
+  </a>
+</p>
+
 {% assign cases = site.cases | where_exp: "c", "c.order" | sort: "order" %}
 <div class="case-grid">
   {% for c in cases %}
