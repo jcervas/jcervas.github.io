@@ -662,6 +662,91 @@
     };
   }
 
+  /* ---------------------------------------------------------- TopoJSON ----
+   *
+   * A TopoJSON topology stores each shared boundary once, as an "arc", and every
+   * polygon as a list of arc indices. Decoding is three small steps and needs no
+   * library:
+   *
+   *   1. arcs may be quantized -- integer deltas that accumulate from zero
+   *      within each arc, then scale and translate back to real coordinates
+   *   2. a negative index ~i means arc i traversed backwards, which is how the
+   *      two polygons sharing a border each wind correctly
+   *   3. a ring is its arcs concatenated, dropping each one's first point
+   *      because it repeats the previous arc's last
+   *
+   * The point of the format is that a shared border is stored once and therefore
+   * cannot disagree with itself -- which is exactly the property that matters
+   * for a file of districts or states.
+   */
+  function decodeArc(arc, transform) {
+    if (!transform) return arc.map((p) => [p[0], p[1]]);
+    const [sx, sy] = transform.scale, [tx, ty] = transform.translate;
+    let x = 0, y = 0;
+    return arc.map((p) => {
+      x += p[0]; y += p[1];
+      return [x * sx + tx, y * sy + ty];
+    });
+  }
+
+  function stitchRing(idxs, arcs) {
+    const pts = [];
+    for (const idx of idxs) {
+      const rev = idx < 0;
+      const a = arcs[rev ? ~idx : idx];
+      if (!a) continue;
+      const seq = rev ? a.slice().reverse() : a;
+      for (let i = pts.length ? 1 : 0; i < seq.length; i++) pts.push(seq[i]);
+    }
+    if (pts.length > 2) {
+      const a = pts[0], b = pts[pts.length - 1];
+      if (a[0] !== b[0] || a[1] !== b[1]) pts.push([a[0], a[1]]);
+    }
+    return pts;
+  }
+
+  /* Topology -> a plain GeoJSON FeatureCollection.
+   *
+   * A topology may hold several named objects (mapshaper writes one per input
+   * layer). Without an explicit name, take the one with the most polygons and
+   * report which, rather than silently picking the first. */
+  function topologyToFeatures(topo, objectName) {
+    if (!topo || !topo.objects) throw new Error("not a TopoJSON topology");
+    const arcs = (topo.arcs || []).map((a) => decodeArc(a, topo.transform));
+
+    const collect = (g, out, inherited) => {
+      if (!g) return;
+      const props = g.properties || inherited;
+      if (g.type === "GeometryCollection") {
+        for (const c of g.geometries || []) collect(c, out, props);
+      } else if (g.type === "Polygon") {
+        out.push({ type: "Feature", properties: props || {},
+          geometry: { type: "Polygon", coordinates: (g.arcs || []).map((r) => stitchRing(r, arcs)) } });
+      } else if (g.type === "MultiPolygon") {
+        out.push({ type: "Feature", properties: props || {},
+          geometry: { type: "MultiPolygon",
+            coordinates: (g.arcs || []).map((p) => p.map((r) => stitchRing(r, arcs))) } });
+      }
+      // points and lines are not usable here and are dropped on purpose
+    };
+
+    const names = objectName ? [objectName] : Object.keys(topo.objects);
+    let best = null;
+    for (const n of names) {
+      const feats = [];
+      collect(topo.objects[n], feats, null);
+      if (!best || feats.length > best.features.length) best = { name: n, features: feats };
+    }
+    if (!best || !best.features.length) throw new Error("no polygon features in the topology");
+
+    return {
+      type: "FeatureCollection",
+      features: best.features,
+      object: best.name,
+      objectCount: Object.keys(topo.objects).length,
+    };
+  }
+
   /* Turn a GeoJSON FeatureCollection into the shape the studio solves.
    *
    * Coordinates are treated as longitude/latitude when they all fall inside
@@ -673,6 +758,14 @@
   function ingestGeoJSON(gj, opts) {
     opts = opts || {};
     const W = opts.width || 1152, H = opts.height || 748.8, pad = opts.pad == null ? 12 : opts.pad;
+
+    // a topology is decoded to features first, then handled identically
+    let topoInfo = null;
+    if (gj && gj.type === "Topology") {
+      const fc = topologyToFeatures(gj, opts.object);
+      topoInfo = { object: fc.object, objectCount: fc.objectCount };
+      gj = fc;
+    }
 
     const feats = gj.type === "FeatureCollection" ? gj.features
       : gj.type === "Feature" ? [gj]
@@ -767,12 +860,13 @@
       projected: !!project,
       totalArea: out.reduce((a, s) => a + s.area, 0),
       dropped: raw.length - out.length,
+      topology: topoInfo,
     };
   }
 
   return {
     mulberry32, ringArea2, partArea, geomArea, bbox,
-    albersFit, ingestGeoJSON,
+    albersFit, ingestGeoJSON, topologyToFeatures,
     pointInPart, pointInGeom, buildPIP, pipIndexed, samplePoints, kmeans,
     powerAssign, balance, clipBisector, powerCells,
     boundaryDiscs, relaxDiscs, hungarian, carve,

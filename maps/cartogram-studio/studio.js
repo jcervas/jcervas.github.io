@@ -353,7 +353,8 @@
     el.statPlace.textContent = p.iterations === 0
       ? "no relaxation (padding 0)"
       : `${p.iterations} iterations, ${p.ms} ms · ` +
-        `${p.discCount.toLocaleString()} discs · worst state moved ${p.moved.toFixed(1)} px`;
+        `${p.discCount.toLocaleString()} discs · worst region moved ${p.moved.toFixed(1)} px` +
+        (p.expand ? ` · arrangement spread ${p.expand.toFixed(2)}×, refitted to the frame` : "");
 
     if (res.cells) {
       const c = res.cells;
@@ -396,6 +397,12 @@
           `so there is nowhere left to push. Raise the state size number or lower the padding.`
         : `At this state size there may be no layout that fits. Raise the state size number or lower the padding.`);
     }
+    // an uploaded map is solved expanded then fitted back, so the gap enforced
+    // and the gap drawn are not the same number
+    if (p.expand && Math.abs(p.effectivePadding - +el.padding.value) > 0.15)
+      msgs.push(
+        `The ${(+el.padding.value).toFixed(1)} px padding was enforced on the spread-out layout; ` +
+        `after refitting to the frame the drawn gaps are about ${p.effectivePadding.toFixed(1)} px.`);
     if (p.coarsened)
       msgs.push(
         `Disc spacing was backed off to ${p.spacing.toFixed(2)} px to stay inside the ` +
@@ -437,7 +444,7 @@
       for (const o of el.seats.options) o.disabled = o.value !== "custom";
     } else {
       el.geo.value = "builtin";
-      fileOpt.textContent = "Load a GeoJSON file…";
+      fileOpt.textContent = "Load a GeoJSON or TopoJSON file…";
       el.geoActions.hidden = true;
       for (const o of el.seats.options) o.disabled = false;
       if (el.seats.value === "custom") el.seats.value = "districts";
@@ -477,14 +484,6 @@
         el.geoNote.textContent = "";
         return;
       }
-      if (gj.type === "Topology") {
-        warn("That looks like TopoJSON. Convert it to GeoJSON first — " +
-             "`mapshaper in.topojson -o format=geojson` does it in one line.");
-        el.geo.value = "builtin";
-        el.geoNote.textContent = "";
-        return;
-      }
-
       let ing;
       try {
         ing = CartogramSolver.ingestGeoJSON(gj, {
@@ -510,15 +509,23 @@
       };
 
       const hasSeats = ing.states.some((s) => s.seats.custom > 1);
+      const t = ing.topology;
       useGeography(next,
         `${ing.states.length} regions from ${file.name}. ` +
+        (t
+          ? `TopoJSON, decoded from ${t.objectCount > 1
+              ? `the “${t.object}” layer — it has ${t.objectCount}, and this was the one with the most polygons`
+              : `the “${t.object}” layer`}. `
+          : "") +
         (ing.projected
           ? "Longitude/latitude detected, projected equal-area. "
           : "Coordinates used as given — assumed already projected and equal-area. ") +
         (hasSeats
           ? "Seat counts read from the file. "
           : "No seat property found, so every region starts at 1 — edit them below. ") +
-        "Regions are seeded at their own centres, since a file has no hand-drawn slots.");
+        "A file has no hand-drawn slots, so regions are seeded at their own centres, " +
+        "the arrangement is spread until the relaxation can separate them, and the " +
+        "result is fitted back to the frame.");
     };
     reader.readAsText(file);
   }
@@ -558,7 +565,7 @@
     if (el.geo.value === "file") el.geoFile.click();
     else if (builtin) {
       useGeography(builtin,
-        "Any polygon FeatureCollection works. Longitude/latitude is detected " +
+        "GeoJSON or TopoJSON, any polygon layer. Longitude/latitude is detected " +
         "and projected equal-area; already-projected files are used as they are.");
     }
   });
@@ -577,7 +584,7 @@
     if (payload && payload.uploaded && builtin) {
       el.geo.value = "builtin";
       useGeography(builtin,
-        "Any polygon FeatureCollection works. Longitude/latitude is detected " +
+        "GeoJSON or TopoJSON, any polygon layer. Longitude/latitude is detected " +
         "and projected equal-area; already-projected files are used as they are.");
     }
     lastSource = DEFAULTS.seats;

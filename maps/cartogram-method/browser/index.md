@@ -210,7 +210,28 @@ counts changed, not because anything else did.
 ## Your own geography
 
 The **Geography** control loads any GeoJSON polygon `FeatureCollection` (or a
-bare `Polygon`/`MultiPolygon`, or a `GeometryCollection`).
+bare `Polygon`/`MultiPolygon`, or a `GeometryCollection`), or a **TopoJSON**
+topology.
+
+**TopoJSON** is decoded directly, in about sixty lines and with no library. A
+topology stores each shared boundary once as an *arc* and every polygon as a list
+of arc indices, so decoding is three steps: de-quantize the arcs (integer deltas
+that accumulate from zero within each arc, then scale and translate back);
+resolve a negative index `~i` as arc *i* traversed backwards, which is how two
+neighbours sharing a border each wind correctly; and stitch each ring from its
+arcs, dropping every arc's first point because it repeats the previous one's
+last.
+
+The reversed-arc case is the part that is easy to get wrong and silent when you
+do, so it is tested directly: two unit squares sharing an edge, the second
+referencing that edge as `~0`. If `~i` were mishandled the second ring would not
+close and its area would be wrong. Round-tripping the build's own 50 states
+through `mapshaper -o format=topojson` and back gives 50/50 features, matching
+part counts, and a worst area difference of 0.003% — which is mapshaper's
+quantization, not the decode.
+
+A topology may hold several named layers. Without one specified, the layer with
+the most polygons is used, and the page says which.
 
 **Projection.** Coordinates that all fall inside ±180 by ±90 are taken as
 longitude/latitude and projected with an Albers equal-area conic fitted to the
@@ -238,16 +259,39 @@ suffixed. No seat property means every region starts at 1, to be edited by hand.
 
 **What switches off.** Three controls describe the built-in map specifically and
 are disabled for a file: colouring by the 2022 winner, the hand-drawn slots and
-their nudges, and the "vs. the R build" comparison. A loaded region has no slot,
-so it is seeded at its own centroid and grown or shrunk in place — which is what
-the hand-drawn slots are an artist's refinement *of*, so the fallback degrades
-gracefully rather than differently.
+their nudges, and the "vs. the R build" comparison.
 
-**What it will not take.** TopoJSON — convert first, with
-`mapshaper in.topojson -o format=geojson`. Files over 40 MB — simplify first,
-with `mapshaper in.geojson -simplify 5% -o out.geojson`. Anything with no polygon
-features. Each of those reports what is wrong and leaves the built-in map in
-place rather than half-loading.
+**Placing a map with no slots.** A loaded region has no hand-drawn slot, so it is
+seeded at its own centroid and scaled in place. On a real map that is not enough
+on its own. Seats per unit area vary by an order of magnitude — across the U.S.
+states the region scales run 0.16× to 1.87× — so the dense corners overlap far
+too deeply for the relaxation to untangle. Started that way it plateaus with
+pairs still touching no matter how long it runs: 3,000 iterations, no spring, a
+600 px displacement cap, and it still sits 1.9 px short of a 2 px padding.
+
+So the arrangement as a whole is spread before relaxing. The first guess is the
+largest region growth, since that is what has to be made room for, and it
+escalates by 1.3× until the relaxation converges. On the 50 states that is 1.88×
+and 53 iterations. The finished layout is then fitted back to the frame, which
+composes exactly — a body is drawn as `p * scale + t`, so a global `u → g·u + d`
+just makes the scale `scale·g` and the offset `g·t + d`. Nothing is re-solved,
+and relative areas are untouched.
+
+Two honest consequences. The padding is enforced *before* that refit, so the gaps
+actually drawn are smaller by the fit factor; the page reports both numbers when
+they differ. And since the layout is always refitted, the state-size control no
+longer sets how much of the frame is filled — it sets how large the regions are
+relative to the gaps between them, which is to say how tightly the map packs.
+
+The result is a non-contiguous cartogram in Olson's sense: every region at its
+seat-proportional size, near where it actually is, overlapping nothing. That is
+the honest automatic answer, and it is also a good illustration of what the
+hand-drawn slots buy — they are an artist's refinement of exactly this.
+
+**What it will not take.** Files over 40 MB — simplify first, with
+`mapshaper in.geojson -simplify 5% -o out.geojson`. Anything with no polygon
+features. Malformed JSON. Each reports what is wrong and leaves the built-in map
+in place rather than half-loading.
 
 ## Cost
 

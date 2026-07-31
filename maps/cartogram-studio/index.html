@@ -6,7 +6,7 @@ description: "The equal-area U.S. House cartogram, solved live in the browser. C
 
 <link rel="stylesheet" href="{{ '/maps/cartogram-studio/studio.css' | relative_url }}?v=6168ba13">
 
-<div class="cs" id="cs-root" data-src="{{ '/maps/cartogram-studio/studio.json' | relative_url }}?v=7b8aaac7" data-worker="{{ '/maps/cartogram-studio/studio.worker.16cbf879.js' | relative_url }}">
+<div class="cs" id="cs-root" data-src="{{ '/maps/cartogram-studio/studio.json' | relative_url }}?v=7b8aaac7" data-worker="{{ '/maps/cartogram-studio/studio.worker.707b3909.js' | relative_url }}">
 
   <header class="cs-head">
     <h1 class="cs-title">Cartogram studio</h1>
@@ -27,15 +27,15 @@ description: "The equal-area U.S. House cartogram, solved live in the browser. C
         <label class="cs-label" for="cs-geo">Geography</label>
         <select class="cs-select" id="cs-geo">
           <option value="builtin" selected>U.S. states (built in)</option>
-          <option value="file">Load a GeoJSON file…</option>
+          <option value="file">Load a GeoJSON or TopoJSON file…</option>
         </select>
-        <input class="cs-file" id="cs-geo-file" type="file" accept=".json,.geojson,application/json,application/geo+json" hidden>
+        <input class="cs-file" id="cs-geo-file" type="file" accept=".json,.geojson,.topojson,application/json,application/geo+json" hidden>
         <div class="cs-seat-head" id="cs-geo-actions" hidden>
           <button class="cs-mini" id="cs-geo-replace" type="button">Choose another file…</button>
         </div>
         <p class="cs-note" id="cs-geo-note">
-          Any polygon FeatureCollection works. Longitude/latitude is detected and
-          projected equal-area; already-projected files are used as they are.
+          GeoJSON or TopoJSON, any polygon layer. Longitude/latitude is detected
+          and projected equal-area; already-projected files are used as they are.
         </p>
       </div>
 
@@ -154,7 +154,7 @@ description: "The equal-area U.S. House cartogram, solved live in the browser. C
       regions works exactly as well as 435 across fifty.
     </p>
     <p>
-      <strong>Geography</strong> — load any GeoJSON polygon FeatureCollection.
+      <strong>Geography</strong> — load any GeoJSON or TopoJSON polygon layer.
       Longitude/latitude is detected and projected with an Albers equal-area
       conic fitted to your data; anything outside ±180 by ±90 is assumed to be
       already projected and is only fitted to the frame. Equal-area is not a
@@ -170,9 +170,13 @@ description: "The equal-area U.S. House cartogram, solved live in the browser. C
       colouring by the 2022 winner, the hand-drawn slots and their nudges, and
       the comparison against the R build. An uploaded region is seeded at its own
       centre instead of in a hand-drawn slot — which is what those slots are an
-      artist's refinement of — and the relaxation takes it from there. TopoJSON
-      needs converting first; <code>mapshaper in.topojson -o format=geojson</code>
-      does it in one line.
+      artist's refinement of. Region scales vary by an order of magnitude on a
+      real map, so seeding at centroids alone leaves the dense corners
+      hopelessly overlapped; the arrangement is spread until the relaxation can
+      separate it, then fitted back to the frame. The padding is enforced before
+      that refit, so the drawn gaps come out smaller — the page reports both
+      numbers. A topology with several layers is decoded from whichever has the
+      most polygons, and the page says which one it used.
     </p>
 
     <h2>What is actually running here</h2>
@@ -203,5 +207,5 @@ description: "The equal-area U.S. House cartogram, solved live in the browser. C
 
 </div>
 
-<script src="{{ '/maps/cartogram-studio/solver.1150c38c.js' | relative_url }}" defer></script>
-<script src="{{ '/maps/cartogram-studio/studio.js' | relative_url }}?v=61e8463d" defer></script>
+<script src="{{ '/maps/cartogram-studio/solver.c646ab1e.js' | relative_url }}" defer></script>
+<script src="{{ '/maps/cartogram-studio/studio.js' | relative_url }}?v=4b82c41b" defer></script>
