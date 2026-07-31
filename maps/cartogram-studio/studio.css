@@ -175,6 +175,73 @@
 .cs-row { display: flex; gap: 8px; }
 .cs-row .cs-num { flex: 1; }
 
+/* ---------------------------------------------------------- seat editor ---- */
+
+.cs-seat-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 12px 0 7px;
+  font-size: 12px;
+  color: var(--cs-dim);
+}
+.cs-seat-head output {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--cs-ink);
+}
+.cs-seat-head button { margin-left: auto; }
+.cs-seat-head button + button { margin-left: 0; }
+
+.cs .cs-mini {
+  padding: 3px 7px;
+  font: inherit;
+  font-size: 11.5px;
+  color: var(--cs-dim);
+  background: var(--cs-paper);
+  border: 1px solid var(--cs-rule);
+  border-radius: 5px;
+  cursor: pointer;
+}
+.cs .cs-mini:hover { color: var(--cs-accent); border-color: var(--cs-accent); }
+
+.cs-seat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 8px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 2px 4px 2px 0;
+}
+
+.cs-seat-row {
+  display: grid;
+  grid-template-columns: 1fr 44px;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--cs-dim);
+}
+.cs-seat-row span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cs .cs-seat-row input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 2px 4px;
+  font: inherit;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--cs-ink);
+  background: var(--cs-paper);
+  border: 1px solid var(--cs-rule);
+  border-radius: 4px;
+}
+.cs .cs-seat-row input:focus { border-color: var(--cs-accent); outline: none; }
+
 .cs .cs-btn {
   display: block;
   width: 100%;
@@ -214,6 +281,12 @@
 }
 
 .cs-map { display: block; width: 100%; height: auto; }
+
+/* An author `display` beats the UA stylesheet's `[hidden] { display: none }`
+ * whatever the specificity, so any element this file gives a display AND the JS
+ * toggles with .hidden needs its own [hidden] rule. Without this the overlay
+ * reports hidden === true and stays on screen forever. */
+.cs [hidden] { display: none !important; }
 
 .cs-progress {
   position: absolute;

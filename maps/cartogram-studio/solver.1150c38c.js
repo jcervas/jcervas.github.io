@@ -627,8 +627,152 @@
     };
   }
 
+  // ----------------------------------------------------- custom geography ----
+
+  /* Albers equal-area conic, fitted to the data.
+   *
+   * EQUAL-AREA is the requirement, not a preference: the whole cartogram scales
+   * each region so that its drawn area is proportional to its seat count, which
+   * is only meaningful if the source areas were themselves proportional to
+   * ground area. A Mercator-projected input would silently inflate the north.
+   *
+   * Standard parallels at 1/6 and 5/6 of the latitude span is the usual
+   * heuristic and is close to optimal for a compact region.
+   *
+   * This does NOT reproduce mapshaper's `albersusa` for the built-in map: that
+   * one cuts Alaska and Hawaii out and insets them, which is an editorial
+   * decision about the United States, not a projection. Custom geography is
+   * drawn where it actually is. */
+  function albersFit(lonLatBBox) {
+    const [w, s, e, n] = lonLatBBox;
+    const rad = Math.PI / 180;
+    const lat0 = ((s + n) / 2) * rad, lon0 = ((w + e) / 2) * rad;
+    const p1 = (s + (n - s) / 6) * rad, p2 = (s + (5 * (n - s)) / 6) * rad;
+    const nn = Math.abs(p1 - p2) < 1e-9
+      ? Math.sin(p1)
+      : (Math.sin(p1) + Math.sin(p2)) / 2;
+    const C = Math.cos(p1) * Math.cos(p1) + 2 * nn * Math.sin(p1);
+    const rho = (phi) => Math.sqrt(Math.max(0, C - 2 * nn * Math.sin(phi))) / nn;
+    const rho0 = rho(lat0);
+    return (lon, lat) => {
+      const th = nn * (lon * rad - lon0);
+      const r = rho(lat * rad);
+      // y negated: screen space runs downward, latitude runs up
+      return [r * Math.sin(th), -(rho0 - r * Math.cos(th))];
+    };
+  }
+
+  /* Turn a GeoJSON FeatureCollection into the shape the studio solves.
+   *
+   * Coordinates are treated as longitude/latitude when they all fall inside
+   * +/-180 by +/-90, and projected; anything else is assumed to be already in a
+   * planar, equal-area space and only fitted to the frame. That test is a guess,
+   * and a deliberately conservative one -- a projected file in metres or feet
+   * cannot be mistaken for degrees, and the reverse would need a dataset
+   * spanning less than 180 units, which the caller is told about. */
+  function ingestGeoJSON(gj, opts) {
+    opts = opts || {};
+    const W = opts.width || 1152, H = opts.height || 748.8, pad = opts.pad == null ? 12 : opts.pad;
+
+    const feats = gj.type === "FeatureCollection" ? gj.features
+      : gj.type === "Feature" ? [gj]
+      : Array.isArray(gj) ? gj
+      : gj.type === "GeometryCollection" ? gj.geometries.map((g) => ({ type: "Feature", geometry: g, properties: {} }))
+      : [{ type: "Feature", geometry: gj, properties: {} }];
+
+    const raw = [];
+    for (const f of feats) {
+      const g = f.geometry || f;
+      if (!g || (g.type !== "Polygon" && g.type !== "MultiPolygon")) continue;
+      raw.push({ props: f.properties || {}, parts: g.type === "Polygon" ? [g.coordinates] : g.coordinates });
+    }
+    if (!raw.length) throw new Error("no polygon features found");
+
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    for (const r of raw) for (const p of r.parts) for (const ring of p) for (const c of ring) {
+      if (c[0] < x0) x0 = c[0]; if (c[1] < y0) y0 = c[1];
+      if (c[0] > x1) x1 = c[0]; if (c[1] > y1) y1 = c[1];
+    }
+    const looksLonLat = x0 >= -180.001 && x1 <= 180.001 && y0 >= -90.001 && y1 <= 90.001;
+    const project = looksLonLat ? albersFit([x0, y0, x1, y1]) : null;
+
+    const mapped = raw.map((r) => ({
+      props: r.props,
+      parts: r.parts.map((p) => p.map((ring) =>
+        ring.map((c) => (project ? project(c[0], c[1]) : [c[0], c[1]])))),
+    }));
+
+    // fit to the frame with a single uniform scale, so relative areas survive
+    x0 = Infinity; y0 = Infinity; x1 = -Infinity; y1 = -Infinity;
+    for (const m of mapped) for (const p of m.parts) for (const ring of p) for (const c of ring) {
+      if (c[0] < x0) x0 = c[0]; if (c[1] < y0) y0 = c[1];
+      if (c[0] > x1) x1 = c[0]; if (c[1] > y1) y1 = c[1];
+    }
+    const k = Math.min((W - 2 * pad) / (x1 - x0 || 1), (H - 2 * pad) / (y1 - y0 || 1));
+    const ox = (W - (x1 - x0) * k) / 2 - x0 * k;
+    const oy = (H - (y1 - y0) * k) / 2 - y0 * k;
+
+    const NAME_KEYS = ["st", "STUSPS", "STATE_ABBR", "abbr", "code", "GEOID", "id", "name", "NAME", "NAMELSAD"];
+    const SEAT_KEYS = ["seats", "SEATS", "districts", "DISTRICTS", "n_seats", "nseats"];
+    const used = new Set();
+
+    const out = mapped.map((m, i) => {
+      const parts = m.parts.map((p) => p.map((ring) => {
+        const r = ring.map((c) => [
+          +(c[0] * k + ox).toFixed(2), +(c[1] * k + oy).toFixed(2)]);
+        // rings must be closed for the area and crossing tests
+        const a = r[0], b = r[r.length - 1];
+        if (a[0] !== b[0] || a[1] !== b[1]) r.push([a[0], a[1]]);
+        return r;
+      }));
+
+      let key = null;
+      for (const nk of NAME_KEYS) {
+        const v = m.props[nk];
+        if (v != null && String(v).trim()) { key = String(v).trim(); break; }
+      }
+      if (!key) key = "F" + (i + 1);
+      // ids key the seat table and the clip paths, so they must be unique; they
+      // are not truncated, because the label shown on the map is derived
+      // separately and a lossy id would collide silently
+      let id = key, n = 2;
+      while (used.has(id)) id = key + " (" + n++ + ")";
+      used.add(id);
+
+      let seats = 1;
+      for (const sk of SEAT_KEYS) {
+        const v = Number(m.props[sk]);
+        if (Number.isFinite(v) && v >= 1) { seats = Math.round(v); break; }
+      }
+
+      const geom = parts;
+      const b = bbox(geom);
+      return {
+        st: id,
+        name: key,
+        area: geomArea(geom),
+        bbox: b,
+        centroid: [(b[0] + b[2]) / 2, (b[1] + b[3]) / 2],
+        seats: { custom: seats },
+        outline: geom.length === 1
+          ? { type: "Polygon", coordinates: geom[0] }
+          : { type: "MultiPolygon", coordinates: geom },
+        districts: [],
+        slot: null, label: null, tweak: null, ref: null,
+      };
+    });
+
+    return {
+      states: out,
+      projected: !!project,
+      totalArea: out.reduce((a, s) => a + s.area, 0),
+      dropped: raw.length - out.length,
+    };
+  }
+
   return {
     mulberry32, ringArea2, partArea, geomArea, bbox,
+    albersFit, ingestGeoJSON,
     pointInPart, pointInGeom, buildPIP, pipIndexed, samplePoints, kmeans,
     powerAssign, balance, clipBisector, powerCells,
     boundaryDiscs, relaxDiscs, hungarian, carve,

@@ -27,6 +27,10 @@
     cells: $("cs-cells"), colour: $("cs-colour"),
     points: $("cs-points"), pointsOut: $("cs-points-out"),
     seed: $("cs-seed"), reroll: $("cs-reroll"),
+    geo: $("cs-geo"), geoFile: $("cs-geo-file"), geoNote: $("cs-geo-note"),
+    geoActions: $("cs-geo-actions"), geoReplace: $("cs-geo-replace"),
+    seatEditor: $("cs-seat-editor"), seatGrid: $("cs-seat-grid"),
+    seatTotal: $("cs-seat-total"), seatCopy: $("cs-seat-copy"), seatOne: $("cs-seat-one"),
     solve: $("cs-solve"), auto: $("cs-auto"), reset: $("cs-reset"),
     progress: $("cs-progress"), fill: $("cs-progress-fill"), plabel: $("cs-progress-label"),
     statPlace: $("cs-stat-place"), statCells: $("cs-stat-cells"),
@@ -35,6 +39,8 @@
   };
 
   let payload = null, worker = null, seq = 0, pending = null, busy = false;
+  let builtin = null;            // the shipped U.S. payload, kept for "go back"
+  let customSeats = {};          // region id -> seat count, when the source is custom
 
   const DEFAULTS = {
     seats: "districts", divisor: 2.9, padding: 2, tweaks: true, groupNE: true,
@@ -55,6 +61,7 @@
       pointsPerSeat: +el.points.value,
       seed: +el.seed.value | 0,
       balanceIters: payload ? payload.defaults.balanceIters : 40,
+      customSeats: el.seats.value === "custom" ? customSeats : null,
     };
   }
 
@@ -62,16 +69,91 @@
     el.divisorOut.textContent = (+el.divisor.value).toFixed(2);
     el.paddingOut.textContent = (+el.padding.value).toFixed(1) + " px";
     el.pointsOut.textContent = el.points.value;
-    // colouring by winner only means anything when the cells ARE the districts
-    const canColour = el.seats.value === "districts" && el.cells.value !== "none";
+
+    const uploaded = !!(payload && payload.uploaded);
+
+    // colouring by winner only means anything when the cells ARE the 2022
+    // districts, which an uploaded file never is
+    const canColour = !uploaded && el.seats.value === "districts" && el.cells.value !== "none";
     el.colour.disabled = !canColour;
     el.colour.parentElement.style.opacity = canColour ? "" : "0.5";
+
+    // the hand-drawn slots, the New England grouping and the nudges are all
+    // facts about the built-in U.S. map
+    for (const c of [el.tweaks, el.groupNE, el.ghost]) {
+      c.disabled = uploaded;
+      c.parentElement.style.opacity = uploaded ? "0.5" : "";
+    }
+
+    el.seatEditor.hidden = el.seats.value !== "custom";
+    if (el.seats.value === "custom") updateSeatTotal();
+  }
+
+  /* -------------------------------------------------------- seat editor ---- */
+
+  // what a given source would give each region, used to seed the custom table
+  function seatsFromSource(key) {
+    const out = {};
+    for (const s of payload.states) {
+      out[s.st] = key === "custom" ? (customSeats[s.st] || 1)
+        : key === "districts" ? (s.districts ? s.districts.length : 1)
+        : (s.seats && s.seats[key]) || 1;
+    }
+    return out;
+  }
+
+  function buildSeatGrid() {
+    el.seatGrid.textContent = "";
+    for (const s of payload.states) {
+      const row = document.createElement("label");
+      row.className = "cs-seat-row";
+      const name = document.createElement("span");
+      name.textContent = s.st;
+      name.title = s.name || s.st;
+      const inp = document.createElement("input");
+      inp.type = "number";
+      inp.min = "1";
+      inp.step = "1";
+      inp.value = customSeats[s.st] || 1;
+      inp.dataset.st = s.st;
+      inp.addEventListener("input", () => {
+        const v = Math.max(1, Math.round(+inp.value || 1));
+        customSeats[s.st] = v;
+        updateSeatTotal();
+        schedule(400);
+      });
+      row.appendChild(name);
+      row.appendChild(inp);
+      el.seatGrid.appendChild(row);
+    }
+    updateSeatTotal();
+  }
+
+  function updateSeatTotal() {
+    let t = 0;
+    for (const s of payload.states) t += customSeats[s.st] || 1;
+    el.seatTotal.textContent = t.toLocaleString();
+  }
+
+  function setSeats(table) {
+    customSeats = table;
+    for (const inp of el.seatGrid.querySelectorAll("input"))
+      inp.value = customSeats[inp.dataset.st] || 1;
+    updateSeatTotal();
   }
 
   /* ------------------------------------------------------------ worker ---- */
 
   function start(data) {
+    builtin = data;
     payload = data;
+    customSeats = seatsFromSource("districts");
+    buildSeatGrid();
+    syncOutputs();
+    startWorker();
+  }
+
+  function startWorker() {
     worker = new Worker(root.dataset.worker);
     worker.onmessage = (e) => {
       const m = e.data;
@@ -102,7 +184,7 @@
       el.solve.disabled = false;
       warn("The solver could not start: " + (e.message || "worker error"));
     };
-    worker.postMessage({ type: "init", payload: data });
+    worker.postMessage({ type: "init", payload });
   }
 
   /* Placement alone re-solves in well under a tenth of a second, so showing the
@@ -161,8 +243,8 @@
     if (res.cells) for (const c of res.cells.states) cellsBySt[c.st] = c;
     const palette = payload.palette;
 
-    // ghost of the R build, underneath
-    if (el.ghost.checked) {
+    // ghost of the R build, underneath -- only the built-in map has one
+    if (el.ghost.checked && !payload.uploaded) {
       const g = document.createElementNS(SVG, "g");
       for (const s of payload.states) {
         const p = document.createElementNS(SVG, "path");
@@ -236,10 +318,25 @@
       const s = byState[b.st];
       const t = document.createElementNS(SVG, "text");
       t.setAttribute("class", "cs-lab");
-      // the label rides with however far the state actually moved
-      t.setAttribute("x", ((s.label[0] / dw) * W + (b.tx - b.seedTx)).toFixed(1));
-      t.setAttribute("y", ((s.label[1] / dh) * H + (b.ty - b.seedTy)).toFixed(1));
-      t.textContent = s.st;
+      if (s.label) {
+        // the hand-placed label rides with however far the state actually moved
+        t.setAttribute("x", ((s.label[0] / dw) * W + (b.tx - b.seedTx)).toFixed(1));
+        t.setAttribute("y", ((s.label[1] / dh) * H + (b.ty - b.seedTy)).toFixed(1));
+      } else {
+        // uploaded geography: put it at the region's own centre, transformed
+        t.setAttribute("x", (s.centroid[0] * b.scale + b.tx).toFixed(1));
+        t.setAttribute("y", (s.centroid[1] * b.scale + b.ty).toFixed(1));
+      }
+      // built-in ids are already two-letter postal codes; an uploaded file's are
+      // whole region names, which have to be cut down to sit on the map
+      if (s.st.length > 9) {
+        t.textContent = s.st.slice(0, 8) + "…";
+        const full = document.createElementNS(SVG, "title");
+        full.textContent = s.st;
+        t.appendChild(full);
+      } else {
+        t.textContent = s.st;
+      }
       labels.appendChild(t);
     }
     frag.appendChild(labels);
@@ -271,17 +368,22 @@
       ? `${res.match.ms} ms · total cost ${Math.round(res.match.cost).toLocaleString()} px²`
       : "—";
 
-    // how far this solve sits from the layout R shipped
-    let worst = 0, worstSt = "", mean = 0;
-    for (const b of res.bodies) {
-      const s = payload.states.find((q) => q.st === b.st);
-      const d = Math.hypot(b.tx - s.ref.tx, b.ty - s.ref.ty);
-      mean += d;
-      if (d > worst) { worst = d; worstSt = b.st; }
+    // how far this solve sits from the layout R shipped -- only comparable for
+    // the built-in map, which is the only thing R ever built
+    if (payload.uploaded) {
+      el.statRef.textContent = "n/a — uploaded geography";
+    } else {
+      let worst = 0, worstSt = "", mean = 0;
+      for (const b of res.bodies) {
+        const s = payload.states.find((q) => q.st === b.st);
+        const d = Math.hypot(b.tx - s.ref.tx, b.ty - s.ref.ty);
+        mean += d;
+        if (d > worst) { worst = d; worstSt = b.st; }
+      }
+      mean /= res.bodies.length;
+      el.statRef.textContent =
+        `mean ${mean.toFixed(1)} px, worst ${worst.toFixed(1)} px (${worstSt})`;
     }
-    mean /= res.bodies.length;
-    el.statRef.textContent =
-      `mean ${mean.toFixed(1)} px, worst ${worst.toFixed(1)} px (${worstSt})`;
 
     const msgs = [];
     if (!p.converged && p.iterations > 0) {
@@ -307,6 +409,120 @@
     el.warn.textContent = text || "";
   }
 
+  /* --------------------------------------------------- custom geography ---- */
+
+  /* The solver is loaded in the page as well as in the worker, so a file can be
+   * turned into a payload here and shipped over as one `init`. */
+  function useGeography(next, note) {
+    payload = next;
+    // An uploaded file's seat counts come from the file itself; the built-in map
+    // starts from its real districts. Going through seatsFromSource("custom")
+    // here would read the PREVIOUS geography's table, whose ids no longer exist.
+    customSeats = {};
+    for (const s of payload.states) {
+      customSeats[s.st] = payload.uploaded
+        ? (s.seats && s.seats.custom) || 1
+        : s.districts.length;
+    }
+    buildSeatGrid();
+
+    // keep the dropdown honest about what is actually loaded, however we got here
+    const fileOpt = el.geo.querySelector('option[value="file"]');
+    if (payload.uploaded) {
+      el.geo.value = "file";
+      fileOpt.textContent = payload.meta.title;
+      el.geoActions.hidden = false;
+      el.seats.value = "custom";
+      // the apportionment years describe the United States, not this file
+      for (const o of el.seats.options) o.disabled = o.value !== "custom";
+    } else {
+      el.geo.value = "builtin";
+      fileOpt.textContent = "Load a GeoJSON file…";
+      el.geoActions.hidden = true;
+      for (const o of el.seats.options) o.disabled = false;
+      if (el.seats.value === "custom") el.seats.value = "districts";
+    }
+
+    el.geoNote.textContent = note;
+    syncOutputs();
+
+    if (worker) worker.terminate();
+    worker = null;
+    startWorker();
+  }
+
+  function loadGeographyFile(file) {
+    const MAX = 40 * 1024 * 1024;
+    if (file.size > MAX) {
+      warn(`That file is ${(file.size / 1048576).toFixed(0)} MB. The limit here is 40 MB — ` +
+           `simplify it first (mapshaper's ‑simplify does this well).`);
+      el.geo.value = "builtin";
+      return;
+    }
+    warn("");
+    el.geoNote.textContent = "reading " + file.name + "…";
+
+    const reader = new FileReader();
+    reader.onerror = () => {
+      warn("Could not read that file.");
+      el.geo.value = "builtin";
+    };
+    reader.onload = () => {
+      let gj;
+      try {
+        gj = JSON.parse(reader.result);
+      } catch (e) {
+        warn("That file is not valid JSON: " + e.message);
+        el.geo.value = "builtin";
+        el.geoNote.textContent = "";
+        return;
+      }
+      if (gj.type === "Topology") {
+        warn("That looks like TopoJSON. Convert it to GeoJSON first — " +
+             "`mapshaper in.topojson -o format=geojson` does it in one line.");
+        el.geo.value = "builtin";
+        el.geoNote.textContent = "";
+        return;
+      }
+
+      let ing;
+      try {
+        ing = CartogramSolver.ingestGeoJSON(gj, {
+          width: builtin.design.width, height: builtin.design.height,
+        });
+      } catch (e) {
+        warn("Could not use that file: " + e.message);
+        el.geo.value = "builtin";
+        el.geoNote.textContent = "";
+        return;
+      }
+
+      const next = {
+        meta: { title: file.name },
+        design: builtin.design,
+        defaults: builtin.defaults,
+        totalArea: ing.totalArea,
+        newEngland: [],
+        palette: builtin.palette,
+        states: ing.states,
+        uploaded: true,
+        geographyId: file.name + ":" + file.size,
+      };
+
+      const hasSeats = ing.states.some((s) => s.seats.custom > 1);
+      useGeography(next,
+        `${ing.states.length} regions from ${file.name}. ` +
+        (ing.projected
+          ? "Longitude/latitude detected, projected equal-area. "
+          : "Coordinates used as given — assumed already projected and equal-area. ") +
+        (hasSeats
+          ? "Seat counts read from the file. "
+          : "No seat property found, so every region starts at 1 — edit them below. ") +
+        "Regions are seeded at their own centres, since a file has no hand-drawn slots.");
+    };
+    reader.readAsText(file);
+  }
+
   /* ------------------------------------------------------------- wiring ---- */
 
   for (const c of [el.divisor, el.padding, el.points]) c.addEventListener("input", () => schedule(220));
@@ -318,8 +534,53 @@
     el.seed.value = Math.floor(Math.random() * 1e8);
     schedule(0);
   });
+
+  // switching TO custom carries over whatever was showing, so the grid starts
+  // from something recognisable rather than all ones
+  let lastSource = "districts";
+  el.seats.addEventListener("change", () => {
+    if (el.seats.value === "custom") setSeats(seatsFromSource(lastSource));
+    else lastSource = el.seats.value;
+  });
+
+  el.seatCopy.addEventListener("click", () => {
+    setSeats(seatsFromSource(payload.uploaded ? "custom" : lastSource));
+    schedule(0);
+  });
+  el.seatOne.addEventListener("click", () => {
+    const t = {};
+    for (const s of payload.states) t[s.st] = 1;
+    setSeats(t);
+    schedule(0);
+  });
+
+  el.geo.addEventListener("change", () => {
+    if (el.geo.value === "file") el.geoFile.click();
+    else if (builtin) {
+      useGeography(builtin,
+        "Any polygon FeatureCollection works. Longitude/latitude is detected " +
+        "and projected equal-area; already-projected files are used as they are.");
+    }
+  });
+  el.geoReplace.addEventListener("click", () => el.geoFile.click());
+
+  el.geoFile.addEventListener("change", () => {
+    const f = el.geoFile.files && el.geoFile.files[0];
+    // re-selecting the same file must still fire a change event
+    el.geoFile.value = "";
+    if (f) loadGeographyFile(f);
+    else el.geo.value = payload && payload.uploaded ? "file" : "builtin";
+  });
   el.solve.addEventListener("click", solve);
   el.reset.addEventListener("click", () => {
+    // reset means the build's settings, which includes the built-in geography
+    if (payload && payload.uploaded && builtin) {
+      el.geo.value = "builtin";
+      useGeography(builtin,
+        "Any polygon FeatureCollection works. Longitude/latitude is detected " +
+        "and projected equal-area; already-projected files are used as they are.");
+    }
+    lastSource = DEFAULTS.seats;
     el.seats.value = DEFAULTS.seats;
     el.divisor.value = DEFAULTS.divisor;
     el.padding.value = DEFAULTS.padding;

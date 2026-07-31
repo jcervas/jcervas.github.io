@@ -24,7 +24,9 @@ the seats came from the 2030 projection instead of 2022.
 
 So the numerical half is also ported to JavaScript, in `web/solver.js`, and
 driven by a page that re-solves live:
-[the studio](https://jonathancervas.com/maps/cartogram-studio/).
+[the studio](https://jonathancervas.com/maps/cartogram-studio/). It takes your
+own seat counts, and your own geography — the method is not really about the
+United States, and nothing downstream assumes 435 seats or fifty regions.
 
 > **Where this sits in the build**
 >
@@ -163,7 +165,8 @@ nothing to move: the two implementations agree on what "legal" means.
 
 | Control | Re-runs | Notes |
 |---|---|---|
-| Seats per state | everything | 2022 districts, or the 2000/2010/2020 apportionments, or the 2030 projection |
+| Geography | everything | The built-in U.S. states, or any GeoJSON polygon file you load |
+| Seats per region | everything | 2022 districts, the 2000/2010/2020 apportionments, the 2030 projection, or your own numbers |
 | State size | placement only | The area divisor. The build uses 2.90 |
 | Padding | placement only | Zero skips relaxation entirely and leaves states in their raw slots |
 | Hand nudges | placement only | The [New England, WV and LA corrections]({{ '/maps/cartogram-method/placement/' | relative_url }}#the-hand-corrections) |
@@ -188,6 +191,63 @@ because it only ever runs at one state size. Here the size is a control, so the
 cap scales with it — every state's linear scale goes as `1/√divisor`, so the cap
 does too. Otherwise turning the states up would make the map infeasible for a
 reason about the cap rather than about the geometry.
+
+## Your own seats
+
+Choosing **Custom** turns the seat counts into an editable table, one number per
+region. Nothing downstream assumes 435, or any particular total: a region's scale
+is
+
+```
+scale = sqrt( totalArea * (seats / allSeats) / area / areaDivisor )
+```
+
+so what matters is each region's *share* of the total, whatever that total is.
+Nine regions sharing 78 seats behaves exactly as fifty sharing 435. The cell
+cache keys on the table, so editing one number re-carves only because the seat
+counts changed, not because anything else did.
+
+## Your own geography
+
+The **Geography** control loads any GeoJSON polygon `FeatureCollection` (or a
+bare `Polygon`/`MultiPolygon`, or a `GeometryCollection`).
+
+**Projection.** Coordinates that all fall inside ±180 by ±90 are taken as
+longitude/latitude and projected with an Albers equal-area conic fitted to the
+data — centre at the middle of the bounding box, standard parallels at 1/6 and
+5/6 of the latitude span. Anything else is assumed to be already projected and is
+only fitted to the frame with a single uniform scale, which preserves relative
+areas.
+
+Equal-area is a requirement rather than a preference. The whole construction
+scales each region so drawn area is proportional to seat count, which only says
+anything if the source areas were proportional to ground area. Hand a Mercator
+file to a cartogram and it will dutifully compute nonsense, because Greenland
+arrives fourteen times too large. The test suite checks this property directly
+rather than trusting the formula: 64 graticule cells of equal spherical area
+project to planar areas within 0.0000% of each other.
+
+This is *not* mapshaper's `albersusa`, which the built-in map uses. That one cuts
+Alaska and Hawaii out and insets them — an editorial decision about the United
+States, not a projection. A loaded file is drawn where it actually is.
+
+**Properties.** Seat counts are read from `seats`, `SEATS`, `districts`,
+`DISTRICTS`, `n_seats` or `nseats`; names from `st`, `STUSPS`, `STATE_ABBR`,
+`abbr`, `code`, `GEOID`, `id`, `name`, `NAME` or `NAMELSAD`, with duplicates
+suffixed. No seat property means every region starts at 1, to be edited by hand.
+
+**What switches off.** Three controls describe the built-in map specifically and
+are disabled for a file: colouring by the 2022 winner, the hand-drawn slots and
+their nudges, and the "vs. the R build" comparison. A loaded region has no slot,
+so it is seeded at its own centroid and grown or shrunk in place — which is what
+the hand-drawn slots are an artist's refinement *of*, so the fallback degrades
+gracefully rather than differently.
+
+**What it will not take.** TopoJSON — convert first, with
+`mapshaper in.topojson -o format=geojson`. Files over 40 MB — simplify first,
+with `mapshaper in.geojson -simplify 5% -o out.geojson`. Anything with no polygon
+features. Each of those reports what is wrong and leaves the built-in map in
+place rather than half-loading.
 
 ## Cost
 

@@ -12,7 +12,7 @@
  * feel immediate.
  */
 
-importScripts("solver.ef9b2848.js");
+importScripts("solver.1150c38c.js");
 const S = self.CartogramSolver;
 
 let payload = null;
@@ -21,13 +21,24 @@ let cellCache = { key: null, value: null };
 const toGeom = (g) =>
   g.type === "Polygon" ? [g.coordinates] : g.coordinates;
 
-const seatsFor = (state, key) =>
-  key === "districts" ? state.districts.length : state.seats[key];
+/* `custom` is a map of region id -> seat count, edited in the panel. It wins
+ * whenever the seat source is "custom", which is also the only source available
+ * for an uploaded geography -- a file has no apportionment history. */
+function seatsFor(state, key, custom) {
+  if (key === "custom") {
+    const v = custom && custom[state.st];
+    return Number.isFinite(v) && v >= 1 ? Math.round(v) : 1;
+  }
+  if (key === "districts") return state.districts.length;
+  const v = state.seats && state.seats[key];
+  return Number.isFinite(v) && v >= 1 ? v : 1;
+}
 
 /* ------------------------------------------------------------- carving ---- */
 
 function carveAll(p, post) {
-  const key = JSON.stringify([p.seatKey, p.cellMode, p.pointsPerSeat, p.seed, p.balanceIters]);
+  const key = JSON.stringify([p.seatKey, p.cellMode, p.pointsPerSeat, p.seed, p.balanceIters,
+    p.seatKey === "custom" ? p.customSeats : null, payload.geographyId || null]);
   if (cellCache.key === key) return cellCache.value;
 
   const t0 = performance.now();
@@ -35,7 +46,7 @@ function carveAll(p, post) {
   let worstRatio = 0, worstSt = "";
 
   payload.states.forEach((s, i) => {
-    const k = seatsFor(s, p.seatKey);
+    const k = seatsFor(s, p.seatKey, p.customSeats);
     const geom = toGeom(s.outline);
     const r = S.carve(geom, k, {
       seed: p.seed + i,
@@ -71,31 +82,48 @@ function carveAll(p, post) {
 function place(p) {
   const t0 = performance.now();
   const total = payload.totalArea;
-  const allSeats = payload.states.reduce((a, s) => a + seatsFor(s, p.seatKey), 0);
+  const allSeats = payload.states.reduce((a, s) => a + seatsFor(s, p.seatKey, p.customSeats), 0);
   const dw = payload.design.w, dh = payload.design.h;
   const W = payload.design.width, H = payload.design.height;
   // the tweaks are authored in design units on a 0.65 aspect; same conversion R uses
   const yScale = dh / (dw * 0.65);
 
   const bodies = payload.states.map((s) => {
-    const k = seatsFor(s, p.seatKey);
+    const k = seatsFor(s, p.seatKey, p.customSeats);
     const scale = Math.sqrt((total * (k / allSeats)) / s.area / p.areaDivisor);
     const geom = toGeom(s.outline).map((part) =>
       part.map((ring) => ring.map((c) => [c[0] * scale, c[1] * scale])));
 
-    // the slot is the top-left the scaled bbox moves to
-    let sx = (s.slot[0] / dw) * W, sy = (s.slot[1] / dh) * H;
-    if (p.tweaks && s.tweak) {
-      sx += (s.tweak[0] / dw) * W;
-      sy += (s.tweak[1] / dh) * H * yScale;
+    /* Two ways to seed a region's position.
+     *
+     * The built-in map has a hand-drawn slot per state -- Karim's Figma layout --
+     * and the slot is the top-left corner the scaled bounding box moves to.
+     *
+     * An uploaded file has no such thing, so each region is instead pinned at
+     * its own centroid: shrink or grow it in place and let the relaxation sort
+     * out the overlaps. That is what the hand-drawn slots are an artist's
+     * refinement OF, so it degrades gracefully rather than differently. */
+    let x, y;
+    if (s.slot) {
+      let sx = (s.slot[0] / dw) * W, sy = (s.slot[1] / dh) * H;
+      if (p.tweaks && s.tweak) {
+        sx += (s.tweak[0] / dw) * W;
+        sy += (s.tweak[1] / dh) * H * yScale;
+      }
+      x = sx - s.bbox[0] * scale;
+      y = sy - s.bbox[1] * scale;
+    } else {
+      x = s.centroid[0] * (1 - scale);
+      y = s.centroid[1] * (1 - scale);
     }
+
     return {
       st: s.st,
       geom,
       scale,
-      x: sx - s.bbox[0] * scale,
-      y: sy - s.bbox[1] * scale,
-      group: p.groupNE && payload.newEngland.includes(s.st) ? 1 : null,
+      x,
+      y,
+      group: p.groupNE && payload.newEngland && payload.newEngland.includes(s.st) ? 1 : null,
     };
   });
 
