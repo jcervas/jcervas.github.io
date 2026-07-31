@@ -13,6 +13,7 @@ permalink: /maps/cartogram-method/
   <a href="{{ '/maps/cartogram-method/placement/' | relative_url }}">Placing the states</a>
   <a href="{{ '/maps/cartogram-method/cells/' | relative_url }}">Carving equal-area cells</a>
   <a href="{{ '/maps/cartogram-method/matching/' | relative_url }}">Matching cells to districts</a>
+  <a href="{{ '/maps/cartogram-method/browser/' | relative_url }}">Solving it in the browser</a>
   <a href="https://github.com/jcervas/cartograms">Source on GitHub</a></nav>
 
 Published at
@@ -28,6 +29,7 @@ them changes the pictures.
 | **[Placement]({{ '/maps/cartogram-method/placement/' | relative_url }})** | Sizing each state to its seat count, fitting it to the hand-drawn layout, and pushing the country apart until nothing overlaps. Also available as an [interactive walkthrough](https://jonathancervas.com/maps/cartogram-placement/). |
 | **[Carving cells]({{ '/maps/cartogram-method/cells/' | relative_url }})** | Subdividing each state into equal-area cells, one per seat: sample, cluster, power diagram, clip. |
 | **[Matching]({{ '/maps/cartogram-method/matching/' | relative_url }})** | Pairing each real district with one cell, so the morph between them reads. |
+| **[In the browser]({{ '/maps/cartogram-method/browser/' | relative_url }})** | The same solvers ported to JavaScript, so the map can be re-solved live with different settings. Try it in [the studio](https://jonathancervas.com/maps/cartogram-studio/). |
 
 The stages either side of these are thin enough to live in the
 [README](https://github.com/jcervas/cartograms#readme): getting and projecting the boundaries at the front, and
@@ -40,5 +42,8 @@ writing the JSON at the back.
 > mapshaper owns anything topological — projection, simplification,
 > dissolve, polygon intersection. Base R owns everything numerical, with no
 > packages beyond what ships with R.
+>
+> The numerical half is also [ported to JavaScript]({{ '/maps/cartogram-method/browser/' | relative_url }}), so the whole
+> thing can be re-solved live in a browser.
 
 </div>

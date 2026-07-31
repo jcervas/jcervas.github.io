@@ -13,6 +13,7 @@ permalink: /maps/cartogram-method/cells/
   <a href="{{ '/maps/cartogram-method/placement/' | relative_url }}">Placing the states</a>
   <a href="{{ '/maps/cartogram-method/cells/' | relative_url }}" aria-current="page">Carving equal-area cells</a>
   <a href="{{ '/maps/cartogram-method/matching/' | relative_url }}">Matching cells to districts</a>
+  <a href="{{ '/maps/cartogram-method/browser/' | relative_url }}">Solving it in the browser</a>
   <a href="https://github.com/jcervas/cartograms">Source on GitHub</a></nav>
 
 Once [placement]({{ '/maps/cartogram-method/placement/' | relative_url }}) has stopped moving the states, each one is
@@ -33,6 +34,9 @@ notebook used it: twelve districts in a small, awkward, non-convex shape.
 > mapshaper owns anything topological — projection, simplification,
 > dissolve, polygon intersection. Base R owns everything numerical, with no
 > packages beyond what ships with R.
+>
+> The numerical half is also [ported to JavaScript]({{ '/maps/cartogram-method/browser/' | relative_url }}), so the whole
+> thing can be re-solved live in a browser.
 
 ---
 

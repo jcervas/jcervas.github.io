@@ -13,6 +13,7 @@ permalink: /maps/cartogram-method/matching/
   <a href="{{ '/maps/cartogram-method/placement/' | relative_url }}">Placing the states</a>
   <a href="{{ '/maps/cartogram-method/cells/' | relative_url }}">Carving equal-area cells</a>
   <a href="{{ '/maps/cartogram-method/matching/' | relative_url }}" aria-current="page">Matching cells to districts</a>
+  <a href="{{ '/maps/cartogram-method/browser/' | relative_url }}">Solving it in the browser</a>
   <a href="https://github.com/jcervas/cartograms">Source on GitHub</a></nav>
 
 [Carving a state]({{ '/maps/cartogram-method/cells/' | relative_url }}) produces the right *number* of equal-area cells, but
@@ -36,6 +37,9 @@ cartogram, made visible.
 > mapshaper owns anything topological — projection, simplification,
 > dissolve, polygon intersection. Base R owns everything numerical, with no
 > packages beyond what ships with R.
+>
+> The numerical half is also [ported to JavaScript]({{ '/maps/cartogram-method/browser/' | relative_url }}), so the whole
+> thing can be re-solved live in a browser.
 
 ---
 

@@ -13,6 +13,7 @@ permalink: /maps/cartogram-method/placement/
   <a href="{{ '/maps/cartogram-method/placement/' | relative_url }}" aria-current="page">Placing the states</a>
   <a href="{{ '/maps/cartogram-method/cells/' | relative_url }}">Carving equal-area cells</a>
   <a href="{{ '/maps/cartogram-method/matching/' | relative_url }}">Matching cells to districts</a>
+  <a href="{{ '/maps/cartogram-method/browser/' | relative_url }}">Solving it in the browser</a>
   <a href="https://github.com/jcervas/cartograms">Source on GitHub</a></nav>
 
 Placement is the part of the pipeline that decides where each state sits and how
@@ -34,6 +35,9 @@ you can step through, hosted alongside the maps themselves.
 > mapshaper owns anything topological — projection, simplification,
 > dissolve, polygon intersection. Base R owns everything numerical, with no
 > packages beyond what ships with R.
+>
+> The numerical half is also [ported to JavaScript]({{ '/maps/cartogram-method/browser/' | relative_url }}), so the whole
+> thing can be re-solved live in a browser.
 
 ---
 
