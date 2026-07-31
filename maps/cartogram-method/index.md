@@ -33,9 +33,12 @@ The stages either side of these are thin enough to live in the
 [README](https://github.com/jcervas/cartograms#readme): getting and projecting the boundaries at the front, and
 writing the JSON at the back.
 
-```
-census boundaries -> project + simplify -> scale to seats -> place in slots
-   -> push apart -> carve into cells -> match cells to districts -> JSON
-```
+> **Where this sits in the build**
+>
+> **census boundaries** → **project + simplify** → [scale to seats]({{ '/maps/cartogram-method/placement/' | relative_url }}) → [place in slots]({{ '/maps/cartogram-method/placement/' | relative_url }}) → [push apart]({{ '/maps/cartogram-method/placement/' | relative_url }}) → [carve into cells]({{ '/maps/cartogram-method/cells/' | relative_url }}) → [match cells to districts]({{ '/maps/cartogram-method/matching/' | relative_url }}) → **JSON**
+>
+> mapshaper owns anything topological — projection, simplification,
+> dissolve, polygon intersection. Base R owns everything numerical, with no
+> packages beyond what ships with R.
 
 </div>

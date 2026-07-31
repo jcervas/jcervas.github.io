@@ -26,6 +26,14 @@ subdivision for one state with the same functions and the same seed as the
 build. New Jersey is the worked example, for the same reason the original
 notebook used it: twelve districts in a small, awkward, non-convex shape.
 
+> **Where this sits in the build**
+>
+> census boundaries → project + simplify → [scale to seats]({{ '/maps/cartogram-method/placement/' | relative_url }}) → [place in slots]({{ '/maps/cartogram-method/placement/' | relative_url }}) → [push apart]({{ '/maps/cartogram-method/placement/' | relative_url }}) → **carve into cells** → [match cells to districts]({{ '/maps/cartogram-method/matching/' | relative_url }}) → JSON
+>
+> mapshaper owns anything topological — projection, simplification,
+> dissolve, polygon intersection. Base R owns everything numerical, with no
+> packages beyond what ships with R.
+
 ---
 
 ## The four steps

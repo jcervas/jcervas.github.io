@@ -27,6 +27,14 @@ build and the pictures update.
 There is also an [interactive version](https://jonathancervas.com/maps/cartogram-placement/)
 you can step through, hosted alongside the maps themselves.
 
+> **Where this sits in the build**
+>
+> census boundaries → project + simplify → **scale to seats** → **place in slots** → **push apart** → [carve into cells]({{ '/maps/cartogram-method/cells/' | relative_url }}) → [match cells to districts]({{ '/maps/cartogram-method/matching/' | relative_url }}) → JSON
+>
+> mapshaper owns anything topological — projection, simplification,
+> dissolve, polygon intersection. Base R owns everything numerical, with no
+> packages beyond what ships with R.
+
 ---
 
 ## 1. Start from the real map

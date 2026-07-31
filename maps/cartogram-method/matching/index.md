@@ -29,6 +29,14 @@ Matched pairs share a colour. The small dense districts in the north-east map to
 cells the same size as the large southern ones — which is the whole point of the
 cartogram, made visible.
 
+> **Where this sits in the build**
+>
+> census boundaries → project + simplify → [scale to seats]({{ '/maps/cartogram-method/placement/' | relative_url }}) → [place in slots]({{ '/maps/cartogram-method/placement/' | relative_url }}) → [push apart]({{ '/maps/cartogram-method/placement/' | relative_url }}) → [carve into cells]({{ '/maps/cartogram-method/cells/' | relative_url }}) → **match cells to districts** → JSON
+>
+> mapshaper owns anything topological — projection, simplification,
+> dissolve, polygon intersection. Base R owns everything numerical, with no
+> packages beyond what ships with R.
+
 ---
 
 ## The rule
