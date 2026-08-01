@@ -40,6 +40,18 @@ defaults:
     values:
       layout: publication
 
+  # maps/cartogram-studio/index.html is generated output — the jcervas/cartograms
+  # repo republishes it (and the solver/worker bundles) into this one, front matter
+  # and all. Anything added to that file by hand is wiped on the next publish, so
+  # the page's site metadata lives here instead, where the generator cannot reach
+  # it. Front matter in the file itself still wins if the generator ever emits any.
+  - scope:
+      path: "maps/cartogram-studio"
+    values:
+      breadcrumb: "Cartogram studio"
+      wide: true
+      order: 8
+
 # Primary navigation (edit here to change the menu everywhere)
 nav:
   - title: Home
