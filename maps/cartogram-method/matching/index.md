@@ -127,4 +127,8 @@ an m-part shape matches them sensibly.
 
 Back to [placement]({{ '/maps/cartogram-method/placement/' | relative_url }}), or [carving cells]({{ '/maps/cartogram-method/cells/' | relative_url }}).
 
+---
+
+*Updated 30 July 2026.*
+
 </div>

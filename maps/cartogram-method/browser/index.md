@@ -377,4 +377,8 @@ Back to the [documentation index]({{ '/maps/cartogram-method/' | relative_url }}
 [placement]({{ '/maps/cartogram-method/placement/' | relative_url }}), [carving cells]({{ '/maps/cartogram-method/cells/' | relative_url }}),
 [matching]({{ '/maps/cartogram-method/matching/' | relative_url }}).
 
+---
+
+*Updated 31 July 2026.*
+
 </div>

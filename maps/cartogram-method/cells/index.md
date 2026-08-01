@@ -136,4 +136,8 @@ seconds.
 
 Next: [matching cells to districts]({{ '/maps/cartogram-method/matching/' | relative_url }}).
 
+---
+
+*Updated 30 July 2026.*
+
 </div>

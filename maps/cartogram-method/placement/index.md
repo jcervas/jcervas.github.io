@@ -301,4 +301,8 @@ in this layout.
 Switches: `RELAX` (`discs` default, or `polygon` / `box` / `none`), `PADDING`
 (2 px), `TWEAKS=0` to ignore the hand corrections.
 
+---
+
+*Updated 31 July 2026.*
+
 </div>

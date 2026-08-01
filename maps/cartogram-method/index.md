@@ -46,4 +46,8 @@ writing the JSON at the back.
 > The numerical half is also [ported to JavaScript]({{ '/maps/cartogram-method/browser/' | relative_url }}), so the whole
 > thing can be re-solved live in a browser.
 
+---
+
+*Updated 30 July 2026.*
+
 </div>
