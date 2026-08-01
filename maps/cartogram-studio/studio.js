@@ -32,12 +32,13 @@
     seatsLoad: $("cs-seats-load"), seatsFile: $("cs-seats-file"), seatsNote: $("cs-seats-note"),
     matchOn: $("cs-match-on"), seatTwo: $("cs-seat-two"),
     gravity: $("cs-gravity"), gravityOut: $("cs-gravity-out"), modeOut: $("cs-mode-out"),
+    links: $("cs-links"), linksOut: $("cs-links-out"),
     seatEditor: $("cs-seat-editor"), seatGrid: $("cs-seat-grid"),
     seatTotal: $("cs-seat-total"), seatCopy: $("cs-seat-copy"), seatOne: $("cs-seat-one"),
     solve: $("cs-solve"), auto: $("cs-auto"), reset: $("cs-reset"),
     progress: $("cs-progress"), fill: $("cs-progress-fill"), plabel: $("cs-progress-label"),
     statPlace: $("cs-stat-place"), statCells: $("cs-stat-cells"),
-    statMatch: $("cs-stat-match"), statRef: $("cs-stat-ref"),
+    statMatch: $("cs-stat-match"), statRef: $("cs-stat-ref"), statAdj: $("cs-stat-adj"),
     warn: $("cs-warn"),
   };
 
@@ -57,7 +58,7 @@
   const DEFAULTS = {
     seats: "districts", divisor: 2.9, padding: 2, tweaks: true, groupNE: true,
     cells: "balanced", colour: true, points: 200, seed: 20221108, ghost: false,
-    gravity: 0.01,
+    gravity: 0.005, links: 0.05,
   };
 
   /* Offer every field the loaded regions actually carry, so a table keyed on
@@ -96,6 +97,7 @@
       balanceIters: payload ? payload.defaults.balanceIters : 40,
       customSeats: el.seats.value === "custom" ? customSeats : null,
       gravity: +el.gravity.value,
+      linkStrength: +el.links.value,
     };
   }
 
@@ -104,6 +106,7 @@
     el.paddingOut.textContent = (+el.padding.value).toFixed(1) + " px";
     el.pointsOut.textContent = el.points.value;
     el.gravityOut.textContent = (+el.gravity.value).toFixed(3);
+    el.linksOut.textContent = (+el.links.value).toFixed(2);
 
     const uploaded = !!(payload && payload.uploaded);
 
@@ -394,7 +397,7 @@
       : `${p.iterations} iterations, ${p.ms} ms · ` +
         `${p.discCount.toLocaleString()} discs · worst region moved ${p.moved.toFixed(1)} px` +
         (p.expand ? ` · spread ${p.expand.toFixed(2)}× over ${p.solves} solves, refitted` : "");
-    el.modeOut.textContent = p.mode === "slots" ? "hand-drawn slots" : "gravity";
+    el.modeOut.textContent = p.mode === "slots" ? "hand-drawn slots" : "force layout";
 
     if (res.cells) {
       const c = res.cells;
@@ -404,6 +407,13 @@
     } else {
       el.statCells.textContent = "off";
     }
+
+    /* How faithful the arrangement is. Zoom-invariant, since the layout is
+     * refitted anyway -- it is the mean deviation of neighbour spacing from what
+     * the real geography implies, after fitting the best uniform scale. */
+    el.statAdj.textContent = p.fidelity
+      ? `${p.fidelity.borders} borders · spacing off by ${p.fidelity.error.toFixed(0)}%`
+      : "—";
 
     el.statMatch.textContent = res.match
       ? `${res.match.ms} ms · total cost ${Math.round(res.match.cost).toLocaleString()} px²`
@@ -624,7 +634,7 @@
 
   /* ------------------------------------------------------------- wiring ---- */
 
-  for (const c of [el.divisor, el.padding, el.points, el.gravity])
+  for (const c of [el.divisor, el.padding, el.points, el.gravity, el.links])
     c.addEventListener("input", () => schedule(220));
   for (const c of [el.seats, el.cells, el.seed]) c.addEventListener("change", () => schedule(0));
   for (const c of [el.tweaks, el.groupNE, el.colour]) c.addEventListener("change", () => schedule(0));
@@ -713,6 +723,7 @@
     el.seed.value = DEFAULTS.seed;
     el.ghost.checked = DEFAULTS.ghost;
     el.gravity.value = DEFAULTS.gravity;
+    el.links.value = DEFAULTS.links;
     el.matchOn.value = "auto";
     syncOutputs();
     solve();

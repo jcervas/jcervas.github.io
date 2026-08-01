@@ -179,7 +179,57 @@ pure separation, so the run still ends on a layout that meets the padding. The
 test suite checks both halves of that — that gravity shrinks the bounding box,
 and that with the decay turned off it never converges.
 
-Two measurements, on this map:
+### Pulling neighbours together
+
+Gravity compacts, but it pulls everything toward one point and does not care who
+borders whom — so it closes gaps while quietly rearranging the neighbourhood. The
+fix is to give the solver the map's actual topology.
+
+**Adjacency is derived from the boundary samples themselves.** Two regions are
+neighbours when their outlines come within a couple of pixels in the *original*
+geography, before any scaling or moving, because that is the only place the real
+borders are. It reuses the same discs and the same grid as the collision test, so
+an uploaded file gets adjacency for free rather than needing a topology or a
+neighbour table. On the states it finds 109 borders, gives Missouri and Tennessee
+eight neighbours each (the most any state has), Maine only New Hampshire, and
+Alaska and Hawaii none — and returns the same answer anywhere between a 1px and a
+4px tolerance, so it is not a tuned number.
+
+Each border becomes a spring, and two details matter:
+
+- **It targets a distance, not contact.** The target is the pair's original centre
+  spacing scaled by how much the two actually resized: if both halve, their
+  centres should come half as close. Springing to zero is what a naive link force
+  does, and it collapses chains — a state with eight neighbours takes eight
+  full-strength pulls a pass.
+- **It is mass-weighted.** A correction is split between a pair inversely to mass,
+  `w_i = m_j/(m_i+m_j)`, so a large state pulls a small one to it rather than the
+  two meeting in the middle. The collision response is split the same way.
+
+Collision still runs last and still wins, so nothing overlaps.
+
+The effect is large, and so is its cost. Measured as the mean deviation of
+neighbour spacing from what the geography implies — after fitting the best
+uniform zoom, since the layout is refitted anyway:
+
+| | packing | arrangement error |
+|---|---|---|
+| Hand-drawn slots, 2022 seats | 25.6% | 71% |
+| Gravity only | 16.1% | 66% |
+| Neighbour pull | 7.2% | **34%** |
+| At two seats each, gravity only | 4.8% | 72% |
+| At two seats each, neighbour pull | 2.6% | **21%** |
+
+So neighbour pull roughly halves the arrangement error and roughly halves the
+packing. Both are exposed as sliders, because which one matters is a judgement
+about the map you want, not something the code should decide.
+
+One finding worth stating: the hand-drawn layout scores *worse* on faithfulness
+(71%) than the automatic adjacency one. Karim traded geography for compactness,
+deliberately and correctly — a reader wants to find the states, and packing them
+is what makes them big enough to read.
+
+Two more measurements, on the gravity path:
 
 | | packing, as a share of the bounding box |
 |---|---|

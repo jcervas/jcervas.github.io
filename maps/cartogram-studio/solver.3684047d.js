@@ -392,6 +392,68 @@
     return out;
   }
 
+  /* Who borders whom, derived from the boundary samples themselves.
+   *
+   * Two regions are neighbours when their outlines come within `tol` of each
+   * other in the ORIGINAL geography -- before any scaling or moving, because
+   * that is the only place the real borders are. Since the outlines come from a
+   * dissolve, a shared border is all but coincident; the tolerance only has to
+   * absorb simplification.
+   *
+   * Reusing the boundary discs for this is the same trick as the collision test,
+   * and it means an uploaded file gets adjacency for free rather than needing a
+   * topology or a neighbour table. */
+  function adjacency(geoms, tol) {
+    tol = tol || 2;
+    const n = geoms.length;
+    const pts = geoms.map((g) => boundaryDiscs(g, Math.max(tol / 2, 0.5)));
+    const ext = pts.map((d) => {
+      let a = [Infinity, Infinity, -Infinity, -Infinity];
+      for (const p of d) {
+        if (p[0] < a[0]) a[0] = p[0]; if (p[1] < a[1]) a[1] = p[1];
+        if (p[0] > a[2]) a[2] = p[0]; if (p[1] > a[3]) a[3] = p[1];
+      }
+      return a;
+    });
+
+    const h = Math.max(tol, 1);
+    const grids = pts.map((d, i) => {
+      const nx = Math.max(1, Math.ceil((ext[i][2] - ext[i][0]) / h) + 1);
+      const ny = Math.max(1, Math.ceil((ext[i][3] - ext[i][1]) / h) + 1);
+      const head = new Int32Array(nx * ny).fill(-1);
+      const next = new Int32Array(d.length).fill(-1);
+      for (let k = 0; k < d.length; k++) {
+        const gx = Math.min(nx - 1, Math.max(0, Math.floor((d[k][0] - ext[i][0]) / h)));
+        const gy = Math.min(ny - 1, Math.max(0, Math.floor((d[k][1] - ext[i][1]) / h)));
+        const c = gy * nx + gx;
+        next[k] = head[c]; head[c] = k;
+      }
+      return { nx, ny, x0: ext[i][0], y0: ext[i][1], head, next };
+    });
+
+    const links = [];
+    const deg = new Array(n).fill(0);
+    for (let i = 0; i < n; i++) for (let j = 0; j < i; j++) {
+      if (ext[i][0] - ext[j][2] > tol || ext[j][0] - ext[i][2] > tol ||
+          ext[i][1] - ext[j][3] > tol || ext[j][1] - ext[i][3] > tol) continue;
+      const A = pts[i], B = pts[j], G = grids[j];
+      let touch = false;
+      for (let a = 0; a < A.length && !touch; a++) {
+        const qx = A[a][0], qy = A[a][1];
+        const gx = Math.floor((qx - G.x0) / h), gy = Math.floor((qy - G.y0) / h);
+        if (gx < -1 || gy < -1 || gx > G.nx || gy > G.ny) continue;
+        for (let cy = Math.max(0, gy - 1); cy <= Math.min(G.ny - 1, gy + 1) && !touch; cy++)
+          for (let cx = Math.max(0, gx - 1); cx <= Math.min(G.nx - 1, gx + 1) && !touch; cx++)
+            for (let b = G.head[cy * G.nx + cx]; b !== -1; b = G.next[b]) {
+              const dx = qx - B[b][0], dy = qy - B[b][1];
+              if (dx * dx + dy * dy <= tol * tol) { touch = true; break; }
+            }
+      }
+      if (touch) { links.push([j, i]); deg[i]++; deg[j]++; }
+    }
+    return { links, degree: deg };
+  }
+
   /* Sequential (Gauss-Seidel) projection: each pair's correction is applied
    * immediately so later pairs see it. Summing every pair's push and applying
    * the total stalls -- a state boxed in on several sides sits at an
@@ -417,7 +479,20 @@
     const maxDiscs = opts.maxDiscs || 40000;
     const gravity = opts.gravity || 0;
     const gravityDecay = opts.gravityDecay == null ? 0.97 : opts.gravityDecay;
+    const links = opts.links || null;
+    const linkStrength = opts.linkStrength || 0;
+    // links get their own schedule: they must undo the initial spread, which
+    // takes longer than gravity needs to simply tighten
+    const linkDecay = opts.linkDecay == null ? gravityDecay : opts.linkDecay;
     const n = bodies.length;
+
+    /* Mass, so that a big state pulls a small one rather than the two meeting in
+     * the middle. Everything below shares a correction between a pair inversely
+     * to mass -- w_i = m_j/(m_i+m_j) -- which is the standard two-body split and
+     * makes the heavier one move less. Default mass is the drawn area, since
+     * that is what "larger" means on a cartogram. */
+    const mass = bodies.map((b, i) =>
+      b.mass != null ? Math.max(1e-6, b.mass) : Math.max(1e-6, geomArea(b.geom)));
 
     /* Spacing is padding/2, so halving the padding doubles the discs and
      * quadruples the naive pair cost. Back the spacing off until the total is
@@ -464,6 +539,14 @@
     const seed = pos.map((p) => [p[0], p[1]]);
     const gid = bodies.map((b) => (b.group == null ? -1 : b.group));
 
+    // a rigid group moves as one body, so it resists as one body too
+    const groupMass = (i) => {
+      if (gid[i] < 0) return mass[i];
+      let m = 0;
+      for (let k = 0; k < n; k++) if (gid[k] === gid[i]) m += mass[k];
+      return m;
+    };
+
     let it = 0, worst = 0;
     for (it = 0; it < maxIter; it++) {
       let hits = 0;
@@ -502,10 +585,49 @@
         hits++;
         const ux = dist < 1e-9 ? 1 : (bax - bbx) / dist;
         const uy = dist < 1e-9 ? 0 : (bay - bby) / dist;
-        const half = (pen / 2) * step;
+        // split inversely to mass: the heavier body gives less ground
+        const mi = groupMass(i), mj = groupMass(j);
+        const wi = (mj / (mi + mj)) * pen * step;
+        const wj = (mi / (mi + mj)) * pen * step;
         for (let m = 0; m < n; m++) {
-          if (gid[i] >= 0 ? gid[m] === gid[i] : m === i) { pos[m][0] += ux * half; pos[m][1] += uy * half; }
-          else if (gid[j] >= 0 ? gid[m] === gid[j] : m === j) { pos[m][0] -= ux * half; pos[m][1] -= uy * half; }
+          if (gid[i] >= 0 ? gid[m] === gid[i] : m === i) { pos[m][0] += ux * wi; pos[m][1] += uy * wi; }
+          else if (gid[j] >= 0 ? gid[m] === gid[j] : m === j) { pos[m][0] -= ux * wj; pos[m][1] -= uy * wj; }
+        }
+      }
+
+      /* Adjacency links. Neighbours in the real map are pulled toward each other;
+       * the collision pass above is what stops them, so the pair settles at
+       * contact rather than at some guessed distance. This is the difference
+       * between compacting a map and compacting it *correctly*: gravity alone
+       * pulls everything at a single point and does not care who borders whom,
+       * so it closes gaps while quietly rearranging the neighbourhood.
+       *
+       * Mass-weighted the same way as collision, so a large state pulls a small
+       * one to it rather than the two meeting halfway. Annealed for the same
+       * reason as gravity -- attraction and collision are opposed. */
+      const linkPull = linkStrength * Math.pow(linkDecay, it);
+      if (links && linkPull > 1e-6) {
+        for (let L = 0; L < links.length; L++) {
+          const i = links[L][0], j = links[L][1], want = links[L][2];
+          if (gid[i] >= 0 && gid[i] === gid[j]) continue;
+          const dx = pos[j][0] - pos[i][0], dy = pos[j][1] - pos[i][1];
+          const d = Math.hypot(dx, dy);
+          if (d < 1e-9) continue;
+          /* A spring to a target distance, not to zero. Pulling toward zero is
+           * what a naive link force does and it collapses chains: a state with
+           * eight neighbours gets eight full-strength pulls a pass. The target is
+           * the pair's original centre spacing, scaled by how much the two
+           * actually changed size -- if both halve, their centres should come
+           * half as close. */
+          const err = want ? (d - want) / d : 1;
+          if (want && Math.abs(d - want) < 0.01) continue;
+          const mi = groupMass(i), mj = groupMass(j);
+          const si = (mj / (mi + mj)) * linkPull * err;
+          const sj = (mi / (mi + mj)) * linkPull * err;
+          for (let m = 0; m < n; m++) {
+            if (gid[i] >= 0 ? gid[m] === gid[i] : m === i) { pos[m][0] += dx * si; pos[m][1] += dy * si; }
+            else if (gid[j] >= 0 ? gid[m] === gid[j] : m === j) { pos[m][0] -= dx * sj; pos[m][1] -= dy * sj; }
+          }
         }
       }
 
@@ -541,7 +663,7 @@
         }
       }
       // with gravity still active an empty pass is not yet an answer
-      if ((!hits || worst < tol) && pull <= 1e-6) break;
+      if ((!hits || worst < tol) && pull <= 1e-6 && linkPull <= 1e-6) break;
     }
     return {
       pos, iterations: it + 1, unmet: worst,
@@ -1031,6 +1153,6 @@
     parseDelimited, seatsFromTable,
     pointInPart, pointInGeom, buildPIP, pipIndexed, samplePoints, kmeans,
     powerAssign, balance, clipBisector, powerCells,
-    boundaryDiscs, relaxDiscs, hungarian, carve,
+    boundaryDiscs, adjacency, relaxDiscs, hungarian, carve,
   };
 });

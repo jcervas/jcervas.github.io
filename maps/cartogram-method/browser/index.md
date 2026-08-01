@@ -169,7 +169,8 @@ nothing to move: the two implementations agree on what "legal" means.
 | Seats per region | everything | 2022 districts, the 2000/2010/2020 apportionments, the 2030 projection, or your own numbers |
 | State size | placement only | The area divisor. The build uses 2.90 |
 | Padding | placement only | Zero skips relaxation entirely and leaves states in their raw slots |
-| Compaction | placement only | Gravity toward the centre of mass. Only used when the slots do not fit |
+| Compaction | placement only | Gravity toward the centre of mass — packs tighter, ignores who borders whom |
+| Neighbour pull | placement only | Springs real neighbours toward the spacing the geography implies |
 | Hand nudges | placement only | The [New England, WV and LA corrections]({{ '/maps/cartogram-method/placement/' | relative_url }}#the-hand-corrections) |
 | New England as one body | placement only | Off lets the six states shear apart |
 | Cells | carving | Balanced, plain k-means, or none |
@@ -184,7 +185,10 @@ two seats each, Wyoming needs six times the room its slot allows — and the pag
 then falls back to seeding each region at its own centre, spreading the
 arrangement until it can be solved, compacting it with gravity, and refitting to
 the frame. The **Placement** readout says which strategy ran, and the page says
-so in words when it falls back. [The placement page]({{ '/maps/cartogram-method/placement/' | relative_url }}#when-the-slots-stop-working)
+so in words when it falls back. The **arrangement** stat reports how far neighbour
+spacing has drifted from what the real geography implies, so the two sliders can
+be judged rather than guessed at: on the Senate case, neighbour pull takes that
+from 81% to about 20%, at roughly half the packing. [The placement page]({{ '/maps/cartogram-method/placement/' | relative_url }}#when-the-slots-stop-working)
 has the detail and the numbers.
 
 Two settings are worth trying deliberately.

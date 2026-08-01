@@ -12,11 +12,24 @@
  * feel immediate.
  */
 
-importScripts("solver.3d87db3d.js");
+importScripts("solver.3684047d.js");
 const S = self.CartogramSolver;
 
 let payload = null;
 let cellCache = { key: null, value: null };
+let adjCache = null;      // who borders whom -- a fact about the geography alone
+
+/* Adjacency is derived once per geography from the ORIGINAL outlines, since that
+ * is the only place the real borders are. Verified against facts: on the U.S.
+ * states it finds 109 borders, gives Missouri and Tennessee eight neighbours
+ * each (the maximum), Maine only New Hampshire, and Alaska and Hawaii none. */
+function adjacencyOf() {
+  if (adjCache) return adjCache;
+  const t = performance.now();
+  const a = S.adjacency(payload.states.map((s) => toGeom(s.outline)), 2);
+  adjCache = { links: a.links, ms: Math.round(performance.now() - t) };
+  return adjCache;
+}
 
 const toGeom = (g) =>
   g.type === "Polygon" ? [g.coordinates] : g.coordinates;
@@ -163,7 +176,28 @@ function place(p) {
   if (!hasSlots || !res.converged) {
     mode = "free";
     const gravity = p.gravity == null ? 0.01 : p.gravity;
-    const opts = { maxIter: 600, maxShift: 1e6, spring: 0, gravity };
+    const linkStrength = p.linkStrength || 0;
+
+    /* Neighbours are sprung to a target distance, not to contact: their original
+     * centre spacing, scaled by how much the pair actually resized. If both
+     * halve, their centres should come half as close. Springing to zero instead
+     * is what a naive link force does, and it collapses chains -- a state with
+     * eight neighbours takes eight full-strength pulls a pass. */
+    let links = null;
+    if (linkStrength > 0) {
+      const sc = payload.states.map(scaleOf);
+      links = adjacencyOf().links.map(([i, j]) => {
+        const a = payload.states[i].centroid, b = payload.states[j].centroid;
+        const d0 = Math.hypot(a[0] - b[0], a[1] - b[1]);
+        return [i, j, d0 * (sc[i] + sc[j]) / 2];
+      });
+    }
+    /* linkDecay is slower than gravity's: the links have to undo the initial
+     * spread, which takes longer than gravity needs to simply tighten. */
+    const opts = {
+      maxIter: 900, maxShift: 1e6, spring: 0,
+      gravity, links, linkStrength, linkDecay: 0.995,
+    };
     const run = (e) => {
       solves++;
       const bs = makeBodies("free", e);
@@ -219,6 +253,29 @@ function place(p) {
     }));
   }
 
+  /* How faithful the arrangement is, independent of overall zoom -- the layout
+   * is refitted anyway, so only relative spacing means anything. Fit the best
+   * uniform scale by least squares, then report the mean residual. */
+  let fidelity = null;
+  if (payload.states.length > 1 && payload.states[0].centroid) {
+    const sc = payload.states.map(scaleOf);
+    const ls = adjacencyOf().links;
+    if (ls.length) {
+      let num = 0, den = 0;
+      const want = [], got = [];
+      for (const [i, j] of ls) {
+        const a = payload.states[i].centroid, b = payload.states[j].centroid;
+        const w = Math.hypot(a[0] - b[0], a[1] - b[1]) * (sc[i] + sc[j]) / 2;
+        const d = Math.hypot(out[i].tx - out[j].tx, out[i].ty - out[j].ty);
+        want.push(w); got.push(d); num += d * w; den += d * d;
+      }
+      const lam = den > 0 ? num / den : 1;
+      let e = 0;
+      for (let k = 0; k < want.length; k++) e += Math.abs(lam * got[k] - want[k]) / want[k];
+      fidelity = { error: (100 * e) / want.length, borders: ls.length, ms: adjacencyOf().ms };
+    }
+  }
+
   const cap = mode === "slots" ? slotShift : 1e6;
   return {
     bodies: out,
@@ -226,7 +283,7 @@ function place(p) {
       ms: Math.round(performance.now() - t0),
       iterations: res.iterations, unmet: res.unmet, converged: res.converged,
       discCount: res.discCount, spacing: res.spacing, coarsened: res.coarsened,
-      mode, expand: mode === "free" ? expand : null, solves,
+      mode, expand: mode === "free" ? expand : null, solves, fidelity,
       maxShift: cap,
       effectivePadding: p.padding * fit,
       moved: res.pos.reduce((a, q, i) =>
@@ -271,6 +328,7 @@ self.onmessage = (e) => {
 
   if (msg.type === "init") {
     payload = msg.payload;
+    adjCache = null;
     self.postMessage({ type: "ready", states: payload.states.length });
     return;
   }
