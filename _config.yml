@@ -40,17 +40,76 @@ defaults:
     values:
       layout: publication
 
-  # maps/cartogram-studio/index.html is generated output — the jcervas/cartograms
-  # repo republishes it (and the solver/worker bundles) into this one, front matter
-  # and all. Anything added to that file by hand is wiped on the next publish, so
-  # the page's site metadata lives here instead, where the generator cannot reach
-  # it. Front matter in the file itself still wins if the generator ever emits any.
+  # ---- The /maps/ index ----------------------------------------------------
+  # One table for every map page, in the order they appear on /maps/:
+  #   order       puts the page on the index and sets its position there
+  #   wide        aligns its breadcrumb with the map's ~1200px content rather
+  #               than the 860px text column
+  #   breadcrumb  short label for the trail, in place of the long page title
+  #
+  # These live here rather than in each page's front matter because several of
+  # the map pages are generated output: jcervas/cartograms republishes them into
+  # this repo, front matter and all, so anything added to those files by hand is
+  # wiped on the next publish. Keeping the keys here puts them out of the
+  # generator's reach. Front matter in a page still wins, so a hand-authored
+  # page can override any of this locally.
+  #
+  # Paths are exact files, not directories: a directory scope would also match
+  # everything beneath it, which would drag the cartogram-method sub-pages onto
+  # the index. A map page with no `order` here is deliberately left off it.
   - scope:
-      path: "maps/cartogram-studio"
+      path: "maps/mid-decade-redistricting/index.html"
+    values:
+      breadcrumb: "Mid-decade redistricting"
+      wide: true
+      order: 1
+  - scope:
+      path: "maps/us-house-2022-cartogram/index.html"
+    values:
+      breadcrumb: "U.S. House 2022 cartogram"
+      wide: true
+      order: 2
+  - scope:
+      path: "maps/apportionment-2020-2030/index.html"
+    values:
+      breadcrumb: "Apportionment 2020&ndash;2030"
+      wide: true
+      order: 3
+  - scope:
+      path: "maps/apportionment-2010-2020/index.html"
+    values:
+      breadcrumb: "Apportionment 2010&ndash;2020"
+      wide: true
+      order: 4
+  - scope:
+      path: "maps/apportionment-2000-2010/index.html"
+    values:
+      breadcrumb: "Apportionment 2000&ndash;2010"
+      wide: true
+      order: 5
+  - scope:
+      path: "maps/cartogram-placement/index.html"
+    values:
+      breadcrumb: "Placement walkthrough"
+      wide: true
+      order: 6
+  - scope:
+      path: "maps/cartogram-method/index.md"
+    values:
+      breadcrumb: "Cartogram method"
+      order: 7
+  - scope:
+      path: "maps/cartogram-studio/index.html"
     values:
       breadcrumb: "Cartogram studio"
       wide: true
       order: 8
+  - scope:
+      path: "maps/alpine-lake-construction/index.html"
+    values:
+      breadcrumb: "Alpine Lake construction"
+      wide: true
+      order: 9
 
 # Primary navigation (edit here to change the menu everywhere)
 nav:

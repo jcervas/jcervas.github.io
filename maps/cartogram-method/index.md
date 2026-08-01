@@ -3,8 +3,6 @@ layout: subpage
 title: "How the cartogram is built"
 description: "The method behind the House cartograms: placing states, carving them into equal-area district cells, and matching those cells to real districts."
 permalink: /maps/cartogram-method/
-breadcrumb: "Cartogram method"
-order: 7
 ---
 
 <link rel="stylesheet" href="{{ '/maps/cartogram-method/doc.css' | relative_url }}?v=f1e3b02b">
