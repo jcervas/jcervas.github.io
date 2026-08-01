@@ -1345,7 +1345,7 @@ function mlsWarp(v, ctlRest, ctlNow, K) {
      * Mexico, Ohio/West Virginia). Covering the boundary is what makes "circles
      * may not overlap" mean "outlines may not overlap". */
     const RADIUS = SPACING * (opts.radius == null ? 1.05 : opts.radius);
-    const MIN = 2 * RADIUS + GAP;
+    let MIN = 2 * RADIUS + GAP;
 
     const circles = [], rest = [], owner = [];
     const bodies = regions.map((r, i) => {
@@ -1446,7 +1446,35 @@ function mlsWarp(v, ctlRest, ctlNow, K) {
       }
     }
 
-    function separate() {
+    /* A PURE test: does anything overlap? Distinct from separate(), which both
+     * detects and moves. Using the mover as a predicate -- `if (!separate())
+     * break` -- means every check also perturbs the layout, so the answer
+     * depends on how many times you asked. That is why the same settings were
+     * measuring 25.9% coverage on one run and 11.0% on the next. */
+    function overlapping() {
+      const grid = new Map();
+      for (let i = 0; i < N; i++) {
+        const k = Math.floor(circles[i][0] / MIN) + "," + Math.floor(circles[i][1] / MIN);
+        let v = grid.get(k); if (!v) grid.set(k, v = []);
+        v.push(i);
+      }
+      for (let i = 0; i < N; i++) {
+        const gx = Math.floor(circles[i][0] / MIN), gy = Math.floor(circles[i][1] / MIN);
+        for (let ox = -1; ox <= 1; ox++) for (let oy = -1; oy <= 1; oy++) {
+          const v = grid.get((gx + ox) + "," + (gy + oy));
+          if (!v) continue;
+          for (const j of v) {
+            if (j <= i || owner[i] === owner[j]) continue;
+            const dx = circles[i][0] - circles[j][0], dy = circles[i][1] - circles[j][1];
+            if (dx * dx + dy * dy < MIN * MIN - 1e-9) return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    function separate(rigid) {
+      const RG = rigid == null ? 1 : rigid;
       const grid = new Map();
       for (let i = 0; i < N; i++) {
         const k = Math.floor(circles[i][0] / MIN) + "," + Math.floor(circles[i][1] / MIN);
@@ -1475,7 +1503,7 @@ function mlsWarp(v, ctlRest, ctlNow, K) {
       for (const key of pairs) {
         const i = Math.floor(key / 4096), j = key % 4096;
         const A = bodies[i], B = bodies[j];
-        let worst = 0, ux = 0, uy = 0;
+        let worst = 0, ux = 0, uy = 0, bestA = -1, bestB = -1;
         for (let a = 0; a < A.count; a++) {
           const ia = A.first + a;
           const gx = Math.floor(circles[ia][0] / MIN), gy = Math.floor(circles[ia][1] / MIN);
@@ -1489,7 +1517,7 @@ function mlsWarp(v, ctlRest, ctlNow, K) {
               if (d2 >= MIN * MIN) continue;
               const d = Math.sqrt(d2) || 1e-9;
               const pen = MIN - d;
-              if (pen > worst) { worst = pen; ux = dx / d; uy = dy / d; }
+              if (pen > worst) { worst = pen; ux = dx / d; uy = dy / d; bestA = ia; bestB = ib; }
             }
           }
         }
@@ -1497,8 +1525,22 @@ function mlsWarp(v, ctlRest, ctlNow, K) {
         hits++;
         const mi = A.mass, mj = B.mass;
         const wi = (mj / (mi + mj)) * worst, wj = (mi / (mi + mj)) * worst;
-        for (let m = 0; m < A.count; m++) { circles[A.first + m][0] += ux * wi; circles[A.first + m][1] += uy * wi; }
-        for (let m = 0; m < B.count; m++) { circles[B.first + m][0] -= ux * wj; circles[B.first + m][1] -= uy * wj; }
+        /* Mostly a whole-body translation, which shape matching never fights.
+         * The remainder is applied only to the circles actually in contact, and
+         * that fraction is what breaks deadlocks: a region wedged between
+         * several neighbours has no single direction that relieves all of them,
+         * so pure translation runs out with pairs still touching. A little local
+         * give lets it deform its way out, and shape matching pulls the shape
+         * back on the next pass. */
+        for (let m = 0; m < A.count; m++) { circles[A.first + m][0] += ux * wi * RG; circles[A.first + m][1] += uy * wi * RG; }
+        for (let m = 0; m < B.count; m++) { circles[B.first + m][0] -= ux * wj * RG; circles[B.first + m][1] -= uy * wj * RG; }
+        if (RG < 1) {
+          const g = 1 - RG;
+          circles[bestA][0] += ux * wi * g * A.count * 0.15;
+          circles[bestA][1] += uy * wi * g * A.count * 0.15;
+          circles[bestB][0] -= ux * wj * g * B.count * 0.15;
+          circles[bestB][1] -= uy * wj * g * B.count * 0.15;
+        }
       }
       return hits;
     }
@@ -1630,10 +1672,41 @@ function mlsWarp(v, ctlRest, ctlNow, K) {
       const stiff = FLOOR + (STIFF - FLOOR) * Math.pow(1 - extra / SETTLE, 2);
       shapeMatch(stiff);
       if (contactPairs.length) holdContacts(0.05); else holdNeighbours(0.05);
-      if (!separate()) break;
+      if (!overlapping()) break;
+      separate();
       if (onProgress && extra % 20 === 0) onProgress((ITERS + extra) / (ITERS + SETTLE));
     }
-    for (let q = 0; q < 200; q++) { shapeMatch(FLOOR); if (!separate()) break; }
+    /* Finally, separation alone until nothing overlaps.
+     *
+     * This was avoided for a long time because an earlier version pushed
+     * individual lattice points, and hundreds of unconstrained passes smeared
+     * the outlines badly. It does not apply any more: separation now resolves
+     * each pair as a whole-body TRANSLATION, and a translation is a motion shape
+     * matching has no objection to -- it cannot distort a state, only move it.
+     * So the invariant gets the last word at no cost to the shapes. */
+    let clean = 0;
+    for (; clean < 600 && overlapping(); clean++) separate(clean < 200 ? 1 : 0.7);
+
+    /* Verify, and back off if it did not come out clean.
+     *
+     * Separation resolves each pair as a whole-body translation, and translation
+     * can deadlock: a region wedged between several neighbours has no direction
+     * that relieves all of them, so the loop runs out with pairs still touching.
+     * It gets likelier as the lattice gets finer, and the symptom is that
+     * overlap-freedom stops being monotonic in the density -- clean at one
+     * setting, two pairs at the setting just below it.
+     *
+     * Rather than tune around that, widen the requirement slightly and settle
+     * again. Each retry costs a fraction of the solve, and it turns "clean at
+     * these numbers" into "clean, or it says so". */
+    let widened = 0;
+    for (let attempt = 0; attempt < 4 && overlapping(); attempt++) {
+      widened++;
+      MIN *= 1.06;
+      for (let q = 0; q < 400 && overlapping(); q++) { shapeMatch(FLOOR); separate(0.7); }
+      for (let q = 0; q < 400 && overlapping(); q++) separate(0.7);
+    }
+    const settled = !overlapping();
 
 
     return {
@@ -1643,7 +1716,7 @@ function mlsWarp(v, ctlRest, ctlNow, K) {
         now: circles.slice(s.first, s.first + s.count),
       })),
       radius: RADIUS, spacing: SPACING, circles: N, iterations: ITERS + extra,
-      anchors: contactPairs.length,
+      anchors: contactPairs.length, cleanup: clean, widened, settled,
       centres: bodies.map(centreOf),
       warp(i, v) {
         const c = this.control[i];
