@@ -12,12 +12,13 @@
  * feel immediate.
  */
 
-importScripts("solver.7168d773.js");
+importScripts("solver.575c8ac8.js");
 const S = self.CartogramSolver;
 
 let payload = null;
 let cellCache = { key: null, value: null };
-let adjCache = null;      // who borders whom -- a fact about the geography alone
+let adjCache = null;
+let segCache = null;   // anchors along each shared border      // who borders whom -- a fact about the geography alone
 
 /* Adjacency is derived once per geography from the ORIGINAL outlines, since that
  * is the only place the real borders are. Verified against facts: on the U.S.
@@ -323,11 +324,21 @@ function placeSoft(p, post) {
 
   post(5, "finding borders");
   const links = adjacencyOf().links;
+
+  /* Anchors along each shared border rather than one link between centroids.
+   * A centroid link drags Connecticut toward the middle of New York, which is
+   * upstate; anchors hold it against the stretch of border it actually shares,
+   * and several along a border pin orientation too. Cached with the geography,
+   * since it is a fact about the outlines alone. */
+  if (!segCache) {
+    segCache = S.borderSegments(payload.states.map((s) => toGeom(s.outline)), 2);
+  }
   post(10, "packing");
 
   const res = S.softLayout(regions, links, {
     width: W, height: H, gap: p.padding == null ? 1 : Math.max(0.5, p.padding / 2),
     neighbour: p.neighbour == null ? 1.2 : p.neighbour,
+    contacts: segCache,
     onProgress: (f) => post(10 + Math.round(f * 80), "settling"),
   });
 
@@ -354,7 +365,7 @@ function placeSoft(p, post) {
     stats: {
       ms: Math.round(performance.now() - t0),
       mode: "soft", circles: res.circles, iterations: res.iterations,
-      borders: links.length,
+      borders: links.length, anchors: res.anchors,
     },
   };
 }
@@ -394,6 +405,7 @@ self.onmessage = (e) => {
   if (msg.type === "init") {
     payload = msg.payload;
     adjCache = null;
+    segCache = null;
     self.postMessage({ type: "ready", states: payload.states.length });
     return;
   }

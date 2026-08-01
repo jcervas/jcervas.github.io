@@ -454,6 +454,86 @@
     return { links, degree: deg };
   }
 
+  /* Where two regions touch, not just that they touch.
+   *
+   * `adjacency` already finds the boundary samples that sit within a tolerance
+   * of a neighbour's, then throws them away and keeps only the fact of the
+   * border. Those points ARE the shared border, so keeping them costs nothing
+   * and says something a centroid cannot: a single link between two centres of
+   * mass drags Connecticut toward the middle of New York, which is upstate,
+   * when what actually holds them together is a stretch of border down by the
+   * Sound. Several anchors along a border also pin orientation, because a
+   * rotated or displaced region cannot satisfy all of them at once.
+   *
+   * Anchors are thinned to `apart` so a long border gets several and a short one
+   * gets one, rather than a thousand near-duplicates on the longest borders
+   * outvoting every short one. */
+  function borderSegments(geoms, tol, apart) {
+    tol = tol || 2;
+    /* 25px measured: closer spacing gives more anchors but a WORSE arrangement
+     * and, at 14, two overlapping pairs. A long border outvoting every short one
+     * is the failure mode, and thinning is the control for it. */
+    apart = apart || 25;
+    const n = geoms.length;
+    const pts = geoms.map((g) => boundaryDiscs(g, Math.max(tol / 2, 0.5)));
+    const ext = pts.map((d) => {
+      let a = [Infinity, Infinity, -Infinity, -Infinity];
+      for (const q of d) {
+        if (q[0] < a[0]) a[0] = q[0]; if (q[1] < a[1]) a[1] = q[1];
+        if (q[0] > a[2]) a[2] = q[0]; if (q[1] > a[3]) a[3] = q[1];
+      }
+      return a;
+    });
+    const h = Math.max(tol, 1);
+    const grids = pts.map((d, i) => {
+      const nx = Math.max(1, Math.ceil((ext[i][2] - ext[i][0]) / h) + 1);
+      const ny = Math.max(1, Math.ceil((ext[i][3] - ext[i][1]) / h) + 1);
+      const head = new Int32Array(nx * ny).fill(-1);
+      const next = new Int32Array(d.length).fill(-1);
+      for (let k = 0; k < d.length; k++) {
+        const gx = Math.min(nx - 1, Math.max(0, Math.floor((d[k][0] - ext[i][0]) / h)));
+        const gy = Math.min(ny - 1, Math.max(0, Math.floor((d[k][1] - ext[i][1]) / h)));
+        const c = gy * nx + gx;
+        next[k] = head[c]; head[c] = k;
+      }
+      return { nx, ny, x0: ext[i][0], y0: ext[i][1], head, next };
+    });
+
+    const out = [];
+    for (let i = 0; i < n; i++) for (let j = 0; j < i; j++) {
+      if (ext[i][0] - ext[j][2] > tol || ext[j][0] - ext[i][2] > tol ||
+          ext[i][1] - ext[j][3] > tol || ext[j][1] - ext[i][3] > tol) continue;
+      const A = pts[i], B = pts[j], G = grids[j];
+      const touching = [];
+      for (let a = 0; a < A.length; a++) {
+        const qx = A[a][0], qy = A[a][1];
+        const gx = Math.floor((qx - G.x0) / h), gy = Math.floor((qy - G.y0) / h);
+        if (gx < -1 || gy < -1 || gx > G.nx || gy > G.ny) continue;
+        let hit = false;
+        for (let cy = Math.max(0, gy - 1); cy <= Math.min(G.ny - 1, gy + 1) && !hit; cy++)
+          for (let cx = Math.max(0, gx - 1); cx <= Math.min(G.nx - 1, gx + 1) && !hit; cx++)
+            for (let b = G.head[cy * G.nx + cx]; b !== -1; b = G.next[b]) {
+              const dx = qx - B[b][0], dy = qy - B[b][1];
+              if (dx * dx + dy * dy <= tol * tol) { hit = true; break; }
+            }
+        if (hit) touching.push([qx, qy]);
+      }
+      if (!touching.length) continue;
+      // thin: keep anchors at least `apart` from every anchor already kept
+      const keep = [];
+      for (const q of touching) {
+        let ok = true;
+        for (const k of keep) {
+          const dx = q[0] - k[0], dy = q[1] - k[1];
+          if (dx * dx + dy * dy < apart * apart) { ok = false; break; }
+        }
+        if (ok) keep.push(q);
+      }
+      for (const q of keep) out.push([j, i, q]);
+    }
+    return out;
+  }
+
   /* Sequential (Gauss-Seidel) projection: each pair's correction is applied
    * immediately so later pairs see it. Summing every pair's push and applying
    * the total stalls -- a state boxed in on several sides sits at an
@@ -1240,6 +1320,7 @@ function mlsWarp(v, ctlRest, ctlNow, K) {
   }
 
   function softLayout(regions, links, opts) {
+    const contacts = (opts || {}).contacts || null;
     opts = opts || {};
     const W = opts.width || 1152, H = opts.height || 748.8;
     const GAP = opts.gap == null ? 1 : opts.gap;
@@ -1469,6 +1550,56 @@ function mlsWarp(v, ctlRest, ctlNow, K) {
       for (let m = 0; m < s.count; m++) { cx += circles[s.first + m][0]; cy += circles[s.first + m][1]; }
       return [cx / s.count, cy / s.count];
     };
+    /* Segment anchors: the circles that actually sit on a shared border, tied to
+     * each other.
+     *
+     * A contact is a point ON the shared border, in the original geography. Each
+     * region maps it into its own lattice space -- scaled, then shifted -- and
+     * the nearest circle there is by construction one sitting against that
+     * stretch of border. Tying those two circles is what a centroid link cannot
+     * say: it holds Connecticut against the piece of New York it really touches
+     * rather than against New York's centre of mass, which is upstate.
+     *
+     * The pull moves whole regions rather than individual circles, for the same
+     * reason separation does -- a single-circle tug is undone by the shape
+     * projection on the next pass. */
+    const nearestIn = (s, q) => {
+      let best = -1, bd = Infinity;
+      for (let k = 0; k < s.count; k++) {
+        const i = s.first + k;
+        const dx = rest[i][0] - q[0], dy = rest[i][1] - q[1];
+        const d = dx * dx + dy * dy;
+        if (d < bd) { bd = d; best = i; }
+      }
+      return best;
+    };
+    const contactPairs = [];
+    for (const [i, j, q] of (contacts || [])) {
+      const A = bodies[i], B = bodies[j];
+      const ka = regions[i].scale || 1, kb = regions[j].scale || 1;
+      const ia = nearestIn(A, [q[0] * ka + A.shift[0], q[1] * ka + A.shift[1]]);
+      const ib = nearestIn(B, [q[0] * kb + B.shift[0], q[1] * kb + B.shift[1]]);
+      if (ia >= 0 && ib >= 0) contactPairs.push([i, j, ia, ib]);
+    }
+
+    function holdContacts(strength) {
+      let worst = 0;
+      for (const [i, j, a, b] of contactPairs) {
+        const dx = circles[b][0] - circles[a][0], dy = circles[b][1] - circles[a][1];
+        const d = Math.hypot(dx, dy);
+        // separation owns the other direction; this only closes gaps
+        if (d <= MIN || d < 1e-6) continue;
+        worst = Math.max(worst, d - MIN);
+        const A = bodies[i], B = bodies[j];
+        const mi = A.mass, mj = B.mass;
+        const f = ((d - MIN) / d) * strength;
+        const fi = (mj / (mi + mj)) * f, fj = (mi / (mi + mj)) * f;
+        for (let m = 0; m < A.count; m++) { circles[A.first + m][0] += dx * fi; circles[A.first + m][1] += dy * fi; }
+        for (let m = 0; m < B.count; m++) { circles[B.first + m][0] -= dx * fj; circles[B.first + m][1] -= dy * fj; }
+      }
+      return worst;
+    }
+
     function holdNeighbours(strength) {
       let worst = 0;
       for (const [i, j, ux, uy] of anchors) {
@@ -1489,7 +1620,8 @@ function mlsWarp(v, ctlRest, ctlNow, K) {
     for (let it = 0; it < ITERS; it++) {
       const anneal = 1 - it / ITERS;
       shapeMatch(STIFF);
-      holdNeighbours(NEIGH * anneal + 0.05);
+      if (contactPairs.length) holdContacts(NEIGH * anneal + 0.05);
+      else holdNeighbours(NEIGH * anneal + 0.05);
       separate();
       if (onProgress && it % 20 === 0) onProgress(it / (ITERS + SETTLE));
     }
@@ -1497,12 +1629,12 @@ function mlsWarp(v, ctlRest, ctlNow, K) {
     for (; extra < SETTLE; extra++) {
       const stiff = FLOOR + (STIFF - FLOOR) * Math.pow(1 - extra / SETTLE, 2);
       shapeMatch(stiff);
-      holdNeighbours(0.05);
+      if (contactPairs.length) holdContacts(0.05); else holdNeighbours(0.05);
       if (!separate()) break;
       if (onProgress && extra % 20 === 0) onProgress((ITERS + extra) / (ITERS + SETTLE));
     }
     for (let q = 0; q < 200; q++) { shapeMatch(FLOOR); if (!separate()) break; }
-    const unmet = holdNeighbours(0);
+
 
     return {
       control: bodies.map((s) => ({
@@ -1511,6 +1643,7 @@ function mlsWarp(v, ctlRest, ctlNow, K) {
         now: circles.slice(s.first, s.first + s.count),
       })),
       radius: RADIUS, spacing: SPACING, circles: N, iterations: ITERS + extra,
+      anchors: contactPairs.length,
       centres: bodies.map(centreOf),
       warp(i, v) {
         const c = this.control[i];
@@ -1526,6 +1659,6 @@ function mlsWarp(v, ctlRest, ctlNow, K) {
     parseDelimited, seatsFromTable,
     pointInPart, pointInGeom, buildPIP, pipIndexed, samplePoints, kmeans,
     powerAssign, balance, clipBisector, powerCells,
-    boundaryDiscs, adjacency, relaxDiscs, hungarian, carve,
+    boundaryDiscs, adjacency, borderSegments, relaxDiscs, hungarian, carve,
   };
 });

@@ -488,8 +488,8 @@
       el.modeOut.textContent = "soft body";
       el.statPlace.textContent =
         `${p.circles.toLocaleString()} circles, ${p.iterations} iterations, ` +
-        `${(p.ms / 1000).toFixed(1)} s · ${p.borders} borders`;
-      el.statAdj.textContent = `${p.borders} borders · shape held by matching`;
+        `${(p.ms / 1000).toFixed(1)} s`;
+      el.statAdj.textContent = `${p.borders} borders · ${p.anchors} segment anchors`;
       el.statCells.textContent = res.cells
         ? `carved, deformed with the outlines · worst area ratio ${res.cells.worstRatio.toFixed(2)} (${res.cells.worstSt})`
         : "off";
