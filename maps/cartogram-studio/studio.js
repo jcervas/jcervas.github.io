@@ -27,8 +27,9 @@
     cells: $("cs-cells"), colour: $("cs-colour"),
     points: $("cs-points"), pointsOut: $("cs-points-out"),
     seed: $("cs-seed"), reroll: $("cs-reroll"),
-    geo: $("cs-geo"), geoFile: $("cs-geo-file"), geoNote: $("cs-geo-note"),
-    geoActions: $("cs-geo-actions"), geoReplace: $("cs-geo-replace"),
+    geoFile: $("cs-geo-file"), geoNote: $("cs-geo-note"),
+    geoCurrent: $("cs-geo-current"), geoLoad: $("cs-geo-load"), geoClear: $("cs-geo-clear"),
+    seatsLoad: $("cs-seats-load"), seatsFile: $("cs-seats-file"), seatsNote: $("cs-seats-note"),
     seatEditor: $("cs-seat-editor"), seatGrid: $("cs-seat-grid"),
     seatTotal: $("cs-seat-total"), seatCopy: $("cs-seat-copy"), seatOne: $("cs-seat-one"),
     solve: $("cs-solve"), auto: $("cs-auto"), reset: $("cs-reset"),
@@ -37,6 +38,15 @@
     statMatch: $("cs-stat-match"), statRef: $("cs-stat-ref"),
     warn: $("cs-warn"),
   };
+
+  const GEO_NOTE =
+    "GeoJSON or TopoJSON, any polygon layer — or just drop a file on the map. " +
+    "Longitude/latitude is detected and projected equal-area; already-projected " +
+    "files are used as they are.";
+  const SEATS_NOTE =
+    "Two columns: a region name or code, and a number. A header is optional. " +
+    "Matched by code or name, so CA,52 and California,52 both work.";
+  const resetGeoNote = () => { el.geoNote.textContent = GEO_NOTE; };
 
   let payload = null, worker = null, seq = 0, pending = null, busy = false;
   let builtin = null;            // the shipped U.S. payload, kept for "go back"
@@ -416,6 +426,56 @@
     el.warn.textContent = text || "";
   }
 
+  /* ------------------------------------------------------ seats from CSV ---- */
+
+  function loadSeatsFile(file) {
+    warn("");
+    el.seatsNote.textContent = "reading " + file.name + "…";
+    const reader = new FileReader();
+    reader.onerror = () => { warn("Could not read that file."); el.seatsNote.textContent = SEATS_NOTE; };
+    reader.onload = () => {
+      let r;
+      try {
+        r = CartogramSolver.seatsFromTable(
+          CartogramSolver.parseDelimited(reader.result), payload.states);
+      } catch (e) {
+        warn("Could not read that table: " + e.message);
+        el.seatsNote.textContent = SEATS_NOTE;
+        return;
+      }
+      if (!r.matched) {
+        warn(`Nothing in ${file.name} matched a region on the map. It needs a column of ` +
+             `names or codes — this map uses ${payload.states.slice(0, 3).map((s) => s.st).join(", ")}` +
+             `${payload.states.length > 3 ? ", …" : ""}.` +
+             (r.unmatched.length ? ` The file had ${JSON.stringify(r.unmatched.slice(0, 3))}.` : ""));
+        el.seatsNote.textContent = SEATS_NOTE;
+        return;
+      }
+
+      // regions the file did not mention keep whatever they had, rather than
+      // being silently reset to 1
+      const merged = {};
+      for (const s of payload.states) merged[s.st] = r.table[s.st] != null ? r.table[s.st] : (customSeats[s.st] || 1);
+      el.seats.value = "custom";
+      setSeats(merged);
+      syncOutputs();
+
+      const bits = [`${r.matched} of ${payload.states.length} regions set from ${file.name}`];
+      if (r.header) bits.push(`using the “${r.header[r.valCol] || "?"}” column`);
+      const tail = [];
+      if (r.missing.length) tail.push(`${r.missing.length} not in the file kept their previous value` +
+        ` (${r.missing.slice(0, 4).join(", ")}${r.missing.length > 4 ? ", …" : ""})`);
+      if (r.unmatched.length) tail.push(`${r.unmatched.length} row${r.unmatched.length > 1 ? "s" : ""} ` +
+        `matched no region (${r.unmatched.slice(0, 3).map((u) => `“${u}”`).join(", ")}` +
+        `${r.unmatched.length > 3 ? ", …" : ""})`);
+      if (r.bad) tail.push(`${r.bad} row${r.bad > 1 ? "s" : ""} had no usable number`);
+      el.seatsNote.textContent = bits.join(", ") + ". " + (tail.length ? tail.join("; ") + "." : "");
+
+      solve();
+    };
+    reader.readAsText(file);
+  }
+
   /* --------------------------------------------------- custom geography ---- */
 
   /* The solver is loaded in the page as well as in the worker, so a file can be
@@ -433,19 +493,20 @@
     }
     buildSeatGrid();
 
-    // keep the dropdown honest about what is actually loaded, however we got here
-    const fileOpt = el.geo.querySelector('option[value="file"]');
+    // say what is loaded, however we got here -- button, dialog or drop
     if (payload.uploaded) {
-      el.geo.value = "file";
-      fileOpt.textContent = payload.meta.title;
-      el.geoActions.hidden = false;
+      el.geoCurrent.textContent = payload.meta.title;
+      el.geoCurrent.title = payload.meta.title;
+      el.geoLoad.textContent = "Choose a different map file…";
+      el.geoClear.hidden = false;
       el.seats.value = "custom";
       // the apportionment years describe the United States, not this file
       for (const o of el.seats.options) o.disabled = o.value !== "custom";
     } else {
-      el.geo.value = "builtin";
-      fileOpt.textContent = "Load a GeoJSON or TopoJSON file…";
-      el.geoActions.hidden = true;
+      el.geoCurrent.textContent = "U.S. states";
+      el.geoCurrent.title = "";
+      el.geoLoad.textContent = "Choose a map file…";
+      el.geoClear.hidden = true;
       for (const o of el.seats.options) o.disabled = false;
       if (el.seats.value === "custom") el.seats.value = "districts";
     }
@@ -463,25 +524,20 @@
     if (file.size > MAX) {
       warn(`That file is ${(file.size / 1048576).toFixed(0)} MB. The limit here is 40 MB — ` +
            `simplify it first (mapshaper's ‑simplify does this well).`);
-      el.geo.value = "builtin";
       return;
     }
     warn("");
     el.geoNote.textContent = "reading " + file.name + "…";
 
     const reader = new FileReader();
-    reader.onerror = () => {
-      warn("Could not read that file.");
-      el.geo.value = "builtin";
-    };
+    reader.onerror = () => warn("Could not read that file.");
     reader.onload = () => {
       let gj;
       try {
         gj = JSON.parse(reader.result);
       } catch (e) {
         warn("That file is not valid JSON: " + e.message);
-        el.geo.value = "builtin";
-        el.geoNote.textContent = "";
+        resetGeoNote();
         return;
       }
       let ing;
@@ -491,8 +547,7 @@
         });
       } catch (e) {
         warn("Could not use that file: " + e.message);
-        el.geo.value = "builtin";
-        el.geoNote.textContent = "";
+        resetGeoNote();
         return;
       }
 
@@ -561,32 +616,51 @@
     schedule(0);
   });
 
-  el.geo.addEventListener("change", () => {
-    if (el.geo.value === "file") el.geoFile.click();
-    else if (builtin) {
-      useGeography(builtin,
-        "GeoJSON or TopoJSON, any polygon layer. Longitude/latitude is detected " +
-        "and projected equal-area; already-projected files are used as they are.");
-    }
-  });
-  el.geoReplace.addEventListener("click", () => el.geoFile.click());
+  /* Drop a file anywhere on the map. Which kind it is comes from the content,
+   * not the extension: a .json holding a table and a .txt holding GeoJSON are
+   * both things people actually have. */
+  const drop = document.querySelector(".cs-mapwrap");
+  if (drop) {
+    let depth = 0;
+    const over = (on) => drop.classList.toggle("cs-dropping", on);
+    drop.addEventListener("dragenter", (e) => { e.preventDefault(); depth++; over(true); });
+    drop.addEventListener("dragover", (e) => { e.preventDefault(); e.dataTransfer.dropEffect = "copy"; });
+    drop.addEventListener("dragleave", () => { if (--depth <= 0) { depth = 0; over(false); } });
+    drop.addEventListener("drop", (e) => {
+      e.preventDefault();
+      depth = 0; over(false);
+      const f = e.dataTransfer.files && e.dataTransfer.files[0];
+      if (!f) return;
+      const head = new FileReader();
+      head.onload = () => {
+        const t = String(head.result).replace(/^﻿/, "").trimStart();
+        if (t.startsWith("{") || t.startsWith("[")) loadGeographyFile(f);
+        else loadSeatsFile(f);
+      };
+      head.readAsText(f.slice(0, 512));
+    });
+  }
 
+  el.geoLoad.addEventListener("click", () => el.geoFile.click());
+  el.geoClear.addEventListener("click", () => builtin && useGeography(builtin, GEO_NOTE));
   el.geoFile.addEventListener("change", () => {
     const f = el.geoFile.files && el.geoFile.files[0];
-    // re-selecting the same file must still fire a change event
+    // clear it, or re-picking the same file fires no change event
     el.geoFile.value = "";
     if (f) loadGeographyFile(f);
-    else el.geo.value = payload && payload.uploaded ? "file" : "builtin";
+  });
+
+  el.seatsLoad.addEventListener("click", () => el.seatsFile.click());
+  el.seatsFile.addEventListener("change", () => {
+    const f = el.seatsFile.files && el.seatsFile.files[0];
+    el.seatsFile.value = "";
+    if (f) loadSeatsFile(f);
   });
   el.solve.addEventListener("click", solve);
   el.reset.addEventListener("click", () => {
     // reset means the build's settings, which includes the built-in geography
-    if (payload && payload.uploaded && builtin) {
-      el.geo.value = "builtin";
-      useGeography(builtin,
-        "GeoJSON or TopoJSON, any polygon layer. Longitude/latitude is detected " +
-        "and projected equal-area; already-projected files are used as they are.");
-    }
+    if (payload && payload.uploaded && builtin) useGeography(builtin, GEO_NOTE);
+    el.seatsNote.textContent = SEATS_NOTE;
     lastSource = DEFAULTS.seats;
     el.seats.value = DEFAULTS.seats;
     el.divisor.value = DEFAULTS.divisor;

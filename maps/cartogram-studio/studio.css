@@ -282,6 +282,22 @@
 
 .cs-map { display: block; width: 100%; height: auto; }
 
+.cs-mapwrap.cs-dropping { border-color: var(--cs-accent); }
+.cs-mapwrap.cs-dropping::after {
+  content: "drop a map or a seat table";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--cs-accent);
+  background: color-mix(in srgb, var(--cs-accent) 8%, var(--cs-paper) 88%);
+  pointer-events: none;
+  z-index: 3;
+}
+
 /* An author `display` beats the UA stylesheet's `[hidden] { display: none }`
  * whatever the specificity, so any element this file gives a display AND the JS
  * toggles with .hidden needs its own [hidden] rule. Without this the overlay

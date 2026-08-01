@@ -209,9 +209,38 @@ counts changed, not because anything else did.
 
 ## Your own geography
 
-The **Geography** control loads any GeoJSON polygon `FeatureCollection` (or a
-bare `Polygon`/`MultiPolygon`, or a `GeometryCollection`), or a **TopoJSON**
-topology.
+Two buttons at the top of the panel take your own data: **Choose a map file…**
+and **Load seats from a CSV…**. You can also drop either onto the map — which
+kind it is comes from the content, not the extension, since a `.json` holding a
+table and a `.txt` holding GeoJSON are both things people actually have.
+
+### A seat table
+
+Two columns: a region name or code, and a number. `CA,52` and `California,52`
+both work, matching is case- and punctuation-insensitive, and a header is
+optional.
+
+Which column is which is decided from the data rather than from a header,
+because real files disagree about headers. The key column is whichever matches
+the most region names or codes; the value column is whichever remaining one holds
+the most positive whole numbers, unless a header explicitly names one
+(`seats`, `districts`, `n`, `count`, `cd`, `members`…). So all of these load:
+
+```
+CA,52                     state,seats               52,California
+TX,38                     California,52             38,Texas
+NY,26                     Texas,38
+```
+
+as do tab- and semicolon-separated files, quoted fields, and a table with a
+population column in between. Regions the file does not mention keep whatever
+they had rather than resetting to 1, and the page reports what matched, what
+did not, and any rows with no usable number.
+
+### A map
+
+Any GeoJSON polygon `FeatureCollection` (or a bare `Polygon`/`MultiPolygon`, or
+a `GeometryCollection`), or a **TopoJSON** topology.
 
 **TopoJSON** is decoded directly, in about sixty lines and with no library. A
 topology stores each shared boundary once as an *arc* and every polygon as a list

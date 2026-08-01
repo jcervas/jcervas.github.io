@@ -4,9 +4,9 @@ title: Cartogram studio
 description: "The equal-area U.S. House cartogram, solved live in the browser. Change the state size, the padding between states, the seat counts or the sample size and watch the placement, carving and assignment re-solve."
 ---
 
-<link rel="stylesheet" href="{{ '/maps/cartogram-studio/studio.css' | relative_url }}?v=6168ba13">
+<link rel="stylesheet" href="{{ '/maps/cartogram-studio/studio.css' | relative_url }}?v=a21260de">
 
-<div class="cs" id="cs-root" data-src="{{ '/maps/cartogram-studio/studio.json' | relative_url }}?v=7b8aaac7" data-worker="{{ '/maps/cartogram-studio/studio.worker.707b3909.js' | relative_url }}">
+<div class="cs" id="cs-root" data-src="{{ '/maps/cartogram-studio/studio.json' | relative_url }}?v=7b8aaac7" data-worker="{{ '/maps/cartogram-studio/studio.worker.cf6a1348.js' | relative_url }}">
 
   <header class="cs-head">
     <h1 class="cs-title">Cartogram studio</h1>
@@ -24,18 +24,14 @@ description: "The equal-area U.S. House cartogram, solved live in the browser. C
     <div class="cs-panel">
 
       <div class="cs-group">
-        <label class="cs-label" for="cs-geo">Geography</label>
-        <select class="cs-select" id="cs-geo">
-          <option value="builtin" selected>U.S. states (built in)</option>
-          <option value="file">Load a GeoJSON or TopoJSON file…</option>
-        </select>
+        <span class="cs-label">Geography <output class="cs-out" id="cs-geo-current">U.S. states</output></span>
+        <button class="cs-btn" id="cs-geo-load" type="button">Choose a map file…</button>
+        <button class="cs-btn" id="cs-geo-clear" type="button" hidden>Back to U.S. states</button>
         <input class="cs-file" id="cs-geo-file" type="file" accept=".json,.geojson,.topojson,application/json,application/geo+json" hidden>
-        <div class="cs-seat-head" id="cs-geo-actions" hidden>
-          <button class="cs-mini" id="cs-geo-replace" type="button">Choose another file…</button>
-        </div>
         <p class="cs-note" id="cs-geo-note">
-          GeoJSON or TopoJSON, any polygon layer. Longitude/latitude is detected
-          and projected equal-area; already-projected files are used as they are.
+          GeoJSON or TopoJSON, any polygon layer — or just drop a file on the map.
+          Longitude/latitude is detected and projected equal-area; already-projected
+          files are used as they are.
         </p>
       </div>
 
@@ -50,6 +46,14 @@ description: "The equal-area U.S. House cartogram, solved live in the browser. C
           <option value="custom">Custom — type your own</option>
         </select>
         <p class="cs-note">Drives everything downstream — each region's size and its number of cells.</p>
+
+        <button class="cs-btn" id="cs-seats-load" type="button">Load seats from a CSV…</button>
+        <input class="cs-file" id="cs-seats-file" type="file" accept=".csv,.tsv,.txt,text/csv,text/plain" hidden>
+        <p class="cs-note" id="cs-seats-note">
+          Two columns: a region name or code, and a number. A header is optional.
+          Matched by code or name, so <code>CA,52</code> and
+          <code>California,52</code> both work.
+        </p>
 
         <div id="cs-seat-editor" hidden>
           <div class="cs-seat-head">
@@ -207,5 +211,5 @@ description: "The equal-area U.S. House cartogram, solved live in the browser. C
 
 </div>
 
-<script src="{{ '/maps/cartogram-studio/solver.c646ab1e.js' | relative_url }}" defer></script>
-<script src="{{ '/maps/cartogram-studio/studio.js' | relative_url }}?v=4b82c41b" defer></script>
+<script src="{{ '/maps/cartogram-studio/solver.f512dbfc.js' | relative_url }}" defer></script>
+<script src="{{ '/maps/cartogram-studio/studio.js' | relative_url }}?v=0f163a57" defer></script>

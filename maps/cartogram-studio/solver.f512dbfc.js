@@ -662,6 +662,115 @@
     };
   }
 
+  // ------------------------------------------------------ seats from CSV ----
+
+  /* A delimited-text reader that handles the things real files actually have:
+   * quoted fields with embedded delimiters, doubled quotes, CRLF, and a
+   * delimiter that might be a comma, semicolon, tab or pipe. */
+  function parseDelimited(text) {
+    text = text.replace(/^﻿/, "");                       // strip a BOM
+    const first = text.split(/\r?\n/).find((l) => l.trim()) || "";
+    let delim = ",", best = -1;
+    for (const d of [",", "\t", ";", "|"]) {
+      // count only delimiters outside quotes
+      let n = 0, q = false;
+      for (const c of first) {
+        if (c === '"') q = !q;
+        else if (c === d && !q) n++;
+      }
+      if (n > best) { best = n; delim = d; }
+    }
+
+    const rows = [];
+    let row = [], field = "", q = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (q) {
+        if (c === '"') {
+          if (text[i + 1] === '"') { field += '"'; i++; }
+          else q = false;
+        } else field += c;
+      } else if (c === '"') q = true;
+      else if (c === delim) { row.push(field); field = ""; }
+      else if (c === "\n") { row.push(field); rows.push(row); row = []; field = ""; }
+      else if (c !== "\r") field += c;
+    }
+    if (field.length || row.length) { row.push(field); rows.push(row); }
+    return rows
+      .map((r) => r.map((f) => f.trim()))
+      .filter((r) => r.some((f) => f !== ""));
+  }
+
+  const SEAT_HEADERS = /^(seats?|districts?|n|num|number|count|cd|members?|reps?)$/i;
+
+  /* Match a table of region -> seat count against a set of regions.
+   *
+   * Which column is which is decided by looking at the data rather than trusting
+   * a header, because real files disagree about headers. The key column is
+   * whichever one matches the most region names or codes; the value column is
+   * whichever remaining one holds the most positive whole numbers, unless a
+   * header explicitly names one. Comparison is case- and punctuation-insensitive
+   * so "St. Louis", "st louis" and "ST-LOUIS" land together. */
+  function seatsFromTable(rows, states) {
+    if (!rows.length) throw new Error("the file is empty");
+
+    const norm = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
+    const lookup = new Map();
+    for (const s of states) {
+      lookup.set(norm(s.st), s.st);
+      if (s.name) lookup.set(norm(s.name), s.st);
+    }
+
+    const ncol = Math.max(...rows.map((r) => r.length));
+    const isNum = (v) => /^-?\d+(\.\d+)?$/.test(v) && Number(v) > 0;
+
+    // does row 0 look like a header? -- it does if it names nothing we know
+    const headerish = !rows[0].some((c) => lookup.has(norm(c)));
+    const body = headerish && rows.length > 1 ? rows.slice(1) : rows;
+    if (!body.length) throw new Error("no data rows");
+
+    let keyCol = 0, keyHits = -1;
+    for (let c = 0; c < ncol; c++) {
+      let n = 0;
+      for (const r of body) if (r[c] != null && lookup.has(norm(r[c]))) n++;
+      if (n > keyHits) { keyHits = n; keyCol = c; }
+    }
+
+    let valCol = -1;
+    if (headerish) {
+      for (let c = 0; c < ncol; c++)
+        if (c !== keyCol && SEAT_HEADERS.test(rows[0][c] || "")) { valCol = c; break; }
+    }
+    if (valCol < 0) {
+      let bestNums = -1;
+      for (let c = 0; c < ncol; c++) {
+        if (c === keyCol) continue;
+        let n = 0;
+        for (const r of body) if (r[c] != null && isNum(r[c])) n++;
+        if (n > bestNums) { bestNums = n; valCol = c; }
+      }
+    }
+    if (valCol < 0) throw new Error("could not find a column of numbers");
+
+    const table = {}, unmatched = [];
+    let bad = 0;
+    for (const r of body) {
+      const id = lookup.get(norm(r[keyCol] || ""));
+      const v = Number(r[valCol]);
+      if (!id) { if ((r[keyCol] || "").trim()) unmatched.push(r[keyCol]); continue; }
+      if (!Number.isFinite(v) || v < 1) { bad++; continue; }
+      table[id] = Math.round(v);
+    }
+
+    const missing = states.filter((s) => table[s.st] == null).map((s) => s.st);
+    return {
+      table, unmatched, missing, bad,
+      matched: Object.keys(table).length,
+      keyCol, valCol, header: headerish ? rows[0] : null,
+      total: Object.values(table).reduce((a, b) => a + b, 0),
+    };
+  }
+
   /* ---------------------------------------------------------- TopoJSON ----
    *
    * A TopoJSON topology stores each shared boundary once, as an "arc", and every
@@ -867,6 +976,7 @@
   return {
     mulberry32, ringArea2, partArea, geomArea, bbox,
     albersFit, ingestGeoJSON, topologyToFeatures,
+    parseDelimited, seatsFromTable,
     pointInPart, pointInGeom, buildPIP, pipIndexed, samplePoints, kmeans,
     powerAssign, balance, clipBisector, powerCells,
     boundaryDiscs, relaxDiscs, hungarian, carve,

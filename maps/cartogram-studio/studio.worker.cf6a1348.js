@@ -12,7 +12,7 @@
  * feel immediate.
  */
 
-importScripts("solver.c646ab1e.js");
+importScripts("solver.f512dbfc.js");
 const S = self.CartogramSolver;
 
 let payload = null;
