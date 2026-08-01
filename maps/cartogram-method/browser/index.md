@@ -169,11 +169,23 @@ nothing to move: the two implementations agree on what "legal" means.
 | Seats per region | everything | 2022 districts, the 2000/2010/2020 apportionments, the 2030 projection, or your own numbers |
 | State size | placement only | The area divisor. The build uses 2.90 |
 | Padding | placement only | Zero skips relaxation entirely and leaves states in their raw slots |
+| Compaction | placement only | Gravity toward the centre of mass. Only used when the slots do not fit |
 | Hand nudges | placement only | The [New England, WV and LA corrections]({{ '/maps/cartogram-method/placement/' | relative_url }}#the-hand-corrections) |
 | New England as one body | placement only | Off lets the six states shear apart |
 | Cells | carving | Balanced, plain k-means, or none |
 | Sample points per seat | carving | The build uses 600; the page defaults to 200 for speed |
 | Seed | carving | The sampling is the only randomness |
+
+### Placement has two strategies
+
+The hand-drawn slots are used whenever they work. They were drawn for one set of
+seat counts, though, so changing the counts far enough makes them unusable — at
+two seats each, Wyoming needs six times the room its slot allows — and the page
+then falls back to seeding each region at its own centre, spreading the
+arrangement until it can be solved, compacting it with gravity, and refitting to
+the frame. The **Placement** readout says which strategy ran, and the page says
+so in words when it falls back. [The placement page]({{ '/maps/cartogram-method/placement/' | relative_url }}#when-the-slots-stop-working)
+has the detail and the numbers.
 
 Two settings are worth trying deliberately.
 
@@ -219,6 +231,14 @@ table and a `.txt` holding GeoJSON are both things people actually have.
 Two columns: a region name or code, and a number. `CA,52` and `California,52`
 both work, matching is case- and punctuation-insensitive, and a header is
 optional.
+
+**Match on** picks the field to key against. The default matches any field a
+region carries — its code, its name, anything the file's properties supplied —
+which is what you want when you do not know the table. Name a field instead when
+two could collide: a numeric FIPS column against a numeric seat count, say. The
+menu is built from the fields the loaded geography actually has, so it lists
+`fips`, `name` and `st` for the built-in states and whatever your own file
+carries.
 
 Which column is which is decided from the data rather than from a header,
 because real files disagree about headers. The key column is whichever matches

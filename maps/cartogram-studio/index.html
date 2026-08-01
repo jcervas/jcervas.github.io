@@ -4,9 +4,9 @@ title: Cartogram studio
 description: "The equal-area U.S. House cartogram, solved live in the browser. Change the state size, the padding between states, the seat counts or the sample size and watch the placement, carving and assignment re-solve."
 ---
 
-<link rel="stylesheet" href="{{ '/maps/cartogram-studio/studio.css' | relative_url }}?v=a21260de">
+<link rel="stylesheet" href="{{ '/maps/cartogram-studio/studio.css' | relative_url }}?v=13ecfa81">
 
-<div class="cs" id="cs-root" data-src="{{ '/maps/cartogram-studio/studio.json' | relative_url }}?v=7b8aaac7" data-worker="{{ '/maps/cartogram-studio/studio.worker.cf6a1348.js' | relative_url }}">
+<div class="cs" id="cs-root" data-src="{{ '/maps/cartogram-studio/studio.json' | relative_url }}?v=dc251404" data-worker="{{ '/maps/cartogram-studio/studio.worker.58561d79.js' | relative_url }}">
 
   <header class="cs-head">
     <h1 class="cs-title">Cartogram studio</h1>
@@ -49,6 +49,12 @@ description: "The equal-area U.S. House cartogram, solved live in the browser. C
 
         <button class="cs-btn" id="cs-seats-load" type="button">Load seats from a CSV…</button>
         <input class="cs-file" id="cs-seats-file" type="file" accept=".csv,.tsv,.txt,text/csv,text/plain" hidden>
+        <label class="cs-inline">
+          <span>Match on</span>
+          <select class="cs-select cs-select-sm" id="cs-match-on">
+            <option value="auto" selected>any field</option>
+          </select>
+        </label>
         <p class="cs-note" id="cs-seats-note">
           Two columns: a region name or code, and a number. A header is optional.
           Matched by code or name, so <code>CA,52</code> and
@@ -60,6 +66,7 @@ description: "The equal-area U.S. House cartogram, solved live in the browser. C
             <span>Total <output id="cs-seat-total">435</output></span>
             <button class="cs-mini" id="cs-seat-copy" type="button">Copy current</button>
             <button class="cs-mini" id="cs-seat-one" type="button">All 1</button>
+            <button class="cs-mini" id="cs-seat-two" type="button" title="Two per region, as in the U.S. Senate">All 2</button>
           </div>
           <div class="cs-seat-grid" id="cs-seat-grid"></div>
           <p class="cs-note">
@@ -86,7 +93,16 @@ description: "The equal-area U.S. House cartogram, solved live in the browser. C
       </div>
 
       <div class="cs-group">
-        <span class="cs-label">Placement</span>
+        <span class="cs-label">Placement <output class="cs-out" id="cs-mode-out">hand-drawn slots</output></span>
+        <label class="cs-label" for="cs-gravity" style="margin-top:8px">
+          Compaction <output class="cs-out" id="cs-gravity-out">0.010</output>
+        </label>
+        <input class="cs-range" id="cs-gravity" type="range" min="0" max="0.04" step="0.002" value="0.01">
+        <p class="cs-note">
+          Gravity toward the centre of mass, annealed as the solve settles. Only
+          used when the hand-drawn slots do not fit — raising it packs the map
+          tighter, too much and the separation has to spread further to succeed.
+        </p>
         <label class="cs-check"><input type="checkbox" id="cs-tweaks" checked> Hand nudges (New England, WV, LA)</label>
         <label class="cs-check"><input type="checkbox" id="cs-group-ne" checked> New England moves as one body</label>
         <label class="cs-check"><input type="checkbox" id="cs-ghost"> Ghost the R build's layout</label>
@@ -211,5 +227,5 @@ description: "The equal-area U.S. House cartogram, solved live in the browser. C
 
 </div>
 
-<script src="{{ '/maps/cartogram-studio/solver.f512dbfc.js' | relative_url }}" defer></script>
-<script src="{{ '/maps/cartogram-studio/studio.js' | relative_url }}?v=0f163a57" defer></script>
+<script src="{{ '/maps/cartogram-studio/solver.3d87db3d.js' | relative_url }}" defer></script>
+<script src="{{ '/maps/cartogram-studio/studio.js' | relative_url }}?v=179a65fb" defer></script>

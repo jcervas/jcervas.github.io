@@ -415,6 +415,8 @@
     const maxShift = opts.maxShift || 40;
     const tol = opts.tol == null ? 0.05 : opts.tol;
     const maxDiscs = opts.maxDiscs || 40000;
+    const gravity = opts.gravity || 0;
+    const gravityDecay = opts.gravityDecay == null ? 0.97 : opts.gravityDecay;
     const n = bodies.length;
 
     /* Spacing is padding/2, so halving the padding doubles the discs and
@@ -507,7 +509,28 @@
         }
       }
 
+      /* Gravity: a pull toward the centre of mass, which closes the gaps the
+       * collision pass opens. Note that p <- p + g(C - p) is (1-g)p + gC, a
+       * uniform contraction about C -- so it compacts the map without distorting
+       * the arrangement, which a per-pair attraction would.
+       *
+       * It is annealed, for the same reason d3-force decays alpha: gravity and
+       * collision are opposed, so at constant strength the layout oscillates and
+       * `worst` never settles under the tolerance. Decaying it means the early
+       * iterations compact and the late ones are pure separation, so the run
+       * still finishes on a layout that satisfies the padding. */
+      let gx = 0, gy = 0;
+      if (gravity > 0) {
+        for (let m = 0; m < n; m++) { gx += pos[m][0]; gy += pos[m][1]; }
+        gx /= n; gy /= n;
+      }
+      const pull = gravity * Math.pow(gravityDecay, it);
+
       for (let m = 0; m < n; m++) {
+        if (pull > 1e-6) {
+          pos[m][0] += pull * (gx - pos[m][0]);
+          pos[m][1] += pull * (gy - pos[m][1]);
+        }
         pos[m][0] += spring * (seed[m][0] - pos[m][0]);
         pos[m][1] += spring * (seed[m][1] - pos[m][1]);
         const dx = pos[m][0] - seed[m][0], dy = pos[m][1] - seed[m][1];
@@ -517,7 +540,8 @@
           pos[m][1] = seed[m][1] + (dy * maxShift) / s;
         }
       }
-      if (!hits || worst < tol) break;
+      // with gravity still active an empty pass is not yet an answer
+      if ((!hits || worst < tol) && pull <= 1e-6) break;
     }
     return {
       pos, iterations: it + 1, unmet: worst,
@@ -711,15 +735,32 @@
    * whichever remaining one holds the most positive whole numbers, unless a
    * header explicitly names one. Comparison is case- and punctuation-insensitive
    * so "St. Louis", "st louis" and "ST-LOUIS" land together. */
-  function seatsFromTable(rows, states) {
+  function seatsFromTable(rows, states, matchOn) {
     if (!rows.length) throw new Error("the file is empty");
 
     const norm = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
+
+    /* `matchOn` names one property to key on -- FIPS, GEOID, a state code,
+     * whatever the caller's table actually uses. Left unset it matches against
+     * every field a region carries, which is what you want when you do not know
+     * the file, and wrong when two fields collide (a numeric FIPS against a
+     * numeric seat count, say). Naming the field removes the guess. */
     const lookup = new Map();
+    const add = (v, id) => {
+      const k = norm(v);
+      if (k && !lookup.has(k)) lookup.set(k, id);
+    };
     for (const s of states) {
-      lookup.set(norm(s.st), s.st);
-      if (s.name) lookup.set(norm(s.name), s.st);
+      if (matchOn && matchOn !== "auto") {
+        const v = s.props ? s.props[matchOn] : (matchOn === "st" ? s.st : s[matchOn]);
+        if (v != null) add(v, s.st);
+      } else {
+        add(s.st, s.st);
+        if (s.name) add(s.name, s.st);
+        if (s.props) for (const k of Object.keys(s.props)) add(s.props[k], s.st);
+      }
     }
+    if (!lookup.size) throw new Error(`no region carries a “${matchOn}” value`);
 
     const ncol = Math.max(...rows.map((r) => r.length));
     const isNum = (v) => /^-?\d+(\.\d+)?$/.test(v) && Number(v) > 0;
@@ -941,6 +982,16 @@
       while (used.has(id)) id = key + " (" + n++ + ")";
       used.add(id);
 
+      // keep the scalar properties: they are the fields a seat table may key on
+      const props = {};
+      for (const k of Object.keys(m.props || {})) {
+        const v = m.props[k];
+        if (v == null) continue;
+        if (typeof v === "string" || typeof v === "number" || typeof v === "boolean") {
+          props[k] = String(v);
+        }
+      }
+
       let seats = 1;
       for (const sk of SEAT_KEYS) {
         const v = Number(m.props[sk]);
@@ -955,6 +1006,7 @@
         area: geomArea(geom),
         bbox: b,
         centroid: [(b[0] + b[2]) / 2, (b[1] + b[3]) / 2],
+        props,
         seats: { custom: seats },
         outline: geom.length === 1
           ? { type: "Polygon", coordinates: geom[0] }

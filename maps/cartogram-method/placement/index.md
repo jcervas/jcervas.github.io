@@ -156,6 +156,46 @@ one to Mississippi, which is now 4.36 px.
 
 Set `TWEAKS=0` to build without any of them.
 
+## When the slots stop working
+
+Everything above rests on the hand-drawn slots, and those were drawn for one
+particular set of seat counts. Change the counts enough and they stop being a
+good starting point. Give every state two seats — the Senate — and Wyoming needs
+about six times the room its slot allows. Seeding from the slots then leaves
+states overlapping that the relaxation cannot pull apart, because each is also
+held near a slot that no longer fits.
+
+So the browser build has a second strategy, used when the first cannot converge:
+seed each region at its own centre, spread the whole arrangement until the
+overlaps are shallow enough to solve, run the separation with a gentle **gravity**
+toward the centre of mass, and fit the finished layout back to the frame.
+
+Gravity is a uniform contraction — `p + g(C − p)` is `(1−g)p + gC` — so it
+compacts the map without distorting the arrangement, which a per-pair attraction
+would. It is annealed, for the same reason `d3-force` decays alpha: gravity and
+collision are directly opposed, so at constant strength the layout oscillates and
+never settles. Decaying it means the early passes compact and the late ones are
+pure separation, so the run still ends on a layout that meets the padding. The
+test suite checks both halves of that — that gravity shrinks the bounding box,
+and that with the decay turned off it never converges.
+
+Two measurements, on this map:
+
+| | packing, as a share of the bounding box |
+|---|---|
+| Centroid seed, no gravity | 7.3% |
+| Centroid seed, gravity, tightest expansion | **15.9%** |
+| At two seats each, no gravity | 1.0% |
+| At two seats each, gravity | **6.5%** |
+
+The expansion is found by escalating until the relaxation converges and then
+bisecting back down, because the first expansion that works is rarely the
+tightest and a looser arrangement refits to a smaller map.
+
+The comparison is really an argument for the hand-drawn slots: the automatic
+layout is *correct*, and the hand-drawn one is *better*. Both are in
+[the studio](https://jonathancervas.com/maps/cartogram-studio/).
+
 ## 6. Placement finished
 
 ![The finished placement]({{ '/maps/cartogram-method/figures/06-placed.png' | relative_url }})

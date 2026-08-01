@@ -93,6 +93,28 @@ description: "A stepped walkthrough of how the cartogram pipeline sizes every st
     they have stopped moving.</p>
   </div>
 
+  <div class="pl-section">
+    <h2>When the slots stop working</h2>
+    <p>Everything above rests on the hand-drawn slots, and those were drawn for
+    one particular set of seat counts. Change the counts enough and they stop
+    being a good starting point: give every state two seats, as the Senate does,
+    and Wyoming needs roughly six times the room its slot allows. Seeding from
+    the slots then leaves states overlapping that the relaxation cannot pull
+    apart, because each one is also being held near a slot that no longer fits.</p>
+    <p>So there is a second strategy, used when the first cannot converge. Each
+    region is seeded at its own centre instead, the arrangement as a whole is
+    spread until the overlaps are shallow enough to solve, and a gentle
+    <em>gravity</em> &mdash; a pull toward the centre of mass, annealed as the
+    solve settles &mdash; pulls the map back together while the separation runs.
+    The finished layout is then fitted back to the frame. The result is a
+    non-contiguous cartogram in Olson's sense: every region at its
+    seat-proportional size, near where it actually is, overlapping nothing.</p>
+    <p>It is worth seeing the two side by side, because the comparison is really
+    an argument for the hand-drawn layout: the automatic one is correct, and the
+    hand-drawn one is <em>better</em>. You can try both, and any seat counts you
+    like, in <a href="/maps/cartogram-studio/">the studio</a>.</p>
+  </div>
+
   <div class="pl-footer">
     Generated from the build artefacts, so the map above is the same geometry the
     pipeline emits. The written version of this, plus the two stages that follow

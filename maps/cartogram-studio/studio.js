@@ -30,6 +30,8 @@
     geoFile: $("cs-geo-file"), geoNote: $("cs-geo-note"),
     geoCurrent: $("cs-geo-current"), geoLoad: $("cs-geo-load"), geoClear: $("cs-geo-clear"),
     seatsLoad: $("cs-seats-load"), seatsFile: $("cs-seats-file"), seatsNote: $("cs-seats-note"),
+    matchOn: $("cs-match-on"), seatTwo: $("cs-seat-two"),
+    gravity: $("cs-gravity"), gravityOut: $("cs-gravity-out"), modeOut: $("cs-mode-out"),
     seatEditor: $("cs-seat-editor"), seatGrid: $("cs-seat-grid"),
     seatTotal: $("cs-seat-total"), seatCopy: $("cs-seat-copy"), seatOne: $("cs-seat-one"),
     solve: $("cs-solve"), auto: $("cs-auto"), reset: $("cs-reset"),
@@ -55,7 +57,28 @@
   const DEFAULTS = {
     seats: "districts", divisor: 2.9, padding: 2, tweaks: true, groupNE: true,
     cells: "balanced", colour: true, points: 200, seed: 20221108, ghost: false,
+    gravity: 0.01,
   };
+
+  /* Offer every field the loaded regions actually carry, so a table keyed on
+   * FIPS or GEOID can say so. Matching against all fields at once is the right
+   * default but can go wrong when two fields collide -- a numeric FIPS column
+   * against a numeric seat count, say -- and naming the field removes the guess. */
+  function buildMatchOptions() {
+    const keys = new Set();
+    for (const s of payload.states)
+      if (s.props) for (const k of Object.keys(s.props)) keys.add(k);
+    const prev = el.matchOn.value;
+    el.matchOn.textContent = "";
+    const add = (v, label) => {
+      const o = document.createElement("option");
+      o.value = v; o.textContent = label;
+      el.matchOn.appendChild(o);
+    };
+    add("auto", "any field");
+    for (const k of [...keys].sort()) add(k, k);
+    el.matchOn.value = [...el.matchOn.options].some((o) => o.value === prev) ? prev : "auto";
+  }
 
   /* ------------------------------------------------------------ params ---- */
 
@@ -72,6 +95,7 @@
       seed: +el.seed.value | 0,
       balanceIters: payload ? payload.defaults.balanceIters : 40,
       customSeats: el.seats.value === "custom" ? customSeats : null,
+      gravity: +el.gravity.value,
     };
   }
 
@@ -79,6 +103,7 @@
     el.divisorOut.textContent = (+el.divisor.value).toFixed(2);
     el.paddingOut.textContent = (+el.padding.value).toFixed(1) + " px";
     el.pointsOut.textContent = el.points.value;
+    el.gravityOut.textContent = (+el.gravity.value).toFixed(3);
 
     const uploaded = !!(payload && payload.uploaded);
 
@@ -159,6 +184,7 @@
     payload = data;
     customSeats = seatsFromSource("districts");
     buildSeatGrid();
+    buildMatchOptions();
     syncOutputs();
     startWorker();
   }
@@ -320,7 +346,10 @@
       frag.appendChild(g);
     }
 
-    // state labels, in frame coordinates
+    /* State labels. The hand-drawn anchors are positions in the Figma layout, so
+     * they only mean anything when the states are in their slots -- in gravity
+     * mode they would float in empty space. Fall back to the region's own centre. */
+    const freeMode = res.place && res.place.mode === "free";
     const labels = document.createElementNS(SVG, "g");
     const dw = payload.design.w, dh = payload.design.h;
     const W = payload.design.width, H = payload.design.height;
@@ -328,7 +357,7 @@
       const s = byState[b.st];
       const t = document.createElementNS(SVG, "text");
       t.setAttribute("class", "cs-lab");
-      if (s.label) {
+      if (s.label && !freeMode) {
         // the hand-placed label rides with however far the state actually moved
         t.setAttribute("x", ((s.label[0] / dw) * W + (b.tx - b.seedTx)).toFixed(1));
         t.setAttribute("y", ((s.label[1] / dh) * H + (b.ty - b.seedTy)).toFixed(1));
@@ -364,7 +393,8 @@
       ? "no relaxation (padding 0)"
       : `${p.iterations} iterations, ${p.ms} ms · ` +
         `${p.discCount.toLocaleString()} discs · worst region moved ${p.moved.toFixed(1)} px` +
-        (p.expand ? ` · arrangement spread ${p.expand.toFixed(2)}×, refitted to the frame` : "");
+        (p.expand ? ` · spread ${p.expand.toFixed(2)}× over ${p.solves} solves, refitted` : "");
+    el.modeOut.textContent = p.mode === "slots" ? "hand-drawn slots" : "gravity";
 
     if (res.cells) {
       const c = res.cells;
@@ -409,6 +439,12 @@
     }
     // an uploaded map is solved expanded then fitted back, so the gap enforced
     // and the gap drawn are not the same number
+    // the slots stopped working, so say so rather than leaving it to be inferred
+    if (p.mode === "free" && !payload.uploaded)
+      msgs.push(
+        "These seat counts do not fit the hand-drawn slots, so placement fell back to " +
+        "seeding each state at its own centre and letting gravity and separation find " +
+        "a layout. Adjust it with Compaction.");
     if (p.expand && Math.abs(p.effectivePadding - +el.padding.value) > 0.15)
       msgs.push(
         `The ${(+el.padding.value).toFixed(1)} px padding was enforced on the spread-out layout; ` +
@@ -437,7 +473,7 @@
       let r;
       try {
         r = CartogramSolver.seatsFromTable(
-          CartogramSolver.parseDelimited(reader.result), payload.states);
+          CartogramSolver.parseDelimited(reader.result), payload.states, el.matchOn.value);
       } catch (e) {
         warn("Could not read that table: " + e.message);
         el.seatsNote.textContent = SEATS_NOTE;
@@ -492,6 +528,7 @@
         : s.districts.length;
     }
     buildSeatGrid();
+    buildMatchOptions();
 
     // say what is loaded, however we got here -- button, dialog or drop
     if (payload.uploaded) {
@@ -587,7 +624,8 @@
 
   /* ------------------------------------------------------------- wiring ---- */
 
-  for (const c of [el.divisor, el.padding, el.points]) c.addEventListener("input", () => schedule(220));
+  for (const c of [el.divisor, el.padding, el.points, el.gravity])
+    c.addEventListener("input", () => schedule(220));
   for (const c of [el.seats, el.cells, el.seed]) c.addEventListener("change", () => schedule(0));
   for (const c of [el.tweaks, el.groupNE, el.colour]) c.addEventListener("change", () => schedule(0));
   el.ghost.addEventListener("change", () => schedule(0));
@@ -609,12 +647,14 @@
     setSeats(seatsFromSource(payload.uploaded ? "custom" : lastSource));
     schedule(0);
   });
-  el.seatOne.addEventListener("click", () => {
+  const setAll = (n) => {
     const t = {};
-    for (const s of payload.states) t[s.st] = 1;
+    for (const s of payload.states) t[s.st] = n;
     setSeats(t);
     schedule(0);
-  });
+  };
+  el.seatOne.addEventListener("click", () => setAll(1));
+  el.seatTwo.addEventListener("click", () => setAll(2));
 
   /* Drop a file anywhere on the map. Which kind it is comes from the content,
    * not the extension: a .json holding a table and a .txt holding GeoJSON are
@@ -672,6 +712,8 @@
     el.points.value = DEFAULTS.points;
     el.seed.value = DEFAULTS.seed;
     el.ghost.checked = DEFAULTS.ghost;
+    el.gravity.value = DEFAULTS.gravity;
+    el.matchOn.value = "auto";
     syncOutputs();
     solve();
   });

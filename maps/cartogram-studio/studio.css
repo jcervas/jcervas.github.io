@@ -172,6 +172,17 @@
 }
 .cs-check input { accent-color: var(--cs-accent); margin: 0; }
 
+.cs-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 9px;
+  font-size: 12.5px;
+  color: var(--cs-dim);
+}
+.cs-inline > span { flex: 0 0 auto; }
+.cs .cs-select-sm { padding: 4px 6px; font-size: 12.5px; }
+
 .cs-row { display: flex; gap: 8px; }
 .cs-row .cs-num { flex: 1; }
 
@@ -179,6 +190,7 @@
 
 .cs-seat-head {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 6px;
   margin: 12px 0 7px;
@@ -190,8 +202,8 @@
   font-weight: 600;
   color: var(--cs-ink);
 }
-.cs-seat-head button { margin-left: auto; }
-.cs-seat-head button + button { margin-left: 0; }
+.cs-seat-head > span { margin-right: auto; }
+.cs .cs-seat-head .cs-mini { white-space: nowrap; }
 
 .cs .cs-mini {
   padding: 3px 7px;
