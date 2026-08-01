@@ -130,6 +130,32 @@ img { max-width: 100%; height: auto; }
   padding-top: .9rem; border-top: 1px solid rgba(255,255,255,.3); display: inline-block;
 }
 
+/* ---------- Breadcrumbs ---------- */
+/* Inline (not flex) so a long page title wraps as ordinary text instead of
+   overflowing the line on a narrow screen. */
+.breadcrumbs {
+  max-width: var(--wrap); margin: 0 auto;
+  padding: 1rem 1.25rem 0;
+  font-size: .85rem;
+}
+/* Map pages run wider than the text column; keep the trail on their left edge. */
+.breadcrumbs--wide { max-width: 1200px; }
+
+.breadcrumbs__list { list-style: none; margin: 0; padding: 0; line-height: 1.6; }
+.breadcrumbs__item { display: inline; color: var(--muted); }
+.breadcrumbs__item + .breadcrumbs__item::before {
+  content: "/"; margin: 0 .45rem; color: var(--muted); opacity: .5;
+}
+.breadcrumbs__item--current { color: var(--ink); font-weight: 500; }
+
+/* Quieter than body links — the trail is orientation, not a call to action. */
+.breadcrumbs a { color: var(--muted); }
+.breadcrumbs a:hover { color: var(--red); }
+
+/* The trail already supplies the top gap above the title. General sibling, not
+   adjacent: the include emits its JSON-LD <script> between the two. */
+.breadcrumbs ~ .page { padding-top: 1.25rem; }
+
 /* ---------- Page content ---------- */
 .page { padding: 2.5rem 1.25rem 1rem; }
 .page-title { font-size: 2rem; margin: 0 0 1rem; }
@@ -221,7 +247,6 @@ img { max-width: 100%; height: auto; }
 .case__body p { font-size: .95rem; margin: 0; }
 
 /* ---------- Case detail page ---------- */
-.case-back { margin: 0 0 1rem; font-size: .95rem; }
 .case-detail__sub {
   color: var(--red); font-weight: 600; margin: -.5rem 0 1rem; font-size: 1.05rem;
 }
@@ -240,6 +265,10 @@ img { max-width: 100%; height: auto; }
 .case-highlights { padding-left: 1.1rem; }
 .case-highlights li { margin-bottom: .3rem; }
 .case__img-link { display: block; background: none; padding: 0; }
+
+/* Maps index: same card as a case, but with no thumbnail above the title, so
+   the heading needs the breathing room .case__sub would otherwise have given. */
+.map-card .case__body h3 { margin-bottom: .45rem; }
 
 /* ---------- Media ---------- */
 .media-inquiries {

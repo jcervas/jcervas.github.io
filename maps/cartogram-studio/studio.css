@@ -282,6 +282,14 @@
 }
 .cs .cs-btn-primary:hover { color: #fff; filter: brightness(1.08); }
 
+/* says the map on screen no longer matches the controls */
+.cs .cs-btn-stale {
+  background: var(--cs-warn);
+  border-color: var(--cs-warn);
+  color: #fff;
+}
+.cs .cs-btn-stale:hover { color: #fff; filter: brightness(1.08); }
+
 /* -------------------------------------------------------------- stage ---- */
 
 .cs-mapwrap {

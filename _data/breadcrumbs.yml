@@ -1,0 +1,14 @@
+# Breadcrumb labels for URL segments that have no page of their own.
+#
+# Anything with a real page behind it takes its label from that page's
+# front matter (`breadcrumb:` if set, otherwise `title:`), so it does not
+# need an entry here. This file is only for path segments a visitor can
+# see in the URL but cannot click through to — those crumbs render as
+# plain text with the label given here.
+#
+# Keys are the full path, with both slashes, e.g.
+#
+#     "/archive/": "Archive"
+#
+# Nothing needs one at the moment: /maps/ used to live here and now has
+# an index page of its own. Kept as the place to add the next one.

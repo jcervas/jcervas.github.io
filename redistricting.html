@@ -3,6 +3,7 @@ layout: page
 title: Redistricting &amp; Legal Work
 permalink: /redistricting/
 description: "Jonathan Cervas's court-appointed work as Special Master, consultant, and expert witness in redistricting and voting-rights cases, with reports and maps."
+breadcrumb: "Redistricting"
 ---
 
 <p class="section-lead">
@@ -47,6 +48,8 @@ description: "Jonathan Cervas's court-appointed work as Special Master, consulta
     <a href="{{ '/maps/cartogram-studio/' | relative_url }}">Solve one yourself</a>
   </span>
 </p>
+
+<p><a class="more-link" href="{{ '/maps/' | relative_url }}">Browse all interactive maps &rarr;</a></p>
 
 {% assign cases = site.cases | where_exp: "c", "c.order" | sort: "order" %}
 <div class="case-grid">

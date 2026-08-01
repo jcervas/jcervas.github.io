@@ -1147,8 +1147,381 @@
     };
   }
 
+
+  // ------------------------------------------------------ soft-body layout ----
+
+  /* Placement without a hand-drawn layout.
+   *
+   * Each region is packed with a hex lattice of equal-radius circles, seeded at
+   * its true centroid. The lattice is split into overlapping clusters and every
+   * cluster is projected each step onto the best linear transform of its rest
+   * shape -- shape matching, after Müller et al. 2005. Folding and shearing into
+   * slivers become unreachable rather than penalised, because the only
+   * configurations available are T q + c; and since area is exactly det(T) times
+   * the rest area, forcing det(T) = 1 makes area-proportional-to-seats exact
+   * rather than something to iterate toward.
+   *
+   * Three details are not in the paper and each was arrived at by measurement:
+   *
+   *   * the blend target is the IDENTITY, not the closest rotation. A rotation
+   *     is right for a physics simulation and wrong for a map -- a reader knows
+   *     a state by its silhouette and its orientation together.
+   *   * the shape constraint is annealed to a FLOOR, never to zero. Passes with
+   *     it switched off are free to push lattice points anywhere, and they
+   *     smeared outlines by a median of 17%.
+   *   * separation resolves one region pair at a time, written immediately.
+   *     Pooling the pushes is a Jacobi sweep, and a region squeezed from several
+   *     sides sits at an average of zero while still overlapping everything.
+   *
+   * Returns the deformation as control points, so the caller can carry outlines,
+   * cells or anything else through the same field with mlsWarp.
+   */
+function mlsWarp(v, ctlRest, ctlNow, K) {
+  const n = ctlRest.length;
+  const d = [];
+  for (let i = 0; i < n; i++) {
+    const dx = ctlRest[i][0] - v[0], dy = ctlRest[i][1] - v[1];
+    d.push([dx * dx + dy * dy, i]);
+  }
+  d.sort((a, b) => a[0] - b[0]);
+  const k = Math.min(K, n);
+
+  let sw = 0, px = 0, py = 0, qx = 0, qy = 0;
+  const use = [];
+  for (let m = 0; m < k; m++) {
+    const [d2, i] = d[m];
+    if (d2 < 1e-9) return [ctlNow[i][0], ctlNow[i][1]];   // sitting on a control point
+    const w = 1 / d2;
+    sw += w; use.push([w, i]);
+    px += w * ctlRest[i][0]; py += w * ctlRest[i][1];
+    qx += w * ctlNow[i][0]; qy += w * ctlNow[i][1];
+  }
+  px /= sw; py /= sw; qx /= sw; qy /= sw;
+
+  const bx = v[0] - px, by = v[1] - py;
+  let mu = 0, fx = 0, fy = 0;
+  for (const [w, i] of use) {
+    const ax = ctlRest[i][0] - px, ay = ctlRest[i][1] - py;
+    mu += w * (ax * ax + ay * ay);
+  }
+  if (mu < 1e-12) return [v[0] - px + qx, v[1] - py + qy];
+  for (const [w, i] of use) {
+    const ax = ctlRest[i][0] - px, ay = ctlRest[i][1] - py;
+    const hx = ctlNow[i][0] - qx, hy = ctlNow[i][1] - qy;
+    // A = w * [[a.b, a x b], [-(a x b), a.b]] -- a scaled rotation
+    const dot = ax * bx + ay * by, crs = ax * by - ay * bx;
+    fx += w * (hx * dot - hy * crs);
+    fy += w * (hx * crs + hy * dot);
+  }
+  return [qx + fx / mu, qy + fy / mu];
+}
+
+/* Carrying the lines back. The deformation is no longer one transform per state,
+ * so the outline goes through the lattice by moving least squares again -- but
+ * the lattice can no longer fold or shear into slivers, which is what made this
+ * step fail before. Same code, sound input. */
+
+  function hexFill(geom, spacing) {
+    const b = bbox(geom);
+    const dx = spacing, dy = (spacing * Math.sqrt(3)) / 2;
+    const idx = geom.map((part) => buildPIP(part));
+    const pts = [];
+    let row = 0;
+    for (let y = b[1]; y <= b[3] + dy; y += dy, row++) {
+      const off = row % 2 ? dx / 2 : 0;
+      for (let x = b[0] + off; x <= b[2] + dx; x += dx) {
+        for (let p = 0; p < geom.length; p++) {
+          if (pipIndexed(x, y, idx[p])) { pts.push([x, y]); break; }
+        }
+      }
+    }
+    if (!pts.length) pts.push([(b[0] + b[2]) / 2, (b[1] + b[3]) / 2]);
+    return pts;
+  }
+
+  function softLayout(regions, links, opts) {
+    opts = opts || {};
+    const W = opts.width || 1152, H = opts.height || 748.8;
+    const GAP = opts.gap == null ? 1 : opts.gap;
+    const ITERS = opts.iters || 300;
+    const SETTLE = opts.settle || 300;
+    const BETA = opts.beta == null ? 0.7 : opts.beta;
+    const STIFF = opts.stiff == null ? 0.7 : opts.stiff;
+    const FLOOR = opts.floor == null ? 0.25 : opts.floor;
+    const MINPTS = opts.minPts || 14;
+    const CLUSTER = opts.cluster || 3.5;
+    // 1.2 measured against bearing error and overlaps together: below it the
+    // bearings drift, above it the pairs fight the separation
+    const NEIGH = opts.neighbour == null ? 1.2 : opts.neighbour;
+    const onProgress = opts.onProgress || null;
+
+    const smallest = Math.min(...regions.map((r) => geomArea(r.geom)));
+    const SPACING = Math.max(2, Math.sqrt(smallest / MINPTS));
+    /* The radius has to reach the border, not just the last lattice point. A
+     * hex fill samples INSIDE the polygon, so the outline can sit a full spacing
+     * beyond the outermost centre; at 0.62 the circles stop short and two states
+     * separated by their centres still had overlapping outlines (Arizona/New
+     * Mexico, Ohio/West Virginia). Covering the boundary is what makes "circles
+     * may not overlap" mean "outlines may not overlap". */
+    const RADIUS = SPACING * (opts.radius == null ? 1.05 : opts.radius);
+    const MIN = 2 * RADIUS + GAP;
+
+    const circles = [], rest = [], owner = [];
+    const bodies = regions.map((r, i) => {
+      const pts = hexFill(r.geom, SPACING);
+      const b = bbox(r.geom);
+      const tx = r.centroid[0] - (b[0] + b[2]) / 2;
+      const ty = r.centroid[1] - (b[1] + b[3]) / 2;
+      const first = circles.length;
+      for (const p of pts) {
+        circles.push([p[0] + tx, p[1] + ty]);
+        rest.push([p[0] + tx, p[1] + ty]);
+        owner.push(i);
+      }
+      return { first, count: pts.length, shift: [tx, ty], mass: r.mass || 1 };
+    });
+    const N = circles.length;
+
+    // overlapping clusters, so a region can bend locally
+    const clusters = [];
+    bodies.forEach((s, si) => {
+      const L = SPACING * CLUSTER;
+      const cells = new Map();
+      for (let k = 0; k < s.count; k++) {
+        const p = rest[s.first + k];
+        const key = Math.floor(p[0] / L) + "," + Math.floor(p[1] / L);
+        if (!cells.has(key)) cells.set(key, []);
+        cells.get(key).push(s.first + k);
+      }
+      let made = 0;
+      for (const key of cells.keys()) {
+        const [gx, gy] = key.split(",").map(Number);
+        const members = [];
+        for (let ox = -1; ox <= 1; ox++) for (let oy = -1; oy <= 1; oy++) {
+          const v = cells.get((gx + ox) + "," + (gy + oy));
+          if (v) members.push(...v);
+        }
+        if (members.length < 3) continue;
+        clusters.push({ si, members }); made++;
+      }
+      if (!made) clusters.push({ si, members: Array.from({ length: s.count }, (_, k) => s.first + k) });
+    });
+    for (const c of clusters) {
+      let cx = 0, cy = 0;
+      for (const i of c.members) { cx += rest[i][0]; cy += rest[i][1]; }
+      c.rc = [cx / c.members.length, cy / c.members.length];
+      let qxx = 0, qxy = 0, qyy = 0;
+      c.q = c.members.map((i) => {
+        const qx = rest[i][0] - c.rc[0], qy = rest[i][1] - c.rc[1];
+        qxx += qx * qx; qxy += qx * qy; qyy += qy * qy;
+        return [qx, qy];
+      });
+      const det = qxx * qyy - qxy * qxy;
+      c.qinv = Math.abs(det) < 1e-9 ? null : [qyy / det, -qxy / det, -qxy / det, qxx / det];
+    }
+    const share = new Float64Array(N);
+    for (const c of clusters) for (const i of c.members) share[i] += 1;
+    const goalX = new Float64Array(N), goalY = new Float64Array(N);
+
+    function shapeMatch(stiff) {
+      goalX.fill(0); goalY.fill(0);
+      for (const c of clusters) {
+        let cx = 0, cy = 0;
+        for (const i of c.members) { cx += circles[i][0]; cy += circles[i][1]; }
+        cx /= c.members.length; cy /= c.members.length;
+        let Txx = 1, Txy = 0, Tyx = 0, Tyy = 1;
+        if (c.qinv) {
+          let pxx = 0, pxy = 0, pyx = 0, pyy = 0;
+          for (let m = 0; m < c.members.length; m++) {
+            const i = c.members[m];
+            const rx = circles[i][0] - cx, ry = circles[i][1] - cy;
+            const q = c.q[m];
+            pxx += rx * q[0]; pxy += rx * q[1];
+            pyx += ry * q[0]; pyy += ry * q[1];
+          }
+          const iv = c.qinv;
+          const Axx = pxx * iv[0] + pxy * iv[2], Axy = pxx * iv[1] + pxy * iv[3];
+          const Ayx = pyx * iv[0] + pyy * iv[2], Ayy = pyx * iv[1] + pyy * iv[3];
+          // toward the identity, so a region never turns
+          Txx = BETA * Axx + (1 - BETA);
+          Txy = BETA * Axy;
+          Tyx = BETA * Ayx;
+          Tyy = BETA * Ayy + (1 - BETA);
+        }
+        let det = Txx * Tyy - Txy * Tyx;
+        if (!(Math.abs(det) > 1e-12)) { Txx = Tyy = 1; Txy = Tyx = 0; det = 1; }
+        const k = Math.sqrt(1 / Math.abs(det)) * (det < 0 ? -1 : 1);
+        Txx *= k; Txy *= k; Tyx *= k; Tyy *= k;
+        for (let m = 0; m < c.members.length; m++) {
+          const i = c.members[m], q = c.q[m];
+          goalX[i] += Txx * q[0] + Txy * q[1] + cx;
+          goalY[i] += Tyx * q[0] + Tyy * q[1] + cy;
+        }
+      }
+      for (let i = 0; i < N; i++) {
+        if (!share[i]) continue;
+        circles[i][0] += (goalX[i] / share[i] - circles[i][0]) * stiff;
+        circles[i][1] += (goalY[i] / share[i] - circles[i][1]) * stiff;
+      }
+    }
+
+    function separate() {
+      const grid = new Map();
+      for (let i = 0; i < N; i++) {
+        const k = Math.floor(circles[i][0] / MIN) + "," + Math.floor(circles[i][1] / MIN);
+        let v = grid.get(k); if (!v) grid.set(k, v = []);
+        v.push(i);
+      }
+      /* Candidate pairs must scan the SAME neighbourhood the contact test uses:
+       * with a cell exactly MIN across, two points 0.9*MIN apart routinely land
+       * in adjacent cells, and a same-cell list silently omits them. */
+      const pairs = new Set();
+      for (let i = 0; i < N; i++) {
+        const gx = Math.floor(circles[i][0] / MIN), gy = Math.floor(circles[i][1] / MIN);
+        for (let ox = -1; ox <= 1; ox++) for (let oy = -1; oy <= 1; oy++) {
+          const v = grid.get((gx + ox) + "," + (gy + oy));
+          if (!v) continue;
+          for (const j of v) {
+            const oa = owner[i], ob = owner[j];
+            if (oa === ob) continue;
+            const dx = circles[i][0] - circles[j][0], dy = circles[i][1] - circles[j][1];
+            if (dx * dx + dy * dy >= MIN * MIN) continue;
+            pairs.add(oa < ob ? oa * 4096 + ob : ob * 4096 + oa);
+          }
+        }
+      }
+      let hits = 0;
+      for (const key of pairs) {
+        const i = Math.floor(key / 4096), j = key % 4096;
+        const A = bodies[i], B = bodies[j];
+        let worst = 0, ux = 0, uy = 0;
+        for (let a = 0; a < A.count; a++) {
+          const ia = A.first + a;
+          const gx = Math.floor(circles[ia][0] / MIN), gy = Math.floor(circles[ia][1] / MIN);
+          for (let ox = -1; ox <= 1; ox++) for (let oy = -1; oy <= 1; oy++) {
+            const v = grid.get((gx + ox) + "," + (gy + oy));
+            if (!v) continue;
+            for (const ib of v) {
+              if (owner[ib] !== j) continue;
+              const dx = circles[ia][0] - circles[ib][0], dy = circles[ia][1] - circles[ib][1];
+              const d2 = dx * dx + dy * dy;
+              if (d2 >= MIN * MIN) continue;
+              const d = Math.sqrt(d2) || 1e-9;
+              const pen = MIN - d;
+              if (pen > worst) { worst = pen; ux = dx / d; uy = dy / d; }
+            }
+          }
+        }
+        if (worst <= 0) continue;
+        hits++;
+        const mi = A.mass, mj = B.mass;
+        const wi = (mj / (mi + mj)) * worst, wj = (mi / (mi + mj)) * worst;
+        for (let m = 0; m < A.count; m++) { circles[A.first + m][0] += ux * wi; circles[A.first + m][1] += uy * wi; }
+        for (let m = 0; m < B.count; m++) { circles[B.first + m][0] -= ux * wj; circles[B.first + m][1] -= uy * wj; }
+      }
+      return hits;
+    }
+
+    /* Neighbour constraints, on the OFFSET rather than the distance.
+     *
+     * A distance-only spring says nothing about which side of you your
+     * neighbour is on, so two regions can slide past each other into swapped
+     * positions and the spring will then hold them there perfectly happily --
+     * which is how Georgia ended up south of Florida and South Carolina north of
+     * North Carolina. Targeting the original centroid offset, scaled by how much
+     * the pair resized, constrains direction as well as separation and makes the
+     * swap something the solver actively undoes. */
+    /* The target is a BEARING, not an offset.
+     *
+     * Targeting the scaled offset assumes both neighbours resized by about the
+     * same amount, and they do not: California grows to fifty-two seats while
+     * Oregon stays small, so the distance California's own centre now needs to
+     * its northern edge is far more than the scaled original. Oregon was pulled
+     * to a distance that put it beside California rather than above it.
+     *
+     * So only the direction is constrained. How far apart two regions end up is
+     * the separation's business -- it is the one that knows how big they are --
+     * and this just insists they sit on the correct side of each other. */
+    /* Target offset: the true BEARING, at a distance set by how big the two
+     * regions have become.
+     *
+     * Scaling the original offset by the pair's mean scale assumes both resized
+     * about equally, and they do not -- California grows to fifty-two seats
+     * while Oregon stays small, so the distance from California's centre to its
+     * own northern edge is far more than the scaled original offset allows, and
+     * Oregon gets pulled in beside it rather than above it.
+     *
+     * Using each region's own equivalent radius fixes that and stays bounded,
+     * which a pure bearing constraint does not: correcting toward a direction at
+     * whatever distance the pair currently has makes the correction grow with
+     * the error, and the layout runs away (every area wrong, bearings random). */
+    const radiusOf = regions.map((r) => Math.sqrt(geomArea(r.geom) / Math.PI));
+    const anchors = [];
+    for (const [i, j] of (links || [])) {
+      const dx = regions[j].centroid[0] - regions[i].centroid[0];
+      const dy = regions[j].centroid[1] - regions[i].centroid[1];
+      const d = Math.hypot(dx, dy) || 1;
+      const want = (radiusOf[i] + radiusOf[j]) * 0.95;
+      anchors.push([i, j, (dx / d) * want, (dy / d) * want]);
+    }
+    const centreOf = (s) => {
+      let cx = 0, cy = 0;
+      for (let m = 0; m < s.count; m++) { cx += circles[s.first + m][0]; cy += circles[s.first + m][1]; }
+      return [cx / s.count, cy / s.count];
+    };
+    function holdNeighbours(strength) {
+      let worst = 0;
+      for (const [i, j, ux, uy] of anchors) {
+        const A = bodies[i], B = bodies[j];
+        const ca = centreOf(A), cb = centreOf(B);
+        const ex = (cb[0] - ca[0]) - ux, ey = (cb[1] - ca[1]) - uy;
+        const e = Math.hypot(ex, ey);
+        if (e < 0.01) continue;
+        worst = Math.max(worst, e);
+        const mi = A.mass, mj = B.mass;
+        const fi = (mj / (mi + mj)) * strength, fj = (mi / (mi + mj)) * strength;
+        for (let m = 0; m < A.count; m++) { circles[A.first + m][0] += ex * fi; circles[A.first + m][1] += ey * fi; }
+        for (let m = 0; m < B.count; m++) { circles[B.first + m][0] -= ex * fj; circles[B.first + m][1] -= ey * fj; }
+      }
+      return worst;
+    }
+
+    for (let it = 0; it < ITERS; it++) {
+      const anneal = 1 - it / ITERS;
+      shapeMatch(STIFF);
+      holdNeighbours(NEIGH * anneal + 0.05);
+      separate();
+      if (onProgress && it % 20 === 0) onProgress(it / (ITERS + SETTLE));
+    }
+    let extra = 0;
+    for (; extra < SETTLE; extra++) {
+      const stiff = FLOOR + (STIFF - FLOOR) * Math.pow(1 - extra / SETTLE, 2);
+      shapeMatch(stiff);
+      holdNeighbours(0.05);
+      if (!separate()) break;
+      if (onProgress && extra % 20 === 0) onProgress((ITERS + extra) / (ITERS + SETTLE));
+    }
+    for (let q = 0; q < 200; q++) { shapeMatch(FLOOR); if (!separate()) break; }
+    const unmet = holdNeighbours(0);
+
+    return {
+      control: bodies.map((s) => ({
+        shift: s.shift,
+        rest: rest.slice(s.first, s.first + s.count),
+        now: circles.slice(s.first, s.first + s.count),
+      })),
+      radius: RADIUS, spacing: SPACING, circles: N, iterations: ITERS + extra,
+      centres: bodies.map(centreOf),
+      warp(i, v) {
+        const c = this.control[i];
+        return mlsWarp([v[0] + c.shift[0], v[1] + c.shift[1]], c.rest, c.now, 10);
+      },
+    };
+  }
+
   return {
     mulberry32, ringArea2, partArea, geomArea, bbox,
+    softLayout, hexFill, mlsWarp,
     albersFit, ingestGeoJSON, topologyToFeatures,
     parseDelimited, seatsFromTable,
     pointInPart, pointInGeom, buildPIP, pipIndexed, samplePoints, kmeans,

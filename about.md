@@ -1,6 +1,7 @@
 ---
 layout: subpage
 title: "About Jonathan Cervas"
+breadcrumb: "About"
 permalink: /about/
 redirect_from:
   - /about.html
