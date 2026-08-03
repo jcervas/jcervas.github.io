@@ -110,6 +110,12 @@ defaults:
       breadcrumb: "Alpine Lake construction"
       wide: true
       order: 9
+  - scope:
+      path: "maps/packed-cartogram/index.html"
+    values:
+      breadcrumb: "Packed cartogram"
+      wide: true
+      order: 10
 
 # Primary navigation (edit here to change the menu everywhere)
 nav:
