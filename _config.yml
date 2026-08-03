@@ -88,16 +88,15 @@ defaults:
       wide: true
       order: 5
   - scope:
-      path: "maps/cartogram-placement/index.html"
+      path: "maps/cartogram-placement/index.md"
     values:
       breadcrumb: "Placement walkthrough"
       wide: true
       order: 6
-  - scope:
-      path: "maps/cartogram-method/index.md"
-    values:
-      breadcrumb: "Cartogram method"
-      order: 7
+  # cartogram-method has no entry on purpose. The walkthrough moved to
+  # /maps/cartogram-placement/ and what is left at the old URL is a redirect
+  # stub, carrying layout: null and sitemap: false -- giving it an `order`
+  # would put a bare redirect on the index.
   - scope:
       path: "maps/cartogram-studio/index.html"
     values:
