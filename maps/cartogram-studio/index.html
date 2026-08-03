@@ -6,7 +6,7 @@ description: "The equal-area U.S. House cartogram, solved live in the browser. C
 
 <link rel="stylesheet" href="{{ '/maps/cartogram-studio/studio.css' | relative_url }}?v=e71a68a4">
 
-<div class="cs" id="cs-root" data-src="{{ '/maps/cartogram-studio/studio.json' | relative_url }}?v=dc251404" data-worker="{{ '/maps/cartogram-studio/studio.worker.fa1aa6ad.js' | relative_url }}">
+<div class="cs" id="cs-root" data-src="{{ '/maps/cartogram-studio/studio.json' | relative_url }}?v=dc251404" data-worker="{{ '/maps/cartogram-studio/studio.worker.1f475078.js' | relative_url }}">
 
   <header class="cs-head">
     <h1 class="cs-title">Cartogram studio</h1>
@@ -96,14 +96,14 @@ description: "The equal-area U.S. House cartogram, solved live in the browser. C
         <span class="cs-label">Placement <output class="cs-out" id="cs-mode-out">hand-drawn slots</output></span>
         <select class="cs-select" id="cs-placement">
           <option value="auto" selected>Slots, falling back to force</option>
-          <option value="soft">Soft body — no hand-drawn layout</option>
+          <option value="free">Free — no hand-drawn layout</option>
         </select>
-        <p class="cs-note" id="cs-soft-note" hidden>
-          Every state is packed with a lattice of equal circles, held in shape by
-          shape matching and pushed apart until nothing overlaps — then the real
-          state lines are carried back through the lattice. Uses no hand-drawn
-          layout at all, and takes a few seconds, so it runs only when you press
-          <strong>Re-solve</strong>.
+        <p class="cs-note" id="cs-free-note" hidden>
+          Every state keeps its exact outline. Each is pinned at its own centroid,
+          the whole arrangement is spread apart until nothing overlaps, and then
+          gravity draws it back together while the states are held apart along
+          their borders. Uses no hand-drawn layout at all — and because the
+          states are only moved, never bent, every shape stays exactly itself.
         </p>
         <label class="cs-label" for="cs-gravity" style="margin-top:8px">
           Compaction <output class="cs-out" id="cs-gravity-out">0.005</output>
@@ -244,8 +244,8 @@ description: "The equal-area U.S. House cartogram, solved live in the browser. C
     </p>
   </section>
 
-<p class="cg-updated" style="margin:18px 0 0;font-size:12.5px;opacity:.65">Updated <time datetime="2026-08-01T15:23:02-04:00">1 August 2026</time> · solved in your browser by <a href="https://github.com/jcervas/cartograms">web/solver.js</a></p>
+<p class="cg-updated" style="margin:18px 0 0;font-size:12.5px;opacity:.65">Updated <time datetime="2026-08-03T13:10:29-04:00">3 August 2026</time> · solved in your browser by <a href="https://github.com/jcervas/cartograms">web/solver.js</a></p>
 </div>
 
-<script src="{{ '/maps/cartogram-studio/solver.8ed51b2d.js' | relative_url }}" defer></script>
-<script src="{{ '/maps/cartogram-studio/studio.js' | relative_url }}?v=a3b311cb" defer></script>
+<script src="{{ '/maps/cartogram-studio/solver.3684047d.js' | relative_url }}" defer></script>
+<script src="{{ '/maps/cartogram-studio/studio.js' | relative_url }}?v=9da1aa2f" defer></script>
