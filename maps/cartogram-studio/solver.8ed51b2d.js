@@ -1331,9 +1331,16 @@ function mlsWarp(v, ctlRest, ctlNow, K) {
     const FLOOR = opts.floor == null ? 0.25 : opts.floor;
     const MINPTS = opts.minPts || 14;
     const CLUSTER = opts.cluster || 3.5;
-    // 1.2 measured against bearing error and overlaps together: below it the
-    // bearings drift, above it the pairs fight the separation
-    const NEIGH = opts.neighbour == null ? 1.2 : opts.neighbour;
+    /* Anchor strength. This is a fraction of the gap closed per pass, so values
+     * at or above 1 overshoot: the pair sails past each other, and with 380
+     * anchors each translating whole states it scrambles the map. It was 1.2,
+     * which is why the anchors were making the arrangement three times WORSE
+     * than switching them off -- something I never caught because I only ever
+     * compared anchor variants against each other, never against no anchors.
+     *
+     * 0.1 measured against a no-anchor baseline: it is what fixes Maryland ->
+     * Delaware (127 degrees out to 6) at the least cost elsewhere. */
+    const NEIGH = Math.min(0.6, opts.neighbour == null ? 0.1 : opts.neighbour);
     const onProgress = opts.onProgress || null;
 
     const smallest = Math.min(...regions.map((r) => geomArea(r.geom)));
