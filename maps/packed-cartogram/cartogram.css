@@ -200,3 +200,9 @@ path.state:hover { fill: var(--state-hover); }
   border-radius: 6px;
   font-size: .9rem;
 }
+
+.leaders line {
+  stroke: var(--label-ink);
+  stroke-width: .7;
+  opacity: .55;
+}

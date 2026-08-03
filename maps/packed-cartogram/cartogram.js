@@ -180,12 +180,13 @@
     .attr('preserveAspectRatio', 'xMidYMid meet');
   const gFit = svg.append('g');
   const gStates = gFit.append('g');
+  const gLeaders = svg.append('g').attr('class', 'leaders');
   const gLabels = svg.append('g').attr('class', 'labels');
   const tip = $('tooltip');
 
   let states = [];         // per-state geometry, fixed for the life of the page
   let bodies = null;       // per-solve rigid bodies
-  let raf = null;
+  let raf = null, timer = null;
 
   Promise.all([
     fetch('states.topojson').then((r) => {
@@ -582,16 +583,14 @@
   let fit = null;
 
   function draw(B, snap) {
-    const t = 1;
-
     let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
     for (let i = 0; i < B.NB; i++) {
       const bb = B.list[i].bbox;
       const ax = B.px[i], ay = B.py[i];
-      if (ax + bb[0] * t < x0) x0 = ax + bb[0] * t;
-      if (ay + bb[1] * t < y0) y0 = ay + bb[1] * t;
-      if (ax + bb[2] * t > x1) x1 = ax + bb[2] * t;
-      if (ay + bb[3] * t > y1) y1 = ay + bb[3] * t;
+      if (ax + bb[0] < x0) x0 = ax + bb[0];
+      if (ay + bb[1] < y0) y0 = ay + bb[1];
+      if (ax + bb[2] > x1) x1 = ax + bb[2];
+      if (ay + bb[3] > y1) y1 = ay + bb[3];
     }
     const pad = 8;
     const K = Math.min((W - 2 * pad) / (x1 - x0 || 1), (H - 2 * pad) / (y1 - y0 || 1));
@@ -609,18 +608,77 @@
 
     gFit.attr('transform', `translate(${fit.ox.toFixed(2)},${fit.oy.toFixed(2)}) scale(${fit.k.toFixed(4)})`);
     gStates.selectAll('path').attr('transform', (d, i) =>
-      `translate(${B.px[i].toFixed(2)},${B.py[i].toFixed(2)}) scale(${t.toFixed(4)})`);
+      `translate(${B.px[i].toFixed(2)},${B.py[i].toFixed(2)})`);
 
     /* Labels live outside the fitted group so their size is in screen units and
-     * stays legible whatever the packing does to the scale. */
+     * stays legible whatever the packing does to the scale. While the pack is
+     * still moving they simply sit on their anchors; decluttering waits until
+     * it has settled, since there is no point solving an arrangement that is
+     * about to change. */
     gLabels.selectAll('text')
-      .attr('x', (d, i) => fit.ox + (B.px[i] + B.list[i].label[0] * t) * fit.k)
-      .attr('y', (d, i) => fit.oy + (B.py[i] + B.list[i].label[1] * t) * fit.k)
-      .attr('font-size', (d, i) => {
-        const px = B.list[i].span * t * fit.k;
-        return Math.max(6.5, Math.min(20, px * 0.34)).toFixed(1);
+      .attr('x', (d, i) => anchor(B, i)[0])
+      .attr('y', (d, i) => anchor(B, i)[1])
+      .attr('font-size', (d, i) => labelSize(B, i).toFixed(1));
+  }
+
+  const anchor = (B, i) => [
+    fit.ox + (B.px[i] + B.list[i].label[0]) * fit.k,
+    fit.oy + (B.py[i] + B.list[i].label[1]) * fit.k,
+  ];
+
+  /* Never smaller than this. Shrinking a label to fit its state is what made
+   * New England unreadable: six small states share one corner of the map, and
+   * at the size their shapes allowed, the two-letter codes were a smear -- to
+   * the point of reading as though New Hampshire sat east of Maine. */
+  const LABEL_MIN = 9.5, LABEL_MAX = 20;
+
+  const labelSize = (B, i) =>
+    Math.max(LABEL_MIN, Math.min(LABEL_MAX, B.list[i].span * fit.k * 0.34));
+
+  /* Anchor every label at its state's guaranteed-inside point, let a force
+   * simulation push the overlapping ones apart, and draw a connector back for
+   * any that had to move. Same declutter the mid-decade map uses. Run
+   * synchronously, so the labels are settled the moment they appear. */
+  function declutter(B) {
+    const nodes = B.list.map((b, i) => {
+      const [ax, ay] = anchor(B, i);
+      const size = labelSize(B, i);
+      return {
+        i, ax, ay, x: ax, y: ay, size,
+        collide: size * 0.82 + 1.8,
+        /* A label big enough to sit comfortably inside its own state should
+         * hold its ground; it is the cramped ones that need to give way. */
+        hold: Math.min(0.95, Math.max(0.10, size / 17)),
+      };
+    });
+    const sim = d3.forceSimulation(nodes)
+      .alphaDecay(0.12).alphaMin(0.01)
+      .force('collide', d3.forceCollide((d) => d.collide).iterations(3))
+      .force('x', d3.forceX((d) => d.ax).strength((d) => d.hold))
+      .force('y', d3.forceY((d) => d.ay).strength((d) => d.hold))
+      .stop();
+    sim.tick(Math.ceil(Math.log(sim.alphaMin() / sim.alpha()) / Math.log(1 - sim.alphaDecay())));
+
+    gLabels.selectAll('text')
+      .attr('x', (d, i) => nodes[i].x.toFixed(1))
+      .attr('y', (d, i) => nodes[i].y.toFixed(1))
+      .attr('font-size', (d, i) => nodes[i].size.toFixed(1));
+
+    const moved = nodes.filter((d) =>
+      Math.hypot(d.x - d.ax, d.y - d.ay) > d.collide * 0.85);
+    const leads = gLeaders.selectAll('line').data(moved, (d) => d.i);
+    leads.exit().remove();
+    leads.enter().append('line').attr('class', 'leader').merge(leads)
+      .attr('x1', (d) => {
+        const a = Math.atan2(d.ay - d.y, d.ax - d.x);
+        return (d.x + Math.cos(a) * d.collide).toFixed(1);
       })
-      .attr('opacity', (d, i) => (B.list[i].span * t * fit.k < 15 ? 0 : 1));
+      .attr('y1', (d) => {
+        const a = Math.atan2(d.ay - d.y, d.ax - d.x);
+        return (d.y + Math.sin(a) * d.collide * 0.8).toFixed(1);
+      })
+      .attr('x2', (d) => d.ax.toFixed(1))
+      .attr('y2', (d) => d.ay.toFixed(1));
   }
 
   function paintOnce(B) {
@@ -655,31 +713,70 @@
 
   /* ---------------------------------------------------------------- drive -- */
 
+  /* Drive the solve on animation frames when the page is actually being drawn,
+   * and on a timer when it is not. A hidden tab never fires requestAnimationFrame
+   * at all, so a page opened in a background tab used to sit on "Packing..."
+   * forever and still be sitting there when the reader switched to it. The
+   * timer path is not smooth, but nothing is being watched then anyway. */
+  function nextFrame(fn) {
+    if (document.hidden) {
+      timer = setTimeout(fn, 0);
+      return;
+    }
+    raf = requestAnimationFrame(fn);
+  }
+
+  function stopFrames() {
+    if (raf) { cancelAnimationFrame(raf); raf = null; }
+    if (timer) { clearTimeout(timer); timer = null; }
+  }
+
   function solve() {
-    if (raf) cancelAnimationFrame(raf);
+    stopFrames();
     const padding = +$('padding').value;
     const B = build($('metric').value, padding);
     bodies = B;
     fit = null;
+    gLeaders.selectAll('line').remove();
     paintOnce(B);
     draw(B, true);
 
     const t0 = performance.now();
     $('run').classList.add('busy');
 
+    const finish = () => {
+      B.ms = Math.round(performance.now() - t0);
+      report(B);
+      $('run').classList.remove('busy');
+    };
+
+    /* A page that is not on screen gets the whole solve in one go. Animating it
+     * is pointless when nobody is watching, and worse than pointless: a hidden
+     * tab fires no animation frames at all and throttles timers to about one a
+     * second, so yielding between passes would leave the map unsolved for
+     * minutes and still unsolved when the reader finally switched to it. */
+    if (document.hidden) {
+      while (!done(B)) step(B);
+      draw(B, true);
+      finish();
+      declutter(B);
+      return;
+    }
+
     (function frame() {
       const until = performance.now() + 12;
       while (!done(B) && performance.now() < until) step(B);
       draw(B, false);
-      if (!done(B)) { raf = requestAnimationFrame(frame); return; }
-      /* Let the fit finish easing after the physics has stopped. */
-      B.ms = Math.round(performance.now() - t0);
-      report(B);
-      $('run').classList.remove('busy');
+      if (!done(B)) { nextFrame(frame); return; }
+      finish();
+      /* Let the fit finish easing, THEN declutter -- the label arrangement
+       * depends on the final scale, so solving it earlier would only have to
+       * be thrown away. */
       let settle = 30;
       (function ease() {
         draw(B, false);
-        if (--settle > 0) raf = requestAnimationFrame(ease);
+        if (--settle > 0) { nextFrame(ease); return; }
+        declutter(B);
       })();
     })();
   }
