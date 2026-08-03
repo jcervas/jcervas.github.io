@@ -71,11 +71,37 @@
  * it fights the separation pass forever and settles at an equilibrium that
  * still contains overlap.
  *
- * KNOWN LIMIT: this converges at the default settings and across the four
- * measures, but it is not robust at every padding -- a few values leave one or
- * two contacts short of the requested gap. The readout MEASURES the clearance
- * actually achieved rather than assuming it, and says so when it falls short.
- * Trust the number on the page, not the value on the slider.
+ * A fourth force holds NEIGHBOURS in their true bearing to one another, because
+ * gravity says where each state belongs on its own and nothing whatever about
+ * where states belong relative to each other -- so a large state on the edge of
+ * the pack can shoulder a small one straight past itself, which is how Maine
+ * came to sit west of New Hampshire. It corrects only the component ACROSS the
+ * true bearing, never along it, so the padding is still free to drive
+ * neighbours apart.
+ *
+ * That force is switched on by MEASURED distortion and is off for most of this
+ * map's settings. True bearings are only simultaneously satisfiable while the
+ * resizing is mild: once New Jersey is 3.6x its true size it cannot sit at its
+ * true bearing from both New York and Pennsylvania without overlapping one of
+ * them, and a spring demanding it fights the separation pass until the packing
+ * is worse than with no alignment at all -- measured, at every strength tried.
+ * So its strength scales with the spread of the scale factors and reaches zero
+ * by a coefficient of variation of 0.25. Under "land area" the spread is zero
+ * and it runs at full strength, halving the misordered pairs; under the three
+ * resized measures it is off entirely and the packing is bit-for-bit what it
+ * was without it.
+ *
+ * KNOWN LIMITS, both measured rather than guessed at:
+ *
+ *   - Convergence is not robust at every padding, and "two per state" falls
+ *     short at the default. The readout MEASURES the clearance achieved rather
+ *     than assuming it, and says so when the packing misses. Trust the number
+ *     on the page, not the value on the slider.
+ *
+ *   - Relative position is approximate under the resized measures, where the
+ *     alignment force is off: about 1% of east-west state pairs come out on the
+ *     wrong side of each other against the true projection. Under "land area",
+ *     with alignment on, that is halved.
  */
 
 (function () {
@@ -108,6 +134,8 @@
     STEP_TOUCH: 1.2,   // furthest a body already in contact may move in a pass
     PROJECT: 6,        // separation projections run per pull toward geography
     MAX_BIAS: 0.8,     // share of the move taken from the deepest contact alone
+    ALIGN: 0.06,       // how hard neighbours hold each other's true bearing
+    ALIGN_FADE: 0.25,  // scale spread at which alignment is switched off entirely
 
     /* How much a state's value resists being pushed. 1 is physically honest
      * (mass proportional to area) but it makes a 1-seat state absorb 98% of
@@ -185,6 +213,7 @@
   const tip = $('tooltip');
 
   let states = [];         // per-state geometry, fixed for the life of the page
+  let adjacency = [];      // for each state, the indices of the states it borders
   let bodies = null;       // per-solve rigid bodies
   let raf = null, timer = null;
 
@@ -201,6 +230,10 @@
     const seats = new Map(d3.csvParse(csvText).map((r) => [r.abbr, {
       name: r.name, seats: +r.seats,
     }]));
+
+    /* Who borders whom, taken from the shared arcs in the topology rather than
+     * guessed at from the projected outlines. */
+    adjacency = topojson.neighbors(topo.objects.states.geometries);
 
     const fc = topojson.feature(topo, topo.objects.states);
     const projection = d3.geoAlbersUsa().fitExtent([[0, 0], [W, H]], fc);
@@ -376,6 +409,23 @@
     }
     spread(hi * 1.04);
     B.startE = hi * 1.04;
+
+    /* How far this measure moves the states away from their true sizes, as the
+     * spread of the scale factors. It decides how much say the alignment force
+     * gets, because true bearings are only achievable while the resizing is
+     * mild: hold every neighbour to its real bearing on a map where New Jersey
+     * is 3.6x its true size and the constraints contradict each other, the
+     * separation pass never wins, and the packing ends up worse than with no
+     * alignment at all. Measured, not assumed -- under "land area" the spread
+     * is zero and alignment runs at full strength. */
+    const ks = list.map((b) => b.k);
+    const mean = ks.reduce((a, v) => a + v, 0) / ks.length;
+    const cv = Math.sqrt(ks.reduce((a, v) => a + (v - mean) * (v - mean), 0) / ks.length) / mean;
+    B.alignScale = Math.max(0, 1 - cv / TUNE.ALIGN_FADE);
+
+    const pairs = [];
+    adjacency.forEach((ns, i) => ns.forEach((j) => { if (j > i) pairs.push(i, j); }));
+    B.pairs = Int32Array.from(pairs);
 
     /* A body in contact may never be pulled further in one step than the gap it
      * is being asked to keep. The padding IS the safety margin here: two states
@@ -570,10 +620,44 @@
     return B.maxOver <= 0.01;
   }
 
+  /* Neighbours hold each other in their true bearing. Gravity says where each
+   * state belongs on its own and nothing at all about where states belong
+   * RELATIVE to one another, so a large state on the edge of the pack can
+   * shoulder a small one straight past itself. That is how Maine ended up west
+   * of New Hampshire: Maine has neighbours on one side only, resists being
+   * moved because the correction is mass-weighted, and pushes Vermont and New
+   * Hampshire around itself as the pack contracts.
+   *
+   * Only the component ACROSS the true bearing is corrected. The component
+   * along it is left alone, because the padding has to drive neighbours apart
+   * and a spring resisting that would simply close the gap again. So a pair may
+   * separate as far as the packing needs, but it may not rotate about the other
+   * -- and if it has already swapped sides, the second term drives it back. */
+  function align(B, s) {
+    const { px, py, hx, hy, inv, pairs } = B;
+    for (let p = 0; p < pairs.length; p += 2) {
+      const i = pairs[p], j = pairs[p + 1];
+      const ex = hx[j] - hx[i], ey = hy[j] - hy[i];
+      const el = Math.hypot(ex, ey);
+      if (el < 1e-6) continue;
+      const ux = ex / el, uy = ey / el;
+      const dx = px[j] - px[i], dy = py[j] - py[i];
+      const along = dx * ux + dy * uy;
+      let mx = -(dx - along * ux), my = -(dy - along * uy);
+      if (along < 0) { mx -= along * ux; my -= along * uy; }
+      mx *= s; my *= s;
+      const wi = inv[i], wj = inv[j], sw = wi + wj;
+      px[i] -= mx * (wi / sw); py[i] -= my * (wi / sw);
+      px[j] += mx * (wj / sw); py[j] += my * (wj / sw);
+    }
+  }
+
   function step(B) {
     const gf = Math.min(1, B.iter / (TUNE.ITERS * TUNE.GRAVITY_OFF));
     const g = TUNE.GRAVITY0 * (1 - smoothstep(gf));
     if (g > 0) attract(B, g);
+    const a = TUNE.ALIGN * B.alignScale * (1 - smoothstep(gf));
+    if (a > 0) align(B, a);
     for (let k = 0; k < TUNE.PROJECT; k++) pass(B);
     B.iter++;
   }

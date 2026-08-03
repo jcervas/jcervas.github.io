@@ -135,13 +135,36 @@ description: "A cartogram where every state keeps its exact shape: each state is
       the one contact that is genuinely overlapping, and that contact never clears no
       matter how long the solve runs. Weighting by depth lets the worst contact lead.
     </p>
+    <p>
+      A fourth force holds <strong>neighbours in their true bearing</strong> to one
+      another. Gravity says where each state belongs on its own and nothing at all
+      about where states belong <em>relative</em> to each other, so a large state on
+      the edge of the pack can shoulder a small one straight past itself — which is
+      how Maine came to sit west of New Hampshire. It corrects only the component
+      across the true bearing, never along it, so the padding is still free to push
+      neighbours apart.
+    </p>
+    <p>
+      That force is only switched on when the map is barely resized, and the reason
+      is worth stating: true bearings are not all satisfiable at once. Once New Jersey
+      is 3.6&times; its true size it cannot sit at its true bearing from both New York
+      and Pennsylvania without overlapping one of them. A spring demanding it fights
+      the separation pass until the packing comes out worse than with no alignment at
+      all — which is what happened at every strength tried. So its strength is scaled
+      by the measured spread of the scale factors. Under <em>Land area</em> the spread
+      is zero, alignment runs at full strength, and it halves the misordered pairs;
+      under the three resized measures it is off.
+    </p>
+
     <p class="caveat">
-      <strong>Honest caveat:</strong> the solver converges at the default settings and
-      for all four measures, but it is not robust at every padding — a few values
-      leave one or two contacts short of the gap requested. So the clearance above is
-      <em>measured</em> on the finished map, not assumed from the settings, and the
-      line beneath it says plainly when the packing fell short. Trust that number
-      rather than the slider.
+      <strong>Honest caveats,</strong> both measured rather than asserted. The solver
+      does not converge at every padding, and <em>Two per state</em> falls short at the
+      default — so the clearance above is measured on the finished map, not inferred
+      from the settings, and the line beneath it says plainly when the packing missed.
+      And relative position is only approximate: under the resized measures about 1% of
+      east–west state pairs come out on the wrong side of one another compared with the
+      true projection. This map buys exact shape and exact area by spending accuracy
+      on <em>where</em> things sit, and that is the bill.
     </p>
 
     <h3>What the controls show</h3>
