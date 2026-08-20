@@ -60,7 +60,7 @@ The course grade will be a weighted average of the following components:
 | Op-ed, first draft       | September 21                     |
 | Op-ed peer review        | September 24                     |
 | Op-ed final draft        | September 28                     |
-| Book Review (slides)     | October 24                       |
+| Book Review (slides)     | November 23                      |
 | Group Project            | December 1/3                     |
 | Group Project reflection | December 4                       |
 

@@ -120,7 +120,7 @@ The course grade will be a weighted average of the following components:
 | Op-ed, first draft       | September 21                     |
 | Op-ed peer review        | September 24                     |
 | Op-ed final draft        | September 28                     |
-| Book Review (slides)     | October 24                       |
+| Book Review (slides)     | November 23                      |
 | Group Project            | December 1/3                     |
 | Group Project reflection | December 4                       |
 
@@ -250,7 +250,7 @@ accordingly: say what you actually think, and assume it could travel.
 
 You will run a class. Not present to one, run it.
 
-Working in a team of three or four, you choose a topic connected to the
+Working in a team of four or five, you choose a topic connected to the
 course themes, assign the readings your classmates will do beforehand,
 and lead the session. Teams and topics are set on September 1, and the
 calendar of who leads which day is fixed that week and does not move.
@@ -371,9 +371,16 @@ discussion
 - **In-Class Oral Presentation** (7%)
 
 *Purpose*: Verbal synthesis, peer engagement, clarity of thought  
-*Format*: Short oral presentation to the class, followed by discussion
+*Format*: Short oral presentation, followed by discussion
+
+- **You present to a small group, not to the whole class.** On November
+  24 everyone presents in the same session: you will be placed in a
+  breakout group of five or six and present there, about ten minutes
+  each including questions. I move between groups. The grade is the same
+  as it would be in front of everyone.
 
 - *Expectations*:
+
   - Clear, engaging summary of key ideas from the book.
   - Highlight your critical take or most interesting insight.
   - Open the floor by posing a question or provocation, and field your
@@ -510,18 +517,49 @@ numbers come back on September 8.
 
 - Background on “The Fence”
   - <https://www.cmu.edu/stugov/fence/index.html>
-- President Farnam’s Statement about the Fence after Trump Visit
-  - [Statement
-    1](https://view.connect.cmu.edu/?qs=9827695e1300b223c66dc479ff67774b2636d3862de5ba00c9a33d4302a496ddcaf11df3a82f9e278459b95e9d5ee66d1142ed95ebf2e444469cb9e124411e4d6f6a1f56aec0be5427e909c8e70b5fdc)
-  - [Statement
-    2](https://view.connect.cmu.edu/?qs=d5ffef9eec97a8068120b2ae007393146e19f012eb1422f95848b0a34d534b2e1f9f223a78511d4e3a52621e5d0aa96979ac815d57172df6e4829d10878251adfa53d1d6402581641ffd4f9ec001f75b)
-- Articles from *The Tartan* about The Fence\`s history
-  - [The True History of the Fence: Part
-    I](https://github.com/jcervas/teaching/blob/main/2026-2027/class-cmu-2026-84-309/readings/The-True-History-of-the-Fence-I.md)
-  - [The True History of the Fence: Part
-    II](https://github.com/jcervas/teaching/blob/main/2026-2027/class-cmu-2026-84-309/readings/The-True-History-of-the-Fence-II.md)
-  - [The True History of the Fence: Part
-    III](https://github.com/jcervas/teaching/blob/main/2026-2027/class-cmu-2026-84-309/readings/The-True-History-of-the-Fence-III.md)
+
+**What has happened since — and it is still happening.** The Fence is
+not a museum piece. Over the past year it has been at the centre of a
+live argument about what a century-old tradition of anonymous student
+expression is for, and where its limits lie. Read these four in order;
+together they run about forty minutes, and they are the reason this
+session opens the course.
+
+- “CMU Fence Controversy Sparks Censorship Concerns.” *Pittsburgh
+  Post-Gazette*, July 17, 2025. — what the Fence is, and what happened
+  around the July 2025 energy summit: students painted messages opposing
+  it, and the university painted the Fence white and took it offline.
+  - <https://www.post-gazette.com/news/education/2025/07/17/what-is-the-fence-at-carnegie-mellon/stories/202507160062>
+- Strasburg, Stephanie, and Maddy Franklin. 2025. “In Midnight Move, CMU
+  Students Roll in New Fence to Protest Closure of Free Speech Icon.”
+  *PublicSource*, July 21. — students wheeled a fence of their own to
+  Warner Hall and painted that instead. The university reopened The
+  Fence the same day.
+  - <https://www.publicsource.org/cmu-students-create-new-fence-to-highlight-campus-free-speech/>
+- Chang, Tiffany, and Michelle Yang. 2026. “YAL Rallies at Fence,
+  Delivers Petition to President Jahanian.” *The Tartan*, April 6. —
+  nine months on, a student organisation rallies at the Fence and
+  delivers a petition asking the university to write its protections
+  down rather than leave them customary.
+  - <https://the-tartan.org/2026/04/06/yal-rallies-at-fence-delivers-petition-to-president-jahanian/>
+- Aiken, Maddie. 2026. “Carnegie Mellon Investigating Students over
+  Fence Messages Tied to Israeli-Palestinian Conflict.” *Pittsburgh
+  Post-Gazette*, August 1. — where matters stand three weeks before you
+  arrived. A coalition of advocacy groups says ten students are under
+  investigation and one faces expulsion over Fence messages the
+  university has called discriminatory.
+  - <https://www.post-gazette.com/news/education/2026/08/01/carnegie-mellon-fence-investigation/stories/202607310058>
+
+**Read the rules against the events.** Both documents below are still
+the operative policy. Work out, before class, whether what happened in
+July 2025 and what is happening now are permitted by them, forbidden by
+them, or simply not addressed — and whether a tradition that has run on
+custom for a hundred years can survive being written down.
+
+- Articles from *The Tartan* on the Fence’s history — **posted on
+  Canvas** (three parts, William Curvan, 2023). Worth reading first if
+  you want to know how much of what you have been told about the Fence
+  is true.
 - [Student Handbook, Advertising on Campus - Graffiti and Poster Policy
   of Student
   Government](https://www.cmu.edu/student-affairs/theword/community-policies/advertising-on-campus.html)
@@ -1189,9 +1227,10 @@ equations in it, and takes about fifteen minutes. Read the original if
 you want to see where the numbers come from; the guide ends with a table
 telling you which page each one is on.
 
-- **Start here:** [Would You Vote Against Your Own Side to Save
-  Democracy?](https://github.com/jcervas/teaching/blob/main/2026-2027/class-cmu-2026-84-309/readings/Graham-Svolik-2020-plain-language.md)
-  — a plain-language guide to the article below.
+- **Start here — posted on Canvas:** “Would You Vote Against Your Own
+  Side to Save Democracy?” — a plain-language guide to the article
+  below, written for this course. No equations; about fifteen minutes. —
+  a plain-language guide to the article below.
   - Do the two-matchup exercise at the end **before** class, and write
     down both answers. The gap between them is the finding.
 - Graham, Matthew H., and Milan W. Svolik. 2020. “Democracy in America?
@@ -1348,19 +1387,25 @@ Student led topics/debates — team and topic TBA
 
 ### November 24
 
-**VIRTUAL CLASS** — we meet on Zoom this session, since many of you will
-already be travelling for Thanksgiving. Link posted on Canvas. The
-session runs as any other: a team is leading, and the room being virtual
-does not change what they are owed.
+**VIRTUAL CLASS — Book Review Presentations**
 
-Student led topics/debates — team and topic TBA
+We meet on Zoom this session, since many of you will already be
+travelling for Thanksgiving. Link posted on Canvas.
 
-**A note for whichever team draws this one.** Zoom is harder to run than
-a classroom, and the fix is structural rather than heroic. Ask questions
-that name a person. Use the chat deliberately rather than letting it run
-underneath you. Plan one breakout, because a room of black rectangles
-will not argue but a room of four will. Come to office hours the week
-before and we will build the plan together.
+**Everyone presents today.** You will not present to the room — you will
+be put into a small breakout group and present there, which is how
+thirty-four presentations fit into eighty minutes. Expect five or six
+people in your group and about ten minutes each including questions. I
+move between the groups.
+
+- **Slides are due November 23 at 11:59 p.m.**, uploaded to Canvas. Have
+  them open and share your screen when your turn comes.
+- Speak to your slides rather than reading them, and open the floor with
+  a question. A group of five is the one setting where the discussion
+  the assignment asks for can actually happen — in a lecture hall it
+  cannot.
+- Being in a small group does not make this informal. It is the same 7%
+  it would be in front of everyone, and your group is your audience.
 
 ### November 26
 
