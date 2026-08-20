@@ -680,12 +680,6 @@ they part company.
   Negative Partisanship and the Nationalization of U.S. Elections in the
   21st Century.” *Electoral Studies* 41: 12–22.
   - <http://www.stevenwwebster.com/negative-partisanship.pdf>
-- Iyengar, Shanto, and Sean J. Westwood. 2015. “Fear and Loathing across
-  Party Lines: New Evidence on Group Polarization.” *American Journal of
-  Political Science* 59(3): 690–707.
-  - <https://doi.org/10.1111/ajps.12152>
-  - The scholarship-award and trust-game experiments are the ones to
-    focus on.
 - Abramowitz, Alan I. 2025. “It’s Not the Economy, Stupid: The
   Ideological Foundations of White Working Class Republicanism.”
   *Sabato’s Crystal Ball*, April 3.
@@ -696,6 +690,14 @@ they part company.
 
 Optional
 
+- Iyengar, Shanto, and Sean J. Westwood. 2015. “Fear and Loathing across
+  Party Lines: New Evidence on Group Polarization.” *American Journal of
+  Political Science* 59(3): 690–707. — the experiments behind the
+  affective-polarization claim you met on September 10: partisans hand
+  out a scholarship to the less-qualified candidate of their own party,
+  and trust the other side less with money. Read the scholarship-award
+  and trust-game sections if you read any of it.
+  - <https://doi.org/10.1111/ajps.12152>
 - Fiorina, Morris P. 2024. “Economic Anxiety or Cultural Backlash: Which
   Is Key to Trump’s Support?” Hoover Institution.
   - <https://www.hoover.org/research/economic-anxiety-or-cultural-backlash-which-key-trumps-support>
@@ -741,69 +743,6 @@ topic:
 ## Week 6 — September 29 & October 1
 
 ### September 29
-
-**Polarization Research VI — Does Any of This Threaten Democracy?**
-
-The claim that polarization endangers democracy is the one everybody
-repeats and almost nobody examines. Two teams of scholars look at
-overlapping evidence and reach opposite conclusions; a third pair stops
-asking what Americans believe and puts a price on it instead. This is
-the last session before your own turns begin, so treat it as the model:
-credible sources, a real disagreement, and a question that the readings
-do not settle for you.
-
-- Druckman, James N., Donald P. Green, and Shanto Iyengar. 2023. “Does
-  Affective Polarization Contribute to Democratic Backsliding in
-  America?” *The ANNALS of the American Academy of Political and Social
-  Science* 708(1): 137–163. — *scant evidence of a direct link.*
-  - <https://doi.org/10.1177/00027162241228952>
-- McCoy, Jennifer, and Murat Somer. 2019. “Toward a Theory of Pernicious
-  Polarization and How It Harms Democracies: Comparative Evidence and
-  Possible Remedies.” *The ANNALS of the American Academy of Political
-  and Social Science* 681(1): 234–271. — *it does, and here is the
-  mechanism.*
-  - <https://doi.org/10.1177/0002716218818782>
-
-**Then the price.**
-
-Everyone says they support democracy. More than 85% of Americans tell
-surveys that democracy beats any alternative, and that number has barely
-moved in sixty years. Graham and Svolik think the question is close to
-worthless, because saying you value democracy costs nothing and voting
-against your own side costs something. So they stop asking and instead
-put a price on it: what will Americans actually give up to punish a
-politician who breaks the rules? The answer, in a realistic general
-election, is about **3.5%** of the vote — which is to say, in most
-districts, nothing that would cost anyone their seat.
-
-Read the plain-language version. It is written for this course, has no
-equations in it, and takes about fifteen minutes. Read the original if
-you want to see where the numbers come from; the guide ends with a table
-telling you which page each one is on.
-
-- **Start here:** [Would You Vote Against Your Own Side to Save
-  Democracy?](https://github.com/jcervas/teaching/blob/main/2026-2027/class-cmu-2026-84-309/readings/Graham-Svolik-2020-plain-language.md)
-  — a plain-language guide to the article below.
-  - Do the two-matchup exercise at the end **before** class, and write
-    down both answers. The gap between them is the finding.
-- Graham, Matthew H., and Milan W. Svolik. 2020. “Democracy in America?
-  Partisanship, Polarization, and the Robustness of Support for
-  Democracy in the United States.” *American Political Science Review*
-  114(2): 392–409.
-  - <https://doi.org/10.1017/S0003055420000052> — open access.
-
-This is the sharpest statement of the claim the last third of the course
-argues about: that polarization is dangerous not because Americans stop
-believing in democracy, but because it makes believing in it cheap and
-acting on it expensive. We pick it up again on November 5, two days
-after the midterms, when the question is no longer hypothetical.
-
-Both ANNALS articles sit in special issues that make good hunting
-grounds for your own session — volume 708 on threats to American
-democracy, volume 681 on polarization worldwide. The library has the
-ANNALS online.
-
-### October 1
 
 **Polarization Research VII — Geographic Polarization: The Map, and the
 Power in It**
@@ -1041,9 +980,7 @@ competition.
   Ziblatt, asked with 220 years of data, and a more complicated answer.
   - <https://onlinelibrary.wiley.com/doi/abs/10.1111/ssqu.12871>
 
-## Week 7 — October 6 & 8
-
-### October 6
+### October 1
 
 **Place, Identity, and Rural Consciousness**
 
@@ -1209,11 +1146,76 @@ second half is mostly your sessions, and what you say here I can still
 act on. Same arrangement as the first survey — anonymous, so screenshot
 the confirmation screen and upload it for the credit.
 
+## Week 7 — October 6 & 8
+
+### October 6
+
+**Polarization Research VI — Does Any of This Threaten Democracy?**
+
+The claim that polarization endangers democracy is the one everybody
+repeats and almost nobody examines. Two teams of scholars look at
+overlapping evidence and reach opposite conclusions; a third pair stops
+asking what Americans believe and puts a price on it instead. Your own
+sessions begin after the break, so treat this as the model: credible
+sources, a real disagreement, and a question that the readings do not
+settle for you.
+
+- Druckman, James N., Donald P. Green, and Shanto Iyengar. 2023. “Does
+  Affective Polarization Contribute to Democratic Backsliding in
+  America?” *The ANNALS of the American Academy of Political and Social
+  Science* 708(1): 137–163. — *scant evidence of a direct link.*
+  - <https://doi.org/10.1177/00027162241228952>
+- McCoy, Jennifer, and Murat Somer. 2019. “Toward a Theory of Pernicious
+  Polarization and How It Harms Democracies: Comparative Evidence and
+  Possible Remedies.” *The ANNALS of the American Academy of Political
+  and Social Science* 681(1): 234–271. — *it does, and here is the
+  mechanism.*
+  - <https://doi.org/10.1177/0002716218818782>
+
+**Then the price.**
+
+Everyone says they support democracy. More than 85% of Americans tell
+surveys that democracy beats any alternative, and that number has barely
+moved in sixty years. Graham and Svolik think the question is close to
+worthless, because saying you value democracy costs nothing and voting
+against your own side costs something. So they stop asking and instead
+put a price on it: what will Americans actually give up to punish a
+politician who breaks the rules? The answer, in a realistic general
+election, is about **3.5%** of the vote — which is to say, in most
+districts, nothing that would cost anyone their seat.
+
+Read the plain-language version. It is written for this course, has no
+equations in it, and takes about fifteen minutes. Read the original if
+you want to see where the numbers come from; the guide ends with a table
+telling you which page each one is on.
+
+- **Start here:** [Would You Vote Against Your Own Side to Save
+  Democracy?](https://github.com/jcervas/teaching/blob/main/2026-2027/class-cmu-2026-84-309/readings/Graham-Svolik-2020-plain-language.md)
+  — a plain-language guide to the article below.
+  - Do the two-matchup exercise at the end **before** class, and write
+    down both answers. The gap between them is the finding.
+- Graham, Matthew H., and Milan W. Svolik. 2020. “Democracy in America?
+  Partisanship, Polarization, and the Robustness of Support for
+  Democracy in the United States.” *American Political Science Review*
+  114(2): 392–409.
+  - <https://doi.org/10.1017/S0003055420000052> — open access.
+
+This is the sharpest statement of the claim the last third of the course
+argues about: that polarization is dangerous not because Americans stop
+believing in democracy, but because it makes believing in it cheap and
+acting on it expensive. We pick it up again on November 5, two days
+after the midterms, when the question is no longer hypothetical.
+
+Both ANNALS articles sit in special issues that make good hunting
+grounds for your own session — volume 708 on threats to American
+democracy, volume 681 on polarization worldwide. The library has the
+ANNALS online.
+
 ### October 8
 
 **Who Pays for the News?**
 
-On September 29 you read Graham and Svolik: Americans will give up about
+On October 6 you read Graham and Svolik: Americans will give up about
 3.5% of the vote to punish a politician who breaks the rules, which in
 most districts is nothing. The standing answer to *what would raise that
 number* is information — voters cannot punish what they never hear
@@ -1293,16 +1295,10 @@ everyone’s read on it will be coloured by who won.
     available online through the CMU Library.
   - Open access copy: [Rooney Institute, Notre
     Dame](https://rooneyinstitute.nd.edu/assets/569540/political_parties_and_loser_s_consent_in_american_politics.pdf)
-  - Read it against September 29: Druckman, Green, and Iyengar argue
+  - Read it against October 6: Druckman, Green, and Iyengar argue
     affective polarization does not drive democratic backsliding, and
     McCoy and Somer argue it does. Loser’s consent is the specific thing
     that would have to give way for the second account to be right.
-
-**Write down two predictions before you leave**, and keep them. Which
-side do you expect to lose, and what do you expect that side to say in
-the week after? We will come back to what you wrote once the results are
-in. A prediction made in advance is the only kind that can be wrong,
-which is what makes it worth making.
 
 ### October 29
 
@@ -1352,10 +1348,19 @@ Student led topics/debates — team and topic TBA
 
 ### November 24
 
-**VIRTUAL CLASS** — we meet remotely this session, since many of you
-will already be traveling for Thanksgiving. Link posted on Canvas.
+**VIRTUAL CLASS** — we meet on Zoom this session, since many of you will
+already be travelling for Thanksgiving. Link posted on Canvas. The
+session runs as any other: a team is leading, and the room being virtual
+does not change what they are owed.
 
 Student led topics/debates — team and topic TBA
+
+**A note for whichever team draws this one.** Zoom is harder to run than
+a classroom, and the fix is structural rather than heroic. Ask questions
+that name a person. Use the chat deliberately rather than letting it run
+underneath you. Plan one breakout, because a room of black rectangles
+will not argue but a room of four will. Come to office hours the week
+before and we will build the plan together.
 
 ### November 26
 
@@ -1583,7 +1588,7 @@ and Frisks, Related Pittsburgh Police Data, and Recommendations” October
   its identity and who counts as a real American. The two arguments are
   often run together and they have different evidence behind them.
   Pulling them apart is a session on its own, and it bears directly on
-  September 29.
+  October 6.
 
 *Topic banks assembled in previous semesters. Students leading a session
 are welcome to draw on these, or to propose readings of their own.*
