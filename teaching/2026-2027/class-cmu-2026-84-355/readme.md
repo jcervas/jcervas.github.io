@@ -3,7 +3,8 @@
 > Professor Jonathan Cervas  
 > Office: Posner Hall 374  
 > Email: **<cervas@cmu.edu>**  
-> Location: PH A21A  
+> Location: [Porter Hall
+> A21A](https://www.cmu.edu/computing/services/teach-learn/tes/classrooms/locations/porter.html)  
 > Time: Tuesday & Thursday 11:00a-12:20p Eastern  
 > Office Hours: Wed 10:30a-12:30p & 1:30p-3:30p, and by appointment
 > (arrange via email)  
@@ -15,8 +16,9 @@ here**](https://jcervas.github.io/teaching/2026-2027/class-cmu-2026-84-355/readm
 
 ------------------------------------------------------------------------
 
-> **Prerequisites:** 36-200 Reasoning with Data  
 > **Course Relevance:** DC: *Perspectives on Justice and Injustice*
+> **Learning Resources:** All resources will be provided via Canvas  
+> **Prerequisites:** 36-200 Reasoning with Data
 
 ------------------------------------------------------------------------
 

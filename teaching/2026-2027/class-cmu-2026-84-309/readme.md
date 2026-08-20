@@ -5,7 +5,7 @@
 > Email: **<cervas@cmu.edu>**  
 > Location: [Scaife Hall
 > 234](https://www.cmu.edu/computing/services/teach-learn/tes/classrooms/locations/scaife.html)  
-> Time: Tuesday/Thursday 2:00p-3:20p Eastern  
+> Time: Tuesday & Thursday 2:00p-3:20p Eastern  
 > Office Hours: Wed 10:30a-12:30p & 1:30p-3:30p, and by appointment
 > (arrange via email)  
 > [**CMU Academic Calendar**](https://www.cmu.edu/hub/calendar/)
@@ -14,9 +14,17 @@
 > Email: **<zhamed@andrew.cmu.edu>**  
 > Office Hours: arrange via email
 
+The most up-to-date version of this [**syllabus can be found
+here**](https://jcervas.github.io/teaching/2026-2027/class-cmu-2026-84-355/readme.html):
+<https://jcervas.github.io/teaching/2026-2027/class-cmu-2026-84-355/readme.html>
+
+------------------------------------------------------------------------
+
 > **Course Relevance:** DC: Perspectives on Justice and Injustice  
 > **Learning Resources:** All resources will be provided via Canvas  
-> **Prerequisite Knowledge:** NONE
+> **Prerequisites:** NONE
+
+------------------------------------------------------------------------
 
 <img src="readme_files/figure-gfm/meetings-1.png" width="100%" style="display: block; margin: auto;" />
 
@@ -488,28 +496,17 @@ Alignment*: 3, 7, 8
     confirmation screen appears, screenshot it and upload it to the same
     Canvas assignment — that screenshot is what earns the credit,
     because the survey itself has no idea who you are.
-  - More in Common. *The Perception Gap* — <https://perceptiongap.us/>
-    - Take this **after** you have submitted the survey, not before. It
-      runs a version of the same exercise on a national sample, so it
-      tells you how the country does. The survey tells you how this room
-      does, and the gap between those two is the more interesting
-      number.
-    - The finding, briefly: partisans on both sides imagine roughly
-      twice as many of their opponents hold extreme views as actually
-      do. The part worth arguing about is what follows — people who
-      follow politics closely, and who post about it, have *wider*
-      perception gaps than people who do not. Which is to say the
-      problem may not be that Americans know too little about each
-      other, but that the sources telling them about each other are not
-      describing anyone real.
-    - We come back to your own answers on September 8, alongside the
-      study these questions are taken from, and again on September 10
-      with a political scientist who reads the same evidence as showing
-      the polarization everyone worries about has been overstated.
 
 ### August 27
 
 **The Fence**
+
+**In class: the Perception Gap.** More in Common,
+[perceptiongap.us](https://perceptiongap.us/). We run it together, now
+that Survey 1 has closed. Partisans on both sides imagine about twice as
+many of their opponents hold extreme views as actually do — and the
+people who follow politics most closely are the most wrong. Your own
+numbers come back on September 8.
 
 - Background on “The Fence”
   - <https://www.cmu.edu/stugov/fence/index.html>
@@ -808,12 +805,12 @@ ANNALS online.
 
 ### October 1
 
-**Polarization Research VII — Geographic Polarization: The Map and What
-It Doesn’t Show**
+**Polarization Research VII — Geographic Polarization: The Map, and the
+Power in It**
 
 You have seen the county map. Almost nobody is asked what it actually
-shows. This session is about three questions that students routinely
-collapse into one, and that the field answers differently.
+shows. This session does two things: it works out how sorted we actually
+are, and then what our rules do with that fact.
 
 *Are we more geographically sorted than we used to be?* Mostly yes, and
 the answer got much firmer once researchers stopped using counties and
@@ -845,6 +842,18 @@ take ten minutes together and they are the point.
 
 **Then read these.**
 
+- Badger, Emily, Kevin Quealy, and Josh Katz. 2021. “A Close-Up Picture
+  of Partisan Segregation, Among 180 Million Voters.” *The New York
+  Times*, March 17. — the Upshot’s write-up of the Brown and Enos data
+  you just clicked through, with the maps done properly. Nearly every
+  American lives somewhere less politically mixed than chance would
+  predict, and you can see it street by street.
+  - <https://www.nytimes.com/interactive/2021/03/17/upshot/partisan-segregation-maps.html>
+    — metered paywall; I will post a gift link.
+  - **If you would rather listen:** Enos talks through the same findings
+    on *An Honorable Profession*, “Ryan Enos on the Phenomenon of
+    Partisan Segregation” (October 27, 2022).
+    <https://podcasts.apple.com/us/podcast/ryan-enos-on-the-phenomenon-of-partisan-segregation/id1435970632?i=1000584060815>
 - Brown, Jacob R., Enrico Cantoni, Ryan D. Enos, Vincent Pons, and
   Emilie Sartre. 2026. “How Generational Turnover and Party Switching
   Reshape the US Political Map.” CEPR/VoxEU, March 9. — five pages,
@@ -862,6 +871,49 @@ take ten minutes together and they are the point.
     NBER Working Paper 33422 (2025, revised 2026), free at
     <https://www.nber.org/papers/w33422>. It is under review, not yet
     published — cite it as a working paper.
+- De Witte, Melissa. 2019. “How the Urban-Rural Divide Shapes
+  Elections.” Stanford Report. — **six minutes**, a Q&A with Jonathan
+  Rodden and no jargon in it. This is the plain-language version of the
+  finding: Democratic votes pile up in cities at margins no district
+  needs, so the same votes buy fewer seats. Rodden wrote the trade book
+  on this (*Why Cities Lose*, 2019); the library has it in print only,
+  so this is the assignable version.
+  - <https://news.stanford.edu/stories/2019/06/urban-rural-divide-shapes-elections>
+- Cervas, Jonathan R. 2026. “The Effects of Mid-Decade Redistricting on
+  Electoral Outcomes.” — six minutes.
+  - <https://cervas.medium.com/the-effects-of-mid-decade-redistricting-on-electoral-outcomes-d870c772942b>
+  - My own count of what the 2025–26 redraws actually did. Note how
+    often a party gerrymandering an already-gerrymandered map gains
+    almost nothing, and how often these maps backfire outright.
+  - The interactive version, updated through 2026:
+    <https://jonathancervas.com/maps/mid-decade-redistricting/>
+
+**In class.** We will use Dave’s Redistricting App
+(<https://davesredistricting.org/>) and I will give you a state. Draw me
+a map that is compact, contiguous, and proportional. Twenty minutes.
+Most of you will not manage it, and the reason you cannot is Rodden’s:
+the votes are in the wrong places, and no amount of good faith with the
+pen moves them.
+
+Optional
+
+**Come to class ready to answer this.** If people are barely moving for
+politics, and in 2024 the densest places moved right faster than the
+sparsest ones, in what sense is America “sorting”? And if most partisan
+bias is structural rather than drawn, what is a gerrymandering lawsuit
+for? Two of you will be asked to argue the sorting story is still
+basically right, and two that it has quietly stopped being true. You
+will not know in advance which.
+
+**In class.** We will use Dave’s Redistricting App
+(<https://davesredistricting.org/>) and I will give you a state. Draw me
+a map that is compact, contiguous, and proportional. Twenty minutes.
+Most of you will not manage it, and the reason you cannot is Rodden’s:
+the votes are in the wrong places, and no amount of good faith with the
+pen moves them.
+
+Optional — for anyone who wants the fuller picture
+
 - Abrams, Samuel J., and Morris P. Fiorina. 2012. “‘The Big Sort’ That
   Wasn’t: A Skeptical Reexamination.” *PS: Political Science & Politics*
   45(2): 203–210. — eight pages.
@@ -874,6 +926,16 @@ take ten minutes together and they are the point.
     have changed. Worth asking as you read the piece above: does the
     voter-file evidence answer Fiorina, or did he just pick the wrong
     unit to be skeptical about?
+- Chen, Jowei, and Jonathan Rodden. 2015. “Cutting Through the Thicket:
+  Redistricting Simulations and the Detection of Partisan Gerrymanders.”
+  *Election Law Journal* 14(4): 331–345. — free, and short.
+  - <https://www.brennancenter.org/sites/default/files/legal-work/Chen_Rodden_Through_the_Thicket_2015.pdf>
+  - Draw a thousand maps by computer with no partisan intent. Then see
+    where the enacted map falls in that distribution. In Florida, the
+    enacted plan produced 17 Republican seats — an outcome that appeared
+    in **zero** of the thousand simulations. This is the method that
+    taught courts how to detect a gerrymander, and it is the method I
+    use in court.
 - “How the Other Half Votes: The Big Counties Versus the Rest of the
   Country in 2024.” *Sabato’s Crystal Ball*, University of Virginia
   Center for Politics. — fifteen minutes, free.
@@ -891,7 +953,23 @@ asked to argue that the sorting story is still basically right, and two
 to argue it has quietly stopped being true. You will not know in advance
 which.
 
-Optional — for anyone who wants the fuller picture
+Optional — for anyone who wants the fuller picture - Petry, Eric. “How
+the Efficiency Gap Works.” Brennan Center for Justice. — four pages, ten
+minutes. \*
+<https://www.brennancenter.org/sites/default/files/legal-work/How_the_Efficiency_Gap_Standard_Works.pdf>
+\* A five-district worked example with no jargon. You will be able to
+compute an efficiency gap by hand afterward, which is the point — this
+is the number that went to the Supreme Court in *Gill v. Whitford*, and
+you should know what it can and cannot see. - Kenny, Christopher T.,
+Cory McCartan, Tyler Simko, Shiro Kuriwaki, and Kosuke Imai. 2023.
+“Widespread Partisan Gerrymandering Mostly Cancels Nationally, but
+Reduces Electoral Competition.” *PNAS* 120(25): e2217322120. — **read
+the plain-language summary**, eight minutes. \* Summary:
+<https://alarm-redist.org/posts/2023-06-13-widespread-gerrymandering-pnas/>
+\* Paper: <https://doi.org/10.1073/pnas.2217322120> \* The current state
+of the art, and a genuinely awkward result for both parties: nationally,
+the gerrymanders roughly cancel out. What they reliably destroy is
+competition.
 
 - Brown, Jacob R., and Delfina Ferro. 2026. “Partisan Sorting and
   Geographic Polarization: How People and Politics Cluster by Place.”
@@ -927,161 +1005,324 @@ Optional — for anyone who wants the fuller picture
   not a city-limits line, and the sharpest political break sits out past
   the edge of the suburbs.
   - <https://doi.org/10.1177/0002716217712696>
-
-<!-- 
+- Chen, Jowei, and Jonathan Rodden. 2013. “Unintentional Gerrymandering:
+  Political Geography and Electoral Bias in Legislatures.” *Quarterly
+  Journal of Political Science* 8(3): 239–269. — the original. Free.
+  - <https://web.stanford.edu/~jrodden/wp/florida.pdf>
+- Cervas, Jonathan R., and Bernard Grofman. 2020. “Tools for Identifying
+  Partisan Gerrymandering with an Application to Congressional
+  Districting in Pennsylvania.” *Political Geography* 76: 102069. —
+  several competing measures applied to the same four Pennsylvania maps,
+  with different answers. The 2011 map was a “blatant and undisguised”
+  gerrymander; the legislature’s proposed remedy was a stealth one; the
+  court-ordered 2018 map was neither. Choosing a metric is choosing a
+  conclusion.
+  - [https://doi.org/10.1016/j.jpgeo.2019.102069](https://www.sciencedirect.com/science/article/abs/pii/S0962629818303342)
+- Goedert, Nicholas. 2014. “Gerrymandering or Geography? How Democrats
+  Won the Popular Vote but Lost the Congress in 2012.” *Research &
+  Politics* 1(1). — open access, twenty minutes, and it puts a number on
+  each side: geography about 16–17 seats, intentional gerrymandering
+  about 9.
+  - <https://doi.org/10.1177/2053168014528683>
+- Riccardi, Nicholas. 2026. “Redistricting War Accelerates
+  Winner-Take-All Politics Straining American Democracy.” Associated
+  Press / PBS NewsHour, May 4. — five minutes, free. Read it for the
+  sentence of mine it quotes, and decide whether you think I am right.
+  - <https://www.pbs.org/newshour/politics/redistricting-war-accelerates-winner-take-all-politics-straining-american-democracy>
+- Levitsky, Steven, and Daniel Ziblatt. 2023. *Tyranny of the Minority.*
+  Crown. — Chapter 1, free excerpt, fifteen minutes. The argument that
+  our counter-majoritarian institutions convert geographic sorting into
+  durable minority rule.
+  - <https://penguinrandomhousehighereducation.com/2023/10/16/excerpt-from-tyranny-of-the-minority/>
+- Cervas, Jonathan R., and Bernard Grofman. 2020. “Legal, Political
+  Science and Economics Approaches to Measuring Malapportionment: The
+  U.S. House, Senate, and Electoral College 1790–2010.” *Social Science
+  Quarterly* 101(6): 2238–2256. — the same question as Levitsky and
+  Ziblatt, asked with 220 years of data, and a more complicated answer.
+  - <https://onlinelibrary.wiley.com/doi/abs/10.1111/ssqu.12871>
 
 ## Week 7 — October 6 & 8
+
 ### October 6
 
-**Polarization Research VIII — When Geography Becomes Power**
+**Place, Identity, and Rural Consciousness**
 
-The previous session was about where people live. This one is about what our
-rules do with that fact. The uncomfortable finding at the center of it is that
-you can produce a systematically biased legislature with **no one intending
-anything** — draw districts at random, with no partisan data and no bad faith,
-and Democratic votes still get wasted at higher rates, because Democrats are
-packed into dense places at margins no district needs. Geography gerrymanders
-before any mapmaker does.
+Why does where you live feel like who you are? Cramer’s answer, from
+years of sitting in gas stations in rural Wisconsin, is that rural
+people share a “rural consciousness” — a conviction that decisions,
+money, and respect all flow to the cities. It is a lens, not a policy
+position, and it makes small-government appeals land regardless of a
+person’s actual economic interest.
 
-That finding is twelve years old and it has since been measured more precisely.
-The current best estimate for the 2020s maps: Democrats lose roughly eight House
-seats to political geography, and only about two more to deliberate
-gerrymandering. Which raises the question this session is actually about — if
-most of the bias is structural, what is all the litigation for?
+The decade since has complicated her almost beyond recognition, and the
+complications are the reason this makes a good session rather than a
+good lecture. It turns out rural *identity* matters more than rural
+*residence* — people who identify as rural but do not live rurally look
+politically identical to those who do. It turns out the *symbolic*
+grievances predict Trump support and the *material* ones do not, which
+is bad news for anyone whose answer to rural discontent is a spending
+program. And it turns out that when you control for racial resentment,
+much of rural consciousness’s predictive power goes with it — though how
+much, and whether that means the concept reduces to racism, is genuinely
+disputed.
 
-Then there is the last year, in which both parties abandoned the convention that
-you redraw maps once a decade. Between July 2025 and April 2026, Texas, Missouri,
-North Carolina, Ohio, California, Utah and Florida all redrew mid-decade. I have
-been in the middle of some of this, and I will tell you what it looks like from
-inside a courtroom.
+**Two chapters, and that is the whole assignment.** Jacobs and Shea
+fielded the largest survey ever taken of rural Americans, and the book
+that came out of it is the best available answer to “well, what *is*
+true about rural voters?” Both are trade writing rather than journal
+prose, and both are on Canvas.
 
-- Chen, Jowei, and Jonathan Rodden. 2015. "Cutting Through the Thicket: Redistricting Simulations and the Detection of Partisan Gerrymanders." *Election Law Journal* 14(4): 331–345. — free, and short.
-  * [https://www.brennancenter.org/sites/default/files/legal-work/Chen_Rodden_Through_the_Thicket_2015.pdf](https://www.brennancenter.org/sites/default/files/legal-work/Chen_Rodden_Through_the_Thicket_2015.pdf)
-  * Draw a thousand maps by computer with no partisan intent. Then see where the enacted map falls in that distribution. In Florida, the enacted plan produced 17 Republican seats — an outcome that appeared in **zero** of the thousand simulations. This is the method that taught courts how to detect a gerrymander, and it is the method I use in court.
-- Petry, Eric. "How the Efficiency Gap Works." Brennan Center for Justice. — four pages, ten minutes.
-  * [https://www.brennancenter.org/sites/default/files/legal-work/How_the_Efficiency_Gap_Standard_Works.pdf](https://www.brennancenter.org/sites/default/files/legal-work/How_the_Efficiency_Gap_Standard_Works.pdf)
-  * A five-district worked example with no jargon. You will be able to compute an efficiency gap by hand afterward, which is the point — this is the number that went to the Supreme Court in *Gill v. Whitford*, and you should know what it can and cannot see.
-- Kenny, Christopher T., Cory McCartan, Tyler Simko, Shiro Kuriwaki, and Kosuke Imai. 2023. "Widespread Partisan Gerrymandering Mostly Cancels Nationally, but Reduces Electoral Competition." *PNAS* 120(25): e2217322120. — **read the plain-language summary**, eight minutes.
-  * Summary: [https://alarm-redist.org/posts/2023-06-13-widespread-gerrymandering-pnas/](https://alarm-redist.org/posts/2023-06-13-widespread-gerrymandering-pnas/)
-  * Paper: [https://doi.org/10.1073/pnas.2217322120](https://doi.org/10.1073/pnas.2217322120)
-  * The current state of the art, and a genuinely awkward result for both parties: nationally, the gerrymanders roughly cancel out. What they reliably destroy is competition.
-- Cervas, Jonathan R. 2026. "The Effects of Mid-Decade Redistricting on Electoral Outcomes." — six minutes.
-  * [https://cervas.medium.com/the-effects-of-mid-decade-redistricting-on-electoral-outcomes-d870c772942b](https://cervas.medium.com/the-effects-of-mid-decade-redistricting-on-electoral-outcomes-d870c772942b)
-  * My own count of what the 2025–26 redraws actually did. Note how often a party gerrymandering an already-gerrymandered map gains almost nothing, and how often these maps backfire outright.
-  * The interactive version, updated through 2026: [https://jonathancervas.com/maps/mid-decade-redistricting/](https://jonathancervas.com/maps/mid-decade-redistricting/)
+- Jacobs, Nicholas F., and Daniel M. Shea. 2023. *The Rural Voter: The
+  Politics of Place and the Disuniting of America.* Columbia University
+  Press.
+  - **Introduction, “Two Americas”** (pp. 1–22). Opens with the two of
+    them driving twenty-five minutes from rural Maine to Colby College
+    and back, and asks why the picture drawn by journalism and memoir is
+    “at best, simplistic and more often just plain wrong.” Only about
+    10% of rural residents hold politically extreme views, and rural
+    voters agree with the country on most issues except guns.
+  - **Chapter 11, “Bridges Across the Rural-Urban Divide”**
+    (pp. 380–414). The conclusion, and the reason this is not a
+    debunking exercise.
+  - [CMU catalog
+    record](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020185778804436)
+    · free eight-minute summary: [“Understanding the Rural Voter,” Colby
+    News](https://news.colby.edu/story/understanding-the-rural-voter/)
 
-**In class.** We will use Dave's Redistricting App ([https://davesredistricting.org/](https://davesredistricting.org/)) and I will give you a state. Draw me a map that is compact, contiguous, and proportional. Twenty minutes. Most of you will not manage it, and the reason you cannot is the finding in the first reading.
+**Do not miss what Jacobs and Shea actually conclude.** Having spent a
+book dismantling the caricature — and having publicly accused Schaller
+and Waldman of academic malpractice — they end by arguing that the
+rural-urban divide *is* a threat to American democracy. But the threat
+they name is a structural one: rural areas “cannot flourish in the
+absence of competitive elections and viable alternatives,” and one-party
+dominance produces “bad representation and recalcitrant extremism.” The
+danger is in the uncontested seat, not in the character of the people
+filling it. Two books can agree that something is wrong and disagree
+completely about what.
 
-Optional
+**The question to bring.** If the caricature of rural America is wrong
+on the facts — and Jacobs and Shea spend a book showing that it is — why
+does the rural-urban divide still end up being a problem for democracy?
+Their answer is not about what rural people are like. Come ready to say
+whether you find it convincing, and what would follow if it were true.
 
-- Chen, Jowei, and Jonathan Rodden. 2013. "Unintentional Gerrymandering: Political Geography and Electoral Bias in Legislatures." *Quarterly Journal of Political Science* 8(3): 239–269. — the original. Free.
-  * [https://web.stanford.edu/~jrodden/wp/florida.pdf](https://web.stanford.edu/~jrodden/wp/florida.pdf)
-- Cervas, Jonathan R., and Bernard Grofman. 2020. "Tools for Identifying Partisan Gerrymandering with an Application to Congressional Districting in Pennsylvania." *Political Geography* 76: 102069. — several competing measures applied to the same four Pennsylvania maps, with different answers. The 2011 map was a "blatant and undisguised" gerrymander; the legislature's proposed remedy was a stealth one; the court-ordered 2018 map was neither. Choosing a metric is choosing a conclusion.
-  * [https://doi.org/10.1016/j.jpgeo.2019.102069](https://www.sciencedirect.com/science/article/abs/pii/S0962629818303342)
-- Goedert, Nicholas. 2014. "Gerrymandering or Geography? How Democrats Won the Popular Vote but Lost the Congress in 2012." *Research & Politics* 1(1). — open access, twenty minutes, and it puts a number on each side: geography about 16–17 seats, intentional gerrymandering about 9.
-  * [https://doi.org/10.1177/2053168014528683](https://doi.org/10.1177/2053168014528683)
-- Riccardi, Nicholas. 2026. "Redistricting War Accelerates Winner-Take-All Politics Straining American Democracy." Associated Press / PBS NewsHour, May 4. — five minutes, free. Read it for the sentence of mine it quotes, and decide whether you think I am right.
-  * [https://www.pbs.org/newshour/politics/redistricting-war-accelerates-winner-take-all-politics-straining-american-democracy](https://www.pbs.org/newshour/politics/redistricting-war-accelerates-winner-take-all-politics-straining-american-democracy)
-- Levitsky, Steven, and Daniel Ziblatt. 2023. *Tyranny of the Minority.* Crown. — Chapter 1, free excerpt, fifteen minutes. The argument that our counter-majoritarian institutions convert geographic sorting into durable minority rule.
-  * [https://penguinrandomhousehighereducation.com/2023/10/16/excerpt-from-tyranny-of-the-minority/](https://penguinrandomhousehighereducation.com/2023/10/16/excerpt-from-tyranny-of-the-minority/)
-- Cervas, Jonathan R., and Bernard Grofman. 2020. "Legal, Political Science and Economics Approaches to Measuring Malapportionment: The U.S. House, Senate, and Electoral College 1790–2010." *Social Science Quarterly* 101(6): 2238–2256. — the same question as Levitsky and Ziblatt, asked with 220 years of data, and a more complicated answer.
-  * [https://onlinelibrary.wiley.com/doi/abs/10.1111/ssqu.12871](https://onlinelibrary.wiley.com/doi/abs/10.1111/ssqu.12871)
+Optional — the public fight this book was written into
 
+**The *White Rural Rage* affair — a public argument, start to finish.**
+Most of the topics you will choose are fights like this one rather than
+journal exchanges, so this is the closest thing in the syllabus to a
+model of what you are being asked to do. In 2024 Schaller and Waldman
+argued in a bestseller that rural white Americans are a distinct threat
+to American democracy. Within weeks, the scholars whose research the
+book cited went public to say it had misread them — in one case
+reporting a finding backwards. Read it in order: claim, critique, reply.
+Everything below is free and written for general readers, the whole
+sequence is under an hour, and none of it is the book itself — the
+articles quote it at length, and the authors restate their own case in
+the last one.
 
-<!-- 
+- Harper, Tyler Austin. 2024. “An Utterly Misleading Book About Rural
+  America.” *The Atlantic*, April 4. — the critique that did the damage.
+  Harper contacted more than twenty scholars cited in the book: a
+  majority were critical and not one defended it. Watch for the Pape
+  example, where a study finding that insurrectionist sympathy
+  concentrates in *metropolitan* counties is cited as evidence about
+  rural ones. That is not a rounding error; it is the opposite of the
+  source’s finding.
+  - <https://www.theatlantic.com/ideas/archive/2024/04/white-rural-rage-criticism/677967/>
+    — metered paywall; I will post a copy on Canvas.
+- Jacobs, Nicholas F., and B. Kal Munis. 2024. “The Truth About ‘Rural
+  Rage’.” *Reason*, March 7. — twelve minutes, and unusual: two of the
+  scholars whose work is above, writing about what it is like to be
+  cited for something you did not find. The clearest illustration you
+  will get of why a county-level correlation and an individual-level
+  claim are different things.
+  - <https://reason.com/2024/03/07/the-truth-about-rural-rage/>
+- Schaller, Thomas, and Paul Waldman. 2024. “An Honest Assessment of
+  Rural White Resentment Is Long Overdue.” *The New Republic*, April 11.
+  — the reply, and it must be read last. They concede “a few errors” and
+  argue their critics are running apologetics for views that deserve
+  alarm. Decide for yourself whether the concession is proportionate to
+  the charge, and whether the second point survives the first.
+  - <https://newrepublic.com/article/180570/trump-rural-white-resentment-honest-assessment>
+    — metered paywall.
 
-**Survey 2 — course feedback.** Take it on your own; it is **due
-October 7 at 11:59 p.m.** The link is in Canvas,
-under Assignments. This is the one that can still change the semester you are
-in: we are halfway, the second half is mostly your sessions, and what you say
-here I can still act on. Same arrangement as the first survey — anonymous, so
-screenshot the confirmation screen and upload it for the credit.
+Optional — the research literature
+
+- Cramer, Katherine J. 2016. *The Politics of Resentment: Rural
+  Consciousness in Wisconsin and the Rise of Scott Walker.* University
+  of Chicago Press. — Chapters 3–5. Ethnography, not statistics; the
+  most readable thing in this course.
+  - [CMU catalog
+    record](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991019603989504436)
+  - **The assignable version is the article, and it is published under a
+    different name.** Cramer wrote it as *Katherine Cramer Walsh*; she
+    publishes as *Katherine J. Cramer* now. Searching one name will not
+    find the other, which is worth knowing before you spend twenty
+    minutes on it.
+    - Walsh, Katherine Cramer. 2012. “Putting Inequality in Its Place:
+      Rural Consciousness and the Power of Perspective.” *American
+      Political Science Review* 106(3): 517–532. — sixteen pages, and it
+      carries the whole argument without the book.
+    - <https://doi.org/10.1017/S0003055412000305>
+- Lunz Trujillo, Kristin, and Zack Crowley. 2022. “Symbolic versus
+  Material Concerns of Rural Consciousness in the United States.”
+  *Political Geography* 96: 102658. — splits rural consciousness into
+  “our way of life is disrespected” and “we don’t get our share of the
+  money.” Only the first predicts anything.
+  - <https://doi.org/10.1016/j.polgeo.2022.102658>
+- Nelsen, Matthew D., and Christopher D. Petsko. 2021. “Race and White
+  Rural Consciousness.” *Perspectives on Politics* 19(4): 1205–1218. —
+  the central critique of Cramer. Rural respondents attach
+  stereotypically Black attributes to “Milwaukeeans,” and controlling
+  for racial resentment strips most of rural consciousness’s explanatory
+  power. They stop short of saying it reduces to racism. Decide whether
+  you think they should have.
+  - <https://doi.org/10.1017/S1537592721001948>
+- Jacobs, Nicholas F., and B. Kal Munis. 2023. “Place-Based Resentment
+  in Contemporary U.S. Elections: The Individual Sources of America’s
+  Urban-Rural Divide.” *Political Research Quarterly* 76(3): 1102–1118.
+  — the reply: place resentment predicts vote choice net of both
+  partisanship and racial attitudes.
+  - <https://doi.org/10.1177/10659129221124864>
+- Lunz Trujillo, Kristin. 2024. “Feeling Out of Place: Who Are the
+  Non-Rural Rural Identifiers, and Are They Unique Politically?”
+  *Political Behavior* 46(4): 2215–2239. Free preprint:
+  <https://preprints.apsanet.org/engage/api-gateway/apsa/assets/orp/resource/item/63120eabbc257b6406d8bea1/original/feeling-out-of-place-who-are-the-non-rural-rural-identifiers-and-are-they-unique-politically.pdf>
+- Hershewe, Thomas, and Asher Smith. 2025. “When Politics Override
+  Place: How Political Affiliation Supersedes Rural Identity.” *American
+  Politics Research* 53(1): 17–27. — eleven pages. When the two
+  identities conflict, party wins, and asymmetrically: rural Democrats
+  suppress their rural identity, rural Republicans do not.
+  - <https://doi.org/10.1177/1532673X241282286>
+- Geismer, Lily. 2024. “A New Suburban Politics.” *Dissent*, Fall. —
+  free, fifteen minutes. Suburbs now house nearly half of America’s poor
+  and are racially diverse, while both parties still campaign against a
+  1950s image of them. The best short argument that the urban–rural
+  binary is the wrong frame.
+  - <https://dissentmagazine.org/article/a-new-suburban-politics/>
+
+**Survey 2 — course feedback.** Take it on your own; it is **due October
+7 at 11:59 p.m.** The link is in Canvas, under Assignments. This is the
+one that can still change the semester you are in: we are halfway, the
+second half is mostly your sessions, and what you say here I can still
+act on. Same arrangement as the first survey — anonymous, so screenshot
+the confirmation screen and upload it for the credit.
 
 ### October 8
+
 **Who Pays for the News?**
 
+On September 29 you read Graham and Svolik: Americans will give up about
+3.5% of the vote to punish a politician who breaks the rules, which in
+most districts is nothing. The standing answer to *what would raise that
+number* is information — voters cannot punish what they never hear
+about. These two papers test that, and they are unusually clean, because
+in both cases something happens **to** a community rather than being
+chosen by it.
 
+- Darr, Joshua P., Matthew P. Hitt, and Johanna L. Dunaway. 2018.
+  “Newspaper Closures Polarize Voting Behavior.” *Journal of
+  Communication* 68(6): 1007–1028.
+  - <https://doi.org/10.1093/joc/jqy051>
+  - A local paper closes; split-ticket voting falls in that community.
+    Nobody’s opinions had to change for this to happen — ask yourself
+    what did.
+- Martin, Gregory J., and Joshua McCrain. 2019. “Local News and National
+  Politics.” *American Political Science Review* 113(2): 372–384.
+  - <https://doi.org/10.1017/S0003055418000965>
+  - A station changes owner; local coverage gives way to national
+    politics, coverage moves right, and viewership drops. The mechanism
+    from the other direction.
 
-On September 29 you read Graham and Svolik:
-Americans will give up about 3.5% of the vote to punish a politician who breaks
-the rules, which in most districts is nothing. The standing answer to *what
-would raise that number* is information — voters cannot punish what they never
-hear about. These two papers test that, and they are unusually clean, because
-in both cases something happens **to** a community rather than being chosen by
-it.
+**The proposal, and the objection.** If the market will not pay for
+local journalism, one answer is that the public should. Pickard makes
+that case directly.
 
-- Darr, Joshua P., Matthew P. Hitt, and Johanna L. Dunaway. 2018. “Newspaper Closures Polarize Voting Behavior.” *Journal of Communication* 68(6): 1007–1028.
-  * [https://doi.org/10.1093/joc/jqy051](https://doi.org/10.1093/joc/jqy051)
-  * A local paper closes; split-ticket voting falls in that community. Nobody's opinions had to change for this to happen — ask yourself what did.
-- Martin, Gregory J., and Joshua McCrain. 2019. “Local News and National Politics.” *American Political Science Review* 113(2): 372–384.
-  * [https://doi.org/10.1017/S0003055418000965](https://doi.org/10.1017/S0003055418000965)
-  * A station changes owner; local coverage gives way to national politics, coverage moves right, and viewership drops. The mechanism from the other direction.
+- Pickard, Victor. 2020. “Restructuring Democratic Infrastructures: A
+  Policy Approach to the Journalism Crisis.” *Digital Journalism* 8(6):
+  704–719.
+  - <https://doi.org/10.1080/21670811.2020.1733433>
 
-**The proposal, and the objection.** If the market will not pay for local
-journalism, one answer is that the public should. Pickard makes that case
-directly.
-
-- Pickard, Victor. 2020. “Restructuring Democratic Infrastructures: A Policy Approach to the Journalism Crisis.” *Digital Journalism* 8(6): 704–719.
-  * [https://doi.org/10.1080/21670811.2020.1733433](https://doi.org/10.1080/21670811.2020.1733433)
-
-Come with an answer to this, because it is the whole argument. On
-August 25 you read that the people who follow politics *most*
-closely have the **widest** misperceptions of the other party. If heavy news
-consumption makes people more wrong, why would funding more journalism help?
-There is a good answer available in the two papers above. Find it, and then
-work out whether it survives — and if public money is the instrument, who
-decides what gets funded, and what stops that from being captured by whoever
-is in office.
+Come with an answer to this, because it is the whole argument. On August
+25 you read that the people who follow politics *most* closely have the
+**widest** misperceptions of the other party. If heavy news consumption
+makes people more wrong, why would funding more journalism help? There
+is a good answer available in the two papers above. Find it, and then
+work out whether it survives — and if public money is the instrument,
+who decides what gets funded, and what stops that from being captured by
+whoever is in office.
 
 ## Week 8 — October 13 & 15
 
 ### October 13
+
 **FALL BREAK**, no class
 
 ### October 15
+
 **FALL BREAK**, no class
 
 ## Week 9 — October 20 & 22
 
 ### October 20
+
 Student led topics/debates — team and topic TBA
 
 ### October 22
+
 Student led topics/debates — team and topic TBA
 
 ## Week 10 — October 27 & 29
 
 ### October 27
-**Before the Vote: Loser's Consent**
 
-The midterms are a week from today. Loser's consent — whether the side that
-loses accepts that it lost — is the hinge the whole polarization-and-democracy
-argument turns on, and it is worth having the idea in hand *before* the result
-comes in rather than after, when everyone's read on it will be coloured by who
-won.
+**Before the Vote: Loser’s Consent**
 
-- Layman, Geoffrey, Frances Lee, and Christina Wolbrecht. 2023. “Political Parties and Loser's Consent in American Politics.” *The ANNALS of the American Academy of Political and Social Science* 708(1): 164–183.
-  * [https://doi.org/10.1177/00027162241229309](https://doi.org/10.1177/00027162241229309) — the ANNALS is available online through the CMU Library.
-  * Open access copy: [Rooney Institute, Notre Dame](https://rooneyinstitute.nd.edu/assets/569540/political_parties_and_loser_s_consent_in_american_politics.pdf)
-  * Read it against September 29: Druckman, Green, and Iyengar argue affective polarization does not drive democratic backsliding, and McCoy and Somer argue it does. Loser's consent is the specific thing that would have to give way for the second account to be right.
+The midterms are a week from today. Loser’s consent — whether the side
+that loses accepts that it lost — is the hinge the whole
+polarization-and-democracy argument turns on, and it is worth having the
+idea in hand *before* the result comes in rather than after, when
+everyone’s read on it will be coloured by who won.
 
-**Write down two predictions before you leave**, and keep them. Which side do
-you expect to lose, and what do you expect that side to say in the week after?
-We will come back to what you wrote once the results are in. A prediction made
-in advance is the only kind that can be wrong, which is what makes it worth
-making.
+- Layman, Geoffrey, Frances Lee, and Christina Wolbrecht. 2023.
+  “Political Parties and Loser’s Consent in American Politics.” *The
+  ANNALS of the American Academy of Political and Social Science*
+  708(1): 164–183.
+  - <https://doi.org/10.1177/00027162241229309> — the ANNALS is
+    available online through the CMU Library.
+  - Open access copy: [Rooney Institute, Notre
+    Dame](https://rooneyinstitute.nd.edu/assets/569540/political_parties_and_loser_s_consent_in_american_politics.pdf)
+  - Read it against September 29: Druckman, Green, and Iyengar argue
+    affective polarization does not drive democratic backsliding, and
+    McCoy and Somer argue it does. Loser’s consent is the specific thing
+    that would have to give way for the second account to be right.
+
+**Write down two predictions before you leave**, and keep them. Which
+side do you expect to lose, and what do you expect that side to say in
+the week after? We will come back to what you wrote once the results are
+in. A prediction made in advance is the only kind that can be wrong,
+which is what makes it worth making.
 
 ### October 29
+
 Student led topics/debates — team and topic TBA
 
 ## Week 11 — November 3 & 5
 
 ### November 3
-DEMOCRACY DAY, no class [**Register to Vote**](https://www.cmu.edu/student-affairs/slice/civic-engagement/advocacy/voter/index.html)
 
-_Join us for CMU’s fourth Democracy Day, an opportunity to focus on our institutional commitment to civic service and democracy on Election Day. There will be programming and resources available throughout the day for our entire community to engage on the key ideals of democracy._
+DEMOCRACY DAY, no class [**Register to
+Vote**](https://www.cmu.edu/student-affairs/slice/civic-engagement/advocacy/voter/index.html)
 
-_There are no classes on Democracy Day prior to 5 p.m. and the entire CMU community —faculty, staff and students — is encouraged to participate as their schedules allow._
+*Join us for CMU’s fourth Democracy Day, an opportunity to focus on our
+institutional commitment to civic service and democracy on Election Day.
+There will be programming and resources available throughout the day for
+our entire community to engage on the key ideals of democracy.*
+
+*There are no classes on Democracy Day prior to 5 p.m. and the entire
+CMU community —faculty, staff and students — is encouraged to
+participate as their schedules allow.*
 
 ### November 5
 
@@ -1090,138 +1331,115 @@ Student led topics/debates — team and topic TBA
 ## Week 12 — November 10 & 12
 
 ### November 10
+
 Student led topics/debates — team and topic TBA
 
 ### November 12
+
 Student led topics/debates — team and topic TBA
 
 ## Week 13 — November 17 & 19
 
 ### November 17
+
 Student led topics/debates — team and topic TBA
 
 ### November 19
+
 Student led topics/debates — team and topic TBA
 
 ## Week 14 — November 24 & 26
 
 ### November 24
-**VIRTUAL CLASS** — we meet remotely this session, since many of you will already be traveling for Thanksgiving. Link posted on Canvas.
+
+**VIRTUAL CLASS** — we meet remotely this session, since many of you
+will already be traveling for Thanksgiving. Link posted on Canvas.
 
 Student led topics/debates — team and topic TBA
 
 ### November 26
+
 **THANKSGIVING DAY**, no class
 
 ## Week 15 — December 1 & 3
 
 ### December 1
+
 Group Policy Brief
 
 ### December 3
+
 Group Policy Brief
 
+------------------------------------------------------------------------
 
-***
+------------------------------------------------------------------------
 
-
-***
 ## Units on the shelf
-
-### Place, Identity, and Rural Consciousness
-
-**Place, Identity, and Rural Consciousness**
-
-Why does where you live feel like who you are? Cramer's answer, from years of
-sitting in gas stations in rural Wisconsin, is that rural people share a "rural
-consciousness" — a conviction that decisions, money, and respect all flow to the
-cities. It is a lens, not a policy position, and it makes small-government
-appeals land regardless of a person's actual economic interest.
-
-The decade since has complicated her almost beyond recognition, and the
-complications are the reason this makes a good session rather than a good
-lecture. It turns out rural *identity* matters more than rural *residence* —
-people who identify as rural but do not live rurally look politically identical
-to those who do. It turns out the *symbolic* grievances predict Trump support
-and the *material* ones do not, which is bad news for anyone whose answer to
-rural discontent is a spending program. And it turns out that when you control
-for racial resentment, much of rural consciousness's predictive power goes with
-it — though how much, and whether that means the concept reduces to racism, is
-genuinely disputed.
-
-- Cramer, Katherine J. 2016. *The Politics of Resentment: Rural Consciousness in Wisconsin and the Rise of Scott Walker.* University of Chicago Press. — Chapters 3–5. Ethnography, not statistics; the most readable thing in this course.
-  * [CMU catalog record](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991019603989504436)
-  * **The assignable version is the article, and it is published under a different name.** Cramer wrote it as *Katherine Cramer Walsh*; she publishes as *Katherine J. Cramer* now. Searching one name will not find the other, which is worth knowing before you spend twenty minutes on it.
-    - Walsh, Katherine Cramer. 2012. "Putting Inequality in Its Place: Rural Consciousness and the Power of Perspective." *American Political Science Review* 106(3): 517–532. — sixteen pages, and it carries the whole argument without the book.
-    - [https://doi.org/10.1017/S0003055412000305](https://doi.org/10.1017/S0003055412000305)
-- Lunz Trujillo, Kristin, and Zack Crowley. 2022. "Symbolic versus Material Concerns of Rural Consciousness in the United States." *Political Geography* 96: 102658. — splits rural consciousness into "our way of life is disrespected" and "we don't get our share of the money." Only the first predicts anything.
-  * [https://doi.org/10.1016/j.polgeo.2022.102658](https://doi.org/10.1016/j.polgeo.2022.102658)
-- Nelsen, Matthew D., and Christopher D. Petsko. 2021. "Race and White Rural Consciousness." *Perspectives on Politics* 19(4): 1205–1218. — the central critique of Cramer. Rural respondents attach stereotypically Black attributes to "Milwaukeeans," and controlling for racial resentment strips most of rural consciousness's explanatory power. They stop short of saying it reduces to racism. Decide whether you think they should have.
-  * [https://doi.org/10.1017/S1537592721001948](https://doi.org/10.1017/S1537592721001948)
-- Jacobs, Nicholas F., and B. Kal Munis. 2023. "Place-Based Resentment in Contemporary U.S. Elections: The Individual Sources of America's Urban-Rural Divide." *Political Research Quarterly* 76(3): 1102–1118. — the reply: place resentment predicts vote choice net of both partisanship and racial attitudes.
-  * [https://doi.org/10.1177/10659129221124864](https://doi.org/10.1177/10659129221124864)
-
-**A live case in how the discipline polices itself.** In 2024, Schaller and
-Waldman's *White Rural Rage* became a bestseller by arguing rural white
-Americans are a distinct threat to democracy. Within weeks, the scholars whose
-work it cited — including two of the authors above — went public to say it had
-misread them, in one case reporting a source's finding backwards. Read the
-takedown; it is free, it is twelve minutes, and it is the clearest illustration
-you will get of why the difference between a county-level correlation and an
-individual-level claim actually matters.
-
-- Jacobs, Nicholas F., and B. Kal Munis. 2024. "The Truth About 'Rural Rage'." *Reason*, March 7.
-  * [https://reason.com/2024/03/07/the-truth-about-rural-rage/](https://reason.com/2024/03/07/the-truth-about-rural-rage/)
-
-Optional
-
-- Jacobs, Nicholas F., and Daniel M. Shea. 2023. *The Rural Voter: The Politics of Place and the Disuniting of America.* Columbia University Press. — the largest survey ever fielded on rural Americans. [CMU catalog record](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020185778804436). Free summary: ["Understanding the Rural Voter," Colby News](https://news.colby.edu/story/understanding-the-rural-voter/), eight minutes. Only 10% of rural residents hold politically extreme views, and rural voters agree with the country on most issues except guns.
-- Lunz Trujillo, Kristin. 2024. "Feeling Out of Place: Who Are the Non-Rural Rural Identifiers, and Are They Unique Politically?" *Political Behavior* 46(4): 2215–2239. Free preprint: [https://preprints.apsanet.org/engage/api-gateway/apsa/assets/orp/resource/item/63120eabbc257b6406d8bea1/original/feeling-out-of-place-who-are-the-non-rural-rural-identifiers-and-are-they-unique-politically.pdf](https://preprints.apsanet.org/engage/api-gateway/apsa/assets/orp/resource/item/63120eabbc257b6406d8bea1/original/feeling-out-of-place-who-are-the-non-rural-rural-identifiers-and-are-they-unique-politically.pdf)
-- Hershewe, Thomas, and Asher Smith. 2025. "When Politics Override Place: How Political Affiliation Supersedes Rural Identity." *American Politics Research* 53(1): 17–27. — eleven pages. When the two identities conflict, party wins, and asymmetrically: rural Democrats suppress their rural identity, rural Republicans do not.
-  * [https://doi.org/10.1177/1532673X241282286](https://doi.org/10.1177/1532673X241282286)
-- Geismer, Lily. 2024. "A New Suburban Politics." *Dissent*, Fall. — free, fifteen minutes. Suburbs now house nearly half of America's poor and are racially diverse, while both parties still campaign against a 1950s image of them. The best short argument that the urban–rural binary is the wrong frame.
-  * [https://dissentmagazine.org/article/a-new-suburban-politics/](https://dissentmagazine.org/article/a-new-suburban-politics/)
-
-
-<!-- 
 
 ### Short free substitutes
 
-- De Witte, Melissa. 2019. "How the Urban-Rural Divide Shapes Elections." Stanford Report. — **six minutes**, Q&A with Rodden, no jargon. The best short thing in existence on this topic; delivers the whole "Democrats win cities by huge margins and lose everywhere else narrowly" mechanism.
-  * [https://news.stanford.edu/stories/2019/06/urban-rural-divide-shapes-elections](https://news.stanford.edu/stories/2019/06/urban-rural-divide-shapes-elections)
-- Pew Research Center. 2024. "Partisanship in Rural, Suburban and Urban Communities." — eight minutes, two charts. Rural R+25, up from R+6 in 2000; urban 60–37 Democratic; suburbs 50–47.
-  * [https://www.pewresearch.org/politics/2024/04/09/partisanship-in-rural-suburban-and-urban-communities/](https://www.pewresearch.org/politics/2024/04/09/partisanship-in-rural-suburban-and-urban-communities/)
-- Rodden, Jonathan, and Will Wilkinson. 2019. "Explaining the Urban-Rural Political Divide." Niskanen Center. — podcast with full transcript; skim in fifteen minutes. Two scholars who agree about the map and disagree about why: Rodden says nineteenth-century rail and factory geography, Wilkinson says contemporary personality self-selection.
-  * [https://www.niskanencenter.org/explaining-the-urban-rural-political-divide/](https://www.niskanencenter.org/explaining-the-urban-rural-political-divide/)
-- Hennig, Benjamin. 2024. "Cartographic Perspectives of the 2024 U.S. Election." *Election Analysis*. — ten minutes, free. Population-weighted cartograms. The best short piece on how the standard county map lies about American political geography, and a good thing to open a session with.
-  * [https://www.electionanalysis.ws/us/president2024/section-3-voters/cartographic-perspectives-of-the-2024-u-s-election/](https://www.electionanalysis.ws/us/president2024/section-3-voters/cartographic-perspectives-of-the-2024-u-s-election/)
-- Muro, Mark, and Shriya Methkupally. 2024. "Trump Again Won Counties Representing a Minority Share of National GDP, but with Notable Gains." Brookings, November 8. — ten minutes. Trump won 86% of counties producing 38% of GDP. Trump-won counties in the top 100 by GDP went from 5 to 16, including Maricopa, Miami-Dade and Tarrant.
-  * [https://www.brookings.edu/articles/trump-again-won-counties-representing-a-minority-share-of-national-gdp-but-with-notable-gains/](https://www.brookings.edu/articles/trump-again-won-counties-representing-a-minority-share-of-national-gdp-but-with-notable-gains/)
+- De Witte, Melissa. 2019. “How the Urban-Rural Divide Shapes
+  Elections.” Stanford Report. — **six minutes**, Q&A with Rodden, no
+  jargon. The best short thing in existence on this topic; delivers the
+  whole “Democrats win cities by huge margins and lose everywhere else
+  narrowly” mechanism.
+  - <https://news.stanford.edu/stories/2019/06/urban-rural-divide-shapes-elections>
+- Pew Research Center. 2024. “Partisanship in Rural, Suburban and Urban
+  Communities.” — eight minutes, two charts. Rural R+25, up from R+6 in
+  2000; urban 60–37 Democratic; suburbs 50–47.
+  - <https://www.pewresearch.org/politics/2024/04/09/partisanship-in-rural-suburban-and-urban-communities/>
+- Rodden, Jonathan, and Will Wilkinson. 2019. “Explaining the
+  Urban-Rural Political Divide.” Niskanen Center. — podcast with full
+  transcript; skim in fifteen minutes. Two scholars who agree about the
+  map and disagree about why: Rodden says nineteenth-century rail and
+  factory geography, Wilkinson says contemporary personality
+  self-selection.
+  - <https://www.niskanencenter.org/explaining-the-urban-rural-political-divide/>
+- Hennig, Benjamin. 2024. “Cartographic Perspectives of the 2024 U.S.
+  Election.” *Election Analysis*. — ten minutes, free.
+  Population-weighted cartograms. The best short piece on how the
+  standard county map lies about American political geography, and a
+  good thing to open a session with.
+  - <https://www.electionanalysis.ws/us/president2024/section-3-voters/cartographic-perspectives-of-the-2024-u-s-election/>
+- Muro, Mark, and Shriya Methkupally. 2024. “Trump Again Won Counties
+  Representing a Minority Share of National GDP, but with Notable
+  Gains.” Brookings, November 8. — ten minutes. Trump won 86% of
+  counties producing 38% of GDP. Trump-won counties in the top 100 by
+  GDP went from 5 to 16, including Maricopa, Miami-Dade and Tarrant.
+  - <https://www.brookings.edu/articles/trump-again-won-counties-representing-a-minority-share-of-national-gdp-but-with-notable-gains/>
 
+Assembled and ready to schedule, but not currently on the calendar. Any
+of these can be dropped into an open session, or handed to a student
+team as a starting point for their own.
 
-<!-- 
-Assembled and ready to schedule, but not currently on the calendar. Any of
-these can be dropped into an open session, or handed to a student team as a
-starting point for their own.
+### America’s Founding: Enlightened or Enslaved?
 
-### America's Founding: Enlightened or Enslaved?
+**America’s Founding: Enlightened or Enslaved?**
 
-**America's Founding: Enlightened or Enslaved?**
+1.  *The 1619 Project*
 
-1. _The 1619 Project_
-
-- “America Wasn’t a Democracy Until Black Americans Made It One” – Essay by Nikole Hannah-Jones [https://www.nytimes.com/interactive/2019/08/14/magazine/black-history-american-democracy.html](https://www.nytimes.com/interactive/2019/08/14/magazine/black-history-american-democracy.html)
-  - Introduces the central thesis of the project: re-centering slavery and Black Americans in the nation's founding narrative.
-- “In Order to Understand the Brutality of American Capitalism, You Have to Start on the Plantation” – Essay by Matthew Desmond [https://www.nytimes.com/interactive/2019/08/14/magazine/slavery-capitalism.html](https://www.nytimes.com/interactive/2019/08/14/magazine/slavery-capitalism.html)
+- “America Wasn’t a Democracy Until Black Americans Made It One” – Essay
+  by Nikole Hannah-Jones
+  <https://www.nytimes.com/interactive/2019/08/14/magazine/black-history-american-democracy.html>
+  - Introduces the central thesis of the project: re-centering slavery
+    and Black Americans in the nation’s founding narrative.
+- “In Order to Understand the Brutality of American Capitalism, You Have
+  to Start on the Plantation” – Essay by Matthew Desmond
+  <https://www.nytimes.com/interactive/2019/08/14/magazine/slavery-capitalism.html>
   - Connects slavery to contemporary economic systems.
 
-2. _The 1776 Report_
+2.  *The 1776 Report*
 
-– [Arnn, Larry P., Carol Swain, and Matthew Spalding. 2021. The President’s Advisory 1776 Commission. Washington, D.C: The White House.](https://trumpwhitehouse.archives.gov/wp-content/uploads/2021/01/The-Presidents-Advisory-1776-Commission-Final-Report.pdf)
-  - Presents a traditionalist, patriotic framing of American founding values.
+– [Arnn, Larry P., Carol Swain, and Matthew Spalding. 2021. The
+President’s Advisory 1776 Commission. Washington, D.C: The White
+House.](https://trumpwhitehouse.archives.gov/wp-content/uploads/2021/01/The-Presidents-Advisory-1776-Commission-Final-Report.pdf) -
+Presents a traditionalist, patriotic framing of American founding
+values.
 
 Optional Readings
-```md
+
+``` md
 1. _The 1776 Report_
 
 - “AHA Statement Condemning Report of Advisory 1776 Commission.” 
@@ -1243,23 +1461,26 @@ Optional Readings
 - Frederick Douglass, “What to the Slave is the Fourth of July?” (1852)
   * (~20 min read, historical context for both projects)
 ```
-    
 
 ### Free Speech and Academic Freedom on Campus
+
 **Free Speech in Schools**
 
-- Chemerinsky, Erwin. 2024. “The Underlying Issues Concerning Free Speech in Schools.” Stanford Law Review 76: 1427. 
- * [https://review.law.stanford.edu/wp-content/uploads/sites/3/2024/10/Chemerinsky-76-Stan.-L.-Rev.-1427.pdf](https://review.law.stanford.edu/wp-content/uploads/sites/3/2024/10/Chemerinsky-76-Stan.-L.-Rev.-1427.pdf)
+- Chemerinsky, Erwin. 2024. “The Underlying Issues Concerning Free
+  Speech in Schools.” Stanford Law Review 76: 1427.
+- <https://review.law.stanford.edu/wp-content/uploads/sites/3/2024/10/Chemerinsky-76-Stan.-L.-Rev.-1427.pdf>
 
 **Introduction and the History of Free Speech in America**
 
-- Chemerinsky, Erwin, and Howard Gillman. 2018. Free speech on campus. Paperback edition. New Haven ; London: Yale University Press.
-    * Chapter 1: [The New Censorship](https://canvas.cmu.edu/courses/47827/files/folder/Free%20Speech%20on%20Campus?preview=13149838) <!-- TODO: F26 Canvas course ID -->
-
-    * Chapter 2: [Why Is Free Speech Important?](https://canvas.cmu.edu/courses/47827/files/folder/Free%20Speech%20on%20Campus?preview=13149839) <!-- TODO: F26 Canvas course ID -->
-
-**The History of Academic Freedom**
-
+- Chemerinsky, Erwin, and Howard Gillman. 2018. Free speech on campus.
+  Paperback edition. New Haven ; London: Yale University Press.
+  - Chapter 1: [The New
+    Censorship](https://canvas.cmu.edu/courses/47827/files/folder/Free%20Speech%20on%20Campus?preview=13149838)
+    <!-- TODO: F26 Canvas course ID -->
+  - Chapter 2: [Why Is Free Speech
+    Important?](https://canvas.cmu.edu/courses/47827/files/folder/Free%20Speech%20on%20Campus?preview=13149839)
+    <!-- TODO: F26 Canvas course ID --> **The History of Academic
+    Freedom**
 - Chemerinsky, Erwin, and Howard Gillman. 2018. Free speech on campus.
   Paperback edition. New Haven; London: Yale University Press.
   - Chapter 3: Nullius in Verba: Free Speech at Colleges and

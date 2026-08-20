@@ -5,7 +5,7 @@
 > Email: **<cervas@cmu.edu>**  
 > Location: [Scaife Hall
 > 234](https://www.cmu.edu/computing/services/teach-learn/tes/classrooms/locations/scaife.html)  
-> Time: Tuesday/Thursday 2:00p-3:20p Eastern  
+> Time: Tuesday & Thursday 2:00p-3:20p Eastern  
 > Office Hours: Wed 10:30a-12:30p & 1:30p-3:30p, and by appointment
 > (arrange via email)  
 > [**CMU Academic Calendar**](https://www.cmu.edu/hub/calendar/)
@@ -14,9 +14,17 @@
 > Email: **<zhamed@andrew.cmu.edu>**  
 > Office Hours: arrange via email
 
+The most up-to-date version of this [**syllabus can be found
+here**](https://jcervas.github.io/teaching/2026-2027/class-cmu-2026-84-355/readme.html):
+<https://jcervas.github.io/teaching/2026-2027/class-cmu-2026-84-355/readme.html>
+
+------------------------------------------------------------------------
+
 > **Course Relevance:** DC: Perspectives on Justice and Injustice  
 > **Learning Resources:** All resources will be provided via Canvas  
-> **Prerequisite Knowledge:** NONE
+> **Prerequisites:** NONE
+
+------------------------------------------------------------------------
 
 <img src="readme_files/figure-gfm/meetings-1.png" width="100%" style="display: block; margin: auto;" />
 
