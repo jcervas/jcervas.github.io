@@ -32,9 +32,11 @@ Renders content sorted newest-first; js/media-table.js enhances it.
             {%- if c == "date" -%}
             <td class="mt-date" data-date="{{ it.date }}">{% if it.date and it.date != "" %}{{ it.date | date: "%b %-d, %Y" }}{% endif %}</td>
             {%- elsif c == "title" -%}
-            <td class="mt-title"><a href="{{ it.url }}">{{ it.title }}</a>{% if it.author %} <span class="mt-author">&mdash; {{ it.author }}</span>{% endif %}{% if it.quotes %}<div class="mt-quotes">{% for q in it.quotes %}<blockquote>{{ q }}</blockquote>{% endfor %}</div>{% endif %}</td>
+            <td class="mt-title"><a href="{{ it.url }}">{{ it.title }}</a>{% unless cols contains "author" %}{% if it.author %} <span class="mt-author">&mdash; {{ it.author }}</span>{% endif %}{% endunless %}{% if it.quotes %}<div class="mt-quotes">{% for q in it.quotes %}<blockquote>{{ q }}</blockquote>{% endfor %}</div>{% endif %}</td>
             {%- elsif c == "outlet" -%}
             <td class="mt-outlet">{{ it.outlet }}</td>
+            {%- elsif c == "author" -%}
+            <td class="mt-author-col">{{ it.author }}</td>
             {%- else -%}
             <td>{{ it[c] }}</td>
             {%- endif -%}

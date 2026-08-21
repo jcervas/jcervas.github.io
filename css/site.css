@@ -382,6 +382,7 @@ img { max-width: 100%; height: auto; }
   color: var(--muted); font-size: .9em;
 }
 .mt-date { white-space: nowrap; color: var(--muted); }
+.mt-author-col { color: var(--muted); font-size: .92em; }
 .mt-outlet { white-space: nowrap; color: var(--muted); }
 .mtable__table tbody tr:hover { background: var(--bg-alt); }
 

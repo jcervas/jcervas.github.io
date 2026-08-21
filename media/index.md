@@ -54,6 +54,6 @@ description: "News coverage and media mentions of Jonathan Cervas's redistrictin
 <h2>Media Mentions</h2>
 <p class="section-lead">Sort by any column, filter by topic or outlet, or search the titles.</p>
 
-{% include media-table.html items=site.data.media.mentions facets="topic,outlet" columns="date,title,outlet" %}
+{% include media-table.html items=site.data.media.mentions facets="topic,outlet" columns="date,title,outlet,author" %}
 
 <p class="media-more"><a href="{{ '/media/new-york-daily-news/' | relative_url }}">See also: New York Daily News coverage &rarr;</a></p>
