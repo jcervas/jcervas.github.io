@@ -43,13 +43,14 @@ screen and work out what it shows — through the 2026 midterms, live.
 
 The course grade will be a weighted average of the following components:
 
-| Category                       | Percent of Final Grade |
-|--------------------------------|------------------------|
-| **Participation & Attendance** | 25%                    |
-| **Discussion Board**           | 10%                    |
-| **Weekly Data Contributions**  | 10%                    |
-| **Three Tests** (10% each)     | 30%                    |
-| **Data Journalism Project**    | 25%                    |
+| Category                         | Percent of Final Grade |
+|----------------------------------|------------------------|
+| **Participation & Attendance**   | 23%                    |
+| **Discussion Board**             | 10%                    |
+| **Surveys** (3, completion only) | 2%                     |
+| **Weekly Data Contributions**    | 10%                    |
+| **Three Tests** (10% each)       | 30%                    |
+| **Data Journalism Project**      | 25%                    |
 
 What each one is:
 
@@ -61,6 +62,11 @@ What each one is:
   missed, something you do not understand, or an answer to somebody
   else’s question. **A few sentences to a paragraph** — enough to show
   you engaged with what we did. One post is full credit.
+- **Surveys** — Three short ones: the **Cervas Election Study** in Week
+  1, a **midterm feedback** survey once you have seen how the course
+  actually runs, and the **course evaluation** at the end. Graded for
+  completion only — there are no right answers, and nothing you say
+  affects any other part of your grade.
 - **Weekly Data Contributions** — Find data bearing on the question
   Tuesday ended with, name the source, and post it as a slide before
   Thursday. Each week two slides are drawn at random and worked through
@@ -71,7 +77,7 @@ What each one is:
   write-up. **Build it as you go** — it is a paragraph a week, and an
   evening’s work if you leave it all to December.
 - **Three Tests** — In class, on paper, and **on the textbook only**.
-  Test 1 on **Tue, Oct 20** (Sides et al., Chapters 1–5), Test 2 on
+  Test 1 on **Thu, Oct 8** (Sides et al., Chapters 1–5), Test 2 on
   **Tue, Nov 10** (Chapters 6–9), Test 3 on **Thu, Dec 3** (Chapters
   10–13). We read the book straight through in its own order, so each
   test is a block of consecutive chapters: each covers the chapters read
@@ -84,20 +90,21 @@ What each one is:
 
 ## Due Dates
 
-| Assignment                                      | Due                                                                      |
-|-------------------------------------------------|--------------------------------------------------------------------------|
-| Data slide                                      | before **each Thursday**                                                 |
-| Discussion board post                           | **Friday, 11:59 p.m.**, each week                                        |
-| Data Session 4 board post (no Thursday session) | **Tue, Sep 22** — no session to follow that week, so you get the weekend |
-| Week 14 board post (Thanksgiving)               | **Mon, Nov 30** — Tuesday is the lab, and there is no Thursday           |
-| Data journalism: pitch                          | **Thu, Oct 8**, in class                                                 |
-| **Test 1** — Ch. 1–5                            | **Tue, Oct 20**, in class                                                |
-| **Test 2** — Ch. 6–9                            | **Tue, Nov 10**, in class                                                |
-| Data journalism: **draft**                      | **Thu, Nov 19** — the last session before the break                      |
-| Data journalism: **peer reviews** (two)         | **Tue, Dec 1**                                                           |
-| **Test 3** — Ch. 10–13                          | **Thu, Dec 3**, in class                                                 |
-| Data newsletter                                 | **Fri, Dec 4** — the last day of classes                                 |
-| Data journalism: **final**                      | **Fri, Dec 11** — after the last session                                 |
+| Assignment                                      | Due                                                                                                             |
+|-------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
+| Data slide                                      | before **each Thursday**                                                                                        |
+| Surveys (3)                                     | **Wed, Aug 26** (Cervas Election Study), **Fri, Oct 23** (midterm feedback), **final week** (course evaluation) |
+| Discussion board post                           | **Friday, 11:59 p.m.**, each week                                                                               |
+| Data Session 4 board post (no Thursday session) | **Tue, Sep 22** — no session to follow that week, so you get the weekend                                        |
+| Week 14 board post (Thanksgiving)               | **Mon, Nov 30** — Tuesday is on Zoom, and there is no Thursday                                                  |
+| **Test 1** — Ch. 1–5                            | **Thu, Oct 8**, in class                                                                                        |
+| Data journalism: pitch                          | **Tue, Oct 20**, in class                                                                                       |
+| **Test 2** — Ch. 6–9                            | **Tue, Nov 10**, in class                                                                                       |
+| Data journalism: **draft**                      | **Thu, Nov 19** — the last session before the break                                                             |
+| Data journalism: **peer reviews** (two)         | **Tue, Dec 1**                                                                                                  |
+| **Test 3** — Ch. 10–13                          | **Thu, Dec 3**, in class                                                                                        |
+| Data newsletter                                 | **Fri, Dec 4** — the last day of classes                                                                        |
+| Data journalism: **final**                      | **Fri, Dec 11** — after the last session                                                                        |
 
 There is no final exam.
 
