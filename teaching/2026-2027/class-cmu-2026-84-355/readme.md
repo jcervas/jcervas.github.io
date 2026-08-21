@@ -94,6 +94,35 @@ Each unit below states which of these it is building. If at any point
 you cannot tell why we are doing something, that is a failure of my
 design and not of your attention — please say so, and I will fix it.
 
+<!-- Grading philosophy and late policy. -->
+
+## Grading
+
+Your grade rests on engagement as much as on output. The course is built
+around two things happening every week — you arriving having read, and
+you arriving having found data — and neither can be made up afterwards.
+
+**Deadlines.** You are expected to meet them. If you can see in advance
+that you will not, contact me **before** the due date and we will sort
+something out.
+
+Late work loses **one percentage point per hour, and never falls below
+50%**.[^1] Canvas applies this automatically. Submit what you have
+rather than polishing something that is already late.
+
+Work that is never submitted scores **zero**, which is the whole reason
+the late floor sits at 50%: handing something in a week late is always
+worth more than handing in nothing.
+
+Two things sit outside that rule because being late breaks somebody
+else’s work, not just your own:
+
+- **Peer reviews.** Your classmate cannot revise against a review that
+  has not arrived. Late reviews are marked down sharply.
+- **Project drafts.** A missing draft means two people have nothing to
+  review, and — as above — you cannot rescue a missing draft with a good
+  final.
+
 <!-- Required text. Update the edition yearly. -->
 
 ## Required Text
@@ -331,35 +360,6 @@ on the Tuesday it belongs to, in the schedule below.
 Thursdays.** It uses time the chapter was not using. On those Tuesdays
 the four moves above compress — usually the evidence and disagreement
 segments — which is a shape, not a stopwatch.
-
-<!-- Grading philosophy and late policy. -->
-
-## Grading
-
-Your grade rests on engagement as much as on output. The course is built
-around two things happening every week — you arriving having read, and
-you arriving having found data — and neither can be made up afterwards.
-
-**Deadlines.** You are expected to meet them. If you can see in advance
-that you will not, contact me **before** the due date and we will sort
-something out.
-
-Late work loses **one percentage point per hour, and never falls below
-50%**.[^1] Canvas applies this automatically. Submit what you have
-rather than polishing something that is already late.
-
-Work that is never submitted scores **zero**, which is the whole reason
-the late floor sits at 50%: handing something in a week late is always
-worth more than handing in nothing.
-
-Two things sit outside that rule because being late breaks somebody
-else’s work, not just your own:
-
-- **Peer reviews.** Your classmate cannot revise against a review that
-  has not arrived. Late reviews are marked down sharply.
-- **Project drafts.** A missing draft means two people have nothing to
-  review, and — as above — you cannot rescue a missing draft with a good
-  final.
 
 <!-- Assessment weights, what each component is, and due dates. Shared by both syllabi. -->
 
