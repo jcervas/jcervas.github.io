@@ -64,10 +64,9 @@ What each one is:
 - **Weekly Data Contributions** — Find data bearing on the question
   Tuesday ended with, name the source, and post it as a slide before
   Thursday. Each week two slides are drawn at random and worked through
-  in class, and nobody presents the data they found themselves. **If
-  your name is drawn and you are absent or have no slide, it costs 25%
-  of your attendance grade for the semester** — expect your own data to
-  come up once or twice all term. At the end of term you hand in a
+  in class, and nobody presents the data they found themselves — expect
+  your own data to come up once or twice all term. The slide is marked
+  complete or incomplete each week. At the end of term you hand in a
   **newsletter**: every piece of data you found, each with a short
   write-up. **Build it as you go** — it is a paragraph a week, and an
   evening’s work if you leave it all to December.

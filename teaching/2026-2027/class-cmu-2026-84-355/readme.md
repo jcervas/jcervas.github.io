@@ -123,6 +123,70 @@ else’s work, not just your own:
   review, and — as above — you cannot rescue a missing draft with a good
   final.
 
+<!-- Assessment weights, what each component is, and due dates. Shared by both syllabi. -->
+
+## Assessment
+
+The course grade will be a weighted average of the following components:
+
+| Category                       | Percent of Final Grade |
+|--------------------------------|------------------------|
+| **Participation & Attendance** | 25%                    |
+| **Discussion Board**           | 10%                    |
+| **Weekly Data Contributions**  | 10%                    |
+| **Three Tests** (10% each)     | 30%                    |
+| **Data Journalism Project**    | 25%                    |
+
+What each one is:
+
+- **Participation & Attendance** — Being here, prepared, and in the
+  conversation — on both days.
+- **Discussion Board** — By Friday night each week, one post about any
+  of the data we talked about: the lab, a classmate’s data slide, a
+  figure in the reading. Something that surprised you, something we
+  missed, something you do not understand, or an answer to somebody
+  else’s question. **A few sentences to a paragraph** — enough to show
+  you engaged with what we did. One post is full credit.
+- **Weekly Data Contributions** — Find data bearing on the question
+  Tuesday ended with, name the source, and post it as a slide before
+  Thursday. Each week two slides are drawn at random and worked through
+  in class, and nobody presents the data they found themselves — expect
+  your own data to come up once or twice all term. The slide is marked
+  complete or incomplete each week. At the end of term you hand in a
+  **newsletter**: every piece of data you found, each with a short
+  write-up. **Build it as you go** — it is a paragraph a week, and an
+  evening’s work if you leave it all to December.
+- **Three Tests** — In class, on paper, and **on the textbook only**.
+  Test 1 on **Tue, Oct 20** (Sides et al., Chapters 1–5), Test 2 on
+  **Tue, Nov 10** (Chapters 6–9), Test 3 on **Thu, Dec 3** (Chapters
+  10–13). We read the book straight through in its own order, so each
+  test is a block of consecutive chapters: each covers the chapters read
+  since the last one, **none is cumulative**, and every chapter appears
+  on exactly one test. There is no final exam.
+- **Data Journalism Project** — A data-driven news story about a trend
+  or issue in electoral processes. Runs in three parts — draft, peer
+  review, final — and **most of the marks are on the first two**. It is
+  the only substantial piece of writing this term.
+
+## Due Dates
+
+| Assignment                                      | Due                                                                      |
+|-------------------------------------------------|--------------------------------------------------------------------------|
+| Data slide                                      | before **each Thursday**                                                 |
+| Discussion board post                           | **Friday, 11:59 p.m.**, each week                                        |
+| Data Session 4 board post (no Thursday session) | **Tue, Sep 22** — no session to follow that week, so you get the weekend |
+| Week 14 board post (Thanksgiving)               | **Mon, Nov 30** — Tuesday is the lab, and there is no Thursday           |
+| Data journalism: pitch                          | **Thu, Oct 8**, in class                                                 |
+| **Test 1** — Ch. 1–5                            | **Tue, Oct 20**, in class                                                |
+| **Test 2** — Ch. 6–9                            | **Tue, Nov 10**, in class                                                |
+| Data journalism: **draft**                      | **Thu, Nov 19** — the last session before the break                      |
+| Data journalism: **peer reviews** (two)         | **Tue, Dec 1**                                                           |
+| **Test 3** — Ch. 10–13                          | **Thu, Dec 3**, in class                                                 |
+| Data newsletter                                 | **Fri, Dec 4** — the last day of classes                                 |
+| Data journalism: **final**                      | **Fri, Dec 11** — after the last session                                 |
+
+There is no final exam.
+
 <!-- Required text. Update the edition yearly. -->
 
 ## Required Text
@@ -361,71 +425,6 @@ Thursdays.** It uses time the chapter was not using. On those Tuesdays
 the four moves above compress — usually the evidence and disagreement
 segments — which is a shape, not a stopwatch.
 
-<!-- Assessment weights, what each component is, and due dates. Shared by both syllabi. -->
-
-## Assessment
-
-The course grade will be a weighted average of the following components:
-
-| Category                       | Percent of Final Grade |
-|--------------------------------|------------------------|
-| **Participation & Attendance** | 25%                    |
-| **Discussion Board**           | 10%                    |
-| **Weekly Data Contributions**  | 10%                    |
-| **Three Tests** (10% each)     | 30%                    |
-| **Data Journalism Project**    | 25%                    |
-
-What each one is:
-
-- **Participation & Attendance** — Being here, prepared, and in the
-  conversation — on both days.
-- **Discussion Board** — By Friday night each week, one post about any
-  of the data we talked about: the lab, a classmate’s data slide, a
-  figure in the reading. Something that surprised you, something we
-  missed, something you do not understand, or an answer to somebody
-  else’s question. **A few sentences to a paragraph** — enough to show
-  you engaged with what we did. One post is full credit.
-- **Weekly Data Contributions** — Find data bearing on the question
-  Tuesday ended with, name the source, and post it as a slide before
-  Thursday. Each week two slides are drawn at random and worked through
-  in class, and nobody presents the data they found themselves. **If
-  your name is drawn and you are absent or have no slide, it costs 25%
-  of your attendance grade for the semester** — expect your own data to
-  come up once or twice all term. At the end of term you hand in a
-  **newsletter**: every piece of data you found, each with a short
-  write-up. **Build it as you go** — it is a paragraph a week, and an
-  evening’s work if you leave it all to December.
-- **Three Tests** — In class, on paper, and **on the textbook only**.
-  Test 1 on **Tue, Oct 20** (Sides et al., Chapters 1–5), Test 2 on
-  **Tue, Nov 10** (Chapters 6–9), Test 3 on **Thu, Dec 3** (Chapters
-  10–13). We read the book straight through in its own order, so each
-  test is a block of consecutive chapters: each covers the chapters read
-  since the last one, **none is cumulative**, and every chapter appears
-  on exactly one test. There is no final exam.
-- **Data Journalism Project** — A data-driven news story about a trend
-  or issue in electoral processes. Runs in three parts — draft, peer
-  review, final — and **most of the marks are on the first two**. It is
-  the only substantial piece of writing this term.
-
-## Due Dates
-
-| Assignment                                      | Due                                                                      |
-|-------------------------------------------------|--------------------------------------------------------------------------|
-| Data slide                                      | before **each Thursday**                                                 |
-| Discussion board post                           | **Friday, 11:59 p.m.**, each week                                        |
-| Data Session 4 board post (no Thursday session) | **Tue, Sep 22** — no session to follow that week, so you get the weekend |
-| Week 14 board post (Thanksgiving)               | **Mon, Nov 30** — Tuesday is the lab, and there is no Thursday           |
-| Data journalism: pitch                          | **Thu, Oct 8**, in class                                                 |
-| **Test 1** — Ch. 1–5                            | **Tue, Oct 20**, in class                                                |
-| **Test 2** — Ch. 6–9                            | **Tue, Nov 10**, in class                                                |
-| Data journalism: **draft**                      | **Thu, Nov 19** — the last session before the break                      |
-| Data journalism: **peer reviews** (two)         | **Tue, Dec 1**                                                           |
-| **Test 3** — Ch. 10–13                          | **Thu, Dec 3**, in class                                                 |
-| Data newsletter                                 | **Fri, Dec 4** — the last day of classes                                 |
-| Data journalism: **final**                      | **Fri, Dec 11** — after the last session                                 |
-
-There is no final exam.
-
 <!-- What each graded component is. -->
 
 ## Assignment Details
@@ -525,18 +524,16 @@ There is no final exam.
 
     ------------------------------------------------------------------------
 
-    **Grading, and one real penalty.** The slide is marked
-    complete/incomplete each week.
+    **Grading.** The slide is marked complete/incomplete each week.
+    There is no separate penalty for being drawn without one: a missing
+    slide costs that week’s credit, whether or not your name comes out.
 
-    > **If your name is drawn and you are not here — or you are here
-    > with no slide — you lose 25% of your attendance grade for the
-    > semester.**
-
-    The odds of that are low and the cost is high, which is the point.
-    When your name comes out, the next fifteen minutes of the class are
-    built on your having done a small piece of work. If you are not
-    ready, I draw again and we carry on, but a room of nineteen people
-    has been left waiting on you.
+    What being drawn costs is not points. When your name comes out, the
+    next fifteen minutes of the class are built on your having done a
+    small piece of work. If you are not ready, I draw again and we carry
+    on — but a room of nineteen people has been left waiting on you, and
+    that is the reason to have something ready rather than a number in
+    the gradebook.
 
     Over a semester you can expect your own data to be drawn once or
     twice, and to present somebody else’s about as often.
@@ -745,12 +742,6 @@ There is no final exam.
     If you must miss class, please notify me at least 24 hours in
     advance (unless it is an emergency or sudden illness) so we can
     arrange a way for you to catch up.[^2]
-
-    **One thing sits on top of that curve.** If your name is drawn for
-    the Thursday data discussion and you are absent, or present with no
-    slide, you lose 25% of your attendance grade for the semester. Being
-    drawn is rare — once or twice across the term — but on the week it
-    happens, the class is relying on you.
 
 ------------------------------------------------------------------------
 
