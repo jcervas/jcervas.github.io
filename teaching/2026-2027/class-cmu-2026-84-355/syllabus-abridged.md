@@ -113,8 +113,9 @@ There is no final exam.
   data brief with the results already in front of you; what you do is
   work out what they show.
 - **Tests are on the textbook only** — in class, on paper.
-- **First day, in class**: the Cervas Election Study — link in **Canvas,
-  under Assignments**; screenshot the confirmation screen for credit.
+- **Due Wed, Aug 26, 11:59 p.m.**: the Cervas Election Study — link in
+  **Canvas, under Assignments**; screenshot the confirmation screen for
+  credit. It is the first thing due, and Thursday’s session uses it.
 
 ## The Full Syllabus
 

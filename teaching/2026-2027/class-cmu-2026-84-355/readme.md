@@ -275,7 +275,7 @@ bothered.
 **Thursdays** are one source of data, start to finish — the weekly draw,
 then the lab.
 
-### The fourteen data sessions
+### The data sessions
 
 **They come in three parts, and the parts are a claim about who
 collected the data and why.** The state **enumerates**, and you are
@@ -287,35 +287,26 @@ everything it leaves behind: the state **certifies** the result and
 file having been asked nothing at all, and where nobody collected
 anything a researcher **built** the number.
 
-| Pt      |                                |     \# | Session                                                |
-|---------|--------------------------------|-------:|--------------------------------------------------------|
-| **I**   | The Census Bureau              |  **1** | What a census is, and how you get it                   |
-|         |                                |  **2** | Geography, and the scales it comes at                  |
-|         |                                |  **3** | What the count is used for                             |
-| **II**  | Surveys                        |  **4** | What a survey can establish, and how you get one       |
-|         |                                |  **5** | Weighting, polls, and what a margin hides              |
-| **III** | Elections *(returns)*          |  **6** | What a return is, and where you get one *(self-study)* |
-|         |                                |  **7** | Returns over time, and the careers in them             |
-|         |                                |  **8** | The bottom rungs: precincts and ballots                |
-|         | *(what a campaign files)*      |  **9** | Filed because somebody had to                          |
-|         | *(one night only)*             | **10** | Live returns ⚑                                         |
-|         | *(machinery)*                  | **11** | The machinery behind the result                        |
-|         | *(records nobody volunteered)* | **12** | Who volunteered, and who did not                       |
-|         | *(numbers somebody built)*     | **13** | A number somebody built                                |
-|         |                                | **14** | Grading a score against a known truth 🔒               |
+| Pt      |                                        | Sessions |
+|---------|----------------------------------------|---------:|
+| **I**   | The Census Bureau                      |  **1–3** |
+| **II**  | Surveys                                |  **4–5** |
+| **III** | Elections, and the records around them | **6–14** |
+
+Which source each Thursday takes is set week by week in the schedule
+below, not here — the part is the promise, the particular file is not.
 
 **The order is cumulative: nothing is inferred from a source you have
 not already met.** The census (Part I) comes before the districts drawn
 on top of it. Surveys (II) come before the models built out of them.
 Returns (III) come before we ask who cast them, and the voter file — the
-other half of the same part — comes before we guess race from it in 13.
-And the last part is last because a score can only be graded against
-data you already trust — which by then you do.
+other half of the same part — comes before we guess race from it. And
+the capstone is last because a score can only be graded against data you
+already trust — which by then you do.
 
-⚑ **Session 10 is fixed to Nov 5** and is the only session whose date is
+**Session 10 is fixed to Nov 5** and is the only session whose date is
 not ours to choose: it runs on returns that do not exist until Nov 3,
-and everything around it is arranged to suit. That is why Part III is
-interrupted by Session 9 rather than run straight through.
+and everything around it is arranged to suit.
 
 **The textbook runs on its own track** — not tied to the parts. We read
 it straight through, Chapters 1 to 13, and the three tests are the
@@ -330,15 +321,11 @@ twenty to thirty minutes of a Tuesday on it. They are marked **(Tuesday
 companion)** in the schedule below.
 
 **Most of them are about what a chart does to data you have already
-met** — *overplotting*, *chord*, *sparklines*, *distributions*, *pie and
-radar*, *streamgraph*, *rank-size*. That is exactly a twenty-minute
-conversation and not a session. The rest carry an argument: *One Ballot,
-One Number* on the first day, because it is the question every later
-session inherits; *Draw the Line Somewhere Else*, which returns in
-December to open the capstone; *Who the Count Missed*, on the 37 states
-the Census Bureau will not characterise; *Seventy-Five Seats*; the
-*bellwether* counties that were not; and *how old is Congress, compared
-with what?*
+met** — what overplotting hides, what a rank-size plot shows that a bar
+chart does not. That is a twenty-minute conversation and not a session.
+The rest carry an argument, and the first of them arrives on day one
+because it is the question every later session inherits. Each is named
+on the Tuesday it belongs to, in the schedule below.
 
 **This does not add a fifteenth data session and it does not lengthen
 Thursdays.** It uses time the chapter was not using. On those Tuesdays
@@ -781,7 +768,7 @@ Subject to change as the semester progresses.
 
 ------------------------------------------------------------------------
 
-### How the fourteen data sessions work
+### How to read the schedule
 
 *Every Thursday takes **one source of data** and goes behind a number
 you have already seen. Each session asks the same five questions —
@@ -821,20 +808,6 @@ grade stamped on a neighbourhood in 1937. And where nobody collected
 anything, a researcher **builds** the number. These sit in Part III
 because this is where they get used, and where nearly all the wrong
 answers live.
-
-| Part    |                                        | Sessions | What opens it                                      |
-|---------|----------------------------------------|----------|----------------------------------------------------|
-| **I**   | The Census Bureau                      | 1–3      | *What a census is, and how you get it*             |
-| **II**  | Surveys                                | 4–5      | *What a survey can establish, and how you get one* |
-| **III** | Elections, and the records around them | 6–14     | *What a return is, and where you get one*          |
-
-**The order is cumulative: nothing is inferred from a source you have
-not already met.** The census (Part I) comes before the districts drawn
-on top of it. Surveys (Part II) come before the models built out of
-them. Returns (Part III) come before we ask who cast them, and the voter
-file comes before we guess race from it. The capstone is last because a
-score can only be graded against data you already trust — which by then
-you do.
 
 **The money runs early on purpose.** What a campaign files is taken in
 **Session 9**, one week before the election, while the campaign it
@@ -887,30 +860,24 @@ cover the textbook and nothing else.**
 - **Tue, Aug 25** — Course introduction: the three layers. A number you
   read in the news, the file it came from, and the reason anyone cares.
   Then straight into the 2024 electoral map.
-  - *No reading — this is the first day.*
+  - **The book’s introduction — *What This Book Is For*** (about twenty
+    minutes). Why every chapter here starts from the file rather than
+    the question. Read it before Thursday; it is the argument the rest
+    of the term is an argument with.
   - **Lab**: the 2024 electoral map. How to read one of these briefs.
-  - **In class**: the **Cervas Election Study** — a survey instrument
-    modelled on the Cooperative Election Study, but not the CES: items
-    have been cut, reworded, and added — and the census replication. The
-    link is in **Canvas, under Assignments**. You are the sample. The
+  - **DUE Wed, Aug 26, 11:59 p.m.** — the **Cervas Election Study**, a
+    survey instrument modelled on the Cooperative Election Study and the
+    American National Election Study, but neither: items have been cut,
+    reworded, and added. The link is in **Canvas, under Assignments**.
+    You take it on your own time, before Thursday, because Thursday’s
+    session works with what the class answered. You are the sample. The
     survey is anonymous (no name, no login), so credit runs on a
     receipt: **screenshot the confirmation screen after you submit and
     upload it to the same Canvas assignment.** **We come back to your
     answers in Session 11**, when we set them against the real
     Cooperative Election Study.
   - **Tuesday companion — which rung answers which question?** Read the
-    brief before class; about twenty-five minutes. Election data comes
-    on a ladder — one ballot, then the precinct, the election
-    jurisdiction, the county, the district, the state, the nation — and
-    **every step up is one way**. An aggregate cannot be zoomed back in.
-    This is here on day one because it is the question every later
-    session inherits. The vote-weighted Democratic mean is **48.90%
-    across 2,684 Georgia precincts, 48.90% across 159 counties, and
-    48.89% for the state** — identical at every rung, while **30.1% of
-    the variation disappears**. Then watch a method used in federal
-    voting-rights litigation report that **194.0% of Georgia’s mail
-    voters chose Biden**, against a published truth of **64.5%**.
-    Grouping the same ballots into counties makes it worse: **233.4%**.
+    brief before class; about twenty-five minutes.
 - **Thu, Aug 27** — **DATA SESSION 1 · Part I: What a census is, and how
   you get it.** The one thing no other source in this course can do —
   count everybody, once, with no margin of error — and four different
@@ -919,35 +886,12 @@ cover the textbook and nothing else.**
     <https://www.census.gov/library/stories/2026/06/america-counts-250-years.html>
   - Census Academy, “Introduction to the Census Bureau Data API,”
     <https://www.census.gov/data/academy/courses/intro-to-the-census-bureau-data-api.html>
-  - **Lab, part 1 — what the decennial actually is.** **Seven questions
-    and six tables**, and everything downstream depends on it. The 2020
-    undercount ran **3.30% for Black residents and 4.99% for Hispanic
-    residents against a 1.64% *over*count for non-Hispanic White
-    residents** — both gaps *wider* than 2010. *Where those numbers come
-    from, and what happens when you ask the same question state by
-    state, is next week’s Tuesday companion.*
-  - **Lab, part 2 — the race question, and the people who refuse every
-    box.** **94.5%** of “Some Other Race” respondents are Hispanic,
-    answering neither question with the box the form provides.
-  - **Lab, part 3 — four doors, four answers.** Three official routes to
-    one county’s population give **1,250,578 / 1,240,476 / 1,231,814**.
-    The survey’s margin of error is published as **−555555555**, which
-    is not missing data: it is the code for *this estimate was
-    controlled*. **The route decides the number**, and the one field
-    that would warn you reads as blank.
-  - **Also**: **73 of the API’s 338 variables exist because the Voting
-    Rights Act needs them.** A file’s contents are a record of what
-    somebody was required to know.
-  - *Where did that number come from?* Every population figure in
-    American politics, including every denominator in this course.
 
 **Week 2 — Part I**
 
 - **Tue, Sep 1** — The framework: what we are judging, and against what.
-  - **Sides et al., Ch. 1.** Rules, reality, strategy, choice — and the
-    **four standards** (free choice, political equality, deliberation,
-    free speech) that this course evaluates everything against. Table
-    1.1 is the one page to know.
+  - **Sides et al., Ch. 1** — rules, reality, strategy, choice, and the
+    four standards.
   - Scott, *Seeing Like a State*, Introduction
   - Nobles, *Shades of Citizenship*, Ch. 1 (“Race, Censuses, and
     Citizenship”)
@@ -955,52 +899,27 @@ cover the textbook and nothing else.**
   it comes at.** Last week counted people. This week asks *where*, and
   discovers that the answer depends entirely on the size of the box you
   put them in.
-  - **Lab, part 1 — race at eight scales**, and only the smallest
-    describes anyone.
-  - **Lab, part 2 — a ZIP code is a routing key for mail trucks.** It is
-    not a place, it has no boundary, and this is why so much data in
-    this course will not join.
-  - **Tuesday companion — *Draw the Line Somewhere Else*.** The same
-    **11,748 Fulton County blocks**, cut into 6 equal-population units
-    by rules that never once look at race, give **anywhere from 0 to 4
-    majority-Black units**. Nobody moves. Nothing is estimated. **The
-    unit itself decides**, and “the algorithm does not look at race” is
-    therefore not a defence of anything. **Keep this one** — you reread
-    it over Thanksgiving and it opens the capstone.
+  - U.S. Census Bureau, *Understanding Statistical Geographies*
+    (webinar, video),
+    <https://www.census.gov/library/video/2021/understanding-statistical-geographies.html>
+    — where tracts, block groups and blocks came from, and how they have
+    moved. The Bureau explaining its own containers, which is the thing
+    this session takes apart.
+  - **Tuesday companion — *Draw the Line Somewhere Else*.** **Keep this
+    one** — you reread it over the break and it opens the capstone.
   - **Tuesday companion — *Who the Count Missed*.** Session 1 gave you
-    the undercount by race. This one asks **where**, and finds that the
-    answer is mostly a blank — for the same reason this session is
-    about. The Bureau grades its own count afterward, publishes a number
-    for all **51** states and DC, and puts its mark on **14** of them:
-    six undercounts, eight overcounts. On the other **37** it prints the
-    number and says nothing. **Louisiana’s −3.73% carries no mark and
-    Illinois’s −1.97% does**, which is a fact about how much of each
-    state the survey saw and not about how well either was counted. Cut
-    by **group** instead of by state the same survey is sharp —
-    **children under five undercounted 2.79%**, **men aged 30 to 49 by
-    3.05% against +0.10% for women the same age**, **renters 1.48% under
-    and owners 0.43% over in each of the last four censuses** — because
-    a national group is measured with the whole sample and a state with
-    one state’s slice of it. **A state is a mixture, and mixtures
-    cancel.** Also: how many households answered on their own is a
-    *different* measurement, correlating **0.11** with the undercount
-    and **−0.47** with the margin beside it.
+    the undercount by race.
   - **Tuesday companion — too many dots.** What a scatterplot does to a
     hundred thousand rows, and what it hides.
-  - *Where did that number come from?* “This neighbourhood is X percent
-    Y,” and “state X was undercounted.”
 
 **Week 3 — Part I**
 
 - **Tue, Sep 8** — The rules: who may vote, who may run, and how a
   population becomes seats.
-  - **Sides et al., Ch. 2** — who can vote, how to vote, who can run,
-    when elections are held, **where to run (single-member districts,
-    reapportionment, redistricting)**, and who wins.
+  - **Sides et al., Ch. 2** — who may vote, who may run, and how a
+    population becomes seats.
   - **Sides et al., the “The Electoral College” section of Ch. 9**
-    (about six pages). Read with Ch. 2 it is one story: how a population
-    count turns into seats. **The rest of Ch. 9 comes in November**, on
-    election week.
+    (about six pages), read with Ch. 2.
   - Nate Cohn, “Republicans’ Electoral College Edge, Once Seen as
     Ironclad, Looks to Be Fading,” *New York Times* (Upshot),
     <https://www.nytimes.com/2024/09/25/upshot/trump-electoral-college-harris.html>
@@ -1020,49 +939,18 @@ cover the textbook and nothing else.**
     Significance”
   - Don Moynihan, “Power, Democracy and Clarity,”
     <https://open.substack.com/pub/donmoynihan/p/power-democracy-and-clarity>
-  - **Lab, part 1 — the ACS, and the sample hiding inside the count.**
-    The one-year survey covers **854 counties and the five-year all
-    3,222** — for **73.5% of the country there is no annual estimate at
-    all** — and the three-year series **404s from 2014 onward**.
-  - **Lab, part 2 — apportionment.** How 435 seats get divided, and how
-    **New York missed the last one by 89 people**.
-  - **Lab, part 3 — a legal threshold applied to an estimate.** Section
-    203 language coverage: Philadelphia is covered at **10,150 ± 450**,
-    Solano County is not, at **9,943 ± 377**. **The intervals overlap.**
-  - **Lab, part 4 — who moved, and who never left.** Apply the published
-    margins to state-to-state migration and **938 of 2,652 pairs (35%)
-    cannot be told apart from zero** — while holding only **2.21% of
-    movers**. Uncertainty destroys the thin, interesting-looking
-    connections and leaves the thick ones untouched, so **the more
-    distinctive a migration claim sounds, the likelier it is to be an
-    artefact of sample size.**
-  - **Lab, part 5 — a name is a distribution, not a label.** A name is
-    asked to do three jobs at once: identify a person, stand in for
-    their sex, stand in for their race. **We return to this in Session
-    13**, where it is graded.
-  - **Tuesday companion — seventy-five seats.** Any single
-    reapportionment looks like housekeeping; add six decades together
-    and **75 seats have changed states since 1960**, 17.2% of the House,
-    New York alone down 15. The per-decade gains sum to **78** against a
-    sixty-year total of **75**, and that difference of exactly three is
-    the three states that ever moved in both directions. **A ratchet,
-    not a cycle**, and nobody voted on any of it.
+  - **Tuesday companion — seventy-five seats.**
   - **Tuesday companion — the chord diagram**, on the same migration
     file.
   - *Self-study brief:* **age structure** — who the population is, not
     just how many.
-  - *Where did that number come from?* Whether your county must print
-    ballots in your language. And “people are leaving X for Y.”
 
 **Week 4 — Part II opens**
 
 - **Tue, Sep 15** — **We meet.** The chapter, and the argument it
   raises.
 
-  - **Sides et al., Ch. 3** — the transformation of American campaigns,
-    and the five campaign eras. Pay attention to **“The Case for
-    Continuity”** at the end, where the book argues against its own
-    scheme.
+  - **Sides et al., Ch. 3** — the transformation of American campaigns.
 
 - **Thu, Sep 17** — **No class.** Constitution Day Symposium. Go if you
   can — it is the most on-topic thing happening on this campus all term.
@@ -1077,43 +965,13 @@ cover the textbook and nothing else.**
     <https://www.pewresearch.org/methods/2023/04/19/how-public-polling-has-changed-in-the-21st-century/>
   - Pew Research Center, *Public Opinion Polling Basics* — lessons 1–3,
     <https://www.pewresearch.org/course/public-opinion-polling-basics/>
-  - **Lab, part 1 — getting one at all.** Of six survey archives, all
-    free, **four will not answer a program** — and one tells `curl` 403
-    and Python 200 from the same address with identical headers.
-  - **Lab, part 2 — checking a survey against a public record.** The
-    Census Bureau asks 60,000 households whether they voted, and the
-    ballots are a matter of record. In 2016 the survey **overstated the
-    electorate by 8.6 million people.** This is the check Session 7’s
-    voter file makes possible.
-  - **Lab, part 3 — one survey, up close.** **Your own answers**, from
-    the Cervas Election Study you took on the first day of class, set
-    against the real Cooperative Election Study. Same questions, same
-    scales, a very different sample.
-  - **Lab, part 4 — party ID, ideology, and one coding decision.** **One
-    coding decision moves the most repeated number in American politics
-    by a factor of five.**
-  - **Lab, part 5 — fifty years of the same question, and the two
-    numbers on the scale that are not answers.** Since 1978 warmth
-    toward your *own* party has not moved: **70.6 to 70.1.** Warmth
-    toward the *other* party fell **48.0 to 20.6**, which is **98% of
-    all the movement**, and the share rating it at absolute zero went
-    **5.4% to 33.2%**. The scale everyone describes as 0 to 100 in fact
-    stops at 97: **98 and 99 mean “don’t know” and “not ascertained,”**
-    and because no respondent is ever coded 100, nothing about the
-    column looks wrong until you average it.
   - **Board post**: post any time before **Tue, Sep 22** — there is no
     Thursday session to follow this week, so you get the weekend.
-  - *Where did that number come from?* “X percent of Americans believe…”
 
 **Week 5 — Part II**
 
 - **Tue, Sep 22** — Money, and the rule that shapes everything after it.
-  - **Sides et al., Ch. 4** — campaign finance. The organising principle
-    is one sentence: **contributions are limited, spending is not.**
-    Table 4.1 has the 2025–26 limits. Read §“Complicating the Case for
-    Reform” carefully — it is the half of the argument nobody makes for
-    you. Four later chapters refer back to this one; you are reading it
-    before any of them.
+  - **Sides et al., Ch. 4** — campaign finance.
 - **Thu, Sep 24** — **DATA SESSION 5 · Part II: Weighting, polls, and
   what a margin hides.** Last week was one survey. This week is all of
   them at once — what weighting repairs, what it cannot, and what a
@@ -1130,25 +988,6 @@ cover the textbook and nothing else.**
   - **Podcast:** *Public Opinion Podcast* (AAPOR), “Pre-Election
     Polling: The Challenges and The Importance of Understanding the 2024
     Voter” — Don Levy, <https://aapor.org/media/public-opinion-pod/>
-  - **Lab, part 1 — what weighting does.** CES weighting moves
-    “registered to vote” from **91.5% to 72.5%**. The correction is
-    larger than most findings.
-  - **Lab, part 2 — sampling error is not the problem.** At n = 100,000
-    the poll reports **±0.31 and is wrong by 4.5.**
-  - **Lab, part 3 — one question for fifty-one years.** The GSS has
-    asked about confidence in thirteen institutions since 1973. **Eleven
-    fell. Two did not.** The largest decline is not Congress but
-    **Medicine**, and the military *rose*, peaking in 1991 — confidence
-    responds to events rather than drifting.
-  - **Lab, part 4 — sixty thousand people, and sixty-eight Vermonters.**
-    The largest political survey in America is not 60,000 people
-    everywhere. It is **3,618 Texans and 68 Vermonters**, and only the
-    second number decides what it can say about Vermont. State margins
-    run **2.71 to 15.81 points**. And a bigger sample buys **precision,
-    not accuracy**: sample size predicts a state’s margin of error at
-    **−0.75** and how wrong that state actually was at **−0.25**, so
-    **45 of 51 states** land inside their own margin where sampling
-    error alone predicts **48.4**.
 
 **Week 6 — Part III opens · you run this one yourself**
 
@@ -1158,9 +997,7 @@ cover the textbook and nothing else.**
   - Pascal Sabino, “Missourians Reject Measure That Threatened to Kill
     Citizen-Led Ballot Initiatives,” *Bolts*, August 5, 2026,
     <https://boltsmag.org/missouri-rejects-restrictions-on-direct-democracy/>
-  - **Sides et al., Ch. 5** — campaign strategy, vote targets, and the
-    North Carolina worked example the **Oct 8** session rebuilds. Tables
-    5.1–5.3 are the ones to look at.
+  - **Sides et al., Ch. 5** — campaign strategy and vote targets.
 
 - **Thu, Oct 1** — **DATA SESSION 6 · Part III: What a return is, and
   where you get one. The week still happens; you run it yourself.**
@@ -1168,18 +1005,6 @@ cover the textbook and nothing else.**
   - Alex Burness, “Election Data Is Vital to Voting Rights. So Why Is It
     So Hard to Track Down?” *Bolts*,
     <https://boltsmag.org/election-data-is-vital-to-voting-rights-but-hard-to-track-down/>
-  - **Lab, part 1 — the certified return.** Complete, official, and
-    **permanently silent about who did it**. Also not stable: **DC is
-    coded 11001 in both 2020 and 2024 and means different things.**
-  - **Lab, part 2 — assembling the file no agency publishes.** **No
-    federal agency counts votes.** Building a national county file takes
-    **102 documents in 11 formats from 51 officers** — after which the
-    certified record and the compilation everyone uses agree on the
-    Democratic vote in all but **42** counties, and disagree about **how
-    many people voted in 1,588 of 3,138.**
-  - **Lab, part 3 — a century of campaigns.** The same data stretched
-    across a hundred years: the Solid South gap runs from **+41.7 in
-    1924 to −7.4 in 2024**.
   - **Tuesday companion — sparklines**, on that century.
   - **No data slide and no draw this week**, whether or not Tuesday
     happens.
@@ -1195,33 +1020,14 @@ cover the textbook and nothing else.**
 - **Thu, Oct 8** — **DATA SESSION 7 · Part III: Returns over time, and
   the careers in them.** A return is a snapshot. Stack forty of them and
   you get a career, a base rate, and a way to be wrong about both.
-  - **Lab, part 1 — the midterm penalty, 1858–2026.** The president’s
-    party has lost House seats in **36 of the last 41 midterms — 88%** —
-    with a median loss of 28. One sentence forecasts the direction of a
-    national election more reliably than any poll or model we meet this
-    term. **You will write down a number before you leave**: how many
-    seats the president’s party gains or loses on Nov 3. On **Nov 5** we
-    reopen this lab and find out how you and the base rate both did.
-  - **Lab, part 2 — vote targeting in North Carolina.** Rebuilds Chapter
-    5’s own worked example from the state’s returns. The book prints
-    five counties; we do all one hundred — and we check its arithmetic,
-    which is how we know **Table 5.3’s statewide 2016 figure disagrees
-    with Table 5.2 on the facing page.**
-  - **Lab, part 3 — the races nobody contested, 1946–2024.** Uncontested
-    races ran **20.2% in 1946 and 17.7% in 2014** — barely a change, and
-    the flat national line is two opposite trends cancelling. **94.1% of
-    uncontested races had an incumbent**, so non-competition is a
-    decision an organisation makes before the campaign starts.
-  - **Lab, part 4 — retirements and primary defeats.** One name on the
-    ballot is ordinary. Ranking states by contribution to a total
-    against ranking them by percentage share has **zero overlap in the
-    top five**.
+  - FairVote, *Monopoly Politics 2026*,
+    <https://fairvote.org/report/monopoly-politics-2026-update/> — a
+    claim that **81% of 2026 House races are already decided**,
+    published before anyone voted.
   - **Tuesday companion — distributions.** Four hundred districts drawn
     four ways give an average that describes almost nothing.
   - **DUE: Data journalism story — pitch your topic** (one paragraph, in
     class).
-  - *Where did that number come from?* “The president’s party is going
-    to lose the House.”
 
 **Week 8 — FALL BREAK, no class (Oct 12–16)**
 
@@ -1245,44 +1051,14 @@ Use it for Test 1. Nothing is due.
   to the ballot itself.
   - *Reading to source: FairVote or a news analysis of Alaska’s
     ranked-choice results.*
-  - **Lab, part 1 — where precinct returns come from.** Georgia’s
-    Secretary of State publishes them county by county, broken out by
-    **how the ballot was cast** — election day, early, mail, provisional
-    — a split no other source carries.
-  - **Lab, part 2 — the ground moves under the data.** A precinct is not
-    a fixed thing. Only **84.5% of Georgia precinct names survive
-    2020→2024**. Comparing across elections means putting both years on
-    one map, and two defensible ways of weighting that carry disagree
-    about whether **78.3% or 18.6%** of precincts were split at all.
-  - **Lab, part 3 — the ballot itself.** Cast vote records: one row per
-    ballot, every ranking on it, published for a handful of elections.
-    **Given four rankings, 65% of Alaskans used one.** Note what the
-    file leaves out — hand-counted ballots, and the names voters wrote
-    in.
   - **Tuesday companion — the bellwether that never was.** Session 5’s
     midterm rule is certain about the sign and useless about the size.
-    This one looks predictive and is not a rule at all: searching all
-    3,081 counties for a perfect 1980–2016 record returns the *Wall
-    Street Journal*’s nineteen bellwethers exactly. Eighteen died in
-    2020 and the last in 2024. **Zero perfect records over the full
-    seventeen elections.**
-  - **Also — the wind map.** Swing between two elections drawn as an
-    arrow, and what an arrow has to promise before it is allowed to
-    point.
-  - *Where did that number come from?* “This precinct swung X points.”
 
 **Week 10 — Part III**
 
 - **Tue, Oct 27** — Parties, and the groups that spend around them.
-  - **Sides et al., Ch. 6** — political parties. Read it for Figure 6.3
-    (**nationalization**) and Figure 6.4: partisans’ ratings of their
-    *own* party have been flat for forty years while ratings of the
-    *other* party fell from the 40s into the teens. **That asymmetry is
-    what polarization actually is**, and Session 13 measures it.
-  - **Sides et al., Ch. 7** — interest groups. Note that **the groups
-    most visible in elections are the least representative of interest
-    groups overall**, and that there is little evidence groups change
-    what candidates talk about.
+  - **Sides et al., Ch. 6** — political parties.
+  - **Sides et al., Ch. 7** — interest groups.
   - “Donald Trump’s Campaign-Finance Disclosures Are ‘a Governance
     Nightmare’,” *New York Times* (Opinion),
     <https://www.nytimes.com/2024/08/26/opinion/republican-donors-money-trump.html>
@@ -1296,23 +1072,6 @@ Use it for Test 1. Nothing is due.
   votes, while the campaign it describes is still running.
   - **Podcast:** *The Downballot* — an episode on the current cycle’s
     money.
-  - **Lab, part 1 — FEC filings.** Bulk totals, then **one candidate’s
-    own itemized filings**. PAC share runs **37.6% for incumbents
-    against 1.1% for challengers**.
-  - **Lab, part 2 — independent expenditures, and the sixteen rows.**
-    Money spent for or against a candidate by somebody legally forbidden
-    from coordinating with them. **16 of 73,449 FEC rows carry 90.4% of
-    the dollars** — include them and outside spending goes from
-    **\$4.75bn to \$49.7bn**, and the support/oppose split **reverses
-    from 94.5/5.5 to 42.4/57.6.**
-  - **Lab, part 3 — lobbying.** Campaign finance is money spent deciding
-    who holds office; lobbying is money spent on what they do
-    afterwards. **More than a quarter of registered federal lobbyists
-    disclose a former government position.** But a filing reports **one
-    dollar figure across up to seventeen issue areas**, so *how much was
-    spent on health care* has no answer.
-  - **Lab, part 4 — attention as data.** Wikipedia pageviews: Harris
-    drew **2,532,334 views on Jul 22, 2024 — 204× her baseline.**
   - **Brief — the campaign visit tracker.** A wire service counted the
     stops because it chose to, not because anyone made it. That is the
     commercial half of this part.
@@ -1321,36 +1080,24 @@ Use it for Test 1. Nothing is due.
     which ad. Both are effectively closed. **The most detailed record of
     political persuasion in America is not public**, and that absence is
     worth one minute of class time.
-  - **Tuesday companions — three ways to draw money**: pie and radar,
+  - **Tuesday companions — three ways to draw money** : pie and radar,
     the streamgraph, and rank-size.
-  - **Lab, the last part — models and markets.** A forecast and a
-    prediction market are commercial products like the rest of this
-    part: nobody was compelled to publish either. How an average becomes
-    a probability, and what a price is actually claiming. **746 resolved
-    markets, Brier 0.064.** Write your number down — **Session 10 is in
-    seven days** and grades it, along with the polls from last week and
-    the base rate you wrote on Sep 24.
-  - *Where did that number come from?* “Candidate X outraised candidate
-    Y.”
 
-**Week 11 — Part III · election night** - **Tue, Nov 3** — **DEMOCRACY
-DAY / ELECTION DAY, no class before 5p.** - Read this week, for
-Thursday: **Sides et al., Ch. 8** (media) and **Ch. 9 in full**
-(presidential campaigns — you have already read its Electoral College
-section). Ch. 9’s Figure 9.3 is a forecast built from one economic
-number; Thursday you will watch a forecast get graded. - **Thu, Nov 5**
-— **DATA SESSION 10 · Part III ⚑: Live returns.** *(Fixed date — the
-only session whose date is not ours to choose.)* The country voted on
-Tuesday. Today the numbers arrive while we watch, and we check them
-against everything that claimed to know in advance. - **First, ten
-minutes: how did the prior do?** We reopen the midterm-penalty lab from
-**Oct 8**, enter the seat change the country just produced, and see
-where 2026 falls in a distribution of 41 midterms. **Bring the number
-you wrote down.** The question is not who was closest — it is **how many
-of you beat simply reading the median off the table.** - **Lab**:
-election night returns, live. The district-level baseline was right in
-**418 of 433 districts (96.5%)** last time. Did anyone beat it? - *Where
-did that number come from?* “The night the networks called it.”
+**Week 11 — Part III · election night**
+
+- **Tue, Nov 3** — **DEMOCRACY DAY / ELECTION DAY, no class before 5p.**
+  - Read this week, for Thursday: **Sides et al., Ch. 8** (media) and
+    **Ch. 9 in full** (presidential campaigns — you have already read
+    its Electoral College section).
+- **Thu, Nov 5** — **DATA SESSION 10 · Part III: Live returns.** *(Fixed
+  date — the only session whose date is not ours to choose.)* The
+  country voted on Tuesday. Today the numbers arrive while we watch, and
+  we check them against everything that claimed to know in advance.
+  - NPR, “Race calls 101: How the AP declares winners,”
+    <https://www.npr.org/2024/11/05/g-s1-32603/how-are-races-actually-called>
+    — short, and worth reading the morning of the session it describes.
+    A call is a judgement about how much vote is left, not a result.
+  - **Lab**: election night returns, live.
 
 **Week 12 — Part III · the machinery**
 
@@ -1365,46 +1112,13 @@ did that number come from?* “The night the networks called it.”
   instrument that can tell you whether a survey is lying.
   - *Reading to source: a news piece on voter-file purges or commercial
     voter data.*
-  - **Lab, part 1 — what is actually in it.** **21 of 53 columns just
-    route you to a ballot**, 70% of the file carries no party signal,
-    and **13,803 people voted in 2020 and are gone from the 2026 file**.
-  - **Lab, part 2 — public by law, and unobtainable in practice.** The
-    list is public in every state, and **exactly 1 of 51 publishes it
-    for download**. 33 addresses answer; 26 of those hand you a form.
-  - **Lab, part 3 — matching people is harder than it looks.** False
-    matches, and what a purge does with them.
-  - **Lab, part 4 — four million people who are not in the
-    denominator.** About **4.05 million** adult citizens cannot vote
-    because of a felony conviction. **71.5% are not incarcerated**, and
-    **two fifths have completed their sentences entirely** — a category
-    that exists in only ten states.
-  - *Where did that number come from?* “Turnout among registered
-    Democrats was…”
-  - **Lab, part 5 — the service record of an election.** Every
-    jurisdiction in the country, every two years. **584,463 mail ballots
-    rejected (1.22%)**, and the rate runs from **Oklahoma at 4.35% to
-    Vermont at 0.20% — a factor of 22.**
-  - **Lab, part 6 — the denominator decides.** The same ballots under
-    two different denominators give a thirty-year decline that is not in
-    the data (**−0.006 points per election**).
 
 **Week 13 — Part III**
 
 - **Tue, Nov 17** — The races down the ballot, and the careers they
   produce.
-  - **Sides et al., Ch. 10** — congressional campaigns. The headline
-    claim is testable and we test it: **congressional elections have
-    been nationalized, weakening the incumbency advantage** — which fell
-    from just under 10 points at its 1986 peak to **1.2 points in
-    2024**, while 97% of House incumbents still won.
-  - **Sides et al., Ch. 11.** The chapter’s own thesis is the one to
-    argue with: *“State and local elections — the ones that arguably
-    affect citizens’ daily lives the most — are often the ones that live
-    up to ideals of political campaigns the least.”* Note **off-cycle
-    elections** (turnout more than 20 points below
-    presidential-concurrent), **at-large vs. district elections**, and
-    **judicial elections** — state supreme court fundraising went from
-    **\$9.0M in 1989–90 to \$100M in 2021–22**.
+  - **Sides et al., Ch. 10** — congressional campaigns.
+  - **Sides et al., Ch. 11** — state and local campaigns.
   - G. Elliott Morris, “The Hidden Axis: The Left–Right Spectrum Has a
     Non-Ideology Problem,”
     <https://www.gelliottmorris.com/p/not-just-left-vs-right-most-voters>
@@ -1414,37 +1128,6 @@ did that number come from?* “The night the networks called it.”
   somebody who never volunteered for anything leaves behind.
   - *Reading to source: a news piece using either a congressional vote
     score or a police/court dataset.*
-  - **Lab, part 1 — every vote since 1789.** The roll-call record is the
-    cleanest data in this course: the vote *is* the event, not a report
-    of one. And there is no note of what most of the votes were about.
-  - **Lab, part 2 — the score on top of it.** DW-NOMINATE turns votes
-    into a number. The Senate polarized as much as the House (**0.587 →
-    0.917**), and **agreement rates alone recover most of it** without
-    any model.
-  - **Lab, part 3 — how old is Congress, against what?** Change one row
-    of the life table and the conclusion reverses.
-  - **Now the mirror.** Everything above is about people who put
-    themselves forward. What follows is the same kind of institutional
-    record about people who did not — and it arrives as a **numerator
-    with no denominator**. The same traffic stops over three published
-    denominators give disparities from **3.07× to 4.79×**.
-  - **Lab, part 4 — choose one.** Take **one** and come back able to
-    explain your inference to somebody who took a different one.
-    - **Traffic stops.** The comparison everyone reaches for proves
-      nothing — there is no census of who was driving. A second
-      comparison, which never needs that denominator, finds contraband
-      in **24.2%** of searches of white drivers and **9.2%** of searches
-      of Black drivers, who were searched **4.9 times as often**.
-    - **Jury selection.** Reasons for a strike are rarely recorded — but
-      the defense strikes from the same pools. The state struck
-      **49.8%** of eligible Black jurors, the defense **47.3%** of
-      eligible white ones. **The file contains its own control group.**
-    - **Redlining.** The 1930s federal maps wrote the racial reasoning
-      on the form. Eighty years later, *within the same city*, D-graded
-      areas are on average **14.5 points more Black** than A-graded ones
-      — and six cities reverse, which is where the argument is.
-  - *Where did that number come from?* “X thousand mail ballots were
-    rejected.”
   - **DUE: Data journalism DRAFT**, to Canvas before class. A complete
     attempt, graded as though it were the finished piece.
 
@@ -1458,32 +1141,10 @@ did that number come from?* “The night the networks called it.”
   - **The last two chapters of the book, read over the break, for Test 3
     on Dec 3.** There is no Thursday this week and no session to prepare
     for.
-    - **Sides et al., Ch. 12** — ability, motivation, opportunity;
-      registration and convenience voting; and **group differences by
-      income, age, race, gender, and race × gender**. The book admits
-      that intersectional participation is under-studied; that admission
-      is the reason Session 13 exists.
-    - **Sides et al., Ch. 13** — vote choice. Party identification,
-      social groups, retrospective voting, and the finding the polling
-      session was built around: **presidential elections can be forecast
-      months in advance**, which raises the question of what the
-      campaign was for. It is the last chapter, and it is the one that
-      argues with the most of what came before it.
+    - **Sides et al., Ch. 12** — who participates, and who does not.
+    - **Sides et al., Ch. 13** — vote choice.
   - *Reading to source: a news piece quoting a margin of error, or an
     estimate of how a demographic group voted.*
-  - **Lab, part 1 — what a confidence interval does not cover.** It
-    covers one kind of error out of several, and the others do not
-    shrink with sample size.
-  - **Lab, part 2 — fifty-six laws, one number, four answers.** The Cost
-    of Voting Index compresses fifty-six election laws into a single
-    score. Change the weights nobody chose and the same laws give **four
-    different answers.**
-  - **Lab, part 3 — guessing race from a name and an address.** BISG is
-    used in voting-rights litigation and in bank regulation. Checked
-    against a state that actually records race, it is **right 40.3% of
-    the time.**
-  - *Where did that number come from?* “Black voters in this county
-    broke 9 to 1.”
 
 - **Thu, Nov 26** — **THANKSGIVING, no class**
 
@@ -1493,64 +1154,14 @@ did that number come from?* “The night the networks called it.”
 
 **Week 15 — Part III, and the end**
 
-- **Tue, Dec 1** — **DATA SESSION 14 · Part III 🔒: Grading a score
-  against a known truth.** The capstone, and it needs everything: the
-  census from Part I, precinct returns and the voter file from Part III,
-  and the inference logic from Session 13. **This is the one place in
-  the course where a method is graded against an answer key.**
+- **Tue, Dec 1** — **DATA SESSION 14 · Part III: Grading a score against
+  a known truth.** The capstone, and it needs everything: the census
+  from Part I, precinct returns and the voter file from Part III, and
+  the inference logic from Session 13. **This is the one place in the
+  course where a method is graded against an answer key.**
   - King, *A Solution to the Ecological Inference Problem*, Ch. 1
   - Monmonier, *Drawing the Line*, Ch. 5 (“Boundary Litigation and the
     Map as Evidence”)
-  - **First, about twenty minutes on what you reread over break — draw
-    the line somewhere else.** Session 14 is itself a Tuesday, so this
-    opens the capstone rather than preceding it. It is the sibling of
-    Session 6’s precinct geography: that one holds the people fixed and
-    varies **time**, watching the boundaries move underneath them; this
-    one holds the people fixed and varies **the rule**. One county’s
-    census — **1,066,710 people on 11,748 Fulton County blocks** — cut
-    into 6 equal-population districts 360 different ways by rules that
-    never look at race, and the number of majority-Black units comes out
-    anywhere from **0 to 4**. Throw out every ill-shaped plan and it
-    still runs **2 to 3**, a one-seat swing on a six-seat board. Carry
-    two things into the day: **a correlation belongs to the grouping and
-    not only to the people**, and “how many majority-Black districts
-    does this county support?” is a question about a county **and a
-    rulebook**.
-  - **Lab, part 1 — inferring the secret ballot.** Nobody records how
-    you voted, so racially polarized voting has to be inferred — and
-    Georgia’s party-primary records let us check the inference for once.
-    The fifty-year-old courtroom standard fits with an **R² of 0.982**
-    and concludes that **102.1% of Black voters** took a Democratic
-    ballot. **The truth is 92.7%.** Arithmetic bounds that cannot be
-    wrong give an answer thirty points wide: **\[70.1, 100\].**
-  - **Lab, part 2 — the district that was not drawn.** Part 1 asked
-    whether voters of different races prefer different candidates. This
-    is a different kind of question: a claim about **a map nobody has
-    drawn**. There is no record of such a thing, so the evidence is
-    manufactured by the party who needs it. We build it, in Houston
-    County, with one dial. *Louisiana v. Callais* leaves only the
-    tightest setting — and there the **306 admissible starting blocks
-    span 22.64 points, from 27.21% to 49.85% Black adults, and not one
-    of the 306 reaches 50%.** The honest write-up would be that no
-    majority-Black district can be drawn here compactly. **That write-up
-    is wrong**: the enacted District 4 has been law all along at **53.7%
-    Black adults and a compactness of 0.266**, beating all fifteen
-    algorithm districts on both measures at once. **Finding a map proves
-    the point; failing to find one proves nothing, because the search
-    was never exhaustive.**
-  - **Lab, part 3 — how many majority-Black districts are there?** One
-    file, six answers between **8 and 14**, and six districts that sit
-    on both sides of *Bartlett*’s line depending only on the
-    denominator.
-  - **Lab, part 4 — finding a gerrymander without looking at a map.**
-    Across 434 districts only **91 (21%) sit within five points of
-    even.** And the number that breaks the number: **Massachusetts
-    scores as lopsided as North Carolina and is not gerrymandered** —
-    63.8% Democratic, nine seats of nine, because there is no way to
-    carve a Republican seat out of it. **The measure cannot tell a drawn
-    advantage from a geographic one.**
-  - *Where did that number come from?* “Voting in this county is
-    racially polarized.”
   - **DUE: peer reviews of the data journalism draft** — two each,
     worksheet on Canvas.
 - **Thu, Dec 3** — **TEST 3**, then the course wrap.
