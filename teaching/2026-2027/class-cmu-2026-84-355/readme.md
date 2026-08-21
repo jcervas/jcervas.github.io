@@ -369,8 +369,8 @@ The course grade will be a weighted average of the following components:
 
 | Category                       | Percent of Final Grade |
 |--------------------------------|------------------------|
-| **Participation & Attendance** | 15%                    |
-| **Discussion Board**           | 20%                    |
+| **Participation & Attendance** | 25%                    |
+| **Discussion Board**           | 10%                    |
 | **Weekly Data Contributions**  | 10%                    |
 | **Three Tests** (10% each)     | 30%                    |
 | **Data Journalism Project**    | 25%                    |
