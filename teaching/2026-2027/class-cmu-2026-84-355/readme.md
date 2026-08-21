@@ -25,11 +25,9 @@ here**](https://jcervas.github.io/teaching/2026-2027/class-cmu-2026-84-355/readm
 <img src="readme_files/figure-gfm/meetings-1.png" width="100%" style="display: block; margin: auto;" />
 
 **25 meetings**, Tuesdays and Thursdays. One of them, **Tue, Nov 24**,
-meets on Zoom rather than in the room. The tinted days are closures —
-fall break, Democracy Day, Thanksgiving, and the Constitution Day
-Symposium.
-
-------------------------------------------------------------------------
+meets on Zoom rather than in the room. Days that tinted we will not have
+class — fall break, Democracy Day, Thanksgiving, and the Constitution
+Day Symposium.
 
 <!-- Course description, goals, and learning objectives. -->
 
@@ -46,17 +44,15 @@ somebody, for a purpose, and every one of them leaves something out.
 We work with real data every week — 41 presidential elections since
 1864, the apportionment that followed the 2020 census, FEC filings,
 congressional roll calls, Census and American Community Survey
-estimates, and the 2026 midterms as they happen. Tuesdays are for the
-week’s reading and the argument it raises; Thursdays are for the data,
-worked through together.
+estimates, and the 2026 midterms as they happen.
 
 **This is a general education course and there is no coding
-prerequisite.** Every lab arrives as a prepared data brief with the
-results already in front of you. What you are asked to do is read it
-closely, follow how the numbers were made, and explain what you are
-looking at. The skill being built is not programming; it is judgment
-about evidence. You will practise it on a data-driven news story written
-for real readers, and defend it in class every week.
+prerequisite.** Every data exercise we do arrives as a prepared data
+brief with the results already in front of you. What you are asked to do
+is read it closely, follow how the numbers were made, and explain what
+you are looking at. The skill being built is not programming; it is
+judgment about evidence. You will practice it on a data-driven news
+story written for real readers, and defend it in class every week.
 
 ## Course Goals
 
@@ -83,7 +79,7 @@ By the end of the semester you will be able to:
 4.  **Explain the institutions that convert votes into power**: the
     Electoral College, apportionment, districting, and the Voting Rights
     Act. *(Units I, IV, V)*
-5.  **Recognise when a number misleads** — through selective framing,
+5.  **Recognize when a number misleads** — through selective framing,
     mismatched units of analysis, or a model that gets the right answer
     for the wrong reason. *(every unit)*
 6.  **Write about quantitative evidence for a non-technical audience** —
@@ -102,19 +98,19 @@ John Sides, Daron Shaw, Matt Grossmann & Keena Lipsitz. *Campaigns and
 Elections*. New York: W. W. Norton. ISBN 978-1-324-11504-5.
 
 Readings from the text provide the **context** for each week. Expect to
-read one chapter before Tuesday, when we discuss it, and to spend
-Thursday working with data — the weekly draw, then the lab. Chapters are
-short — budget about an hour.
+read one or two chapters before Tuesday, when we discuss it, and to
+spend Thursday working with data — the weekly draw, then the lab.
+Chapters are short — budget about an hour.
 
 There is nothing else to buy.
 
 ### Current events
 
-**The textbook is the context; the news is the test.** A textbook
+**The textbook is the context; the news provides content.** A textbook
 chapter is settled by the time it prints, and this one went to press
 before the campaign you are living through. The point of this course is
-to understand the political world — above all through the data it
-produces — and a chapter alone cannot do that, because politics keeps
+to understand the political world, above all through the data it
+produces, and a chapter alone cannot do that, because politics keeps
 happening after the book is finished.
 
 We also happen to be meeting during a midterm cycle, which means the
@@ -136,9 +132,9 @@ August cannot know what November will produce. Expect items to be added
 during the term, always to Canvas. If the schedule and Canvas disagree,
 Canvas is right.
 
-**These are also where your weekly data slide comes from.** You are not
-expected to go hunting in unfamiliar places. Anything below is fair
-game, and so is anything else you can source and name.
+**Current events are also where your weekly data slide comes from.** You
+are not expected to go hunting in unfamiliar places. The sources below
+are valuable resources, but you can find other things as well.
 
 |                           | Worth following all term                                                                                                                                                                                                                                                              |
 |---------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -147,48 +143,33 @@ game, and so is anything else you can source and name.
 | **Data and forecasting**  | [Strength In Numbers](https://www.gelliottmorris.com) (G. Elliott Morris), [Silver Bulletin](https://www.natesilver.net), [Split Ticket](https://split-ticket.org), [The Downballot](https://www.the-downballot.com)                                                                  |
 | **Podcasts**              | *The Ezra Klein Show* (NYT) · *NPR Politics Podcast* · *The Downballot* (weekly, Thursdays) · *Amicus* (Slate) · *Public Opinion Podcast* (AAPOR)                                                                                                                                     |
 
-Where a specific episode is assigned it appears in the schedule marked
-**Podcast:**, the same way readings and labs are marked. Five weeks
-carry one.
-
-None of these is required reading in itself. Pick two or three and
-actually follow them; that is worth more than skimming all of them once.
-
 ## What you need
 
 **This is not a programming course, and there is no coding
 prerequisite.**
 
-There is no software to install and nothing to set up. Every lab arrives
-as a prepared data brief — the source, the decisions behind it, and the
-figures already made — and your job is to read it, follow how the
-numbers were built, and above all *explain what you are looking at*. If
-you have never worked with data before, you are exactly who these labs
-are written for.
-
-What you are graded on is the thinking, not the typing. Nothing you hand
-in this term asks you to produce code or a chart — what you hand in is
-what you made of what the data shows.
+There is no software to install and nothing to set up. Every data
+exercise or example arrives as a prepared data brief — the source, the
+decisions behind it, and the figures already made — and your job is to
+read it, follow how the numbers were built, and above all *explain what
+you are looking at*. If you have never worked with data before, you are
+exactly who these are written for.
 
 Bring a laptop to Thursday sessions if you have one; the briefs are web
 pages and they read well on a phone or on paper too. If you would rather
 work from a printout, say so and I will bring one.
 
-------------------------------------------------------------------------
-
 <!-- How the week runs and the structure of the course — the Tuesday/Thursday rhythm. -->
 
 ## How This Course Works
 
-The same rhythm every week. Nothing in the schedule should ever surprise
-you.
-
-**Tuesday is for the reading. Thursday is for data.**
+**Tuesday is for the reading. Thursday is for data.** This is generally
+the pattern, though we will deviate on some select weeks.
 
 | When                           | What                                                                                                                                                       |
 |--------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Before Tuesday**             | Read the week’s chapter — about an hour.                                                                                                                   |
-| **Tuesday, in class**          | The chapter: what it claims, what it shows, who disputes it, and what would settle it.                                                                     |
+| **Tuesday, in class**          | The chapter, and the question it raises.                                                                                                                   |
 | **Before Thursday**            | Post a data slide bearing on the question we ended Tuesday with.                                                                                           |
 | **Thursday, in class**         | The data draw (first 15 minutes), then the lab. We work through it together; submit what you have at the end of class, which also records your attendance. |
 | **Thursday evening or Friday** | Post once to the discussion board about any of the data we talked about that week. Due **Friday, 11:59 p.m.**                                              |
@@ -230,29 +211,6 @@ is not a discussion. If you know something, say so.
 
 **No code, no charts, no screenshots.** Write what you made of what you
 saw.
-
-### Tuesday: the reading
-
-Tuesday has as much shape as Thursday does. We make the same four moves
-every week, in this order, and by the end of the hour we have turned a
-chapter into a question that data could answer.
-
-|                         |          |                                                                                                                                                                                                                                                                                                                                                                                     |
-|-------------------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **1. The claim**        | *15 min* | What is this chapter actually asserting? We put one sentence on the board and argue about the wording until it says something that could be wrong. “Campaigns matter” is not a claim. “Campaign spending changes vote share in House races” is.                                                                                                                                     |
-| **2. The evidence**     | *20 min* | What does the chapter offer in support — a number, a study, a case, an anecdote, or nothing at all? Textbooks state a great many things without showing you why. Finding the unsupported sentences is not a criticism of the book; it is the exercise.                                                                                                                              |
-| **3. The disagreement** | *30 min* | Who disputes this, and on what grounds? Each Tuesday names two of the four standards from Chapter 1 — free choice, political equality, deliberation, free speech — and a question that forces you to trade one against the other. The reference sheet at the end of this syllabus explains all four. We take sides — you will often be asked to argue the position you do not hold. |
-| **4. The test**         | *15 min* | What evidence would settle it? We end by writing down one question that data could answer.                                                                                                                                                                                                                                                                                          |
-
-**Move 4 is the handoff.** The question we end Tuesday with is the
-prompt for the data you post before Thursday. You are not hunting for
-something interesting in the abstract; you are looking for evidence
-bearing on a question the room agreed was worth asking two days earlier
-— and on Thursday we find out whether anybody could.
-
-**What to bring on Tuesday.** The chapter, read, and **one sentence in
-it you would want to see tested.** You will not hand that in, and I may
-ask you for it.
 
 ------------------------------------------------------------------------
 
@@ -414,11 +372,10 @@ There is no final exam.
       Say so.
 
     **It has to bear on the question we ended Tuesday with.** Every
-    Tuesday closes by writing down one question that data could answer —
-    that is move 4 of *Tuesday: the reading*, above. Your slide is your
-    attempt at evidence for it. Read the question broadly; an odd angle
-    is welcome. But do not bring turnout data to a week that ended on a
-    question about the media.
+    Tuesday closes by writing down one question that data could answer.
+    Your slide is your attempt at evidence for it. Read the question
+    broadly; an odd angle is welcome. But do not bring turnout data to a
+    week that ended on a question about the media.
 
     That constraint is the point. When a dozen people go looking at the
     same subject, **they come back with data that disagree**, and

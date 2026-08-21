@@ -25,11 +25,9 @@ here**](https://jcervas.github.io/teaching/2026-2027/class-cmu-2026-84-355/readm
 <img src="readme_files/figure-gfm/meetings-1.png" width="100%" style="display: block; margin: auto;" />
 
 **25 meetings**, Tuesdays and Thursdays. One of them, **Tue, Nov 24**,
-meets on Zoom rather than in the room. The tinted days are closures —
-fall break, Democracy Day, Thanksgiving, and the Constitution Day
-Symposium.
-
-------------------------------------------------------------------------
+meets on Zoom rather than in the room. Days that tinted we will not have
+class — fall break, Democracy Day, Thanksgiving, and the Constitution
+Day Symposium.
 
 <!-- Abridged syllabus only. See syllabus/README.md. -->
 
