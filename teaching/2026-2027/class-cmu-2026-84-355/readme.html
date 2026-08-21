@@ -291,9 +291,6 @@ if (window.hljs) {
 --rule: #C9C9CB; 
 --rule-2: #E0E0E0; 
 
-Each is a CMU colour taken down far enough to be legible as text on
-the light page — Gold Thread and Green Thread are set for screens,
-not for 11pt type on paper. */
 --accent: #C41230; 
 --accent-soft: #F7DDE1;
 --built: #006B33; 
@@ -958,6 +955,62 @@ h3 { font-size: 12.5pt; }
 .stats { break-inside: avoid; page-break-inside: avoid; }
 }
 </style>
+<style type="text/css">
+
+#schedule p > strong:only-child {
+font-family: var(--mono);
+font-size: .74rem;
+font-weight: 600;
+letter-spacing: .05em;
+color: var(--accent);
+}
+#schedule p:has(> strong:only-child) { margin: 1.7em 0 .55em; }
+
+#schedule ul:not(li ul) {
+list-style: none;
+padding-left: 0;
+margin: 0 0 .4em;
+}
+#schedule ul:not(li ul) > li {
+border-left: 2px solid var(--accent);
+padding: .1rem 0 .1rem .7rem;
+margin: 0 0 .85em;
+font-size: .92rem;
+line-height: 1.45;
+}
+#schedule ul:not(li ul) strong { font-weight: 600; }
+
+#schedule ul:not(li ul) > li > strong:first-child {
+display: block;
+font-family: var(--mono);
+font-size: .68rem;
+font-weight: 500;
+letter-spacing: .07em;
+text-transform: uppercase;
+color: var(--ink-3);
+margin-bottom: .2em;
+}
+
+#schedule li ul {
+list-style: none;
+margin: .35em 0 0;
+padding-left: 0;
+}
+#schedule li ul > li {
+position: relative;
+padding-left: .85rem;
+margin-bottom: .28em;
+font-size: .86rem;
+line-height: 1.4;
+color: var(--ink-2);
+}
+#schedule li ul > li::before {
+content: "\00B7";
+position: absolute;
+left: 0;
+color: var(--ink-3);
+}
+</style>
 
 
 
@@ -983,9 +1036,6 @@ Description</a></li>
 <li><a href="#course-goals" id="toc-course-goals">Course Goals</a></li>
 <li><a href="#learning-objectives" id="toc-learning-objectives">Learning
 Objectives</a></li>
-<li><a href="#grading" id="toc-grading">Grading</a></li>
-<li><a href="#assessment" id="toc-assessment">Assessment</a></li>
-<li><a href="#due-dates" id="toc-due-dates">Due Dates</a></li>
 <li><a href="#required-text" id="toc-required-text">Required
 Text</a></li>
 <li><a href="#what-you-need" id="toc-what-you-need">What you
@@ -993,8 +1043,11 @@ need</a></li>
 <li><a href="#how-this-course-works" id="toc-how-this-course-works">How
 This Course Works</a></li>
 <li><a href="#structure-of-the-course" id="toc-structure-of-the-course">Structure of the Course</a></li>
+<li><a href="#assessment" id="toc-assessment">Assessment</a></li>
+<li><a href="#due-dates" id="toc-due-dates">Due Dates</a></li>
 <li><a href="#assignment-details" id="toc-assignment-details">Assignment
 Details</a></li>
+<li><a href="#grading" id="toc-grading">Grading</a></li>
 <li><a href="#schedule" id="toc-schedule">Schedule</a></li>
 <li><a href="#ai-use-policy-for-student-work" id="toc-ai-use-policy-for-student-work">AI Use Policy for Student
 Work</a></li>
@@ -1096,189 +1149,6 @@ board)</em></li>
 <p>Each unit below states which of these it is building. If at any point
 you cannot tell why we are doing something, that is a failure of my
 design and not of your attention — please say so, and I will fix it.</p>
-<!-- Grading philosophy and late policy. -->
-</div>
-<div id="grading" class="section level2">
-<h2>Grading</h2>
-<p>Your grade rests on engagement as much as on output. The course is
-built around two things happening every week — you arriving having read,
-and you arriving having found data — and neither can be made up
-afterwards.</p>
-<p><strong>Deadlines.</strong> You are expected to meet them. If you can
-see in advance that you will not, contact me <strong>before</strong> the
-due date and we will sort something out.</p>
-<p>Late work loses <strong>one percentage point per hour, and never
-falls below 50%</strong>.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> Canvas applies this automatically. Submit
-what you have rather than polishing something that is already late.</p>
-<p>Work that is never submitted scores <strong>zero</strong>, which is
-the whole reason the late floor sits at 50%: handing something in a week
-late is always worth more than handing in nothing.</p>
-<p>Two things sit outside that rule because being late breaks somebody
-else’s work, not just your own:</p>
-<ul>
-<li><strong>Peer reviews.</strong> Your classmate cannot revise against
-a review that has not arrived. Late reviews are marked down
-sharply.</li>
-<li><strong>Project drafts.</strong> A missing draft means two people
-have nothing to review, and — as above — you cannot rescue a missing
-draft with a good final.</li>
-</ul>
-<!-- Assessment weights, what each component is, and due dates. Shared by both syllabi. -->
-</div>
-<div id="assessment" class="section level2">
-<h2>Assessment</h2>
-<p>The course grade will be a weighted average of the following
-components:</p>
-<table>
-<thead>
-<tr class="header">
-<th>Category</th>
-<th>Percent of Final Grade</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Participation &amp; Attendance</strong></td>
-<td>23%</td>
-</tr>
-<tr class="even">
-<td><strong>Discussion Board</strong></td>
-<td>10%</td>
-</tr>
-<tr class="odd">
-<td><strong>Surveys</strong> (3, completion only)</td>
-<td>2%</td>
-</tr>
-<tr class="even">
-<td><strong>Weekly Data Contributions</strong></td>
-<td>10%</td>
-</tr>
-<tr class="odd">
-<td><strong>Three Tests</strong> (10% each)</td>
-<td>30%</td>
-</tr>
-<tr class="even">
-<td><strong>Data Journalism Project</strong></td>
-<td>25%</td>
-</tr>
-</tbody>
-</table>
-<p>What each one is:</p>
-<ul>
-<li><strong>Participation &amp; Attendance</strong> — Being here,
-prepared, and in the conversation — on both days.</li>
-<li><strong>Discussion Board</strong> — By Friday night each week, one
-post about any of the data we talked about: the lab, a classmate’s data
-slide, a figure in the reading. Something that surprised you, something
-we missed, something you do not understand, or an answer to somebody
-else’s question. <strong>A few sentences to a paragraph</strong> —
-enough to show you engaged with what we did. One post is full
-credit.</li>
-<li><strong>Surveys</strong> — Three short ones: the <strong>Cervas
-Election Study</strong> in Week 1, a <strong>midterm feedback</strong>
-survey once you have seen how the course actually runs, and the
-<strong>course evaluation</strong> at the end. Graded for completion
-only — there are no right answers, and nothing you say affects any other
-part of your grade.</li>
-<li><strong>Weekly Data Contributions</strong> — Find data bearing on
-the question Tuesday ended with, name the source, and post it as a slide
-before Thursday. Each week two slides are drawn at random and worked
-through in class, and nobody presents the data they found themselves —
-expect your own data to come up once or twice all term. The slide is
-marked complete or incomplete each week. At the end of term you hand in
-a <strong>newsletter</strong>: every piece of data you found, each with
-a short write-up. <strong>Build it as you go</strong> — it is a
-paragraph a week, and an evening’s work if you leave it all to
-December.</li>
-<li><strong>Three Tests</strong> — In class, on paper, and <strong>on
-the textbook only</strong>. Test 1 on <strong>Thu, Oct 8</strong> (Sides
-et al., Chapters 1–5), Test 2 on <strong>Tue, Nov 10</strong> (Chapters
-6–9), Test 3 on <strong>Thu, Dec 3</strong> (Chapters 10–13). We read
-the book straight through in its own order, so each test is a block of
-consecutive chapters: each covers the chapters read since the last one,
-<strong>none is cumulative</strong>, and every chapter appears on
-exactly one test. There is no final exam.</li>
-<li><strong>Data Journalism Project</strong> — A data-driven news story
-about a trend or issue in electoral processes. Runs in three parts —
-draft, peer review, final — and <strong>most of the marks are on the
-first two</strong>. It is the only substantial piece of writing this
-term.</li>
-</ul>
-</div>
-<div id="due-dates" class="section level2">
-<h2>Due Dates</h2>
-<table>
-<colgroup>
-<col width="50%" />
-<col width="50%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Assignment</th>
-<th>Due</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Data slide</td>
-<td>before <strong>each Thursday</strong></td>
-</tr>
-<tr class="even">
-<td>Surveys (3)</td>
-<td><strong>Wed, Aug 26</strong> (Cervas Election Study), <strong>Fri,
-Oct 23</strong> (midterm feedback), <strong>final week</strong> (course
-evaluation)</td>
-</tr>
-<tr class="odd">
-<td>Discussion board post</td>
-<td><strong>Friday, 11:59 p.m.</strong>, each week</td>
-</tr>
-<tr class="even">
-<td>Data Session 4 board post (no Thursday session)</td>
-<td><strong>Tue, Sep 22</strong> — no session to follow that week, so
-you get the weekend</td>
-</tr>
-<tr class="odd">
-<td>Week 14 board post (Thanksgiving)</td>
-<td><strong>Mon, Nov 30</strong> — Tuesday is on Zoom, and there is no
-Thursday</td>
-</tr>
-<tr class="even">
-<td><strong>Test 1</strong> — Ch. 1–5</td>
-<td><strong>Thu, Oct 8</strong>, in class</td>
-</tr>
-<tr class="odd">
-<td>Data journalism: pitch</td>
-<td><strong>Tue, Oct 20</strong>, in class</td>
-</tr>
-<tr class="even">
-<td><strong>Test 2</strong> — Ch. 6–9</td>
-<td><strong>Tue, Nov 10</strong>, in class</td>
-</tr>
-<tr class="odd">
-<td>Data journalism: <strong>draft</strong></td>
-<td><strong>Thu, Nov 19</strong> — the last session before the
-break</td>
-</tr>
-<tr class="even">
-<td>Data journalism: <strong>peer reviews</strong> (two)</td>
-<td><strong>Tue, Dec 1</strong></td>
-</tr>
-<tr class="odd">
-<td><strong>Test 3</strong> — Ch. 10–13</td>
-<td><strong>Thu, Dec 3</strong>, in class</td>
-</tr>
-<tr class="even">
-<td>Data newsletter</td>
-<td><strong>Fri, Dec 4</strong> — the last day of classes</td>
-</tr>
-<tr class="odd">
-<td>Data journalism: <strong>final</strong></td>
-<td><strong>Fri, Dec 11</strong> — after the last session</td>
-</tr>
-</tbody>
-</table>
-<p>There is no final exam.</p>
 <!-- Required text. Update the edition yearly. -->
 </div>
 <div id="required-text" class="section level2">
@@ -1626,8 +1496,164 @@ being built for this course is made of short written walkthroughs — one
 file, one chart, ten numbered steps, no code. They are teaching material
 rather than homework: which one a session uses is decided on the day,
 mostly on Thursdays. Nothing to read in advance, nothing to install.</p>
-<!-- What each graded component is. -->
+<!-- Assessment weights, what each component is, and due dates. Shared by both syllabi. -->
 </div>
+</div>
+<div id="assessment" class="section level2">
+<h2>Assessment</h2>
+<p>The course grade will be a weighted average of the following
+components:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Category</th>
+<th>Percent of Final Grade</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Participation &amp; Attendance</strong></td>
+<td>23%</td>
+</tr>
+<tr class="even">
+<td><strong>Discussion Board</strong></td>
+<td>10%</td>
+</tr>
+<tr class="odd">
+<td><strong>Surveys</strong> (3, completion only)</td>
+<td>2%</td>
+</tr>
+<tr class="even">
+<td><strong>Weekly Data Contributions</strong></td>
+<td>10%</td>
+</tr>
+<tr class="odd">
+<td><strong>Three Tests</strong> (10% each)</td>
+<td>30%</td>
+</tr>
+<tr class="even">
+<td><strong>Data Journalism Project</strong></td>
+<td>25%</td>
+</tr>
+</tbody>
+</table>
+<p>What each one is:</p>
+<ul>
+<li><strong>Participation &amp; Attendance</strong> — Being here,
+prepared, and in the conversation — on both days.</li>
+<li><strong>Discussion Board</strong> — By Friday night each week, one
+post about any of the data we talked about: the lab, a classmate’s data
+slide, a figure in the reading. Something that surprised you, something
+we missed, something you do not understand, or an answer to somebody
+else’s question. <strong>A few sentences to a paragraph</strong> —
+enough to show you engaged with what we did. One post is full
+credit.</li>
+<li><strong>Surveys</strong> — Three short ones: the <strong>Cervas
+Election Study</strong> in Week 1, a <strong>midterm feedback</strong>
+survey once you have seen how the course actually runs, and the
+<strong>course evaluation</strong> at the end. Graded for completion
+only — there are no right answers, and nothing you say affects any other
+part of your grade.</li>
+<li><strong>Weekly Data Contributions</strong> — Find data bearing on
+the question Tuesday ended with, name the source, and post it as a slide
+before Thursday. Each week two slides are drawn at random and worked
+through in class, and nobody presents the data they found themselves —
+expect your own data to come up once or twice all term. The slide is
+marked complete or incomplete each week. At the end of term you hand in
+a <strong>newsletter</strong>: every piece of data you found, each with
+a short write-up. <strong>Build it as you go</strong> — it is a
+paragraph a week, and an evening’s work if you leave it all to
+December.</li>
+<li><strong>Three Tests</strong> — In class, on paper, and <strong>on
+the textbook only</strong>. Test 1 on <strong>Thu, Oct 8</strong> (Sides
+et al., Chapters 1–5), Test 2 on <strong>Tue, Nov 10</strong> (Chapters
+6–9), Test 3 on <strong>Thu, Dec 3</strong> (Chapters 10–13). We read
+the book straight through in its own order, so each test is a block of
+consecutive chapters: each covers the chapters read since the last one,
+<strong>none is cumulative</strong>, and every chapter appears on
+exactly one test. There is no final exam.</li>
+<li><strong>Data Journalism Project</strong> — A data-driven news story
+about a trend or issue in electoral processes. Runs in three parts —
+draft, peer review, final — and <strong>most of the marks are on the
+first two</strong>. It is the only substantial piece of writing this
+term.</li>
+</ul>
+</div>
+<div id="due-dates" class="section level2">
+<h2>Due Dates</h2>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Assignment</th>
+<th>Due</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Data slide</td>
+<td>before <strong>each Thursday</strong></td>
+</tr>
+<tr class="even">
+<td>Surveys (3)</td>
+<td><strong>Wed, Aug 26</strong> (Cervas Election Study), <strong>Fri,
+Oct 23</strong> (midterm feedback), <strong>final week</strong> (course
+evaluation)</td>
+</tr>
+<tr class="odd">
+<td>Discussion board post</td>
+<td><strong>Friday, 11:59 p.m.</strong>, each week</td>
+</tr>
+<tr class="even">
+<td>Data Session 4 board post (no Thursday session)</td>
+<td><strong>Tue, Sep 22</strong> — no session to follow that week, so
+you get the weekend</td>
+</tr>
+<tr class="odd">
+<td>Week 14 board post (Thanksgiving)</td>
+<td><strong>Mon, Nov 30</strong> — Tuesday is on Zoom, and there is no
+Thursday</td>
+</tr>
+<tr class="even">
+<td><strong>Test 1</strong> — Ch. 1–5</td>
+<td><strong>Thu, Oct 8</strong>, in class</td>
+</tr>
+<tr class="odd">
+<td>Data journalism: pitch</td>
+<td><strong>Tue, Oct 20</strong>, in class</td>
+</tr>
+<tr class="even">
+<td><strong>Test 2</strong> — Ch. 6–9</td>
+<td><strong>Tue, Nov 10</strong>, in class</td>
+</tr>
+<tr class="odd">
+<td>Data journalism: <strong>draft</strong></td>
+<td><strong>Thu, Nov 19</strong> — the last session before the
+break</td>
+</tr>
+<tr class="even">
+<td>Data journalism: <strong>peer reviews</strong> (two)</td>
+<td><strong>Tue, Dec 1</strong></td>
+</tr>
+<tr class="odd">
+<td><strong>Test 3</strong> — Ch. 10–13</td>
+<td><strong>Thu, Dec 3</strong>, in class</td>
+</tr>
+<tr class="even">
+<td>Data newsletter</td>
+<td><strong>Tue, Dec 8</strong></td>
+</tr>
+<tr class="odd">
+<td>Data journalism: <strong>final</strong></td>
+<td><strong>Fri, Dec 11</strong> — after the last session</td>
+</tr>
+</tbody>
+</table>
+<p>There is no final exam.</p>
+<!-- What each graded component is. -->
 </div>
 <div id="assignment-details" class="section level2">
 <h2>Assignment Details</h2>
@@ -1799,7 +1825,7 @@ the time you get there — you found the data, and the class told you what
 it was worth. Written up in the week it happened, each entry takes ten
 minutes; written up in December from a folder of half-remembered links,
 the whole thing is an evening you did not need to spend. <strong>Due
-Fri, Dec 4, 11:59 p.m.</strong>, the last day of classes.</p>
+Tue, Dec 8, 11:59 p.m.</strong></p>
 <p>It is worth a small share of the grade and it is the only place your
 own term’s work sits in one piece. Several of these will be a better
 portfolio of what you can do with data than anything else you hand
@@ -2087,7 +2113,7 @@ no point at which you may as well stop coming.</p>
 </table>
 <p>If you must miss class, please notify me at least 24 hours in advance
 (unless it is an emergency or sudden illness) so we can arrange a way
-for you to catch up.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p></li>
+for you to catch up.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p></li>
 </ol>
 <hr />
 <ol start="6" style="list-style-type: decimal">
@@ -2116,504 +2142,310 @@ submit, screenshot the confirmation screen and upload it to the Canvas
 assignment.</strong> The screenshot is your receipt; the survey data
 never learns who you are.</p></li>
 </ol>
+<!-- Grading philosophy and late policy. -->
+</div>
+<div id="grading" class="section level2">
+<h2>Grading</h2>
+<p>Your grade rests on engagement as much as on output. The course is
+built around two things happening every week — you arriving having read,
+and you arriving having found data — and neither can be made up
+afterwards.</p>
+<p><strong>Deadlines.</strong> You are expected to meet them. If you can
+see in advance that you will not, contact me <strong>before</strong> the
+due date and we will sort something out.</p>
+<p>Late work loses <strong>one percentage point per hour, and never
+falls below 50%</strong>.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> Canvas applies this automatically. Submit
+what you have rather than polishing something that is already late.</p>
+<p>Work that is never submitted scores <strong>zero</strong>, which is
+the whole reason the late floor sits at 50%: handing something in a week
+late is always worth more than handing in nothing.</p>
+<p>Two things sit outside that rule because being late breaks somebody
+else’s work, not just your own:</p>
+<ul>
+<li><strong>Peer reviews.</strong> Your classmate cannot revise against
+a review that has not arrived. Late reviews are marked down
+sharply.</li>
+<li><strong>Project drafts.</strong> A missing draft means two people
+have nothing to review, and — as above — you cannot rescue a missing
+draft with a good final.</li>
+</ul>
 <!-- Session-by-session schedule. Dates are written out, so a new year means editing them here. -->
 </div>
 <div id="schedule" class="section level2">
 <h2>Schedule</h2>
-<p>Classes meet Tuesday and Thursday, 11:00a–12:20p, in PH A21A.
-Tuesdays are for the chapter and the question it raises; Thursdays open
-with the data draw and then run the lab. Read the assigned chapter
-<strong>before</strong> Tuesday, and post your data slide
-<strong>before</strong> Thursday. Your board post is due <strong>Friday,
-11:59 p.m.</strong></p>
-<p>Subject to change as the semester progresses.</p>
-<hr />
-<div id="how-to-read-the-schedule" class="section level3">
-<h3>How to read the schedule</h3>
-<p><em>Every Thursday takes <strong>one source of data</strong> and goes
-behind a number you have already seen. Each session asks the same five
-questions — <strong>what is one row? who made this, and why? how do you
-get it? what can it settle? what can it never settle?</strong> — and
-each has its own reading, due before class, about that data.</em></p>
-<p><strong>The sessions come in three parts, and each part is a place
-data comes from.</strong> Not a topic — a <em>source</em>. Turnout turns
-up four times in this course and means something slightly different each
-time, because a different organisation produced it for a different
-reason. Sorting by topic would hide that. Sorting by where it came from
-is what makes it visible.</p>
-<p><strong>Part I is the Census Bureau</strong>, one agency that counts
-people and places. It goes first because nearly every other part borrows
-a number from it: if you want to know what share of a county voted,
-somebody has to tell you how many people live there.</p>
-<p><strong>Part II is surveys</strong> — asking a sample of people
-questions and using the answers to describe everyone. You will already
-have met one in Part I, because the American Community Survey is a
-survey, and answering it is required by law. Here you meet the voluntary
-kind, and examine what goes wrong with them.</p>
-<p><strong>Part III is elections, and everything that accretes around
-one.</strong> The word is two things sharing a name: the
-<strong>result</strong> that officials certified, and the
-<strong>machinery</strong> that produced it — who was registered, who
-was removed, how many ballots were rejected.</p>
-<p>Around that sit the records other people leave. A candidate
-<strong>discloses</strong> because a statute compels it: every campaign
-files what it raised, every member of Congress votes on the record, and
-the person in the row chose to run for office. An ordinary person leaves
-a record having volunteered nothing at all — a traffic stop, a jury
-summons, a grade stamped on a neighbourhood in 1937. And where nobody
-collected anything, a researcher <strong>builds</strong> the number.
-These sit in Part III because this is where they get used, and where
-nearly all the wrong answers live.</p>
-<p><strong>The money runs early on purpose.</strong> What a campaign
-files is taken in <strong>Session 9</strong>, one week before the
-election, while the campaign it describes is still running; what a
-member of Congress votes waits until Session 12. It also puts polls and
-forecasts (Session 5) and the money (Session 9) ahead of
-<strong>election night (Session 10)</strong>, so the night grades work
-you have already done.</p>
-<p><strong>One session’s date is not ours to choose.</strong>
-<code>election-night</code> is a Part III session that runs on
-<strong>Thu, Nov 5</strong> and no other day, because it is built around
-returns that do not exist until Nov 3. Everything else is arranged
-around it: Sessions 7 and 8 through October, then the money session on
-<strong>Oct 29</strong> while the campaign is still running, then live
-returns on <strong>Nov 5</strong> and the machinery behind them on
-<strong>Nov 12</strong>. The arrangement earns its place — you met the
-midterm base rate in <strong>Session 7</strong> and you grade it on the
-night against what the country actually did.</p>
-<p><strong>The book’s own briefs turn up in class.</strong> The book
-being built for this course is made of short written walkthroughs — one
-file, one chart, ten numbered steps, no code. They are teaching material
-rather than homework: which one a session uses is decided on the day,
-mostly on Thursdays. Nothing to read in advance, nothing to install.</p>
-<p><strong>The textbook runs on its own track.</strong> It is not tied
-to the parts. We read it <strong>straight through, Chapters 1 to
-13</strong>, one or two chapters a week, and the three tests are simply
-the blocks that fall between them: <strong>Ch. 1–5</strong> on Oct 8,
-<strong>Ch. 6–9</strong> on Nov 10, <strong>Ch. 10–13</strong> on Dec 3.
-Nothing to keep track of, and the book’s own cross-references land in
-the right order — Ch. 10 and 11 refer back to campaign finance in Ch. 4,
-and several chapters refer back to parties in Ch. 6, both of which you
-will already have read.</p>
-<p><strong>The cost is worth naming.</strong> A chapter no longer always
-sits beside the data session it feeds: you read campaign finance on
-<strong>Sep 22</strong> and do not touch FEC filings until <strong>Oct
-29</strong>. When a Thursday leans on a chapter you read weeks earlier,
-the session says so. <strong>The three tests cover the textbook and
-nothing else.</strong></p>
-<hr />
 <p><strong>Week 1 — Part I opens</strong></p>
 <ul>
 <li><strong>Tue, Aug 25</strong> — Course introduction: the three
-layers. A number you read in the news, the file it came from, and the
-reason anyone cares. Then straight into the 2024 electoral map.
+layers. Read the book’s own introduction, What This Book Is For.
 <ul>
-<li><strong>The book’s introduction — <em>What This Book Is
-For</em></strong> (about twenty minutes). Why every chapter here starts
-from the file rather than the question. Read it before Thursday; it is
-the argument the rest of the term is an argument with.</li>
-<li><strong>Lab</strong>: the 2024 electoral map. How to read one of
-these briefs.</li>
+<li>The book’s introduction — <em>What This Book Is For</em></li>
 <li><strong>DUE Wed, Aug 26, 11:59 p.m.</strong> — the <strong>Cervas
-Election Study</strong>, a survey instrument modelled on the Cooperative
-Election Study and the American National Election Study, but neither:
-items have been cut, reworded, and added. The link is in <strong>Canvas,
-under Assignments</strong>. You take it on your own time, before
-Thursday, because Thursday’s session works with what the class answered.
-You are the sample. The survey is anonymous (no name, no login), so
-credit runs on a receipt: <strong>screenshot the confirmation screen
-after you submit and upload it to the same Canvas assignment.</strong>
-<strong>We come back to your answers in Session 6</strong>, when we set
-them against the real Cooperative Election Study.</li>
+Election Study</strong>.</li>
 </ul></li>
-<li><strong>Thu, Aug 27</strong> — <strong>DATA SESSION 1 · Part I: The
-decennial census, and the seats it decides.</strong> The one thing no
-other source in this course can do — count everybody, once, with no
-margin of error — how you get at it, and what the count is then used
-for: apportionment, and the seats each state gets.
+<li><strong>Thu, Aug 27</strong> — Data Session 1 — The decennial
+census, and the seats it decides
 <ul>
-<li>U.S. Census Bureau, “America Counts: 250 Years,” <a href="https://www.census.gov/library/stories/2026/06/america-counts-250-years.html" class="uri">https://www.census.gov/library/stories/2026/06/america-counts-250-years.html</a></li>
-<li>Census Academy, “Introduction to the Census Bureau Data API” —
-<strong>module 1 only</strong>, <a href="https://www.census.gov/data/academy/courses/intro-to-the-census-bureau-data-api.html" class="uri">https://www.census.gov/data/academy/courses/intro-to-the-census-bureau-data-api.html</a></li>
-<li>NCSL, <em>Redistricting Law 2020</em>, <strong>Ch. 1 (“The
-Census”)</strong> — written by the chief of the Census Bureau’s
-Redistricting and Voting Rights Data Office. On Canvas, and also public,
-<a href="https://documents.ncsl.org/wwwncsl/Redistricting-Census/Redistricting-Law-2020_NCSL%20FINAL.pdf" class="uri">https://documents.ncsl.org/wwwncsl/Redistricting-Census/Redistricting-Law-2020_NCSL%20FINAL.pdf</a></li>
+<li><a href="https://www.census.gov/library/stories/2026/06/america-counts-250-years.html">Census
+Bureau, <em>America Counts: 250 Years</em></a></li>
+<li><a href="https://www.census.gov/data/academy/courses/intro-to-the-census-bureau-data-api.html">Census
+Academy — the Census data API</a> — module 1 only</li>
+<li><a href="https://documents.ncsl.org/wwwncsl/Redistricting-Census/Redistricting-Law-2020_NCSL%20FINAL.pdf">NCSL,
+<em>Redistricting Law 2020</em>, ch. 1 — the census</a></li>
 </ul></li>
 </ul>
 <p><strong>Week 2 — Part I</strong></p>
 <ul>
-<li><strong>Tue, Sep 1</strong> — The framework: what we are judging,
-and against what.
+<li><strong>Tue, Sep 1</strong> — The rules, and the four standards
 <ul>
-<li><strong>Sides et al., Ch. 1</strong> — rules, reality, strategy,
-choice, and the four standards.</li>
-<li>James C. Scott, <em>Seeing Like a State: How Certain Schemes to
-Improve the Human Condition Have Failed</em> (Yale, 1998), Introduction
-— where the idea of a state making its population <em>legible</em> comes
-from. Ebook through the library, <a href="https://www.jstor.org/stable/j.ctt1nq3vk" class="uri">https://www.jstor.org/stable/j.ctt1nq3vk</a></li>
+<li>Sides et al., Ch. 1</li>
+<li><a href="https://www.jstor.org/stable/j.ctt1nq3vk">Scott, <em>Seeing
+Like a State</em> (1998), intro — where “legibility” comes from</a></li>
 </ul></li>
-<li><strong>Thu, Sep 3</strong> — <strong>DATA SESSION 2 · Part I:
-Geography, and the scales it comes at.</strong> Last week counted
-people. This week asks <em>where</em>, and discovers that the answer
-depends entirely on the size of the box you put them in.
+<li><strong>Thu, Sep 3</strong> — Data Session 2 — Geography, and the
+scales it comes at
 <ul>
-<li>U.S. Census Bureau, <em>Understanding Statistical Geographies</em>
-(webinar, video), <a href="https://www.census.gov/library/video/2021/understanding-statistical-geographies.html" class="uri">https://www.census.gov/library/video/2021/understanding-statistical-geographies.html</a>
-— where tracts, block groups and blocks came from, and how they have
-moved. The Bureau explaining its own containers, which is the thing this
-session takes apart.</li>
+<li><a href="https://www.census.gov/library/video/2021/understanding-statistical-geographies.html">Census
+Bureau video — <em>Understanding Statistical Geographies</em></a></li>
 </ul></li>
 </ul>
 <p><strong>Week 3 — Part I</strong></p>
 <ul>
-<li><strong>Tue, Sep 8</strong> — The rules: who may vote, who may run,
-and how a population becomes seats.
+<li><strong>Tue, Sep 8</strong> — Who can vote, how, and where
 <ul>
-<li><strong>Sides et al., Ch. 2</strong> — who may vote, who may run,
-and how a population becomes seats.</li>
-<li>Nate Cohn, “Republicans’ Electoral College Edge, Once Seen as
-Ironclad, Looks to Be Fading,” <em>New York Times</em> (Upshot), <a href="https://www.nytimes.com/2024/09/25/upshot/trump-electoral-college-harris.html" class="uri">https://www.nytimes.com/2024/09/25/upshot/trump-electoral-college-harris.html</a></li>
-<li>Brennan Center, “Census Data Highlights a Changing Nation,” <a href="https://www.brennancenter.org/our-work/research-reports/census-data-highlights-changing-nation" class="uri">https://www.brennancenter.org/our-work/research-reports/census-data-highlights-changing-nation</a></li>
-<li>“Black Representation in Congress at Risk after Court Ruling,”
-<em>NPR</em>, <a href="https://www.npr.org/2026/04/30/nx-s1-5805050/supreme-court-voting-rights-congressional-black-caucus" class="uri">https://www.npr.org/2026/04/30/nx-s1-5805050/supreme-court-voting-rights-congressional-black-caucus</a></li>
-<li><strong>Podcast:</strong> <em>Amicus</em> (Slate), “A Huge Shift is
-Underway at SCOTUS” (Jun 13,
-<ol start="2026" style="list-style-type: decimal">
-<li>— Pamela S. Karlan on <em>Callais</em> and <em>Milligan</em>, <a href="https://slate.com/podcasts/amicus/2026/07/supreme-court-term-recap-birthright-citizenship-voting-rights" class="uri">https://slate.com/podcasts/amicus/2026/07/supreme-court-term-recap-birthright-citizenship-voting-rights</a></li>
-</ol></li>
+<li>Sides et al., Ch. 2</li>
+<li><a href="https://www.nytimes.com/2024/09/25/upshot/trump-electoral-college-harris.html">Cohn,
+<em>NYT</em> — the Electoral College edge</a></li>
+<li><a href="https://www.brennancenter.org/our-work/research-reports/census-data-highlights-changing-nation">Brennan
+Center — census data and a changing nation</a></li>
+<li><a href="https://www.npr.org/2026/04/30/nx-s1-5805050/supreme-court-voting-rights-congressional-black-caucus"><em>NPR</em>
+— Black representation after the ruling</a></li>
+<li><a href="https://slate.com/podcasts/amicus/2026/07/supreme-court-term-recap-birthright-citizenship-voting-rights">Podcast:
+<em>Amicus</em> (Slate)</a></li>
 </ul></li>
-<li><strong>Thu, Sep 10</strong> — <strong>DATA SESSION 3 · Part I: The
-American Community Survey.</strong> The census counts once a decade; the
-ACS asks a sample every year, and almost every current number about a
-place comes from it. A survey wearing the census’s clothes — with a
-margin of error the census does not have.
+<li><strong>Thu, Sep 10</strong> — Data Session 3 — The American
+Community Survey
 <ul>
-<li>ACS Handbook, Ch. 1 — “Understanding the ACS: The Basics.” What the
-survey is, who it is built for, and the kind of question it exists to
-answer, <a href="https://www.census.gov/content/dam/Census/library/publications/2020/acs/acs_general_handbook_2020_ch01.pdf" class="uri">https://www.census.gov/content/dam/Census/library/publications/2020/acs/acs_general_handbook_2020_ch01.pdf</a></li>
-<li>Census Academy, <em>Discovering the American Community Survey</em> —
-<strong>all six modules</strong>, about ninety minutes of video in
-total, <a href="https://www.census.gov/data/academy/courses/discovering-the-american-community-survey.html" class="uri">https://www.census.gov/data/academy/courses/discovering-the-american-community-survey.html</a></li>
+<li><a href="https://www.census.gov/content/dam/Census/library/publications/2020/acs/acs_general_handbook_2020_ch01.pdf">ACS
+Handbook, ch. 1 — the basics</a></li>
+<li><a href="https://www.census.gov/data/academy/courses/discovering-the-american-community-survey.html">Census
+Academy — <em>Discovering the American Community Survey</em></a> — all
+six modules</li>
 </ul></li>
 </ul>
 <p><strong>Week 4 — Part II opens</strong></p>
 <ul>
-<li><p><strong>Tue, Sep 15</strong> — <strong>We meet.</strong> The
-chapter, and the argument it raises.</p>
+<li><strong>Tue, Sep 15</strong> — The transformation of American
+campaigns
 <ul>
-<li><strong>Sides et al., Ch. 3</strong> — the transformation of
-American campaigns.</li>
+<li>Sides et al., Ch. 3</li>
 </ul></li>
-<li><p><strong>Thu, Sep 17</strong> — <strong>No class.</strong>
-Constitution Day Symposium. Go if you can — it is the most on-topic
-thing happening on this campus all term.</p>
-<p><strong>DATA SESSION 4 · Part II: What a survey can establish, and
-how you get one.</strong> Every source so far was a record of something
-that happened. This one is a record of what somebody <em>said</em>, and
-it can reach things no record can — at a price no sample size will buy
-off.</p>
+<li><strong>Thu, Sep 17</strong> — <strong>NO CLASS.</strong>
+Constitution Day Symposium. Data Session 4 is self-directed: what a
+survey can establish.
 <ul>
-<li>Pew Research Center, “How Public Polling Has Changed in the 21st
-Century” (April 2023), <a href="https://www.pewresearch.org/methods/2023/04/19/how-public-polling-has-changed-in-the-21st-century/" class="uri">https://www.pewresearch.org/methods/2023/04/19/how-public-polling-has-changed-in-the-21st-century/</a></li>
-<li>Pew Research Center, <em>Public Opinion Polling Basics</em> —
-lessons 1–3, <a href="https://www.pewresearch.org/course/public-opinion-polling-basics/" class="uri">https://www.pewresearch.org/course/public-opinion-polling-basics/</a></li>
-<li><strong>Board post</strong>: post any time before <strong>Tue, Sep
-22</strong> — there is no Thursday session to follow this week, so you
-get the weekend.</li>
+<li><a href="https://www.pewresearch.org/methods/2023/04/19/how-public-polling-has-changed-in-the-21st-century/">Pew
+— how public polling has changed</a></li>
+<li><a href="https://www.pewresearch.org/course/public-opinion-polling-basics/">Pew
+— polling basics, lessons 1–3</a></li>
 </ul></li>
 </ul>
 <p><strong>Week 5 — Part II</strong></p>
 <ul>
 <li><strong>Tue, Sep 22</strong> — Money, and the rule that shapes
-everything after it.
+everything after it
 <ul>
-<li><strong>Sides et al., Ch. 4</strong> — campaign finance.</li>
+<li>Sides et al., Ch. 4</li>
 </ul></li>
-<li><strong>Thu, Sep 24</strong> — <strong>DATA SESSION 5 · Part II:
-Election polls, and what a margin hides.</strong> The horse race: who is
-ahead, how that number is built, what weighting repairs, what it cannot,
-and why the misses of 2016 and 2020 were not bad luck. <strong>This week
-is polls about an election.</strong> Next week is the other kind of
-survey — the ones that ask what people think.
+<li><strong>Thu, Sep 24</strong> — Data Session 5 — Election polls: the
+horse race, and what a margin hides
 <ul>
-<li>Michael A. Bailey, <em>Polling at a Crossroads: Rethinking Modern
-Survey Research</em> (Cambridge, 2023), <strong>Ch. 1,
-pp. 3–22</strong>. Cambridge Core, through the library, <a href="https://www.cambridge.org/9781108482790" class="uri">https://www.cambridge.org/9781108482790</a></li>
-<li>“Are Political Polls Accurate?” <em>New York Times</em> (The Morning
-briefing, Aug 14, 2026), <a href="https://www.nytimes.com/2026/08/14/briefing/are-political-polls-accurate.html" class="uri">https://www.nytimes.com/2026/08/14/briefing/are-political-polls-accurate.html</a></li>
-<li><strong>Podcast:</strong> <em>Public Opinion Podcast</em> (AAPOR),
-“Pre-Election Polling: The Challenges and The Importance of
-Understanding the 2024 Voter” — Don Levy, <a href="https://aapor.org/media/public-opinion-pod/" class="uri">https://aapor.org/media/public-opinion-pod/</a></li>
+<li><a href="https://www.cambridge.org/9781108482790">Bailey,
+<em>Polling at a Crossroads</em> (2023), ch. 1, 3–22</a></li>
+<li><a href="https://www.nytimes.com/2026/08/14/briefing/are-political-polls-accurate.html"><em>NYT</em>
+— are political polls accurate?</a></li>
+<li><a href="https://aapor.org/media/public-opinion-pod/">Podcast: AAPOR
+on pre-election polling</a></li>
 </ul></li>
 </ul>
 <p><strong>Week 6 — Part II closes</strong></p>
 <ul>
 <li><strong>Tue, Sep 29</strong> — Strategy: who a campaign decides to
-talk to, and how it decides.
+talk to
 <ul>
-<li>Pascal Sabino, “Missourians Reject Measure That Threatened to Kill
-Citizen-Led Ballot Initiatives,” <em>Bolts</em>, August 5, 2026, <a href="https://boltsmag.org/missouri-rejects-restrictions-on-direct-democracy/" class="uri">https://boltsmag.org/missouri-rejects-restrictions-on-direct-democracy/</a></li>
-<li><strong>Sides et al., Ch. 5</strong> — campaign strategy and vote
-targets.</li>
+<li><a href="https://boltsmag.org/missouri-rejects-restrictions-on-direct-democracy/">Sabino,
+<em>Bolts</em> — Missouri’s ballot-initiative vote</a></li>
+<li>Sides et al., Ch. 5</li>
 </ul></li>
-<li><strong>Thu, Oct 1</strong> — <strong>DATA SESSION 6 · Part II:
-Public opinion, and the studies built to measure it.</strong> Not who is
-ahead, but what people think — and how much of the answer is made by the
-question. You took the <strong>Cervas Election Study</strong> in Week 1;
-today it sits beside the two academic instruments it was modelled on and
-departs from. What can a class of eighteen establish that a national
-sample can, what can it not, and which differences are the instrument
-rather than the people?
+<li><strong>Thu, Oct 1</strong> — Data Session 6 — Public opinion, and
+the studies built to measure it: the Cervas Election Study beside CES
+and ANES. No slide, no draw.
 <ul>
-<li>Sidney Verba, “The Citizen as Respondent: Sample Surveys and
-American Democracy,” <em>American Political Science Review</em> 90(1),
-1996, pp. 1–7 — <strong>why we measure opinion this way at all.</strong>
-Voting, giving and protesting all take resources, so they over-represent
-whoever has them; answering a survey takes none, which is why a survey
-can speak for people politics does not hear from. Seven pages, through
-the library, <a href="https://www.jstor.org/stable/2082793" class="uri">https://www.jstor.org/stable/2082793</a></li>
-<li>Pew Research Center, “Writing Survey Questions” — then the how:
-wording, order effects, and response options, with examples of the same
-question measuring different opinions. Ten to fifteen minutes, <a href="https://www.pewresearch.org/writing-survey-questions/" class="uri">https://www.pewresearch.org/writing-survey-questions/</a></li>
-<li><em>Reference:</em> <strong>Cooperative Election Study</strong> —
-how it samples, and how many people it reaches, <a href="https://cces.gov.harvard.edu/" class="uri">https://cces.gov.harvard.edu/</a></li>
-<li><em>Reference:</em> <strong>American National Election
-Studies</strong> — the same two questions, answered a different way, <a href="https://electionstudies.org/" class="uri">https://electionstudies.org/</a></li>
-<li><em>Reference:</em> Institute of Politics, Harvard Kennedy School,
-<em>Harvard Youth Poll</em>, 52nd edition — the toplines, and the
-methodology statement behind them. <strong>You are the population being
-sampled</strong>, <a href="https://iop.harvard.edu/youth-poll/52nd-edition-spring-2026" class="uri">https://iop.harvard.edu/youth-poll/52nd-edition-spring-2026</a></li>
-<li><strong>Read Verba against Bailey from last week.</strong> Verba’s
-case for the survey rests on everyone being equally likely to answer.
-Bailey’s chapter is about what happens when they are not. The whole of
-Part II sits in that gap.</li>
-<li><strong>No data slide and no draw this week.</strong></li>
+<li><a href="https://www.jstor.org/stable/2082793">Verba, “The Citizen
+as Respondent” (1996), 1–7</a> — why measure opinion by survey at
+all</li>
+<li><a href="https://www.pewresearch.org/writing-survey-questions/">Pew
+— writing survey questions</a> — wording, order effects, response
+options</li>
+<li><em>Reference:</em> <a href="https://cces.gov.harvard.edu/">Cooperative Election Study</a> —
+how it samples, and how many it reaches</li>
+<li><em>Reference:</em> <a href="https://electionstudies.org/">American
+National Election Studies</a> — the same two questions, answered
+differently</li>
+<li><em>Reference:</em> <a href="https://iop.harvard.edu/youth-poll/52nd-edition-spring-2026"><em>Harvard
+Youth Poll</em>, 52nd edition</a> — toplines, and the methodology behind
+them</li>
 </ul></li>
 </ul>
 <p><strong>Week 7 — Test 1</strong></p>
 <ul>
-<li><strong>Tue, Oct 6</strong> — Who the electorate is, and who gets
-asked about it.
+<li><strong>Tue, Oct 6</strong> — Who the electorate is. No new chapter
+— review Ch. 1–5; Test 1 is Thursday.
 <ul>
-<li><strong>No new chapter this week.</strong> You have read Ch. 1–5 and
-<strong>Test 1 is Thursday</strong>. Tuesday is the review — bring
-questions.</li>
-<li>“Inside the Rise of the Multiracial Right,” <em>New York Times</em>
-(Opinion), <a href="https://www.nytimes.com/interactive/2025/07/24/opinion/minority-voters-trump-right.html" class="uri">https://www.nytimes.com/interactive/2025/07/24/opinion/minority-voters-trump-right.html</a></li>
+<li>No new chapter — review Ch. 1–5 for Test 1</li>
+<li><a href="https://www.nytimes.com/interactive/2025/07/24/opinion/minority-voters-trump-right.html"><em>NYT</em>
+— the rise of the multiracial right</a></li>
 </ul></li>
-<li><strong>Thu, Oct 8</strong> — <strong>TEST 1</strong>, in class, on
-paper. <strong>Sides et al., Ch. 1–5.</strong>
+<li><strong>Thu, Oct 8</strong> — <strong>TEST 1.</strong> In class, on
+paper — Ch. 1–5
 <ul>
-<li>Tuesday is the review, and fall break is the week after: the test
-does not sit across the break.</li>
-<li><strong>In the time the test leaves</strong>: nothing new.</li>
-<li><strong>No data slide this week</strong> — there is no data session
-to bring one to.</li>
+<li>Nothing new — bring questions</li>
 </ul></li>
 </ul>
-<p><strong>Week 8 — FALL BREAK, no class (Oct 12–16)</strong></p>
-<p>Test 1 is behind you. Nothing is due.</p>
+<p><strong>Week 8 — FALL BREAK, no class (Oct 12–16)</strong> Test 1 is
+behind you. Nothing is due.</p>
 <hr />
 <p><strong>Week 9 — Part III opens</strong></p>
 <ul>
-<li><strong>Tue, Oct 20</strong> — <strong>DATA SESSION 7 · Part III
-opens: What a return is, where you get one, and what forty of them
-show.</strong> Part III starts with the object itself. A return is a
-snapshot, and getting hold of one is harder than it sounds. Stack forty
-and you get a career, a base rate, and a way to be wrong about both.
+<li><strong>Tue, Oct 20</strong> — Data Session 7 — Part III opens: what
+a return is, where you get one, and what forty of them show
 <ul>
-<li>Alex Burness, “Election Data Is Vital to Voting Rights. So Why Is It
-So Hard to Track Down?” <em>Bolts</em>, <a href="https://boltsmag.org/election-data-is-vital-to-voting-rights-but-hard-to-track-down/" class="uri">https://boltsmag.org/election-data-is-vital-to-voting-rights-but-hard-to-track-down/</a></li>
-<li>FairVote, <em>Monopoly Politics 2026</em>, <a href="https://fairvote.org/report/monopoly-politics-2026-update/" class="uri">https://fairvote.org/report/monopoly-politics-2026-update/</a>
-— a claim that <strong>81% of 2026 House races are already
-decided</strong>, published before anyone voted.</li>
+<li><a href="https://boltsmag.org/election-data-is-vital-to-voting-rights-but-hard-to-track-down/">Burness,
+<em>Bolts</em> — election data and voting rights</a></li>
+<li><a href="https://fairvote.org/report/monopoly-politics-2026-update/">FairVote
+— <em>Monopoly Politics 2026</em></a></li>
 <li><strong>DUE: Data journalism story — pitch your topic</strong> (one
 paragraph, in class).</li>
-<li><strong>Two data sessions this week, so two slides</strong> — one
-before Tuesday and one before Thursday.</li>
 </ul></li>
-<li><strong>Thu, Oct 22</strong> — <strong>DATA SESSION 8 · Part III:
-The bottom rungs — precincts and ballots.</strong> Every session so far
-has used totals. Today we go down two rungs, to the smallest unit
-anybody publishes and then to the ballot itself.
+<li><strong>Thu, Oct 22</strong> — Data Session 8 — The bottom rungs:
+precincts and ballots
 <ul>
-<li>Kate Murray, Samuel Baltz and Charles Stewart III, “Why Does Anyone
-Need Precinct-Level Election Results?” MIT Election Data and Science Lab
-— what a precinct is, what county totals lose, why the boundaries move
-between elections, and why you cannot read an individual off an
-aggregate. About fifteen minutes, <a href="https://electionlab.mit.edu/articles/why-does-anyone-need-precinct-level-election-results" class="uri">https://electionlab.mit.edu/articles/why-does-anyone-need-precinct-level-election-results</a></li>
+<li><a href="https://electionlab.mit.edu/articles/why-does-anyone-need-precinct-level-election-results">MIT
+Election Lab — why does anyone need precinct-level results?</a> — what
+county totals lose, and why the boundaries move</li>
 </ul></li>
 </ul>
 <p><strong>Week 10 — Part III</strong></p>
 <ul>
-<li><strong>Tue, Oct 27</strong> — Parties, and the groups that spend
-around them.
+<li><strong>Tue, Oct 27</strong> — Parties and interest groups
 <ul>
-<li><strong>Sides et al., Ch. 6</strong> — political parties.</li>
-<li><strong>Sides et al., Ch. 7</strong> — interest groups.</li>
+<li>Sides et al., Ch. 6 and Ch. 7</li>
 </ul></li>
-<li><strong>Thu, Oct 29</strong> — <strong>DATA SESSION 9 · Part III:
-Money in politics.</strong> The record and the hole in it. Disclosure is
-the one source in this course written by the people it is about —
-self-reported like a survey, mandatory like a record — and it arrives
-one week before the country votes. Then the spending that never has to
-say where it came from.
+<li><strong>Thu, Oct 29</strong> — Data Session 9 — Money in politics:
+the record, and the hole in it
 <ul>
-<li>OpenSecrets, “Dark Money Basics” — hard money and soft money, who
-has to name a donor and who does not, and roughly a billion dollars of
-spending since <em>Citizens United</em> that traces back to nobody, <a href="https://www.opensecrets.org/dark-money/basics" class="uri">https://www.opensecrets.org/dark-money/basics</a></li>
-<li>“Kamala Harris’s Donors,” <em>New York Times</em> (interactive) —
-skim the graphics. <strong>This is what a disclosure file looks like
-once somebody draws it</strong>, <a href="https://www.nytimes.com/interactive/2024/08/22/us/elections/kamala-harris-donors.html" class="uri">https://www.nytimes.com/interactive/2024/08/22/us/elections/kamala-harris-donors.html</a></li>
-<li>“Donald Trump’s Campaign-Finance Disclosures Are ‘a Governance
-Nightmare’,” <em>New York Times</em> (Opinion) — the same instrument,
-read as a problem, <a href="https://www.nytimes.com/2024/08/26/opinion/republican-donors-money-trump.html" class="uri">https://www.nytimes.com/2024/08/26/opinion/republican-donors-money-trump.html</a></li>
-<li><strong>Podcast:</strong> <em>The Downballot</em> — an episode on
-the current cycle’s money, <a href="https://www.the-downballot.com/podcast" class="uri">https://www.the-downballot.com/podcast</a></li>
-<li><strong>A note on what we are not doing.</strong> The obvious lab
-here would use the Meta and Google political ad libraries to show who
-was shown which ad. Both are effectively closed. <strong>The most
-detailed record of political persuasion in America is not
-public</strong>, and that absence is worth one minute of class
-time.</li>
+<li><a href="https://www.opensecrets.org/dark-money/basics">OpenSecrets
+— dark money basics</a> — who must name a donor, and who need not</li>
+<li><a href="https://www.nytimes.com/interactive/2024/08/22/us/elections/kamala-harris-donors.html"><em>NYT</em>
+— Harris’s donors, the graphics</a> — a disclosure file, drawn</li>
+<li><a href="https://www.nytimes.com/2024/08/26/opinion/republican-donors-money-trump.html"><em>NYT</em>
+— Trump’s campaign-finance disclosures</a> — the same instrument as a
+problem</li>
+<li><a href="https://www.the-downballot.com/podcast">Podcast: <em>The
+Downballot</em> on this cycle’s money</a></li>
 </ul></li>
 </ul>
 <p><strong>Week 11 — Part III · election night</strong></p>
 <ul>
-<li><strong>Tue, Nov 3</strong> — <strong>DEMOCRACY DAY / ELECTION DAY,
-no class before 5p.</strong>
+<li><strong>Tue, Nov 3</strong> — <strong>NO CLASS.</strong> Democracy
+Day. Read both chapters this week, for Thursday.
 <ul>
-<li>Read this week, for Thursday: <strong>Sides et al., Ch. 8</strong>
-(media) and <strong>Ch. 9</strong> (presidential campaigns).</li>
+<li>For Thursday: Sides et al., Ch. 8 and Ch. 9</li>
 </ul></li>
-<li><strong>Thu, Nov 5</strong> — <strong>DATA SESSION 10 · Part III:
-Live returns.</strong> <em>(Fixed date — the only session whose date is
-not ours to choose.)</em> The country voted on Tuesday. Today the
-numbers arrive while we watch, and we check them against everything that
-claimed to know in advance.
+<li><strong>Thu, Nov 5</strong> — <strong>Fixed date.</strong> Data
+Session 10 — Live returns. Built on results that do not exist until Nov
+3.
 <ul>
-<li>NPR, “Race calls 101: How the AP declares winners,” <a href="https://www.npr.org/2024/11/05/g-s1-32603/how-are-races-actually-called" class="uri">https://www.npr.org/2024/11/05/g-s1-32603/how-are-races-actually-called</a>
-— short, and worth reading the morning of the session it describes. A
-call is a judgement about how much vote is left, not a result.</li>
-<li><strong>Lab</strong>: election night returns, live.</li>
+<li><a href="https://www.npr.org/2024/11/05/g-s1-32603/how-are-races-actually-called">NPR
+— <em>Race calls 101</em></a></li>
 </ul></li>
 </ul>
 <p><strong>Week 12 — Part III · the machinery</strong></p>
 <ul>
-<li><strong>Tue, Nov 10</strong> — <strong>TEST 2</strong>, in class, on
-paper. <strong>Sides et al., Ch. 6–9.</strong>
+<li><strong>Tue, Nov 10</strong> — <strong>TEST 2.</strong> In class, on
+paper — Ch. 6–9
 <ul>
-<li><strong>Chapters 8 and 9 are on this test.</strong> You read both
-last week, during the election.</li>
+<li>Ch. 8 and 9 are on the test</li>
 </ul></li>
-<li><strong>Thu, Nov 12</strong> — <strong>DATA SESSION 11 · Part
-III.</strong> <em>Session and reading to be set.</em></li>
+<li><strong>Thu, Nov 12</strong> — Data Session 11
+<ul>
+<li><em>Session and reading to be set.</em></li>
+</ul></li>
 </ul>
 <p><strong>Week 13 — Part III</strong></p>
 <ul>
-<li><strong>Tue, Nov 17</strong> — The races down the ballot, and the
-careers they produce.
+<li><strong>Tue, Nov 17</strong> — Congressional, state and local
+campaigns
 <ul>
-<li><strong>Sides et al., Ch. 10</strong> — congressional
-campaigns.</li>
-<li><strong>Sides et al., Ch. 11</strong> — state and local
-campaigns.</li>
-<li>G. Elliott Morris, “The Hidden Axis: The Left–Right Spectrum Has a
-Non-Ideology Problem,” <a href="https://www.gelliottmorris.com/p/not-just-left-vs-right-most-voters" class="uri">https://www.gelliottmorris.com/p/not-just-left-vs-right-most-voters</a></li>
+<li>Sides et al., Ch. 10 and Ch. 11</li>
+<li><a href="https://www.gelliottmorris.com/p/not-just-left-vs-right-most-voters">Morris
+— the hidden axis</a></li>
 </ul></li>
-<li><strong>Thu, Nov 19</strong> — <strong>DATA SESSION 12 · Part
-III.</strong> <em>Session and reading to be set.</em>
+<li><strong>Thu, Nov 19</strong> — Data Session 12
 <ul>
-<li><strong>DUE: Data journalism DRAFT</strong>, to Canvas before class.
-A complete attempt, graded as though it were the finished piece.</li>
+<li><em>Session and reading to be set.</em></li>
+<li><strong>DUE: data journalism draft</strong>.</li>
 </ul></li>
 </ul>
 <p><strong>Week 14 — the last two chapters</strong></p>
 <ul>
-<li><p><strong>Tue, Nov 24</strong> — <strong>REMOTE — we meet on
-Zoom.</strong> Link on Canvas. <strong>The last two chapters.</strong>
-Who turns out and who does not, and how the people who do decide. No
-data session this week, and no data slide — there is no Thursday to
-bring one to.</p>
+<li><strong>Tue, Nov 24</strong> — <strong>Remote.</strong> The last two
+chapters — who turns out, and how they choose. On Zoom. No data session,
+no slide.
 <ul>
-<li><strong>Sides et al., Ch. 12</strong> — who participates, and who
-does not.</li>
-<li><strong>Sides et al., Ch. 13</strong> — vote choice.</li>
-<li>Both are on <strong>Test 3</strong>, a week on Thursday.</li>
+<li>Sides et al., Ch. 12 and Ch. 13 — both on Test 3</li>
+<li><em>Source your own:</em> a news piece quoting a margin of error, or
+a demographic estimate</li>
 </ul></li>
-<li><p><strong>Thu, Nov 26</strong> — <strong>THANKSGIVING, no
-class</strong></p>
-<p><strong>Board post, this week only: due Mon, Nov 30, 11:59
-p.m.</strong> — not Friday. There is no Thursday session to follow, and
-the Friday in question is the day after Thanksgiving.</p></li>
+<li><strong>Thu, Nov 26</strong> — <strong>NO CLASS.</strong>
+Thanksgiving. Read Ch. 12 and Ch. 13 over the break, for Test 3.</li>
 </ul>
 <p><strong>Week 15 — Part III, and the end</strong></p>
 <ul>
-<li><strong>Tue, Dec 1</strong> — <strong>The end of the
-argument.</strong> Where the term’s questions land: the law, the maps,
-and whether the thing itself can be measured.
+<li><strong>Tue, Dec 1</strong> — The end of the argument — the law, the
+maps, and whether the thing itself can be measured.
 <ul>
-<li>Don Moynihan, “Power, Democracy and Clarity,” <a href="https://open.substack.com/pub/donmoynihan/p/power-democracy-and-clarity" class="uri">https://open.substack.com/pub/donmoynihan/p/power-democracy-and-clarity</a>
-— the Court’s voting-rights turn, and the maps redrawn after
-<em>Callais</em>.</li>
-<li>Monmonier, <em>Drawing the Line</em>, Ch. 5 (“Boundary Litigation
-and the Map as Evidence”). Borrow it from the Internet Archive, <a href="https://archive.org/details/drawinglinetales0000monm" class="uri">https://archive.org/details/drawinglinetales0000monm</a></li>
-<li>“Gerrymandered Districts Aren’t Always Ugly,” <em>New York
-Times</em> (Opinion, interactive) — a direct challenge to the eyeball
-test, <a href="https://www.nytimes.com/interactive/2022/01/11/opinion/redistricting-gerrymandering-reform.html" class="uri">https://www.nytimes.com/interactive/2022/01/11/opinion/redistricting-gerrymandering-reform.html</a></li>
-<li><strong>Two ballot measures, two outcomes, one year.</strong>
-<ul>
-<li><strong>California, Proposition 50</strong> (passed Nov 4, 2025).
-Suspends the independent commission and uses a legislature-drawn
-congressional map from 2026 through 2030, <a href="https://lao.ca.gov/BallotAnalysis/Proposition?number=50&amp;year=2025" class="uri">https://lao.ca.gov/BallotAnalysis/Proposition?number=50&amp;year=2025</a></li>
-<li><strong>Virginia</strong> (referendum Apr 21, 2026). A
-near-identical move, approved <strong>50.7 to 49.3</strong>, then
-<strong>voided by the Supreme Court of Virginia on May 8, 2026</strong>,
-4–3, on a procedural question about early voting, <a href="https://cardinalnews.org/2026/05/08/supreme-court-of-virginia-voids-redistricting-election-as-unconstitutional/" class="uri">https://cardinalnews.org/2026/05/08/supreme-court-of-virginia-voids-redistricting-election-as-unconstitutional/</a></li>
-</ul></li>
-<li><strong>The last question: could you measure democracy
-itself?</strong> We have spent twelve sessions measuring pieces of it —
-who is counted, who votes, who gives, who wins. <strong>V-Dem</strong>
-tries to score the whole thing, for every country, every year, with
-expert coders and uncertainty intervals around each estimate, <a href="https://v-dem.net/" class="uri">https://v-dem.net/</a>. Look at
-how it is built before you decide whether you believe it. It is a number
-somebody built, and you now know what to ask of one.</li>
-<li><strong>If you want to draw a map yourself</strong>, Dave’s
-Redistricting is free and is what the professionals actually use — <a href="https://davesredistricting.org" class="uri">https://davesredistricting.org</a>. Not assigned, not
-graded.</li>
+<li><a href="https://open.substack.com/pub/donmoynihan/p/power-democracy-and-clarity">Moynihan
+— <em>Power, Democracy and Clarity</em></a> — the Court’s voting-rights
+turn after <em>Callais</em></li>
+<li><a href="https://archive.org/details/drawinglinetales0000monm">Monmonier,
+<em>Drawing the Line</em>, ch. 5</a> — borrow from the Internet
+Archive</li>
+<li><a href="https://www.nytimes.com/interactive/2022/01/11/opinion/redistricting-gerrymandering-reform.html"><em>NYT</em>
+— gerrymandered districts aren’t always ugly</a></li>
+<li>Two ballot measures: <a href="https://lao.ca.gov/BallotAnalysis/Proposition?number=50&amp;year=2025">California
+Prop 50</a> (passed), and <a href="https://cardinalnews.org/2026/05/08/supreme-court-of-virginia-voids-redistricting-election-as-unconstitutional/">Virginia</a>
+(passed, then voided)</li>
+<li><a href="https://v-dem.net/">V-Dem</a> — scoring democracy itself,
+for every country, every year</li>
 <li><strong>DUE: peer reviews of the data journalism draft</strong> —
-two each, worksheet on Canvas.</li>
+two each.</li>
 </ul></li>
-<li><strong>Thu, Dec 3</strong> — <strong>TEST 3</strong>, and the
-course wrap.
+<li><strong>Thu, Dec 3</strong> — <strong>TEST 3.</strong> In class, on
+paper — Ch. 10–13, then the course wrap
 <ul>
-<li><strong>TEST 3</strong>, in class, on paper — <strong>Sides et al.,
-Ch. 10–13.</strong> Nothing else is on it: not Tuesday’s material, not
-the data sessions.</li>
-<li><strong>Nothing to read.</strong> Bring questions.</li>
+<li>Nothing to read — bring questions</li>
 </ul></li>
 </ul>
 <hr />
+<p><strong>Finals period — there is no exam.</strong></p>
 <ul>
-<li><strong>DUE Fri, Dec 4</strong> — <strong>the data
-newsletter</strong>: every piece of data you contributed this term, each
-with a short write-up. You have been assembling it as you went, so this
-is a submission rather than a project.</li>
-</ul>
-<p><strong>Finals period — there is no exam.</strong> All three tests
-were held during the term, the last of them on Dec 3, and there is
-nothing to sit in the exam block. One deadline falls in it, and it is a
-deadline rather than an exam.</p>
-<ul>
-<li><strong>DUE Fri, Dec 11</strong> — <strong>Data journalism story,
-final version</strong>, with your note on what you changed. You wrote
-the draft before the break and revised it after the reviews came back;
-say what you changed and why. This is the last thing you owe me.</li>
+<li><strong>DUE Tue, Dec 8</strong> — <strong>the data
+newsletter</strong>.</li>
+<li><strong>DUE Fri, Dec 11</strong> — <strong>data journalism story,
+final version</strong>.</li>
 </ul>
 <hr />
 <!-- End matter: AI policy, representation, accommodations, well-being. -->
-</div>
 </div>
 <div id="ai-use-policy-for-student-work" class="section level2">
 <h2>AI Use Policy for Student Work</h2>
@@ -2727,14 +2559,14 @@ reach out.</p>
 <div class="footnotes footnotes-end-of-document">
 <hr />
 <ol>
-<li id="fn1"><p>An hour or two costs almost nothing; a day costs a
+<li id="fn1"><p>If you need to miss more than two sessions due to
+extenuating circumstances, let me know as soon as possible so we can
+discuss how best to support you.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>An hour or two costs almost nothing; a day costs a
 letter grade. Charging by the hour rather than the day removes the cliff
 at midnight — being twenty minutes late should not cost the same as
 being twenty hours late. The floor is there so that late work is always
-worth more than no work.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p>If you need to miss more than two sessions due to
-extenuating circumstances, let me know as soon as possible so we can
-discuss how best to support you.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+worth more than no work.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 

@@ -103,7 +103,7 @@ What each one is:
 | Data journalism: **draft**                      | **Thu, Nov 19** — the last session before the break                                                             |
 | Data journalism: **peer reviews** (two)         | **Tue, Dec 1**                                                                                                  |
 | **Test 3** — Ch. 10–13                          | **Thu, Dec 3**, in class                                                                                        |
-| Data newsletter                                 | **Fri, Dec 4** — the last day of classes                                                                        |
+| Data newsletter                                 | **Tue, Dec 8**                                                                                                  |
 | Data journalism: **final**                      | **Fri, Dec 11** — after the last session                                                                        |
 
 There is no final exam.

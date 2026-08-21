@@ -94,106 +94,6 @@ Each unit below states which of these it is building. If at any point
 you cannot tell why we are doing something, that is a failure of my
 design and not of your attention — please say so, and I will fix it.
 
-<!-- Grading philosophy and late policy. -->
-
-## Grading
-
-Your grade rests on engagement as much as on output. The course is built
-around two things happening every week — you arriving having read, and
-you arriving having found data — and neither can be made up afterwards.
-
-**Deadlines.** You are expected to meet them. If you can see in advance
-that you will not, contact me **before** the due date and we will sort
-something out.
-
-Late work loses **one percentage point per hour, and never falls below
-50%**.[^1] Canvas applies this automatically. Submit what you have
-rather than polishing something that is already late.
-
-Work that is never submitted scores **zero**, which is the whole reason
-the late floor sits at 50%: handing something in a week late is always
-worth more than handing in nothing.
-
-Two things sit outside that rule because being late breaks somebody
-else’s work, not just your own:
-
-- **Peer reviews.** Your classmate cannot revise against a review that
-  has not arrived. Late reviews are marked down sharply.
-- **Project drafts.** A missing draft means two people have nothing to
-  review, and — as above — you cannot rescue a missing draft with a good
-  final.
-
-<!-- Assessment weights, what each component is, and due dates. Shared by both syllabi. -->
-
-## Assessment
-
-The course grade will be a weighted average of the following components:
-
-| Category                         | Percent of Final Grade |
-|----------------------------------|------------------------|
-| **Participation & Attendance**   | 23%                    |
-| **Discussion Board**             | 10%                    |
-| **Surveys** (3, completion only) | 2%                     |
-| **Weekly Data Contributions**    | 10%                    |
-| **Three Tests** (10% each)       | 30%                    |
-| **Data Journalism Project**      | 25%                    |
-
-What each one is:
-
-- **Participation & Attendance** — Being here, prepared, and in the
-  conversation — on both days.
-- **Discussion Board** — By Friday night each week, one post about any
-  of the data we talked about: the lab, a classmate’s data slide, a
-  figure in the reading. Something that surprised you, something we
-  missed, something you do not understand, or an answer to somebody
-  else’s question. **A few sentences to a paragraph** — enough to show
-  you engaged with what we did. One post is full credit.
-- **Surveys** — Three short ones: the **Cervas Election Study** in Week
-  1, a **midterm feedback** survey once you have seen how the course
-  actually runs, and the **course evaluation** at the end. Graded for
-  completion only — there are no right answers, and nothing you say
-  affects any other part of your grade.
-- **Weekly Data Contributions** — Find data bearing on the question
-  Tuesday ended with, name the source, and post it as a slide before
-  Thursday. Each week two slides are drawn at random and worked through
-  in class, and nobody presents the data they found themselves — expect
-  your own data to come up once or twice all term. The slide is marked
-  complete or incomplete each week. At the end of term you hand in a
-  **newsletter**: every piece of data you found, each with a short
-  write-up. **Build it as you go** — it is a paragraph a week, and an
-  evening’s work if you leave it all to December.
-- **Three Tests** — In class, on paper, and **on the textbook only**.
-  Test 1 on **Thu, Oct 8** (Sides et al., Chapters 1–5), Test 2 on
-  **Tue, Nov 10** (Chapters 6–9), Test 3 on **Thu, Dec 3** (Chapters
-  10–13). We read the book straight through in its own order, so each
-  test is a block of consecutive chapters: each covers the chapters read
-  since the last one, **none is cumulative**, and every chapter appears
-  on exactly one test. There is no final exam.
-- **Data Journalism Project** — A data-driven news story about a trend
-  or issue in electoral processes. Runs in three parts — draft, peer
-  review, final — and **most of the marks are on the first two**. It is
-  the only substantial piece of writing this term.
-
-## Due Dates
-
-| Assignment                                      | Due                                                                                                             |
-|-------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
-| Data slide                                      | before **each Thursday**                                                                                        |
-| Surveys (3)                                     | **Wed, Aug 26** (Cervas Election Study), **Fri, Oct 23** (midterm feedback), **final week** (course evaluation) |
-| Discussion board post                           | **Friday, 11:59 p.m.**, each week                                                                               |
-| Data Session 4 board post (no Thursday session) | **Tue, Sep 22** — no session to follow that week, so you get the weekend                                        |
-| Week 14 board post (Thanksgiving)               | **Mon, Nov 30** — Tuesday is on Zoom, and there is no Thursday                                                  |
-| **Test 1** — Ch. 1–5                            | **Thu, Oct 8**, in class                                                                                        |
-| Data journalism: pitch                          | **Tue, Oct 20**, in class                                                                                       |
-| **Test 2** — Ch. 6–9                            | **Tue, Nov 10**, in class                                                                                       |
-| Data journalism: **draft**                      | **Thu, Nov 19** — the last session before the break                                                             |
-| Data journalism: **peer reviews** (two)         | **Tue, Dec 1**                                                                                                  |
-| **Test 3** — Ch. 10–13                          | **Thu, Dec 3**, in class                                                                                        |
-| Data newsletter                                 | **Fri, Dec 4** — the last day of classes                                                                        |
-| Data journalism: **final**                      | **Fri, Dec 11** — after the last session                                                                        |
-
-There is no final exam.
-
 <!-- Required text. Update the edition yearly. -->
 
 ## Required Text
@@ -420,6 +320,77 @@ ten numbered steps, no code. They are teaching material rather than
 homework: which one a session uses is decided on the day, mostly on
 Thursdays. Nothing to read in advance, nothing to install.
 
+<!-- Assessment weights, what each component is, and due dates. Shared by both syllabi. -->
+
+## Assessment
+
+The course grade will be a weighted average of the following components:
+
+| Category                         | Percent of Final Grade |
+|----------------------------------|------------------------|
+| **Participation & Attendance**   | 23%                    |
+| **Discussion Board**             | 10%                    |
+| **Surveys** (3, completion only) | 2%                     |
+| **Weekly Data Contributions**    | 10%                    |
+| **Three Tests** (10% each)       | 30%                    |
+| **Data Journalism Project**      | 25%                    |
+
+What each one is:
+
+- **Participation & Attendance** — Being here, prepared, and in the
+  conversation — on both days.
+- **Discussion Board** — By Friday night each week, one post about any
+  of the data we talked about: the lab, a classmate’s data slide, a
+  figure in the reading. Something that surprised you, something we
+  missed, something you do not understand, or an answer to somebody
+  else’s question. **A few sentences to a paragraph** — enough to show
+  you engaged with what we did. One post is full credit.
+- **Surveys** — Three short ones: the **Cervas Election Study** in Week
+  1, a **midterm feedback** survey once you have seen how the course
+  actually runs, and the **course evaluation** at the end. Graded for
+  completion only — there are no right answers, and nothing you say
+  affects any other part of your grade.
+- **Weekly Data Contributions** — Find data bearing on the question
+  Tuesday ended with, name the source, and post it as a slide before
+  Thursday. Each week two slides are drawn at random and worked through
+  in class, and nobody presents the data they found themselves — expect
+  your own data to come up once or twice all term. The slide is marked
+  complete or incomplete each week. At the end of term you hand in a
+  **newsletter**: every piece of data you found, each with a short
+  write-up. **Build it as you go** — it is a paragraph a week, and an
+  evening’s work if you leave it all to December.
+- **Three Tests** — In class, on paper, and **on the textbook only**.
+  Test 1 on **Thu, Oct 8** (Sides et al., Chapters 1–5), Test 2 on
+  **Tue, Nov 10** (Chapters 6–9), Test 3 on **Thu, Dec 3** (Chapters
+  10–13). We read the book straight through in its own order, so each
+  test is a block of consecutive chapters: each covers the chapters read
+  since the last one, **none is cumulative**, and every chapter appears
+  on exactly one test. There is no final exam.
+- **Data Journalism Project** — A data-driven news story about a trend
+  or issue in electoral processes. Runs in three parts — draft, peer
+  review, final — and **most of the marks are on the first two**. It is
+  the only substantial piece of writing this term.
+
+## Due Dates
+
+| Assignment                                      | Due                                                                                                             |
+|-------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
+| Data slide                                      | before **each Thursday**                                                                                        |
+| Surveys (3)                                     | **Wed, Aug 26** (Cervas Election Study), **Fri, Oct 23** (midterm feedback), **final week** (course evaluation) |
+| Discussion board post                           | **Friday, 11:59 p.m.**, each week                                                                               |
+| Data Session 4 board post (no Thursday session) | **Tue, Sep 22** — no session to follow that week, so you get the weekend                                        |
+| Week 14 board post (Thanksgiving)               | **Mon, Nov 30** — Tuesday is on Zoom, and there is no Thursday                                                  |
+| **Test 1** — Ch. 1–5                            | **Thu, Oct 8**, in class                                                                                        |
+| Data journalism: pitch                          | **Tue, Oct 20**, in class                                                                                       |
+| **Test 2** — Ch. 6–9                            | **Tue, Nov 10**, in class                                                                                       |
+| Data journalism: **draft**                      | **Thu, Nov 19** — the last session before the break                                                             |
+| Data journalism: **peer reviews** (two)         | **Tue, Dec 1**                                                                                                  |
+| **Test 3** — Ch. 10–13                          | **Thu, Dec 3**, in class                                                                                        |
+| Data newsletter                                 | **Tue, Dec 8**                                                                                                  |
+| Data journalism: **final**                      | **Fri, Dec 11** — after the last session                                                                        |
+
+There is no final exam.
+
 <!-- What each graded component is. -->
 
 ## Assignment Details
@@ -552,7 +523,7 @@ Thursdays. Nothing to read in advance, nothing to install.
     worth. Written up in the week it happened, each entry takes ten
     minutes; written up in December from a folder of half-remembered
     links, the whole thing is an evening you did not need to spend.
-    **Due Fri, Dec 4, 11:59 p.m.**, the last day of classes.
+    **Due Tue, Dec 8, 11:59 p.m.**
 
     It is worth a small share of the grade and it is the only place your
     own term’s work sits in one piece. Several of these will be a better
@@ -739,7 +710,7 @@ Thursdays. Nothing to read in advance, nothing to install.
 
     If you must miss class, please notify me at least 24 hours in
     advance (unless it is an emergency or sudden illness) so we can
-    arrange a way for you to catch up.[^2]
+    arrange a way for you to catch up.[^1]
 
 ------------------------------------------------------------------------
 
@@ -769,467 +740,250 @@ Thursdays. Nothing to read in advance, nothing to install.
     Canvas assignment.** The screenshot is your receipt; the survey data
     never learns who you are.
 
+<!-- Grading philosophy and late policy. -->
+
+## Grading
+
+Your grade rests on engagement as much as on output. The course is built
+around two things happening every week — you arriving having read, and
+you arriving having found data — and neither can be made up afterwards.
+
+**Deadlines.** You are expected to meet them. If you can see in advance
+that you will not, contact me **before** the due date and we will sort
+something out.
+
+Late work loses **one percentage point per hour, and never falls below
+50%**.[^2] Canvas applies this automatically. Submit what you have
+rather than polishing something that is already late.
+
+Work that is never submitted scores **zero**, which is the whole reason
+the late floor sits at 50%: handing something in a week late is always
+worth more than handing in nothing.
+
+Two things sit outside that rule because being late breaks somebody
+else’s work, not just your own:
+
+- **Peer reviews.** Your classmate cannot revise against a review that
+  has not arrived. Late reviews are marked down sharply.
+- **Project drafts.** A missing draft means two people have nothing to
+  review, and — as above — you cannot rescue a missing draft with a good
+  final.
+
 <!-- Session-by-session schedule. Dates are written out, so a new year means editing them here. -->
 
 ## Schedule
 
-Classes meet Tuesday and Thursday, 11:00a–12:20p, in PH A21A. Tuesdays
-are for the chapter and the question it raises; Thursdays open with the
-data draw and then run the lab. Read the assigned chapter **before**
-Tuesday, and post your data slide **before** Thursday. Your board post
-is due **Friday, 11:59 p.m.**
-
-Subject to change as the semester progresses.
-
-------------------------------------------------------------------------
-
-### How to read the schedule
-
-*Every Thursday takes **one source of data** and goes behind a number
-you have already seen. Each session asks the same five questions —
-**what is one row? who made this, and why? how do you get it? what can
-it settle? what can it never settle?** — and each has its own reading,
-due before class, about that data.*
-
-**The sessions come in three parts, and each part is a place data comes
-from.** Not a topic — a *source*. Turnout turns up four times in this
-course and means something slightly different each time, because a
-different organisation produced it for a different reason. Sorting by
-topic would hide that. Sorting by where it came from is what makes it
-visible.
-
-**Part I is the Census Bureau**, one agency that counts people and
-places. It goes first because nearly every other part borrows a number
-from it: if you want to know what share of a county voted, somebody has
-to tell you how many people live there.
-
-**Part II is surveys** — asking a sample of people questions and using
-the answers to describe everyone. You will already have met one in Part
-I, because the American Community Survey is a survey, and answering it
-is required by law. Here you meet the voluntary kind, and examine what
-goes wrong with them.
-
-**Part III is elections, and everything that accretes around one.** The
-word is two things sharing a name: the **result** that officials
-certified, and the **machinery** that produced it — who was registered,
-who was removed, how many ballots were rejected.
-
-Around that sit the records other people leave. A candidate
-**discloses** because a statute compels it: every campaign files what it
-raised, every member of Congress votes on the record, and the person in
-the row chose to run for office. An ordinary person leaves a record
-having volunteered nothing at all — a traffic stop, a jury summons, a
-grade stamped on a neighbourhood in 1937. And where nobody collected
-anything, a researcher **builds** the number. These sit in Part III
-because this is where they get used, and where nearly all the wrong
-answers live.
-
-**The money runs early on purpose.** What a campaign files is taken in
-**Session 9**, one week before the election, while the campaign it
-describes is still running; what a member of Congress votes waits until
-Session 12. It also puts polls and forecasts (Session 5) and the money
-(Session 9) ahead of **election night (Session 10)**, so the night
-grades work you have already done.
-
-**One session’s date is not ours to choose.** `election-night` is a Part
-III session that runs on **Thu, Nov 5** and no other day, because it is
-built around returns that do not exist until Nov 3. Everything else is
-arranged around it: Sessions 7 and 8 through October, then the money
-session on **Oct 29** while the campaign is still running, then live
-returns on **Nov 5** and the machinery behind them on **Nov 12**. The
-arrangement earns its place — you met the midterm base rate in **Session
-7** and you grade it on the night against what the country actually did.
-
-**The book’s own briefs turn up in class.** The book being built for
-this course is made of short written walkthroughs — one file, one chart,
-ten numbered steps, no code. They are teaching material rather than
-homework: which one a session uses is decided on the day, mostly on
-Thursdays. Nothing to read in advance, nothing to install.
-
-**The textbook runs on its own track.** It is not tied to the parts. We
-read it **straight through, Chapters 1 to 13**, one or two chapters a
-week, and the three tests are simply the blocks that fall between them:
-**Ch. 1–5** on Oct 8, **Ch. 6–9** on Nov 10, **Ch. 10–13** on Dec 3.
-Nothing to keep track of, and the book’s own cross-references land in
-the right order — Ch. 10 and 11 refer back to campaign finance in Ch. 4,
-and several chapters refer back to parties in Ch. 6, both of which you
-will already have read.
-
-**The cost is worth naming.** A chapter no longer always sits beside the
-data session it feeds: you read campaign finance on **Sep 22** and do
-not touch FEC filings until **Oct 29**. When a Thursday leans on a
-chapter you read weeks earlier, the session says so. **The three tests
-cover the textbook and nothing else.**
-
-------------------------------------------------------------------------
-
 **Week 1 — Part I opens**
 
-- **Tue, Aug 25** — Course introduction: the three layers. A number you
-  read in the news, the file it came from, and the reason anyone cares.
-  Then straight into the 2024 electoral map.
-  - **The book’s introduction — *What This Book Is For*** (about twenty
-    minutes). Why every chapter here starts from the file rather than
-    the question. Read it before Thursday; it is the argument the rest
-    of the term is an argument with.
-  - **Lab**: the 2024 electoral map. How to read one of these briefs.
-  - **DUE Wed, Aug 26, 11:59 p.m.** — the **Cervas Election Study**, a
-    survey instrument modelled on the Cooperative Election Study and the
-    American National Election Study, but neither: items have been cut,
-    reworded, and added. The link is in **Canvas, under Assignments**.
-    You take it on your own time, before Thursday, because Thursday’s
-    session works with what the class answered. You are the sample. The
-    survey is anonymous (no name, no login), so credit runs on a
-    receipt: **screenshot the confirmation screen after you submit and
-    upload it to the same Canvas assignment.** **We come back to your
-    answers in Session 6**, when we set them against the real
-    Cooperative Election Study.
-- **Thu, Aug 27** — **DATA SESSION 1 · Part I: The decennial census, and
-  the seats it decides.** The one thing no other source in this course
-  can do — count everybody, once, with no margin of error — how you get
-  at it, and what the count is then used for: apportionment, and the
-  seats each state gets.
-  - U.S. Census Bureau, “America Counts: 250 Years,”
-    <https://www.census.gov/library/stories/2026/06/america-counts-250-years.html>
-  - Census Academy, “Introduction to the Census Bureau Data API” —
-    **module 1 only**,
-    <https://www.census.gov/data/academy/courses/intro-to-the-census-bureau-data-api.html>
-  - NCSL, *Redistricting Law 2020*, **Ch. 1 (“The Census”)** — written
-    by the chief of the Census Bureau’s Redistricting and Voting Rights
-    Data Office. On Canvas, and also public,
-    <https://documents.ncsl.org/wwwncsl/Redistricting-Census/Redistricting-Law-2020_NCSL%20FINAL.pdf>
+- **Tue, Aug 25** — Course introduction: the three layers. Read the
+  book’s own introduction, What This Book Is For.
+  - The book’s introduction — *What This Book Is For*
+  - **DUE Wed, Aug 26, 11:59 p.m.** — the **Cervas Election Study**.
+- **Thu, Aug 27** — Data Session 1 — The decennial census, and the seats
+  it decides
+  - [Census Bureau, *America Counts: 250
+    Years*](https://www.census.gov/library/stories/2026/06/america-counts-250-years.html)
+  - [Census Academy — the Census data
+    API](https://www.census.gov/data/academy/courses/intro-to-the-census-bureau-data-api.html)
+    — module 1 only
+  - [NCSL, *Redistricting Law 2020*, ch. 1 — the
+    census](https://documents.ncsl.org/wwwncsl/Redistricting-Census/Redistricting-Law-2020_NCSL%20FINAL.pdf)
 
 **Week 2 — Part I**
 
-- **Tue, Sep 1** — The framework: what we are judging, and against what.
-  - **Sides et al., Ch. 1** — rules, reality, strategy, choice, and the
-    four standards.
-  - James C. Scott, *Seeing Like a State: How Certain Schemes to Improve
-    the Human Condition Have Failed* (Yale, 1998), Introduction — where
-    the idea of a state making its population *legible* comes from.
-    Ebook through the library,
-    <https://www.jstor.org/stable/j.ctt1nq3vk>
-- **Thu, Sep 3** — **DATA SESSION 2 · Part I: Geography, and the scales
-  it comes at.** Last week counted people. This week asks *where*, and
-  discovers that the answer depends entirely on the size of the box you
-  put them in.
-  - U.S. Census Bureau, *Understanding Statistical Geographies*
-    (webinar, video),
-    <https://www.census.gov/library/video/2021/understanding-statistical-geographies.html>
-    — where tracts, block groups and blocks came from, and how they have
-    moved. The Bureau explaining its own containers, which is the thing
-    this session takes apart.
+- **Tue, Sep 1** — The rules, and the four standards
+  - Sides et al., Ch. 1
+  - [Scott, *Seeing Like a State* (1998), intro — where “legibility”
+    comes from](https://www.jstor.org/stable/j.ctt1nq3vk)
+- **Thu, Sep 3** — Data Session 2 — Geography, and the scales it comes
+  at
+  - [Census Bureau video — *Understanding Statistical
+    Geographies*](https://www.census.gov/library/video/2021/understanding-statistical-geographies.html)
 
 **Week 3 — Part I**
 
-- **Tue, Sep 8** — The rules: who may vote, who may run, and how a
-  population becomes seats.
-  - **Sides et al., Ch. 2** — who may vote, who may run, and how a
-    population becomes seats.
-  - Nate Cohn, “Republicans’ Electoral College Edge, Once Seen as
-    Ironclad, Looks to Be Fading,” *New York Times* (Upshot),
-    <https://www.nytimes.com/2024/09/25/upshot/trump-electoral-college-harris.html>
-  - Brennan Center, “Census Data Highlights a Changing Nation,”
-    <https://www.brennancenter.org/our-work/research-reports/census-data-highlights-changing-nation>
-  - “Black Representation in Congress at Risk after Court Ruling,”
-    *NPR*,
-    <https://www.npr.org/2026/04/30/nx-s1-5805050/supreme-court-voting-rights-congressional-black-caucus>
-  - **Podcast:** *Amicus* (Slate), “A Huge Shift is Underway at SCOTUS”
-    (Jun 13,
-    2026) — Pamela S. Karlan on *Callais* and *Milligan*,
-          <https://slate.com/podcasts/amicus/2026/07/supreme-court-term-recap-birthright-citizenship-voting-rights>
-- **Thu, Sep 10** — **DATA SESSION 3 · Part I: The American Community
-  Survey.** The census counts once a decade; the ACS asks a sample every
-  year, and almost every current number about a place comes from it. A
-  survey wearing the census’s clothes — with a margin of error the
-  census does not have.
-  - ACS Handbook, Ch. 1 — “Understanding the ACS: The Basics.” What the
-    survey is, who it is built for, and the kind of question it exists
-    to answer,
-    <https://www.census.gov/content/dam/Census/library/publications/2020/acs/acs_general_handbook_2020_ch01.pdf>
-  - Census Academy, *Discovering the American Community Survey* — **all
-    six modules**, about ninety minutes of video in total,
-    <https://www.census.gov/data/academy/courses/discovering-the-american-community-survey.html>
+- **Tue, Sep 8** — Who can vote, how, and where
+  - Sides et al., Ch. 2
+  - [Cohn, *NYT* — the Electoral College
+    edge](https://www.nytimes.com/2024/09/25/upshot/trump-electoral-college-harris.html)
+  - [Brennan Center — census data and a changing
+    nation](https://www.brennancenter.org/our-work/research-reports/census-data-highlights-changing-nation)
+  - [*NPR* — Black representation after the
+    ruling](https://www.npr.org/2026/04/30/nx-s1-5805050/supreme-court-voting-rights-congressional-black-caucus)
+  - [Podcast: *Amicus*
+    (Slate)](https://slate.com/podcasts/amicus/2026/07/supreme-court-term-recap-birthright-citizenship-voting-rights)
+- **Thu, Sep 10** — Data Session 3 — The American Community Survey
+  - [ACS Handbook, ch. 1 — the
+    basics](https://www.census.gov/content/dam/Census/library/publications/2020/acs/acs_general_handbook_2020_ch01.pdf)
+  - [Census Academy — *Discovering the American Community
+    Survey*](https://www.census.gov/data/academy/courses/discovering-the-american-community-survey.html)
+    — all six modules
 
 **Week 4 — Part II opens**
 
-- **Tue, Sep 15** — **We meet.** The chapter, and the argument it
-  raises.
-
-  - **Sides et al., Ch. 3** — the transformation of American campaigns.
-
-- **Thu, Sep 17** — **No class.** Constitution Day Symposium. Go if you
-  can — it is the most on-topic thing happening on this campus all term.
-
-  **DATA SESSION 4 · Part II: What a survey can establish, and how you
-  get one.** Every source so far was a record of something that
-  happened. This one is a record of what somebody *said*, and it can
-  reach things no record can — at a price no sample size will buy off.
-
-  - Pew Research Center, “How Public Polling Has Changed in the 21st
-    Century” (April 2023),
-    <https://www.pewresearch.org/methods/2023/04/19/how-public-polling-has-changed-in-the-21st-century/>
-  - Pew Research Center, *Public Opinion Polling Basics* — lessons 1–3,
-    <https://www.pewresearch.org/course/public-opinion-polling-basics/>
-  - **Board post**: post any time before **Tue, Sep 22** — there is no
-    Thursday session to follow this week, so you get the weekend.
+- **Tue, Sep 15** — The transformation of American campaigns
+  - Sides et al., Ch. 3
+- **Thu, Sep 17** — **NO CLASS.** Constitution Day Symposium. Data
+  Session 4 is self-directed: what a survey can establish.
+  - [Pew — how public polling has
+    changed](https://www.pewresearch.org/methods/2023/04/19/how-public-polling-has-changed-in-the-21st-century/)
+  - [Pew — polling basics, lessons
+    1–3](https://www.pewresearch.org/course/public-opinion-polling-basics/)
 
 **Week 5 — Part II**
 
-- **Tue, Sep 22** — Money, and the rule that shapes everything after it.
-  - **Sides et al., Ch. 4** — campaign finance.
-- **Thu, Sep 24** — **DATA SESSION 5 · Part II: Election polls, and what
-  a margin hides.** The horse race: who is ahead, how that number is
-  built, what weighting repairs, what it cannot, and why the misses of
-  2016 and 2020 were not bad luck. **This week is polls about an
-  election.** Next week is the other kind of survey — the ones that ask
-  what people think.
-  - Michael A. Bailey, *Polling at a Crossroads: Rethinking Modern
-    Survey Research* (Cambridge, 2023), **Ch. 1, pp. 3–22**. Cambridge
-    Core, through the library, <https://www.cambridge.org/9781108482790>
-  - “Are Political Polls Accurate?” *New York Times* (The Morning
-    briefing, Aug 14, 2026),
-    <https://www.nytimes.com/2026/08/14/briefing/are-political-polls-accurate.html>
-  - **Podcast:** *Public Opinion Podcast* (AAPOR), “Pre-Election
-    Polling: The Challenges and The Importance of Understanding the 2024
-    Voter” — Don Levy, <https://aapor.org/media/public-opinion-pod/>
+- **Tue, Sep 22** — Money, and the rule that shapes everything after it
+  - Sides et al., Ch. 4
+- **Thu, Sep 24** — Data Session 5 — Election polls: the horse race, and
+  what a margin hides
+  - [Bailey, *Polling at a Crossroads* (2023), ch. 1,
+    3–22](https://www.cambridge.org/9781108482790)
+  - [*NYT* — are political polls
+    accurate?](https://www.nytimes.com/2026/08/14/briefing/are-political-polls-accurate.html)
+  - [Podcast: AAPOR on pre-election
+    polling](https://aapor.org/media/public-opinion-pod/)
 
 **Week 6 — Part II closes**
 
-- **Tue, Sep 29** — Strategy: who a campaign decides to talk to, and how
-  it decides.
-  - Pascal Sabino, “Missourians Reject Measure That Threatened to Kill
-    Citizen-Led Ballot Initiatives,” *Bolts*, August 5, 2026,
-    <https://boltsmag.org/missouri-rejects-restrictions-on-direct-democracy/>
-  - **Sides et al., Ch. 5** — campaign strategy and vote targets.
-- **Thu, Oct 1** — **DATA SESSION 6 · Part II: Public opinion, and the
-  studies built to measure it.** Not who is ahead, but what people think
-  — and how much of the answer is made by the question. You took the
-  **Cervas Election Study** in Week 1; today it sits beside the two
-  academic instruments it was modelled on and departs from. What can a
-  class of eighteen establish that a national sample can, what can it
-  not, and which differences are the instrument rather than the people?
-  - Sidney Verba, “The Citizen as Respondent: Sample Surveys and
-    American Democracy,” *American Political Science Review* 90(1),
-    1996, pp. 1–7 — **why we measure opinion this way at all.** Voting,
-    giving and protesting all take resources, so they over-represent
-    whoever has them; answering a survey takes none, which is why a
-    survey can speak for people politics does not hear from. Seven
-    pages, through the library, <https://www.jstor.org/stable/2082793>
-  - Pew Research Center, “Writing Survey Questions” — then the how:
-    wording, order effects, and response options, with examples of the
-    same question measuring different opinions. Ten to fifteen minutes,
-    <https://www.pewresearch.org/writing-survey-questions/>
-  - *Reference:* **Cooperative Election Study** — how it samples, and
-    how many people it reaches, <https://cces.gov.harvard.edu/>
-  - *Reference:* **American National Election Studies** — the same two
-    questions, answered a different way, <https://electionstudies.org/>
-  - *Reference:* Institute of Politics, Harvard Kennedy School, *Harvard
-    Youth Poll*, 52nd edition — the toplines, and the methodology
-    statement behind them. **You are the population being sampled**,
-    <https://iop.harvard.edu/youth-poll/52nd-edition-spring-2026>
-  - **Read Verba against Bailey from last week.** Verba’s case for the
-    survey rests on everyone being equally likely to answer. Bailey’s
-    chapter is about what happens when they are not. The whole of Part
-    II sits in that gap.
-  - **No data slide and no draw this week.**
+- **Tue, Sep 29** — Strategy: who a campaign decides to talk to
+  - [Sabino, *Bolts* — Missouri’s ballot-initiative
+    vote](https://boltsmag.org/missouri-rejects-restrictions-on-direct-democracy/)
+  - Sides et al., Ch. 5
+- **Thu, Oct 1** — Data Session 6 — Public opinion, and the studies
+  built to measure it: the Cervas Election Study beside CES and ANES. No
+  slide, no draw.
+  - [Verba, “The Citizen as Respondent” (1996),
+    1–7](https://www.jstor.org/stable/2082793) — why measure opinion by
+    survey at all
+  - [Pew — writing survey
+    questions](https://www.pewresearch.org/writing-survey-questions/) —
+    wording, order effects, response options
+  - *Reference:* [Cooperative Election
+    Study](https://cces.gov.harvard.edu/) — how it samples, and how many
+    it reaches
+  - *Reference:* [American National Election
+    Studies](https://electionstudies.org/) — the same two questions,
+    answered differently
+  - *Reference:* [*Harvard Youth Poll*, 52nd
+    edition](https://iop.harvard.edu/youth-poll/52nd-edition-spring-2026)
+    — toplines, and the methodology behind them
 
 **Week 7 — Test 1**
 
-- **Tue, Oct 6** — Who the electorate is, and who gets asked about it.
-  - **No new chapter this week.** You have read Ch. 1–5 and **Test 1 is
-    Thursday**. Tuesday is the review — bring questions.
-  - “Inside the Rise of the Multiracial Right,” *New York Times*
-    (Opinion),
-    <https://www.nytimes.com/interactive/2025/07/24/opinion/minority-voters-trump-right.html>
-- **Thu, Oct 8** — **TEST 1**, in class, on paper. **Sides et al., Ch.
-  1–5.**
-  - Tuesday is the review, and fall break is the week after: the test
-    does not sit across the break.
-  - **In the time the test leaves**: nothing new.
-  - **No data slide this week** — there is no data session to bring one
-    to.
+- **Tue, Oct 6** — Who the electorate is. No new chapter — review Ch.
+  1–5; Test 1 is Thursday.
+  - No new chapter — review Ch. 1–5 for Test 1
+  - [*NYT* — the rise of the multiracial
+    right](https://www.nytimes.com/interactive/2025/07/24/opinion/minority-voters-trump-right.html)
+- **Thu, Oct 8** — **TEST 1.** In class, on paper — Ch. 1–5
+  - Nothing new — bring questions
 
-**Week 8 — FALL BREAK, no class (Oct 12–16)**
-
-Test 1 is behind you. Nothing is due.
+**Week 8 — FALL BREAK, no class (Oct 12–16)** Test 1 is behind you.
+Nothing is due.
 
 ------------------------------------------------------------------------
 
 **Week 9 — Part III opens**
 
-- **Tue, Oct 20** — **DATA SESSION 7 · Part III opens: What a return is,
-  where you get one, and what forty of them show.** Part III starts with
-  the object itself. A return is a snapshot, and getting hold of one is
-  harder than it sounds. Stack forty and you get a career, a base rate,
-  and a way to be wrong about both.
-  - Alex Burness, “Election Data Is Vital to Voting Rights. So Why Is It
-    So Hard to Track Down?” *Bolts*,
-    <https://boltsmag.org/election-data-is-vital-to-voting-rights-but-hard-to-track-down/>
-  - FairVote, *Monopoly Politics 2026*,
-    <https://fairvote.org/report/monopoly-politics-2026-update/> — a
-    claim that **81% of 2026 House races are already decided**,
-    published before anyone voted.
+- **Tue, Oct 20** — Data Session 7 — Part III opens: what a return is,
+  where you get one, and what forty of them show
+  - [Burness, *Bolts* — election data and voting
+    rights](https://boltsmag.org/election-data-is-vital-to-voting-rights-but-hard-to-track-down/)
+  - [FairVote — *Monopoly Politics
+    2026*](https://fairvote.org/report/monopoly-politics-2026-update/)
   - **DUE: Data journalism story — pitch your topic** (one paragraph, in
     class).
-  - **Two data sessions this week, so two slides** — one before Tuesday
-    and one before Thursday.
-- **Thu, Oct 22** — **DATA SESSION 8 · Part III: The bottom rungs —
-  precincts and ballots.** Every session so far has used totals. Today
-  we go down two rungs, to the smallest unit anybody publishes and then
-  to the ballot itself.
-  - Kate Murray, Samuel Baltz and Charles Stewart III, “Why Does Anyone
-    Need Precinct-Level Election Results?” MIT Election Data and Science
-    Lab — what a precinct is, what county totals lose, why the
-    boundaries move between elections, and why you cannot read an
-    individual off an aggregate. About fifteen minutes,
-    <https://electionlab.mit.edu/articles/why-does-anyone-need-precinct-level-election-results>
+- **Thu, Oct 22** — Data Session 8 — The bottom rungs: precincts and
+  ballots
+  - [MIT Election Lab — why does anyone need precinct-level
+    results?](https://electionlab.mit.edu/articles/why-does-anyone-need-precinct-level-election-results)
+    — what county totals lose, and why the boundaries move
 
 **Week 10 — Part III**
 
-- **Tue, Oct 27** — Parties, and the groups that spend around them.
-  - **Sides et al., Ch. 6** — political parties.
-  - **Sides et al., Ch. 7** — interest groups.
-- **Thu, Oct 29** — **DATA SESSION 9 · Part III: Money in politics.**
-  The record and the hole in it. Disclosure is the one source in this
-  course written by the people it is about — self-reported like a
-  survey, mandatory like a record — and it arrives one week before the
-  country votes. Then the spending that never has to say where it came
-  from.
-  - OpenSecrets, “Dark Money Basics” — hard money and soft money, who
-    has to name a donor and who does not, and roughly a billion dollars
-    of spending since *Citizens United* that traces back to nobody,
-    <https://www.opensecrets.org/dark-money/basics>
-  - “Kamala Harris’s Donors,” *New York Times* (interactive) — skim the
-    graphics. **This is what a disclosure file looks like once somebody
-    draws it**,
-    <https://www.nytimes.com/interactive/2024/08/22/us/elections/kamala-harris-donors.html>
-  - “Donald Trump’s Campaign-Finance Disclosures Are ‘a Governance
-    Nightmare’,” *New York Times* (Opinion) — the same instrument, read
-    as a problem,
-    <https://www.nytimes.com/2024/08/26/opinion/republican-donors-money-trump.html>
-  - **Podcast:** *The Downballot* — an episode on the current cycle’s
-    money, <https://www.the-downballot.com/podcast>
-  - **A note on what we are not doing.** The obvious lab here would use
-    the Meta and Google political ad libraries to show who was shown
-    which ad. Both are effectively closed. **The most detailed record of
-    political persuasion in America is not public**, and that absence is
-    worth one minute of class time.
+- **Tue, Oct 27** — Parties and interest groups
+  - Sides et al., Ch. 6 and Ch. 7
+- **Thu, Oct 29** — Data Session 9 — Money in politics: the record, and
+  the hole in it
+  - [OpenSecrets — dark money
+    basics](https://www.opensecrets.org/dark-money/basics) — who must
+    name a donor, and who need not
+  - [*NYT* — Harris’s donors, the
+    graphics](https://www.nytimes.com/interactive/2024/08/22/us/elections/kamala-harris-donors.html)
+    — a disclosure file, drawn
+  - [*NYT* — Trump’s campaign-finance
+    disclosures](https://www.nytimes.com/2024/08/26/opinion/republican-donors-money-trump.html)
+    — the same instrument as a problem
+  - [Podcast: *The Downballot* on this cycle’s
+    money](https://www.the-downballot.com/podcast)
 
 **Week 11 — Part III · election night**
 
-- **Tue, Nov 3** — **DEMOCRACY DAY / ELECTION DAY, no class before 5p.**
-  - Read this week, for Thursday: **Sides et al., Ch. 8** (media) and
-    **Ch. 9** (presidential campaigns).
-- **Thu, Nov 5** — **DATA SESSION 10 · Part III: Live returns.** *(Fixed
-  date — the only session whose date is not ours to choose.)* The
-  country voted on Tuesday. Today the numbers arrive while we watch, and
-  we check them against everything that claimed to know in advance.
-  - NPR, “Race calls 101: How the AP declares winners,”
-    <https://www.npr.org/2024/11/05/g-s1-32603/how-are-races-actually-called>
-    — short, and worth reading the morning of the session it describes.
-    A call is a judgement about how much vote is left, not a result.
-  - **Lab**: election night returns, live.
+- **Tue, Nov 3** — **NO CLASS.** Democracy Day. Read both chapters this
+  week, for Thursday.
+  - For Thursday: Sides et al., Ch. 8 and Ch. 9
+- **Thu, Nov 5** — **Fixed date.** Data Session 10 — Live returns. Built
+  on results that do not exist until Nov 3.
+  - [NPR — *Race calls
+    101*](https://www.npr.org/2024/11/05/g-s1-32603/how-are-races-actually-called)
 
 **Week 12 — Part III · the machinery**
 
-- **Tue, Nov 10** — **TEST 2**, in class, on paper. **Sides et al., Ch.
-  6–9.**
-  - **Chapters 8 and 9 are on this test.** You read both last week,
-    during the election.
-- **Thu, Nov 12** — **DATA SESSION 11 · Part III.** *Session and reading
-  to be set.*
+- **Tue, Nov 10** — **TEST 2.** In class, on paper — Ch. 6–9
+  - Ch. 8 and 9 are on the test
+- **Thu, Nov 12** — Data Session 11
+  - *Session and reading to be set.*
 
 **Week 13 — Part III**
 
-- **Tue, Nov 17** — The races down the ballot, and the careers they
-  produce.
-  - **Sides et al., Ch. 10** — congressional campaigns.
-  - **Sides et al., Ch. 11** — state and local campaigns.
-  - G. Elliott Morris, “The Hidden Axis: The Left–Right Spectrum Has a
-    Non-Ideology Problem,”
-    <https://www.gelliottmorris.com/p/not-just-left-vs-right-most-voters>
-- **Thu, Nov 19** — **DATA SESSION 12 · Part III.** *Session and reading
-  to be set.*
-  - **DUE: Data journalism DRAFT**, to Canvas before class. A complete
-    attempt, graded as though it were the finished piece.
+- **Tue, Nov 17** — Congressional, state and local campaigns
+  - Sides et al., Ch. 10 and Ch. 11
+  - [Morris — the hidden
+    axis](https://www.gelliottmorris.com/p/not-just-left-vs-right-most-voters)
+- **Thu, Nov 19** — Data Session 12
+  - *Session and reading to be set.*
+  - **DUE: data journalism draft**.
 
 **Week 14 — the last two chapters**
 
-- **Tue, Nov 24** — **REMOTE — we meet on Zoom.** Link on Canvas. **The
-  last two chapters.** Who turns out and who does not, and how the
-  people who do decide. No data session this week, and no data slide —
-  there is no Thursday to bring one to.
-
-  - **Sides et al., Ch. 12** — who participates, and who does not.
-  - **Sides et al., Ch. 13** — vote choice.
-  - Both are on **Test 3**, a week on Thursday.
-
-- **Thu, Nov 26** — **THANKSGIVING, no class**
-
-  **Board post, this week only: due Mon, Nov 30, 11:59 p.m.** — not
-  Friday. There is no Thursday session to follow, and the Friday in
-  question is the day after Thanksgiving.
+- **Tue, Nov 24** — **Remote.** The last two chapters — who turns out,
+  and how they choose. On Zoom. No data session, no slide.
+  - Sides et al., Ch. 12 and Ch. 13 — both on Test 3
+  - *Source your own:* a news piece quoting a margin of error, or a
+    demographic estimate
+- **Thu, Nov 26** — **NO CLASS.** Thanksgiving. Read Ch. 12 and Ch. 13
+  over the break, for Test 3.
 
 **Week 15 — Part III, and the end**
 
-- **Tue, Dec 1** — **The end of the argument.** Where the term’s
-  questions land: the law, the maps, and whether the thing itself can be
-  measured.
-  - Don Moynihan, “Power, Democracy and Clarity,”
-    <https://open.substack.com/pub/donmoynihan/p/power-democracy-and-clarity>
-    — the Court’s voting-rights turn, and the maps redrawn after
-    *Callais*.
-  - Monmonier, *Drawing the Line*, Ch. 5 (“Boundary Litigation and the
-    Map as Evidence”). Borrow it from the Internet Archive,
-    <https://archive.org/details/drawinglinetales0000monm>
-  - “Gerrymandered Districts Aren’t Always Ugly,” *New York Times*
-    (Opinion, interactive) — a direct challenge to the eyeball test,
-    <https://www.nytimes.com/interactive/2022/01/11/opinion/redistricting-gerrymandering-reform.html>
-  - **Two ballot measures, two outcomes, one year.**
-    - **California, Proposition 50** (passed Nov 4, 2025). Suspends the
-      independent commission and uses a legislature-drawn congressional
-      map from 2026 through 2030,
-      <https://lao.ca.gov/BallotAnalysis/Proposition?number=50&year=2025>
-    - **Virginia** (referendum Apr 21, 2026). A near-identical move,
-      approved **50.7 to 49.3**, then **voided by the Supreme Court of
-      Virginia on May 8, 2026**, 4–3, on a procedural question about
-      early voting,
-      <https://cardinalnews.org/2026/05/08/supreme-court-of-virginia-voids-redistricting-election-as-unconstitutional/>
-  - **The last question: could you measure democracy itself?** We have
-    spent twelve sessions measuring pieces of it — who is counted, who
-    votes, who gives, who wins. **V-Dem** tries to score the whole
-    thing, for every country, every year, with expert coders and
-    uncertainty intervals around each estimate, <https://v-dem.net/>.
-    Look at how it is built before you decide whether you believe it. It
-    is a number somebody built, and you now know what to ask of one.
-  - **If you want to draw a map yourself**, Dave’s Redistricting is free
-    and is what the professionals actually use —
-    <https://davesredistricting.org>. Not assigned, not graded.
-  - **DUE: peer reviews of the data journalism draft** — two each,
-    worksheet on Canvas.
-- **Thu, Dec 3** — **TEST 3**, and the course wrap.
-  - **TEST 3**, in class, on paper — **Sides et al., Ch. 10–13.**
-    Nothing else is on it: not Tuesday’s material, not the data
-    sessions.
-  - **Nothing to read.** Bring questions.
+- **Tue, Dec 1** — The end of the argument — the law, the maps, and
+  whether the thing itself can be measured.
+  - [Moynihan — *Power, Democracy and
+    Clarity*](https://open.substack.com/pub/donmoynihan/p/power-democracy-and-clarity)
+    — the Court’s voting-rights turn after *Callais*
+  - [Monmonier, *Drawing the Line*, ch.
+    5](https://archive.org/details/drawinglinetales0000monm) — borrow
+    from the Internet Archive
+  - [*NYT* — gerrymandered districts aren’t always
+    ugly](https://www.nytimes.com/interactive/2022/01/11/opinion/redistricting-gerrymandering-reform.html)
+  - Two ballot measures: [California Prop
+    50](https://lao.ca.gov/BallotAnalysis/Proposition?number=50&year=2025)
+    (passed), and
+    [Virginia](https://cardinalnews.org/2026/05/08/supreme-court-of-virginia-voids-redistricting-election-as-unconstitutional/)
+    (passed, then voided)
+  - [V-Dem](https://v-dem.net/) — scoring democracy itself, for every
+    country, every year
+  - **DUE: peer reviews of the data journalism draft** — two each.
+- **Thu, Dec 3** — **TEST 3.** In class, on paper — Ch. 10–13, then the
+  course wrap
+  - Nothing to read — bring questions
 
 ------------------------------------------------------------------------
 
-- **DUE Fri, Dec 4** — **the data newsletter**: every piece of data you
-  contributed this term, each with a short write-up. You have been
-  assembling it as you went, so this is a submission rather than a
-  project.
+**Finals period — there is no exam.**
 
-**Finals period — there is no exam.** All three tests were held during
-the term, the last of them on Dec 3, and there is nothing to sit in the
-exam block. One deadline falls in it, and it is a deadline rather than
-an exam.
-
-- **DUE Fri, Dec 11** — **Data journalism story, final version**, with
-  your note on what you changed. You wrote the draft before the break
-  and revised it after the reviews came back; say what you changed and
-  why. This is the last thing you owe me.
+- **DUE Tue, Dec 8** — **the data newsletter**.
+- **DUE Fri, Dec 11** — **data journalism story, final version**.
 
 ------------------------------------------------------------------------
 
@@ -1349,12 +1103,12 @@ out.
 
 ------------------------------------------------------------------------
 
-[^1]: An hour or two costs almost nothing; a day costs a letter grade.
+[^1]: If you need to miss more than two sessions due to extenuating
+    circumstances, let me know as soon as possible so we can discuss how
+    best to support you.
+
+[^2]: An hour or two costs almost nothing; a day costs a letter grade.
     Charging by the hour rather than the day removes the cliff at
     midnight — being twenty minutes late should not cost the same as
     being twenty hours late. The floor is there so that late work is
     always worth more than no work.
-
-[^2]: If you need to miss more than two sessions due to extenuating
-    circumstances, let me know as soon as possible so we can discuss how
-    best to support you.
