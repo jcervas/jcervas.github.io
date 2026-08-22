@@ -42,11 +42,11 @@ reinforce one another, and whether any of this actually threatens
 democracy. You will read scholars arguing with each other in print,
 sometimes over the same data.
 
-The rest of the semester belongs to you. Working in teams of three, you
-will choose a topic, assign your classmates the readings, lay out the
-genuine controversies, and run the discussion yourselves. Alongside that
-you will write an op-ed for a general audience, review a book and
-present it to the class, and build a policy brief with a small team.
+The rest of the semester belongs to you. Working in teams of four or
+five, you will choose a topic, assign your classmates the readings, set
+the questions, and run the discussion yourselves. Alongside that you
+will write an op-ed for a general audience, review a book and present it
+to the class, and build a policy brief with a small team.
 
 Running through all of it is a question about justice: how political
 division creates and entrenches inequality — who gets heard, who gets
@@ -246,7 +246,7 @@ course themes, assign the readings your classmates will do beforehand,
 and lead the session. Teams and topics are set on September 1, and the
 calendar of who leads which day is fixed that week and does not move.
 
-**What your team owes the class. Readings and materials are due five
+**What your team owes the class. The topic and readings are due five
 days before you lead; the questions go up three days before:**
 
 1.  **A topic.** Narrow enough to argue about in eighty minutes.
@@ -270,11 +270,6 @@ days before you lead; the questions go up three days before:**
       your questions or raises another, before the hour. Nobody posts to
       a board after the class it belongs to. The full rule is under
       **Discussion Board** above.
-4.  **A statement of the controversies.** A short written list of the
-    genuine points of disagreement on your topic: what is actually
-    contested, who holds each position, and what each side takes to be
-    its strongest argument. This is the part that separates a real
-    discussion from a book report.
 
 **On the day** your team runs the room: open the question, keep the
 conversation moving, pull in people who have not spoken, and cut off a
