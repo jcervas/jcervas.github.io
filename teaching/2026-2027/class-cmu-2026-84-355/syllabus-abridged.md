@@ -25,9 +25,9 @@ here**](https://jcervas.github.io/teaching/2026-2027/class-cmu-2026-84-355/readm
 <img src="readme_files/figure-gfm/meetings-1.png" width="100%" style="display: block; margin: auto;" />
 
 **25 meetings**, Tuesdays and Thursdays. One of them, **Tue, Nov 24**,
-meets on Zoom rather than in the room. Days that tinted we will not have
-class — fall break, Democracy Day, Thanksgiving, and the Constitution
-Day Symposium.
+meets on Zoom rather than in the room. Tinted days are ones we do not
+meet — fall break, Democracy Day, Thanksgiving, and the Constitution Day
+Symposium.
 
 <!-- Abridged syllabus only. See syllabus/README.md. -->
 
@@ -46,7 +46,7 @@ The course grade will be a weighted average of the following components:
 | **Participation & Attendance**   | 23%                    |
 | **Discussion Board**             | 10%                    |
 | **Surveys** (3, completion only) | 2%                     |
-| **Weekly Data Contributions**    | 10%                    |
+| **Data Slides**                  | 10%                    |
 | **Three Tests** (10% each)       | 30%                    |
 | **Data Journalism Project**      | 25%                    |
 
@@ -62,18 +62,20 @@ What each one is:
   you engaged with what we did. One post is full credit.
 - **Surveys** — Three short ones: the **Cervas Election Study** in Week
   1, a **midterm feedback** survey once you have seen how the course
-  actually runs, and the **course evaluation** at the end. Graded for
-  completion only — there are no right answers, and nothing you say
-  affects any other part of your grade.
-- **Weekly Data Contributions** — Find data bearing on the question
-  Tuesday ended with, name the source, and post it as a slide before
-  Thursday. Each week two slides are drawn at random and worked through
-  in class, and nobody presents the data they found themselves — expect
-  your own data to come up once or twice all term. The slide is marked
-  complete or incomplete each week. At the end of term you hand in a
-  **newsletter**: every piece of data you found, each with a short
-  write-up. **Build it as you go** — it is a paragraph a week, and an
-  evening’s work if you leave it all to December.
+  actually runs, and the **course evaluation** at the end. **All three
+  are anonymous** and graded for completion only — there are no right
+  answers, and nothing you say affects any other part of your grade.
+- **Data Slides** — Find data bearing on the question Tuesday ended with
+  and post it before Thursday as an **infographic with a short
+  write-up**: the figure itself, the source named and linked, and a few
+  sentences on what the data say and mean. Each week two slides are
+  drawn at random and worked through in class, and nobody presents the
+  data they found themselves — expect your own data to come up once or
+  twice all term. The slide is marked complete or incomplete each week.
+  At the end of term you hand in a **newsletter**: every piece of data
+  you found, each with a short write-up. **Build it as you go** — it is
+  a paragraph a week, and an evening’s work if you leave it all to
+  December.
 - **Three Tests** — In class, on paper, and **on the textbook only**.
   Test 1 on **Thu, Oct 8** (Sides et al., Chapters 1–5), Test 2 on
   **Tue, Nov 10** (Chapters 6–9), Test 3 on **Thu, Dec 3** (Chapters
@@ -98,7 +100,7 @@ What each one is:
 | **Test 1** — Ch. 1–5                            | **Thu, Oct 8**, in class                                                                                        |
 | Data journalism: pitch                          | **Tue, Oct 20**, in class                                                                                       |
 | **Test 2** — Ch. 6–9                            | **Tue, Nov 10**, in class                                                                                       |
-| Data journalism: **draft**                      | **Thu, Nov 19** — the last session before the break                                                             |
+| Data journalism: **draft**                      | **Thu, Nov 19** — the term’s last data session                                                                  |
 | Data journalism: **peer reviews** (two)         | **Tue, Dec 1**                                                                                                  |
 | **Test 3** — Ch. 10–13                          | **Thu, Dec 3**, in class                                                                                        |
 | Data newsletter                                 | **Tue, Dec 8**                                                                                                  |
@@ -119,7 +121,8 @@ There is no final exam.
 - **Tests are on the textbook only** — in class, on paper.
 - **Due Wed, Aug 26, 11:59 p.m.**: the Cervas Election Study — link in
   **Canvas, under Assignments**; screenshot the confirmation screen for
-  credit. It is the first thing due, and Thursday’s session uses it.
+  credit. It is the first thing due, and your answers become one of the
+  datasets we work with later in the term.
 
 ## The Full Syllabus
 
