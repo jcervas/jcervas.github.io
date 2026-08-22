@@ -161,6 +161,9 @@ will result in a lower grade.
 
 ## Schedule
 
+*Required readings only. Optional readings, and fuller notes on each,
+are on that session’s page in Canvas.*
+
 **Week 1 — the course, and the Fence**
 
 - **Tue, Aug 25** — Introduction to the Course
@@ -194,10 +197,6 @@ will result in a lower grade.
     Myth?](https://doi.org/10.1017/S0022381608080493)
   - [Fiorina 2024 — Once More Unto the Breach: Is America
     Polarized?](https://www.hoover.org/research/once-more-unto-breach-america-polarized)
-  - *Optional*: [Fiorina 2026 — *Unstable Majorities Continue: The Trump
-    Era*](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020547656104436)
-  - *Optional*: McCarty, Nolan, Keith T. Poole, and Howard Rosenthal.
-    Polarized America: The Dance of Ideo
 
 **Week 3 — Polarization unit**
 
@@ -206,8 +205,6 @@ will result in a lower grade.
     Agree’](https://doi.org/10.1111/ajps.12089)
   - [Ahler et al. 2018 — The Parties in Our
     Heads](https://doi.org/10.1086/697253)
-  - *Optional*: [Mason 2018 — \*Uncivil
-    Agreement](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991019580374304436)
 - **Thu, Sep 10** — Polarization III: Affective Polarization
   - [Iyengar et al. 2019 — The Origins and Consequences of
     Affective…](https://doi.org/10.1146/annurev-polisci-051117-073034)
@@ -215,10 +212,6 @@ will result in a lower grade.
     America](https://doi.org/10.1126/science.abe1715)
   - [Fiorina 2024 — What About *Affective*
     Polarization?](https://www.hoover.org/research/what-about-affective-polarization)
-  - *Optional*: [Klar et al. 2018 — Affective Polarization or Partisan
-    Disdain?…](https://doi.org/10.1093/poq/nfy014)
-  - *Optional*: [Broockman et al. 2023 — Does Affective Polarization
-    Undermine…](https://doi.org/10.1111/ajps.12719)
 
 **Week 4 — NO CLASS (Sep 15–17)**
 
@@ -235,23 +228,11 @@ will result in a lower grade.
     Stupid](https://centerforpolitics.org/crystalball/its-not-the-economy-stupid-the-ideological-foundations-of-white-working-class-republicanism/)
   - [Fiorina 2024 — The White Working
     Class](https://www.hoover.org/research/white-working-class)
-  - *Optional*: [Iyengar et al. 2015 — Fear and Loathing across Party
-    Lines](https://doi.org/10.1111/ajps.12152)
-  - *Optional*: [Fiorina 2024 — Economic Anxiety or Cultural
-    Backlash](https://www.hoover.org/research/economic-anxiety-or-cultural-backlash-which-key-trumps-support)
-  - *Optional*: [Abramowitz et al. 2018 — Negative
-    Partisanship](https://doi.org/10.1111/pops.12479)
 - **Thu, Sep 24** — Polarization V: Race and Polarization
   - [Tesler 2012 — The Spillover of Racialization into Health
     Care](https://doi.org/10.1111/j.1540-5907.2011.00577.x)
   - [Mason et al. 2021 — Activating
     Animus](https://doi.org/10.1017/S0003055421000563)
-  - *Optional*: [Jardina 2019 — *White Identity
-    Politics*](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991019870288804436)
-  - *Optional*: [Voelkel et al. 2024 — Megastudy Testing 25 Treatments
-    to Reduce…](https://doi.org/10.1126/science.adh4764)
-  - *Optional*: [Kleinfeld 2023 — \*Polarization, Democracy, and
-    Political…](https://carnegieendowment.org/research/2023/09/polarization-democracy-and-political-violence-in-the-united-states-what-the-research-says?lang=en)
 
 **Week 6 — Polarization unit · geography**
 
@@ -270,65 +251,12 @@ will result in a lower grade.
     Elections](https://news.stanford.edu/stories/2019/06/urban-rural-divide-shapes-elections)
   - [Cervas 2026 — The Effects of Mid-Decade Redistricting
     on…](https://cervas.medium.com/the-effects-of-mid-decade-redistricting-on-electoral-outcomes-d870c772942b)
-  - *Optional*: [Abrams et al. 2012 — ‘The Big Sort’ That
-    Wasn’t](https://doi.org/10.1017/S1049096512000017)
-  - *Optional*: [Chen et al. 2015 — Cutting Through the
-    Thicket](https://www.brennancenter.org/sites/default/files/legal-work/Chen_Rodden_Through_the_Thicket_2015.pdf)
-  - *Optional*: [“How the Other Half
-    Votes](https://centerforpolitics.org/crystalball/how-the-other-half-votes-the-big-counties-versus-the-rest-of-the-country-in-2024/)
-  - *Optional*: [Petry, Eric. “How the Efficiency Gap Works.” Brennan
-    Center
-    for…](https://www.brennancenter.org/sites/default/files/legal-work/How_the_Efficiency_Gap_Standard_Works.pdf)
-  - *Optional*: [Kenny et al. 2023 — Widespread Partisan Gerrymandering
-    Mostly…](https://alarm-redist.org/posts/2023-06-13-widespread-gerrymandering-pnas/)
-  - *Optional*: [Brown et al. 2026 — Partisan Sorting and Geographic
-    Polarization](https://jacobrbrown.com/files/partisan_seg_chapter.pdf)
-  - *Optional*: [Brown et al. 2021 — The Measurement of Partisan Sorting
-    for 180…](https://doi.org/10.1038/s41562-021-01066-z)
-  - *Optional*: [Mummolo et al. 2017 — Why Partisans Do Not
-    Sort](https://doi.org/10.1086/687569)
-  - *Optional*: [Brown 2025 — Partisan Conversion Through Neighborhood
-    Influence](https://doi.org/10.1086/732981)
-  - *Optional*: [Scala et al. 2017 — Political Polarization along
-    the…](https://doi.org/10.1177/0002716217712696)
-  - *Optional*: [Chen et al. 2013 — Unintentional
-    Gerrymandering](https://web.stanford.edu/~jrodden/wp/florida.pdf)
-  - *Optional*: [Cervas et al. 2020 — Tools for Identifying
-    Partisan…](https://www.sciencedirect.com/science/article/abs/pii/S0962629818303342)
-  - *Optional*: [Goedert 2014 — Gerrymandering or Geography? How
-    Democrats Won…](https://doi.org/10.1177/2053168014528683)
-  - *Optional*: [Riccardi 2026 — Redistricting War Accelerates
-    Winner-Take-All…](https://www.pbs.org/newshour/politics/redistricting-war-accelerates-winner-take-all-politics-straining-american-democracy)
-  - *Optional*: [Levitsky et al. 2023 — \*Tyranny of the
-    Minority](https://penguinrandomhousehighereducation.com/2023/10/16/excerpt-from-tyranny-of-the-minority/)
-  - *Optional*: [Cervas et al. 2020 — Legal, Political Science and
-    Economics…](https://onlinelibrary.wiley.com/doi/abs/10.1111/ssqu.12871)
 - **Thu, Oct 1** — Place, Identity, and Rural Consciousness
   - **Two chapters, and that is the whole assignment.** Jacobs and Shea
     fielded the largest survey ever taken of rural Americans, and the
     book that came out of it is the best available answer to
   - [Jacobs et al. 2023 — \*The Rural
     Voter](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020185778804436)
-  - *Optional*: [Harper 2024 — An Utterly Misleading Book About Rural
-    America](https://www.theatlantic.com/ideas/archive/2024/04/white-rural-rage-criticism/677967/)
-  - *Optional*: [Jacobs et al. 2024 — The Truth About ‘Rural
-    Rage’](https://reason.com/2024/03/07/the-truth-about-rural-rage/)
-  - *Optional*: [Schaller et al. 2024 — An Honest Assessment of Rural
-    White…](https://newrepublic.com/article/180570/trump-rural-white-resentment-honest-assessment)
-  - *Optional*: [Cramer 2016 — \*The Politics of
-    Resentment](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991019603989504436)
-  - *Optional*: [Lunz Trujillo et
-    al. 2022](https://doi.org/10.1016/j.polgeo.2022.102658)
-  - *Optional*: [Nelsen et al. 2021 — Race and White Rural
-    Consciousness](https://doi.org/10.1017/S1537592721001948)
-  - *Optional*: [Jacobs et al. 2023 — Place-Based Resentment in
-    Contemporary U](https://doi.org/10.1177/10659129221124864)
-  - *Optional*: [Lunz Trujillo 2024 — Feeling Out of
-    Place](https://preprints.apsanet.org/engage/api-gateway/apsa/assets/orp/resource/item/63120eabbc257b6406d8bea1/original/feeling-out-of-place-who-are-the-non-rural-rural-identifiers-and-are-they-unique-politically.pdf)
-  - *Optional*: [Hershewe et al. 2025 — When Politics Override
-    Place](https://doi.org/10.1177/1532673X241282286)
-  - *Optional*: [Geismer 2024 — A New Suburban
-    Politics](https://dissentmagazine.org/article/a-new-suburban-politics/)
 
 **Week 7 — Polarization unit closes**
 
