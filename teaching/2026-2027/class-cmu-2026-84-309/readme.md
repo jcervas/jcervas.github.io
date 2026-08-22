@@ -479,7 +479,6 @@ progress (for instance, in group projects). Failing to participate or
 contribute meaningfully, especially in ways that affect others’ work,
 will result in a lower grade.
 
-<!-- Week-by-week schedule, reserve readings, topic bank. Dates come from weeksession()/weekrange() in the parent's setup chunk, so changing the term start date moves everything. -->
 <!-- Session-by-session schedule. Dates are written out, so a new year means editing them here. -->
 
 ## Schedule
