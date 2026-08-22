@@ -184,7 +184,10 @@ anything, a number a researcher **built**.
 | **II**  | Surveys                                |  **4–6** |
 | **III** | Elections, and the records around them | **7–12** |
 
-<!-- Assessment weights, what each component is, and due dates. Shared by both syllabi. -->
+<!-- Assessment weights and due dates. Shared by both syllabi; the per-component
+     descriptions are gated to the full syllabus via _components.Rmd. The child
+     path is bare, not syllabus/-prefixed: knitr resolves it from this file's own
+     folder, unlike the child paths in readme.Rmd. -->
 
 ## Assessment
 
@@ -198,6 +201,9 @@ The course grade will be a weighted average of the following components:
 | **Data Slides**                  | 10%                    |
 | **Three Tests** (10% each)       | 30%                    |
 | **Data Journalism Project**      | 25%                    |
+
+<!-- The one-line description of each component. FULL SYLLABUS ONLY: the Canvas
+     syllabus stays brief, and each assignment carries its own instructions. -->
 
 What each one is:
 

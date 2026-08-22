@@ -1313,7 +1313,10 @@ where nobody collected anything, a number a researcher
 </tr>
 </tbody>
 </table>
-<!-- Assessment weights, what each component is, and due dates. Shared by both syllabi. -->
+<!-- Assessment weights and due dates. Shared by both syllabi; the per-component
+     descriptions are gated to the full syllabus via _components.Rmd. The child
+     path is bare, not syllabus/-prefixed: knitr resolves it from this file's own
+     folder, unlike the child paths in readme.Rmd. -->
 </div>
 </div>
 <div id="assessment" class="section level2">
@@ -1354,6 +1357,8 @@ components:</p>
 </tr>
 </tbody>
 </table>
+<!-- The one-line description of each component. FULL SYLLABUS ONLY: the Canvas
+     syllabus stays brief, and each assignment carries its own instructions. -->
 <p>What each one is:</p>
 <ul>
 <li><strong>Participation &amp; Attendance</strong> — Being here,

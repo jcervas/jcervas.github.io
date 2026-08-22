@@ -35,7 +35,10 @@ How American elections actually work, taught through the data they
 produce. Tuesdays we read; Thursdays we put real election data on the
 screen and work out what it shows — through the 2026 midterms, live.
 
-<!-- Assessment weights, what each component is, and due dates. Shared by both syllabi. -->
+<!-- Assessment weights and due dates. Shared by both syllabi; the per-component
+     descriptions are gated to the full syllabus via _components.Rmd. The child
+     path is bare, not syllabus/-prefixed: knitr resolves it from this file's own
+     folder, unlike the child paths in readme.Rmd. -->
 
 ## Assessment
 
@@ -49,44 +52,6 @@ The course grade will be a weighted average of the following components:
 | **Data Slides**                  | 10%                    |
 | **Three Tests** (10% each)       | 30%                    |
 | **Data Journalism Project**      | 25%                    |
-
-What each one is:
-
-- **Participation & Attendance** — Being here, prepared, and in the
-  conversation — on both days.
-- **Discussion Board** — By Friday night each week, one post about any
-  of the data we talked about: the lab, a classmate’s data slide, a
-  figure in the reading. Something that surprised you, something we
-  missed, something you do not understand, or an answer to somebody
-  else’s question. **A few sentences to a paragraph** — enough to show
-  you engaged with what we did. One post is full credit.
-- **Surveys** — Three short ones: the **Cervas Election Study** in Week
-  1, a **midterm feedback** survey once you have seen how the course
-  actually runs, and the **course evaluation** at the end. **All three
-  are anonymous** and graded for completion only — there are no right
-  answers, and nothing you say affects any other part of your grade.
-- **Data Slides** — Find data bearing on the question Tuesday ended with
-  and post it before Thursday as an **infographic with a short
-  write-up**: the figure itself, the source named and linked, and a few
-  sentences on what the data say and mean. Each week two slides are
-  drawn at random and worked through in class, and nobody presents the
-  data they found themselves — expect your own data to come up once or
-  twice all term. The slide is marked complete or incomplete each week.
-  At the end of term you hand in a **newsletter**: every piece of data
-  you found, each with a short write-up. **Build it as you go** — it is
-  a paragraph a week, and an evening’s work if you leave it all to
-  December.
-- **Three Tests** — In class, on paper, and **on the textbook only**.
-  Test 1 on **Thu, Oct 8** (Sides et al., Chapters 1–5), Test 2 on
-  **Tue, Nov 10** (Chapters 6–9), Test 3 on **Thu, Dec 3** (Chapters
-  10–13). We read the book straight through in its own order, so each
-  test is a block of consecutive chapters: each covers the chapters read
-  since the last one, **none is cumulative**, and every chapter appears
-  on exactly one test. There is no final exam.
-- **Data Journalism Project** — A data-driven news story about a trend
-  or issue in electoral processes. Runs in three parts — draft, peer
-  review, final — and **most of the marks are on the first two**. It is
-  the only substantial piece of writing this term.
 
 ## Due Dates
 
