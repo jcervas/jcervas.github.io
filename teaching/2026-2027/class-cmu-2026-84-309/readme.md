@@ -94,6 +94,10 @@ The course grade will be a weighted average of the following components:
 | **Op-Ed Project** (Draft + Review + Final)   | **20%**                |
 | **Group Policy Brief**                       | **17%**                |
 
+![Absences and the attendance grade. The first three cost almost
+nothing; four to six is where it
+bites.](readme_files/figure-gfm/attendance-curve-1.png)
+
 ## Due Dates
 
 | Assignment               | Due Date                         |
