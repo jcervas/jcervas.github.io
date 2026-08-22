@@ -187,9 +187,9 @@ down before the conversation starts.
 **The board is only ever used before a class, never after it.** Every
 board belongs to one session and closes when that session begins;
 nothing is posted to it afterwards, and no assignment in this course
-asks you to write up a class once it has happened. The one reflection
-that does look backwards — the student-led reflection above — goes in
-Canvas under Assignments at the end of term.
+asks you to write up a class once it has happened. The one piece of
+writing that does look backwards — the student-led reflection above —
+goes in Canvas under Assignments, in the days after your team leads.
 
 **What to raise, or what to answer, depends on the day.**
 
@@ -276,12 +276,13 @@ conversation moving, pull in people who have not spoken, and cut off a
 thread that has stopped going anywhere. I will be there and will step in
 if needed, but the session is yours.
 
-**At the end of term**, a short written reflection: what you took from
-the sessions your classmates led and from your own, what changed your
-thinking, what you would do differently. This is **one piece covering
-the whole semester, not one after each session**, and it is submitted in
-**Canvas under Assignments** — never on the discussion board. It is due
-December 4.
+**Within three days of the session you lead**, a short written
+reflection — written while it is still fresh, not saved up for the end
+of term. How did the discussion actually go? Where did it stall, and
+what would you do differently if you ran it again? What have you taken
+from the sessions your classmates have led so far? It goes in **Canvas
+under Assignments**, never on the discussion board, and your team’s
+deadline is fixed with the leading calendar on September 1.
 
 *A note on the readings*: the strongest sessions in past years have not
 all been academic articles. A podcast episode, a documentary segment, an
@@ -295,45 +296,24 @@ voices you assign.
 course  
 *Objective Alignment*: 8
 
-You will complete three short surveys: one in the first week, one at the
-midpoint of the semester, and one in the final week. The first uses the
-**Cervas Election Study**, a survey instrument modelled on the
-Cooperative Election Study; the midpoint survey is course feedback; the
-last is an end-of-course evaluation. Links are posted in **Canvas, under
-Assignments**. They serve four ends:
+Three short surveys: first week, midpoint, final week. The first is the
+**Cervas Election Study**, modelled on the Cooperative Election Study;
+the second is course feedback, early enough that I can still act on it;
+the third is an end-of-course evaluation. Links are in **Canvas, under
+Assignments**.
 
-- **Who is in the room.** Your background, your experience with the
-  material, and the perspectives you bring — so I can teach the class
-  that is actually in front of me.
-- **How the course is going.** Candid feedback on what is working and
-  what is not, early enough in the semester that I can still act on it.
-- **What you want from the course.** What drew you here and what you
-  hope to get out of it, so the topics we spend time on reflect your
-  interests.
-- **What you think other people are like.** The first survey ends with
-  eight questions asking you to estimate the composition of the two
-  parties — how many Democrats are union members, how many Republicans
-  earn over \$250,000, and so on. Answer cold. Do not look anything up
-  and do not confer: a wrong guess is useful and a correct look-up is
-  worthless.
+The first ends with eight questions asking you to estimate what the two
+parties are made of — how many Democrats are union members, how many
+Republicans earn over \$250,000. Answer cold: nothing looked up, nothing
+compared with a classmate. Your answers become a class dataset, which I
+report back only in aggregate, and we set it beside the published
+figures on September 8.
 
-That last block is the one you will hear about again. Your answers
-become a class dataset, which I report back in aggregate — never
-individually, and never in a form that identifies anyone. We put it
-beside the published figures on September 8, when you read the study
-these questions come from, and find out how far off this room is — and
-whether it is off in the same direction as the country.
-
-Graded purely for completion — there are no right answers, and nothing
-you say is graded on content. The estimates in particular are not graded
-on accuracy. Being wrong is the finding.
-
-The survey itself is anonymous: it asks no name, requires no login, and
-records nothing that identifies you — which also means it cannot tell me
-you completed it. So credit works like this: **after you submit,
-screenshot the confirmation screen and upload it to the Canvas
-assignment.** The screenshot is your receipt; the survey data never
-learns who you are.
+Graded for completion, not content; the estimates are not graded on
+accuracy, and being wrong is the finding. The survey is anonymous and
+cannot tell me you finished it, so **screenshot the confirmation screen
+and upload it to the Canvas assignment** — the screenshot is your
+receipt.
 
 **Book Review Assignment** (12%)
 
@@ -501,11 +481,11 @@ will result in a lower grade.
 
 <!-- Week-by-week schedule, reserve readings, topic bank. Dates come from weeksession()/weekrange() in the parent's setup chunk, so changing the term start date moves everything. -->
 
-# Course Schedule
+## Course Schedule
 
-## Week 1 — August 25 & 27
+### Week 1 — August 25 & 27
 
-### August 25
+#### August 25
 
 - **Introduction to the Course**; draft privacy/free speech statement
   - **Student-led sessions — nothing is settled today.** Teams and
@@ -519,7 +499,7 @@ will result in a lower grade.
     Canvas assignment — that screenshot is what earns the credit,
     because the survey itself has no idea who you are.
 
-### August 27
+#### August 27
 
 **The Fence**
 
@@ -581,9 +561,9 @@ custom for a hundred years can survive being written down.
 - [Student Government Graffiti and Poster
   Policy](https://www.cmu.edu/stugov/policies/old-pdfs/Student%20Government%20Graffiti%20and%20Poster%20Policy_Updates_1_26_17.pdf)
 
-## Week 2 — September 1 & 3
+### Week 2 — September 1 & 3
 
-### September 1
+#### September 1
 
 **Organize Topics for Student Led Discussions**
 
@@ -593,7 +573,7 @@ or three topics you would be willing to lead. The bank at the end of
 this syllabus is a starting point rather than a menu — a topic of your
 own is welcome, and the readings you assign are yours to choose.
 
-### September 3
+#### September 3
 
 **Polarization Research I — Partisan and Ideological Polarization**
 
@@ -633,9 +613,9 @@ Optional
   America: The Dance of Ideology and Unequal Riches*. MIT Press. — the
   elite side of the story, measured through congressional roll calls.
 
-## Week 3 — September 8 & 10
+### Week 3 — September 8 & 10
 
-### September 8
+#### September 8
 
 **Polarization Research II — Sorting and Social Identity**
 
@@ -665,7 +645,7 @@ Optional
   - [CMU catalog
     record](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991019580374304436)
 
-### September 10
+#### September 10
 
 **Polarization Research III — Affective Polarization**
 
@@ -704,19 +684,19 @@ Optional — the counterarguments
   than assumed.
   - <https://doi.org/10.1111/ajps.12719>
 
-## Week 4 — September 15 & 17
+### Week 4 — September 15 & 17
 
-### September 15
+#### September 15
 
 **ERADICATE HATE CONFERENCE**, no class
 
-### September 17
+#### September 17
 
 **CONSTITUTION DAY SYMPOSIUM**, no class
 
-## Week 5 — September 22 & 24
+### Week 5 — September 22 & 24
 
-### September 22
+#### September 22
 
 **Polarization Research IV — Negative Partisanship and the White Working
 Class**
@@ -759,7 +739,7 @@ Optional
   Partisans.” *Political Psychology* 39: 119–135.
   - <https://doi.org/10.1111/pops.12479>
 
-### September 24
+#### September 24
 
 **Polarization Research V — Race and Polarization**
 
@@ -793,9 +773,9 @@ topic:
   Endowment for International Peace.
   - <https://carnegieendowment.org/research/2023/09/polarization-democracy-and-political-violence-in-the-united-states-what-the-research-says?lang=en>
 
-## Week 6 — September 29 & October 1
+### Week 6 — September 29 & October 1
 
-### September 29
+#### September 29
 
 **Polarization Research VII — Geographic Polarization: The Map, and the
 Power in It**
@@ -1033,7 +1013,7 @@ competition.
   Ziblatt, asked with 220 years of data, and a more complicated answer.
   - <https://onlinelibrary.wiley.com/doi/abs/10.1111/ssqu.12871>
 
-### October 1
+#### October 1
 
 **Place, Identity, and Rural Consciousness**
 
@@ -1199,9 +1179,9 @@ second half is mostly your sessions, and what you say here I can still
 act on. Same arrangement as the first survey — anonymous, so screenshot
 the confirmation screen and upload it for the credit.
 
-## Week 7 — October 6 & 8
+### Week 7 — October 6 & 8
 
-### October 6
+#### October 6
 
 **Polarization Research VI — Does Any of This Threaten Democracy?**
 
@@ -1265,7 +1245,7 @@ grounds for your own session — volume 708 on threats to American
 democracy, volume 681 on polarization worldwide. The library has the
 ANNALS online.
 
-### October 8
+#### October 8
 
 **Who Pays for the News?**
 
@@ -1309,29 +1289,29 @@ work out whether it survives — and if public money is the instrument,
 who decides what gets funded, and what stops that from being captured by
 whoever is in office.
 
-## Week 8 — October 13 & 15
+### Week 8 — October 13 & 15
 
-### October 13
-
-**FALL BREAK**, no class
-
-### October 15
+#### October 13
 
 **FALL BREAK**, no class
 
-## Week 9 — October 20 & 22
+#### October 15
 
-### October 20
+**FALL BREAK**, no class
+
+### Week 9 — October 20 & 22
+
+#### October 20
 
 Student led topics/debates — team and topic TBA
 
-### October 22
+#### October 22
 
 Student led topics/debates — team and topic TBA
 
-## Week 10 — October 27 & 29
+### Week 10 — October 27 & 29
 
-### October 27
+#### October 27
 
 **Before the Vote: Loser’s Consent**
 
@@ -1354,13 +1334,13 @@ everyone’s read on it will be coloured by who won.
     McCoy and Somer argue it does. Loser’s consent is the specific thing
     that would have to give way for the second account to be right.
 
-### October 29
+#### October 29
 
 Student led topics/debates — team and topic TBA
 
-## Week 11 — November 3 & 5
+### Week 11 — November 3 & 5
 
-### November 3
+#### November 3
 
 DEMOCRACY DAY, no class [**Register to
 Vote**](https://www.cmu.edu/student-affairs/slice/civic-engagement/advocacy/voter/index.html)
@@ -1374,33 +1354,33 @@ our entire community to engage on the key ideals of democracy.*
 CMU community —faculty, staff and students — is encouraged to
 participate as their schedules allow.*
 
-### November 5
+#### November 5
 
 Student led topics/debates — team and topic TBA
 
-## Week 12 — November 10 & 12
+### Week 12 — November 10 & 12
 
-### November 10
-
-Student led topics/debates — team and topic TBA
-
-### November 12
+#### November 10
 
 Student led topics/debates — team and topic TBA
 
-## Week 13 — November 17 & 19
-
-### November 17
+#### November 12
 
 Student led topics/debates — team and topic TBA
 
-### November 19
+### Week 13 — November 17 & 19
+
+#### November 17
 
 Student led topics/debates — team and topic TBA
 
-## Week 14 — November 24 & 26
+#### November 19
 
-### November 24
+Student led topics/debates — team and topic TBA
+
+### Week 14 — November 24 & 26
+
+#### November 24
 
 **VIRTUAL CLASS — Book Review Presentations**
 
@@ -1422,17 +1402,17 @@ move between the groups.
 - Being in a small group does not make this informal. It is the same 7%
   it would be in front of everyone, and your group is your audience.
 
-### November 26
+#### November 26
 
 **THANKSGIVING DAY**, no class
 
-## Week 15 — December 1 & 3
+### Week 15 — December 1 & 3
 
-### December 1
+#### December 1
 
 Group Policy Brief
 
-### December 3
+#### December 3
 
 Group Policy Brief
 
