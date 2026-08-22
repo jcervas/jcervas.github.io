@@ -163,87 +163,32 @@ work from a printout, say so and I will bring one.
 
 ## How This Course Works
 
-**Tuesday is for the reading. Thursday is for data.** This is generally
-the pattern, though we will deviate on some select weeks.
+**Tuesday is for the reading. Thursday is for data.** That is the
+pattern most weeks; a few deviate, and the schedule says which.
 
-| When                           | What                                                                                                                                                       |
-|--------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Before Tuesday**             | Read the week’s chapter — about an hour.                                                                                                                   |
-| **Tuesday, in class**          | The chapter, and the question it raises.                                                                                                                   |
-| **Before Thursday**            | Post a data slide bearing on the question we ended Tuesday with.                                                                                           |
-| **Thursday, in class**         | The data draw (first 15 minutes), then the lab. We work through it together; submit what you have at the end of class, which also records your attendance. |
-| **Thursday evening or Friday** | Post once to the discussion board about any of the data we talked about that week. Due **Friday, 11:59 p.m.**                                              |
+| When                      | What                                                                                                      |
+|---------------------------|-----------------------------------------------------------------------------------------------------------|
+| **Before Tuesday**        | Read the week’s chapter — about an hour.                                                                  |
+| **Tuesday, in class**     | The chapter, and the question it raises.                                                                  |
+| **Before Thursday**       | Post a data slide bearing on the question we ended Tuesday with.                                          |
+| **Thursday, in class**    | The data draw, then the lab. Submit what you have at the end of class; that also records your attendance. |
+| **By Friday, 11:59 p.m.** | One post to the discussion board about any data we looked at that week.                                   |
 
-**Every week ends with a post to the discussion board**, due **Friday,
-11:59 p.m.**, the day after we work through data together. The deadline
-is close on purpose: reflect while it is still fresh, not four days
-later when all you remember is that there was a table.
-
-**A few sentences to a paragraph.** What the post has to do is show that
-you were in the room and thinking about what was on the screen — name
-the number, the slide, or the finding you mean, and say what you make of
-it. A short post that does that beats a long one that could have been
-written by somebody who never turned up.
-
-Write about **any of the data we talked about that week**. Usually that
-will be Thursday’s lab, because it is what we spent the most time on.
-But a classmate’s data slide from the draw, or a chart in the week’s
-reading, or a number in one of the news items is equally fair game — if
-we looked at it together, you can write about it.
-
-**One post is all it takes.** Do any *one* of these:
-
-- **Something that surprised you.** A number that was not what you
-  expected. Say what you expected and why, then what the data actually
-  showed.
-- **Something we missed.** A question the lab did not ask, a comparison
-  it did not make, a group or a year it left out. You do not have to
-  answer it — noticing it is the contribution.
-- **Something you do not understand.** Genuinely. Not a performance of
-  confusion: a real question about what a number means or why a method
-  works. These are the most useful posts on the board and they are
-  graded as generously as any other.
-- **Or answer somebody.** Replying to a classmate counts as your post
-  for the week, and a good answer is worth as much as a good question.
-
-That last one matters. A board where everybody asks and nobody answers
-is not a discussion. If you know something, say so.
-
-**No code, no charts, no screenshots.** Write what you made of what you
-saw.
+What each of those asks for, and how it is marked, is under **Assignment
+Details**.
 
 ------------------------------------------------------------------------
-
-## Structure of the Course
-
-The course has three layers, and every week runs all three.
-
-| Layer               | Where                                     | The question it answers                |
-|---------------------|-------------------------------------------|----------------------------------------|
-| **Prepared data**   | your weekly data slide, and the draw      | *What is being claimed?*               |
-| **Underlying data** | **Thursday’s data session**               | ***Where did that number come from?*** |
-| **Why it matters**  | Tuesday’s chapter, and Thursday’s reading | *Why should anyone care?*              |
-
-**The loop is the point.** You bring a chart on Tuesday. On Thursday we
-open the file it was built from and find out what had to be decided,
-discarded or guessed to produce it. The readings tell you why anyone
-bothered.
-
-**Tuesdays** are for the chapter and the argument it raises.
-**Thursdays** are one source of data, start to finish — the weekly draw,
-then the lab.
 
 ### The data sessions
 
 **They come in three parts, and the parts are a claim about who
 collected the data and why.** The state **enumerates**, and you are
-required by law to answer (I). Somebody **asks**, and you answer because
-you feel like it (II). Then an election happens, and Part III is
-everything it leaves behind: the state **certifies** the result and
-**administers** the machinery that produced it, a candidate
-**discloses** because a statute compels it, an ordinary person is in the
-file having been asked nothing at all, and where nobody collected
-anything a researcher **built** the number.
+required to answer (I). Somebody **asks**, and you answer because you
+feel like it (II). Then an election happens, and Part III is everything
+it leaves behind — the result **certified**, the machinery
+**administered**, a donation **disclosed** because a statute compels it,
+a voter file nobody volunteered for, and, where nobody collected
+anything, a number a researcher **built**.
 
 | Pt      |                                        | Sessions |
 |---------|----------------------------------------|---------:|
@@ -251,32 +196,13 @@ anything a researcher **built** the number.
 | **II**  | Surveys                                |  **4–6** |
 | **III** | Elections, and the records around them | **7–12** |
 
-Which source each Thursday takes is set week by week in the schedule
-below, not here — the part is the promise, the particular file is not.
+**The textbook runs on its own track**, not tied to the parts: straight
+through, Chapters 1 to 13, with the three tests falling between — Ch.
+1–5, Ch. 6–9, Ch. 10–13. The tests cover the textbook and nothing else.
 
-**The order is cumulative: nothing is inferred from a source you have
-not already met.** The census (Part I) comes before the districts drawn
-on top of it. Surveys (II) come before the models built out of them.
-Returns (III) come before we ask who cast them, and the voter file — the
-other half of the same part — comes before we guess race from it. By the
-last sessions you are being asked to judge a number rather than read
-one, which only works because you already know where every part of it
-came from.
-
-**Session 10 is fixed to Nov 5** and is the only session whose date is
-not ours to choose: it runs on returns that do not exist until Nov 3,
-and everything around it is arranged to suit.
-
-**The textbook runs on its own track** — not tied to the parts. We read
-it straight through, Chapters 1 to 13, and the three tests are the
-blocks that fall between: Ch. 1–5, Ch. 6–9, Ch. 10–13. They cover the
-textbook and nothing else.
-
-**The book’s own briefs turn up in class.** The book being built for
-this course is made of short written walkthroughs — one file, one chart,
-ten numbered steps, no code. They are teaching material rather than
-homework: which one a session uses is decided on the day, mostly on
-Thursdays. Nothing to read in advance, nothing to install.
+**The book’s own briefs turn up in class** — short walkthroughs of one
+file and one chart. Teaching material rather than homework: nothing to
+read in advance, nothing to install.
 
 <!-- Assessment weights, what each component is, and due dates. Shared by both syllabi. -->
 
