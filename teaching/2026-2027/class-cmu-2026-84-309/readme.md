@@ -195,7 +195,8 @@ Canvas under Assignments at the end of term.
 
 - **When a student team is leading.** That team posts its five or six
   questions to the board a full week ahead. **Everyone not on that team
-  answers one of them** — say which one you are taking, so the thread
+  either answers one of them or puts a further question on the table** —
+  if you are answering, say which question you are taking, so the thread
   stays legible. These are the days the board does the most work,
   because the leaders walk in already knowing where the room stands.
   - **If it is your team leading, your questions are your post for that
@@ -256,10 +257,18 @@ calendar of who leads which day is fixed that week and does not move.
     A reading posted late is a session that falls flat, and the whole
     class pays for it. Ideally, multiple points of view are reflected in
     the readings.
-3.  **Discussion questions.** Five or six, written out, **posted to the
-    discussion board** so the class answers them before you meet. Good
-    ones have no obvious answer and cannot be resolved by looking
-    something up.
+3.  **Discussion questions.** Five or six, written out, **posted to your
+    session’s discussion board** a full week ahead so the class arrives
+    having answered them. Good ones have no obvious answer and cannot be
+    resolved by looking something up.
+    - **This is how the board works on your day, and it is different for
+      you than for everyone else.** Posting these questions *is* your
+      discussion-board contribution for the session you lead — you owe
+      nothing further, and you are credited for that board like the rest
+      of the class. Everyone not on your team then either answers one of
+      your questions or raises another, before the hour. Nobody posts to
+      a board after the class it belongs to. The full rule is under
+      **Discussion Board** above.
 4.  **A statement of the controversies.** A short written list of the
     genuine points of disagreement on your topic: what is actually
     contested, who holds each position, and what each side takes to be
