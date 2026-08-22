@@ -202,6 +202,10 @@ The course grade will be a weighted average of the following components:
 | **Three Tests** (10% each)       | 30%                    |
 | **Data Journalism Project**      | 25%                    |
 
+![Absences and the attendance grade. The first three cost almost
+nothing; four to six is where it
+bites.](readme_files/figure-gfm/attendance-curve-1.png)
+
 <!-- The one-line description of each component. FULL SYLLABUS ONLY: the Canvas
      syllabus stays brief, and each assignment carries its own instructions. -->
 
@@ -263,284 +267,39 @@ What each one is:
 
 There is no final exam.
 
-<!-- What each graded component is. -->
+<!-- One line per graded component. The full instructions live in ../assignments/*.md,
+     which sync-to-canvas.sh pushes to the Canvas pages; this section only says what
+     each component is and what it is worth. -->
 
 ## Assignment Details
 
-1.  **Data Slides**
+**Full instructions for every assignment are in Canvas**, under
+Assignments. What follows is the shape of each one and what it is worth.
 
-    Every week you find data bearing on the question Tuesday ended with,
-    and bring it to class. Some weeks yours will be what the room works
-    on, and you will not know which weeks in advance.
-
-    **Before Thursday.** Post one slide to the shared deck (link on
-    Canvas). A slide is **an infographic with a short write-up** —
-    something to look at, and a few sentences saying what it means.
-
-    - **The infographic.** A chart, a map, a table, a figure — data you
-      can *see*. One number or a hundred, but shown rather than
-      described. You do not have to make it yourself: something
-      published is fine, and so is a figure from a reading or a lab.
-    - **The write-up.** A few sentences on **what the data say and what
-      they mean** — the finding, and why it bears on Tuesday’s question.
-      Not a caption restating the title. If the figure shows turnout
-      falling, say what you think that is evidence of.
-    - **The source**, named and linked — not “a study,” but who
-      published it.
-    - **What you did to it**, if anything — cropped a chart, took one
-      row out of a table, converted a count into a percentage. Say so.
-
-    **It has to bear on the question we ended Tuesday with.** Every
-    Tuesday closes by writing down one question that data could answer.
-    Your slide is your attempt at evidence for it. Read the question
-    broadly; an odd angle is welcome. But do not bring turnout data to a
-    week that ended on a question about the media.
-
-    > **Example.** *Voter turnout*: “About two-thirds (66%) of the
-    > voting-eligible population turned out for the 2020 presidential
-    > election.” — [Pew Research
-    > Center](https://www.pewresearch.org/politics/2023/07/12/voter-turnout-2018-2022/)
-    >
-    > Note the phrase “voting-eligible population.” Somebody else will
-    > arrive with turnout data built on a different denominator, and the
-    > two will not match. Neither of them is wrong.
-
-    ------------------------------------------------------------------------
-
-    **What the groups discuss.**
-
-    1.  **What does it measure?** Who produced this, what exactly does
-        it count, and what does it leave out?
-    2.  **Does anyone else’s data bear on it?** Agree, disagree,
-        complicate. If two of you have data about the same thing that do
-        not match, stop and work out why — that is the best thing that
-        can happen in this exercise.
-    3.  **How would you put it in a couple of sentences** to somebody
-        who had not seen it?
-
-    Question 3 is not decoration. It is the rehearsal for explaining the
-    data to the room, and if your group cannot answer it, the presenter
-    is about to find that out in front of everyone.
-
-    ------------------------------------------------------------------------
-
-    **In class Thursday — about fifteen minutes, before the lab.**
-
-    |                                 | What happens                                                                                                                                              |
-    |---------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-    | **1. Before class**             | I draw **two names**. Those two slides are on the screen when you walk in.                                                                                |
-    | **2. Four groups**              | We split into four groups. Two groups take the first piece of data, two take the second.                                                                  |
-    | **3. The discussion** *(7 min)* | Each group works its data using the three questions above. Anyone whose own data bears on it brings it in.                                                |
-    | **4. The second draw**          | Once discussion ends, I draw **one presenter for each piece of data** — from one of the two groups that worked it.                                        |
-    | **5. The floor** *(6 min)*      | Each presenter explains the data, and what their group talked about. Then the **other groups** say where they read it differently. Anyone can contribute. |
-
-    ------------------------------------------------------------------------
-
-    **Grading.** The slide is marked complete/incomplete each week.
-    There is no separate penalty for being drawn without one: a missing
-    slide costs that week’s credit, whether or not your name comes out.
-
-    ------------------------------------------------------------------------
-
-    **At the end: the newsletter.** Your data slides do not evaporate
-    once the class has discussed them. In the last week of term you hand
-    in a single document — a **newsletter** — collecting every piece of
-    data you found this semester, each with a short write-up: what it
-    measures, where it came from, and what you made of it once the room
-    had worked it over. A paragraph apiece is plenty.
-
-    |                   | Share of this component | What it is                                                         |
-    |-------------------|-------------------------|--------------------------------------------------------------------|
-    | **Weekly slides** | **90%**                 | The data you post before each session, marked complete/incomplete. |
-    | **Newsletter**    | **10%**                 | The collected set, written up, handed in at the end.               |
-
-    **Assemble it as you go.** The work is already done by the time you
-    get there — you found the data, and the class told you what it was
-    worth. Written up in the week it happened, each entry takes ten
-    minutes; written up in December from a folder of half-remembered
-    links, the whole thing is an evening you did not need to spend.
-    **Due Tue, Dec 8, 11:59 p.m.**
-
-2.  **Discussion Board**
-
-    - We work through data together in class — the lab on Thursday, and
-      before that the two slides drawn from the class. You submit what
-      you have at the end of Thursday’s session; this doubles as
-      attendance.
-    - **Then you post that evening or the next day**, on the course
-      discussion board in Canvas. Due **Friday, 11:59 p.m.** One post a
-      week, and one post is all that is needed for full credit.
-    - **A few sentences to a paragraph.** What it has to do is show
-      engagement with what we actually did in class. Say which number,
-      slide or finding you mean and what you make of it. Running longer
-      than a paragraph earns nothing on its own; running shorter usually
-      means you have named something without saying what you make of it.
-    - **You are not asked to write code, and not asked to produce a
-      chart.** The post is about what you made of the data.
-
-    Write about **any of the data we talked about that week** — the lab,
-    a classmate’s slide, a figure in the reading, a number in one of the
-    news items. Do any one of these:
-
-    |                                     |                                                                                                                         |
-    |-------------------------------------|-------------------------------------------------------------------------------------------------------------------------|
-    | **Something surprised you**         | Say what you expected and why, then what the data showed instead. The gap is the interesting part.                      |
-    | **Something we missed**             | A question nobody asked, a comparison nobody made, a group or a year left out. You need not answer it; noticing counts. |
-    | **Something you do not understand** | A real question about what a number means or why a method works. These are the most valuable posts on the board.        |
-    | **An answer**                       | Reply to a classmate. A good answer is worth as much as a good question, and counts as your post for the week.          |
-
-    Posts are marked **complete/incomplete**.
-
-3.  **The data journalism project**
-
-    **A data-driven news story investigating a trend, pattern or issue
-    in electoral processes**, written for somebody who does not read
-    this sort of thing for pleasure. **2–4 pages, single spaced, with at
-    least two figures**, worked into the text rather than parked at the
-    end. The full rubric is on Canvas.
-
-    **The figures do not have to be ones you built yourself.** A chart
-    we made together in a lab is fine; so is a table you pull from
-    data.census.gov, or a figure from one of the readings — provided you
-    say what it shows, where it came from, and why it bears on your
-    question. If you would rather make your own, the code in every lab
-    is yours to adapt and I will help. **What is graded is whether the
-    evidence supports the claim**, not whether you wrote the plotting
-    code.
-
-    One substantial piece of writing this term, worth **25%**, in three
-    parts: a pitch in October, a full draft at the term’s last data
-    session, and the revision after the term’s final session. The
-    reviews you write sit between the draft and the final, so the
-    comments reach their author while there is still time to act on
-    them.
-
-    |                 | Share of the project | What it is                                                                                                  |
-    |-----------------|----------------------|-------------------------------------------------------------------------------------------------------------|
-    | **Pitch**       | **5%**               | One paragraph on **Tue, Oct 20**, in class. Marked for having done it.                                      |
-    | **Draft**       | **50%**              | A complete attempt — not an outline, not a sketch. Graded as though it were the finished piece.             |
-    | **Peer review** | **35%**              | The two reviews **you write** for other people. Graded on how useful they are to the person receiving them. |
-    | **Final**       | **10%**              | The revision. Graded on what you changed and why, not re-graded from scratch.                               |
-
-    **Most of the marks are on the draft and the reviews,
-    deliberately.** The usual way a paper gets written is that nothing
-    happens for three weeks and then something happens the night before,
-    and the comments you get back arrive too late to matter. So the
-    draft has a deadline of its own — **Thu, Nov 19** — and carries 50%
-    on that date, and the two reviews you write carry another 35% on
-    **Tue, Dec 1**. **The piece has to be finished once, three weeks
-    early, before it is finished for good.** A strong draft and two
-    genuinely useful reviews will carry you even if the revision is
-    modest.
-
-    The corollary is that **the final is a small piece of the grade, and
-    that is not an invitation to skip it.** Ten per cent is what a
-    revision is worth when the work it revises was already done
-    properly. It is not what the piece is worth.
-
-    It also means **you cannot rescue a missing draft with a good
-    final.** There is no version of this where the work starts late.
-
-    ------------------------------------------------------------------------
-
-    **On the peer review.** You will review two people’s drafts, on a
-    worksheet I provide, and they will review yours. What is graded is
-    the review you *give*. A review that says “this is good, maybe add
-    more data” is worth very little; a review that says “your second
-    chart shows share and your argument needs counts, and I could not
-    find where the 62% came from” is worth a great deal. Reviewing is a
-    skill, it is most of what editors and referees actually do, and you
-    will get better at your own writing by doing it.
-
-    **On the final.** Submit it with a short note — three or four
-    sentences — on what you changed in response to the reviews and what
-    you decided not to change and why. Declining to take advice is fine
-    and sometimes right. Ignoring it silently is not.
-
-4.  **Tests**
-
-    Three, in class, on paper, **10% each**.
-
-    |            | When            | Covers                  |
-    |------------|-----------------|-------------------------|
-    | **Test 1** | **Thu, Oct 8**  | Sides et al., Ch. 1–5   |
-    | **Test 2** | **Tue, Nov 10** | Sides et al., Ch. 6–9   |
-    | **Test 3** | **Thu, Dec 3**  | Sides et al., Ch. 10–13 |
-
-    **All three cover the textbook only** — not the labs, not the
-    outside readings, not the data sessions. Each one covers the
-    chapters assigned since the previous test, and none is cumulative.
-
-    **We read the book straight through, 1 to 13.** There is nothing to
-    keep track of: the chapters arrive in the book’s own order, each
-    test is the block read since the last one, and every chapter is read
-    once and tested once.
-
-    The questions will be multiple choice and short answer, on what the
-    chapters say. This is the one part of the course that rewards
-    ordinary studying, and it exists because the rest of the course
-    grades interpretation, which is harder to prepare for by reading
-    carefully. If you have kept up with the chapters, no separate
-    preparation should be needed.
-
-    **There is no final exam.**
-
-5.  **Attendance:**
-
-    ![Absences and the attendance grade. The first three cost almost
-    nothing; four to six is where it
-    bites.](readme_files/figure-gfm/plot-curve-1.png)
-
-    Regular attendance and active involvement form a significant part of
-    your final grade (see grading section). If you do not show up, you
-    will not earn an ‘A’. Participation is not just about being present;
-    it involves engaging with the material, contributing to discussions,
-    and collaborating with your peers. To recognize that occasional
-    absences are sometimes unavoidable (e.g., for religious observance,
-    job interviews, university-sanctioned events, or illness),
-    attendance grades follow a curve with three stretches. The first
-    three absences cost you almost nothing — that is what they are there
-    for. From the fourth to the sixth the penalty bites hard, and this
-    is the range where a semester goes wrong. After that the curve
-    flattens into a long tail: each further absence still costs you, but
-    less, and it never reaches zero. There is no point at which you may
-    as well stop coming.
-
-    | Classes missed   |    0 |   2 |   3 |   4 |   5 |   6 |   8 |  12 |
-    |------------------|-----:|----:|----:|----:|----:|----:|----:|----:|
-    | Attendance grade | 100% | 94% | 88% | 72% | 47% | 36% | 30% | 23% |
-
-    If you must miss class, please notify me at least 24 hours in
-    advance (unless it is an emergency or sudden illness) so we can
-    arrange a way for you to catch up.[^1]
-
-------------------------------------------------------------------------
-
-6.  **Surveys** (2%)
-
-    Three short surveys, each graded purely for completion. There are no
-    right answers, nothing you say is graded on content, and nothing you
-    say affects any other part of your grade.
-
-    - **Week 1 — the Cervas Election Study.** Due **Wed, Aug 26, 11:59
-      p.m.** A survey instrument modelled on the Cooperative Election
-      Study and the American National Election Study, but neither: items
-      have been cut, reworded, and added. Your answers become a class
-      dataset, which I report back in aggregate and never individually.
-      We set it against the real Cooperative Election Study in **Session
-      6**.
-    - **Mid-term — course feedback.** Due **Fri, Oct 23, 11:59 p.m.**,
-      after the first test and the break, which is late enough that you
-      have seen how the course actually runs and early enough that I can
-      still change it.
-    - **Final week — the course evaluation.**
-
-    **All three are anonymous.** Your answers are never attached to your
-    name and I never see who said what — which also means the surveys
-    cannot tell me you completed them. So credit runs on a receipt:
-    **after you submit, screenshot the confirmation screen and upload it
-    to the Canvas assignment.** The screenshot is your receipt; the
-    survey data never learns who you are.
+- **Participation & Attendance** (23%). Being here, prepared, and in the
+  conversation — on both days. The first three absences cost almost
+  nothing; four to six is where a semester goes wrong.
+- **Discussion Board** (10%). One post a week about any of the data we
+  looked at, due **Friday, 11:59 p.m.** Marked complete/incomplete, and
+  one post is full credit.
+- **Surveys** (2%). Three short ones: the **Cervas Election Study** on
+  **Wed, Aug 26**, midterm feedback on **Fri, Oct 23**, and the course
+  evaluation in the final week. All three are anonymous, so screenshot
+  the confirmation and upload it.
+- **Data Slides** (10%). Each week an **infographic with a short
+  write-up**, bearing on the question Tuesday ended with, posted before
+  Thursday. Two are drawn at random and worked through in class. The
+  weekly slides are 90% of this component; the newsletter you assemble
+  from them is the other 10%.
+- **Three Tests** (30%). In class, on paper, and **on the textbook
+  only** — 10% each, none cumulative: **Thu, Oct 8** (Ch. 1–5), **Tue,
+  Nov 10** (Ch. 6–9), **Thu, Dec 3** (Ch. 10–13). There is no final
+  exam.
+- **Data Journalism Project** (25%). A data-driven news story, 2–4 pages
+  single spaced, with at least two figures. A pitch (5%), a draft (50%),
+  the two peer reviews you write (35%), and the final (10%) — **most of
+  the marks are on the draft and the reviews**, and you cannot rescue a
+  missing draft with a good final.
 
 <!-- Grading philosophy and late policy. -->
 
@@ -555,7 +314,7 @@ that you will not, contact me **before** the due date and we will sort
 something out.
 
 Late work loses **one percentage point per hour, and never falls below
-50%**.[^2] Canvas applies this automatically. Submit what you have
+50%**.[^1] Canvas applies this automatically. Submit what you have
 rather than polishing something that is already late.
 
 Work that is never submitted scores **zero**, which is the whole reason
@@ -903,11 +662,7 @@ out.
 
 ------------------------------------------------------------------------
 
-[^1]: If you need to miss more than two sessions due to extenuating
-    circumstances, let me know as soon as possible so we can discuss how
-    best to support you.
-
-[^2]: An hour or two costs almost nothing; a day costs a letter grade.
+[^1]: An hour or two costs almost nothing; a day costs a letter grade.
     Charging by the hour rather than the day removes the cliff at
     midnight — being twenty minutes late should not cost the same as
     being twenty hours late. The floor is there so that late work is
