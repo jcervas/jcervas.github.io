@@ -194,7 +194,7 @@ Canvas under Assignments at the end of term.
 **What to raise, or what to answer, depends on the day.**
 
 - **When a student team is leading.** That team posts its five or six
-  questions to the board a full week ahead. **Everyone not on that team
+  questions to the board three days before. **Everyone not on that team
   either answers one of them or puts a further question on the table** —
   if you are answering, say which question you are taking, so the thread
   stays legible. These are the days the board does the most work,
@@ -246,21 +246,22 @@ course themes, assign the readings your classmates will do beforehand,
 and lead the session. Teams and topics are set on September 1, and the
 calendar of who leads which day is fixed that week and does not move.
 
-**What your team owes the class, one week before you lead:**
+**What your team owes the class. Readings and materials are due five
+days before you lead; the questions go up three days before:**
 
 1.  **A topic.** Narrow enough to argue about in eighty minutes.
     “Immigration” is not a topic; “whether birthright citizenship can be
     altered by executive order” is.
 2.  **The readings.** Two or three pieces, and no more than about sixty
     pages total. They must not all argue the same side. Post them to
-    Canvas a full week ahead so your classmates can actually read them.
-    A reading posted late is a session that falls flat, and the whole
+    Canvas five days ahead so your classmates can actually read them. A
+    reading posted late is a session that falls flat, and the whole
     class pays for it. Ideally, multiple points of view are reflected in
     the readings.
 3.  **Discussion questions.** Five or six, written out, **posted to your
-    session’s discussion board** a full week ahead so the class arrives
-    having answered them. Good ones have no obvious answer and cannot be
-    resolved by looking something up.
+    session’s discussion board** three days before you lead, so the
+    class arrives having answered them. Good ones have no obvious answer
+    and cannot be resolved by looking something up.
     - **This is how the board works on your day, and it is different for
       you than for everyone else.** Posting these questions *is* your
       discussion-board contribution for the session you lead — you owe
