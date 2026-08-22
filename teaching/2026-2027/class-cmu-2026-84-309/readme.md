@@ -78,23 +78,6 @@ By the end of this course, students will be able to:
 8.  **Reflect** on your own values, biases, and role as a civic
     participant in a divided society.
 
-<!-- Grading philosophy and the late-work policy. Usually stable year to year. -->
-
-## Grading
-
-Your grade depends heavily on active engagement. This course is
-interactive: your preparation (completing the readings), contributions
-to discussions, and participation in debates are essential to your
-success.
-
-*Assignments & Deadlines* You are expected to meet all assignment
-deadlines. If you anticipate being unable to turn something in on time,
-contact me before the due date to discuss alternatives. Late work will
-incur a penalty[^1] provided it does not impede your classmates’
-progress (for instance, in group projects). Failing to participate or
-contribute meaningfully, especially in ways that affect others’ work,
-will result in a lower grade.
-
 <!-- Assessment weights and due dates. Shared by both syllabi. Weights must total 100. -->
 
 ## Assessment
@@ -159,7 +142,7 @@ no point at which you may as well stop coming.
 
 If you must miss class, please notify the TA (and cc the professor) at
 least 24 hours in advance (unless it is an emergency or sudden illness)
-so we can arrange a way for you to catch up.[^2]
+so we can arrange a way for you to catch up.[^1]
 
 **Devices.** Laptops, tablets, and phones are not to be used for
 anything that is not pertinent to what we are doing in the room. The
@@ -483,6 +466,23 @@ Alignment*: 3, 7, 8
     its own kind of unfairness, and this is how I find out.
 
 ------------------------------------------------------------------------
+
+<!-- Grading philosophy and the late-work policy. Usually stable year to year. -->
+
+## Grading
+
+Your grade depends heavily on active engagement. This course is
+interactive: your preparation (completing the readings), contributions
+to discussions, and participation in debates are essential to your
+success.
+
+*Assignments & Deadlines* You are expected to meet all assignment
+deadlines. If you anticipate being unable to turn something in on time,
+contact me before the due date to discuss alternatives. Late work will
+incur a penalty[^2] provided it does not impede your classmates’
+progress (for instance, in group projects). Failing to participate or
+contribute meaningfully, especially in ways that affect others’ work,
+will result in a lower grade.
 
 <!-- Week-by-week schedule, reserve readings, topic bank. Dates come from weeksession()/weekrange() in the parent's setup chunk, so changing the term start date moves everything. -->
 
@@ -1987,15 +1987,15 @@ services available on campus at:
 Please remember that support is always available—don’t hesitate to reach
 out.
 
-[^1]: One percentage point per hour late, never falling below 50%. An
+[^1]: If you need to miss more than two sessions due to extenuating
+    circumstances, let me know as soon as possible so we can discuss how
+    best to support you.
+
+[^2]: One percentage point per hour late, never falling below 50%. An
     hour or two costs almost nothing; a day costs a letter grade, but
     late work is always worth more than no work. Work never submitted
     scores zero, so handing something in a week late is always worth
     more than handing in nothing. Canvas applies both automatically.
-
-[^2]: If you need to miss more than two sessions due to extenuating
-    circumstances, let me know as soon as possible so we can discuss how
-    best to support you.
 
 [^3]: The per-chapter PDF allowance is capped at 77 pages for the whole
     book, so spend it on the chapters you actually want. “Download Book”
