@@ -480,51 +480,39 @@ contribute meaningfully, especially in ways that affect others’ work,
 will result in a lower grade.
 
 <!-- Week-by-week schedule, reserve readings, topic bank. Dates come from weeksession()/weekrange() in the parent's setup chunk, so changing the term start date moves everything. -->
-<!-- Session-by-session schedule. Dates come from weeksession()/weekrange() in the parent's setup chunk. -->
+<!-- Session-by-session schedule. Dates are written out, so a new year means editing them here. -->
 
-## Course Schedule
+## Schedule
 
-**Week 1 — August 25 & 27**
+**Week 1 — the course, and the Fence**
 
-- **Tue, August 25** — Introduction to the Course
-  - **Student-led sessions — nothing is settled today.** Teams and
-    topics are fixed on September 1, not now.
-  - **Survey 1 — the Cervas Election Study.** Take it on your own after
-    class; it is **due August 26 at 11:59 p.m.** The link is in Canvas,
-    under Assignments, and it runs about ten…
-- **Thu, August 27** — The Fence
+- **Tue, Aug 25** — Introduction to the Course
+  - Nothing is settled today: teams and topics are fixed on **Sep 1**.
+  - **DUE Wed, Aug 26, 11:59 p.m.** — the **Cervas Election Study**
+    (link in Canvas; screenshot the confirmation).
+- **Thu, Aug 27** — The Fence
   - **In class: the Perception Gap.** More in Common, perceptiongap.us.
   - Background on “The Fence”
-  - [“CMU Fence Controversy Sparks Censorship Concerns.” Pittsburgh
-    Post-Gazette, July 17,
-    2025](https://www.post-gazette.com/news/education/2025/07/17/what-is-the-fence-at-carnegie-mellon/stories/202507160062)
-  - [Strasburg et al. 2025 — In Midnight Move, CMU Students Roll in New
-    Fence to Protest Closure of Free Speech
-    Icon](https://www.publicsource.org/cmu-students-create-new-fence-to-highlight-campus-free-speech/)
-  - [Chang et al. 2026 — YAL Rallies at Fence, Delivers Petition to
-    President
-    Jahanian](https://the-tartan.org/2026/04/06/yal-rallies-at-fence-delivers-petition-to-president-jahanian/)
-  - [Aiken 2026 — Carnegie Mellon Investigating Students over Fence
-    Messages Tied to Israeli-Palestinian
-    Conflict](https://www.post-gazette.com/news/education/2026/08/01/carnegie-mellon-fence-investigation/stories/202607310058)
+  - [“CMU Fence Controversy Sparks Censorship Concerns.”
+    Pittsburgh…](https://www.post-gazette.com/news/education/2025/07/17/what-is-the-fence-at-carnegie-mellon/stories/202507160062)
+  - [Strasburg et al. 2025 — In Midnight Move, CMU Students Roll
+    in…](https://www.publicsource.org/cmu-students-create-new-fence-to-highlight-campus-free-speech/)
+  - [Chang et al. 2026 — YAL Rallies at Fence, Delivers Petition
+    to…](https://the-tartan.org/2026/04/06/yal-rallies-at-fence-delivers-petition-to-president-jahanian/)
+  - [Aiken 2026 — Carnegie Mellon Investigating Students over
+    Fence…](https://www.post-gazette.com/news/education/2026/08/01/carnegie-mellon-fence-investigation/stories/202607310058)
   - Articles from The Tartan on the Fence’s history
-  - [Student Handbook, Advertising on Campus - Graffiti and Poster
-    Policy of Student
-    Government](https://www.cmu.edu/student-affairs/theword/community-policies/advertising-on-campus.html)
+  - [Student Handbook, Advertising on
+    Campus](https://www.cmu.edu/student-affairs/theword/community-policies/advertising-on-campus.html)
   - [Student Government Graffiti and Poster
     Policy](https://www.cmu.edu/stugov/policies/old-pdfs/Student%20Government%20Graffiti%20and%20Poster%20Policy_Updates_1_26_17.pdf)
 
-**Week 2 — September 1 & 3**
+**Week 2 — Polarization unit opens**
 
-- **Tue, September 1** — Organize Topics for Student Led Discussions.
-  Teams and topics are settled today, and the calendar of who leads
-  which day is fixed in this session and does not move afterwards.
-- **Thu, September 3** — Polarization I: Partisan and Ideological
-  Polarization. Is the public itself polarized, or only the people it
-  elects? These two pieces are a direct exchange: Abramowitz and
-  Saunders are answering Fiorina and Abrams by name.
-  - [Fiorina et al. 2008 — Political Polarization in the American
-    Public](https://doi.org/10.1146/annurev.polisci.11.053106.153836)
+- **Tue, Sep 1** — Organize Topics for Student Led Discussions
+- **Thu, Sep 3** — Polarization I: Partisan and Ideological Polarization
+  - [Fiorina et al. 2008 — Political Polarization in the
+    American…](https://doi.org/10.1146/annurev.polisci.11.053106.153836)
   - [Abramowitz et al. 2008 — Is Polarization a
     Myth?](https://doi.org/10.1017/S0022381608080493)
   - [Fiorina 2024 — Once More Unto the Breach: Is America
@@ -534,270 +522,206 @@ will result in a lower grade.
   - *Optional*: McCarty, Nolan, Keith T. Poole, and Howard Rosenthal.
     Polarized America: The Dance of Ideo
 
-**Week 3 — September 8 & 10**
+**Week 3 — Polarization unit**
 
-- **Tue, September 8** — Polarization II: Sorting and Social Identity.
-  How party stopped being a preference and became an identity — and what
-  happens when we are badly wrong about who actually belongs to the
-  other party.
-  - [Mason 2015 — ‘I Disrespectfully Agree’: The Differential Effects of
-    Partisan Sorting on Social and Issue
-    Polarization](https://doi.org/10.1111/ajps.12089)
-  - [Ahler et al. 2018 — The Parties in Our Heads: Misperceptions about
-    Party Composition and Their
-    Consequences](https://doi.org/10.1086/697253)
-  - *Optional*: [Mason 2018 — *Uncivil Agreement: How Politics Became
-    Our
-    Identity*](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991019580374304436)
-- **Thu, September 10** — Polarization III: Affective Polarization.
-  Disliking the other side more than you like your own. Start with the
-  survey piece, then read the two challenges — the finding is not as
-  settled as the first two readings make it sound.
-  - [Iyengar et al. 2019 — The Origins and Consequences of Affective
-    Polarization in the United
-    States](https://doi.org/10.1146/annurev-polisci-051117-073034)
+- **Tue, Sep 8** — Polarization II: Sorting and Social Identity
+  - [Mason 2015 — ‘I Disrespectfully
+    Agree’](https://doi.org/10.1111/ajps.12089)
+  - [Ahler et al. 2018 — The Parties in Our
+    Heads](https://doi.org/10.1086/697253)
+  - *Optional*: [Mason 2018 — \*Uncivil
+    Agreement](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991019580374304436)
+- **Thu, Sep 10** — Polarization III: Affective Polarization
+  - [Iyengar et al. 2019 — The Origins and Consequences of
+    Affective…](https://doi.org/10.1146/annurev-polisci-051117-073034)
   - [Finkel et al. 2020 — Political Sectarianism in
     America](https://doi.org/10.1126/science.abe1715)
   - [Fiorina 2024 — What About *Affective*
     Polarization?](https://www.hoover.org/research/what-about-affective-polarization)
   - *Optional*: [Klar et al. 2018 — Affective Polarization or Partisan
-    Disdain? Untangling a Dislike for the Opposing Party from a Dislike
-    of Partisanship](https://doi.org/10.1093/poq/nfy014)
+    Disdain?…](https://doi.org/10.1093/poq/nfy014)
   - *Optional*: [Broockman et al. 2023 — Does Affective Polarization
-    Undermine Democratic Norms or Accountability? Maybe
-    Not](https://doi.org/10.1111/ajps.12719)
+    Undermine…](https://doi.org/10.1111/ajps.12719)
 
-**Week 4 — September 15 & 17**
+**Week 4 — NO CLASS (Sep 15–17)**
 
-- **Tue, September 15** — **NO CLASS.** Eradicate Hate Conference.
-- **Thu, September 17** — **NO CLASS.** Constitution Day Symposium.
+- **Tue, Sep 15** — **NO CLASS.** Eradicate Hate Conference.
+- **Thu, Sep 17** — **NO CLASS.** Constitution Day Symposium.
 
-**Week 5 — September 22 & 24**
+**Week 5 — Polarization unit**
 
-- **Tue, September 22** — Polarization IV: Negative Partisanship and the
-  White Working Class. Voting against rather than for. Note how much of
-  the trend Abramowitz and Webster explain without anyone’s opinions on
-  policy changing at all.
-  - [Abramowitz et al. 2016 — The Rise of Negative Partisanship and the
-    Nationalization of
-    U](http://www.stevenwwebster.com/negative-partisanship.pdf)
-  - [Abramowitz 2025 — It’s Not the Economy, Stupid: The Ideological
-    Foundations of White Working Class
-    Republicanism](https://centerforpolitics.org/crystalball/its-not-the-economy-stupid-the-ideological-foundations-of-white-working-class-republicanism/)
+- **Tue, Sep 22** — Polarization IV: Negative Partisanship and the White
+  Working Class
+  - [Abramowitz et al. 2016 — The Rise of Negative Partisanship
+    and…](http://www.stevenwwebster.com/negative-partisanship.pdf)
+  - [Abramowitz 2025 — It’s Not the Economy,
+    Stupid](https://centerforpolitics.org/crystalball/its-not-the-economy-stupid-the-ideological-foundations-of-white-working-class-republicanism/)
   - [Fiorina 2024 — The White Working
     Class](https://www.hoover.org/research/white-working-class)
   - *Optional*: [Iyengar et al. 2015 — Fear and Loathing across Party
-    Lines: New Evidence on Group
-    Polarization](https://doi.org/10.1111/ajps.12152)
-  - *Optional*: [Fiorina 2024 — Economic Anxiety or Cultural Backlash:
-    Which Is Key to Trump’s
-    Support?](https://www.hoover.org/research/economic-anxiety-or-cultural-backlash-which-key-trumps-support)
-  - *Optional*: [Abramowitz et al. 2018 — Negative Partisanship: Why
-    Americans Dislike Parties But Behave Like Rabid
-    Partisans](https://doi.org/10.1111/pops.12479)
-- **Thu, September 24** — Polarization V: Race and Polarization
-  - [Tesler 2012 — The Spillover of Racialization into Health Care: How
-    President Obama Polarized Public Opinion by Racial Attitudes and
-    Race](https://doi.org/10.1111/j.1540-5907.2011.00577.x)
-  - [Mason et al. 2021 — Activating Animus: The Uniquely Social Roots of
-    Trump Support](https://doi.org/10.1017/S0003055421000563)
+    Lines](https://doi.org/10.1111/ajps.12152)
+  - *Optional*: [Fiorina 2024 — Economic Anxiety or Cultural
+    Backlash](https://www.hoover.org/research/economic-anxiety-or-cultural-backlash-which-key-trumps-support)
+  - *Optional*: [Abramowitz et al. 2018 — Negative
+    Partisanship](https://doi.org/10.1111/pops.12479)
+- **Thu, Sep 24** — Polarization V: Race and Polarization
+  - [Tesler 2012 — The Spillover of Racialization into Health
+    Care](https://doi.org/10.1111/j.1540-5907.2011.00577.x)
+  - [Mason et al. 2021 — Activating
+    Animus](https://doi.org/10.1017/S0003055421000563)
   - *Optional*: [Jardina 2019 — *White Identity
     Politics*](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991019870288804436)
   - *Optional*: [Voelkel et al. 2024 — Megastudy Testing 25 Treatments
-    to Reduce Antidemocratic Attitudes and Partisan
-    Animosity](https://doi.org/10.1126/science.adh4764)
-  - *Optional*: [Kleinfeld 2023 — *Polarization, Democracy, and
-    Political Violence in the United States: What the Research
-    Says*](https://carnegieendowment.org/research/2023/09/polarization-democracy-and-political-violence-in-the-united-states-what-the-research-says?lang=en)
+    to Reduce…](https://doi.org/10.1126/science.adh4764)
+  - *Optional*: [Kleinfeld 2023 — \*Polarization, Democracy, and
+    Political…](https://carnegieendowment.org/research/2023/09/polarization-democracy-and-political-violence-in-the-united-states-what-the-research-says?lang=en)
 
-**Week 6 — September 29 & October 1**
+**Week 6 — Polarization unit · geography**
 
-- **Tue, September 29** — Polarization VII: Geographic — The Map, and
-  the Power in It. You have seen the county map. Almost nobody is asked
-  what it actually shows.
+- **Tue, Sep 29** — Polarization VII: Geographic — The Map, and the
+  Power in It
   - **Do these before you read anything.**
-  - [Brown, Jacob R., and Ryan D. Enos. “Partisan Segregation.”
-    Interactive maps.](https://www.ryandenos.com/partisan-segregation)
-  - [The New York Times 2025 — An Extremely Detailed Map of the 2024
-    Election
-    Results](https://www.nytimes.com/interactive/2025/us/elections/2024-election-map-precinct-results.html)
-  - [Badger et al. 2021 — A Close-Up Picture of Partisan Segregation,
-    Among 180 Million
-    Voters](https://www.nytimes.com/interactive/2021/03/17/upshot/partisan-segregation-maps.html)
-  - [Brown et al. 2026 — How Generational Turnover and Party Switching
-    Reshape the US Political
-    Map](https://cepr.org/voxeu/columns/how-generational-turnover-and-party-switching-reshape-us-political-map)
+  - [Brown, Jacob R., and Ryan D. Enos. “Partisan
+    Segregation.”…](https://www.ryandenos.com/partisan-segregation)
+  - [The New York Times 2025 — An Extremely Detailed Map of the
+    2024…](https://www.nytimes.com/interactive/2025/us/elections/2024-election-map-precinct-results.html)
+  - [Badger et al. 2021 — A Close-Up Picture of
+    Partisan…](https://www.nytimes.com/interactive/2021/03/17/upshot/partisan-segregation-maps.html)
+  - [Brown et al. 2026 — How Generational Turnover and
+    Party…](https://cepr.org/voxeu/columns/how-generational-turnover-and-party-switching-reshape-us-political-map)
   - [De Witte 2019 — How the Urban-Rural Divide Shapes
     Elections](https://news.stanford.edu/stories/2019/06/urban-rural-divide-shapes-elections)
-  - [Cervas 2026 — The Effects of Mid-Decade Redistricting on Electoral
-    Outcomes](https://cervas.medium.com/the-effects-of-mid-decade-redistricting-on-electoral-outcomes-d870c772942b)
-  - *Optional*: [Abrams et al. 2012 — ‘The Big Sort’ That Wasn’t: A
-    Skeptical Reexamination](https://doi.org/10.1017/S1049096512000017)
-  - *Optional*: [Chen et al. 2015 — Cutting Through the Thicket:
-    Redistricting Simulations and the Detection of Partisan
-    Gerrymanders](https://www.brennancenter.org/sites/default/files/legal-work/Chen_Rodden_Through_the_Thicket_2015.pdf)
-  - *Optional*: [“How the Other Half Votes: The Big Counties Versus the
-    Rest of the Country in 2024.”
-    Sabat](https://centerforpolitics.org/crystalball/how-the-other-half-votes-the-big-counties-versus-the-rest-of-the-country-in-2024/)
+  - [Cervas 2026 — The Effects of Mid-Decade Redistricting
+    on…](https://cervas.medium.com/the-effects-of-mid-decade-redistricting-on-electoral-outcomes-d870c772942b)
+  - *Optional*: [Abrams et al. 2012 — ‘The Big Sort’ That
+    Wasn’t](https://doi.org/10.1017/S1049096512000017)
+  - *Optional*: [Chen et al. 2015 — Cutting Through the
+    Thicket](https://www.brennancenter.org/sites/default/files/legal-work/Chen_Rodden_Through_the_Thicket_2015.pdf)
+  - *Optional*: [“How the Other Half
+    Votes](https://centerforpolitics.org/crystalball/how-the-other-half-votes-the-big-counties-versus-the-rest-of-the-country-in-2024/)
   - *Optional*: [Petry, Eric. “How the Efficiency Gap Works.” Brennan
-    Center for
-    Justice.](https://www.brennancenter.org/sites/default/files/legal-work/How_the_Efficiency_Gap_Standard_Works.pdf)
+    Center
+    for…](https://www.brennancenter.org/sites/default/files/legal-work/How_the_Efficiency_Gap_Standard_Works.pdf)
   - *Optional*: [Kenny et al. 2023 — Widespread Partisan Gerrymandering
-    Mostly Cancels Nationally, but Reduces Electoral
-    Competition](https://alarm-redist.org/posts/2023-06-13-widespread-gerrymandering-pnas/)
+    Mostly…](https://alarm-redist.org/posts/2023-06-13-widespread-gerrymandering-pnas/)
   - *Optional*: [Brown et al. 2026 — Partisan Sorting and Geographic
-    Polarization: How People and Politics Cluster by
-    Place](https://jacobrbrown.com/files/partisan_seg_chapter.pdf)
+    Polarization](https://jacobrbrown.com/files/partisan_seg_chapter.pdf)
   - *Optional*: [Brown et al. 2021 — The Measurement of Partisan Sorting
-    for 180 Million Voters](https://doi.org/10.1038/s41562-021-01066-z)
-  - *Optional*: [Mummolo et al. 2017 — Why Partisans Do Not Sort: The
-    Constraints on Political
-    Segregation](https://doi.org/10.1086/687569)
+    for 180…](https://doi.org/10.1038/s41562-021-01066-z)
+  - *Optional*: [Mummolo et al. 2017 — Why Partisans Do Not
+    Sort](https://doi.org/10.1086/687569)
   - *Optional*: [Brown 2025 — Partisan Conversion Through Neighborhood
-    Influence: How Voters Adopt the Partisanship of Their
-    Neighbors](https://doi.org/10.1086/732981)
-  - *Optional*: [Scala et al. 2017 — Political Polarization along the
-    Rural-Urban Continuum? The Geography of the Presidential Vote,
-    2000–2016](https://doi.org/10.1177/0002716217712696)
-  - *Optional*: [Chen et al. 2013 — Unintentional Gerrymandering:
-    Political Geography and Electoral Bias in
-    Legislatures](https://web.stanford.edu/~jrodden/wp/florida.pdf)
-  - *Optional*: [Cervas et al. 2020 — Tools for Identifying Partisan
-    Gerrymandering with an Application to Congressional Districting in
-    Pennsylvania](https://www.sciencedirect.com/science/article/abs/pii/S0962629818303342)
+    Influence](https://doi.org/10.1086/732981)
+  - *Optional*: [Scala et al. 2017 — Political Polarization along
+    the…](https://doi.org/10.1177/0002716217712696)
+  - *Optional*: [Chen et al. 2013 — Unintentional
+    Gerrymandering](https://web.stanford.edu/~jrodden/wp/florida.pdf)
+  - *Optional*: [Cervas et al. 2020 — Tools for Identifying
+    Partisan…](https://www.sciencedirect.com/science/article/abs/pii/S0962629818303342)
   - *Optional*: [Goedert 2014 — Gerrymandering or Geography? How
-    Democrats Won the Popular Vote but Lost the Congress in
-    2012](https://doi.org/10.1177/2053168014528683)
+    Democrats Won…](https://doi.org/10.1177/2053168014528683)
   - *Optional*: [Riccardi 2026 — Redistricting War Accelerates
-    Winner-Take-All Politics Straining American
-    Democracy](https://www.pbs.org/newshour/politics/redistricting-war-accelerates-winner-take-all-politics-straining-american-democracy)
+    Winner-Take-All…](https://www.pbs.org/newshour/politics/redistricting-war-accelerates-winner-take-all-politics-straining-american-democracy)
   - *Optional*: [Levitsky et al. 2023 — \*Tyranny of the
     Minority](https://penguinrandomhousehighereducation.com/2023/10/16/excerpt-from-tyranny-of-the-minority/)
   - *Optional*: [Cervas et al. 2020 — Legal, Political Science and
-    Economics Approaches to Measuring Malapportionment: The
-    U](https://onlinelibrary.wiley.com/doi/abs/10.1111/ssqu.12871)
-- **Thu, October 1** — Place, Identity, and Rural Consciousness. Why
-  does where you live feel like who you are? Cramer’s answer, from years
-  of sitting in gas stations in rural Wisconsin, is that rural people
-  share a “rural consciousness” — a conviction that decisions, money,
-  and respect all flow to the cities.
+    Economics…](https://onlinelibrary.wiley.com/doi/abs/10.1111/ssqu.12871)
+- **Thu, Oct 1** — Place, Identity, and Rural Consciousness
   - **Two chapters, and that is the whole assignment.** Jacobs and Shea
     fielded the largest survey ever taken of rural Americans, and the
     book that came out of it is the best available answer to
-  - [Jacobs et al. 2023 — \*The Rural Voter: The Politics of Place and
-    the Disuniting of
-    America](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020185778804436)
+  - [Jacobs et al. 2023 — \*The Rural
+    Voter](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020185778804436)
   - *Optional*: [Harper 2024 — An Utterly Misleading Book About Rural
     America](https://www.theatlantic.com/ideas/archive/2024/04/white-rural-rage-criticism/677967/)
   - *Optional*: [Jacobs et al. 2024 — The Truth About ‘Rural
     Rage’](https://reason.com/2024/03/07/the-truth-about-rural-rage/)
   - *Optional*: [Schaller et al. 2024 — An Honest Assessment of Rural
-    White Resentment Is Long
-    Overdue](https://newrepublic.com/article/180570/trump-rural-white-resentment-honest-assessment)
-  - *Optional*: [Cramer 2016 — \*The Politics of Resentment: Rural
-    Consciousness in Wisconsin and the Rise of Scott
-    Walker](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991019603989504436)
-  - *Optional*: [Lunz Trujillo et al. 2022 — Symbolic versus Material
-    Concerns of Rural Consciousness in the United
-    States](https://doi.org/10.1016/j.polgeo.2022.102658)
+    White…](https://newrepublic.com/article/180570/trump-rural-white-resentment-honest-assessment)
+  - *Optional*: [Cramer 2016 — \*The Politics of
+    Resentment](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991019603989504436)
+  - *Optional*: [Lunz Trujillo et
+    al. 2022](https://doi.org/10.1016/j.polgeo.2022.102658)
   - *Optional*: [Nelsen et al. 2021 — Race and White Rural
     Consciousness](https://doi.org/10.1017/S1537592721001948)
   - *Optional*: [Jacobs et al. 2023 — Place-Based Resentment in
     Contemporary U](https://doi.org/10.1177/10659129221124864)
-  - *Optional*: [Lunz Trujillo 2024 — Feeling Out of Place: Who Are the
-    Non-Rural Rural Identifiers, and Are They Unique
-    Politically?](https://preprints.apsanet.org/engage/api-gateway/apsa/assets/orp/resource/item/63120eabbc257b6406d8bea1/original/feeling-out-of-place-who-are-the-non-rural-rural-identifiers-and-are-they-unique-politically.pdf)
-  - *Optional*: [Hershewe et al. 2025 — When Politics Override Place:
-    How Political Affiliation Supersedes Rural
-    Identity](https://doi.org/10.1177/1532673X241282286)
+  - *Optional*: [Lunz Trujillo 2024 — Feeling Out of
+    Place](https://preprints.apsanet.org/engage/api-gateway/apsa/assets/orp/resource/item/63120eabbc257b6406d8bea1/original/feeling-out-of-place-who-are-the-non-rural-rural-identifiers-and-are-they-unique-politically.pdf)
+  - *Optional*: [Hershewe et al. 2025 — When Politics Override
+    Place](https://doi.org/10.1177/1532673X241282286)
   - *Optional*: [Geismer 2024 — A New Suburban
     Politics](https://dissentmagazine.org/article/a-new-suburban-politics/)
 
-**Week 7 — October 6 & 8**
+**Week 7 — Polarization unit closes**
 
-- **Tue, October 6** — Polarization VI: Does Any of This Threaten
-  Democracy? The claim that polarization endangers democracy is the one
-  everybody repeats and almost nobody examines.
-  - [Druckman et al. 2023 — Does Affective Polarization Contribute to
-    Democratic Backsliding in
-    America?](https://doi.org/10.1177/00027162241228952)
-  - [McCoy et al. 2019 — Toward a Theory of Pernicious Polarization and
-    How It Harms Democracies: Comparative Evidence and Possible
-    Remedies](https://doi.org/10.1177/0002716218818782)
+- **Tue, Oct 6** — Polarization VI: Does Any of This Threaten Democracy?
+  - [Druckman et al. 2023 — Does Affective Polarization
+    Contribute…](https://doi.org/10.1177/00027162241228952)
+  - [McCoy et al. 2019 — Toward a Theory of Pernicious
+    Polarization…](https://doi.org/10.1177/0002716218818782)
   - “Would You Vote Against Your Own Side to Save Democracy?”
-  - [Graham et al. 2020 — Democracy in America? Partisanship,
-    Polarization, and the Robustness of Support for Democracy in the
-    United States](https://doi.org/10.1017/S0003055420000052)
-- **Thu, October 8** — Who Pays for the News? On October 6 you read
-  Graham and Svolik: Americans will give up about 3.5% of the vote to
-  punish a politician who breaks the rules, which in most districts is
-  nothing.
+  - [Graham et al. 2020 — Democracy in America?
+    Partisanship,…](https://doi.org/10.1017/S0003055420000052)
+- **Thu, Oct 8** — Who Pays for the News?
   - [Darr et al. 2018 — Newspaper Closures Polarize Voting
     Behavior](https://doi.org/10.1093/joc/jqy051)
   - [Martin et al. 2019 — Local News and National
     Politics](https://doi.org/10.1017/S0003055418000965)
-  - [Pickard 2020 — Restructuring Democratic Infrastructures: A Policy
-    Approach to the Journalism
-    Crisis](https://doi.org/10.1080/21670811.2020.1733433)
+  - [Pickard 2020 — Restructuring Democratic
+    Infrastructures](https://doi.org/10.1080/21670811.2020.1733433)
 
-**Week 8 — October 13 & 15**
+**Week 8 — FALL BREAK, no class (Oct 13–15)**
 
-- **Tue, October 13** — **NO CLASS.** Fall Break.
-- **Thu, October 15** — **NO CLASS.** Fall Break.
+- **Tue, Oct 13** — **NO CLASS.** Fall Break.
+- **Thu, Oct 15** — **NO CLASS.** Fall Break.
 
-**Week 9 — October 20 & 22**
+**Week 9 — Student-led sessions open**
 
-- **Tue, October 20** — Student-led session — team and topic TBA
-- **Thu, October 22** — Student-led session — team and topic TBA
+- **Tue, Oct 20** — Student-led session — team and topic TBA
+- **Thu, Oct 22** — Student-led session — team and topic TBA
 
-**Week 10 — October 27 & 29**
+**Week 10 — Student-led · before the vote**
 
-- **Tue, October 27** — Before the Vote: Loser’s Consent. The midterms
-  are a week from today. Loser’s consent — whether the side that loses
-  accepts that it lost — is the hinge the whole
-  polarization-and-democracy argument turns on, and it is worth having
-  the idea in hand *before* the result comes in rather than after, when
-  everyone’s read on it will be coloured by who won.
-  - [Layman et al. 2023 — Political Parties and Loser’s Consent in
-    American Politics](https://doi.org/10.1177/00027162241229309)
-- **Thu, October 29** — Student-led session — team and topic TBA
+- **Tue, Oct 27** — Before the Vote: Loser’s Consent
+  - [Layman et al. 2023 — Political Parties and Loser’s Consent
+    in…](https://doi.org/10.1177/00027162241229309)
+- **Thu, Oct 29** — Student-led session — team and topic TBA
 
-**Week 11 — November 3 & 5**
+**Week 11 — Student-led · election week**
 
-- **Tue, November 3** — **NO CLASS.** Democracy Day; the midterm
-  elections. No classes before 5 p.m. [Register to
+- **Tue, Nov 3** — **NO CLASS.** Democracy Day; the midterm elections.
+  No classes before 5 p.m. [Register to
   vote](https://www.cmu.edu/student-affairs/slice/civic-engagement/advocacy/voter/index.html).
-- **Thu, November 5** — Student-led session — team and topic TBA
+- **Thu, Nov 5** — Student-led session — team and topic TBA
 
-**Week 12 — November 10 & 12**
+**Week 12 — Student-led**
 
-- **Tue, November 10** — Student-led session — team and topic TBA
-- **Thu, November 12** — Student-led session — team and topic TBA
+- **Tue, Nov 10** — Student-led session — team and topic TBA
+- **Thu, Nov 12** — Student-led session — team and topic TBA
 
-**Week 13 — November 17 & 19**
+**Week 13 — Student-led**
 
-- **Tue, November 17** — Student-led session — team and topic TBA
-- **Thu, November 19** — Student-led session — team and topic TBA
+- **Tue, Nov 17** — Student-led session — team and topic TBA
+- **Thu, Nov 19** — Student-led session — team and topic TBA
 
-**Week 14 — November 24 & 26**
+**Week 14 — Book review presentations**
 
-- **Tue, November 24** — VIRTUAL CLASS — Book Review Presentations. We
-  meet on Zoom this session, since many of you will already be
-  travelling for Thanksgiving.
+- **Tue, Nov 24** — VIRTUAL CLASS — Book Review Presentations
   - **Everyone presents today.** You will not present to the room — you
     will be put into a small breakout group and present there, which is
     how thirty-four presentations fit into eighty minutes.
-  - Slides are due November 23 at 11:59 p.m., uploaded to Canvas.
+  - Slides are due Mon, Nov 23 at 11:59 p.m., uploaded to Canvas.
   - Speak to your slides rather than reading them, and open the floor
     with a question. A group
   - Being in a small group does not make this informal. It is the same
     7% it would be in front
-- **Thu, November 26** — **NO CLASS.** Thanksgiving.
+- **Thu, Nov 26** — **NO CLASS.** Thanksgiving.
 
-**Week 15 — December 1 & 3**
+**Week 15 — Group policy briefs**
 
-- **Tue, December 1** — Group Policy Brief
-- **Thu, December 3** — Group Policy Brief
+- **Tue, Dec 1** — Group Policy Brief
+- **Thu, Dec 3** — Group Policy Brief
 
 ## Units on the shelf
 
@@ -808,30 +732,30 @@ will result in a lower grade.
   jargon. The best short thing in existence on this topic; delivers the
   whole “Democrats win cities by huge margins and lose everywhere else
   narrowly” mechanism.
-  - <https://news.stanford.edu/stories/2019/06/urban-rural-divide-shapes-elections>
+  - [https://news.stanford.edu/stories/2019/06/urban-rural-divide-sha…](https://news.stanford.edu/stories/2019/06/urban-rural-divide-shapes-elections)
 - Pew Research Center. 2024. “Partisanship in Rural, Suburban and Urban
   Communities.” — eight minutes, two charts. Rural R+25, up from R+6 in
   2000; urban 60–37 Democratic; suburbs 50–47.
-  - <https://www.pewresearch.org/politics/2024/04/09/partisanship-in-rural-suburban-and-urban-communities/>
+  - [https://www.pewresearch.org/politics/2024/04/09/partisanship-in-…](https://www.pewresearch.org/politics/2024/04/09/partisanship-in-rural-suburban-and-urban-communities/)
 - Rodden, Jonathan, and Will Wilkinson. 2019. “Explaining the
   Urban-Rural Political Divide.” Niskanen Center. — podcast with full
   transcript; skim in fifteen minutes. Two scholars who agree about the
   map and disagree about why: Rodden says nineteenth-century rail and
   factory geography, Wilkinson says contemporary personality
   self-selection.
-  - <https://www.niskanencenter.org/explaining-the-urban-rural-political-divide/>
+  - [https://www.niskanencenter.org/explaining-the-urban-rural-politi…](https://www.niskanencenter.org/explaining-the-urban-rural-political-divide/)
 - Hennig, Benjamin. 2024. “Cartographic Perspectives of the 2024 U.S.
   Election.” *Election Analysis*. — ten minutes, free.
   Population-weighted cartograms. The best short piece on how the
   standard county map lies about American political geography, and a
   good thing to open a session with.
-  - <https://www.electionanalysis.ws/us/president2024/section-3-voters/cartographic-perspectives-of-the-2024-u-s-election/>
+  - [https://www.electionanalysis.ws/us/president2024/section-3-voter…](https://www.electionanalysis.ws/us/president2024/section-3-voters/cartographic-perspectives-of-the-2024-u-s-election/)
 - Muro, Mark, and Shriya Methkupally. 2024. “Trump Again Won Counties
   Representing a Minority Share of National GDP, but with Notable
   Gains.” Brookings, November 8. — ten minutes. Trump won 86% of
   counties producing 38% of GDP. Trump-won counties in the top 100 by
   GDP went from 5 to 16, including Maricopa, Miami-Dade and Tarrant.
-  - <https://www.brookings.edu/articles/trump-again-won-counties-representing-a-minority-share-of-national-gdp-but-with-notable-gains/>
+  - [https://www.brookings.edu/articles/trump-again-won-counties-repr…](https://www.brookings.edu/articles/trump-again-won-counties-representing-a-minority-share-of-national-gdp-but-with-notable-gains/)
 
 Assembled and ready to schedule, but not currently on the calendar. Any
 of these can be dropped into an open session, or handed to a student
@@ -845,19 +769,18 @@ team as a starting point for their own.
 
 - “America Wasn’t a Democracy Until Black Americans Made It One” – Essay
   by Nikole Hannah-Jones
-  <https://www.nytimes.com/interactive/2019/08/14/magazine/black-history-american-democracy.html>
+  [https://www.nytimes.com/interactive/2019/08/14/magazine/black-hi…](https://www.nytimes.com/interactive/2019/08/14/magazine/black-history-american-democracy.html)
   - Introduces the central thesis of the project: re-centering slavery
     and Black Americans in the nation’s founding narrative.
 - “In Order to Understand the Brutality of American Capitalism, You Have
   to Start on the Plantation” – Essay by Matthew Desmond
-  <https://www.nytimes.com/interactive/2019/08/14/magazine/slavery-capitalism.html>
+  [https://www.nytimes.com/interactive/2019/08/14/magazine/slavery-…](https://www.nytimes.com/interactive/2019/08/14/magazine/slavery-capitalism.html)
   - Connects slavery to contemporary economic systems.
 
 2.  *The 1776 Report*
 
-– [Arnn, Larry P., Carol Swain, and Matthew Spalding. 2021. The
-President’s Advisory 1776 Commission. Washington, D.C: The White
-House.](https://trumpwhitehouse.archives.gov/wp-content/uploads/2021/01/The-Presidents-Advisory-1776-Commission-Final-Report.pdf) -
+– [Arnn, Larry P., Carol Swain, and Matthew Spalding. 2021.
+The…](https://trumpwhitehouse.archives.gov/wp-content/uploads/2021/01/The-Presidents-Advisory-1776-Commission-Final-Report.pdf) -
 Presents a traditionalist, patriotic framing of American founding
 values.
 
@@ -867,18 +790,18 @@ Optional Readings
 1. _The 1776 Report_
 
 - “AHA Statement Condemning Report of Advisory 1776 Commission.” 
-  * [https://www.historians.org/news/aha-statement-condemning-report-of-advisory-1776-commission/](https://www.historians.org/news/aha-statement-condemning-report-of-advisory-1776-commission/)
+  * [https://www.historians.org/news/aha-statement-condemning-report-…](https://www.historians.org/news/aha-statement-condemning-report-of-advisory-1776-commission/)
 - McKenna, Konstantin. 2025. “The 1776 Project Is a Desperate Search for the Right Enemies.” Foreign Policy. 
-  * [https://foreignpolicy.com/2021/01/21/1776-project-desperate-search-enemies-identity-politics-unamerican/](https://foreignpolicy.com/2021/01/21/1776-project-desperate-search-enemies-identity-politics-unamerican/)
+  * [https://foreignpolicy.com/2021/01/21/1776-project-desperate-sear…](https://foreignpolicy.com/2021/01/21/1776-project-desperate-search-enemies-identity-politics-unamerican/)
 
 2. _The 1619 Project_
 
 - Hannah-Jones, Nikole. 2019. The 1619 Project. The New York Times Magazine. 
-  * [https://pulitzercenter.org/sites/default/files/full_issue_of_the_1619_project.pdf?_gl=1*av7vjw*_gcl_au*MTA2MTEwMzQ4NS4xNzUwODgxODA1*_ga*MjA3ODQ2OTEyMi4xNzUwODgxODA1*_ga_ZYQYTZTT61*czE3NTA4ODE4MDMkbzEkZzEkdDE3NTA4ODI2NzEkajM4JGwwJGgxNjcwMTY0ODcx](https://pulitzercenter.org/sites/default/files/full_issue_of_the_1619_project.pdf?_gl=1*av7vjw*_gcl_au*MTA2MTEwMzQ4NS4xNzUwODgxODA1*_ga*MjA3ODQ2OTEyMi4xNzUwODgxODA1*_ga_ZYQYTZTT61*czE3NTA4ODE4MDMkbzEkZzEkdDE3NTA4ODI2NzEkajM4JGwwJGgxNjcwMTY0ODcx)
+  * [https://pulitzercenter.org/sites/default/files/full_issue_of_the…](https://pulitzercenter.org/sites/default/files/full_issue_of_the_1619_project.pdf?_gl=1*av7vjw*_gcl_au*MTA2MTEwMzQ4NS4xNzUwODgxODA1*_ga*MjA3ODQ2OTEyMi4xNzUwODgxODA1*_ga_ZYQYTZTT61*czE3NTA4ODE4MDMkbzEkZzEkdDE3NTA4ODI2NzEkajM4JGwwJGgxNjcwMTY0ODcx)
 - Silverstein, Jake. 2020. “On Recent Criticism of The 1619 Project.” The New York Times. 
-  * [https://www.nytimes.com/2020/10/16/magazine/criticism-1619-project.html](https://www.nytimes.com/2020/10/16/magazine/criticism-1619-project.html)
+  * [https://www.nytimes.com/2020/10/16/magazine/criticism-1619-proje…](https://www.nytimes.com/2020/10/16/magazine/criticism-1619-project.html)
 - “We Respond to the Historians Who Critiqued The 1619 Project.” 2019. The New York Times. 
-  * [https://www.nytimes.com/2019/12/20/magazine/we-respond-to-the-historians-who-critiqued-the-1619-project.html](https://www.nytimes.com/2019/12/20/magazine/we-respond-to-the-historians-who-critiqued-the-1619-project.html)
+  * [https://www.nytimes.com/2019/12/20/magazine/we-respond-to-the-hi…](https://www.nytimes.com/2019/12/20/magazine/we-respond-to-the-historians-who-critiqued-the-1619-project.html)
 
 3. **Optional for ambitious students**
 
@@ -892,7 +815,7 @@ Optional Readings
 
 - Chemerinsky, Erwin. 2024. “The Underlying Issues Concerning Free
   Speech in Schools.” Stanford Law Review 76: 1427.
-- <https://review.law.stanford.edu/wp-content/uploads/sites/3/2024/10/Chemerinsky-76-Stan.-L.-Rev.-1427.pdf>
+- [https://review.law.stanford.edu/wp-content/uploads/sites/3/2024/…](https://review.law.stanford.edu/wp-content/uploads/sites/3/2024/10/Chemerinsky-76-Stan.-L.-Rev.-1427.pdf)
 
 **Introduction and the History of Free Speech in America**
 
@@ -919,33 +842,33 @@ Optional Readings
 
 - Bangs, R. “Pittsburgh’s Massive Racial Disparities in Police Actions,
   2021-2023” July 1, 2024.
-  - [Op-Ed Link:
-    https://www.canva.com/design/DAGQTToI1A0/q3ld4QrnSxyaBG8aMxJIRQ/view?utm_content=DAGQTToI1A0&utm_campaign=designshare&utm_medium=link&utm_source=editor](https://www.canva.com/design/DAGQTToI1A0/q3ld4QrnSxyaBG8aMxJIRQ/view?utm_content=DAGQTToI1A0&utm_campaign=designshare&utm_medium=link&utm_source=editor)
+  - [Op-Ed
+    Link:…](https://www.canva.com/design/DAGQTToI1A0/q3ld4QrnSxyaBG8aMxJIRQ/view?utm_content=DAGQTToI1A0&utm_campaign=designshare&utm_medium=link&utm_source=editor)
 - Bangs, R. “Police Discrimination Against Black Youth Under Age 18”
   October 1, 2024.
-  - [Op-Ed Link:
-    https://www.canva.com/design/DAGSX13mhds/KJRJOKXLUTgJiJTZqrWk3Q/view?utm_content=DAGSX13mhds&utm_campaign=designshare&utm_medium=link&utm_source=editor](https://www.canva.com/design/DAGSX13mhds/KJRJOKXLUTgJiJTZqrWk3Q/view?utm_content=DAGSX13mhds&utm_campaign=designshare&utm_medium=link&utm_source=editor)
+  - [Op-Ed
+    Link:…](https://www.canva.com/design/DAGSX13mhds/KJRJOKXLUTgJiJTZqrWk3Q/view?utm_content=DAGSX13mhds&utm_campaign=designshare&utm_medium=link&utm_source=editor)
 
 Optional: - Bangs, R. “Fourth Amendment Problems with Pittsburgh Police
 Policies” February 2025 \*
-<https://www.crsp.pitt.edu/fourth-amendment-problems-pittsburgh-police-policies> -
+[https://www.crsp.pitt.edu/fourth-amendment-problems-pittsburgh-p…](https://www.crsp.pitt.edu/fourth-amendment-problems-pittsburgh-police-policies) -
 Bangs, R. “Pittsburgh Leaders Must Recognize the Serious Racial Problems
 in Police Actions” January 2025 \*
-<https://live-racesocialproblems-pitt.pantheonsite.io/pittsburgh-leaders-must-recognize-serious-racial-problems-police-actions> -
+[https://live-racesocialproblems-pitt.pantheonsite.io/pittsburgh-…](https://live-racesocialproblems-pitt.pantheonsite.io/pittsburgh-leaders-must-recognize-serious-racial-problems-police-actions) -
 Bangs, R. “Racial Disparities and Discrimination in Drug Arrest Charges
 by Pittsburgh Police, January-October 2022” November 2024 \*
-<https://www.crsp.pitt.edu/racial-disparities-and-discrimination-drug-arrest-charges-pittsburgh-police-january-october-2022> -
+[https://www.crsp.pitt.edu/racial-disparities-and-discrimination-…](https://www.crsp.pitt.edu/racial-disparities-and-discrimination-drug-arrest-charges-pittsburgh-police-january-october-2022) -
 Bangs, R. “New National Reports on Anti-Black Pretextual Traffic Stops
 and Frisks, Related Pittsburgh Police Data, and Recommendations” October
 15, 2024 \*
-<https://www.crsp.pitt.edu/new-national-reports-anti-black-pretextual-traffic-stops-and-frisks-related-pittsburgh-police-data>
+[https://www.crsp.pitt.edu/new-national-reports-anti-black-pretex…](https://www.crsp.pitt.edu/new-national-reports-anti-black-pretextual-traffic-stops-and-frisks-related-pittsburgh-police-data)
 
 ### Ezra Klein, *Why We’re Polarized*
 
 - Klein, Ezra. 2020. Why We’re Polarized. Avid Reader Press / Simon &
   Schuster. **Available from CMU Library, and used at many bookstores.
   Working on making it available on Canvas.**
-  - <https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991019694389504436>
+  - [https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/…](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991019694389504436)
 - Klein, Introduction: What Didn’t Happen
 - Klein, Chapter 1: How Democrats Became Liberals and Republicans Became
   Conservatives
@@ -967,14 +890,14 @@ and Frisks, Related Pittsburgh Police Data, and Recommendations” October
   Developing Democracies: The Impact of the Internet, Social Media, and
   Polarization.” Annual Review of Political Science 28(Volume 28, 2025):
   413–434.
-  - <https://www.annualreviews.org/content/journals/10.1146/annurev-polisci-033123-015559>
+  - [https://www.annualreviews.org/content/journals/10.1146/annurev-p…](https://www.annualreviews.org/content/journals/10.1146/annurev-polisci-033123-015559)
 - Barrett, Paul, Justin Hendrix, and Grant Sims. 2021. Fueling the Fire:
   How Social Media Intensifies U.S. Political Polarization And What Can
   Be Done About It. NYU Stern Center for Business and Human Rights.
-  - <https://bhr.stern.nyu.edu/wp-content/uploads/2024/02/NYUCBHRFuelingTheFire_FINALONLINEREVISEDSep7.pdf>
+  - [https://bhr.stern.nyu.edu/wp-content/uploads/2024/02/NYUCBHRFuel…](https://bhr.stern.nyu.edu/wp-content/uploads/2024/02/NYUCBHRFuelingTheFire_FINALONLINEREVISEDSep7.pdf)
 - Shapiro, Ari. 2022. “How the polarizing effect of social media is
   speeding up.” NPR.
-  - <https://www.npr.org/2022/09/09/1121295499/facebook-twitter-youtube-instagram-tiktok-social-media>
+  - [https://www.npr.org/2022/09/09/1121295499/facebook-twitter-youtu…](https://www.npr.org/2022/09/09/1121295499/facebook-twitter-youtube-instagram-tiktok-social-media)
 
 ### Identity Politics and Polarization
 
@@ -1007,7 +930,7 @@ and Frisks, Related Pittsburgh Police Data, and Recommendations” October
   its identity and who counts as a real American. The two arguments are
   often run together and they have different evidence behind them.
   Pulling them apart is a session on its own, and it bears directly on
-  October 6.
+  Oct 6.
 
 *Topic banks assembled in previous semesters. Students leading a session
 are welcome to draw on these, or to propose readings of their own.*
@@ -1044,9 +967,8 @@ AND FELLOWS OF HARVARD COLLEGE, No. 20–1199)) - Decided June 29, 2023
 - Background and commentary
   - [History of Affirmative
     Action](https://www.history.com/articles/affirmative-action)
-  - [Pew Research: Topic — Affirmative Action in College Admissions
-    (Neutral
-    Background)](https://www.pewresearch.org/fact-sheet/topic-affirmative-action-in-college-admissions/)
+  - [Pew Research: Topic — Affirmative Action in College
+    Admissions…](https://www.pewresearch.org/fact-sheet/topic-affirmative-action-in-college-admissions/)
   - [The Strange Career of Affirmative Action — Harvard
     Scholars](https://jlhochschild.scholars.harvard.edu/publications/strange-career-affirmative-action)
   - [Affirmative Action Article
@@ -1059,8 +981,8 @@ AND FELLOWS OF HARVARD COLLEGE, No. 20–1199)) - Decided June 29, 2023
     Case)](https://www.gse.harvard.edu/ideas/usable-knowledge/18/07/case-affirmative-action)
   - [Affirmative Action Was Wrong from the Start
     (Anti)](https://observer.case.edu/affirmative-action-was-wrong-from-the-start/)
-  - [Stanford Magazine: The Case Against Affirmative Action (Anti
-    Case)](https://stanfordmag.org/contents/the-case-against-affirmative-action)
+  - [Stanford Magazine: The Case Against Affirmative Action
+    (Anti…](https://stanfordmag.org/contents/the-case-against-affirmative-action)
 
 **Gun Control**
 
@@ -1072,13 +994,12 @@ AND FELLOWS OF HARVARD COLLEGE, No. 20–1199)) - Decided June 29, 2023
   <!-- TODO: F26 Canvas course ID -->
 - [NRA-ILA \| Why Gun Control Doesn’t
   Work](https://www.nraila.org/why-gun-control-doesn-t-work/)
-- [U.S. Gun Policy: Global Comparisons \| Council on Foreign
-  Relations](https://www.cfr.org/backgrounder/us-gun-policy-global-comparisons#chapter-title-0-2)
+- [U.S. Gun Policy: Global Comparisons \| Council on
+  Foreign…](https://www.cfr.org/backgrounder/us-gun-policy-global-comparisons#chapter-title-0-2)
 - [Do Studies Show Gun Control Works? No. -
   Reason.com](https://reason.com/video/2022/03/31/do-studies-show-gun-control-works-no/)
-- [For Most U.S. Gun Owners, Protection Is the Main Reason They Own a
-  Gun \| Pew
-  Research](https://www.pewresearch.org/politics/2023/08/16/for-most-u-s-gun-owners-protection-is-the-main-reason-they-own-a-gun/)
+- [For Most U.S. Gun Owners, Protection Is the Main Reason
+  They…](https://www.pewresearch.org/politics/2023/08/16/for-most-u-s-gun-owners-protection-is-the-main-reason-they-own-a-gun/)
 
 **Voting Rights and Gerrymandering**
 
@@ -1087,14 +1008,13 @@ AND FELLOWS OF HARVARD COLLEGE, No. 20–1199)) - Decided June 29, 2023
     Explained](https://youtu.be/QT0I-sdoSXU?si=7Tut3IlSdZMIPhfg)
   - [The Voting System That Actually Represents
     Everyone](https://youtu.be/l8XOZJkozfI?si=ZmzpksgR3M8hTPVX)
-  - [Partisan Gerrymandering Mostly Cancels Out at National Level, Study
-    Shows](https://isps.yale.edu/news/blog/2023/06/partisan-gerrymandering-mostly-cancels-out-at-national-level-study-shows)
+  - [Partisan Gerrymandering Mostly Cancels Out at National
+    Level,…](https://isps.yale.edu/news/blog/2023/06/partisan-gerrymandering-mostly-cancels-out-at-national-level-study-shows)
   - [Biggest Problem with Gerrymandering — Harvard
     Gazette](https://news.harvard.edu/gazette/story/2023/07/biggest-problem-with-gerrymandering/)
 - Optional
-  - [Supreme Court Rules Partisan Gerrymandering Is Beyond The Reach Of
-    Federal
-    Courts](https://www.npr.org/2019/06/27/731847977/supreme-court-rules-partisan-gerrymandering-is-beyond-the-reach-of-federal-court)
+  - [Supreme Court Rules Partisan Gerrymandering Is Beyond The
+    Reach…](https://www.npr.org/2019/06/27/731847977/supreme-court-rules-partisan-gerrymandering-is-beyond-the-reach-of-federal-court)
   - [What Is Extreme Gerrymandering? \| Brennan Center for
     Justice](https://www.brennancenter.org/our-work/analysis-opinion/what-extreme-gerrymandering)
   - [Electoral College \| USAGov](https://www.usa.gov/electoral-college)
@@ -1112,8 +1032,8 @@ AND FELLOWS OF HARVARD COLLEGE, No. 20–1199)) - Decided June 29, 2023
     (2022)](https://constitutioncenter.org/the-constitution/supreme-court-case-library/dobbs-v-jackson-womens-health-organization)
 - **NPR**, “Abortion wasn’t always the politically charged issue it is
   today” (2022)
-  - [Abortion wasn’t always the politically charged issue it is today :
-    NPR](https://www.npr.org/2022/05/04/1096719971/abortion-wasn-t-always-the-politically-charged-issue-it-is-today)
+  - [Abortion wasn’t always the politically charged issue it is
+    today](https://www.npr.org/2022/05/04/1096719971/abortion-wasn-t-always-the-politically-charged-issue-it-is-today)
 - **Throughline**, “The Evangelical Vote” (2019)
   - [The Evangelical Vote (2019) : Throughline :
     NPR](https://www.npr.org/2022/06/22/1106765258/the-evangelical-vote-2019)
@@ -1125,9 +1045,8 @@ AND FELLOWS OF HARVARD COLLEGE, No. 20–1199)) - Decided June 29, 2023
   - <https://doi.org/10.2307/jj.22177843.10>
 - **The New York Times**, “Tracking Abortion Bans Across the Country”
   (updated continuously)
-  - [Abortion Laws Across the Country: Tracking Bans and Protections by
-    State - The New York
-    Times](https://www.nytimes.com/interactive/2024/us/abortion-laws-roe-v-wade.html)
+  - [Abortion Laws Across the
+    Country](https://www.nytimes.com/interactive/2024/us/abortion-laws-roe-v-wade.html)
 
 **Birthright Citizenship**
 
