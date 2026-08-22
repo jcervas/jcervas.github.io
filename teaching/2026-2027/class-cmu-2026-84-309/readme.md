@@ -167,9 +167,11 @@ policy does not apply to you.
 *Objective Alignment*: 1, 4, 8
 
 Before every class meeting you post at least one comment to the course
-discussion board. Posts are due by **9:00 a.m. on the day we meet**,
-which gives me time to read the room before I walk into it — and gives
-you a reason to have opened the reading before the hour it is discussed.
+discussion board — **every meeting, including the one your own team
+leads**. There are 21 boards, one for each class that has one. Posts are
+due by **9:00 a.m. on the day we meet**, which gives me time to read the
+room before I walk into it — and gives you a reason to have opened the
+reading before the hour it is discussed.
 
 **Either raise something or answer someone.** A post counts if it does
 one of two things: it puts a question on the table, or it responds to a
@@ -182,12 +184,25 @@ Keep it short. A few sentences is plenty; there is no length requirement
 and no credit for padding. What matters is that you have put something
 down before the conversation starts.
 
+**The board is only ever used before a class, never after it.** Every
+board belongs to one session and closes when that session begins;
+nothing is posted to it afterwards, and no assignment in this course
+asks you to write up a class once it has happened. The one reflection
+that does look backwards — the student-led reflection above — goes in
+Canvas under Assignments at the end of term.
+
 **What to raise, or what to answer, depends on the day.**
 
-- **When a student team is leading**, that team posts its discussion
-  questions to the board in advance. Your comment answers one of them.
-  These are the days the board does the most work, because the leaders
-  arrive already knowing where the room stands.
+- **When a student team is leading.** That team posts its five or six
+  questions to the board a full week ahead. **Everyone not on that team
+  answers one of them** — say which one you are taking, so the thread
+  stays legible. These are the days the board does the most work,
+  because the leaders walk in already knowing where the room stands.
+  - **If it is your team leading, your questions are your post for that
+    day.** You do not owe a second comment on top of them, and you are
+    credited for the board that day like everyone else. Replying to your
+    classmates’ answers before class is worth doing, but it is not
+    required.
 - **When the day has an assigned reading**, respond to it: what you
   found unconvincing, where two readings collide, a question they raise
   and do not answer.
@@ -208,14 +223,6 @@ where you stand at any point in the term from your own record in Canvas.
 asking. A bad week, an illness, a day you simply forgot — two of those
 cost you nothing, and you never have to explain them to me. Past that,
 the arithmetic above applies.
-
-Each post is marked complete or incomplete. A post that shows you
-engaged with the day is complete; there is no partial credit and no
-bonus for length.
-
-Each board opens a week before its class and closes when we meet. You
-can work ahead if you like, but a board does not reopen once the
-conversation it was for has happened.
 
 The board is visible to everyone in the class. That is the point; it
 lets a discussion open already in motion instead of from a standing
@@ -264,9 +271,12 @@ conversation moving, pull in people who have not spoken, and cut off a
 thread that has stopped going anywhere. I will be there and will step in
 if needed, but the session is yours.
 
-**Afterward**, a short written reflection: what you took from the
-sessions your classmates led and from your own, what changed your
-thinking, what you would do differently.
+**At the end of term**, a short written reflection: what you took from
+the sessions your classmates led and from your own, what changed your
+thinking, what you would do differently. This is **one piece covering
+the whole semester, not one after each session**, and it is submitted in
+**Canvas under Assignments** — never on the discussion board. It is due
+December 4.
 
 *A note on the readings*: the strongest sessions in past years have not
 all been academic articles. A podcast episode, a documentary segment, an

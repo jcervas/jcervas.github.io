@@ -86,10 +86,6 @@ By the end of the semester you will be able to:
     in journalistic form at length, and briefly every week on the
     discussion board. *(the data journalism project; the board)*
 
-If at any point you cannot tell why we are doing something, that is a
-failure of my design and not of your attention — please say so, and I
-will fix it.
-
 <!-- Required text. Update the edition yearly. -->
 
 ## Required Text
