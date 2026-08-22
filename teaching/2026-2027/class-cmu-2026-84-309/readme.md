@@ -111,356 +111,30 @@ The course grade will be a weighted average of the following components:
 
 ## Assignment Details
 
-**Attendance** (25%)
+**Full instructions for every assignment are in Canvas**, under
+Assignments. What follows is the shape of each one and what it is worth.
 
-*Purpose*: Civic discourse, empathy, critical thinking  
-*Objective Alignment*: 4, 8
-
-![Absences and the attendance grade. The first three cost almost
-nothing; four to six is where it
-bites.](readme_files/figure-gfm/attendance-curve-1.png)
-
-Showing up is the assignment. This grade covers both being here and
-being present once you are — arriving prepared (having completed the
-readings) and contributing thoughtfully and respectfully to discussion.
-
-Regular attendance and active involvement form a significant part of
-your final grade (see grading section). If you do not show up, you will
-not earn an ‘A’. To recognize that occasional absences are sometimes
-unavoidable (e.g., for religious observance, job interviews,
-university-sanctioned events, or illness), attendance grades follow a
-curve with three stretches. The first three absences cost you almost
-nothing — that is what they are there for. From the fourth to the sixth
-the penalty bites hard, and this is the range where a semester goes
-wrong. After that the curve flattens into a long tail: each further
-absence still costs you, but less, and it never reaches zero. There is
-no point at which you may as well stop coming.
-
-| Absences         |    0 |   2 |   3 |   4 |   5 |   6 |   8 |  12 |
-|------------------|-----:|----:|----:|----:|----:|----:|----:|----:|
-| Attendance grade | 100% | 94% | 88% | 72% | 47% | 36% | 30% | 23% |
-
-If you must miss class, please notify the TA (and cc the professor) at
-least 24 hours in advance (unless it is an emergency or sudden illness)
-so we can arrange a way for you to catch up.[^1]
-
-**Devices.** Laptops, tablets, and phones are not to be used for
-anything that is not pertinent to what we are doing in the room. The
-simplest version of this: keep them in your bag. If you are found using
-a device for something unrelated to class, **you will be marked absent
-for that session** — see the curve above for what that costs.
-
-This is not about distraction alone. This course runs on discussion, and
-a room where half the screens are open is a room where people are
-performing attention rather than paying it. You will also be asked,
-repeatedly, to sit with an argument you dislike before responding to it;
-a device is the easiest available exit from that discomfort, and taking
-the exit is how you learn nothing.
-
-If you have an accommodation from the Office of Disability Resources
-that involves a device, it governs — bring me your letter and this
-policy does not apply to you.
-
-**Discussion Board** (15%)
-
-*Purpose*: Arriving with your thinking already underway  
-*Objective Alignment*: 1, 4, 8
-
-Before every class meeting you post at least one comment to the course
-discussion board — **every meeting, including the one your own team
-leads**. There are 21 boards, one for each class that has one. Posts are
-due by **9:00 a.m. on the day we meet**, which gives me time to read the
-room before I walk into it — and gives you a reason to have opened the
-reading before the hour it is discussed.
-
-**Either raise something or answer someone.** A post counts if it does
-one of two things: it puts a question on the table, or it responds to a
-question or comment a classmate has already put there. Both are worth
-the same. A thread where nobody replies is just a stack of monologues,
-and a thread where nobody asks anything runs out of road — the board
-needs both, and you can supply either.
-
-Keep it short. A few sentences is plenty; there is no length requirement
-and no credit for padding. What matters is that you have put something
-down before the conversation starts.
-
-**The board is only ever used before a class, never after it.** Every
-board belongs to one session and closes when that session begins;
-nothing is posted to it afterwards, and no assignment in this course
-asks you to write up a class once it has happened. The one piece of
-writing that does look backwards — the student-led reflection above —
-goes in Canvas under Assignments, in the days after your team leads.
-
-**What to raise, or what to answer, depends on the day.**
-
-- **When a student team is leading.** That team posts its five or six
-  questions to the board three days before. **Everyone not on that team
-  either answers one of them or puts a further question on the table** —
-  if you are answering, say which question you are taking, so the thread
-  stays legible. These are the days the board does the most work,
-  because the leaders walk in already knowing where the room stands.
-  - **If it is your team leading, your questions are your post for that
-    day.** You do not owe a second comment on top of them, and you are
-    credited for the board that day like everyone else. Replying to your
-    classmates’ answers before class is worth doing, but it is not
-    required.
-- **When the day has an assigned reading**, respond to it: what you
-  found unconvincing, where two readings collide, a question they raise
-  and do not answer.
-- **Otherwise, the floor is open.** Post what is actually on your mind —
-  something in the news, something from an earlier session you are still
-  chewing on, a question you did not get to ask out loud. Not every
-  class needs a set topic for you to have something worth saying.
-
-**Grading.** Completion and engagement, not correctness. Every post is
-worth the same, and they simply add up: there are 21 across the
-semester, so each one is worth a little under five percent of the board
-grade. Miss one and you lose that much; miss five and you have lost
-about a quarter of it. Nothing is forgiven automatically and nothing
-accelerates — the arithmetic is the whole policy, and you can work out
-where you stand at any point in the term from your own record in Canvas.
-
-**Your two lowest scores are dropped**, automatically and without your
-asking. A bad week, an illness, a day you simply forgot — two of those
-cost you nothing, and you never have to explain them to me. Past that,
-the arithmetic above applies.
-
-The board is visible to everyone in the class. That is the point; it
-lets a discussion open already in motion instead of from a standing
-start, and it means the quiet half of the room has said something before
-anyone speaks aloud. But be clear-eyed about what a board is. Unlike
-what we say aloud in this room, a post is written down, attached to your
-name, and takes one keystroke to capture. I cannot stop anyone from
-screenshotting it and I am not going to pretend otherwise. Write
-accordingly: say what you actually think, and assume it could travel.
-
-**Student Led Topics** (9%)
-
-*Purpose*: Facilitation, synthesis, reflection  
-*Objective Alignment*: 2, 4, 5, 6
-
-You will run a class. Not present to one, run it.
-
-Working in a team of four or five, you choose a topic connected to the
-course themes, assign the readings your classmates will do beforehand,
-and lead the session. Teams and topics are set on September 1, and the
-calendar of who leads which day is fixed that week and does not move.
-
-**What your team owes the class. The topic and readings are due five
-days before you lead; the questions go up three days before:**
-
-1.  **A topic.** Narrow enough to argue about in eighty minutes.
-    “Immigration” is not a topic; “whether birthright citizenship can be
-    altered by executive order” is.
-2.  **The readings.** Two or three pieces, and no more than about sixty
-    pages total. They must not all argue the same side. Post them to
-    Canvas five days ahead so your classmates can actually read them. A
-    reading posted late is a session that falls flat, and the whole
-    class pays for it. Ideally, multiple points of view are reflected in
-    the readings.
-3.  **Discussion questions.** Five or six, written out, **posted to your
-    session’s discussion board** three days before you lead, so the
-    class arrives having answered them. Good ones have no obvious answer
-    and cannot be resolved by looking something up.
-    - **This is how the board works on your day, and it is different for
-      you than for everyone else.** Posting these questions *is* your
-      discussion-board contribution for the session you lead — you owe
-      nothing further, and you are credited for that board like the rest
-      of the class. Everyone not on your team then either answers one of
-      your questions or raises another, before the hour. Nobody posts to
-      a board after the class it belongs to. The full rule is under
-      **Discussion Board** above.
-
-**On the day** your team runs the room: open the question, keep the
-conversation moving, pull in people who have not spoken, and cut off a
-thread that has stopped going anywhere. I will be there and will step in
-if needed, but the session is yours.
-
-**Within three days of the session you lead**, a short written
-reflection — written while it is still fresh, not saved up for the end
-of term. How did the discussion actually go? Where did it stall, and
-what would you do differently if you ran it again? What have you taken
-from the sessions your classmates have led so far? It goes in **Canvas
-under Assignments**, never on the discussion board, and your team’s
-deadline is fixed with the leading calendar on September 1.
-
-*A note on the readings*: the strongest sessions in past years have not
-all been academic articles. A podcast episode, a documentary segment, an
-op-ed pair from opposing outlets, or a piece of data journalism can
-carry a discussion as well as a scholarly paper — often better. Vary the
-voices you assign.
-
-**Surveys** (2%)
-
-*Purpose*: Getting to know you, your goals, and what is working in the
-course  
-*Objective Alignment*: 8
-
-Three short surveys: first week, midpoint, final week. The first is the
-**Cervas Election Study**, modelled on the Cooperative Election Study;
-the second is course feedback, early enough that I can still act on it;
-the third is an end-of-course evaluation. Links are in **Canvas, under
-Assignments**.
-
-The first ends with eight questions asking you to estimate what the two
-parties are made of — how many Democrats are union members, how many
-Republicans earn over \$250,000. Answer cold: nothing looked up, nothing
-compared with a classmate. Your answers become a class dataset, which I
-report back only in aggregate, and we set it beside the published
-figures on September 8.
-
-Graded for completion, not content; the estimates are not graded on
-accuracy, and being wrong is the finding. The survey is anonymous and
-cannot tell me you finished it, so **screenshot the confirmation screen
-and upload it to the Canvas assignment** — the screenshot is your
-receipt.
-
-**Book Review Assignment** (12%)
-
-*Purpose*: Deep analysis, critical evaluation, communication  
-*Objective Alignment*: 1, 2, 4, 6
-
-- **Slide Deck** (5%)
-
-*Purpose*: Argument analysis, assumption critique, implication
-discussion
-
-- *Length*: **No fewer than 5 slides and no more than 10**, excluding a
-  title slide and any references slide.
-
-- *Content Guidelines*:
-
-  - Summarize the author’s central argument(s) succinctly.
-  - Critically evaluate those arguments using logical reasoning and
-    textual evidence.
-  - Identify any assumptions or ideological lenses the author brings.
-  - Discuss broader political, ethical, or social implications.
-  - Make connections to course themes such as inequality, polarization,
-    or justice.
-  - Cite anything you quote or paraphrase.
-
-- *On slide design*: a slide is not a page. Put one idea on each, in
-  words large enough to read from the back of the room, and let the rest
-  live in what you say. A deck of dense paragraphs read aloud is the
-  failure mode this assignment is built to avoid. Ten sparse slides beat
-  five crowded ones, and the ceiling is there to stop the deck from
-  becoming the paper.
-
-- **In-Class Oral Presentation** (7%)
-
-*Purpose*: Verbal synthesis, peer engagement, clarity of thought  
-*Format*: Short oral presentation, followed by discussion
-
-- **You present to a small group, not to the whole class.** On November
-  24 everyone presents in the same session: you will be placed in a
-  breakout group of five or six and present there, about ten minutes
-  each including questions. I move between groups. The grade is the same
-  as it would be in front of everyone.
-
-- *Expectations*:
-
-  - Clear, engaging summary of key ideas from the book.
-  - Highlight your critical take or most interesting insight.
-  - Open the floor by posing a question or provocation, and field your
-    classmates’ responses.
-  - Speak to your slides rather than reading them; the presentation is
-    assessed on delivery and engagement, not on narrating the deck.
-
-**Op-ed w/ peer-review** (20%)
-
-*Purpose*: Persuasive writing, revision, public engagement  
-*Objective Alignment*: 3, 6, 7
-
-- Drawing on a topic related to this course, or something political from
-  your own life or experience, write an op-ed that could be published in
-  a newspaper or blog.
-
-The weight sits where the work is. Writing the thing and reading someone
-else’s carefully are the hard parts; the final draft is where you carry
-out edits you have already been handed.
-
-- **Rough Draft** (10%)
-  - *Length*: There is a strict 1,250-word limit.
-  - *Content Guidelines*:
-    - Prepare a short essay advocating for (or against) any social or
-      political issue of your choosing.
-    - The idea is that you will write something that can be submitted to
-      a newspaper or internet blog.
-    - Concise arguments made for a more general audience are the goal of
-      this assignment; something your parents can read and understand.
-    - The use of data and visualizations is strongly encouraged and is
-      not included in the word count.
-  - Graded as a finished piece, not as a sketch. Hand in something you
-    would be willing to see published — a draft written to be fixed
-    later is worth very little to the classmate who has to review it.
-  - **This deadline is hard, and it is the one deadline in the course
-    with no exceptions.** A late draft costs **10% immediately, and a
-    further 1% for every hour after that**. Unlike everything else in
-    this course, it can reach zero.
-  - The reason is not severity for its own sake. Two classmates are
-    assigned to read you, and when review assignments go out, whatever
-    exists is what they get. If your draft is not there, they are given
-    someone else’s instead, the class is not held up waiting for you.
-    But you go into your final draft without the feedback everyone else
-    received, you still owe the two reviews you were assigned, and the
-    points are gone. The cost of being late lands on you, which is
-    exactly where it belongs.
-- **Peer Review** (8%)
-  - You will review two classmates’ drafts. This is worth nearly as much
-    as writing your own, and is graded on the quality of what you give
-    them.
-  - Address the substance first, then the prose: Is the thesis clear,
-    and is it stated early enough? Is the evidence convincing? Would a
-    reader outside this class follow it? Where does it lose momentum?
-  - Say the useful thing. “Nice job” is not a review; naming the
-    paragraph where the argument stops working is.
-- **Final Draft** (2%)
-  - Carry out the revisions your reviewers identified, and improve
-    anything else you now see. This is assessed on whether you took the
-    feedback seriously — what changed, and why — rather than re-graded
-    as a fresh piece of writing.
-  - If you disagree with a reviewer, you are free to leave it as it was;
-    note briefly why, and that counts as taking it seriously.
-
-**Group Policy Brief** (17%)
-
-*Purpose*: Research, equity-centered solutions, teamwork *Objective
-Alignment*: 3, 7, 8
-
-- **Written Brief** (10%): Small teams choose a politically polarizing
-  issue tied to inequality (e.g., gerrymandering, Medicaid expansion,
-  tech bias) and write a formal policy brief (\~1,500–2,000 words).
-  - *Components*:
-    - Executive Summary
-    - Problem Definition
-    - Background/Context
-    - Policy Options & Stakeholder Analysis
-    - Recommendation(s)
-    - Equity Impact Statement
-- **Presentation** (5%): Teams present findings in a mock legislative or
-  community forum during finals week.
-- **Individual Reflection** (2%): A short piece, submitted on your own
-  after your team presents, on how the work actually went.
-  - *Address*:
-    - What you personally contributed — specific tasks, sections, and
-      decisions, not “I helped with research.”
-    - What each teammate contributed, in the same concrete terms.
-    - How the team divided work, and whether that division held up.
-    - What you would do differently on a team project next time.
-  - Submitted individually and read only by the instructors. Your
-    teammates never see it.
-  - **These evaluations can move your grade.** Where the reflections
-    from a team agree that contribution was substantially uneven, I may
-    adjust individual grades on the brief and the presentation above or
-    below the team grade. A team that divided the work fairly sees no
-    adjustment, which is the ordinary outcome.
-  - Be candid in both directions. Credit is easy to overlook, and a
-    teammate who carried more than their share should be named. If the
-    load was uneven, say so plainly — a group grade that lands
-    identically on someone who did the work and someone who did not is
-    its own kind of unfairness, and this is how I find out.
-
-------------------------------------------------------------------------
+- **Attendance** (25%). Show up. The first three absences cost almost
+  nothing; four to six is where a semester goes wrong. The curve is in
+  Canvas.
+- **Discussion Board** (15%). One short post before every class, due
+  **9:00 a.m.** on the day we meet. Either raise something or answer
+  someone. Your two lowest scores are dropped.
+- **Student Led Topics** (9%). In a team of four or five you pick a
+  topic, assign the readings, set the questions, and run one
+  eighty-minute session — plus a short reflection within three days of
+  your own.
+- **Surveys** (2%). Three short surveys: August 26, October 7, and the
+  final week. Graded for completion; screenshot the confirmation and
+  upload it.
+- **Book Review** (12%). A slide deck (5%) and a presentation to a small
+  group on November 24 (7%).
+- **Op-Ed Project** (20%). A rough draft (10%), two peer reviews (8%),
+  and a final draft (2%). **The draft deadline is the one hard deadline
+  in this course** — two classmates are assigned to read you, and
+  whatever exists is what they get.
+- **Group Policy Brief** (17%). A written brief (10%), a presentation in
+  finals week (5%), and an individual reflection (2%).
 
 <!-- Grading philosophy and the late-work policy. Usually stable year to year. -->
 
@@ -474,7 +148,7 @@ success.
 *Assignments & Deadlines* You are expected to meet all assignment
 deadlines. If you anticipate being unable to turn something in on time,
 contact me before the due date to discuss alternatives. Late work will
-incur a penalty[^2] provided it does not impede your classmates’
+incur a penalty[^1] provided it does not impede your classmates’
 progress (for instance, in group projects). Failing to participate or
 contribute meaningfully, especially in ways that affect others’ work,
 will result in a lower grade.
@@ -1279,11 +953,7 @@ services available on campus at:
 Please remember that support is always available—don’t hesitate to reach
 out.
 
-[^1]: If you need to miss more than two sessions due to extenuating
-    circumstances, let me know as soon as possible so we can discuss how
-    best to support you.
-
-[^2]: One percentage point per hour late, never falling below 50%. An
+[^1]: One percentage point per hour late, never falling below 50%. An
     hour or two costs almost nothing; a day costs a letter grade, but
     late work is always worth more than no work. Work never submitted
     scores zero, so handing something in a week late is always worth
