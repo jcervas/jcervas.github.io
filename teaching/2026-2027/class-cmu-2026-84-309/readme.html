@@ -954,6 +954,62 @@ h2 { font-size: 15pt; }
 h3 { font-size: 12.5pt; }
 .stats { break-inside: avoid; page-break-inside: avoid; }
 }
+
+
+
+#schedule p > strong:only-child {
+font-family: var(--mono);
+font-size: .74rem;
+font-weight: 600;
+letter-spacing: .05em;
+color: var(--accent);
+}
+#schedule p:has(> strong:only-child) { margin: 1.7em 0 .55em; }
+
+#schedule ul:not(li ul) {
+list-style: none;
+padding-left: 0;
+margin: 0 0 .4em;
+}
+#schedule ul:not(li ul) > li {
+border-left: 2px solid var(--accent);
+padding: .1rem 0 .1rem .7rem;
+margin: 0 0 .85em;
+font-size: .92rem;
+line-height: 1.45;
+}
+#schedule ul:not(li ul) strong { font-weight: 600; }
+
+#schedule ul:not(li ul) > li > strong:first-child {
+display: block;
+font-family: var(--mono);
+font-size: .68rem;
+font-weight: 500;
+letter-spacing: .07em;
+text-transform: uppercase;
+color: var(--ink-3);
+margin-bottom: .2em;
+}
+
+#schedule li ul {
+list-style: none;
+margin: .35em 0 0;
+padding-left: 0;
+}
+#schedule li ul > li {
+position: relative;
+padding-left: .85rem;
+margin-bottom: .28em;
+font-size: .86rem;
+line-height: 1.4;
+color: var(--ink-2);
+}
+#schedule li ul > li::before {
+content: "\00B7";
+position: absolute;
+left: 0;
+color: var(--ink-3);
+}
 </style>
 
 
