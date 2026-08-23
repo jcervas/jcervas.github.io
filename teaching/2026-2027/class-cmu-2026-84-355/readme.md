@@ -334,218 +334,244 @@ else’s work, not just your own:
 
 ## Schedule
 
-**Week 1 — Part I opens**
+### Week 1 — Part I opens
 
-- **Tue, Aug 25** — Course introduction: the three parts. Read the
-  book’s own introduction, What This Book Is For.
-  - The book’s introduction — *What This Book Is For*
-  - **DUE Wed, Aug 26, 11:59 p.m.** — the **Cervas Election Study**.
-- **Thu, Aug 27** — Data Session 1 — The decennial census, and the seats
-  it decides
-  - [Census Bureau, *America Counts: 250
-    Years*](https://www.census.gov/library/stories/2026/06/america-counts-250-years.html)
-  - [Census Academy — the Census data
-    API](https://www.census.gov/data/academy/courses/intro-to-the-census-bureau-data-api.html)
-    — module 1 only
-  - [NCSL, *Redistricting Law 2020*, ch. 1 — the
-    census](https://documents.ncsl.org/wwwncsl/Redistricting-Census/Redistricting-Law-2020_NCSL%20FINAL.pdf)
+#### Tue, Aug 25 — Course introduction: the three parts. Read the book’s own introduction, What This Book Is For.
 
-**Week 2 — Part I**
+- The book’s introduction — *What This Book Is For*
+- **DUE Wed, Aug 26, 11:59 p.m.** — the **Cervas Election Study**.
 
-- **Tue, Sep 1** — The rules, and the four standards
-  - Sides et al., Ch. 1
-  - [Scott, *Seeing Like a State* (1998), intro — where “legibility”
-    comes from](https://www.jstor.org/stable/j.ctt1nq3vk)
-- **Thu, Sep 3** — Data Session 2 — Geography, and the scales it comes
-  at
-  - [Census Bureau video — *Understanding Statistical
-    Geographies*](https://www.census.gov/library/video/2021/understanding-statistical-geographies.html)
+#### Thu, Aug 27 — Data Session 1 — The decennial census, and the seats it decides
 
-**Week 3 — Part I**
+- [Census Bureau, *America Counts: 250
+  Years*](https://www.census.gov/library/stories/2026/06/america-counts-250-years.html)
+- [Census Academy — the Census data
+  API](https://www.census.gov/data/academy/courses/intro-to-the-census-bureau-data-api.html)
+  — module 1 only
+- [NCSL, *Redistricting Law 2020*, ch. 1 — the
+  census](https://documents.ncsl.org/wwwncsl/Redistricting-Census/Redistricting-Law-2020_NCSL%20FINAL.pdf)
 
-- **Tue, Sep 8** — Who can vote, how, and where
-  - Sides et al., Ch. 2
-  - [Cohn, *NYT* — the Electoral College
-    edge](https://www.nytimes.com/2024/09/25/upshot/trump-electoral-college-harris.html)
-  - [Brennan Center — census data and a changing
-    nation](https://www.brennancenter.org/our-work/research-reports/census-data-highlights-changing-nation)
-  - [*NPR* — Black representation after the
-    ruling](https://www.npr.org/2026/04/30/nx-s1-5805050/supreme-court-voting-rights-congressional-black-caucus)
-  - [Podcast: *Amicus*
-    (Slate)](https://slate.com/podcasts/amicus/2026/07/supreme-court-term-recap-birthright-citizenship-voting-rights)
-- **Thu, Sep 10** — Data Session 3 — The American Community Survey
-  - [ACS Handbook, ch. 1 — the
-    basics](https://www.census.gov/content/dam/Census/library/publications/2020/acs/acs_general_handbook_2020_ch01.pdf)
-  - [Census Academy — *Discovering the American Community
-    Survey*](https://www.census.gov/data/academy/courses/discovering-the-american-community-survey.html)
-    — all six modules
+### Week 2 — Part I
 
-**Week 4 — Part II opens**
+#### Tue, Sep 1 — The rules, and the four standards
 
-- **Tue, Sep 15** — The transformation of American campaigns
-  - Sides et al., Ch. 3
-- **Thu, Sep 17** — **NO CLASS.** Constitution Day Symposium. Data
-  Session 4 is self-directed: what a survey can establish.
-  - [Pew — how public polling has
-    changed](https://www.pewresearch.org/methods/2023/04/19/how-public-polling-has-changed-in-the-21st-century/)
-  - [Pew — polling basics, lessons
-    1–3](https://www.pewresearch.org/course/public-opinion-polling-basics/)
+- Sides et al., Ch. 1
+- [Scott, *Seeing Like a State* (1998), intro — where “legibility” comes
+  from](https://www.jstor.org/stable/j.ctt1nq3vk)
 
-**Week 5 — Part II**
+#### Thu, Sep 3 — Data Session 2 — Geography, and the scales it comes at
 
-- **Tue, Sep 22** — Money, and the rule that shapes everything after it
-  - Sides et al., Ch. 4
-- **Thu, Sep 24** — Data Session 5 — Election polls: the horse race, and
-  what a margin hides
-  - [Bailey, *Polling at a Crossroads* (2023), ch. 1,
-    3–22](https://www.cambridge.org/9781108482790)
-  - [*NYT* — are political polls
-    accurate?](https://www.nytimes.com/2026/08/14/briefing/are-political-polls-accurate.html)
-  - [Podcast: AAPOR on pre-election
-    polling](https://aapor.org/media/public-opinion-pod/)
+- [Census Bureau video — *Understanding Statistical
+  Geographies*](https://www.census.gov/library/video/2021/understanding-statistical-geographies.html)
 
-**Week 6 — Part II closes**
+### Week 3 — Part I
 
-- **Tue, Sep 29** — Strategy: who a campaign decides to talk to
-  - [Sabino, *Bolts* — Missouri’s ballot-initiative
-    vote](https://boltsmag.org/missouri-rejects-restrictions-on-direct-democracy/)
-  - Sides et al., Ch. 5
-- **Thu, Oct 1** — Data Session 6 — Public opinion, and the studies
-  built to measure it: the Cervas Election Study beside CES and ANES. No
-  slide this week.
-  - [Verba, “The Citizen as Respondent” (1996),
-    1–7](https://www.jstor.org/stable/2082793) — why measure opinion by
-    survey at all
-  - [Pew — writing survey
-    questions](https://www.pewresearch.org/writing-survey-questions/) —
-    wording, order effects, response options
-  - *Reference:* [Cooperative Election
-    Study](https://cces.gov.harvard.edu/) — how it samples, and how many
-    it reaches
-  - *Reference:* [American National Election
-    Studies](https://electionstudies.org/) — the same two questions,
-    answered differently
-  - *Reference:* [*Harvard Youth Poll*, 52nd
-    edition](https://iop.harvard.edu/youth-poll/52nd-edition-spring-2026)
-    — toplines, and the methodology behind them
+#### Tue, Sep 8 — Who can vote, how, and where
 
-**Week 7 — Test 1**
+- Sides et al., Ch. 2
+- [Cohn, *NYT* — the Electoral College
+  edge](https://www.nytimes.com/2024/09/25/upshot/trump-electoral-college-harris.html)
+- [Brennan Center — census data and a changing
+  nation](https://www.brennancenter.org/our-work/research-reports/census-data-highlights-changing-nation)
+- [*NPR* — Black representation after the
+  ruling](https://www.npr.org/2026/04/30/nx-s1-5805050/supreme-court-voting-rights-congressional-black-caucus)
+- [Podcast: *Amicus*
+  (Slate)](https://slate.com/podcasts/amicus/2026/07/supreme-court-term-recap-birthright-citizenship-voting-rights)
 
-- **Tue, Oct 6** — Who the electorate is. No new chapter — review Ch.
-  1–5; Test 1 is Thursday.
-  - No new chapter — review Ch. 1–5 for Test 1
-  - [*NYT* — the rise of the multiracial
-    right](https://www.nytimes.com/interactive/2025/07/24/opinion/minority-voters-trump-right.html)
-- **Thu, Oct 8** — **TEST 1.** In class, on paper — Ch. 1–5
-  - Nothing new — bring questions
+#### Thu, Sep 10 — Data Session 3 — The American Community Survey
+
+- [ACS Handbook, ch. 1 — the
+  basics](https://www.census.gov/content/dam/Census/library/publications/2020/acs/acs_general_handbook_2020_ch01.pdf)
+- [Census Academy — *Discovering the American Community
+  Survey*](https://www.census.gov/data/academy/courses/discovering-the-american-community-survey.html)
+  — all six modules
+
+### Week 4 — Part II opens
+
+#### Tue, Sep 15 — The transformation of American campaigns
+
+- Sides et al., Ch. 3
+
+#### Thu, Sep 17 — **NO CLASS.** Constitution Day Symposium. Data Session 4 is self-directed: what a survey can establish.
+
+- [Pew — how public polling has
+  changed](https://www.pewresearch.org/methods/2023/04/19/how-public-polling-has-changed-in-the-21st-century/)
+- [Pew — polling basics, lessons
+  1–3](https://www.pewresearch.org/course/public-opinion-polling-basics/)
+
+### Week 5 — Part II
+
+#### Tue, Sep 22 — Money, and the rule that shapes everything after it
+
+- Sides et al., Ch. 4
+
+#### Thu, Sep 24 — Data Session 5 — Election polls: the horse race, and what a margin hides
+
+- [Bailey, *Polling at a Crossroads* (2023), ch. 1,
+  3–22](https://www.cambridge.org/9781108482790)
+- [*NYT* — are political polls
+  accurate?](https://www.nytimes.com/2026/08/14/briefing/are-political-polls-accurate.html)
+- [Podcast: AAPOR on pre-election
+  polling](https://aapor.org/media/public-opinion-pod/)
+
+### Week 6 — Part II closes
+
+#### Tue, Sep 29 — Strategy: who a campaign decides to talk to
+
+- [Sabino, *Bolts* — Missouri’s ballot-initiative
+  vote](https://boltsmag.org/missouri-rejects-restrictions-on-direct-democracy/)
+- Sides et al., Ch. 5
+
+#### Thu, Oct 1 — Data Session 6 — Public opinion, and the studies built to measure it: the Cervas Election Study beside CES and ANES. No slide this week.
+
+- [Verba, “The Citizen as Respondent” (1996),
+  1–7](https://www.jstor.org/stable/2082793) — why measure opinion by
+  survey at all
+- [Pew — writing survey
+  questions](https://www.pewresearch.org/writing-survey-questions/) —
+  wording, order effects, response options
+- *Reference:* [Cooperative Election
+  Study](https://cces.gov.harvard.edu/) — how it samples, and how many
+  it reaches
+- *Reference:* [American National Election
+  Studies](https://electionstudies.org/) — the same two questions,
+  answered differently
+- *Reference:* [*Harvard Youth Poll*, 52nd
+  edition](https://iop.harvard.edu/youth-poll/52nd-edition-spring-2026)
+  — toplines, and the methodology behind them
+
+### Week 7 — Test 1
+
+#### Tue, Oct 6 — Who the electorate is. No new chapter — review Ch. 1–5; Test 1 is Thursday.
+
+- No new chapter — review Ch. 1–5 for Test 1
+- [*NYT* — the rise of the multiracial
+  right](https://www.nytimes.com/interactive/2025/07/24/opinion/minority-voters-trump-right.html)
+
+#### Thu, Oct 8 — **TEST 1.** In class, on paper — Ch. 1–5
+
+- Nothing new — bring questions
 
 **Week 8 — FALL BREAK, no class (Oct 12–16)** Test 1 is behind you.
 Nothing is due.
 
 ------------------------------------------------------------------------
 
-**Week 9 — Part III opens**
+### Week 9 — Part III opens
 
-- **Tue, Oct 20** — Data Session 7 — Part III opens: what a return is,
-  where you get one, and what forty of them show
-  - [Burness, *Bolts* — election data and voting
-    rights](https://boltsmag.org/election-data-is-vital-to-voting-rights-but-hard-to-track-down/)
-  - [FairVote — *Monopoly Politics
-    2026*](https://fairvote.org/report/monopoly-politics-2026-update/)
-  - **DUE: Data journalism story — pitch your topic** (one paragraph, in
-    class).
-- **Thu, Oct 22** — Data Session 8 — The bottom rungs: precincts and
-  ballots
-  - [MIT Election Lab — why does anyone need precinct-level
-    results?](https://electionlab.mit.edu/articles/why-does-anyone-need-precinct-level-election-results)
-    — what county totals lose, and why the boundaries move
-  - **DUE Fri, Oct 23, 11:59 p.m.** — the **mid-term course feedback
-    survey**.
+#### Tue, Oct 20 — Data Session 7 — Part III opens: what a return is, where you get one, and what forty of them show
 
-**Week 10 — Part III**
+- [Burness, *Bolts* — election data and voting
+  rights](https://boltsmag.org/election-data-is-vital-to-voting-rights-but-hard-to-track-down/)
+- [FairVote — *Monopoly Politics
+  2026*](https://fairvote.org/report/monopoly-politics-2026-update/)
+- **DUE: Data journalism story — pitch your topic** (one paragraph, in
+  class).
 
-- **Tue, Oct 27** — Parties and interest groups
-  - Sides et al., Ch. 6 and Ch. 7
-- **Thu, Oct 29** — Data Session 9 — Money in politics: the record, and
-  the hole in it
-  - [OpenSecrets — dark money
-    basics](https://www.opensecrets.org/dark-money/basics) — who must
-    name a donor, and who need not
-  - [*NYT* — Harris’s donors, the
-    graphics](https://www.nytimes.com/interactive/2024/08/22/us/elections/kamala-harris-donors.html)
-    — a disclosure file, drawn
-  - [*NYT* — Trump’s campaign-finance
-    disclosures](https://www.nytimes.com/2024/08/26/opinion/republican-donors-money-trump.html)
-    — the same instrument as a problem
-  - [Podcast: *The Downballot* on this cycle’s
-    money](https://www.the-downballot.com/podcast)
+#### Thu, Oct 22 — Data Session 8 — The bottom rungs: precincts and ballots
 
-**Week 11 — Part III · election night**
+- [MIT Election Lab — why does anyone need precinct-level
+  results?](https://electionlab.mit.edu/articles/why-does-anyone-need-precinct-level-election-results)
+  — what county totals lose, and why the boundaries move
+- **DUE Fri, Oct 23, 11:59 p.m.** — the **mid-term course feedback
+  survey**.
 
-- **Tue, Nov 3** — **NO CLASS.** Democracy Day. Read both chapters this
-  week, for Thursday.
-  - For Thursday: Sides et al., Ch. 8 and Ch. 9
-- **Thu, Nov 5** — **Fixed date.** Data Session 10 — Live returns. Built
-  on results that do not exist until Nov 3.
-  - [NPR — *Race calls
-    101*](https://www.npr.org/2024/11/05/g-s1-32603/how-are-races-actually-called)
+### Week 10 — Part III
 
-**Week 12 — Part III · the machinery**
+#### Tue, Oct 27 — Parties and interest groups
 
-- **Tue, Nov 10** — **TEST 2.** In class, on paper — Ch. 6–9
-  - Ch. 8 and 9 are on the test
-- **Thu, Nov 12** — Data Session 11
-  - *Session and reading to be set.*
+- Sides et al., Ch. 6 and Ch. 7
 
-**Week 13 — Part III**
+#### Thu, Oct 29 — Data Session 9 — Money in politics: the record, and the hole in it
 
-- **Tue, Nov 17** — Congressional, state and local campaigns
-  - Sides et al., Ch. 10 and Ch. 11
-  - [Morris — the hidden
-    axis](https://www.gelliottmorris.com/p/not-just-left-vs-right-most-voters)
-- **Thu, Nov 19** — Data Session 12
-  - *Session and reading to be set.*
-  - **DUE: data journalism draft**.
+- [OpenSecrets — dark money
+  basics](https://www.opensecrets.org/dark-money/basics) — who must name
+  a donor, and who need not
+- [*NYT* — Harris’s donors, the
+  graphics](https://www.nytimes.com/interactive/2024/08/22/us/elections/kamala-harris-donors.html)
+  — a disclosure file, drawn
+- [*NYT* — Trump’s campaign-finance
+  disclosures](https://www.nytimes.com/2024/08/26/opinion/republican-donors-money-trump.html)
+  — the same instrument as a problem
+- [Podcast: *The Downballot* on this cycle’s
+  money](https://www.the-downballot.com/podcast)
 
-**Week 14 — the last two chapters**
+### Week 11 — Part III · election night
 
-- **Tue, Nov 24** — **Remote.** The last two chapters — who turns out,
-  and how they choose. On Zoom. No data session, no slide.
-  - Sides et al., Ch. 12 and Ch. 13 — both on Test 3
-  - *Source your own:* a news piece quoting a margin of error, or a
-    demographic estimate
-- **Thu, Nov 26** — **NO CLASS.** Thanksgiving. Nothing is due.
+#### Tue, Nov 3 — **NO CLASS.** Democracy Day. Read both chapters this week, for Thursday.
 
-**Week 15 — Part III, and the end**
+- For Thursday: Sides et al., Ch. 8 and Ch. 9
 
-- **Tue, Dec 1** — The end of the argument — the law, the maps, and
-  whether the thing itself can be measured.
-  - [Moynihan — *Power, Democracy and
-    Clarity*](https://open.substack.com/pub/donmoynihan/p/power-democracy-and-clarity)
-    — the Court’s voting-rights turn after *Callais*
-  - [Monmonier, *Drawing the Line*,
-    ch. 5](https://archive.org/details/drawinglinetales0000monm) —
-    borrow from the Internet Archive
-  - [*NYT* — gerrymandered districts aren’t always
-    ugly](https://www.nytimes.com/interactive/2022/01/11/opinion/redistricting-gerrymandering-reform.html)
-  - Two ballot measures: [California Prop
-    50](https://lao.ca.gov/BallotAnalysis/Proposition?number=50&year=2025)
-    (passed), and
-    [Virginia](https://cardinalnews.org/2026/05/08/supreme-court-of-virginia-voids-redistricting-election-as-unconstitutional/)
-    (passed, then voided)
-  - [V-Dem](https://v-dem.net/) — scoring democracy itself, for every
-    country, every year
-  - **DUE: peer reviews of the data journalism draft** — two each.
-- **Thu, Dec 3** — **TEST 3.** In class, on paper — Ch. 10–13, then the
-  course wrap
-  - Nothing to read — bring questions
+#### Thu, Nov 5 — **Fixed date.** Data Session 10 — Live returns. Built on results that do not exist until Nov 3.
+
+- [NPR — *Race calls
+  101*](https://www.npr.org/2024/11/05/g-s1-32603/how-are-races-actually-called)
+
+### Week 12 — Part III · the machinery
+
+#### Tue, Nov 10 — **TEST 2.** In class, on paper — Ch. 6–9
+
+- Ch. 8 and 9 are on the test
+
+#### Thu, Nov 12 — Data Session 11
+
+- *Session and reading to be set.*
+
+### Week 13 — Part III
+
+#### Tue, Nov 17 — Congressional, state and local campaigns
+
+- Sides et al., Ch. 10 and Ch. 11
+- [Morris — the hidden
+  axis](https://www.gelliottmorris.com/p/not-just-left-vs-right-most-voters)
+
+#### Thu, Nov 19 — Data Session 12
+
+- *Session and reading to be set.*
+- **DUE: data journalism draft**.
+
+### Week 14 — the last two chapters
+
+#### Tue, Nov 24 — **Remote.** The last two chapters — who turns out, and how they choose. On Zoom. No data session, no slide.
+
+- Sides et al., Ch. 12 and Ch. 13 — both on Test 3
+- *Source your own:* a news piece quoting a margin of error, or a
+  demographic estimate
+
+#### Thu, Nov 26 — **NO CLASS.** Thanksgiving. Nothing is due.
+
+### Week 15 — Part III, and the end
+
+#### Tue, Dec 1 — The end of the argument — the law, the maps, and whether the thing itself can be measured.
+
+- [Moynihan — *Power, Democracy and
+  Clarity*](https://open.substack.com/pub/donmoynihan/p/power-democracy-and-clarity)
+  — the Court’s voting-rights turn after *Callais*
+- [Monmonier, *Drawing the Line*,
+  ch. 5](https://archive.org/details/drawinglinetales0000monm) — borrow
+  from the Internet Archive
+- [*NYT* — gerrymandered districts aren’t always
+  ugly](https://www.nytimes.com/interactive/2022/01/11/opinion/redistricting-gerrymandering-reform.html)
+- Two ballot measures: [California Prop
+  50](https://lao.ca.gov/BallotAnalysis/Proposition?number=50&year=2025)
+  (passed), and
+  [Virginia](https://cardinalnews.org/2026/05/08/supreme-court-of-virginia-voids-redistricting-election-as-unconstitutional/)
+  (passed, then voided)
+- [V-Dem](https://v-dem.net/) — scoring democracy itself, for every
+  country, every year
+- **DUE: peer reviews of the data journalism draft** — two each.
+
+#### Thu, Dec 3 — **TEST 3.** In class, on paper — Ch. 10–13, then the course wrap
+
+- Nothing to read — bring questions
 
 ------------------------------------------------------------------------
 
 **Finals period — there is no exam.**
 
-- **DUE Tue, Dec 8** — **the data newsletter**.
-- **DUE Fri, Dec 11** — **data journalism story, final version**.
+#### DUE Tue, Dec 8 — **the data newsletter**.
+
+#### DUE Fri, Dec 11 — **data journalism story, final version**.
 
 ------------------------------------------------------------------------
 

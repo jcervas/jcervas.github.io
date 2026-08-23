@@ -957,59 +957,45 @@ h3 { font-size: 12.5pt; }
 
 
 
-#schedule p > strong:only-child {
+#schedule h3 {
 font-family: var(--mono);
 font-size: .74rem;
 font-weight: 600;
 letter-spacing: .05em;
 color: var(--accent);
+border: 0;
+margin: 1.9em 0 .1em;
+padding: 0;
 }
-#schedule p:has(> strong:only-child) { margin: 1.7em 0 .55em; }
 
-#schedule ul:not(li ul) {
-list-style: none;
-padding-left: 0;
-margin: 0 0 .4em;
-}
-#schedule ul:not(li ul) > li {
+#schedule h4 {
+font-family: var(--body);
+font-size: .93rem;
+font-weight: 600;
+color: var(--ink);
 border-left: 2px solid var(--accent);
-padding: .1rem 0 .1rem .7rem;
-margin: 0 0 .85em;
-font-size: .92rem;
-line-height: 1.45;
-}
-#schedule ul:not(li ul) strong { font-weight: 600; }
-
-#schedule ul:not(li ul) > li > strong:first-child {
-display: block;
-font-family: var(--mono);
-font-size: .68rem;
-font-weight: 500;
-letter-spacing: .07em;
-text-transform: uppercase;
-color: var(--ink-3);
-margin-bottom: .2em;
+padding: .06rem 0 .06rem .7rem;
+margin: .95em 0 .3em;
 }
 
-#schedule li ul {
-list-style: none;
-margin: .35em 0 0;
-padding-left: 0;
-}
-#schedule li ul > li {
+#schedule h4 + ul { margin: .3em 0 0 .7rem; }
+#schedule ul { list-style: none; padding-left: 0; }
+#schedule ul > li {
 position: relative;
 padding-left: .85rem;
-margin-bottom: .28em;
-font-size: .86rem;
-line-height: 1.4;
+margin-bottom: .3em;
+font-size: .88rem;
+line-height: 1.45;
 color: var(--ink-2);
 }
-#schedule li ul > li::before {
+#schedule ul > li::before {
 content: "\00B7";
 position: absolute;
 left: 0;
 color: var(--ink-3);
 }
+
+#schedule ul ul > li { font-size: .84rem; color: var(--ink-3); }
 </style>
 
 

@@ -168,6 +168,7 @@ will result in a lower grade.
        **Week N — label**                  a week heading
        - **Tue, Sep 29** — Title           one class
          - [Label](url)                    a required reading — BOTH
+         - *Optional*: [Label](url)        optional — CANVAS ONLY
            - a note about the reading      annotation — CANVAS ONLY
 
      The syllabus filter lives in ../readme.Rmd; the Canvas half is
@@ -182,181 +183,207 @@ will result in a lower grade.
 *Required readings only. Optional readings, and fuller notes on each,
 are on that session’s page in Canvas.*
 
-**Week 1 — the course, and the Fence**
+### Week 1 — the course, and the Fence
 
-- **Tue, Aug 25** — Introduction to the Course
-  - Nothing is settled today: teams and topics are fixed on **Sep 1**.
-  - **DUE Wed, Aug 26, 11:59 p.m.** — the **Cervas Election Study**
-    (link in Canvas; screenshot the confirmation).
-- **Thu, Aug 27** — The Fence
-  - **In class: the Perception Gap.** More in Common, perceptiongap.us.
-  - Background on “The Fence”
-  - [“CMU Fence Controversy Sparks Censorship Concerns.” Pittsburgh
-    Post-Gazette,](https://www.post-gazette.com/news/education/2025/07/17/what-is-the-fence-at-carnegie-mellon/stories/202507160062)
-  - [Strasburg et al. 2025 — In Midnight Move, CMU Students Roll in New
-    Fence to Protest Closure of Free Speech
-    Icon](https://www.publicsource.org/cmu-students-create-new-fence-to-highlight-campus-free-speech/)
-  - [Chang et al. 2026 — YAL Rallies at Fence, Delivers Petition to
-    President
-    Jahanian](https://the-tartan.org/2026/04/06/yal-rallies-at-fence-delivers-petition-to-president-jahanian/)
-  - [Aiken 2026 — Carnegie Mellon Investigating Students over Fence
-    Messages Tied to Israeli-Palestinian
-    Conflict](https://www.post-gazette.com/news/education/2026/08/01/carnegie-mellon-fence-investigation/stories/202607310058)
-  - Articles from The Tartan on the Fence’s history
-  - [Student Handbook, Advertising on Campus - Graffiti and Poster
-    Policy of
-    Student](https://www.cmu.edu/student-affairs/theword/community-policies/advertising-on-campus.html)
-  - [Student Government Graffiti and Poster
-    Policy](https://www.cmu.edu/stugov/policies/old-pdfs/Student%20Government%20Graffiti%20and%20Poster%20Policy_Updates_1_26_17.pdf)
+#### Tue, Aug 25 — Introduction to the Course
 
-**Week 2 — Polarization unit opens**
+- **DUE Wed, Aug 26, 11:59 p.m.** — the **“Cervas” Election Study**
+  (link in Canvas; screenshot the confirmation).
 
-- **Tue, Sep 1** — Organize Topics for Student Led Discussions
-- **Thu, Sep 3** — Polarization I: Partisan and Ideological Polarization
-  - [Fiorina et al. 2008 — Political Polarization in the American
-    Public](https://doi.org/10.1146/annurev.polisci.11.053106.153836)
-  - [Abramowitz et al. 2008 — Is Polarization a
-    Myth?](https://doi.org/10.1017/S0022381608080493)
-  - [Fiorina 2024 — Once More Unto the Breach: Is America
-    Polarized?](https://www.hoover.org/research/once-more-unto-breach-america-polarized)
+#### Thu, Aug 27 — The Fence
 
-**Week 3 — Polarization unit**
+- [“CMU Fence Controversy Sparks Censorship Concerns.” Pittsburgh
+  Post-Gazette,](https://www.post-gazette.com/news/education/2025/07/17/what-is-the-fence-at-carnegie-mellon/stories/202507160062)
+- [Strasburg et al. 2025 — In Midnight Move, CMU Students Roll in New
+  Fence to Protest Closure of Free Speech
+  Icon](https://www.publicsource.org/cmu-students-create-new-fence-to-highlight-campus-free-speech/)
+- [Chang et al. 2026 — YAL Rallies at Fence, Delivers Petition to
+  President
+  Jahanian](https://the-tartan.org/2026/04/06/yal-rallies-at-fence-delivers-petition-to-president-jahanian/)
+- [Aiken 2026 — Carnegie Mellon Investigating Students over Fence
+  Messages Tied to Israeli-Palestinian
+  Conflict](https://www.post-gazette.com/news/education/2026/08/01/carnegie-mellon-fence-investigation/stories/202607310058)
+- [Student Handbook, Advertising on Campus - Graffiti and Poster Policy
+  of
+  Student](https://www.cmu.edu/student-affairs/theword/community-policies/advertising-on-campus.html)
+- [Student Government Graffiti and Poster
+  Policy](https://www.cmu.edu/stugov/policies/old-pdfs/Student%20Government%20Graffiti%20and%20Poster%20Policy_Updates_1_26_17.pdf)
 
-- **Tue, Sep 8** — Polarization II: Sorting and Social Identity
-  - [Mason 2015 — ‘I Disrespectfully
-    Agree’](https://doi.org/10.1111/ajps.12089)
-  - [Ahler et al. 2018 — The Parties in Our
-    Heads](https://doi.org/10.1086/697253)
-- **Thu, Sep 10** — Polarization III: Affective Polarization
-  - [Iyengar et al. 2019 — The Origins and Consequences of Affective
-    Polarization in the United
-    States](https://doi.org/10.1146/annurev-polisci-051117-073034)
-  - [Finkel et al. 2020 — Political Sectarianism in
-    America](https://doi.org/10.1126/science.abe1715)
-  - [Fiorina 2024 — What About *Affective*
-    Polarization?](https://www.hoover.org/research/what-about-affective-polarization)
+### Week 2 — Polarization unit opens
 
-**Week 4 — NO CLASS (Sep 15–17)**
+#### Tue, Sep 1 — Organize Topics for Student Led Discussions
 
-- **Tue, Sep 15** — **NO CLASS.** Eradicate Hate Conference.
-- **Thu, Sep 17** — **NO CLASS.** Constitution Day Symposium.
+- **In class: the Perception Gap.** More in Common, perceptiongap.us.
 
-**Week 5 — Polarization unit**
+#### Thu, Sep 3 — Polarization I: Partisan and Ideological Polarization
 
-- **Tue, Sep 22** — Polarization IV: Negative Partisanship and the White
-  Working Class
-  - [Abramowitz et al. 2016 — The Rise of Negative Partisanship and the
-    Nationalization of
-    U.S](http://www.stevenwwebster.com/negative-partisanship.pdf)
-  - [Abramowitz 2025 — It’s Not the Economy,
-    Stupid](https://centerforpolitics.org/crystalball/its-not-the-economy-stupid-the-ideological-foundations-of-white-working-class-republicanism/)
-  - [Fiorina 2024 — The White Working
-    Class](https://www.hoover.org/research/white-working-class)
-- **Thu, Sep 24** — Polarization V: Race and Polarization
-  - [Tesler 2012 — The Spillover of Racialization into Health
-    Care](https://doi.org/10.1111/j.1540-5907.2011.00577.x)
-  - [Mason et al. 2021 — Activating Animus: The Uniquely Social Roots of
-    Trump Support](https://doi.org/10.1017/S0003055421000563)
+- **Start here:** [Fiorina 2026 — *Unstable Majorities Continue: The
+  Trump
+  Era*](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020547656104436)
+  — **Chapter 8** (23 pages).
+- [Fiorina et al. 2008 — Political Polarization in the American
+  Public](https://doi.org/10.1146/annurev.polisci.11.053106.153836)
+- [Abramowitz et al. 2008 — Is Polarization a
+  Myth?](https://doi.org/10.1017/S0022381608080493)
+- [Fiorina 2024 — Once More Unto the Breach: Is America
+  Polarized?](https://www.hoover.org/research/once-more-unto-breach-america-polarized)
 
-**Week 6 — Polarization unit · geography**
+### Week 3 — Polarization unit
 
-- **Tue, Sep 29** — Polarization VII: Geographic — The Map, and the
-  Power in It
-  - **Do these before you read anything.**
-  - [Brown & Enos — Partisan Segregation (interactive
-    maps)](https://www.ryandenos.com/partisan-segregation)
-  - [The New York Times 2025 — An Extremely Detailed Map of the 2024
-    Election
-    Results](https://www.nytimes.com/interactive/2025/us/elections/2024-election-map-precinct-results.html)
-  - [Badger et al. 2021 — A Close-Up Picture of Partisan Segregation,
-    Among 180 Million
-    Voters](https://www.nytimes.com/interactive/2021/03/17/upshot/partisan-segregation-maps.html)
-  - [Brown et al. 2026 — How Generational Turnover and Party Switching
-    Reshape the US Political
-    Map](https://cepr.org/voxeu/columns/how-generational-turnover-and-party-switching-reshape-us-political-map)
-  - [De Witte 2019 — How the Urban-Rural Divide Shapes
-    Elections](https://news.stanford.edu/stories/2019/06/urban-rural-divide-shapes-elections)
-  - [Cervas 2026 — The Effects of Mid-Decade Redistricting on Electoral
-    Outcomes](https://cervas.medium.com/the-effects-of-mid-decade-redistricting-on-electoral-outcomes-d870c772942b)
-- **Thu, Oct 1** — Place, Identity, and Rural Consciousness
-  - **Two chapters, and that is the whole assignment.** Jacobs and Shea
-    fielded the largest survey ever taken of rural Americans, and the
-    book that came out of it is the best available answer to
-  - [Jacobs et al. 2023 — *The Rural Voter: The Politics of Place and
-    the Disuniting of America.* Columbia University
-    Press](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020185778804436)
+#### Tue, Sep 8 — Polarization II: Sorting and Social Identity
 
-**Week 7 — Polarization unit closes**
+- [Mason 2015 — ‘I Disrespectfully
+  Agree’](https://doi.org/10.1111/ajps.12089)
+- [Ahler et al. 2018 — The Parties in Our
+  Heads](https://doi.org/10.1086/697253)
 
-- **Tue, Oct 6** — Polarization VI: Does Any of This Threaten Democracy?
-  - [Druckman et al. 2023 — Does Affective Polarization Contribute to
-    Democratic Backsliding in
-    America?](https://doi.org/10.1177/00027162241228952)
-  - [McCoy et al. 2019 — Toward a Theory of Pernicious Polarization and
-    How It Harms Democracies](https://doi.org/10.1177/0002716218818782)
-  - “Would You Vote Against Your Own Side to Save Democracy?”
-  - [Graham et al. 2020 — Democracy in America? Partisanship,
-    Polarization, and the Robustness of Support for Democracy in the
-    United States](https://doi.org/10.1017/S0003055420000052)
-- **Thu, Oct 8** — Who Pays for the News?
-  - [Darr et al. 2018 — Newspaper Closures Polarize Voting
-    Behavior](https://doi.org/10.1093/joc/jqy051)
-  - [Martin et al. 2019 — Local News and National
-    Politics](https://doi.org/10.1017/S0003055418000965)
-  - [Pickard 2020 — Restructuring Democratic
-    Infrastructures](https://doi.org/10.1080/21670811.2020.1733433)
+#### Thu, Sep 10 — Polarization III: Affective Polarization
 
-**Week 8 — FALL BREAK, no class (Oct 13–15)**
+- [Iyengar et al. 2019 — The Origins and Consequences of Affective
+  Polarization in the United
+  States](https://doi.org/10.1146/annurev-polisci-051117-073034)
+- [Finkel et al. 2020 — Political Sectarianism in
+  America](https://doi.org/10.1126/science.abe1715)
+- [Fiorina 2024 — What About *Affective*
+  Polarization?](https://www.hoover.org/research/what-about-affective-polarization)
 
-- **Tue, Oct 13** — **NO CLASS.** Fall Break.
-- **Thu, Oct 15** — **NO CLASS.** Fall Break.
+### Week 4 — NO CLASS (Sep 15–17)
 
-**Week 9 — Student-led sessions open**
+#### Tue, Sep 15 — **NO CLASS.** Eradicate Hate Conference.
 
-- **Tue, Oct 20** — Student-led session — team and topic TBA
-- **Thu, Oct 22** — Student-led session — team and topic TBA
+#### Thu, Sep 17 — **NO CLASS.** Constitution Day Symposium.
 
-**Week 10 — Student-led · before the vote**
+### Week 5 — Polarization unit
 
-- **Tue, Oct 27** — Before the Vote: Loser’s Consent
-  - [Layman et al. 2023 — Political Parties and Loser’s Consent in
-    American Politics](https://doi.org/10.1177/00027162241229309)
-- **Thu, Oct 29** — Student-led session — team and topic TBA
+#### Tue, Sep 22 — Polarization IV: Negative Partisanship and the White Working Class
 
-**Week 11 — Student-led · election week**
+- [Abramowitz et al. 2016 — The Rise of Negative Partisanship and the
+  Nationalization of
+  U.S](http://www.stevenwwebster.com/negative-partisanship.pdf)
+- [Abramowitz 2025 — It’s Not the Economy,
+  Stupid](https://centerforpolitics.org/crystalball/its-not-the-economy-stupid-the-ideological-foundations-of-white-working-class-republicanism/)
+- [Fiorina 2024 — The White Working
+  Class](https://www.hoover.org/research/white-working-class)
 
-- **Tue, Nov 3** — **NO CLASS.** Democracy Day; the midterm elections.
-  No classes before 5 p.m. [Register to
-  vote](https://www.cmu.edu/student-affairs/slice/civic-engagement/advocacy/voter/index.html).
-- **Thu, Nov 5** — Student-led session — team and topic TBA
+#### Thu, Sep 24 — Polarization V: Race and Polarization
 
-**Week 12 — Student-led**
+- [Tesler 2012 — The Spillover of Racialization into Health
+  Care](https://doi.org/10.1111/j.1540-5907.2011.00577.x)
+- [Mason et al. 2021 — Activating Animus: The Uniquely Social Roots of
+  Trump Support](https://doi.org/10.1017/S0003055421000563)
 
-- **Tue, Nov 10** — Student-led session — team and topic TBA
-- **Thu, Nov 12** — Student-led session — team and topic TBA
+### Week 6 — Polarization unit · geography
 
-**Week 13 — Student-led**
+#### Tue, Sep 29 — Polarization VII: Geographic — The Map, and the Power in It
 
-- **Tue, Nov 17** — Student-led session — team and topic TBA
-- **Thu, Nov 19** — Student-led session — team and topic TBA
+- **Do these before you read anything.**
+- [Brown & Enos — Partisan Segregation (interactive
+  maps)](https://www.ryandenos.com/partisan-segregation)
+- [The New York Times 2025 — An Extremely Detailed Map of the 2024
+  Election
+  Results](https://www.nytimes.com/interactive/2025/us/elections/2024-election-map-precinct-results.html)
+- [Badger et al. 2021 — A Close-Up Picture of Partisan Segregation,
+  Among 180 Million
+  Voters](https://www.nytimes.com/interactive/2021/03/17/upshot/partisan-segregation-maps.html)
+- [Brown et al. 2026 — How Generational Turnover and Party Switching
+  Reshape the US Political
+  Map](https://cepr.org/voxeu/columns/how-generational-turnover-and-party-switching-reshape-us-political-map)
+- [De Witte 2019 — How the Urban-Rural Divide Shapes
+  Elections](https://news.stanford.edu/stories/2019/06/urban-rural-divide-shapes-elections)
+- [Cervas 2026 — The Effects of Mid-Decade Redistricting on Electoral
+  Outcomes](https://cervas.medium.com/the-effects-of-mid-decade-redistricting-on-electoral-outcomes-d870c772942b)
 
-**Week 14 — Book review presentations**
+#### Thu, Oct 1 — Place, Identity, and Rural Consciousness
 
-- **Tue, Nov 24** — VIRTUAL CLASS — Book Review Presentations
-  - **Everyone presents today.** You will not present to the room — you
-    will be put into a small breakout group and present there, which is
-    how thirty-four presentations fit into eighty minutes.
-  - Slides are due Mon, Nov 23 at 11:59 p.m., uploaded to Canvas.
-  - Speak to your slides rather than reading them, and open the floor
-    with a question. A group
-  - Being in a small group does not make this informal. It is the same
-    7% it would be in front
-- **Thu, Nov 26** — **NO CLASS.** Thanksgiving.
+- **Two chapters, and that is the whole assignment.** Jacobs and Shea
+  fielded the largest survey ever taken of rural Americans, and the book
+  that came out of it is the best available answer to
+- [Jacobs et al. 2023 — *The Rural Voter: The Politics of Place and the
+  Disuniting of America.* Columbia University
+  Press](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020185778804436)
 
-**Week 15 — Group policy briefs**
+### Week 7 — Polarization unit closes
 
-- **Tue, Dec 1** — Group Policy Brief
-- **Thu, Dec 3** — Group Policy Brief
+#### Tue, Oct 6 — Polarization VI: Does Any of This Threaten Democracy?
+
+- [Druckman et al. 2023 — Does Affective Polarization Contribute to
+  Democratic Backsliding in
+  America?](https://doi.org/10.1177/00027162241228952)
+- [McCoy et al. 2019 — Toward a Theory of Pernicious Polarization and
+  How It Harms Democracies](https://doi.org/10.1177/0002716218818782)
+- “Would You Vote Against Your Own Side to Save Democracy?”
+- [Graham et al. 2020 — Democracy in America? Partisanship,
+  Polarization, and the Robustness of Support for Democracy in the
+  United States](https://doi.org/10.1017/S0003055420000052)
+
+#### Thu, Oct 8 — Who Pays for the News?
+
+- [Darr et al. 2018 — Newspaper Closures Polarize Voting
+  Behavior](https://doi.org/10.1093/joc/jqy051)
+- [Martin et al. 2019 — Local News and National
+  Politics](https://doi.org/10.1017/S0003055418000965)
+- [Pickard 2020 — Restructuring Democratic
+  Infrastructures](https://doi.org/10.1080/21670811.2020.1733433)
+
+### Week 8 — FALL BREAK, no class (Oct 13–15)
+
+#### Tue, Oct 13 — **NO CLASS.** Fall Break.
+
+#### Thu, Oct 15 — **NO CLASS.** Fall Break.
+
+### Week 9 — Student-led sessions open
+
+#### Tue, Oct 20 — Student-led session — team and topic TBA
+
+#### Thu, Oct 22 — Student-led session — team and topic TBA
+
+### Week 10 — Student-led · before the vote
+
+#### Tue, Oct 27 — Before the Vote: Loser’s Consent
+
+- [Layman et al. 2023 — Political Parties and Loser’s Consent in
+  American Politics](https://doi.org/10.1177/00027162241229309)
+
+#### Thu, Oct 29 — Student-led session — team and topic TBA
+
+### Week 11 — Student-led · election week
+
+#### Tue, Nov 3 — **NO CLASS.** Democracy Day; the midterm elections. No classes before 5 p.m. [Register to vote](https://www.cmu.edu/student-affairs/slice/civic-engagement/advocacy/voter/index.html).
+
+#### Thu, Nov 5 — Student-led session — team and topic TBA
+
+### Week 12 — Student-led
+
+#### Tue, Nov 10 — Student-led session — team and topic TBA
+
+#### Thu, Nov 12 — Student-led session — team and topic TBA
+
+### Week 13 — Student-led
+
+#### Tue, Nov 17 — Student-led session — team and topic TBA
+
+#### Thu, Nov 19 — Student-led session — team and topic TBA
+
+### Week 14 — Book review presentations
+
+#### Tue, Nov 24 — VIRTUAL CLASS — Book Review Presentations
+
+- **Everyone presents today.** You will not present to the room — you
+  will be put into a small breakout group and present there, which is
+  how thirty-four presentations fit into eighty minutes.
+- Slides are due Mon, Nov 23 at 11:59 p.m., uploaded to Canvas.
+- Speak to your slides rather than reading them, and open the floor with
+  a question. A group
+- Being in a small group does not make this informal. It is the same 7%
+  it would be in front
+
+#### Thu, Nov 26 — **NO CLASS.** Thanksgiving.
+
+### Week 15 — Group policy briefs
+
+#### Tue, Dec 1 — Group Policy Brief
+
+#### Thu, Dec 3 — Group Policy Brief
 
 <!-- End matter: privacy draft, community agreement, AI policy, representation, accommodations, well-being. Mostly stable; the privacy draft is replaced by the class each year. -->
 

@@ -957,59 +957,45 @@ h3 { font-size: 12.5pt; }
 
 
 
-#schedule p > strong:only-child {
+#schedule h3 {
 font-family: var(--mono);
 font-size: .74rem;
 font-weight: 600;
 letter-spacing: .05em;
 color: var(--accent);
+border: 0;
+margin: 1.9em 0 .1em;
+padding: 0;
 }
-#schedule p:has(> strong:only-child) { margin: 1.7em 0 .55em; }
 
-#schedule ul:not(li ul) {
-list-style: none;
-padding-left: 0;
-margin: 0 0 .4em;
-}
-#schedule ul:not(li ul) > li {
+#schedule h4 {
+font-family: var(--body);
+font-size: .93rem;
+font-weight: 600;
+color: var(--ink);
 border-left: 2px solid var(--accent);
-padding: .1rem 0 .1rem .7rem;
-margin: 0 0 .85em;
-font-size: .92rem;
-line-height: 1.45;
-}
-#schedule ul:not(li ul) strong { font-weight: 600; }
-
-#schedule ul:not(li ul) > li > strong:first-child {
-display: block;
-font-family: var(--mono);
-font-size: .68rem;
-font-weight: 500;
-letter-spacing: .07em;
-text-transform: uppercase;
-color: var(--ink-3);
-margin-bottom: .2em;
+padding: .06rem 0 .06rem .7rem;
+margin: .95em 0 .3em;
 }
 
-#schedule li ul {
-list-style: none;
-margin: .35em 0 0;
-padding-left: 0;
-}
-#schedule li ul > li {
+#schedule h4 + ul { margin: .3em 0 0 .7rem; }
+#schedule ul { list-style: none; padding-left: 0; }
+#schedule ul > li {
 position: relative;
 padding-left: .85rem;
-margin-bottom: .28em;
-font-size: .86rem;
-line-height: 1.4;
+margin-bottom: .3em;
+font-size: .88rem;
+line-height: 1.45;
 color: var(--ink-2);
 }
-#schedule li ul > li::before {
+#schedule ul > li::before {
 content: "\00B7";
 position: absolute;
 left: 0;
 color: var(--ink-3);
 }
+
+#schedule ul ul > li { font-size: .84rem; color: var(--ink-3); }
 </style>
 
 
@@ -1284,6 +1270,7 @@ others’ work, will result in a lower grade.</p>
        **Week N — label**                  a week heading
        - **Tue, Sep 29** — Title           one class
          - [Label](url)                    a required reading — BOTH
+         - *Optional*: [Label](url)        optional — CANVAS ONLY
            - a note about the reading      annotation — CANVAS ONLY
 
      The syllabus filter lives in ../readme.Rmd; the Canvas half is
@@ -1297,21 +1284,19 @@ others’ work, will result in a lower grade.</p>
 <h2>Schedule</h2>
 <p><em>Required readings only. Optional readings, and fuller notes on
 each, are on that session’s page in Canvas.</em></p>
-<p><strong>Week 1 — the course, and the Fence</strong></p>
+<div id="week-1-the-course-and-the-fence" class="section level3">
+<h3>Week 1 — the course, and the Fence</h3>
+<div id="tue-aug-25-introduction-to-the-course" class="section level4">
+<h4>Tue, Aug 25 — Introduction to the Course</h4>
 <ul>
-<li><strong>Tue, Aug 25</strong> — Introduction to the Course
-<ul>
-<li>Nothing is settled today: teams and topics are fixed on <strong>Sep
-1</strong>.</li>
-<li><strong>DUE Wed, Aug 26, 11:59 p.m.</strong> — the <strong>Cervas
+<li><strong>DUE Wed, Aug 26, 11:59 p.m.</strong> — the <strong>“Cervas”
 Election Study</strong> (link in Canvas; screenshot the
 confirmation).</li>
-</ul></li>
-<li><strong>Thu, Aug 27</strong> — The Fence
+</ul>
+</div>
+<div id="thu-aug-27-the-fence" class="section level4">
+<h4>Thu, Aug 27 — The Fence</h4>
 <ul>
-<li><strong>In class: the Perception Gap.</strong> More in Common,
-perceptiongap.us.</li>
-<li>Background on “The Fence”</li>
 <li><a href="https://www.post-gazette.com/news/education/2025/07/17/what-is-the-fence-at-carnegie-mellon/stories/202507160062">“CMU
 Fence Controversy Sparks Censorship Concerns.” Pittsburgh
 Post-Gazette,</a></li>
@@ -1324,41 +1309,52 @@ Jahanian</a></li>
 <li><a href="https://www.post-gazette.com/news/education/2026/08/01/carnegie-mellon-fence-investigation/stories/202607310058">Aiken
 2026 — Carnegie Mellon Investigating Students over Fence Messages Tied
 to Israeli-Palestinian Conflict</a></li>
-<li>Articles from The Tartan on the Fence’s history</li>
 <li><a href="https://www.cmu.edu/student-affairs/theword/community-policies/advertising-on-campus.html">Student
 Handbook, Advertising on Campus - Graffiti and Poster Policy of
 Student</a></li>
 <li><a href="https://www.cmu.edu/stugov/policies/old-pdfs/Student%20Government%20Graffiti%20and%20Poster%20Policy_Updates_1_26_17.pdf">Student
 Government Graffiti and Poster Policy</a></li>
-</ul></li>
 </ul>
-<p><strong>Week 2 — Polarization unit opens</strong></p>
+</div>
+</div>
+<div id="week-2-polarization-unit-opens" class="section level3">
+<h3>Week 2 — Polarization unit opens</h3>
+<div id="tue-sep-1-organize-topics-for-student-led-discussions" class="section level4">
+<h4>Tue, Sep 1 — Organize Topics for Student Led Discussions</h4>
 <ul>
-<li><strong>Tue, Sep 1</strong> — Organize Topics for Student Led
-Discussions</li>
-<li><strong>Thu, Sep 3</strong> — Polarization I: Partisan and
-Ideological Polarization
+<li><strong>In class: the Perception Gap.</strong> More in Common,
+perceptiongap.us.</li>
+</ul>
+</div>
+<div id="thu-sep-3-polarization-i-partisan-and-ideological-polarization" class="section level4">
+<h4>Thu, Sep 3 — Polarization I: Partisan and Ideological
+Polarization</h4>
 <ul>
+<li><strong>Start here:</strong> <a href="https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020547656104436">Fiorina
+2026 — <em>Unstable Majorities Continue: The Trump Era</em></a> —
+<strong>Chapter 8</strong> (23 pages).</li>
 <li><a href="https://doi.org/10.1146/annurev.polisci.11.053106.153836">Fiorina
 et al. 2008 — Political Polarization in the American Public</a></li>
 <li><a href="https://doi.org/10.1017/S0022381608080493">Abramowitz et
 al. 2008 — Is Polarization a Myth?</a></li>
 <li><a href="https://www.hoover.org/research/once-more-unto-breach-america-polarized">Fiorina
 2024 — Once More Unto the Breach: Is America Polarized?</a></li>
-</ul></li>
 </ul>
-<p><strong>Week 3 — Polarization unit</strong></p>
-<ul>
-<li><strong>Tue, Sep 8</strong> — Polarization II: Sorting and Social
-Identity
+</div>
+</div>
+<div id="week-3-polarization-unit" class="section level3">
+<h3>Week 3 — Polarization unit</h3>
+<div id="tue-sep-8-polarization-ii-sorting-and-social-identity" class="section level4">
+<h4>Tue, Sep 8 — Polarization II: Sorting and Social Identity</h4>
 <ul>
 <li><a href="https://doi.org/10.1111/ajps.12089">Mason 2015 — ‘I
 Disrespectfully Agree’</a></li>
 <li><a href="https://doi.org/10.1086/697253">Ahler et al. 2018 — The
 Parties in Our Heads</a></li>
-</ul></li>
-<li><strong>Thu, Sep 10</strong> — Polarization III: Affective
-Polarization
+</ul>
+</div>
+<div id="thu-sep-10-polarization-iii-affective-polarization" class="section level4">
+<h4>Thu, Sep 10 — Polarization III: Affective Polarization</h4>
 <ul>
 <li><a href="https://doi.org/10.1146/annurev-polisci-051117-073034">Iyengar et
 al. 2019 — The Origins and Consequences of Affective Polarization in the
@@ -1367,19 +1363,25 @@ United States</a></li>
 — Political Sectarianism in America</a></li>
 <li><a href="https://www.hoover.org/research/what-about-affective-polarization">Fiorina
 2024 — What About <em>Affective</em> Polarization?</a></li>
-</ul></li>
 </ul>
-<p><strong>Week 4 — NO CLASS (Sep 15–17)</strong></p>
-<ul>
-<li><strong>Tue, Sep 15</strong> — <strong>NO CLASS.</strong> Eradicate
-Hate Conference.</li>
-<li><strong>Thu, Sep 17</strong> — <strong>NO CLASS.</strong>
-Constitution Day Symposium.</li>
-</ul>
-<p><strong>Week 5 — Polarization unit</strong></p>
-<ul>
-<li><strong>Tue, Sep 22</strong> — Polarization IV: Negative
-Partisanship and the White Working Class
+</div>
+</div>
+<div id="week-4-no-class-sep-1517" class="section level3">
+<h3>Week 4 — NO CLASS (Sep 15–17)</h3>
+<div id="tue-sep-15-no-class.-eradicate-hate-conference." class="section level4">
+<h4>Tue, Sep 15 — <strong>NO CLASS.</strong> Eradicate Hate
+Conference.</h4>
+</div>
+<div id="thu-sep-17-no-class.-constitution-day-symposium." class="section level4">
+<h4>Thu, Sep 17 — <strong>NO CLASS.</strong> Constitution Day
+Symposium.</h4>
+</div>
+</div>
+<div id="week-5-polarization-unit" class="section level3">
+<h3>Week 5 — Polarization unit</h3>
+<div id="tue-sep-22-polarization-iv-negative-partisanship-and-the-white-working-class" class="section level4">
+<h4>Tue, Sep 22 — Polarization IV: Negative Partisanship and the White
+Working Class</h4>
 <ul>
 <li><a href="http://www.stevenwwebster.com/negative-partisanship.pdf">Abramowitz
 et al. 2016 — The Rise of Negative Partisanship and the Nationalization
@@ -1388,20 +1390,24 @@ of U.S</a></li>
 2025 — It’s Not the Economy, Stupid</a></li>
 <li><a href="https://www.hoover.org/research/white-working-class">Fiorina 2024
 — The White Working Class</a></li>
-</ul></li>
-<li><strong>Thu, Sep 24</strong> — Polarization V: Race and Polarization
+</ul>
+</div>
+<div id="thu-sep-24-polarization-v-race-and-polarization" class="section level4">
+<h4>Thu, Sep 24 — Polarization V: Race and Polarization</h4>
 <ul>
 <li><a href="https://doi.org/10.1111/j.1540-5907.2011.00577.x">Tesler
 2012 — The Spillover of Racialization into Health Care</a></li>
 <li><a href="https://doi.org/10.1017/S0003055421000563">Mason et
 al. 2021 — Activating Animus: The Uniquely Social Roots of Trump
 Support</a></li>
-</ul></li>
 </ul>
-<p><strong>Week 6 — Polarization unit · geography</strong></p>
-<ul>
-<li><strong>Tue, Sep 29</strong> — Polarization VII: Geographic — The
-Map, and the Power in It
+</div>
+</div>
+<div id="week-6-polarization-unit-geography" class="section level3">
+<h3>Week 6 — Polarization unit · geography</h3>
+<div id="tue-sep-29-polarization-vii-geographic-the-map-and-the-power-in-it" class="section level4">
+<h4>Tue, Sep 29 — Polarization VII: Geographic — The Map, and the Power
+in It</h4>
 <ul>
 <li><strong>Do these before you read anything.</strong></li>
 <li><a href="https://www.ryandenos.com/partisan-segregation">Brown &amp;
@@ -1420,9 +1426,10 @@ Witte 2019 — How the Urban-Rural Divide Shapes Elections</a></li>
 <li><a href="https://cervas.medium.com/the-effects-of-mid-decade-redistricting-on-electoral-outcomes-d870c772942b">Cervas
 2026 — The Effects of Mid-Decade Redistricting on Electoral
 Outcomes</a></li>
-</ul></li>
-<li><strong>Thu, Oct 1</strong> — Place, Identity, and Rural
-Consciousness
+</ul>
+</div>
+<div id="thu-oct-1-place-identity-and-rural-consciousness" class="section level4">
+<h4>Thu, Oct 1 — Place, Identity, and Rural Consciousness</h4>
 <ul>
 <li><strong>Two chapters, and that is the whole assignment.</strong>
 Jacobs and Shea fielded the largest survey ever taken of rural
@@ -1431,12 +1438,14 @@ to</li>
 <li><a href="https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020185778804436">Jacobs
 et al. 2023 — <em>The Rural Voter: The Politics of Place and the
 Disuniting of America.</em> Columbia University Press</a></li>
-</ul></li>
 </ul>
-<p><strong>Week 7 — Polarization unit closes</strong></p>
-<ul>
-<li><strong>Tue, Oct 6</strong> — Polarization VI: Does Any of This
-Threaten Democracy?
+</div>
+</div>
+<div id="week-7-polarization-unit-closes" class="section level3">
+<h3>Week 7 — Polarization unit closes</h3>
+<div id="tue-oct-6-polarization-vi-does-any-of-this-threaten-democracy" class="section level4">
+<h4>Tue, Oct 6 — Polarization VI: Does Any of This Threaten
+Democracy?</h4>
 <ul>
 <li><a href="https://doi.org/10.1177/00027162241228952">Druckman et
 al. 2023 — Does Affective Polarization Contribute to Democratic
@@ -1448,8 +1457,10 @@ Democracies</a></li>
 <li><a href="https://doi.org/10.1017/S0003055420000052">Graham et
 al. 2020 — Democracy in America? Partisanship, Polarization, and the
 Robustness of Support for Democracy in the United States</a></li>
-</ul></li>
-<li><strong>Thu, Oct 8</strong> — Who Pays for the News?
+</ul>
+</div>
+<div id="thu-oct-8-who-pays-for-the-news" class="section level4">
+<h4>Thu, Oct 8 — Who Pays for the News?</h4>
 <ul>
 <li><a href="https://doi.org/10.1093/joc/jqy051">Darr et al. 2018 —
 Newspaper Closures Polarize Voting Behavior</a></li>
@@ -1457,59 +1468,74 @@ Newspaper Closures Polarize Voting Behavior</a></li>
 al. 2019 — Local News and National Politics</a></li>
 <li><a href="https://doi.org/10.1080/21670811.2020.1733433">Pickard 2020
 — Restructuring Democratic Infrastructures</a></li>
-</ul></li>
 </ul>
-<p><strong>Week 8 — FALL BREAK, no class (Oct 13–15)</strong></p>
-<ul>
-<li><strong>Tue, Oct 13</strong> — <strong>NO CLASS.</strong> Fall
-Break.</li>
-<li><strong>Thu, Oct 15</strong> — <strong>NO CLASS.</strong> Fall
-Break.</li>
-</ul>
-<p><strong>Week 9 — Student-led sessions open</strong></p>
-<ul>
-<li><strong>Tue, Oct 20</strong> — Student-led session — team and topic
-TBA</li>
-<li><strong>Thu, Oct 22</strong> — Student-led session — team and topic
-TBA</li>
-</ul>
-<p><strong>Week 10 — Student-led · before the vote</strong></p>
-<ul>
-<li><strong>Tue, Oct 27</strong> — Before the Vote: Loser’s Consent
+</div>
+</div>
+<div id="week-8-fall-break-no-class-oct-1315" class="section level3">
+<h3>Week 8 — FALL BREAK, no class (Oct 13–15)</h3>
+<div id="tue-oct-13-no-class.-fall-break." class="section level4">
+<h4>Tue, Oct 13 — <strong>NO CLASS.</strong> Fall Break.</h4>
+</div>
+<div id="thu-oct-15-no-class.-fall-break." class="section level4">
+<h4>Thu, Oct 15 — <strong>NO CLASS.</strong> Fall Break.</h4>
+</div>
+</div>
+<div id="week-9-student-led-sessions-open" class="section level3">
+<h3>Week 9 — Student-led sessions open</h3>
+<div id="tue-oct-20-student-led-session-team-and-topic-tba" class="section level4">
+<h4>Tue, Oct 20 — Student-led session — team and topic TBA</h4>
+</div>
+<div id="thu-oct-22-student-led-session-team-and-topic-tba" class="section level4">
+<h4>Thu, Oct 22 — Student-led session — team and topic TBA</h4>
+</div>
+</div>
+<div id="week-10-student-led-before-the-vote" class="section level3">
+<h3>Week 10 — Student-led · before the vote</h3>
+<div id="tue-oct-27-before-the-vote-losers-consent" class="section level4">
+<h4>Tue, Oct 27 — Before the Vote: Loser’s Consent</h4>
 <ul>
 <li><a href="https://doi.org/10.1177/00027162241229309">Layman et
 al. 2023 — Political Parties and Loser’s Consent in American
 Politics</a></li>
-</ul></li>
-<li><strong>Thu, Oct 29</strong> — Student-led session — team and topic
-TBA</li>
 </ul>
-<p><strong>Week 11 — Student-led · election week</strong></p>
-<ul>
-<li><strong>Tue, Nov 3</strong> — <strong>NO CLASS.</strong> Democracy
-Day; the midterm elections. No classes before 5 p.m. <a href="https://www.cmu.edu/student-affairs/slice/civic-engagement/advocacy/voter/index.html">Register
-to vote</a>.</li>
-<li><strong>Thu, Nov 5</strong> — Student-led session — team and topic
-TBA</li>
-</ul>
-<p><strong>Week 12 — Student-led</strong></p>
-<ul>
-<li><strong>Tue, Nov 10</strong> — Student-led session — team and topic
-TBA</li>
-<li><strong>Thu, Nov 12</strong> — Student-led session — team and topic
-TBA</li>
-</ul>
-<p><strong>Week 13 — Student-led</strong></p>
-<ul>
-<li><strong>Tue, Nov 17</strong> — Student-led session — team and topic
-TBA</li>
-<li><strong>Thu, Nov 19</strong> — Student-led session — team and topic
-TBA</li>
-</ul>
-<p><strong>Week 14 — Book review presentations</strong></p>
-<ul>
-<li><strong>Tue, Nov 24</strong> — VIRTUAL CLASS — Book Review
-Presentations
+</div>
+<div id="thu-oct-29-student-led-session-team-and-topic-tba" class="section level4">
+<h4>Thu, Oct 29 — Student-led session — team and topic TBA</h4>
+</div>
+</div>
+<div id="week-11-student-led-election-week" class="section level3">
+<h3>Week 11 — Student-led · election week</h3>
+<div id="tue-nov-3-no-class.-democracy-day-the-midterm-elections.-no-classes-before-5-p.m.-register-to-vote." class="section level4">
+<h4>Tue, Nov 3 — <strong>NO CLASS.</strong> Democracy Day; the midterm
+elections. No classes before 5 p.m. <a href="https://www.cmu.edu/student-affairs/slice/civic-engagement/advocacy/voter/index.html">Register
+to vote</a>.</h4>
+</div>
+<div id="thu-nov-5-student-led-session-team-and-topic-tba" class="section level4">
+<h4>Thu, Nov 5 — Student-led session — team and topic TBA</h4>
+</div>
+</div>
+<div id="week-12-student-led" class="section level3">
+<h3>Week 12 — Student-led</h3>
+<div id="tue-nov-10-student-led-session-team-and-topic-tba" class="section level4">
+<h4>Tue, Nov 10 — Student-led session — team and topic TBA</h4>
+</div>
+<div id="thu-nov-12-student-led-session-team-and-topic-tba" class="section level4">
+<h4>Thu, Nov 12 — Student-led session — team and topic TBA</h4>
+</div>
+</div>
+<div id="week-13-student-led" class="section level3">
+<h3>Week 13 — Student-led</h3>
+<div id="tue-nov-17-student-led-session-team-and-topic-tba" class="section level4">
+<h4>Tue, Nov 17 — Student-led session — team and topic TBA</h4>
+</div>
+<div id="thu-nov-19-student-led-session-team-and-topic-tba" class="section level4">
+<h4>Thu, Nov 19 — Student-led session — team and topic TBA</h4>
+</div>
+</div>
+<div id="week-14-book-review-presentations" class="section level3">
+<h3>Week 14 — Book review presentations</h3>
+<div id="tue-nov-24-virtual-class-book-review-presentations" class="section level4">
+<h4>Tue, Nov 24 — VIRTUAL CLASS — Book Review Presentations</h4>
 <ul>
 <li><strong>Everyone presents today.</strong> You will not present to
 the room — you will be put into a small breakout group and present
@@ -1520,16 +1546,22 @@ minutes.</li>
 with a question. A group</li>
 <li>Being in a small group does not make this informal. It is the same
 7% it would be in front</li>
-</ul></li>
-<li><strong>Thu, Nov 26</strong> — <strong>NO CLASS.</strong>
-Thanksgiving.</li>
 </ul>
-<p><strong>Week 15 — Group policy briefs</strong></p>
-<ul>
-<li><strong>Tue, Dec 1</strong> — Group Policy Brief</li>
-<li><strong>Thu, Dec 3</strong> — Group Policy Brief</li>
-</ul>
+</div>
+<div id="thu-nov-26-no-class.-thanksgiving." class="section level4">
+<h4>Thu, Nov 26 — <strong>NO CLASS.</strong> Thanksgiving.</h4>
+</div>
+</div>
+<div id="week-15-group-policy-briefs" class="section level3">
+<h3>Week 15 — Group policy briefs</h3>
+<div id="tue-dec-1-group-policy-brief" class="section level4">
+<h4>Tue, Dec 1 — Group Policy Brief</h4>
+</div>
+<div id="thu-dec-3-group-policy-brief" class="section level4">
+<h4>Thu, Dec 3 — Group Policy Brief</h4>
 <!-- End matter: privacy draft, community agreement, AI policy, representation, accommodations, well-being. Mostly stable; the privacy draft is replaced by the class each year. -->
+</div>
+</div>
 </div>
 <div id="student-privacy-in-class-discussions" class="section level2">
 <h2>Student Privacy in Class Discussions</h2>

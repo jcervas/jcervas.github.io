@@ -957,59 +957,45 @@ h3 { font-size: 12.5pt; }
 
 
 
-#schedule p > strong:only-child {
+#schedule h3 {
 font-family: var(--mono);
 font-size: .74rem;
 font-weight: 600;
 letter-spacing: .05em;
 color: var(--accent);
+border: 0;
+margin: 1.9em 0 .1em;
+padding: 0;
 }
-#schedule p:has(> strong:only-child) { margin: 1.7em 0 .55em; }
 
-#schedule ul:not(li ul) {
-list-style: none;
-padding-left: 0;
-margin: 0 0 .4em;
-}
-#schedule ul:not(li ul) > li {
+#schedule h4 {
+font-family: var(--body);
+font-size: .93rem;
+font-weight: 600;
+color: var(--ink);
 border-left: 2px solid var(--accent);
-padding: .1rem 0 .1rem .7rem;
-margin: 0 0 .85em;
-font-size: .92rem;
-line-height: 1.45;
-}
-#schedule ul:not(li ul) strong { font-weight: 600; }
-
-#schedule ul:not(li ul) > li > strong:first-child {
-display: block;
-font-family: var(--mono);
-font-size: .68rem;
-font-weight: 500;
-letter-spacing: .07em;
-text-transform: uppercase;
-color: var(--ink-3);
-margin-bottom: .2em;
+padding: .06rem 0 .06rem .7rem;
+margin: .95em 0 .3em;
 }
 
-#schedule li ul {
-list-style: none;
-margin: .35em 0 0;
-padding-left: 0;
-}
-#schedule li ul > li {
+#schedule h4 + ul { margin: .3em 0 0 .7rem; }
+#schedule ul { list-style: none; padding-left: 0; }
+#schedule ul > li {
 position: relative;
 padding-left: .85rem;
-margin-bottom: .28em;
-font-size: .86rem;
-line-height: 1.4;
+margin-bottom: .3em;
+font-size: .88rem;
+line-height: 1.45;
 color: var(--ink-2);
 }
-#schedule li ul > li::before {
+#schedule ul > li::before {
 content: "\00B7";
 position: absolute;
 left: 0;
 color: var(--ink-3);
 }
+
+#schedule ul ul > li { font-size: .84rem; color: var(--ink-3); }
 </style>
 
 
@@ -1026,7 +1012,7 @@ color: var(--ink-3);
 into American Elections</h1>
 <h3 class="subtitle">[84-355] | Fall 2026</h3>
 <h4 class="author">Prof. Jonathan Cervas</h4>
-<h4 class="date">Updated: August 22, 2026</h4>
+<h4 class="date">Updated: August 23, 2026</h4>
 
 
 <div id="TOC">
@@ -1547,17 +1533,20 @@ draft with a good final.</li>
 </div>
 <div id="schedule" class="section level2">
 <h2>Schedule</h2>
-<p><strong>Week 1 — Part I opens</strong></p>
-<ul>
-<li><strong>Tue, Aug 25</strong> — Course introduction: the three parts.
-Read the book’s own introduction, What This Book Is For.
+<div id="week-1-part-i-opens" class="section level3">
+<h3>Week 1 — Part I opens</h3>
+<div id="tue-aug-25-course-introduction-the-three-parts.-read-the-books-own-introduction-what-this-book-is-for." class="section level4">
+<h4>Tue, Aug 25 — Course introduction: the three parts. Read the book’s
+own introduction, What This Book Is For.</h4>
 <ul>
 <li>The book’s introduction — <em>What This Book Is For</em></li>
 <li><strong>DUE Wed, Aug 26, 11:59 p.m.</strong> — the <strong>Cervas
 Election Study</strong>.</li>
-</ul></li>
-<li><strong>Thu, Aug 27</strong> — Data Session 1 — The decennial
-census, and the seats it decides
+</ul>
+</div>
+<div id="thu-aug-27-data-session-1-the-decennial-census-and-the-seats-it-decides" class="section level4">
+<h4>Thu, Aug 27 — Data Session 1 — The decennial census, and the seats
+it decides</h4>
 <ul>
 <li><a href="https://www.census.gov/library/stories/2026/06/america-counts-250-years.html">Census
 Bureau, <em>America Counts: 250 Years</em></a></li>
@@ -1565,26 +1554,32 @@ Bureau, <em>America Counts: 250 Years</em></a></li>
 Academy — the Census data API</a> — module 1 only</li>
 <li><a href="https://documents.ncsl.org/wwwncsl/Redistricting-Census/Redistricting-Law-2020_NCSL%20FINAL.pdf">NCSL,
 <em>Redistricting Law 2020</em>, ch. 1 — the census</a></li>
-</ul></li>
 </ul>
-<p><strong>Week 2 — Part I</strong></p>
-<ul>
-<li><strong>Tue, Sep 1</strong> — The rules, and the four standards
+</div>
+</div>
+<div id="week-2-part-i" class="section level3">
+<h3>Week 2 — Part I</h3>
+<div id="tue-sep-1-the-rules-and-the-four-standards" class="section level4">
+<h4>Tue, Sep 1 — The rules, and the four standards</h4>
 <ul>
 <li>Sides et al., Ch. 1</li>
 <li><a href="https://www.jstor.org/stable/j.ctt1nq3vk">Scott, <em>Seeing
 Like a State</em> (1998), intro — where “legibility” comes from</a></li>
-</ul></li>
-<li><strong>Thu, Sep 3</strong> — Data Session 2 — Geography, and the
-scales it comes at
+</ul>
+</div>
+<div id="thu-sep-3-data-session-2-geography-and-the-scales-it-comes-at" class="section level4">
+<h4>Thu, Sep 3 — Data Session 2 — Geography, and the scales it comes
+at</h4>
 <ul>
 <li><a href="https://www.census.gov/library/video/2021/understanding-statistical-geographies.html">Census
 Bureau video — <em>Understanding Statistical Geographies</em></a></li>
-</ul></li>
 </ul>
-<p><strong>Week 3 — Part I</strong></p>
-<ul>
-<li><strong>Tue, Sep 8</strong> — Who can vote, how, and where
+</div>
+</div>
+<div id="week-3-part-i" class="section level3">
+<h3>Week 3 — Part I</h3>
+<div id="tue-sep-8-who-can-vote-how-and-where" class="section level4">
+<h4>Tue, Sep 8 — Who can vote, how, and where</h4>
 <ul>
 <li>Sides et al., Ch. 2</li>
 <li><a href="https://www.nytimes.com/2024/09/25/upshot/trump-electoral-college-harris.html">Cohn,
@@ -1595,43 +1590,50 @@ Center — census data and a changing nation</a></li>
 — Black representation after the ruling</a></li>
 <li><a href="https://slate.com/podcasts/amicus/2026/07/supreme-court-term-recap-birthright-citizenship-voting-rights">Podcast:
 <em>Amicus</em> (Slate)</a></li>
-</ul></li>
-<li><strong>Thu, Sep 10</strong> — Data Session 3 — The American
-Community Survey
+</ul>
+</div>
+<div id="thu-sep-10-data-session-3-the-american-community-survey" class="section level4">
+<h4>Thu, Sep 10 — Data Session 3 — The American Community Survey</h4>
 <ul>
 <li><a href="https://www.census.gov/content/dam/Census/library/publications/2020/acs/acs_general_handbook_2020_ch01.pdf">ACS
 Handbook, ch. 1 — the basics</a></li>
 <li><a href="https://www.census.gov/data/academy/courses/discovering-the-american-community-survey.html">Census
 Academy — <em>Discovering the American Community Survey</em></a> — all
 six modules</li>
-</ul></li>
 </ul>
-<p><strong>Week 4 — Part II opens</strong></p>
-<ul>
-<li><strong>Tue, Sep 15</strong> — The transformation of American
-campaigns
+</div>
+</div>
+<div id="week-4-part-ii-opens" class="section level3">
+<h3>Week 4 — Part II opens</h3>
+<div id="tue-sep-15-the-transformation-of-american-campaigns" class="section level4">
+<h4>Tue, Sep 15 — The transformation of American campaigns</h4>
 <ul>
 <li>Sides et al., Ch. 3</li>
-</ul></li>
-<li><strong>Thu, Sep 17</strong> — <strong>NO CLASS.</strong>
-Constitution Day Symposium. Data Session 4 is self-directed: what a
-survey can establish.
+</ul>
+</div>
+<div id="thu-sep-17-no-class.-constitution-day-symposium.-data-session-4-is-self-directed-what-a-survey-can-establish." class="section level4">
+<h4>Thu, Sep 17 — <strong>NO CLASS.</strong> Constitution Day Symposium.
+Data Session 4 is self-directed: what a survey can establish.</h4>
 <ul>
 <li><a href="https://www.pewresearch.org/methods/2023/04/19/how-public-polling-has-changed-in-the-21st-century/">Pew
 — how public polling has changed</a></li>
 <li><a href="https://www.pewresearch.org/course/public-opinion-polling-basics/">Pew
 — polling basics, lessons 1–3</a></li>
-</ul></li>
 </ul>
-<p><strong>Week 5 — Part II</strong></p>
-<ul>
-<li><strong>Tue, Sep 22</strong> — Money, and the rule that shapes
-everything after it
+</div>
+</div>
+<div id="week-5-part-ii" class="section level3">
+<h3>Week 5 — Part II</h3>
+<div id="tue-sep-22-money-and-the-rule-that-shapes-everything-after-it" class="section level4">
+<h4>Tue, Sep 22 — Money, and the rule that shapes everything after
+it</h4>
 <ul>
 <li>Sides et al., Ch. 4</li>
-</ul></li>
-<li><strong>Thu, Sep 24</strong> — Data Session 5 — Election polls: the
-horse race, and what a margin hides
+</ul>
+</div>
+<div id="thu-sep-24-data-session-5-election-polls-the-horse-race-and-what-a-margin-hides" class="section level4">
+<h4>Thu, Sep 24 — Data Session 5 — Election polls: the horse race, and
+what a margin hides</h4>
 <ul>
 <li><a href="https://www.cambridge.org/9781108482790">Bailey,
 <em>Polling at a Crossroads</em> (2023), ch. 1, 3–22</a></li>
@@ -1639,20 +1641,23 @@ horse race, and what a margin hides
 — are political polls accurate?</a></li>
 <li><a href="https://aapor.org/media/public-opinion-pod/">Podcast: AAPOR
 on pre-election polling</a></li>
-</ul></li>
 </ul>
-<p><strong>Week 6 — Part II closes</strong></p>
-<ul>
-<li><strong>Tue, Sep 29</strong> — Strategy: who a campaign decides to
-talk to
+</div>
+</div>
+<div id="week-6-part-ii-closes" class="section level3">
+<h3>Week 6 — Part II closes</h3>
+<div id="tue-sep-29-strategy-who-a-campaign-decides-to-talk-to" class="section level4">
+<h4>Tue, Sep 29 — Strategy: who a campaign decides to talk to</h4>
 <ul>
 <li><a href="https://boltsmag.org/missouri-rejects-restrictions-on-direct-democracy/">Sabino,
 <em>Bolts</em> — Missouri’s ballot-initiative vote</a></li>
 <li>Sides et al., Ch. 5</li>
-</ul></li>
-<li><strong>Thu, Oct 1</strong> — Data Session 6 — Public opinion, and
-the studies built to measure it: the Cervas Election Study beside CES
-and ANES. No slide this week.
+</ul>
+</div>
+<div id="thu-oct-1-data-session-6-public-opinion-and-the-studies-built-to-measure-it-the-cervas-election-study-beside-ces-and-anes.-no-slide-this-week." class="section level4">
+<h4>Thu, Oct 1 — Data Session 6 — Public opinion, and the studies built
+to measure it: the Cervas Election Study beside CES and ANES. No slide
+this week.</h4>
 <ul>
 <li><a href="https://www.jstor.org/stable/2082793">Verba, “The Citizen
 as Respondent” (1996), 1–7</a> — why measure opinion by survey at
@@ -1668,30 +1673,36 @@ differently</li>
 <li><em>Reference:</em> <a href="https://iop.harvard.edu/youth-poll/52nd-edition-spring-2026"><em>Harvard
 Youth Poll</em>, 52nd edition</a> — toplines, and the methodology behind
 them</li>
-</ul></li>
 </ul>
-<p><strong>Week 7 — Test 1</strong></p>
-<ul>
-<li><strong>Tue, Oct 6</strong> — Who the electorate is. No new chapter
-— review Ch. 1–5; Test 1 is Thursday.
+</div>
+</div>
+<div id="week-7-test-1" class="section level3">
+<h3>Week 7 — Test 1</h3>
+<div id="tue-oct-6-who-the-electorate-is.-no-new-chapter-review-ch.-15-test-1-is-thursday." class="section level4">
+<h4>Tue, Oct 6 — Who the electorate is. No new chapter — review Ch. 1–5;
+Test 1 is Thursday.</h4>
 <ul>
 <li>No new chapter — review Ch. 1–5 for Test 1</li>
 <li><a href="https://www.nytimes.com/interactive/2025/07/24/opinion/minority-voters-trump-right.html"><em>NYT</em>
 — the rise of the multiracial right</a></li>
-</ul></li>
-<li><strong>Thu, Oct 8</strong> — <strong>TEST 1.</strong> In class, on
-paper — Ch. 1–5
+</ul>
+</div>
+<div id="thu-oct-8-test-1.-in-class-on-paper-ch.-15" class="section level4">
+<h4>Thu, Oct 8 — <strong>TEST 1.</strong> In class, on paper — Ch.
+1–5</h4>
 <ul>
 <li>Nothing new — bring questions</li>
-</ul></li>
 </ul>
 <p><strong>Week 8 — FALL BREAK, no class (Oct 12–16)</strong> Test 1 is
 behind you. Nothing is due.</p>
 <hr />
-<p><strong>Week 9 — Part III opens</strong></p>
-<ul>
-<li><strong>Tue, Oct 20</strong> — Data Session 7 — Part III opens: what
-a return is, where you get one, and what forty of them show
+</div>
+</div>
+<div id="week-9-part-iii-opens" class="section level3">
+<h3>Week 9 — Part III opens</h3>
+<div id="tue-oct-20-data-session-7-part-iii-opens-what-a-return-is-where-you-get-one-and-what-forty-of-them-show" class="section level4">
+<h4>Tue, Oct 20 — Data Session 7 — Part III opens: what a return is,
+where you get one, and what forty of them show</h4>
 <ul>
 <li><a href="https://boltsmag.org/election-data-is-vital-to-voting-rights-but-hard-to-track-down/">Burness,
 <em>Bolts</em> — election data and voting rights</a></li>
@@ -1699,25 +1710,31 @@ a return is, where you get one, and what forty of them show
 — <em>Monopoly Politics 2026</em></a></li>
 <li><strong>DUE: Data journalism story — pitch your topic</strong> (one
 paragraph, in class).</li>
-</ul></li>
-<li><strong>Thu, Oct 22</strong> — Data Session 8 — The bottom rungs:
-precincts and ballots
+</ul>
+</div>
+<div id="thu-oct-22-data-session-8-the-bottom-rungs-precincts-and-ballots" class="section level4">
+<h4>Thu, Oct 22 — Data Session 8 — The bottom rungs: precincts and
+ballots</h4>
 <ul>
 <li><a href="https://electionlab.mit.edu/articles/why-does-anyone-need-precinct-level-election-results">MIT
 Election Lab — why does anyone need precinct-level results?</a> — what
 county totals lose, and why the boundaries move</li>
 <li><strong>DUE Fri, Oct 23, 11:59 p.m.</strong> — the <strong>mid-term
 course feedback survey</strong>.</li>
-</ul></li>
 </ul>
-<p><strong>Week 10 — Part III</strong></p>
-<ul>
-<li><strong>Tue, Oct 27</strong> — Parties and interest groups
+</div>
+</div>
+<div id="week-10-part-iii" class="section level3">
+<h3>Week 10 — Part III</h3>
+<div id="tue-oct-27-parties-and-interest-groups" class="section level4">
+<h4>Tue, Oct 27 — Parties and interest groups</h4>
 <ul>
 <li>Sides et al., Ch. 6 and Ch. 7</li>
-</ul></li>
-<li><strong>Thu, Oct 29</strong> — Data Session 9 — Money in politics:
-the record, and the hole in it
+</ul>
+</div>
+<div id="thu-oct-29-data-session-9-money-in-politics-the-record-and-the-hole-in-it" class="section level4">
+<h4>Thu, Oct 29 — Data Session 9 — Money in politics: the record, and
+the hole in it</h4>
 <ul>
 <li><a href="https://www.opensecrets.org/dark-money/basics">OpenSecrets
 — dark money basics</a> — who must name a donor, and who need not</li>
@@ -1728,67 +1745,82 @@ the record, and the hole in it
 problem</li>
 <li><a href="https://www.the-downballot.com/podcast">Podcast: <em>The
 Downballot</em> on this cycle’s money</a></li>
-</ul></li>
 </ul>
-<p><strong>Week 11 — Part III · election night</strong></p>
-<ul>
-<li><strong>Tue, Nov 3</strong> — <strong>NO CLASS.</strong> Democracy
-Day. Read both chapters this week, for Thursday.
+</div>
+</div>
+<div id="week-11-part-iii-election-night" class="section level3">
+<h3>Week 11 — Part III · election night</h3>
+<div id="tue-nov-3-no-class.-democracy-day.-read-both-chapters-this-week-for-thursday." class="section level4">
+<h4>Tue, Nov 3 — <strong>NO CLASS.</strong> Democracy Day. Read both
+chapters this week, for Thursday.</h4>
 <ul>
 <li>For Thursday: Sides et al., Ch. 8 and Ch. 9</li>
-</ul></li>
-<li><strong>Thu, Nov 5</strong> — <strong>Fixed date.</strong> Data
-Session 10 — Live returns. Built on results that do not exist until Nov
-3.
+</ul>
+</div>
+<div id="thu-nov-5-fixed-date.-data-session-10-live-returns.-built-on-results-that-do-not-exist-until-nov-3." class="section level4">
+<h4>Thu, Nov 5 — <strong>Fixed date.</strong> Data Session 10 — Live
+returns. Built on results that do not exist until Nov 3.</h4>
 <ul>
 <li><a href="https://www.npr.org/2024/11/05/g-s1-32603/how-are-races-actually-called">NPR
 — <em>Race calls 101</em></a></li>
-</ul></li>
 </ul>
-<p><strong>Week 12 — Part III · the machinery</strong></p>
-<ul>
-<li><strong>Tue, Nov 10</strong> — <strong>TEST 2.</strong> In class, on
-paper — Ch. 6–9
+</div>
+</div>
+<div id="week-12-part-iii-the-machinery" class="section level3">
+<h3>Week 12 — Part III · the machinery</h3>
+<div id="tue-nov-10-test-2.-in-class-on-paper-ch.-69" class="section level4">
+<h4>Tue, Nov 10 — <strong>TEST 2.</strong> In class, on paper — Ch.
+6–9</h4>
 <ul>
 <li>Ch. 8 and 9 are on the test</li>
-</ul></li>
-<li><strong>Thu, Nov 12</strong> — Data Session 11
+</ul>
+</div>
+<div id="thu-nov-12-data-session-11" class="section level4">
+<h4>Thu, Nov 12 — Data Session 11</h4>
 <ul>
 <li><em>Session and reading to be set.</em></li>
-</ul></li>
 </ul>
-<p><strong>Week 13 — Part III</strong></p>
-<ul>
-<li><strong>Tue, Nov 17</strong> — Congressional, state and local
-campaigns
+</div>
+</div>
+<div id="week-13-part-iii" class="section level3">
+<h3>Week 13 — Part III</h3>
+<div id="tue-nov-17-congressional-state-and-local-campaigns" class="section level4">
+<h4>Tue, Nov 17 — Congressional, state and local campaigns</h4>
 <ul>
 <li>Sides et al., Ch. 10 and Ch. 11</li>
 <li><a href="https://www.gelliottmorris.com/p/not-just-left-vs-right-most-voters">Morris
 — the hidden axis</a></li>
-</ul></li>
-<li><strong>Thu, Nov 19</strong> — Data Session 12
+</ul>
+</div>
+<div id="thu-nov-19-data-session-12" class="section level4">
+<h4>Thu, Nov 19 — Data Session 12</h4>
 <ul>
 <li><em>Session and reading to be set.</em></li>
 <li><strong>DUE: data journalism draft</strong>.</li>
-</ul></li>
 </ul>
-<p><strong>Week 14 — the last two chapters</strong></p>
-<ul>
-<li><strong>Tue, Nov 24</strong> — <strong>Remote.</strong> The last two
-chapters — who turns out, and how they choose. On Zoom. No data session,
-no slide.
+</div>
+</div>
+<div id="week-14-the-last-two-chapters" class="section level3">
+<h3>Week 14 — the last two chapters</h3>
+<div id="tue-nov-24-remote.-the-last-two-chapters-who-turns-out-and-how-they-choose.-on-zoom.-no-data-session-no-slide." class="section level4">
+<h4>Tue, Nov 24 — <strong>Remote.</strong> The last two chapters — who
+turns out, and how they choose. On Zoom. No data session, no slide.</h4>
 <ul>
 <li>Sides et al., Ch. 12 and Ch. 13 — both on Test 3</li>
 <li><em>Source your own:</em> a news piece quoting a margin of error, or
 a demographic estimate</li>
-</ul></li>
-<li><strong>Thu, Nov 26</strong> — <strong>NO CLASS.</strong>
-Thanksgiving. Nothing is due.</li>
 </ul>
-<p><strong>Week 15 — Part III, and the end</strong></p>
-<ul>
-<li><strong>Tue, Dec 1</strong> — The end of the argument — the law, the
-maps, and whether the thing itself can be measured.
+</div>
+<div id="thu-nov-26-no-class.-thanksgiving.-nothing-is-due." class="section level4">
+<h4>Thu, Nov 26 — <strong>NO CLASS.</strong> Thanksgiving. Nothing is
+due.</h4>
+</div>
+</div>
+<div id="week-15-part-iii-and-the-end" class="section level3">
+<h3>Week 15 — Part III, and the end</h3>
+<div id="tue-dec-1-the-end-of-the-argument-the-law-the-maps-and-whether-the-thing-itself-can-be-measured." class="section level4">
+<h4>Tue, Dec 1 — The end of the argument — the law, the maps, and
+whether the thing itself can be measured.</h4>
 <ul>
 <li><a href="https://open.substack.com/pub/donmoynihan/p/power-democracy-and-clarity">Moynihan
 — <em>Power, Democracy and Clarity</em></a> — the Court’s voting-rights
@@ -1805,23 +1837,27 @@ Prop 50</a> (passed), and <a href="https://cardinalnews.org/2026/05/08/supreme-c
 for every country, every year</li>
 <li><strong>DUE: peer reviews of the data journalism draft</strong> —
 two each.</li>
-</ul></li>
-<li><strong>Thu, Dec 3</strong> — <strong>TEST 3.</strong> In class, on
-paper — Ch. 10–13, then the course wrap
+</ul>
+</div>
+<div id="thu-dec-3-test-3.-in-class-on-paper-ch.-1013-then-the-course-wrap" class="section level4">
+<h4>Thu, Dec 3 — <strong>TEST 3.</strong> In class, on paper — Ch.
+10–13, then the course wrap</h4>
 <ul>
 <li>Nothing to read — bring questions</li>
-</ul></li>
 </ul>
 <hr />
 <p><strong>Finals period — there is no exam.</strong></p>
-<ul>
-<li><strong>DUE Tue, Dec 8</strong> — <strong>the data
-newsletter</strong>.</li>
-<li><strong>DUE Fri, Dec 11</strong> — <strong>data journalism story,
-final version</strong>.</li>
-</ul>
+</div>
+<div id="due-tue-dec-8-the-data-newsletter." class="section level4">
+<h4>DUE Tue, Dec 8 — <strong>the data newsletter</strong>.</h4>
+</div>
+<div id="due-fri-dec-11-data-journalism-story-final-version." class="section level4">
+<h4>DUE Fri, Dec 11 — <strong>data journalism story, final
+version</strong>.</h4>
 <hr />
 <!-- End matter: AI policy, representation, accommodations, well-being. -->
+</div>
+</div>
 </div>
 <div id="ai-use-policy-for-student-work" class="section level2">
 <h2>AI Use Policy for Student Work</h2>
