@@ -15,8 +15,7 @@
 > Office Hours: arrange via email
 
 The most up-to-date version of this [**syllabus can be found
-here**](https://jcervas.github.io/teaching/2026-2027/class-cmu-2026-84-309/readme.html):
-<https://jcervas.github.io/teaching/2026-2027/class-cmu-2026-84-309/readme.html>
+here**](https://jcervas.github.io/teaching/2026-2027/class-cmu-2026-84-309/readme.html)
 
 ------------------------------------------------------------------------
 

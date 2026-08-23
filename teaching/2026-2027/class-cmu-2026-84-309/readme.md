@@ -15,8 +15,7 @@
 > Office Hours: arrange via email
 
 The most up-to-date version of this [**syllabus can be found
-here**](https://jcervas.github.io/teaching/2026-2027/class-cmu-2026-84-309/readme.html):
-<https://jcervas.github.io/teaching/2026-2027/class-cmu-2026-84-309/readme.html>
+here**](https://jcervas.github.io/teaching/2026-2027/class-cmu-2026-84-309/readme.html)
 
 ------------------------------------------------------------------------
 
@@ -333,68 +332,64 @@ are on that session’s page in Canvas.*
 
 > **Draft only — we write the real one together on the first day.**
 >
-> What follows is where a previous section of this course landed,
-> reproduced here as a starting point and nothing more. On August 25 we
-> will write our own, and whatever the class agrees to that day replaces
-> everything below. Come ready to argue with it: the parts that look
-> obviously right are usually the ones worth testing, and an agreement
-> you had a hand in writing is one you might actually keep.
+> A discussion course works only if people will say what they actually
+> think, and people say what they think only when they know what happens
+> to their words afterward. That is what this agreement settles: what is
+> on the record, what stays in the room, what may be repeated outside it
+> and in what form. It exists to make candour possible.
 
-### What this agreement is for
-
-A discussion course works only if people will say what they actually
-think, and people say what they think only when they know what happens
-to their words afterward. That is what this agreement settles: what is
-on the record, what stays in the room, what may be repeated outside it
-and in what form. It exists to make candour possible, not to police it —
-which is also why you should be the ones to write it.
-
-------------------------------------------------------------------------
-
-## Shared Community Agreement (draft)
-
-To foster a respectful and productive learning environment, the
-following policies apply:
-
-**No Recording of Class Discussions** - Audio or video recording of
-class discussion is **not permitted**.  
-- Recording of lectures may be allowed with approval from **Disability
-Resources**.
-
-**Technology Use**  
-- Laptops must remain closed.  
-- Phones must be put away unless otherwise specified.
-
-**Anonymity in Submissions**  
-- All written work should be anonymized (**no names on papers or
-submissions**).  
-- Peer reviews will also remain anonymous.
-
-**Confidentiality of Classroom Contributions**  
-- When discussing ideas from class outside of this setting, you may
-reference the **content**  
-but not the **identities** of the individuals who contributed.
-
-**Respectful Dialogue** - Listen attentively and allow peers to finish
-their thoughts before responding.  
-- Do not talk over one another.  
-- Treat others with the same respect you would expect for yourself.
-
-**Civility in Communication** - Speak at a moderate volume.  
-- Critique **ideas**, not individuals.  
-- Assume the most generous interpretation of your peers’ statements.
-
-**Use of Generative AI (GAI)**  
-- You may not use a peer’s work in generative AI tools without their
-**explicit permission**.  
-- Consider each peer’s work as **copyrighted**.
-
-**Representation of Opinions**  
-- A peer’s views expressed in class do not represent the official
-position of their  
-clubs, organizations, or extracurricular affiliations.
-
-------------------------------------------------------------------------
+> **Shared Community Agreement (draft)**
+>
+> To foster a respectful and productive learning environment, the
+> following policies apply:
+>
+> **No Recording of Class Discussions**
+>
+> - Audio or video recording of class discussion is **not permitted**.
+> - Recording of lectures may be allowed with approval from **Disability
+>   Resources**.
+>
+> **Technology Use**
+>
+> - Laptops must remain closed.
+> - Phones must be put away unless otherwise specified.
+>
+> **Anonymity in Submissions**
+>
+> - All written work should be anonymized (**no names on papers or
+>   submissions**).
+> - Peer reviews will also remain anonymous.
+>
+> **Confidentiality of Classroom Contributions**
+>
+> - When discussing ideas from class outside of this setting, you may
+>   reference the **content** but not the **identities** of the
+>   individuals who contributed.
+>
+> **Respectful Dialogue**
+>
+> - Listen attentively and allow peers to finish their thoughts before
+>   responding.
+> - Do not talk over one another.
+> - Treat others with the same respect you would expect for yourself.
+>
+> **Civility in Communication**
+>
+> - Speak at a moderate volume.
+> - Critique **ideas**, not individuals.
+> - Assume the most generous interpretation of your peers’ statements.
+>
+> **Use of Generative AI (GAI)**
+>
+> - You may not use a peer’s work in generative AI tools without their
+>   **explicit permission**.
+> - Consider each peer’s work as **copyrighted**.
+>
+> **Representation of Opinions**
+>
+> - A peer’s views expressed in class do not represent the official
+>   position of their clubs, organizations, or extracurricular
+>   affiliations.
 
 ## AI Use Policy for Student Work
 
@@ -433,8 +428,6 @@ Submitting generated work as your own is a violation of the university’s
 academic integrity policy and will be handled as one. If you are unsure
 whether something falls inside these lines, ask me before you submit
 rather than after.
-
-------------------------------------------------------------------------
 
 ## Representation Statement
 
@@ -476,8 +469,6 @@ experiences using the following resources:
   use your feedback to transform our campus climate into one that is
   more equitable and just.
 
-------------------------------------------------------------------------
-
 ## Accommodations for Students with Disabilities
 
 If you have a documented disability and an accommodations letter from
@@ -486,8 +477,6 @@ early in the semester as possible. I will work with you to ensure that
 accommodations are provided as appropriate. If you suspect you may have
 a disability and are not yet registered with the Office of Disability
 Resources, you can contact them at **<access@andrew.cmu.edu>**.
-
-------------------------------------------------------------------------
 
 ## Student Well-Being
 
