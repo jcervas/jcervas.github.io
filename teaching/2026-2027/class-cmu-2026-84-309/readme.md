@@ -297,6 +297,10 @@ are on that session’s page in Canvas.*
 - [Brown et al. 2026 — How Generational Turnover and Party Switching
   Reshape the US Political
   Map](https://cepr.org/voxeu/columns/how-generational-turnover-and-party-switching-reshape-us-political-map)
+- [Brown & Mettler 2023 — Sequential Polarization: The Development of
+  the Rural-Urban Political Divide,
+  1976–2020](https://canvas.cmu.edu/courses/55941/files/14695450) ·
+  [doi](https://doi.org/10.1017/S1537592723002918)
 - [De Witte 2019 — How the Urban-Rural Divide Shapes
   Elections](https://news.stanford.edu/stories/2019/06/urban-rural-divide-shapes-elections)
 - [Cervas 2026 — The Effects of Mid-Decade Redistricting on Electoral
@@ -307,6 +311,10 @@ are on that session’s page in Canvas.*
 - **Two chapters, and that is the whole assignment.** Jacobs and Shea
   fielded the largest survey ever taken of rural Americans, and the book
   that came out of it is the best available answer to
+- [Mettler et al. 2024 — A Rural-Urban Political Divide Among Whom?
+  Race, Ethnicity, and Political Behavior Across
+  Place](https://as.cornell.edu/news/growing-rural-urban-divide-exists-only-among-white-americans)
+  · [doi](https://doi.org/10.1080/21565503.2024.2328551)
 - [Jacobs & Shea 2023 — *The Rural Voter*: **Introduction**, “Two
   Americas” (pp. 1–22) and **Chapter 11**, “Bridges Across the
   Rural-Urban Divide”
