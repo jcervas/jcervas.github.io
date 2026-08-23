@@ -278,7 +278,6 @@ are on that session’s page in Canvas.*
 
 #### Tue, Sep 29 — Polarization VII: Geographic — The Map, and the Power in It
 
-- **Do these before you read anything.**
 - [Brown & Enos — Partisan Segregation (interactive
   maps)](https://www.ryandenos.com/partisan-segregation)
 - [The New York Times 2025 — An Extremely Detailed Map of the 2024
@@ -300,9 +299,6 @@ are on that session’s page in Canvas.*
 
 #### Thu, Oct 1 — Place, Identity, and Rural Consciousness
 
-- **Two chapters, and that is the whole assignment.** Jacobs and Shea
-  fielded the largest survey ever taken of rural Americans, and the book
-  that came out of it is the best available answer to
 - [Mettler et al. 2024 — A Rural-Urban Political Divide Among Whom?
   Race, Ethnicity, and Political Behavior Across
   Place](https://as.cornell.edu/news/growing-rural-urban-divide-exists-only-among-white-americans)
