@@ -327,7 +327,7 @@ are on that session’s page in Canvas.*
 - **Tue, Dec 1** — Group Policy Brief
 - **Thu, Dec 3** — Group Policy Brief
 
-<!-- End matter: privacy draft, community agreement, course principles, AI policy, representation, accommodations, well-being. Mostly stable; the privacy draft is replaced by the class each year. -->
+<!-- End matter: privacy draft, community agreement, AI policy, representation, accommodations, well-being. Mostly stable; the privacy draft is replaced by the class each year. -->
 
 ## Student Privacy in Class Discussions
 
@@ -395,46 +395,6 @@ position of their
 clubs, organizations, or extracurricular affiliations.
 
 ------------------------------------------------------------------------
-
-## Course Principles
-
-Four commitments run through the semester. They are not decoration —
-they are how the discussions are meant to work.
-
-1.  **Establish the fact before arguing about the cause.** Much of what
-    everyone knows about American division turns out to be contested,
-    mismeasured, or wrong, including by people who study it for a
-    living. Before asking why Americans are divided we ask whether they
-    are, how anyone would know, and what the evidence actually shows.
-    You will read scholars disagreeing with each other over the same
-    data, in print, by name.
-
-2.  **Division and inequality are one subject, not two.** Political
-    conflict is not evenly costly. It shapes who is heard, who is
-    represented, whose problems reach an agenda at all, and who absorbs
-    the consequences of a politics organized around mutual dislike.
-    Asking who bears those costs is the question of justice this course
-    exists to raise, and it is not separable from the empirical work —
-    you cannot answer it without knowing what is actually true about the
-    divide.
-
-3.  **Institutions decide who counts.** Rules about voting, districting,
-    representation, and speech are not neutral machinery. They
-    distribute power, they were built by people with interests, and they
-    can be built differently. We look at how the present arrangements
-    came about and whom they serve.
-
-4.  **Argue with the strongest version.** You will be asked, repeatedly,
-    to state a position you reject in terms its most serious advocate
-    would recognize — and only then to disagree with it. This is harder
-    than it sounds, and it is the central skill of the course. A
-    semester spent defeating weak versions of other people’s views
-    teaches nothing at all.
-
-> *By the end of this course you should be able to state what people you
-> disagree with actually believe, in terms they would accept, and to
-> state what you believe with reasons that survive contact with someone
-> who does not.*
 
 ## AI Use Policy for Student Work
 
