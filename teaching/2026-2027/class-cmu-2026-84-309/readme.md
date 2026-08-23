@@ -217,18 +217,18 @@ are on that session’s page in Canvas.*
 
 #### Thu, Sep 3 — Polarization I: Partisan and Ideological Polarization
 
-- **Start here:** [Fiorina 2026 — *Unstable Majorities Continue: The
-  Trump
+- [Fiorina 2026 — *Unstable Majorities Continue: The Trump
   Era*](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020547656104436)
-  — **Chapter 8** (23 pages), free through the library with unlimited
-  access. Read it before the older pieces below.
-- [Fiorina et al. 2008 — Political Polarization in the American
-  Public](https://doi.org/10.1146/annurev.polisci.11.053106.153836)
-- [Abramowitz et al. 2008 — Is Polarization a
-  Myth?](https://doi.org/10.1017/S0022381608080493)
+  — **Chapter 8** (23 pages).
 - [Fiorina 2026 — *Unstable Majorities Continue*, **Chapter 2**: “Once
   More unto the Breach: Is America
   Polarized?”](https://www.hoover.org/research/once-more-unto-breach-america-polarized)
+- [Fiorina et al. 2008 — Political Polarization in the American
+  Public](https://canvas.cmu.edu/courses/55941/files/14695393) ·
+  [doi](https://doi.org/10.1146/annurev.polisci.11.053106.153836)
+- [Abramowitz et al. 2008 — Is Polarization a
+  Myth?](https://canvas.cmu.edu/courses/55941/files/14695394) ·
+  [doi](https://doi.org/10.1017/S0022381608080493)
 
 ### Week 3 — Polarization unit
 
@@ -237,15 +237,18 @@ are on that session’s page in Canvas.*
 - [Mason 2015 — ‘I Disrespectfully
   Agree’](https://doi.org/10.1111/ajps.12089)
 - [Ahler et al. 2018 — The Parties in Our
-  Heads](https://doi.org/10.1086/697253)
+  Heads](https://canvas.cmu.edu/courses/55941/files/14695396) ·
+  [doi](https://doi.org/10.1086/697253)
 
 #### Thu, Sep 10 — Polarization III: Affective Polarization
 
 - [Iyengar et al. 2019 — The Origins and Consequences of Affective
   Polarization in the United
-  States](https://doi.org/10.1146/annurev-polisci-051117-073034)
+  States](https://canvas.cmu.edu/courses/55941/files/14695397) ·
+  [doi](https://doi.org/10.1146/annurev-polisci-051117-073034)
 - [Finkel et al. 2020 — Political Sectarianism in
-  America](https://doi.org/10.1126/science.abe1715)
+  America](https://canvas.cmu.edu/courses/55941/files/14695398) ·
+  [doi](https://doi.org/10.1126/science.abe1715)
 - [Fiorina 2026 — *Unstable Majorities Continue*, **Chapter 3**: “What
   About *Affective*
   Polarization?”](https://www.hoover.org/research/what-about-affective-polarization)
@@ -272,9 +275,11 @@ are on that session’s page in Canvas.*
 #### Thu, Sep 24 — Polarization V: Race and Polarization
 
 - [Tesler 2012 — The Spillover of Racialization into Health
-  Care](https://doi.org/10.1111/j.1540-5907.2011.00577.x)
+  Care](https://canvas.cmu.edu/courses/55941/files/14695402) ·
+  [doi](https://doi.org/10.1111/j.1540-5907.2011.00577.x)
 - [Mason et al. 2021 — Activating Animus: The Uniquely Social Roots of
-  Trump Support](https://doi.org/10.1017/S0003055421000563)
+  Trump Support](https://canvas.cmu.edu/courses/55941/files/14695403) ·
+  [doi](https://doi.org/10.1017/S0003055421000563)
 
 ### Week 6 — Polarization unit · geography
 
@@ -302,9 +307,10 @@ are on that session’s page in Canvas.*
 - **Two chapters, and that is the whole assignment.** Jacobs and Shea
   fielded the largest survey ever taken of rural Americans, and the book
   that came out of it is the best available answer to
-- [Jacobs et al. 2023 — *The Rural Voter: The Politics of Place and the
-  Disuniting of America.* Columbia University
-  Press](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020185778804436)
+- [Jacobs & Shea 2023 — *The Rural Voter*: **Introduction**, “Two
+  Americas” (pp. 1–22) and **Chapter 11**, “Bridges Across the
+  Rural-Urban Divide”
+  (pp. 380–414)](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020185778804436)
 
 ### Week 7 — Polarization unit closes
 
@@ -318,12 +324,14 @@ are on that session’s page in Canvas.*
 - “Would You Vote Against Your Own Side to Save Democracy?”
 - [Graham et al. 2020 — Democracy in America? Partisanship,
   Polarization, and the Robustness of Support for Democracy in the
-  United States](https://doi.org/10.1017/S0003055420000052)
+  United States](https://canvas.cmu.edu/courses/55941/files/14695408) ·
+  [doi](https://doi.org/10.1017/S0003055420000052)
 
 #### Thu, Oct 8 — Who Pays for the News?
 
 - [Darr et al. 2018 — Newspaper Closures Polarize Voting
-  Behavior](https://doi.org/10.1093/joc/jqy051)
+  Behavior](https://canvas.cmu.edu/courses/55941/files/14695409) ·
+  [doi](https://doi.org/10.1093/joc/jqy051)
 - [Martin et al. 2019 — Local News and National
   Politics](https://doi.org/10.1017/S0003055418000965)
 - [Pickard 2020 — Restructuring Democratic
@@ -346,7 +354,9 @@ are on that session’s page in Canvas.*
 #### Tue, Oct 27 — Before the Vote: Loser’s Consent
 
 - [Layman et al. 2023 — Political Parties and Loser’s Consent in
-  American Politics](https://doi.org/10.1177/00027162241229309)
+  American
+  Politics](https://canvas.cmu.edu/courses/55941/files/14695410) ·
+  [doi](https://doi.org/10.1177/00027162241229309)
 
 #### Thu, Oct 29 — Student-led session — team and topic TBA
 
