@@ -224,31 +224,26 @@ are on that session’s page in Canvas.*
   More unto the Breach: Is America
   Polarized?”](https://www.hoover.org/research/once-more-unto-breach-america-polarized)
 - [Fiorina et al. 2008 — Political Polarization in the American
-  Public](https://canvas.cmu.edu/courses/55941/files/14695393) ·
-  [doi](https://doi.org/10.1146/annurev.polisci.11.053106.153836)
+  Public](https://canvas.cmu.edu/courses/55941/files/14695393)
 - [Abramowitz et al. 2008 — Is Polarization a
-  Myth?](https://canvas.cmu.edu/courses/55941/files/14695394) ·
-  [doi](https://doi.org/10.1017/S0022381608080493)
+  Myth?](https://canvas.cmu.edu/courses/55941/files/14695394)
 
 ### Week 3 — Polarization unit
 
 #### Tue, Sep 8 — Polarization II: Sorting and Social Identity
 
 - [Mason 2015 — ‘I Disrespectfully
-  Agree’](https://doi.org/10.1111/ajps.12089)
+  Agree’](https://canvas.cmu.edu/courses/55941/files/14695558)
 - [Ahler et al. 2018 — The Parties in Our
-  Heads](https://canvas.cmu.edu/courses/55941/files/14695396) ·
-  [doi](https://doi.org/10.1086/697253)
+  Heads](https://canvas.cmu.edu/courses/55941/files/14695396)
 
 #### Thu, Sep 10 — Polarization III: Affective Polarization
 
 - [Iyengar et al. 2019 — The Origins and Consequences of Affective
   Polarization in the United
-  States](https://canvas.cmu.edu/courses/55941/files/14695397) ·
-  [doi](https://doi.org/10.1146/annurev-polisci-051117-073034)
+  States](https://canvas.cmu.edu/courses/55941/files/14695397)
 - [Finkel et al. 2020 — Political Sectarianism in
-  America](https://canvas.cmu.edu/courses/55941/files/14695398) ·
-  [doi](https://doi.org/10.1126/science.abe1715)
+  America](https://canvas.cmu.edu/courses/55941/files/14695398)
 - [Fiorina 2026 — *Unstable Majorities Continue*, **Chapter 3**: “What
   About *Affective*
   Polarization?”](https://www.hoover.org/research/what-about-affective-polarization)
@@ -275,11 +270,9 @@ are on that session’s page in Canvas.*
 #### Thu, Sep 24 — Polarization V: Race and Polarization
 
 - [Tesler 2012 — The Spillover of Racialization into Health
-  Care](https://canvas.cmu.edu/courses/55941/files/14695402) ·
-  [doi](https://doi.org/10.1111/j.1540-5907.2011.00577.x)
+  Care](https://canvas.cmu.edu/courses/55941/files/14695402)
 - [Mason et al. 2021 — Activating Animus: The Uniquely Social Roots of
-  Trump Support](https://canvas.cmu.edu/courses/55941/files/14695403) ·
-  [doi](https://doi.org/10.1017/S0003055421000563)
+  Trump Support](https://canvas.cmu.edu/courses/55941/files/14695403)
 
 ### Week 6 — Polarization unit · geography
 
@@ -299,8 +292,7 @@ are on that session’s page in Canvas.*
   Map](https://cepr.org/voxeu/columns/how-generational-turnover-and-party-switching-reshape-us-political-map)
 - [Brown & Mettler 2023 — Sequential Polarization: The Development of
   the Rural-Urban Political Divide,
-  1976–2020](https://canvas.cmu.edu/courses/55941/files/14695450) ·
-  [doi](https://doi.org/10.1017/S1537592723002918)
+  1976–2020](https://canvas.cmu.edu/courses/55941/files/14695450)
 - [De Witte 2019 — How the Urban-Rural Divide Shapes
   Elections](https://news.stanford.edu/stories/2019/06/urban-rural-divide-shapes-elections)
 - [Cervas 2026 — The Effects of Mid-Decade Redistricting on Electoral
@@ -314,11 +306,12 @@ are on that session’s page in Canvas.*
 - [Mettler et al. 2024 — A Rural-Urban Political Divide Among Whom?
   Race, Ethnicity, and Political Behavior Across
   Place](https://as.cornell.edu/news/growing-rural-urban-divide-exists-only-among-white-americans)
-  · [doi](https://doi.org/10.1080/21565503.2024.2328551)
 - [Jacobs & Shea 2023 — *The Rural Voter*: **Introduction**, “Two
   Americas” (pp. 1–22) and **Chapter 11**, “Bridges Across the
   Rural-Urban Divide”
   (pp. 380–414)](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020185778804436)
+- [Badger & Bui 2018 — Rural and Urban Residents Feel Disparaged (Pew
+  survey)](https://www.nytimes.com/2018/05/22/upshot/rural-and-urban-residents-feel-disparaged-pew-survey.html)
 
 ### Week 7 — Polarization unit closes
 
@@ -326,24 +319,23 @@ are on that session’s page in Canvas.*
 
 - [Druckman et al. 2023 — Does Affective Polarization Contribute to
   Democratic Backsliding in
-  America?](https://doi.org/10.1177/00027162241228952)
+  America?](https://canvas.cmu.edu/courses/55941/files/14695547)
 - [McCoy et al. 2019 — Toward a Theory of Pernicious Polarization and
-  How It Harms Democracies](https://doi.org/10.1177/0002716218818782)
+  How It Harms
+  Democracies](https://canvas.cmu.edu/courses/55941/files/14695546)
 - “Would You Vote Against Your Own Side to Save Democracy?”
 - [Graham et al. 2020 — Democracy in America? Partisanship,
   Polarization, and the Robustness of Support for Democracy in the
-  United States](https://canvas.cmu.edu/courses/55941/files/14695408) ·
-  [doi](https://doi.org/10.1017/S0003055420000052)
+  United States](https://canvas.cmu.edu/courses/55941/files/14695408)
 
 #### Thu, Oct 8 — Who Pays for the News?
 
 - [Darr et al. 2018 — Newspaper Closures Polarize Voting
-  Behavior](https://canvas.cmu.edu/courses/55941/files/14695409) ·
-  [doi](https://doi.org/10.1093/joc/jqy051)
+  Behavior](https://canvas.cmu.edu/courses/55941/files/14695409)
 - [Martin et al. 2019 — Local News and National
-  Politics](https://doi.org/10.1017/S0003055418000965)
+  Politics](https://canvas.cmu.edu/courses/55941/files/14695545)
 - [Pickard 2020 — Restructuring Democratic
-  Infrastructures](https://doi.org/10.1080/21670811.2020.1733433)
+  Infrastructures](https://canvas.cmu.edu/courses/55941/files/14695541)
 
 ### Week 8 — FALL BREAK, no class (Oct 13–15)
 
@@ -363,8 +355,7 @@ are on that session’s page in Canvas.*
 
 - [Layman et al. 2023 — Political Parties and Loser’s Consent in
   American
-  Politics](https://canvas.cmu.edu/courses/55941/files/14695410) ·
-  [doi](https://doi.org/10.1177/00027162241229309)
+  Politics](https://canvas.cmu.edu/courses/55941/files/14695410)
 
 #### Thu, Oct 29 — Student-led session — team and topic TBA
 
