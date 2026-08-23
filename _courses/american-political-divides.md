@@ -3,7 +3,7 @@ title: "American Political Divides and Great Debates"
 number: "84-309 / 609"
 level: "Undergraduate & Graduate"
 gened: "Perspectives on Justice & Injustice"
-terms: "Fall 2024, 2025"
+terms: "Fall 2024, 2025, 2026"
 order: 3
 summary: "Active engagement with political polarization and the nation's most contentious debates, from the 2nd Amendment to immigration."
 ---

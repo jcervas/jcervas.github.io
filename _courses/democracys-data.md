@@ -3,7 +3,7 @@ title: "Democracy's Data: Analytics and Insights into American Elections"
 number: "84-355 / 655"
 level: "Undergraduate & Graduate"
 gened: "Contextual Thinking"
-terms: "Fall 2024, 2025"
+terms: "Fall 2024, 2025, 2026"
 order: 4
 summary: "Political science meets data analytics — the U.S. electoral system, the 2024 election, and forecasting the 2026 midterms."
 # syllabus: /assets/syllabi/democracys-data.pdf   # uncomment when a PDF is added
