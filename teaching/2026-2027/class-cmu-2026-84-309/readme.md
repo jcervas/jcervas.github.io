@@ -94,10 +94,6 @@ The course grade will be a weighted average of the following components:
 | **Op-Ed Project** (Draft + Review + Final)   | **20%**                |
 | **Group Policy Brief**                       | **17%**                |
 
-![Absences and the attendance grade. The first three cost almost
-nothing; four to six is where it
-bites.](readme_files/figure-gfm/attendance-curve-1.png)
-
 ## Due Dates
 
 | Assignment               | Due Date                         |
@@ -118,9 +114,12 @@ bites.](readme_files/figure-gfm/attendance-curve-1.png)
 **Full instructions for every assignment are in Canvas**, under
 Assignments. What follows is the shape of each one and what it is worth.
 
+![Absences and the attendance grade. The first three cost almost
+nothing; four to six is where it
+bites.](readme_files/figure-gfm/attendance-curve-1.png)
+
 - **Attendance** (25%). Show up. The first three absences cost almost
-  nothing; four to six is where a semester goes wrong. The curve is in
-  Canvas.
+  nothing; four to six is where a semester goes wrong.
 - **Discussion Board** (15%). One short post before every class, due
   **9:00 a.m.** on the day we meet. Either raise something or answer
   someone. Your two lowest scores are dropped.
