@@ -155,7 +155,27 @@ progress (for instance, in group projects). Failing to participate or
 contribute meaningfully, especially in ways that affect others’ work,
 will result in a lower grade.
 
-<!-- Session-by-session schedule. Dates are written out, so a new year means editing them here. -->
+<!-- ===========================================================================
+     THE SCHEDULE — this is the only file to edit. There is no second copy.
+
+     It feeds two audiences from one source:
+
+       the syllabus   prints the session lines and the REQUIRED readings
+       Canvas         per-session reading pages get everything, including the
+                      optional readings and the annotations
+
+     Line types
+       **Week N — label**                  a week heading
+       - **Tue, Sep 29** — Title           one class
+         - [Label](url)                    a required reading — BOTH
+           - a note about the reading      annotation — CANVAS ONLY
+
+     The syllabus filter lives in ../readme.Rmd; the Canvas half is
+     canvas.json's `sessions` map plus ../../_syllabus-template/canvas-sync.py.
+
+     Dates are written out — no inline R. The build refuses to run if any
+     creeps back in, because it once reached students as literal code.
+     =========================================================================== -->
 
 ## Schedule
 
