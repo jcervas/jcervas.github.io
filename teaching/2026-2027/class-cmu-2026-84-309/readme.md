@@ -191,17 +191,21 @@ are on that session’s page in Canvas.*
 - **Thu, Aug 27** — The Fence
   - **In class: the Perception Gap.** More in Common, perceptiongap.us.
   - Background on “The Fence”
-  - [“CMU Fence Controversy Sparks Censorship Concerns.”
-    Pittsburgh…](https://www.post-gazette.com/news/education/2025/07/17/what-is-the-fence-at-carnegie-mellon/stories/202507160062)
-  - [Strasburg et al. 2025 — In Midnight Move, CMU Students Roll
-    in…](https://www.publicsource.org/cmu-students-create-new-fence-to-highlight-campus-free-speech/)
-  - [Chang et al. 2026 — YAL Rallies at Fence, Delivers Petition
-    to…](https://the-tartan.org/2026/04/06/yal-rallies-at-fence-delivers-petition-to-president-jahanian/)
-  - [Aiken 2026 — Carnegie Mellon Investigating Students over
-    Fence…](https://www.post-gazette.com/news/education/2026/08/01/carnegie-mellon-fence-investigation/stories/202607310058)
+  - [“CMU Fence Controversy Sparks Censorship Concerns.” Pittsburgh
+    Post-Gazette,](https://www.post-gazette.com/news/education/2025/07/17/what-is-the-fence-at-carnegie-mellon/stories/202507160062)
+  - [Strasburg et al. 2025 — In Midnight Move, CMU Students Roll in New
+    Fence to Protest Closure of Free Speech
+    Icon](https://www.publicsource.org/cmu-students-create-new-fence-to-highlight-campus-free-speech/)
+  - [Chang et al. 2026 — YAL Rallies at Fence, Delivers Petition to
+    President
+    Jahanian](https://the-tartan.org/2026/04/06/yal-rallies-at-fence-delivers-petition-to-president-jahanian/)
+  - [Aiken 2026 — Carnegie Mellon Investigating Students over Fence
+    Messages Tied to Israeli-Palestinian
+    Conflict](https://www.post-gazette.com/news/education/2026/08/01/carnegie-mellon-fence-investigation/stories/202607310058)
   - Articles from The Tartan on the Fence’s history
-  - [Student Handbook, Advertising on
-    Campus](https://www.cmu.edu/student-affairs/theword/community-policies/advertising-on-campus.html)
+  - [Student Handbook, Advertising on Campus - Graffiti and Poster
+    Policy of
+    Student](https://www.cmu.edu/student-affairs/theword/community-policies/advertising-on-campus.html)
   - [Student Government Graffiti and Poster
     Policy](https://www.cmu.edu/stugov/policies/old-pdfs/Student%20Government%20Graffiti%20and%20Poster%20Policy_Updates_1_26_17.pdf)
 
@@ -209,8 +213,8 @@ are on that session’s page in Canvas.*
 
 - **Tue, Sep 1** — Organize Topics for Student Led Discussions
 - **Thu, Sep 3** — Polarization I: Partisan and Ideological Polarization
-  - [Fiorina et al. 2008 — Political Polarization in the
-    American…](https://doi.org/10.1146/annurev.polisci.11.053106.153836)
+  - [Fiorina et al. 2008 — Political Polarization in the American
+    Public](https://doi.org/10.1146/annurev.polisci.11.053106.153836)
   - [Abramowitz et al. 2008 — Is Polarization a
     Myth?](https://doi.org/10.1017/S0022381608080493)
   - [Fiorina 2024 — Once More Unto the Breach: Is America
@@ -224,8 +228,9 @@ are on that session’s page in Canvas.*
   - [Ahler et al. 2018 — The Parties in Our
     Heads](https://doi.org/10.1086/697253)
 - **Thu, Sep 10** — Polarization III: Affective Polarization
-  - [Iyengar et al. 2019 — The Origins and Consequences of
-    Affective…](https://doi.org/10.1146/annurev-polisci-051117-073034)
+  - [Iyengar et al. 2019 — The Origins and Consequences of Affective
+    Polarization in the United
+    States](https://doi.org/10.1146/annurev-polisci-051117-073034)
   - [Finkel et al. 2020 — Political Sectarianism in
     America](https://doi.org/10.1126/science.abe1715)
   - [Fiorina 2024 — What About *Affective*
@@ -240,8 +245,9 @@ are on that session’s page in Canvas.*
 
 - **Tue, Sep 22** — Polarization IV: Negative Partisanship and the White
   Working Class
-  - [Abramowitz et al. 2016 — The Rise of Negative Partisanship
-    and…](http://www.stevenwwebster.com/negative-partisanship.pdf)
+  - [Abramowitz et al. 2016 — The Rise of Negative Partisanship and the
+    Nationalization of
+    U.S](http://www.stevenwwebster.com/negative-partisanship.pdf)
   - [Abramowitz 2025 — It’s Not the Economy,
     Stupid](https://centerforpolitics.org/crystalball/its-not-the-economy-stupid-the-ideological-foundations-of-white-working-class-republicanism/)
   - [Fiorina 2024 — The White Working
@@ -249,43 +255,49 @@ are on that session’s page in Canvas.*
 - **Thu, Sep 24** — Polarization V: Race and Polarization
   - [Tesler 2012 — The Spillover of Racialization into Health
     Care](https://doi.org/10.1111/j.1540-5907.2011.00577.x)
-  - [Mason et al. 2021 — Activating
-    Animus](https://doi.org/10.1017/S0003055421000563)
+  - [Mason et al. 2021 — Activating Animus: The Uniquely Social Roots of
+    Trump Support](https://doi.org/10.1017/S0003055421000563)
 
 **Week 6 — Polarization unit · geography**
 
 - **Tue, Sep 29** — Polarization VII: Geographic — The Map, and the
   Power in It
   - **Do these before you read anything.**
-  - [Brown, Jacob R., and Ryan D. Enos. “Partisan
-    Segregation.”…](https://www.ryandenos.com/partisan-segregation)
-  - [The New York Times 2025 — An Extremely Detailed Map of the
-    2024…](https://www.nytimes.com/interactive/2025/us/elections/2024-election-map-precinct-results.html)
-  - [Badger et al. 2021 — A Close-Up Picture of
-    Partisan…](https://www.nytimes.com/interactive/2021/03/17/upshot/partisan-segregation-maps.html)
-  - [Brown et al. 2026 — How Generational Turnover and
-    Party…](https://cepr.org/voxeu/columns/how-generational-turnover-and-party-switching-reshape-us-political-map)
+  - [Brown & Enos — Partisan Segregation (interactive
+    maps)](https://www.ryandenos.com/partisan-segregation)
+  - [The New York Times 2025 — An Extremely Detailed Map of the 2024
+    Election
+    Results](https://www.nytimes.com/interactive/2025/us/elections/2024-election-map-precinct-results.html)
+  - [Badger et al. 2021 — A Close-Up Picture of Partisan Segregation,
+    Among 180 Million
+    Voters](https://www.nytimes.com/interactive/2021/03/17/upshot/partisan-segregation-maps.html)
+  - [Brown et al. 2026 — How Generational Turnover and Party Switching
+    Reshape the US Political
+    Map](https://cepr.org/voxeu/columns/how-generational-turnover-and-party-switching-reshape-us-political-map)
   - [De Witte 2019 — How the Urban-Rural Divide Shapes
     Elections](https://news.stanford.edu/stories/2019/06/urban-rural-divide-shapes-elections)
-  - [Cervas 2026 — The Effects of Mid-Decade Redistricting
-    on…](https://cervas.medium.com/the-effects-of-mid-decade-redistricting-on-electoral-outcomes-d870c772942b)
+  - [Cervas 2026 — The Effects of Mid-Decade Redistricting on Electoral
+    Outcomes](https://cervas.medium.com/the-effects-of-mid-decade-redistricting-on-electoral-outcomes-d870c772942b)
 - **Thu, Oct 1** — Place, Identity, and Rural Consciousness
   - **Two chapters, and that is the whole assignment.** Jacobs and Shea
     fielded the largest survey ever taken of rural Americans, and the
     book that came out of it is the best available answer to
-  - [Jacobs et al. 2023 — \*The Rural
-    Voter](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020185778804436)
+  - [Jacobs et al. 2023 — *The Rural Voter: The Politics of Place and
+    the Disuniting of America.* Columbia University
+    Press](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020185778804436)
 
 **Week 7 — Polarization unit closes**
 
 - **Tue, Oct 6** — Polarization VI: Does Any of This Threaten Democracy?
-  - [Druckman et al. 2023 — Does Affective Polarization
-    Contribute…](https://doi.org/10.1177/00027162241228952)
-  - [McCoy et al. 2019 — Toward a Theory of Pernicious
-    Polarization…](https://doi.org/10.1177/0002716218818782)
+  - [Druckman et al. 2023 — Does Affective Polarization Contribute to
+    Democratic Backsliding in
+    America?](https://doi.org/10.1177/00027162241228952)
+  - [McCoy et al. 2019 — Toward a Theory of Pernicious Polarization and
+    How It Harms Democracies](https://doi.org/10.1177/0002716218818782)
   - “Would You Vote Against Your Own Side to Save Democracy?”
-  - [Graham et al. 2020 — Democracy in America?
-    Partisanship,…](https://doi.org/10.1017/S0003055420000052)
+  - [Graham et al. 2020 — Democracy in America? Partisanship,
+    Polarization, and the Robustness of Support for Democracy in the
+    United States](https://doi.org/10.1017/S0003055420000052)
 - **Thu, Oct 8** — Who Pays for the News?
   - [Darr et al. 2018 — Newspaper Closures Polarize Voting
     Behavior](https://doi.org/10.1093/joc/jqy051)
@@ -307,8 +319,8 @@ are on that session’s page in Canvas.*
 **Week 10 — Student-led · before the vote**
 
 - **Tue, Oct 27** — Before the Vote: Loser’s Consent
-  - [Layman et al. 2023 — Political Parties and Loser’s Consent
-    in…](https://doi.org/10.1177/00027162241229309)
+  - [Layman et al. 2023 — Political Parties and Loser’s Consent in
+    American Politics](https://doi.org/10.1177/00027162241229309)
 - **Thu, Oct 29** — Student-led session — team and topic TBA
 
 **Week 11 — Student-led · election week**
