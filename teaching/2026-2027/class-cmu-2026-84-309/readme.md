@@ -225,8 +225,9 @@ are on that session’s page in Canvas.*
   Public](https://doi.org/10.1146/annurev.polisci.11.053106.153836)
 - [Abramowitz et al. 2008 — Is Polarization a
   Myth?](https://doi.org/10.1017/S0022381608080493)
-- [Fiorina 2024 — Once More Unto the Breach: Is America
-  Polarized?](https://www.hoover.org/research/once-more-unto-breach-america-polarized)
+- [Fiorina 2026 — *Unstable Majorities Continue*, **Chapter 2**: “Once
+  More Unto the Breach: Is America
+  Polarized?”](https://www.hoover.org/research/once-more-unto-breach-america-polarized)
 
 ### Week 3 — Polarization unit
 
