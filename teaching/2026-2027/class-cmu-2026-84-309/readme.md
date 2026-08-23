@@ -220,7 +220,8 @@ are on that session’s page in Canvas.*
 - **Start here:** [Fiorina 2026 — *Unstable Majorities Continue: The
   Trump
   Era*](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020547656104436)
-  — **Chapter 8** (23 pages).
+  — **Chapter 8** (23 pages), free through the library with unlimited
+  access. Read it before the older pieces below.
 - [Fiorina et al. 2008 — Political Polarization in the American
   Public](https://doi.org/10.1146/annurev.polisci.11.053106.153836)
 - [Abramowitz et al. 2008 — Is Polarization a
