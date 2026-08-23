@@ -226,7 +226,7 @@ are on that session’s page in Canvas.*
 - [Abramowitz et al. 2008 — Is Polarization a
   Myth?](https://doi.org/10.1017/S0022381608080493)
 - [Fiorina 2026 — *Unstable Majorities Continue*, **Chapter 2**: “Once
-  More Unto the Breach: Is America
+  More unto the Breach: Is America
   Polarized?”](https://www.hoover.org/research/once-more-unto-breach-america-polarized)
 
 ### Week 3 — Polarization unit
@@ -245,8 +245,9 @@ are on that session’s page in Canvas.*
   States](https://doi.org/10.1146/annurev-polisci-051117-073034)
 - [Finkel et al. 2020 — Political Sectarianism in
   America](https://doi.org/10.1126/science.abe1715)
-- [Fiorina 2024 — What About *Affective*
-  Polarization?](https://www.hoover.org/research/what-about-affective-polarization)
+- [Fiorina 2026 — *Unstable Majorities Continue*, **Chapter 3**: “What
+  About *Affective*
+  Polarization?”](https://www.hoover.org/research/what-about-affective-polarization)
 
 ### Week 4 — NO CLASS (Sep 15–17)
 
@@ -263,8 +264,9 @@ are on that session’s page in Canvas.*
   U.S](http://www.stevenwwebster.com/negative-partisanship.pdf)
 - [Abramowitz 2025 — It’s Not the Economy,
   Stupid](https://centerforpolitics.org/crystalball/its-not-the-economy-stupid-the-ideological-foundations-of-white-working-class-republicanism/)
-- [Fiorina 2024 — The White Working
-  Class](https://www.hoover.org/research/white-working-class)
+- [Fiorina 2026 — *Unstable Majorities Continue*, **Chapter 5**: “The
+  White Working Class in 2016 (and
+  Earlier)”](https://www.hoover.org/research/white-working-class)
 
 #### Thu, Sep 24 — Polarization V: Race and Polarization
 
