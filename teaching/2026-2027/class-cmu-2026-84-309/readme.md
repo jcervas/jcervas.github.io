@@ -171,7 +171,7 @@ will result in a lower grade.
          - *Optional*: [Label](url)        optional — CANVAS ONLY
            - a note about the reading      annotation — CANVAS ONLY
 
-     The syllabus filter lives in ../readme.Rmd; the Canvas half is
+     The syllabus filter lives in syllabus.Rmd; the Canvas half is
      canvas.json's `sessions` map plus ../../_syllabus-template/canvas-sync.py.
 
      Dates are written out — no inline R. The build refuses to run if any
