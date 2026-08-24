@@ -417,11 +417,6 @@ are on that session’s page in Canvas.*
 > - Recording of lectures may be allowed with approval from **Disability
 >   Resources**.
 >
-> **Technology Use**
->
-> - Laptops must remain closed.
-> - Phones must be put away unless otherwise specified.
->
 > **Anonymity in Submissions**
 >
 > - All written work should be anonymized (**no names on papers or
@@ -458,6 +453,15 @@ are on that session’s page in Canvas.*
 > - A peer’s views expressed in class do not represent the official
 >   position of their clubs, organizations, or extracurricular
 >   affiliations.
+
+## Devices in Class
+
+Laptops, tablets, and phones are not to be used for anything that is not
+pertinent to what we are doing in the room. The simplest version of
+this: keep them in your bag. If you are found using a device for
+something unrelated to class, **you will be marked absent for that
+session** — attendance is 25% of the grade, so this is not a small
+thing.
 
 ## AI Use Policy for Student Work
 
