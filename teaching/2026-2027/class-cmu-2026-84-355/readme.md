@@ -318,7 +318,7 @@ else’s work, not just your own:
 #### Tue, Aug 25 — Course introduction: the three parts. Read the book’s own introduction, What This Book Is For.
 
 - The book’s introduction — *What This Book Is For*
-- **DUE Wed, Aug 26, 11:59 p.m.** — the **Cervas Election Study**.
+- **DUE Wed, Aug 26, 11:59 p.m.** — the **“Cervas” Election Study**.
 
 #### Thu, Aug 27 — Data Session 1 — The decennial census, and the seats it decides
 
@@ -401,7 +401,7 @@ else’s work, not just your own:
   vote](https://boltsmag.org/missouri-rejects-restrictions-on-direct-democracy/)
 - Sides et al., Ch. 5
 
-#### Thu, Oct 1 — Data Session 6 — Public opinion, and the studies built to measure it: the Cervas Election Study beside CES and ANES. No slide this week.
+#### Thu, Oct 1 — Data Session 6 — Public opinion, and the studies built to measure it: the “Cervas” Election Study beside CES and ANES.
 
 - [Verba, “The Citizen as Respondent” (1996),
   1–7](https://www.jstor.org/stable/2082793) — why measure opinion by
@@ -490,11 +490,9 @@ Nothing is due.
 
 #### Tue, Nov 10 — **TEST 2.** In class, on paper — Ch. 6–9
 
-- Ch. 8 and 9 are on the test
+#### Thu, Nov 12 — Data Session 11 — Surnames and geolocation: guessing race from a name and an address
 
-#### Thu, Nov 12 — Data Session 11
-
-- *Session and reading to be set.*
+- *Reading to be set.*
 - *Optional*: [Fahey, “Data Federalism,” *Harvard Law Review* 135
   (2022):
   1007](https://harvardlawreview.org/print/vol-135/data-federalism/) —
