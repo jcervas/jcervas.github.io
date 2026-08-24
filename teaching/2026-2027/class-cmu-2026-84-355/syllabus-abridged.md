@@ -53,21 +53,21 @@ bites.](readme_files/figure-gfm/attendance-curve-1.png)
 
 ## Due Dates
 
-| Assignment                                      | Due                                                                                                             |
-|-------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
-| Data slide                                      | before **each Thursday**                                                                                        |
-| Surveys (3)                                     | **Wed, Aug 26** (Cervas Election Study), **Fri, Oct 23** (midterm feedback), **final week** (course evaluation) |
-| Discussion board post                           | **Friday, 11:59 p.m.**, each week                                                                               |
-| Data Session 4 board post (no Thursday session) | **Tue, Sep 22** — no session to follow that week, so you get the weekend                                        |
-| Week 14 board post (Thanksgiving)               | **Mon, Nov 30** — Tuesday is on Zoom, and there is no Thursday                                                  |
-| **Test 1** — Ch. 1–5                            | **Thu, Oct 8**, in class                                                                                        |
-| Data journalism: pitch                          | **Tue, Oct 20**, in class                                                                                       |
-| **Test 2** — Ch. 6–9                            | **Tue, Nov 10**, in class                                                                                       |
-| Data journalism: **draft**                      | **Thu, Nov 19** — the term’s last data session                                                                  |
-| Data journalism: **peer reviews** (two)         | **Tue, Dec 1**                                                                                                  |
-| **Test 3** — Ch. 10–13                          | **Thu, Dec 3**, in class                                                                                        |
-| Data newsletter                                 | **Tue, Dec 8**                                                                                                  |
-| Data journalism: **final**                      | **Fri, Dec 11** — after the last session                                                                        |
+| Assignment                              | Due                                                                                                             |
+|-----------------------------------------|-----------------------------------------------------------------------------------------------------------------|
+| Data slide                              | before **each Thursday**                                                                                        |
+| Surveys (3)                             | **Wed, Aug 26** (Cervas Election Study), **Fri, Oct 23** (midterm feedback), **final week** (course evaluation) |
+| Discussion board post                   | **Friday, 11:59 p.m.**, each week                                                                               |
+| Week 4 board post (no Thursday class)   | **Tue, Sep 22** — Constitution Day, so you get the weekend                                                      |
+| Week 14 board post (Thanksgiving)       | **Mon, Nov 30** — Tuesday is on Zoom, and there is no Thursday                                                  |
+| **Test 1** — Ch. 1–5                    | **Thu, Oct 8**, in class                                                                                        |
+| Data journalism: pitch                  | **Tue, Oct 20**, in class                                                                                       |
+| **Test 2** — Ch. 6–9                    | **Tue, Nov 10**, in class                                                                                       |
+| Data journalism: **draft**              | **Thu, Nov 19** — the term’s last data session                                                                  |
+| Data journalism: **peer reviews** (two) | **Tue, Dec 1**                                                                                                  |
+| **Test 3** — Ch. 10–13                  | **Thu, Dec 3**, in class                                                                                        |
+| Data newsletter                         | **Tue, Dec 8**                                                                                                  |
+| Data journalism: **final**              | **Fri, Dec 11** — after the last session                                                                        |
 
 There is no final exam.
 

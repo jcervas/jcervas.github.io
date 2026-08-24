@@ -164,7 +164,7 @@ data sessions run their own sequence, below.
 
 ### The data sessions
 
-**Twelve sessions in three parts, and the parts are a claim about who
+**Eleven sessions in three parts, and the parts are a claim about who
 collected the data and why.** The state **enumerates**, and you are
 required to answer (I). Somebody **asks**, and you answer because you
 feel like it (II). Then an election happens, and Part III is everything
@@ -176,8 +176,8 @@ anything, a number a researcher **built**.
 | Pt      |                                        | Sessions |
 |---------|----------------------------------------|---------:|
 | **I**   | The Census Bureau                      |  **1–3** |
-| **II**  | Surveys                                |  **4–6** |
-| **III** | Elections, and the records around them | **7–12** |
+| **II**  | Surveys                                |  **4–5** |
+| **III** | Elections, and the records around them | **6–11** |
 
 ## Assessment
 
@@ -236,21 +236,21 @@ What each one is:
 
 ## Due Dates
 
-| Assignment                                      | Due                                                                                                             |
-|-------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
-| Data slide                                      | before **each Thursday**                                                                                        |
-| Surveys (3)                                     | **Wed, Aug 26** (Cervas Election Study), **Fri, Oct 23** (midterm feedback), **final week** (course evaluation) |
-| Discussion board post                           | **Friday, 11:59 p.m.**, each week                                                                               |
-| Data Session 4 board post (no Thursday session) | **Tue, Sep 22** — no session to follow that week, so you get the weekend                                        |
-| Week 14 board post (Thanksgiving)               | **Mon, Nov 30** — Tuesday is on Zoom, and there is no Thursday                                                  |
-| **Test 1** — Ch. 1–5                            | **Thu, Oct 8**, in class                                                                                        |
-| Data journalism: pitch                          | **Tue, Oct 20**, in class                                                                                       |
-| **Test 2** — Ch. 6–9                            | **Tue, Nov 10**, in class                                                                                       |
-| Data journalism: **draft**                      | **Thu, Nov 19** — the term’s last data session                                                                  |
-| Data journalism: **peer reviews** (two)         | **Tue, Dec 1**                                                                                                  |
-| **Test 3** — Ch. 10–13                          | **Thu, Dec 3**, in class                                                                                        |
-| Data newsletter                                 | **Tue, Dec 8**                                                                                                  |
-| Data journalism: **final**                      | **Fri, Dec 11** — after the last session                                                                        |
+| Assignment                              | Due                                                                                                             |
+|-----------------------------------------|-----------------------------------------------------------------------------------------------------------------|
+| Data slide                              | before **each Thursday**                                                                                        |
+| Surveys (3)                             | **Wed, Aug 26** (Cervas Election Study), **Fri, Oct 23** (midterm feedback), **final week** (course evaluation) |
+| Discussion board post                   | **Friday, 11:59 p.m.**, each week                                                                               |
+| Week 4 board post (no Thursday class)   | **Tue, Sep 22** — Constitution Day, so you get the weekend                                                      |
+| Week 14 board post (Thanksgiving)       | **Mon, Nov 30** — Tuesday is on Zoom, and there is no Thursday                                                  |
+| **Test 1** — Ch. 1–5                    | **Thu, Oct 8**, in class                                                                                        |
+| Data journalism: pitch                  | **Tue, Oct 20**, in class                                                                                       |
+| **Test 2** — Ch. 6–9                    | **Tue, Nov 10**, in class                                                                                       |
+| Data journalism: **draft**              | **Thu, Nov 19** — the term’s last data session                                                                  |
+| Data journalism: **peer reviews** (two) | **Tue, Dec 1**                                                                                                  |
+| **Test 3** — Ch. 10–13                  | **Thu, Dec 3**, in class                                                                                        |
+| Data newsletter                         | **Tue, Dec 8**                                                                                                  |
+| Data journalism: **final**              | **Fri, Dec 11** — after the last session                                                                        |
 
 There is no final exam.
 
@@ -384,7 +384,7 @@ else’s work, not just your own:
 
 - Sides et al., Ch. 4
 
-#### Thu, Sep 24 — Data Session 5 — Election polls: the horse race, and what a margin hides
+#### Thu, Sep 24 — Data Session 4 — Election polls: the horse race, and what a margin hides
 
 - [Bailey, *Polling at a Crossroads* (2023), ch. 1,
   3–22](https://www.cambridge.org/9781108482790)
@@ -401,7 +401,7 @@ else’s work, not just your own:
   vote](https://boltsmag.org/missouri-rejects-restrictions-on-direct-democracy/)
 - Sides et al., Ch. 5
 
-#### Thu, Oct 1 — Data Session 6 — Public opinion, and the studies built to measure it: the “Cervas” Election Study beside CES and ANES.
+#### Thu, Oct 1 — Data Session 5 — Public opinion, and the studies built to measure it: the “Cervas” Election Study beside CES and ANES.
 
 - [Verba, “The Citizen as Respondent” (1996),
   1–7](https://www.jstor.org/stable/2082793) — why measure opinion by
@@ -438,7 +438,7 @@ Nothing is due.
 
 ### Week 9 — Part III opens
 
-#### Tue, Oct 20 — Data Session 7 — Part III opens: what a return is, where you get one, and what forty of them show
+#### Tue, Oct 20 — Data Session 6 — Part III opens: what a return is, where you get one, and what forty of them show
 
 - [Burness, *Bolts* — election data and voting
   rights](https://boltsmag.org/election-data-is-vital-to-voting-rights-but-hard-to-track-down/)
@@ -447,7 +447,7 @@ Nothing is due.
 - **DUE: Data journalism story — pitch your topic** (one paragraph, in
   class).
 
-#### Thu, Oct 22 — Data Session 8 — The bottom rungs: precincts and ballots
+#### Thu, Oct 22 — Data Session 7 — The bottom rungs: precincts and ballots
 
 - [MIT Election Lab — why does anyone need precinct-level
   results?](https://electionlab.mit.edu/articles/why-does-anyone-need-precinct-level-election-results)
@@ -461,7 +461,7 @@ Nothing is due.
 
 - Sides et al., Ch. 6 and Ch. 7
 
-#### Thu, Oct 29 — Data Session 9 — Money in politics: the record, and the hole in it
+#### Thu, Oct 29 — Data Session 8 — Money in politics: the record, and the hole in it
 
 - [OpenSecrets — dark money
   basics](https://www.opensecrets.org/dark-money/basics) — who must name
@@ -481,7 +481,7 @@ Nothing is due.
 
 - For Thursday: Sides et al., Ch. 8 and Ch. 9
 
-#### Thu, Nov 5 — **Fixed date.** Data Session 10 — Live returns. Built on results that do not exist until Nov 3.
+#### Thu, Nov 5 — **Fixed date.** Data Session 9 — Live returns. Built on results that do not exist until Nov 3.
 
 - [NPR — *Race calls
   101*](https://www.npr.org/2024/11/05/g-s1-32603/how-are-races-actually-called)
@@ -490,7 +490,7 @@ Nothing is due.
 
 #### Tue, Nov 10 — **TEST 2.** In class, on paper — Ch. 6–9
 
-#### Thu, Nov 12 — Data Session 11 — Surnames and geolocation: guessing race from a name and an address
+#### Thu, Nov 12 — Data Session 10 — Surnames and geolocation: guessing race from a name and an address
 
 - *Reading to be set.*
 - *Optional*: [Fahey, “Data Federalism,” *Harvard Law Review* 135
@@ -508,7 +508,7 @@ Nothing is due.
 - [Morris — the hidden
   axis](https://www.gelliottmorris.com/p/not-just-left-vs-right-most-voters)
 
-#### Thu, Nov 19 — Data Session 12 — Racially polarized voting, and what the Voting Rights Act asks the data to prove
+#### Thu, Nov 19 — Data Session 11 — Racially polarized voting, and what the Voting Rights Act asks the data to prove
 
 - *Reading to be set.*
 - **DUE: data journalism draft**.
