@@ -219,10 +219,11 @@ are on that session’s page in Canvas.*
 
 - [Fiorina 2026 — *Unstable Majorities Continue: The Trump
   Era*](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020547656104436)
-  — **Chapter 8** (23 pages).
-- [Fiorina 2026 — *Unstable Majorities Continue*, **Chapter 2**: “Once
-  More unto the Breach: Is America
-  Polarized?”](https://www.hoover.org/research/once-more-unto-breach-america-polarized)
+  — **Chapter 8. The 2024 Election: Party Performance and Party
+  Policies**.
+- [Fiorina 2026 — *Unstable Majorities Continue: The Trump
+  Era*](https://www.hoover.org/research/once-more-unto-breach-america-polarized) -
+  **Chapter 2**: “Once More unto the Breach: Is America Polarized?”
 - [Fiorina et al. 2008 — Political Polarization in the American
   Public](https://canvas.cmu.edu/courses/55941/files/14695393)
 - [Abramowitz et al. 2008 — Is Polarization a
