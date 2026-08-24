@@ -333,7 +333,28 @@ else’s work, not just your own:
   review, and — as above — you cannot rescue a missing draft with a good
   final.
 
-<!-- Session-by-session schedule. Dates are written out, so a new year means editing them here. -->
+<!-- ===========================================================================
+     THE SCHEDULE — this is the only file to edit. There is no second copy.
+
+     Unlike 84-309, this course has ONE audience: the syllabus prints this file
+     whole. canvas.json carries no `sessions` map, so there are no per-session
+     Canvas reading pages to catch anything dropped here — an *Optional* line
+     is printed, not filtered. Do not copy 84-309's filter across without
+     building the Canvas half first, or optional readings vanish entirely.
+
+     Line types
+       ### Week N — label                  a week heading
+       #### Tue, Sep 29 — Title            one class
+       - [Label][rNNN]                     a reading
+       - *Optional*: [Label][rNNN]         optional — still printed
+       - *Reference*: [Label][rNNN]        look-it-up material, not a reading
+
+     Link targets are reference-style, defined under the session that uses
+     them, so a long URL never breaks the line it sits on.
+
+     Dates are written out — no inline R. The build refuses to run if any
+     creeps back in, because it once reached students as literal code.
+     =========================================================================== -->
 
 ## Schedule
 
@@ -387,7 +408,7 @@ else’s work, not just your own:
   basics](https://www.census.gov/content/dam/Census/library/publications/2020/acs/acs_general_handbook_2020_ch01.pdf)
 - [Census Academy — *Discovering the American Community
   Survey*](https://www.census.gov/data/academy/courses/discovering-the-american-community-survey.html)
-  — all six modules
+  — **all six modules**
 
 ### Week 4 — Part II opens
 
@@ -395,7 +416,7 @@ else’s work, not just your own:
 
 - Sides et al., Ch. 3
 
-#### Thu, Sep 17 — **NO CLASS.** Constitution Day Symposium. Data Session 4 is self-directed: what a survey can establish.
+#### Thu, Sep 17 — **NO CLASS.** Constitution Day Symposium.
 
 - [Pew — how public polling has
   changed](https://www.pewresearch.org/methods/2023/04/19/how-public-polling-has-changed-in-the-21st-century/)
@@ -433,13 +454,13 @@ else’s work, not just your own:
 - [Pew — writing survey
   questions](https://www.pewresearch.org/writing-survey-questions/) —
   wording, order effects, response options
-- *Reference:* [Cooperative Election
+- *Reference*: [Cooperative Election
   Study](https://cces.gov.harvard.edu/) — how it samples, and how many
   it reaches
-- *Reference:* [American National Election
+- *Reference*: [American National Election
   Studies](https://electionstudies.org/) — the same two questions,
   answered differently
-- *Reference:* [*Harvard Youth Poll*, 52nd
+- *Reference*: [*Harvard Youth Poll*, 52nd
   edition](https://iop.harvard.edu/youth-poll/52nd-edition-spring-2026)
   — toplines, and the methodology behind them
 
@@ -519,7 +540,7 @@ Nothing is due.
 #### Thu, Nov 12 — Data Session 11
 
 - *Session and reading to be set.*
-- *Optional:* [Fahey, “Data Federalism,” *Harvard Law Review* 135
+- *Optional*: [Fahey, “Data Federalism,” *Harvard Law Review* 135
   (2022):
   1007](https://harvardlawreview.org/print/vol-135/data-federalism/) —
   governments find it easier to get data about you from each other than
