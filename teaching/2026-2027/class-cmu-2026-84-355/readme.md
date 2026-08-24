@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### Updated: August 23, 2026
+#### Updated: August 24, 2026
 
 <!-- Instructor and logistics. Shared by the full and abridged syllabi. -->
 
@@ -519,6 +519,12 @@ Nothing is due.
 #### Thu, Nov 12 — Data Session 11
 
 - *Session and reading to be set.*
+- *Optional:* [Fahey, “Data Federalism,” *Harvard Law Review* 135
+  (2022):
+  1007](https://harvardlawreview.org/print/vol-135/data-federalism/) —
+  governments find it easier to get data about you from each other than
+  to collect it themselves; election management is one of the markets
+  she traces. Long; the Introduction is the part to read.
 
 ### Week 13 — Part III
 

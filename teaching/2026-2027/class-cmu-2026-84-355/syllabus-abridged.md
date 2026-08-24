@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### Updated: August 23, 2026
+#### Updated: August 24, 2026
 
 <!-- Instructor and logistics. Shared by the full and abridged syllabi. -->
 
