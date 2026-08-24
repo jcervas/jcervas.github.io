@@ -231,6 +231,10 @@ are on that session’s page in Canvas.*
   Symposium](https://www.givecampus.com/schools/CarnegieMellonUniversity/events/cmu-constitution-day-symposium)
   — Simmons Auditorium, Tepper. Free, but **registration closes Wed, Sep
   10**.
+- **DUE Mon, Sep 21, 11:59 p.m.** — the **op-ed rough draft**. We do not
+  meet at all this week, so note it now: this is the one hard deadline
+  in the course. Late costs 10% at once and 1% an hour after that, with
+  no floor, because two classmates are assigned to read you.
 
 ### Week 5 — Polarization unit
 
@@ -247,6 +251,7 @@ are on that session’s page in Canvas.*
 
 #### Thu, Sep 24 — Polarization V: Race and Polarization
 
+- **DUE today, 11:59 p.m.** — your **two op-ed peer reviews**.
 - [Tesler 2012 — The Spillover of Racialization into Health
   Care](https://canvas.cmu.edu/courses/55941/files/14695402)
 - [Mason et al. 2021 — Activating Animus: The Uniquely Social Roots of
@@ -256,6 +261,7 @@ are on that session’s page in Canvas.*
 
 #### Tue, Sep 29 — Polarization VII: Geographic — The Map, and the Power in It
 
+- **DUE Mon, Sep 28, 11:59 p.m.** — the **op-ed final draft**.
 - [Brown & Enos — Partisan Segregation (interactive
   maps)](https://www.ryandenos.com/partisan-segregation)
 - [The New York Times 2025 — An Extremely Detailed Map of the 2024
