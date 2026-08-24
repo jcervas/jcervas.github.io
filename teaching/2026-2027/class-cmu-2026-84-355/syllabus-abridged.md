@@ -39,7 +39,7 @@ produce. Tuesdays we read; Thursdays we put real election data on the
 screen and work out what it shows — through the 2026 midterms, live.
 
 <!-- Assessment weights and due dates. Shared by both syllabi; the per-component
-     descriptions are gated to the full syllabus via _components.Rmd. The child
+     descriptions are gated to the full syllabus via _components.md. The child
      path is bare, not syllabus/-prefixed: knitr resolves it from this file's own
      folder, unlike the child paths in readme.Rmd. -->
 
