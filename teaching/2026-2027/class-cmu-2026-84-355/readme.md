@@ -492,7 +492,16 @@ Nothing is due.
 
 #### Thu, Nov 12 — Data Session 10 — Surnames and geolocation: guessing race from a name and an address
 
-- *Reading to be set.*
+- [CFPB — *Using publicly available information to proxy for
+  unidentified race and
+  ethnicity*](https://files.consumerfinance.gov/f/201409_cfpb_report_proxy-methodology.pdf)
+  — **sections 1–3 only** (pp. 3–11); the appendices are the arithmetic.
+  A federal agency explaining how it guesses your race from your surname
+  and your address, because the law forbids it from asking.
+- [Census Bureau — *Frequently Occurring Surnames from the 2010
+  Census*](https://www.census.gov/topics/population/genealogy/data/2010_surnames.html)
+  — the file that guess is built on: 162,253 names, each with its race
+  percentages. Look up your own before class.
 - *Optional*: [Fahey, “Data Federalism,” *Harvard Law Review* 135
   (2022):
   1007](https://harvardlawreview.org/print/vol-135/data-federalism/) —
@@ -510,7 +519,19 @@ Nothing is due.
 
 #### Thu, Nov 19 — Data Session 11 — Racially polarized voting, and what the Voting Rights Act asks the data to prove
 
-- *Reading to be set.*
+- [Li, Brennan Center — *Section 2 of the Voting Rights Act at the
+  Supreme
+  Court*](https://www.brennancenter.org/our-work/research-reports/section-2-voting-rights-act-supreme-court)
+  — start here: what a Section 2 claim has to prove, worked through
+  Alabama’s congressional map.
+- [NCSL, *Redistricting Law 2020*, ch. 3 — racial and language
+  minorities](https://documents.ncsl.org/wwwncsl/Redistricting-Census/Redistricting-Law-2020_NCSL%20FINAL.pdf)
+  — pp. 53–60, the three *Gingles* preconditions. The same volume as
+  Session 1, asked a very different question.
+- [Michigan Law Voting Rights Initiative —
+  findings](https://voting.law.umich.edu/findings/) — a dataset built by
+  reading 466 Section 2 opinions since 1982. Plaintiff success fell from
+  67% in the first decade to 34% after it.
 - **DUE: data journalism draft**.
 
 ### Week 14 — the last two chapters
