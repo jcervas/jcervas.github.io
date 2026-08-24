@@ -508,9 +508,9 @@ Nothing is due.
 - [Morris — the hidden
   axis](https://www.gelliottmorris.com/p/not-just-left-vs-right-most-voters)
 
-#### Thu, Nov 19 — Data Session 12
+#### Thu, Nov 19 — Data Session 12 — Racially polarized voting, and what the Voting Rights Act asks the data to prove
 
-- *Session and reading to be set.*
+- *Reading to be set.*
 - **DUE: data journalism draft**.
 
 ### Week 14 — the last two chapters
