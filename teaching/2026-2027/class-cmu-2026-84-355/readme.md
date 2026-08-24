@@ -374,6 +374,11 @@ else’s work, not just your own:
 
 #### Thu, Sep 17 — **NO CLASS.** Constitution Day Symposium.
 
+- **You are expected to attend**, at least during our normal class
+  hours. [CMU Constitution Day
+  Symposium](https://www.givecampus.com/schools/CarnegieMellonUniversity/events/cmu-constitution-day-symposium)
+  — Simmons Auditorium, Tepper. Free, but **registration closes Wed, Sep
+  10**.
 - [Pew — how public polling has
   changed](https://www.pewresearch.org/methods/2023/04/19/how-public-polling-has-changed-in-the-21st-century/)
 - [Pew — polling basics, lessons

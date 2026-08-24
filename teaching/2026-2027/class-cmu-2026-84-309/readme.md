@@ -226,6 +226,12 @@ are on that session’s page in Canvas.*
 
 #### Thu, Sep 17 — **NO CLASS.** Constitution Day Symposium.
 
+- **You are expected to attend**, at least during our normal class
+  hours. [CMU Constitution Day
+  Symposium](https://www.givecampus.com/schools/CarnegieMellonUniversity/events/cmu-constitution-day-symposium)
+  — Simmons Auditorium, Tepper. Free, but **registration closes Wed, Sep
+  10**.
+
 ### Week 5 — Polarization unit
 
 #### Tue, Sep 22 — Polarization IV: Negative Partisanship and the White Working Class
