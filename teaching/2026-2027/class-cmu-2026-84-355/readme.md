@@ -495,13 +495,18 @@ Nothing is due.
 - [CFPB — *Using publicly available information to proxy for
   unidentified race and
   ethnicity*](https://files.consumerfinance.gov/f/201409_cfpb_report_proxy-methodology.pdf)
-  — **sections 1–3 only** (pp. 3–11); the appendices are the arithmetic.
-  A federal agency explaining how it guesses your race from your surname
-  and your address, because the law forbids it from asking.
-- [Census Bureau — *Frequently Occurring Surnames from the 2010
-  Census*](https://www.census.gov/topics/population/genealogy/data/2010_surnames.html)
-  — the file that guess is built on: 162,253 names, each with its race
-  percentages. Look up your own before class.
+  — **sections 1–5** (pp. 3–23), stopping before the technical
+  appendices. A federal agency explaining how it guesses your race from
+  your surname and your address, because the law forbids it from asking
+  — and then, in section 4, checking the guess against mortgage
+  applicants whose race is on record.
+- [Rosenman, Olivella & Imai — *Race and ethnicity data for first,
+  middle, and
+  surnames*](https://pmc.ncbi.nlm.nih.gov/articles/PMC10199086/) — read
+  the Background & Summary and the description of the data; the
+  validation is heavier going. Where the name dictionaries come from:
+  the voter files of the six Southern states that ask you your race when
+  you register.
 - *Optional*: [Fahey, “Data Federalism,” *Harvard Law Review* 135
   (2022):
   1007](https://harvardlawreview.org/print/vol-135/data-federalism/) —
