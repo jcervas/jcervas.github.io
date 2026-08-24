@@ -2,8 +2,6 @@
 
 #### Updated: August 24, 2026
 
-<!-- Instructor and logistics. Shared by the full and abridged syllabi. -->
-
 > Professor Jonathan Cervas  
 > Office: Posner Hall 374  
 > Email: **<cervas@cmu.edu>**  
@@ -31,8 +29,6 @@ here**](https://jcervas.github.io/teaching/2026-2027/class-cmu-2026-84-355/readm
 meets on Zoom rather than in the room. Tinted days are ones we do not
 meet — fall break, Democracy Day, Thanksgiving, and the Constitution Day
 Symposium.
-
-<!-- Course description, goals, and learning objectives. -->
 
 ## Course Description
 
@@ -89,8 +85,6 @@ By the end of the semester you will be able to:
     in journalistic form at length, and briefly every week on the
     discussion board. *(the data journalism project; the board)*
 
-<!-- Required text. Update the edition yearly. -->
-
 ## Required Text
 
 John Sides, Daron Shaw, Matt Grossmann & Keena Lipsitz. *Campaigns and
@@ -146,8 +140,6 @@ Bring a laptop to Thursday sessions if you have one; the briefs are web
 pages and they read well on a phone or on paper too. If you would rather
 work from a printout, say so and I will bring one.
 
-<!-- How the week runs and the structure of the course — the Tuesday/Thursday rhythm. -->
-
 ## How This Course Works
 
 **Two things run side by side.** One is the textbook: how campaigns and
@@ -187,11 +179,6 @@ anything, a number a researcher **built**.
 | **II**  | Surveys                                |  **4–6** |
 | **III** | Elections, and the records around them | **7–12** |
 
-<!-- Assessment weights and due dates. Shared by both syllabi; the per-component
-     descriptions are gated to the full syllabus via _components.md. The child
-     path is bare, not syllabus/-prefixed: knitr resolves it from this file's own
-     folder, unlike the child paths in syllabus.Rmd. -->
-
 ## Assessment
 
 The course grade will be a weighted average of the following components:
@@ -208,9 +195,6 @@ The course grade will be a weighted average of the following components:
 ![Absences and the attendance grade. The first three cost almost
 nothing; four to six is where it
 bites.](readme_files/figure-gfm/attendance-curve-1.png)
-
-<!-- The one-line description of each component. FULL SYLLABUS ONLY: the Canvas
-     syllabus stays brief, and each assignment carries its own instructions. -->
 
 What each one is:
 
@@ -270,10 +254,6 @@ What each one is:
 
 There is no final exam.
 
-<!-- One line per graded component. The full instructions live in ../assignments/*.md,
-     which sync-to-canvas.sh pushes to the Canvas pages; this section only says what
-     each component is and what it is worth. -->
-
 ## Assignment Details
 
 **Full instructions for every assignment are in Canvas**, under
@@ -304,8 +284,6 @@ Assignments. What follows is the shape of each one and what it is worth.
   the marks are on the draft and the reviews**, and you cannot rescue a
   missing draft with a good final.
 
-<!-- Grading philosophy and late policy. -->
-
 ## Grading
 
 Your grade rests on engagement as much as on output. The course is built
@@ -332,29 +310,6 @@ else’s work, not just your own:
 - **Project drafts.** A missing draft means two people have nothing to
   review, and — as above — you cannot rescue a missing draft with a good
   final.
-
-<!-- ===========================================================================
-     THE SCHEDULE — this is the only file to edit. There is no second copy.
-
-     Unlike 84-309, this course has ONE audience: the syllabus prints this file
-     whole. canvas.json carries no `sessions` map, so there are no per-session
-     Canvas reading pages to catch anything dropped here — an *Optional* line
-     is printed, not filtered. Do not copy 84-309's filter across without
-     building the Canvas half first, or optional readings vanish entirely.
-
-     Line types
-       ### Week N — label                  a week heading
-       #### Tue, Sep 29 — Title            one class
-       - [Label][rNNN]                     a reading
-       - *Optional*: [Label][rNNN]         optional — still printed
-       - *Reference*: [Label][rNNN]        look-it-up material, not a reading
-
-     Link targets are reference-style, defined under the session that uses
-     them, so a long URL never breaks the line it sits on.
-
-     Dates are written out — no inline R. The build refuses to run if any
-     creeps back in, because it once reached students as literal code.
-     =========================================================================== -->
 
 ## Schedule
 
@@ -604,8 +559,6 @@ Nothing is due.
 #### DUE Fri, Dec 11 — **data journalism story, final version**.
 
 ------------------------------------------------------------------------
-
-<!-- End matter: AI policy, representation, accommodations, well-being. -->
 
 ## AI Use Policy for Student Work
 

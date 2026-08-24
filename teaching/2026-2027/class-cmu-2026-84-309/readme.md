@@ -1,5 +1,3 @@
-<!-- Instructor, TA, room, hours. Shared by the full and abridged syllabi — the one place these facts live. -->
-
 > Professor **Jonathan Cervas**  
 > Office: Posner Hall 374  
 > Email: **<cervas@cmu.edu>**  
@@ -26,8 +24,6 @@ here**](https://jcervas.github.io/teaching/2026-2027/class-cmu-2026-84-309/readm
 ------------------------------------------------------------------------
 
 <img src="readme_files/figure-gfm/meetings-1.png" width="100%" style="display: block; margin: auto;" />
-
-<!-- Course description and learning objectives. Rewrite yearly to match what the course actually does. -->
 
 ## Course Description
 
@@ -77,8 +73,6 @@ By the end of this course, students will be able to:
 8.  **Reflect** on your own values, biases, and role as a civic
     participant in a divided society.
 
-<!-- Assessment weights and due dates. Shared by both syllabi. Weights must total 100. -->
-
 ## Assessment
 
 The course grade will be a weighted average of the following components:
@@ -105,8 +99,6 @@ The course grade will be a weighted average of the following components:
 | Book Review (slides)     | November 23                      |
 | Group Project            | December 1/3                     |
 | Group Project reflection | December 4                       |
-
-<!-- What each graded component is. Contains the attendance and discussion-board figures, which source the shared curve in ../../_syllabus-template/attendance.R. -->
 
 ## Assignment Details
 
@@ -138,8 +130,6 @@ bites.](readme_files/figure-gfm/attendance-curve-1.png)
 - **Group Policy Brief** (17%). A written brief (10%), a presentation in
   finals week (5%), and an individual reflection (2%).
 
-<!-- Grading philosophy and the late-work policy. Usually stable year to year. -->
-
 ## Grading
 
 Your grade depends heavily on active engagement. This course is
@@ -154,29 +144,6 @@ incur a penalty[^1] provided it does not impede your classmates’
 progress (for instance, in group projects). Failing to participate or
 contribute meaningfully, especially in ways that affect others’ work,
 will result in a lower grade.
-
-<!-- ===========================================================================
-     THE SCHEDULE — this is the only file to edit. There is no second copy.
-
-     It feeds two audiences from one source:
-
-       the syllabus   prints the session lines and the REQUIRED readings
-       Canvas         per-session reading pages get everything, including the
-                      optional readings and the annotations
-
-     Line types
-       **Week N — label**                  a week heading
-       - **Tue, Sep 29** — Title           one class
-         - [Label](url)                    a required reading — BOTH
-         - *Optional*: [Label](url)        optional — CANVAS ONLY
-           - a note about the reading      annotation — CANVAS ONLY
-
-     The syllabus filter lives in syllabus.Rmd; the Canvas half is
-     canvas.json's `sessions` map plus ../../_syllabus-template/canvas-sync.py.
-
-     Dates are written out — no inline R. The build refuses to run if any
-     creeps back in, because it once reached students as literal code.
-     =========================================================================== -->
 
 ## Schedule
 
@@ -394,8 +361,6 @@ are on that session’s page in Canvas.*
 #### Tue, Dec 1 — Group Policy Brief
 
 #### Thu, Dec 3 — Group Policy Brief
-
-<!-- End matter: privacy draft, community agreement, AI policy, representation, accommodations, well-being. Mostly stable; the privacy draft is replaced by the class each year. -->
 
 ## Student Privacy in Class Discussions
 

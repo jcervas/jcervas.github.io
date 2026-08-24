@@ -1,5 +1,3 @@
-<!-- Instructor, TA, room, hours. Shared by the full and abridged syllabi — the one place these facts live. -->
-
 > Professor **Jonathan Cervas**  
 > Office: Posner Hall 374  
 > Email: **<cervas@cmu.edu>**  
@@ -27,14 +25,10 @@ here**](https://jcervas.github.io/teaching/2026-2027/class-cmu-2026-84-309/readm
 
 <img src="readme_files/figure-gfm/meetings-1.png" width="100%" style="display: block; margin: auto;" />
 
-<!-- Abridged syllabus only. See syllabus/README.md. -->
-
 Why are Americans so divided — and is the premise even true? We spend a
 month on what political science actually knows, then the semester is
 yours: student teams pick the topics, assign the readings, and run the
 room.
-
-<!-- Assessment weights and due dates. Shared by both syllabi. Weights must total 100. -->
 
 ## Assessment
 
@@ -62,8 +56,6 @@ The course grade will be a weighted average of the following components:
 | Book Review (slides)     | November 23                      |
 | Group Project            | December 1/3                     |
 | Group Project reflection | December 4                       |
-
-<!-- Abridged syllabus only; a DIGEST of policies.Rmd, not a subset. See syllabus/README.md. -->
 
 ## The Essentials
 

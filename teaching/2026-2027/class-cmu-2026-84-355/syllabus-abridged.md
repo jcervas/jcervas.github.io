@@ -2,8 +2,6 @@
 
 #### Updated: August 24, 2026
 
-<!-- Instructor and logistics. Shared by the full and abridged syllabi. -->
-
 > Professor Jonathan Cervas  
 > Office: Posner Hall 374  
 > Email: **<cervas@cmu.edu>**  
@@ -32,16 +30,9 @@ meets on Zoom rather than in the room. Tinted days are ones we do not
 meet — fall break, Democracy Day, Thanksgiving, and the Constitution Day
 Symposium.
 
-<!-- Abridged syllabus only. See syllabus/README.md. -->
-
 How American elections actually work, taught through the data they
 produce. Tuesdays we read; Thursdays we put real election data on the
 screen and work out what it shows — through the 2026 midterms, live.
-
-<!-- Assessment weights and due dates. Shared by both syllabi; the per-component
-     descriptions are gated to the full syllabus via _components.md. The child
-     path is bare, not syllabus/-prefixed: knitr resolves it from this file's own
-     folder, unlike the child paths in syllabus.Rmd. -->
 
 ## Assessment
 
@@ -79,8 +70,6 @@ bites.](readme_files/figure-gfm/attendance-curve-1.png)
 | Data journalism: **final**                      | **Fri, Dec 11** — after the last session                                                                        |
 
 There is no final exam.
-
-<!-- Abridged syllabus only; a DIGEST of policies.Rmd, not a subset. See syllabus/README.md. -->
 
 ## The Essentials
 
