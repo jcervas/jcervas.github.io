@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### Updated: August 24, 2026
+#### Updated: August 26, 2026
 
 > Professor Jonathan Cervas  
 > Office: Posner Hall 374  
@@ -117,13 +117,13 @@ right.
 are not expected to go hunting in unfamiliar places. The sources below
 are valuable resources, but you can find other things as well.
 
-|                           | Worth following all term                                                                                                                                                                                                                                                              |
-|---------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **General**               | *New York Times* (especially The Upshot), *Washington Post*, *Wall Street Journal* — all three are free to you through the [CMU Libraries](https://www.library.cmu.edu/)                                                                                                              |
-| **Elections specialists** | [Bolts](https://boltsmag.org), [Votebeat](https://votebeat.org), [Stateline](https://stateline.org), [Democracy Docket](https://www.democracydocket.com), [Cook Political Report](https://www.cookpolitical.com), [Sabato’s Crystal Ball](https://centerforpolitics.org/crystalball/) |
-| **The census**            | [Count of Counting](https://countofcounting.substack.com) — Mike Schneider, who covered the Census Bureau for the Associated Press, on population change and the count itself                                                                                                         |
-| **Data and forecasting**  | [Strength In Numbers](https://www.gelliottmorris.com) (G. Elliott Morris), [Silver Bulletin](https://www.natesilver.net), [Split Ticket](https://split-ticket.org), [The Downballot](https://www.the-downballot.com)                                                                  |
-| **Podcasts**              | *The Ezra Klein Show* (NYT) · *NPR Politics Podcast* · *The Downballot* (weekly, Thursdays) · *Amicus* (Slate) · *Public Opinion Podcast* (AAPOR)                                                                                                                                     |
+|                           | Worth following all term                                                                                                                                                                                                                                                                                           |
+|---------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **General**               | *New York Times* (especially The Upshot), *Washington Post*, *Wall Street Journal* — all three are free to you through the [CMU Libraries](https://www.library.cmu.edu/)                                                                                                                                           |
+| **Elections specialists** | [Bolts](https://boltsmag.org), [Votebeat](https://votebeat.org), [Stateline](https://stateline.org), [Democracy Docket](https://www.democracydocket.com), [Cook Political Report](https://www.cookpolitical.com), [Sabato’s Crystal Ball](https://centerforpolitics.org/crystalball/)                              |
+| **The census**            | [Count of Counting](https://countofcounting.substack.com) — Mike Schneider, who covered the Census Bureau for the Associated Press, on population change and the count itself                                                                                                                                      |
+| **Data and forecasting**  | [Strength In Numbers](https://www.gelliottmorris.com) (G. Elliott Morris), [Silver Bulletin](https://www.natesilver.net), [Split Ticket](https://split-ticket.org), [The Downballot](https://www.the-downballot.com), [Playing with Election Data](https://playingwithelectiondata.substack.com) (Charles Stewart) |
+| **Podcasts**              | *The Ezra Klein Show* (NYT) · *NPR Politics Podcast* · *The Downballot* (weekly, Thursdays) · *Amicus* (Slate) · *Public Opinion Podcast* (AAPOR)                                                                                                                                                                  |
 
 ## What you need
 
@@ -396,6 +396,8 @@ else’s work, not just your own:
   3–22](https://www.cambridge.org/9781108482790)
 - [*NYT* — are political polls
   accurate?](https://www.nytimes.com/2026/08/14/briefing/are-political-polls-accurate.html)
+- [*NYT* — election polls, confusion, and prediction
+  markets](https://www.nytimes.com/2026/08/22/us/politics/election-polls-confusion-prediction-markets.html)
 - [Podcast: AAPOR on pre-election
   polling](https://aapor.org/media/public-opinion-pod/)
 
