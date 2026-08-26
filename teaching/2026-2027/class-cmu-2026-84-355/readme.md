@@ -330,6 +330,16 @@ else’s work, not just your own:
   — module 1 only
 - [NCSL, *Redistricting Law 2020*, ch. 1 — the
   census](https://documents.ncsl.org/wwwncsl/Redistricting-Census/Redistricting-Law-2020_NCSL%20FINAL.pdf)
+  <!-- Added F26 as optional. Candidate to promote to a required reading in F27. -->
+- *Optional*: [Anderson & Fienberg, *Who Counts? The Politics of
+  Census-Taking in Contemporary America* (Russell Sage,
+  1999)](https://www.jstor.org/stable/10.7758/9781610440059) — the 1990
+  count missed poor and minority city residents, the Bureau knew by how
+  much, and the fight over whether to correct the number went to
+  lawsuits, congressional hearings, and the Supreme Court. It is a book;
+  the Introduction is the part to read. Fienberg wrote it while he was
+  CMU’s Maurice Falk University Professor of Statistics and Social
+  Science.
 
 ### Week 2 — Part I
 
