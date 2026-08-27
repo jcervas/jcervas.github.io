@@ -1,16 +1,18 @@
 /* apportionment.js -- render the change-in-apportionment cartogram.
  *
- * No morph here, so no flubber: the geometry is static and the only animation is
- * the viewBox when zooming. What moves instead is *presence*. Each state holds
- * max(seatsFrom, seatsTo) cells, and the year switch decides which of them
- * existed:
+ * No morph here, so no flubber: the geometry is static and the only animation
+ * is the viewBox when zooming. Each state holds max(seatsFrom, seatsTo) cells,
+ * and the |change| that moved are marked: blue arrives by the to-year, orange
+ * departs by it, grey is held through both.
  *
- *   from-year   retained + lost      solid   (= seatsFrom)
- *   to-year     retained + gained    solid   (= seatsTo)
- *
- * Cells that did not exist in the selected year are drawn as a dashed outline
- * rather than removed, so toggling shows exactly where the change is while the
- * state's shape and every other cell hold still.
+ * THERE IS NO YEAR SWITCH. There used to be, drawing the cells that did not
+ * exist in the chosen year as a dashed outline. It carried no information: a
+ * cell is absent in the from-year if and only if it is marked gained, and in
+ * the to-year if and only if it is marked lost, so the switch only ever
+ * restated the colour already on screen. Worse, it invited the from-year view
+ * to be read as a statement about that year -- California solid orange four
+ * times over in 2020, when in 2020 California still held all 52 of its seats.
+ * One view, every mark solid, and the legend says which way each one goes.
  *
  * Data arrives either as window.APPORTIONMENT_DATA (standalone build) or by
  * fetch from the container's data-src.
@@ -67,12 +69,16 @@
     var flat = [];
 
     DATA.states.forEach(function (s, si) {
-      var g = el("g", { class: "cg-state" });
+      var g = el("g", {
+        class: "cg-state",
+        transform: "translate(" + s.cartogram.tx + "," + s.cartogram.ty +
+                   ") scale(" + s.cartogram.scale + ")"
+      });
       var gc = el("g", { class: "cg-cells" });
       var rec = {
         st: s.st, data: s, node: g, cells: gc, index: si,
         scale: s.cartogram.scale, tx: s.cartogram.tx, ty: s.cartogram.ty,
-        bbox: s.bbox, paths: [], status: [], labels: [], labelStatus: []
+        bbox: s.bbox, paths: [], labels: []
       };
 
       s.cellList.forEach(function (c) {
@@ -81,7 +87,6 @@
         });
         gc.appendChild(p);
         rec.paths.push(p);
-        rec.status.push(c.status);
         flat.push({ c: c, state: s, si: si });
       });
       g.appendChild(gc);
@@ -92,16 +97,13 @@
       g.appendChild(rec.outer);
       g.appendChild(rec.inner);
 
-      // +1 / -1, only on the cells that moved. The mark's own status is kept
-      // alongside it: a mark on a cell that is absent in the shown year sits on
-      // a wash rather than on solid colour, and has to be drawn differently.
+      // +1 / -1, only on the cells that moved
       s.cellList.forEach(function (c) {
         if (!c.label) return;
         var t = el("text", { class: "cg-clabel", x: c.centroid[0], y: c.centroid[1] });
         t.textContent = c.label;
         g.appendChild(t);
         rec.labels.push(t);
-        rec.labelStatus.push(c.status);
       });
 
       gStates.appendChild(g);
@@ -555,7 +557,6 @@
 
     // ---------------------------------------------------------------- render --
 
-    var year = DATA.meta.to;     // which apportionment is shown
     var focus = -1;
     var vb = [0, 0, W, H];
     var zoomK = 1;
@@ -581,39 +582,6 @@
         }
       }
       gLabels.setAttribute("font-size", FS_STATE * zoomK);
-    }
-
-    /* Does a cell exist in the shown year? A lost cell existed in the from-year
-     * and not the to-year; a gained cell the other way round. Either view shows
-     * every change -- one side solid, the other dashed -- so there is nothing a
-     * "show both" mode would add. */
-    function present(status) {
-      if (status === "retained") return true;
-      if (status === "lost") return year === DATA.meta.from;
-      return year === DATA.meta.to;                       // gained
-    }
-
-    function draw() {
-      for (var i = 0; i < states.length; i++) {
-        var s = states[i];
-        s.node.setAttribute(
-          "transform", "translate(" + s.tx + "," + s.ty + ") scale(" + s.scale + ")");
-        for (var j = 0; j < s.paths.length; j++) {
-          var absent = !present(s.status[j]);
-          s.paths[j].classList.toggle("cg-absent", absent);
-          /* Inline, so it beats the stylesheet rule that paints every cell's
-           * stroke in the page background. Without this an absent cell is drawn
-           * white on white in light mode. */
-          s.paths[j].style.stroke = absent ? s.paths[j].getAttribute("fill") : "";
-        }
-        for (var m = 0; m < s.labels.length; m++) {
-          s.labels[m].classList.toggle(
-            "cg-absent", !present(s.labelStatus[m]));
-        }
-      }
-      applyScales();
-      updateLegend();
-      updateYearButtons();
     }
 
     // ---------------------------------------------------------------- zooming --
@@ -698,7 +666,6 @@
 
     function writeHash() {
       var parts = [];
-      if (year !== DATA.meta.to) parts.push(String(year));
       if (focus >= 0) parts.push(states[focus].st);
       var h = parts.length ? "#" + parts.join("-") : "";
       if (h === location.hash || (!h && !location.hash)) return;
@@ -712,92 +679,21 @@
     function applyHash() {
       var h = (location.hash || "").replace(/^#/, "").trim();
       var toks = h ? h.split("-") : [];
-      var y = DATA.meta.to, st = -1;
+      var st = -1;
       toks.forEach(function (t) {
-        if (/^\d{4}$/.test(t)) {
-          var n = +t;
-          if (n === DATA.meta.from || n === DATA.meta.to) y = n;
-        } else {
-          var code = t.toUpperCase();
-          for (var i = 0; i < states.length; i++) if (states[i].st === code) st = i;
-        }
+        /* Links shared while the year switch existed look like #2010-TX. The
+         * year is gone but the link should still land on Texas, so a four-digit
+         * token is skipped rather than treated as a state code. */
+        if (/^\d{4}$/.test(t)) return;
+        var code = t.toUpperCase();
+        for (var i = 0; i < states.length; i++) if (states[i].st === code) st = i;
       });
-      year = y;
-      draw();
+      applyScales();
       focus = -2;              // force setFocus to run even for -1
       setFocus(st);
     }
 
     window.addEventListener("hashchange", function () { if (!hashLock) applyHash(); });
-
-    // -------------------------------------------------------------- controls --
-
-    var seg = $("ap-years");
-    [DATA.meta.from, DATA.meta.to].forEach(function (y) {
-      var b = document.createElement("button");
-      b.type = "button";
-      // never let a projected year read as a settled result
-      b.textContent = String(y) +
-        (DATA.meta.projected && y === DATA.meta.to ? " (proj.)" : "");
-      b.setAttribute("data-year", y);
-      b.addEventListener("click", function () {
-        year = y;
-        draw();
-        writeHash();
-      });
-      seg.appendChild(b);
-    });
-
-    /* A mark is about the move between the two apportionments, not about the
-     * year on screen. In the from-year California still holds all 52 of its
-     * seats, and four of them carry a -1 because those four go by the to-year
-     * -- which read as California having already lost four in the from-year.
-     * So the words move with the year: by 2030 while the from-year is shown,
-     * since 2020 while the to-year is. */
-    function keyWords(status) {
-      if (status === "retained") return "held";
-      var verb = status === "gained" ? "gained" : "lost";
-      return year === DATA.meta.to
-        ? "seat " + verb + " since " + DATA.meta.from
-        : "seat " + verb + " by " + DATA.meta.to;
-    }
-
-    /* Draw each key the way the map is drawing that status right now, and say
-     * once what the difference means. */
-    function updateLegend() {
-      var lg = $("ap-legend");
-      var sw = lg.querySelectorAll(".cg-sw[data-status]");
-      for (var i = 0; i < sw.length; i++) {
-        sw[i].classList.toggle(
-          "cg-absent", !present(sw[i].getAttribute("data-status")));
-      }
-      var lb = lg.querySelectorAll(".cg-keylabel[data-status]");
-      for (var j = 0; j < lb.length; j++) {
-        lb[j].textContent = keyWords(lb[j].getAttribute("data-status"));
-      }
-      var note = $("ap-keynote");
-      if (note) {
-        note.textContent = "solid = the seat existed in " + year +
-          "; dashed = it did not";
-      }
-      /* The House is the same size in both years -- what moves is which state
-       * holds each seat. Saying so here stops the marks reading as a running
-       * total for the year on screen. */
-      var held = DATA.totals.retained +
-        (year === DATA.meta.to ? DATA.totals.gained : DATA.totals.lost);
-      $("ap-status").textContent =
-        year + ": " + held + " seats, " + DATA.totals.seatsMoved +
-        (year === DATA.meta.to ? " of them moved since " + DATA.meta.from
-                               : " of them move by " + DATA.meta.to);
-    }
-
-    function updateYearButtons() {
-      var bs = seg.children;
-      for (var i = 0; i < bs.length; i++) {
-        bs[i].setAttribute("aria-pressed",
-          +bs[i].getAttribute("data-year") === year ? "true" : "false");
-      }
-    }
 
     // --------------------------------------------------------------- tooltip --
 
@@ -841,33 +737,32 @@
       (DATA.meta.districtsAttached === false
         ? " &middot; cells are not matched to district lines for this pair"
         : "") +
-      " &middot; the year switch shows which seats existed then; the others are dashed" +
       (DATA.meta.projected
         ? '<br><b>' + DATA.meta.to + " is a projection, not a result.</b> " +
           (DATA.meta.projection ? DATA.meta.projection.note.replace(/^The \d+ column is a projection, not a result\. /, "") : "")
         : "");
 
-    /* The swatch carries a +1 / -1 glyph as well as a colour, matching the label
+    /* The swatch carries a +1 / -1 glyph as well as a colour, matching the mark
      * drawn on the cell itself, so the encoding never rests on colour alone.
-     *
-     * It also carries the SHOWN YEAR's treatment, solid or washed-and-dashed,
-     * because only one of gained and lost is solid at a time: in the from-year
-     * the lost seats still exist and the gained ones do not, and in the to-year
-     * it is the other way round. A legend drawn solid in both therefore matched
-     * whichever half of the map you were not looking at, and the two years read
-     * as the same picture because nothing said that the wash was the encoding.
-     * updateLegend() below re-runs on every draw. */
+     * Each key names the move rather than a year, because a mark is about the
+     * move: a state holds its lost seats right up to the to-year. */
+    var SPAN = DATA.meta.from + "\u2192" + DATA.meta.to;
     $("ap-legend").innerHTML = [
-      ["gained", "+1", "gained a seat"],
-      ["lost", "\u22121", "lost a seat"],
-      ["retained", "", "held"]
+      ["gained", "+1", "seat gained, " + SPAN],
+      ["lost", "\u22121", "seat lost, " + SPAN],
+      ["retained", "", "held through both"]
     ].map(function (p) {
-      var c = DATA.palette[p[0]];
-      return '<span class="cg-key"><span class="cg-sw" data-status="' + p[0] +
-        '" style="--sw:' + c + ';background:' + c + '">' + p[1] + "</span>" +
-        '<span class="cg-keylabel" data-status="' + p[0] + '">' + p[2] +
-        "</span></span>";
-    }).join("") + '<span class="cg-keynote" id="ap-keynote"></span>';
+      return '<span class="cg-key"><span class="cg-sw" style="background:' +
+        DATA.palette[p[0]] + '">' + p[1] + "</span>" + p[2] + "</span>";
+    }).join("");
+
+    /* The House is the same size at both censuses. What moves is which state
+     * holds each seat, and saying the total here keeps the marks from reading
+     * as a tally against some other number. */
+    $("ap-status").textContent =
+      (DATA.totals.retained + DATA.totals.gained) + " seats; " +
+      DATA.totals.seatsMoved + " move between " +
+      DATA.totals.statesChanged + " states";
 
     /* One chip per state that changed, biggest movers first, each a shortcut to
      * that state's zoom. */
