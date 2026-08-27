@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### DRAFT Updated: August 24, 2026
+#### DRAFT Updated: August 27, 2026
 
 > Professor **Jonathan Cervas**  
 > Office: Posner Hall 374  
@@ -378,63 +378,32 @@ are on that session’s page in Canvas.*
 
 #### Thu, Dec 3 — Group Policy Brief
 
-## Student Privacy in Class Discussions
+## Privacy and Respect Statement
 
-> **Draft only — we write the real one together on the first day.**
->
-> A discussion course works only if people will say what they actually
-> think, and people say what they think only when they know what happens
-> to their words afterward. That is what this agreement settles: what is
-> on the record, what stays in the room, what may be repeated outside it
-> and in what form. It exists to make candour possible.
+*Written by the class on August 27, 2026. This replaces the draft that
+stood here; the words are theirs.*
 
-> **Shared Community Agreement (draft)**
+> **Once it starts getting personal, give it a rest.**
 >
-> To foster a respectful and productive learning environment, the
-> following policies apply:
+> - The goal is to not make people feel like they have been attacked.
+> - Challenge ideas, not people.
+> - No yelling with malicious intent.
+> - Have civil speech in the classroom.
+> - Be open minded to different ideas.
+> - Understand people come from different backgrounds. Give people the
+>   benefit of the doubt, as long as it is not recurring.
+> - **Don’t share personal details of classmates outside of class.**
 >
-> **No Recording of Class Discussions**
+> **Where the line is.**
 >
-> - Audio or video recording of class discussion is **not permitted**.
-> - Recording of lectures may be allowed with approval from **Disability
->   Resources**.
->
-> **Anonymity in Submissions**
->
-> - All written work should be anonymized (**no names on papers or
->   submissions**).
-> - Peer reviews will also remain anonymous.
->
-> **Confidentiality of Classroom Contributions**
->
-> - When discussing ideas from class outside of this setting, you may
->   reference the **content** but not the **identities** of the
->   individuals who contributed.
->
-> **Respectful Dialogue**
->
-> - Listen attentively and allow peers to finish their thoughts before
->   responding.
-> - Do not talk over one another.
-> - Treat others with the same respect you would expect for yourself.
->
-> **Civility in Communication**
->
-> - Speak at a moderate volume.
-> - Critique **ideas**, not individuals.
-> - Assume the most generous interpretation of your peers’ statements.
->
-> **Use of Generative AI (GAI)**
->
-> - You may not use a peer’s work in generative AI tools without their
->   **explicit permission**.
-> - Consider each peer’s work as **copyrighted**.
->
-> **Representation of Opinions**
->
-> - A peer’s views expressed in class do not represent the official
->   position of their clubs, organizations, or extracurricular
->   affiliations.
+> - There are consequences to things that we say if it crosses lines of
+>   university rules.
+> - If someone says something clearly bigoted or sexist, the professor
+>   will enforce.
+> - Nothing in this statement supersedes rules enforced by the
+>   University.
+> - If you have a problem with somebody, or are uncomfortable, come talk
+>   to Professor Cervas.
 
 ## Devices in Class
 
