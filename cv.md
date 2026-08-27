@@ -217,6 +217,8 @@ Degree GPA: 3.277
 
 # Talks (Invited and Conference)
 
+- *Redistricting: The End of the Voting Rights Act and How to Join Our Fight for a Multiracial Democracy* - Let NY Vote Coalition. August 26, 2026. 
+
 - *Congressional Briefing on Redistricting Reform* — invited to Washington, D.C., to brief several dozen members of Congress. Problem Solvers Caucus, Hosted by Rep. Tom Suozzi and Rep. Brian Fitzpatrick. June 2026.
 
 - *Reshaping Government:  Possibilities and Perils.  Congressional Redistricting Frenzy* - University of Pittsburgh, The Dick Thornburgh Forum for Law & Public Policy. Pittsburgh, Pennsylvania. June 4, 2026.
