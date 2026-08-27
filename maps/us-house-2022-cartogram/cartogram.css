@@ -17,6 +17,9 @@
   --cg-panel: #f7f8fa;
   --cg-outline: #101216;
   --cg-accent: #005599;
+  /* how strongly a cell that no longer exists still shows its own colour;
+     the dark page needs more of it to lift off the background */
+  --cg-ghost: 0.30;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -27,15 +30,18 @@
     --cg-panel: #1b1e24;
     --cg-outline: #dfe3e9;
     --cg-accent: #4f9be8;
+    --cg-ghost: 0.45;
   }
 }
 :root[data-theme="light"] {
   --cg-bg: #ffffff; --cg-fg: #16181d; --cg-muted: #6b7280;
   --cg-line: #e3e6ea; --cg-panel: #f7f8fa; --cg-outline: #101216; --cg-accent: #005599;
+  --cg-ghost: 0.30;
 }
 :root[data-theme="dark"] {
   --cg-bg: #14161a; --cg-fg: #e8eaed; --cg-muted: #9aa2ad;
   --cg-line: #2a2e35; --cg-panel: #1b1e24; --cg-outline: #dfe3e9; --cg-accent: #4f9be8;
+  --cg-ghost: 0.45;
 }
 
 .cg,
@@ -236,12 +242,16 @@
 
 /* a cell that does not exist in the selected year: outline only */
 .cg-cell { cursor: pointer; }
-/* A cell that does not exist in the selected year. The stroke colour is set
-   inline by the viewer to the cell's own status colour: the rule below paints
-   every cell's stroke in the page background so neighbours read as separate,
-   which left an absent cell as white-on-white in light mode -- invisible, and
-   contradicting the legend. */
-.cg-cell.cg-absent { fill: none !important; stroke-dasharray: 2.5 2; opacity: 1; }
+/* A cell that does not exist in the selected year. It has to read as its own
+   status colour -- the legend promises orange for a lost seat -- while still
+   reading as absent. So it keeps the fill and loses most of its opacity, and
+   the outline goes dashed. It must not be fill:none: an unfilled cell shows
+   whatever is behind it, which is the page, and the same cell then looked
+   white in light mode and near-black in dark, matching nothing in the legend.
+   The stroke colour is set inline by the viewer to the cell's own status
+   colour, because the rule below paints every cell's stroke in the page
+   background so that neighbours read as separate. */
+.cg-cell.cg-absent { fill-opacity: var(--cg-ghost); stroke-dasharray: 2.5 2; opacity: 1; }
 .cg-cells path { stroke: var(--cg-bg); stroke-linejoin: round; transition: opacity 0.25s; }
 .cg-cells path:hover { stroke: var(--cg-fg); }
 
@@ -257,6 +267,10 @@
   stroke: rgba(0, 0, 0, 0.3);
   transition: opacity 0.25s;
 }
+/* The white glyph and its dark halo are sized for a solid cell. Over the wash
+   of an absent one there is no solid colour behind it, so it goes to the ink
+   and drops the halo. */
+.cg-clabel.cg-absent { fill: var(--cg-fg); stroke: none; }
 
 /* the row of changed states under the map */
 .cg-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }

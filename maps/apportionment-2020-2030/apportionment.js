@@ -72,7 +72,7 @@
       var rec = {
         st: s.st, data: s, node: g, cells: gc, index: si,
         scale: s.cartogram.scale, tx: s.cartogram.tx, ty: s.cartogram.ty,
-        bbox: s.bbox, paths: [], status: [], labels: []
+        bbox: s.bbox, paths: [], status: [], labels: [], labelStatus: []
       };
 
       s.cellList.forEach(function (c) {
@@ -92,13 +92,16 @@
       g.appendChild(rec.outer);
       g.appendChild(rec.inner);
 
-      // +1 / -1, only on the cells that moved
+      // +1 / -1, only on the cells that moved. The mark's own status is kept
+      // alongside it: a mark on a cell that is absent in the shown year sits on
+      // a wash rather than on solid colour, and has to be drawn differently.
       s.cellList.forEach(function (c) {
         if (!c.label) return;
         var t = el("text", { class: "cg-clabel", x: c.centroid[0], y: c.centroid[1] });
         t.textContent = c.label;
         g.appendChild(t);
         rec.labels.push(t);
+        rec.labelStatus.push(c.status);
       });
 
       gStates.appendChild(g);
@@ -602,6 +605,10 @@
            * stroke in the page background. Without this an absent cell is drawn
            * white on white in light mode. */
           s.paths[j].style.stroke = absent ? s.paths[j].getAttribute("fill") : "";
+        }
+        for (var m = 0; m < s.labels.length; m++) {
+          s.labels[m].classList.toggle(
+            "cg-absent", !present(s.labelStatus[m]));
         }
       }
       applyScales();

@@ -1,0 +1,7 @@
+#!/bin/sh
+# Refuse a commit that leaves an asset's ?v= cache-busting stamp out of date.
+# Scoped to what the commit touches, so an unrelated stamp elsewhere in the
+# repo never blocks unrelated work. See _bin/check-asset-stamps.py.
+#
+# Enabled by:  git config core.hooksPath .githooks
+exec python3 "$(git rev-parse --show-toplevel)/_bin/check-asset-stamps.py" --staged
