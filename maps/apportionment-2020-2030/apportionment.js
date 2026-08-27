@@ -612,6 +612,7 @@
         }
       }
       applyScales();
+      updateLegend();
       updateYearButtons();
     }
 
@@ -747,6 +748,21 @@
       seg.appendChild(b);
     });
 
+    /* Draw each key the way the map is drawing that status right now, and say
+     * once what the difference means. */
+    function updateLegend() {
+      var sw = $("ap-legend").querySelectorAll(".cg-sw[data-status]");
+      for (var i = 0; i < sw.length; i++) {
+        sw[i].classList.toggle(
+          "cg-absent", !present(sw[i].getAttribute("data-status")));
+      }
+      var note = $("ap-keynote");
+      if (note) {
+        note.textContent = "solid = the seat existed in " + year +
+          "; dashed = it did not";
+      }
+    }
+
     function updateYearButtons() {
       var bs = seg.children;
       for (var i = 0; i < bs.length; i++) {
@@ -804,15 +820,25 @@
         : "");
 
     /* The swatch carries a +1 / -1 glyph as well as a colour, matching the label
-     * drawn on the cell itself, so the encoding never rests on colour alone. */
+     * drawn on the cell itself, so the encoding never rests on colour alone.
+     *
+     * It also carries the SHOWN YEAR's treatment, solid or washed-and-dashed,
+     * because only one of gained and lost is solid at a time: in the from-year
+     * the lost seats still exist and the gained ones do not, and in the to-year
+     * it is the other way round. A legend drawn solid in both therefore matched
+     * whichever half of the map you were not looking at, and the two years read
+     * as the same picture because nothing said that the wash was the encoding.
+     * updateLegend() below re-runs on every draw. */
     $("ap-legend").innerHTML = [
       ["gained", "+1", "gained a seat"],
       ["lost", "\u22121", "lost a seat"],
       ["retained", "", "held"]
     ].map(function (p) {
-      return '<span class="cg-key"><span class="cg-sw" style="background:' +
-        DATA.palette[p[0]] + '">' + p[1] + "</span>" + p[2] + "</span>";
-    }).join("");
+      var c = DATA.palette[p[0]];
+      return '<span class="cg-key"><span class="cg-sw" data-status="' + p[0] +
+        '" style="--sw:' + c + ';background:' + c + '">' + p[1] + "</span>" +
+        p[2] + "</span>";
+    }).join("") + '<span class="cg-keynote" id="ap-keynote"></span>';
 
     /* One chip per state that changed, biggest movers first, each a shortcut to
      * that state's zoom. */

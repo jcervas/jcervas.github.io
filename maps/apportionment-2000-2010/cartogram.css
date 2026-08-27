@@ -138,6 +138,22 @@
    those square rather than letting the padding above widen them. */
 .cg-sw:empty { min-width: 11px; width: 11px; padding: 0; }
 
+/* A key for a status the shown year does not have. It has to be the same thing
+   the map draws for that status -- the colour at --cg-ghost over the page,
+   dashed rather than filled -- or the legend describes the other year. The
+   background is !important because the viewer sets the solid colour inline;
+   --sw carries the same colour so this rule can wash it. box-sizing is
+   border-box for everything under .cg, so the border does not resize the
+   swatch. Where color-mix is unsupported the declaration drops and the key
+   stays solid, which is no worse than it was. */
+.cg-sw.cg-absent {
+  background: color-mix(in srgb, var(--sw) calc(var(--cg-ghost) * 100%),
+                        var(--cg-bg)) !important;
+  border: 1px dashed var(--sw);
+  color: var(--cg-fg);
+}
+.cg-keynote { color: var(--cg-muted); font-size: 12px; align-self: center; }
+
 .cg-status { color: var(--cg-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
 
 /* map --------------------------------------------------------------------- */
