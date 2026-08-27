@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### Updated: August 26, 2026
+#### Updated: August 27, 2026
 
 > Professor Jonathan Cervas  
 > Office: Posner Hall 374  
@@ -197,21 +197,26 @@ The course grade will be a weighted average of the following components:
 nothing; four to six is where it
 bites.](readme_files/figure-gfm/attendance-curve-1.png)
 
-What each one is:
+**Full instructions for every assignment are in Canvas**, under
+Assignments. What each one is, in the order of the table above:
 
 - **Participation & Attendance** — Being here, prepared, and in the
-  conversation — on both days.
-- **Discussion Board** — By Friday night each week, one post about any
-  of the data we talked about: the lab, a classmate’s data slide, a
-  figure in the reading. Something that surprised you, something we
-  missed, something you do not understand, or an answer to somebody
-  else’s question. **A few sentences to a paragraph** — enough to show
-  you engaged with what we did. One post is full credit.
-- **Surveys** — Three short ones: the **Cervas Election Study** in Week
-  1, a **midterm feedback** survey once you have seen how the course
-  actually runs, and the **course evaluation** at the end. **All three
-  are anonymous** and graded for completion only — there are no right
-  answers, and nothing you say affects any other part of your grade.
+  conversation — on both days. The first three absences cost almost
+  nothing; four to six is where a semester goes wrong.
+- **Discussion Board** — By **Friday, 11:59 p.m.** each week, one post
+  about any of the data we talked about: the lab, a classmate’s data
+  slide, a figure in the reading. Something that surprised you,
+  something we missed, something you do not understand, or an answer to
+  somebody else’s question. **A few sentences to a paragraph** — enough
+  to show you engaged with what we did. Marked complete/incomplete, and
+  one post is full credit.
+- **Surveys** — Three short ones: the **Cervas Election Study** on
+  **Wed, Aug 26**, a **midterm feedback** survey on **Fri, Oct 23**,
+  once you have seen how the course actually runs, and the **course
+  evaluation** in the final week. **All three are anonymous** and graded
+  for completion only — there are no right answers, and nothing you say
+  affects any other part of your grade. Because they are anonymous,
+  screenshot the confirmation screen and upload that for credit.
 - **Data Slides** — Find data bearing on the question Tuesday ended with
   and post it before Thursday as an **infographic with a short
   write-up**: the figure itself, the source named and linked, and a few
@@ -222,7 +227,8 @@ What each one is:
   At the end of term you hand in a **newsletter**: every piece of data
   you found, each with a short write-up. **Build it as you go** — it is
   a paragraph a week, and an evening’s work if you leave it all to
-  December.
+  December. The weekly slides are 90% of this component; the newsletter
+  is the other 10%.
 - **Three Tests** — In class, on paper, and **on the textbook only**.
   Test 1 on **Thu, Oct 8** (Sides et al., Chapters 1–5), Test 2 on
   **Tue, Nov 10** (Chapters 6–9), Test 3 on **Thu, Dec 3** (Chapters
@@ -231,9 +237,12 @@ What each one is:
   since the last one, **none is cumulative**, and every chapter appears
   on exactly one test. There is no final exam.
 - **Data Journalism Project** — A data-driven news story about a trend
-  or issue in electoral processes. Runs in three parts — draft, peer
-  review, final — and **most of the marks are on the first two**. It is
-  the only substantial piece of writing this term.
+  or issue in electoral processes: 2–4 pages single spaced, with at
+  least two figures. It is the only substantial piece of writing this
+  term. A pitch (5%), a draft (50%), the two peer reviews you write
+  (35%), and the final (10%) — **most of the marks are on the draft and
+  the reviews**, and you cannot rescue a missing draft with a good
+  final.
 
 ## Due Dates
 
@@ -254,36 +263,6 @@ What each one is:
 | Data journalism: **final**              | **Fri, Dec 11** — after the last session                                                                        |
 
 There is no final exam.
-
-## Assignment Details
-
-**Full instructions for every assignment are in Canvas**, under
-Assignments. What follows is the shape of each one and what it is worth.
-
-- **Participation & Attendance** (23%). Being here, prepared, and in the
-  conversation — on both days. The first three absences cost almost
-  nothing; four to six is where a semester goes wrong.
-- **Discussion Board** (10%). One post a week about any of the data we
-  looked at, due **Friday, 11:59 p.m.** Marked complete/incomplete, and
-  one post is full credit.
-- **Surveys** (2%). Three short ones: the **Cervas Election Study** on
-  **Wed, Aug 26**, midterm feedback on **Fri, Oct 23**, and the course
-  evaluation in the final week. All three are anonymous, so screenshot
-  the confirmation and upload it.
-- **Data Slides** (10%). Each week an **infographic with a short
-  write-up**, bearing on the question Tuesday ended with, posted before
-  Thursday. Two are drawn at random and worked through in class. The
-  weekly slides are 90% of this component; the newsletter you assemble
-  from them is the other 10%.
-- **Three Tests** (30%). In class, on paper, and **on the textbook
-  only** — 10% each, none cumulative: **Thu, Oct 8** (Ch. 1–5), **Tue,
-  Nov 10** (Ch. 6–9), **Thu, Dec 3** (Ch. 10–13). There is no final
-  exam.
-- **Data Journalism Project** (25%). A data-driven news story, 2–4 pages
-  single spaced, with at least two figures. A pitch (5%), a draft (50%),
-  the two peer reviews you write (35%), and the final (10%) — **most of
-  the marks are on the draft and the reviews**, and you cannot rescue a
-  missing draft with a good final.
 
 ## Grading
 
