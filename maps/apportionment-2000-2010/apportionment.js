@@ -748,19 +748,47 @@
       seg.appendChild(b);
     });
 
+    /* A mark is about the move between the two apportionments, not about the
+     * year on screen. In the from-year California still holds all 52 of its
+     * seats, and four of them carry a -1 because those four go by the to-year
+     * -- which read as California having already lost four in the from-year.
+     * So the words move with the year: by 2030 while the from-year is shown,
+     * since 2020 while the to-year is. */
+    function keyWords(status) {
+      if (status === "retained") return "held";
+      var verb = status === "gained" ? "gained" : "lost";
+      return year === DATA.meta.to
+        ? "seat " + verb + " since " + DATA.meta.from
+        : "seat " + verb + " by " + DATA.meta.to;
+    }
+
     /* Draw each key the way the map is drawing that status right now, and say
      * once what the difference means. */
     function updateLegend() {
-      var sw = $("ap-legend").querySelectorAll(".cg-sw[data-status]");
+      var lg = $("ap-legend");
+      var sw = lg.querySelectorAll(".cg-sw[data-status]");
       for (var i = 0; i < sw.length; i++) {
         sw[i].classList.toggle(
           "cg-absent", !present(sw[i].getAttribute("data-status")));
+      }
+      var lb = lg.querySelectorAll(".cg-keylabel[data-status]");
+      for (var j = 0; j < lb.length; j++) {
+        lb[j].textContent = keyWords(lb[j].getAttribute("data-status"));
       }
       var note = $("ap-keynote");
       if (note) {
         note.textContent = "solid = the seat existed in " + year +
           "; dashed = it did not";
       }
+      /* The House is the same size in both years -- what moves is which state
+       * holds each seat. Saying so here stops the marks reading as a running
+       * total for the year on screen. */
+      var held = DATA.totals.retained +
+        (year === DATA.meta.to ? DATA.totals.gained : DATA.totals.lost);
+      $("ap-status").textContent =
+        year + ": " + held + " seats, " + DATA.totals.seatsMoved +
+        (year === DATA.meta.to ? " of them moved since " + DATA.meta.from
+                               : " of them move by " + DATA.meta.to);
     }
 
     function updateYearButtons() {
@@ -837,7 +865,8 @@
       var c = DATA.palette[p[0]];
       return '<span class="cg-key"><span class="cg-sw" data-status="' + p[0] +
         '" style="--sw:' + c + ';background:' + c + '">' + p[1] + "</span>" +
-        p[2] + "</span>";
+        '<span class="cg-keylabel" data-status="' + p[0] + '">' + p[2] +
+        "</span></span>";
     }).join("") + '<span class="cg-keynote" id="ap-keynote"></span>';
 
     /* One chip per state that changed, biggest movers first, each a shortcut to
@@ -864,9 +893,6 @@
         });
         chips.appendChild(d);
       });
-
-    $("ap-status").textContent =
-      DATA.totals.cells + " cells across " + DATA.states.length + " states";
 
     setViewBox([0, 0, W, H]);
     /* After setViewBox, so applyScales() has put the real font-size on the
