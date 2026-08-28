@@ -1,19 +1,19 @@
 #### Prof. Jonathan Cervas
 
-#### DRAFT Updated: August 27, 2026
+#### DRAFT Updated: August 28, 2026
 
-> Professor **Jonathan Cervas**  
-> Office: Posner Hall 374  
-> Email: **<cervas@cmu.edu>**  
+> Professor **Jonathan Cervas**\
+> Office: Posner Hall 374\
+> Email: **<cervas@cmu.edu>**\
 > Location: [Scaife Hall
-> 234](https://www.cmu.edu/computing/services/teach-learn/tes/classrooms/locations/scaife.html)  
-> Time: Tuesday & Thursday 2:00p-3:20p Eastern  
+> 234](https://www.cmu.edu/computing/services/teach-learn/tes/classrooms/locations/scaife.html)\
+> Time: Tuesday & Thursday 2:00p-3:20p Eastern\
 > Office Hours: Wed 10:30a-12:30p & 1:30p-3:30p, and by appointment
-> (arrange via email)  
+> (arrange via email)\
 > [**CMU Academic Calendar**](https://www.cmu.edu/hub/calendar/)
 
-> TA: **Zakareya Hamed**  
-> Email: **<zhamed@andrew.cmu.edu>**  
+> TA: **Zakareya Hamed**\
+> Email: **<zhamed@andrew.cmu.edu>**\
 > Office Hours: arrange via email
 
 The most up-to-date version of this [**syllabus can be found
@@ -21,8 +21,8 @@ here**](https://jcervas.github.io/teaching/2026-2027/class-cmu-2026-84-309/readm
 
 ------------------------------------------------------------------------
 
-> **Course Relevance:** DC: Perspectives on Justice and Injustice  
-> **Learning Resources:** All resources will be provided via Canvas  
+> **Course Relevance:** DC: Perspectives on Justice and Injustice\
+> **Learning Resources:** All resources will be provided via Canvas\
 > **Prerequisites:** NONE
 
 ------------------------------------------------------------------------
@@ -109,9 +109,14 @@ The course grade will be a weighted average of the following components:
 **Full instructions for every assignment are in Canvas**, under
 Assignments. What follows is the shape of each one and what it is worth.
 
-![Absences and the attendance grade. The first three cost almost
-nothing; four to six is where it
-bites.](readme_files/figure-gfm/attendance-curve-1.png)
+<figure>
+<img
+src="readme_files/figure-gfm/attendance-curve-1.png"
+alt="Absences and the attendance grade. The first three cost almost nothing; four to six is where it bites." />
+<figcaption aria-hidden="true">Absences and the attendance grade. The
+first three cost almost nothing; four to six is where it
+bites.</figcaption>
+</figure>
 
 - **Attendance** (25%). Show up. The first three absences cost almost
   nothing; four to six is where a semester goes wrong.
@@ -484,9 +489,9 @@ hostile treatment on the basis of identity to speak out for justice and
 seek support—either in the moment or afterward. You can share your
 experiences using the following resources:
 
-- **Ethics Reporting Hotline**  
+- **Ethics Reporting Hotline**\
   Submit an anonymous report by calling 844-587-0793 or visiting
-  **cmu.ethicspoint.com**.  
+  **cmu.ethicspoint.com**.\
   All reports are documented and reviewed to determine whether further
   action is needed. Regardless of the incident type, the university will
   use your feedback to transform our campus climate into one that is
@@ -519,7 +524,7 @@ treatment does work. Learn more about confidential mental health
 services available on campus at:
 
 - **Counseling and Psychological Services**:
-  <http://www.cmu.edu/counseling/>  
+  <http://www.cmu.edu/counseling/>\
   Phone (24/7): 412-268-2922
 
 Please remember that support is always available—don’t hesitate to reach
