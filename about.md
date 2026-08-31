@@ -12,6 +12,8 @@ I am **Jonathan Cervas**, Assistant Teaching Professor in the Institute for Stra
 
 My research and professional work focus on political institutions, elections, redistricting, and voting rules. I have published fifteen peer-reviewed articles and book chapters in leading outlets across political science, geography, economics, and law, including the *Proceedings of the National Academy of Sciences*, *Political Geography*, *Social Science Quarterly*, *Public Choice*, and the *Election Law Journal*. I have given invited talks at Princeton University, the University of Houston, Albany Law School, the National Conference of State Legislatures, and other venues, and I referee for major journals in my field.
 
+I am a frequent source on redistricting and voting rights for national media, including *The Wall Street Journal*, the Associated Press, *Politico*, NPR, and ABC News, and I have been profiled by *The New York Times*, the *Pittsburgh Post-Gazette*, and *Washington Monthly*, among others.
+
 ## Public Service and Redistricting Work
 
 I have extensive experience serving as a court-appointed special master, consultant, and expert witness in redistricting and voting rights cases. My appointments have included:
