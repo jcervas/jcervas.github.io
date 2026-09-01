@@ -1,15 +1,15 @@
 #### Prof. Jonathan Cervas
 
-#### Updated: August 27, 2026
+#### Updated: August 31, 2026
 
-> Professor Jonathan Cervas  
-> Office: Posner Hall 374  
-> Email: **<cervas@cmu.edu>**  
+> Professor Jonathan Cervas\
+> Office: Posner Hall 374\
+> Email: **<cervas@cmu.edu>**\
 > Location: [Porter Hall
-> A21A](https://www.cmu.edu/computing/services/teach-learn/tes/classrooms/locations/porter.html)  
-> Time: Tuesday & Thursday 11:00a-12:20p Eastern  
+> A21A](https://www.cmu.edu/computing/services/teach-learn/tes/classrooms/locations/porter.html)\
+> Time: Tuesday & Thursday 11:00a-12:20p Eastern\
 > Office Hours: Wed 10:30a-12:30p & 1:30p-3:30p, and by appointment
-> (arrange via email)  
+> (arrange via email)\
 > [**CMU Academic Calendar**](https://www.cmu.edu/hub/calendar/)
 
 The most up-to-date version of this [**syllabus can be found
@@ -18,7 +18,7 @@ here**](https://jcervas.github.io/teaching/2026-2027/class-cmu-2026-84-355/readm
 ------------------------------------------------------------------------
 
 > **Course Relevance:** DC: *Perspectives on Justice and Injustice*
-> **Learning Resources:** All resources will be provided via Canvas  
+> **Learning Resources:** All resources will be provided via Canvas\
 > **Prerequisites:** 36-200 Reasoning with Data
 
 ------------------------------------------------------------------------
@@ -49,21 +49,21 @@ The course grade will be a weighted average of the following components:
 
 ## Due Dates
 
-| Assignment                              | Due                                                                                                             |
-|-----------------------------------------|-----------------------------------------------------------------------------------------------------------------|
-| Data slide                              | before **each Thursday**                                                                                        |
-| Surveys (3)                             | **Wed, Aug 26** (Cervas Election Study), **Fri, Oct 23** (midterm feedback), **final week** (course evaluation) |
-| Discussion board post                   | **Friday, 11:59 p.m.**, each week                                                                               |
-| Week 4 board post (no Thursday class)   | **Tue, Sep 22** — Constitution Day, so you get the weekend                                                      |
-| Week 14 board post (Thanksgiving)       | **Mon, Nov 30** — Tuesday is on Zoom, and there is no Thursday                                                  |
-| **Test 1** — Ch. 1–5                    | **Thu, Oct 8**, in class                                                                                        |
-| Data journalism: pitch                  | **Tue, Oct 20**, in class                                                                                       |
-| **Test 2** — Ch. 6–9                    | **Tue, Nov 10**, in class                                                                                       |
-| Data journalism: **draft**              | **Thu, Nov 19** — the term’s last data session                                                                  |
-| Data journalism: **peer reviews** (two) | **Tue, Dec 1**                                                                                                  |
-| **Test 3** — Ch. 10–13                  | **Thu, Dec 3**, in class                                                                                        |
-| Data newsletter                         | **Tue, Dec 8**                                                                                                  |
-| Data journalism: **final**              | **Fri, Dec 11** — after the last session                                                                        |
+| Assignment | Due |
+|----|----|
+| Data slide | before **each Thursday** |
+| Surveys (3) | **Wed, Aug 26** (Cervas Election Study), **Fri, Oct 23** (midterm feedback), **final week** (course evaluation) |
+| Discussion board post | **Friday, 11:59 p.m.**, each week |
+| Week 4 board post (no Thursday class) | **Wed, Sep 16** — day after the Tue Sep 15 class; Thu Sep 17 is Constitution Day, no class |
+| Week 14 board post (Thanksgiving) | **Wed, Nov 25** — day after the Tue Nov 24 Zoom class; Thu Nov 26 is Thanksgiving, no class |
+| **Test 1** — Ch. 1–5 | **Thu, Oct 8**, in class |
+| Data journalism: pitch | **Tue, Oct 20**, in class |
+| **Test 2** — Ch. 6–9 | **Tue, Nov 10**, in class |
+| Data journalism: **draft** | **Thu, Nov 19** — the term’s last data session |
+| Data journalism: **peer reviews** (two) | **Tue, Dec 1** |
+| **Test 3** — Ch. 10–13 | **Thu, Dec 3**, in class |
+| Data newsletter | **Tue, Dec 8** |
+| Data journalism: **final** | **Fri, Dec 11** — after the last session |
 
 There is no final exam.
 

@@ -1,15 +1,15 @@
 #### Prof. Jonathan Cervas
 
-#### Updated: August 27, 2026
+#### Updated: August 31, 2026
 
-> Professor Jonathan Cervas  
-> Office: Posner Hall 374  
-> Email: **<cervas@cmu.edu>**  
+> Professor Jonathan Cervas\
+> Office: Posner Hall 374\
+> Email: **<cervas@cmu.edu>**\
 > Location: [Porter Hall
-> A21A](https://www.cmu.edu/computing/services/teach-learn/tes/classrooms/locations/porter.html)  
-> Time: Tuesday & Thursday 11:00a-12:20p Eastern  
+> A21A](https://www.cmu.edu/computing/services/teach-learn/tes/classrooms/locations/porter.html)\
+> Time: Tuesday & Thursday 11:00a-12:20p Eastern\
 > Office Hours: Wed 10:30a-12:30p & 1:30p-3:30p, and by appointment
-> (arrange via email)  
+> (arrange via email)\
 > [**CMU Academic Calendar**](https://www.cmu.edu/hub/calendar/)
 
 The most up-to-date version of this [**syllabus can be found
@@ -18,7 +18,7 @@ here**](https://jcervas.github.io/teaching/2026-2027/class-cmu-2026-84-355/readm
 ------------------------------------------------------------------------
 
 > **Course Relevance:** DC: *Perspectives on Justice and Injustice*
-> **Learning Resources:** All resources will be provided via Canvas  
+> **Learning Resources:** All resources will be provided via Canvas\
 > **Prerequisites:** 36-200 Reasoning with Data
 
 ------------------------------------------------------------------------
@@ -117,13 +117,13 @@ right.
 are not expected to go hunting in unfamiliar places. The sources below
 are valuable resources, but you can find other things as well.
 
-|                           | Worth following all term                                                                                                                                                                                                                                                                                           |
-|---------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **General**               | *New York Times* (especially The Upshot), *Washington Post*, *Wall Street Journal* — all three are free to you through the [CMU Libraries](https://www.library.cmu.edu/)                                                                                                                                           |
-| **Elections specialists** | [Bolts](https://boltsmag.org), [Votebeat](https://votebeat.org), [Stateline](https://stateline.org), [Democracy Docket](https://www.democracydocket.com), [Cook Political Report](https://www.cookpolitical.com), [Sabato’s Crystal Ball](https://centerforpolitics.org/crystalball/)                              |
-| **The census**            | [Count of Counting](https://countofcounting.substack.com) — Mike Schneider, who covered the Census Bureau for the Associated Press, on population change and the count itself                                                                                                                                      |
-| **Data and forecasting**  | [Strength In Numbers](https://www.gelliottmorris.com) (G. Elliott Morris), [Silver Bulletin](https://www.natesilver.net), [Split Ticket](https://split-ticket.org), [The Downballot](https://www.the-downballot.com), [Playing with Election Data](https://playingwithelectiondata.substack.com) (Charles Stewart) |
-| **Podcasts**              | *The Ezra Klein Show* (NYT) · *NPR Politics Podcast* · *The Downballot* (weekly, Thursdays) · *Amicus* (Slate) · *Public Opinion Podcast* (AAPOR)                                                                                                                                                                  |
+|  | Worth following all term |
+|----|----|
+| **General** | *New York Times* (especially The Upshot), *Washington Post*, *Wall Street Journal* — all three are free to you through the [CMU Libraries](https://www.library.cmu.edu/) |
+| **Elections specialists** | [Bolts](https://boltsmag.org), [Votebeat](https://votebeat.org), [Stateline](https://stateline.org), [Democracy Docket](https://www.democracydocket.com), [Cook Political Report](https://www.cookpolitical.com), [Sabato’s Crystal Ball](https://centerforpolitics.org/crystalball/) |
+| **The census** | [Count of Counting](https://countofcounting.substack.com) — Mike Schneider, who covered the Census Bureau for the Associated Press, on population change and the count itself |
+| **Data and forecasting** | [Strength In Numbers](https://www.gelliottmorris.com) (G. Elliott Morris), [Silver Bulletin](https://www.natesilver.net), [Split Ticket](https://split-ticket.org), [The Downballot](https://www.the-downballot.com), [Playing with Election Data](https://playingwithelectiondata.substack.com) (Charles Stewart) |
+| **Podcasts** | *The Ezra Klein Show* (NYT) · *NPR Politics Podcast* · *The Downballot* (weekly, Thursdays) · *Amicus* (Slate) · *Public Opinion Podcast* (AAPOR) |
 
 ## What you need
 
@@ -153,12 +153,12 @@ The two are not synchronized, and are not meant to be. The textbook
 keeps its own order, and the three tests cover it and nothing else. The
 data sessions run their own sequence, below.
 
-| When                      | What                                                                    |
-|---------------------------|-------------------------------------------------------------------------|
-| **Before Tuesday**        | Read the week’s chapter — about an hour.                                |
-| **Tuesday, in class**     | The chapter, and the question it raises.                                |
-| **Before Thursday**       | Post a data slide bearing on the question we ended Tuesday with.        |
-| **Thursday, in class**    | Two of your slides, then the lab.                                       |
+| When | What |
+|----|----|
+| **Before Tuesday** | Read the week’s chapter — about an hour. |
+| **Tuesday, in class** | The chapter, and the question it raises. |
+| **Before Thursday** | Post a data slide bearing on the question we ended Tuesday with. |
+| **Thursday, in class** | Two of your slides, then the lab. |
 | **By Friday, 11:59 p.m.** | One post to the discussion board about any data we looked at that week. |
 
 ------------------------------------------------------------------------
@@ -193,9 +193,14 @@ The course grade will be a weighted average of the following components:
 | **Three Tests** (10% each)       | 30%                    |
 | **Data Journalism Project**      | 25%                    |
 
-![Absences and the attendance grade. The first three cost almost
-nothing; four to six is where it
-bites.](readme_files/figure-gfm/attendance-curve-1.png)
+<figure>
+<img
+src="readme_files/figure-gfm/attendance-curve-1.png"
+alt="Absences and the attendance grade. The first three cost almost nothing; four to six is where it bites." />
+<figcaption aria-hidden="true">Absences and the attendance grade. The
+first three cost almost nothing; four to six is where it
+bites.</figcaption>
+</figure>
 
 **Full instructions for every assignment are in Canvas**, under
 Assignments. What each one is, in the order of the table above:
@@ -246,21 +251,21 @@ Assignments. What each one is, in the order of the table above:
 
 ## Due Dates
 
-| Assignment                              | Due                                                                                                             |
-|-----------------------------------------|-----------------------------------------------------------------------------------------------------------------|
-| Data slide                              | before **each Thursday**                                                                                        |
-| Surveys (3)                             | **Wed, Aug 26** (Cervas Election Study), **Fri, Oct 23** (midterm feedback), **final week** (course evaluation) |
-| Discussion board post                   | **Friday, 11:59 p.m.**, each week                                                                               |
-| Week 4 board post (no Thursday class)   | **Tue, Sep 22** — Constitution Day, so you get the weekend                                                      |
-| Week 14 board post (Thanksgiving)       | **Mon, Nov 30** — Tuesday is on Zoom, and there is no Thursday                                                  |
-| **Test 1** — Ch. 1–5                    | **Thu, Oct 8**, in class                                                                                        |
-| Data journalism: pitch                  | **Tue, Oct 20**, in class                                                                                       |
-| **Test 2** — Ch. 6–9                    | **Tue, Nov 10**, in class                                                                                       |
-| Data journalism: **draft**              | **Thu, Nov 19** — the term’s last data session                                                                  |
-| Data journalism: **peer reviews** (two) | **Tue, Dec 1**                                                                                                  |
-| **Test 3** — Ch. 10–13                  | **Thu, Dec 3**, in class                                                                                        |
-| Data newsletter                         | **Tue, Dec 8**                                                                                                  |
-| Data journalism: **final**              | **Fri, Dec 11** — after the last session                                                                        |
+| Assignment | Due |
+|----|----|
+| Data slide | before **each Thursday** |
+| Surveys (3) | **Wed, Aug 26** (Cervas Election Study), **Fri, Oct 23** (midterm feedback), **final week** (course evaluation) |
+| Discussion board post | **Friday, 11:59 p.m.**, each week |
+| Week 4 board post (no Thursday class) | **Wed, Sep 16** — day after the Tue Sep 15 class; Thu Sep 17 is Constitution Day, no class |
+| Week 14 board post (Thanksgiving) | **Wed, Nov 25** — day after the Tue Nov 24 Zoom class; Thu Nov 26 is Thanksgiving, no class |
+| **Test 1** — Ch. 1–5 | **Thu, Oct 8**, in class |
+| Data journalism: pitch | **Tue, Oct 20**, in class |
+| **Test 2** — Ch. 6–9 | **Tue, Nov 10**, in class |
+| Data journalism: **draft** | **Thu, Nov 19** — the term’s last data session |
+| Data journalism: **peer reviews** (two) | **Tue, Dec 1** |
+| **Test 3** — Ch. 10–13 | **Thu, Dec 3**, in class |
+| Data newsletter | **Tue, Dec 8** |
+| Data journalism: **final** | **Fri, Dec 11** — after the last session |
 
 There is no final exam.
 
