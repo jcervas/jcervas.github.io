@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### DRAFT Updated: August 28, 2026
+#### DRAFT Updated: September 02, 2026
 
 > Professor **Jonathan Cervas**\
 > Office: Posner Hall 374\
@@ -344,11 +344,17 @@ are on that session’s page in Canvas.*
 
 #### Thu, Oct 29 — Student-led session — team and topic TBA
 
-### Week 11 — Student-led · election week
+### Week 11 — election week
 
 #### Tue, Nov 3 — **NO CLASS.** Democracy Day; the midterm elections. No classes before 5 p.m. [Register to vote](https://www.cmu.edu/student-affairs/slice/civic-engagement/advocacy/voter/index.html).
 
-#### Thu, Nov 5 — Student-led session — team and topic TBA
+#### Thu, Nov 5 — After the Vote
+
+- The first class after the midterms, and the answer to **Before the
+  Vote: Loser’s Consent** on Oct 27. We asked what losing well requires;
+  now we find out who has to do it.
+- No student-led session this week. Seven teams of five fill the other
+  seven dates, and this one is mine.
 
 ### Week 12 — Student-led
 
@@ -371,9 +377,11 @@ are on that session’s page in Canvas.*
   how thirty-four presentations fit into eighty minutes.
 - Slides are due Mon, Nov 23 at 11:59 p.m., uploaded to Canvas.
 - Speak to your slides rather than reading them, and open the floor with
-  a question. A group
+  a question. A group that has nothing to ask you has been given nothing
+  to argue with, and that is your fault rather than theirs.
 - Being in a small group does not make this informal. It is the same 7%
-  it would be in front
+  it would be in front of the whole room, and the people in it are the
+  ones who have to read the book on your recommendation.
 
 #### Thu, Nov 26 — **NO CLASS.** Thanksgiving.
 
