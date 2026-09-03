@@ -196,9 +196,10 @@ are on that session’s page in Canvas.*
 - [Fiorina 2026 — *Unstable Majorities Continue: The Trump
   Era*](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020547656104436)
   — **Chapter 8. The 2024 Election: Party Performance and Party
-  Policies**.
+  Policies**. *Library ebook; if it will not open, tell me — the library
+  lists this title without having bought it.*
 - [Fiorina 2026 — *Unstable Majorities Continue: The Trump
-  Era*](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020547656104436)
+  Era*](https://www.hoover.org/research/once-more-unto-breach-america-polarized)
   — **Chapter 2**: “Once More unto the Breach: Is America Polarized?”
 - [Fiorina et al. 2008 — Political Polarization in the American
   Public](https://canvas.cmu.edu/courses/55941/files/14695393)
@@ -223,7 +224,7 @@ are on that session’s page in Canvas.*
   America](https://canvas.cmu.edu/courses/55941/files/14695398)
 - [Fiorina 2026 — *Unstable Majorities Continue*, **Chapter 3**: “What
   About *Affective*
-  Polarization?”](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020547656104436)
+  Polarization?”](https://www.hoover.org/research/what-about-affective-polarization)
 
 ### Week 4 — NO CLASS (Sep 15–17)
 
@@ -252,7 +253,7 @@ are on that session’s page in Canvas.*
   Stupid](https://centerforpolitics.org/crystalball/its-not-the-economy-stupid-the-ideological-foundations-of-white-working-class-republicanism/)
 - [Fiorina 2026 — *Unstable Majorities Continue*, **Chapter 5**: “The
   White Working Class in 2016 (and
-  Earlier)”](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020547656104436)
+  Earlier)”](https://www.hoover.org/research/white-working-class)
 
 #### Thu, Sep 24 — Polarization V: Race and Polarization
 
