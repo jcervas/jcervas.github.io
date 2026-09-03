@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### DRAFT Updated: September 02, 2026
+#### DRAFT Updated: September 03, 2026
 
 > Professor **Jonathan Cervas**\
 > Office: Posner Hall 374\
@@ -330,9 +330,9 @@ are on that session’s page in Canvas.*
 
 ### Week 9 — Student-led sessions open
 
-#### Tue, Oct 20 — Student-led session — team and topic TBA
+#### Tue, Oct 20 — Student-led 1: Social media
 
-#### Thu, Oct 22 — Student-led session — team and topic TBA
+#### Thu, Oct 22 — Student-led 2: Congress and stock trading
 
 ### Week 10 — Student-led · before the vote
 
@@ -342,7 +342,7 @@ are on that session’s page in Canvas.*
   American
   Politics](https://canvas.cmu.edu/courses/55941/files/14695410)
 
-#### Thu, Oct 29 — Student-led session — team and topic TBA
+#### Thu, Oct 29 — Student-led 3: Death penalty
 
 ### Week 11 — election week
 
@@ -358,15 +358,15 @@ are on that session’s page in Canvas.*
 
 ### Week 12 — Student-led
 
-#### Tue, Nov 10 — Student-led session — team and topic TBA
+#### Tue, Nov 10 — Student-led 4: Energy
 
-#### Thu, Nov 12 — Student-led session — team and topic TBA
+#### Thu, Nov 12 — Student-led 5: Unpaid internships
 
 ### Week 13 — Student-led
 
-#### Tue, Nov 17 — Student-led session — team and topic TBA
+#### Tue, Nov 17 — Student-led 6: Wealth tax
 
-#### Thu, Nov 19 — Student-led session — team and topic TBA
+#### Thu, Nov 19 — Student-led 7: Citizenship
 
 ### Week 14 — Book review presentations
 
