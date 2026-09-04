@@ -70,11 +70,13 @@
     blocked.append('rect').attr('class', 'hatch-b').attr('width', 5).attr('height', 5);
     blocked.append('rect').attr('class', 'hatch-a').attr('width', 5).attr('height', 2.5);
 
+    // Sparser and mirrored, so proposed reads as distinct from blocked even when
+    // the two are scattered across the map rather than side by side in the key
     const proposed = defs.append('pattern')
-      .attr('id', 'hatch-proposed').attr('width', 5).attr('height', 5)
+      .attr('id', 'hatch-proposed').attr('width', 9).attr('height', 9)
       .attr('patternUnits', 'userSpaceOnUse').attr('patternTransform', 'rotate(135)');
-    proposed.append('rect').attr('class', 'hatch-b').attr('width', 5).attr('height', 5);
-    proposed.append('rect').attr('class', 'hatch-a').attr('width', 5).attr('height', 2.5);
+    proposed.append('rect').attr('class', 'hatch-b').attr('width', 9).attr('height', 9);
+    proposed.append('rect').attr('class', 'hatch-a').attr('width', 9).attr('height', 2);
 
     defs.append('marker')
       .attr('id', 'arrowhead').attr('viewBox', '0 0 10 10')
