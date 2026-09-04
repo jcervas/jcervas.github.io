@@ -1,5 +1,5 @@
 /* Mid-decade redistricting map.
-   Data-driven: everything on the map (fills, hatching, value tiles, legend totals,
+   Data-driven: everything on the map (fills, hatching, value tiles, key, legend totals,
    annotation arrows) comes from data.csv. Edit the CSV to update the map.
 
    Label declutter borrows the Daily District approach: each value tile is anchored
@@ -235,6 +235,8 @@
     const legend = svg.append('g')
       .attr('class', 'legend')
       .attr('transform', `translate(${W - 242}, ${H - 128})`);
+    legend.append('text').attr('class', 'legend-title')
+      .attr('x', 0).attr('y', -24).text('Expected gain from enacted maps');
     const legendRows = [
       { label: 'Democrat', value: demTotal, party: 'dem' },
       { label: 'Republican', value: gopTotal, party: 'gop' },
@@ -251,6 +253,53 @@
         .attr('x', 230).attr('y', y).attr('text-anchor', 'end')
         .text('+' + row.value.toFixed(2));
     });
+
+    // ----- key: what the shading means (built from the statuses in the data) -----
+    const present = fn => rows.some(fn);
+    const keyItems = [
+      { swatch: 'st-gop', label: 'New map enacted, R gain',
+        show: present(r => r.status === 'enacted' && r.party === 'gop') },
+      { swatch: 'st-dem', label: 'New map enacted, D gain',
+        show: present(r => r.status === 'enacted' && r.party === 'dem') },
+      { swatch: 'st-blocked', label: 'Blocked or overturned', br: true,
+        show: present(r => r.status === 'blocked') },
+      { swatch: 'st-proposed', label: 'Proposed',
+        show: present(r => r.status === 'proposed') },
+      { strike: true, label: 'not counted in the totals',
+        show: present(r => r.status === 'blocked' && r.exp != null) },
+    ].filter(d => d.show);
+
+    if (keyItems.length) {
+      const gKey = svg.append('g').attr('class', 'key');
+      const SW = 20, SH = 14, GAP = 7, ITEM_GAP = 26, ROW_H = 22;
+      const maxW = W - 260;             // stop short of the totals block
+      let x = 0, row = 0;
+      keyItems.forEach(item => {
+        const g = gKey.append('g');
+        let markW = SW;
+        if (item.strike) {
+          // Sample of a struck-through value, drawn the same way the tiles are
+          const t = g.append('text').attr('class', 'key-sample').attr('x', 0).attr('y', 0).text('+0.9');
+          const bb = t.node().getBBox();
+          markW = bb.width;
+          g.append('line').attr('class', 'strike')
+            .attr('x1', bb.x - 1).attr('x2', bb.x + bb.width + 1)
+            .attr('y1', bb.y + bb.height / 2 + 1).attr('y2', bb.y + bb.height / 2 + 1);
+        } else {
+          g.append('rect').attr('class', 'key-swatch ' + item.swatch)
+            .attr('x', 0).attr('y', -SH + 3).attr('width', SW).attr('height', SH);
+        }
+        const label = g.append('text').attr('class', 'key-label')
+          .attr('x', markW + GAP).attr('y', 0).text(item.label);
+        const itemW = markW + GAP + label.node().getComputedTextLength();
+        // Break for a new line where asked, or when the row would overflow
+        if (x > 0 && (item.br || x + itemW > maxW)) { row++; x = 0; }
+        g.attr('transform', `translate(${x},${row * ROW_H})`);
+        x += itemW + ITEM_GAP;
+      });
+      // Bottom-align the block, however many rows it needed
+      gKey.attr('transform', `translate(6, ${H - 12 - row * ROW_H})`);
+    }
 
     // ----- annotation: states taking steps after Callais -----
     const callaisStates = rows.filter(r => r.callais && anchors.has(r.abbr));

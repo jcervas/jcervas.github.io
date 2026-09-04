@@ -166,11 +166,36 @@
 /* ---------- Legend & annotation (SVG) ---------- */
 
 .legend text { font-family: var(--font); }
+.legend .legend-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  fill: var(--muted);
+}
 .legend .legend-label { font-size: 21px; font-weight: 700; fill: var(--ink); }
 .legend .legend-value { font-size: 21px; font-weight: 700; }
 .legend .legend-value.st-dem { fill: var(--dem-text); }
 .legend .legend-value.st-gop { fill: var(--gop-text); }
 .legend .legend-rule { stroke: var(--line); stroke-width: 1; }
+
+/* Key to the shading, bottom-left */
+.key text { font-family: var(--font); }
+.key .key-label { font-size: 13.5px; fill: var(--ink); }
+.key .key-sample {
+  font-size: 15px;
+  font-weight: 700;
+  fill: var(--tile-range);
+}
+.key .strike { stroke: var(--tile-range); stroke-width: 1.4; }
+.key .key-swatch {
+  fill: var(--state-base);
+  stroke: var(--state-border);
+  stroke-width: 1.2;
+}
+.key .key-swatch.st-dem { fill: var(--dem-fill); stroke: var(--dem-border); }
+.key .key-swatch.st-gop { fill: var(--gop-fill); stroke: var(--gop-border); }
+.key .key-swatch.st-blocked  { fill: url(#hatch-blocked); }
+.key .key-swatch.st-proposed { fill: url(#hatch-proposed); stroke-width: 2; }
 
 .annotation text {
   font-family: var(--font);
