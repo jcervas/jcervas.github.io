@@ -66,14 +66,25 @@ for reference and are not part of the map.
 ## Relation to `../elections.csv`
 
 `../elections.csv` is what the per-election detail table under the map reads:
-seat counts per election under each plan, for the states that have a table.
-These files are the same analysis at full coverage — every state with a scored
-redraw, and the district-level shares the seat counts are collapsed from.
+one row per election per state, giving the seat split under each plan. These
+files are the layer below it — the district-level shares those seat counts are
+collapsed from.
 
-The two agree where they overlap. Texas over 17 elections and Florida over 13
-give 3.29 / 2 / 5 and 2.23 / 1 / 4 from either file, matching `data.csv`. They
-reach it by different routes: `elections.csv` comes from `democracys-data`,
-these come from `_DRA_elections.R` in createMaps.
+Texas and Florida came into `elections.csv` from `democracys-data`. The other
+eight states — California, Louisiana, Missouri, North Carolina, Ohio,
+Tennessee, Utah, and Virginia — were counted from the files here, applying the
+same rule (a district is a Democratic seat above 0.5). Every one reproduces the
+`exp`, `lo`, and `hi` already in `data.csv`, and Texas and Florida come out the
+same from either route, which is the check that the two pipelines agree.
+
+`elections.csv` stores the change as `rep_new - rep_old`, so a Democratic
+gerrymander is a negative number there; `data.csv` orients the same quantity
+toward whichever party drew the map, so it is positive for California, Utah,
+and Virginia.
+
+Two gaps are not fillable from this folder. Alabama has values on the map but
+no district-level files here, so it has no detail table. South Carolina has
+files but no map value, for the reason above.
 
 ## `redistrict-map.csv`
 
