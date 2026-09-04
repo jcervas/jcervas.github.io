@@ -1,0 +1,36 @@
+# Election-by-election seat counts behind the exp/lo/hi values in data.csv.
+# One row per statewide election: how the districts break down under the old
+# plan and under the new one, holding the votes fixed. exp is the mean of
+# (rep_new - rep_old) across a state's rows; lo and hi are its min and max.
+# Source: jcervas/democracys-data, labs/.../mid-decade/data/derived/seats_by_election.csv
+abbr,code,label,year,dem_old,rep_old,dem_new,rep_new
+TX,pres-2016,President,2016,14,24,11,27
+TX,sc-2016,Supreme Court,2016,14,24,11,27
+TX,ag-2018,Attorney General,2018,14,24,12,26
+TX,compt-2018,Comptroller,2018,14,24,11,27
+TX,gov-2018,Governor,2018,14,24,9,29
+TX,ltgov-2018,Lieutenant Governor,2018,14,24,11,27
+TX,sc-2018,Supreme Court,2018,12,26,9,29
+TX,senator-2018,U.S. Senate,2018,14,24,12,26
+TX,pres-2020,President,2020,13,25,10,28
+TX,sc-2020,Supreme Court,2020,13,25,10,28
+TX,senator-2020,U.S. Senate,2020,13,25,10,28
+TX,ag-2022,Attorney General,2022,13,25,10,28
+TX,gov-2022,Governor,2022,13,25,9,29
+TX,ltgov-2022,Lieutenant Governor,2022,13,25,9,29
+TX,trea-2022,Treasurer,2022,13,25,9,29
+TX,pres-2024,President,2024,11,27,8,30
+TX,senator-2024,U.S. Senate,2024,13,25,8,30
+FL,president-2016,President,2016,11,17,9,19
+FL,senator-2016,U.S. Senate,2016,8,20,6,22
+FL,ag-2018,Attorney General,2018,10,18,9,19
+FL,gov-2018,Governor,2018,10,18,9,19
+FL,senator-2018,U.S. Senate,2018,10,18,9,19
+FL,trea-2018,Treasurer,2018,10,18,9,19
+FL,president-2020,President,2020,8,20,6,22
+FL,ag-2022,Attorney General,2022,6,22,4,24
+FL,gov-2022,Governor,2022,6,22,4,24
+FL,senator-2022,U.S. Senate,2022,8,20,4,24
+FL,trea-2022,Treasurer,2022,7,21,4,24
+FL,president-2024,President,2024,8,20,4,24
+FL,senator-2024,U.S. Senate,2024,8,20,4,24

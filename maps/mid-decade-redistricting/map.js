@@ -26,7 +26,9 @@
       const mod = r.headers.get('last-modified');
       return r.text().then(text => ({ text, mod }));
     }),
-  ]).then(([topo, csv]) => {
+    // Optional: the map still draws if the per-election detail is missing
+    fetch('elections.csv').then(r => (r.ok ? r.text() : '')).catch(() => ''),
+  ]).then(([topo, csv, electionsText]) => {
     // "Updated" line from the data file's HTTP timestamp (works on GitHub Pages)
     if (csv.mod) {
       const d = new Date(csv.mod);
@@ -51,6 +53,21 @@
       dy: r.dy === '' ? 0 : +r.dy,
     }));
     const byAbbr = new Map(rows.map(r => [r.abbr, r]));
+
+    // One row per statewide election, per state: seats under the old plan and
+    // under the new one. Leading #-comments in the file are documentation.
+    const elections = d3.csvParse(
+      electionsText.split('\n').filter(l => !l.startsWith('#')).join('\n'),
+      r => ({
+        abbr: r.abbr.trim(),
+        label: r.label,
+        year: +r.year,
+        demOld: +r.dem_old, repOld: +r.rep_old,
+        demNew: +r.dem_new, repNew: +r.rep_new,
+        gain: +r.rep_new - +r.rep_old,          // positive = Republican gain
+      })
+    );
+    const electionsBy = d3.group(elections, e => e.abbr);
 
     const statesFC = topojson.feature(topo, topo.objects.states);
     // Leave a right margin clear of the map for the annotation and legend
@@ -360,6 +377,113 @@
         tooltip.style.top = y + 'px';
       })
       .on('mouseleave', () => { tooltip.hidden = true; });
+
+    // ----- detail table: one row per election for the selected state -----
+    const detail = document.getElementById('detail');
+    const featureOf = new Map(statesFC.features.map(f => [f.properties.state, f]));
+    // Selection outline lives above every other layer so it is never covered
+    const selectOutline = svg.append('g').attr('class', 'layer-select')
+      .append('path').attr('class', 'select-outline');
+
+    const esc = v => String(v).replace(/[&<>"]/g, c =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const gainLabel = g => (g > 0 ? 'R +' + g : g < 0 ? 'D +' + -g : 'even');
+    const gainParty = g => (g > 0 ? 'gop' : g < 0 ? 'dem' : null);
+
+    // Diverging bar: Republican gains grow right of the centre line, Democratic
+    // gains left, scaled against the state's largest swing
+    const changeCell = (g, max) => {
+      const w = max ? Math.abs(g) / max * 100 : 0;
+      const party = gainParty(g);
+      const bar = party
+        ? `<span class="bar st-${party}" style="width:${w.toFixed(1)}%"></span>` : '';
+      return `<td class="c-change">
+          <span class="bar-wrap">
+            <span class="bar-half left">${g < 0 ? bar : ''}</span>
+            <span class="bar-half right">${g > 0 ? bar : ''}</span>
+          </span>
+          <span class="change-label${party ? ' st-' + party : ''}">${gainLabel(g)}</span>
+        </td>`;
+    };
+
+    const seatCell = (d, r) =>
+      `<td class="c-seats"><span class="st-dem">${d}</span>` +
+      `<span class="dash">&ndash;</span><span class="st-gop">${r}</span></td>`;
+
+    function renderDetail(abbr) {
+      const r = byAbbr.get(abbr);
+      if (!r) return;
+      const rows = (electionsBy.get(abbr) || []).slice()
+        .sort((a, b) => a.year - b.year || d3.ascending(a.label, b.label));
+
+      let sub = statusText(r);
+      if (rows.length) {
+        const gains = rows.map(e => e.gain);
+        const mean = d3.mean(gains);
+        sub += ` &middot; ${gainLabel(+mean.toFixed(2))} on average across `
+          + `${rows.length} statewide elections (${gainLabel(d3.min(gains))} to `
+          + `${gainLabel(d3.max(gains))})`;
+      }
+
+      let html = `<div class="detail-head">
+          <h2 class="detail-name">${esc(r.name)}</h2>
+          <button type="button" class="detail-clear">Clear</button>
+        </div>
+        <p class="detail-sub">${sub}</p>`;
+
+      if (!rows.length) {
+        html += `<p class="detail-empty">No election-by-election detail for `
+          + `${esc(r.name)} yet.</p>`;
+      } else {
+        const max = d3.max(rows, e => Math.abs(e.gain)) || 1;
+        const body = rows.map(e =>
+          `<tr><th scope="row">${esc(e.label)} ${e.year}</th>`
+          + seatCell(e.demOld, e.repOld) + seatCell(e.demNew, e.repNew)
+          + changeCell(e.gain, max) + '</tr>').join('');
+        const mean = +d3.mean(rows, e => e.gain).toFixed(2);
+        html += `<div class="detail-scroll"><table class="detail-table">
+            <thead><tr>
+              <th scope="col">Election</th>
+              <th scope="col">Old<span class="wide"> map</span> <span class="dr">D&ndash;R</span></th>
+              <th scope="col">New<span class="wide"> map</span> <span class="dr">D&ndash;R</span></th>
+              <th scope="col">Change</th>
+            </tr></thead>
+            <tbody>${body}</tbody>
+            <tfoot><tr><th scope="row">Average</th><td></td><td></td>
+              ${changeCell(mean, max)}</tr></tfoot>
+          </table></div>`;
+      }
+      detail.innerHTML = html;
+      detail.querySelector('.detail-clear').addEventListener('click', () => select(null));
+    }
+
+    let selected = null;
+    function select(abbr) {
+      selected = abbr === selected ? null : abbr;
+      selectOutline.attr('d', selected ? path(featureOf.get(selected)) : null);
+      gStates.selectAll('path.has-data')
+        .classed('is-selected', f => f.properties.state === selected)
+        .attr('aria-pressed', f => String(f.properties.state === selected));
+      if (selected) renderDetail(selected);
+      else detail.innerHTML =
+        '<p class="detail-hint">Select a shaded state for its election-by-election detail.</p>';
+    }
+
+    gStates.selectAll('path.has-data')
+      .attr('tabindex', 0)
+      .attr('role', 'button')
+      .attr('aria-pressed', 'false')
+      .attr('aria-label', f => {
+        const r = byAbbr.get(f.properties.state);
+        return `${r.name}: ${statusText(r).toLowerCase()}`;
+      })
+      .on('click', (event, f) => select(f.properties.state))
+      .on('keydown', (event, f) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          select(f.properties.state);
+        }
+      });
   }).catch(err => {
     console.error(err);
     document.getElementById('map').innerHTML =

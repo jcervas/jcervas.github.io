@@ -14,7 +14,7 @@ description: "Interactive map of mid-decade congressional redistricting: which s
   </header>
 
   <figure class="map-figure">
-    <div id="map" role="img" aria-label="Map of the United States showing states that have redrawn, proposed, or been blocked from redrawing congressional districts mid-decade, with expected partisan seat gains."></div>
+    <div id="map" role="group" aria-label="Map of the United States showing states that have redrawn, proposed, or been blocked from redrawing congressional districts mid-decade, with expected partisan seat gains. Select a shaded state for its election-by-election detail."></div>
     <div id="tooltip" class="tooltip" hidden></div>
     <figcaption class="map-note">
       <strong>Note:</strong> Utah redrawn after court order. Ohio redrawn as required by statute.
@@ -25,6 +25,10 @@ description: "Interactive map of mid-decade congressional redistricting: which s
       Data: Dave&rsquo;s Redistricting, VEST.
     </figcaption>
   </figure>
+
+  <section class="detail" id="detail" aria-live="polite">
+    <p class="detail-hint">Select a shaded state for its election-by-election detail.</p>
+  </section>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
