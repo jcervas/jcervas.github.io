@@ -393,9 +393,9 @@ else’s work, not just your own:
   accurate?](https://www.nytimes.com/2026/08/14/briefing/are-political-polls-accurate.html)
 - [*NYT* — election polls, confusion, and prediction
   markets](https://www.nytimes.com/2026/08/22/us/politics/election-polls-confusion-prediction-markets.html)
-- [Podcast: AAPOR’s *Public Opinion Podcast* — “Pre-Election Polling:
-  The Challenges and The Importance of Understanding the 2024
-  Voter”](https://aapor.org/media/public-opinion-pod/) — scroll the page
+- [Podcast: AAPOR’s *Public Opinion Podcast* — “Perspectives on
+  Political Polling,” March 14,
+  2025](https://aapor.org/media/public-opinion-pod/) — scroll the page
   to find it
 
 ### Week 6 — Part II closes
