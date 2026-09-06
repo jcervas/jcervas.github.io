@@ -534,11 +534,14 @@ Nothing is due.
   Supreme
   Court*](https://www.brennancenter.org/our-work/research-reports/section-2-voting-rights-act-supreme-court)
   — start here: what a Section 2 claim has to prove, worked through
-  Alabama’s congressional map.
+  Alabama’s congressional map. Read the 4/29/26 update box at the top
+  first: the article beneath it was written while *Callais* was still
+  pending.
 - [NCSL, *Redistricting Law 2020*, ch. 3 — racial and language
   minorities](https://documents.ncsl.org/wwwncsl/Redistricting-Census/Redistricting-Law-2020_NCSL%20FINAL.pdf)
-  — pp. 53–60, the three *Gingles* preconditions. The same volume as
-  Session 1, asked a very different question.
+  — pp. 53–60, the three *Gingles* preconditions as they stood before
+  *Callais* rewrote them. The same volume as Session 1, asked a very
+  different question.
 - [Michigan Law Voting Rights Initiative —
   findings](https://voting.law.umich.edu/findings/) — a dataset built by
   reading 466 Section 2 opinions since 1982. Plaintiff success fell from
