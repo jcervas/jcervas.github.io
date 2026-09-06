@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### Updated: September 02, 2026
+#### Updated: September 06, 2026
 
 > Professor Jonathan Cervas\
 > Office: Posner Hall 374\
@@ -349,8 +349,9 @@ else’s work, not just your own:
   nation](https://www.brennancenter.org/our-work/research-reports/census-data-highlights-changing-nation)
 - [*NPR* — Black representation after the
   ruling](https://www.npr.org/2026/04/30/nx-s1-5805050/supreme-court-voting-rights-congressional-black-caucus)
-- [Podcast: *Amicus*
-  (Slate)](https://slate.com/podcasts/amicus/2026/07/supreme-court-term-recap-birthright-citizenship-voting-rights)
+- [Podcast: *Amicus* (Slate) — “This Was the Roberts Court’s Most
+  Shameless Term Yet,” July 11,
+  2026](https://slate.com/podcasts/amicus/2026/07/supreme-court-term-recap-birthright-citizenship-voting-rights)
 
 #### Thu, Sep 10 — Data Session 3 — The American Community Survey
 
