@@ -393,8 +393,10 @@ else’s work, not just your own:
   accurate?](https://www.nytimes.com/2026/08/14/briefing/are-political-polls-accurate.html)
 - [*NYT* — election polls, confusion, and prediction
   markets](https://www.nytimes.com/2026/08/22/us/politics/election-polls-confusion-prediction-markets.html)
-- [Podcast: AAPOR on pre-election
-  polling](https://aapor.org/media/public-opinion-pod/)
+- [Podcast: AAPOR’s *Public Opinion Podcast* — “Pre-Election Polling:
+  The Challenges and The Importance of Understanding the 2024
+  Voter”](https://aapor.org/media/public-opinion-pod/) — scroll the page
+  to find it
 
 ### Week 6 — Part II closes
 
@@ -475,8 +477,9 @@ Nothing is due.
 - [*NYT* — Trump’s campaign-finance
   disclosures](https://www.nytimes.com/2024/08/26/opinion/republican-donors-money-trump.html)
   — the same instrument as a problem
-- [Podcast: *The Downballot* on this cycle’s
-  money](https://www.the-downballot.com/podcast)
+- [Podcast: *The Downballot* — “How Democratic ‘spam PACs’ victimize
+  vulnerable seniors,” September 3,
+  2026](https://www.the-downballot.com/p/how-democratic-spam-pacs-victimize)
 
 ### Week 11 — Part III · election night
 
