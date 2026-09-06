@@ -537,15 +537,23 @@ Nothing is due.
   Alabama’s congressional map. Read the 4/29/26 update box at the top
   first: the article beneath it was written while *Callais* was still
   pending.
-- [NCSL, *Redistricting Law 2020*, ch. 3 — racial and language
-  minorities](https://documents.ncsl.org/wwwncsl/Redistricting-Census/Redistricting-Law-2020_NCSL%20FINAL.pdf)
-  — pp. 53–60, the three *Gingles* preconditions as they stood before
-  *Callais* rewrote them. The same volume as Session 1, asked a very
-  different question.
+- [CRS — *High Court Narrows Voting Rights Act in* Louisiana v.
+  Callais](https://www.congress.gov/crs_external_products/LSB/PDF/LSB11431/LSB11431.1.pdf)
+  — eight pages. The three *Gingles* preconditions, then what the April
+  2026 ruling did to each: an illustrative map now has to meet the
+  state’s partisan goals as well as its traditional ones, and racially
+  polarized voting has to be shown to be something party affiliation
+  cannot explain. Louisiana’s challengers lost on exactly that point.
 - [Michigan Law Voting Rights Initiative —
   findings](https://voting.law.umich.edu/findings/) — a dataset built by
   reading 466 Section 2 opinions since 1982. Plaintiff success fell from
   67% in the first decade to 34% after it.
+- Optional background: [NCSL, *Redistricting Law 2020*, ch. 3 — racial
+  and language
+  minorities](https://documents.ncsl.org/wwwncsl/Redistricting-Census/Redistricting-Law-2020_NCSL%20FINAL.pdf)
+  — pp. 53–60, the *Gingles* preconditions as they stood before
+  *Callais*. The same volume as Session 1, asked a very different
+  question.
 - **DUE: data journalism draft**.
 
 ### Week 14 — the last two chapters
