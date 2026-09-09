@@ -1,0 +1,874 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Polarization II — Sorting</title>
+<style>
+:root{
+  color-scheme: light;
+  --paper:#F2F4F7; --card:#FFFFFF; --tint:#E9ECF1;
+  --ink:#0F1720; --ink-2:#3E4A57; --ink-3:#6B7683;
+  --rule:#B9C1CA; --rule-2:#DDE2E7;
+  --accent:#C41230; --accent-soft:#F7DDE1;
+  --blue:#1F4E79;
+  --match:#17706B; --match-soft:#D3E7E5; --cross:#E09B2D; --none:#C9CFD5;
+  --ghost:#D3D9E0;
+  --display:'Iowan Old Style',Georgia,'Times New Roman',serif;
+  --body:'IBM Plex Sans','Helvetica Neue',Arial,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+:root[data-theme="dark"]{
+  --paper:#0F1720; --card:#161F29; --tint:#1B242E;
+  --ink:#EEF2F6; --ink-2:#B7C2CD; --ink-3:#8A96A3;
+  --rule:#39434E; --rule-2:#26303A; --accent:#FF6B7F; --accent-soft:#3A1C24;
+  --blue:#7FB2E5; --match:#4FC4B8; --match-soft:#12312F; --cross:#F0B860; --none:#4A545F;
+  --ghost:#28323C;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);
+  -webkit-font-smoothing:antialiased;overflow:hidden}
+.deck{position:relative;width:100%;height:100%}
+.slide{position:absolute;inset:0;padding:clamp(32px,4vh,58px) clamp(32px,5vw,78px)
+  clamp(56px,8vh,86px);display:none;flex-direction:column;overflow:auto}
+.slide.on{display:flex}
+.slide.dark{background:var(--ink);color:#F4F7FA}
+.slide.dark .foot{color:#8E9AA6}
+.slide.dark p.lede{color:#B9C4CF}
+.slide.wash{background:var(--accent-soft)}
+.kicker{font-size:clamp(12px,1.02vw,18px);font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+h1{font-family:var(--display);font-size:clamp(32px,4.5vw,94px);line-height:1.04;
+  margin:0 0 8px;font-weight:600;letter-spacing:-.01em}
+h2{font-family:var(--display);font-size:clamp(26px,3.1vw,62px);line-height:1.07;
+  margin:0 0 4px;font-weight:600;letter-spacing:-.006em}
+p.lede{font-size:clamp(15px,1.48vw,34px);line-height:1.45;color:var(--ink-2);
+  max-width:62ch;margin:8px 0 0}
+.punch{font-family:var(--display);font-size:clamp(17px,1.85vw,44px);font-weight:600;
+  margin-top:18px;line-height:1.22}
+.big{font-family:var(--display);font-size:clamp(40px,6.4vw,168px);font-weight:600;line-height:1}
+.foot{position:absolute;left:clamp(32px,5vw,78px);right:clamp(118px,13vw,210px);
+  bottom:clamp(16px,2.4vh,28px);font-size:clamp(11px,.92vw,16px);color:var(--ink-3);
+  line-height:1.4}
+.nums{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,2.5vw,44px);
+  margin-top:12px;align-items:start}
+.card{background:var(--tint);border-radius:10px;padding:clamp(13px,1.5vw,26px)}
+.slide.dark .card{background:#1B242E}
+.card h3{margin:0 0 8px;font-size:clamp(11px,.98vw,17px);font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--blue)}
+.card h3.a{color:var(--accent)}
+.card .claim{font-family:var(--display);font-size:clamp(18px,1.95vw,42px);
+  font-weight:600;line-height:1.14;margin:0 0 10px}
+.card ul{margin:0;padding-left:1.1em}
+.card li{font-size:clamp(13px,1.32vw,29px);line-height:1.36;margin:8px 0}
+.qstem{font-size:clamp(14px,1.45vw,30px);font-style:italic;color:var(--ink-2);
+  line-height:1.34;margin:0 0 12px}
+.opt{display:flex;align-items:center;gap:11px;padding:clamp(4px,.5vw,11px) 9px;
+  border-radius:6px;cursor:pointer;font-size:clamp(13.5px,1.34vw,28px);line-height:1.2}
+.opt:hover{background:var(--card)}
+.opt input{accent-color:var(--accent);margin:0;flex:none;
+  width:clamp(14px,1.15vw,20px);height:clamp(14px,1.15vw,20px)}
+.opt.sel{background:var(--accent-soft);font-weight:600}
+.smap{display:grid;grid-template-columns:auto auto 1fr;gap:5px clamp(12px,1.3vw,24px);
+  align-items:center;font-size:clamp(12.5px,1.15vw,20px);margin-top:6px}
+.smap .hd{font-size:clamp(9.5px,.82vw,14px);font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3)}
+.smap b{width:1.85em;height:1.85em;border-radius:999px;display:grid;place-items:center;
+  color:#fff;font-size:.84em;font-weight:700}
+.gridwrap{display:flex;gap:clamp(16px,2.6vw,54px);align-items:flex-start;margin-top:8px;
+  flex-wrap:wrap;width:100%}
+/* The panel beside a chart used to be pinned at 28ch, which wrapped text that
+   had room to breathe and left the right third of a wide screen empty. Let it
+   take the space the chart does not. */
+.gridwrap > .side{flex:1 1 24ch;min-width:20ch;max-width:62ch}
+svg{overflow:visible}
+.ctl{display:flex;align-items:center;gap:clamp(8px,.9vw,15px);margin-top:12px;flex-wrap:wrap}
+input[type=range]{width:clamp(230px,23vw,460px);accent-color:var(--accent)}
+button{font-family:var(--body);font-size:clamp(12px,1.05vw,18px);font-weight:600;
+  padding:clamp(5px,.55vw,11px) clamp(12px,1.15vw,22px);cursor:pointer;
+  border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:999px}
+button:hover{border-color:var(--accent);color:var(--accent)}
+button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
+.yr{font-family:var(--display);font-size:clamp(34px,3.6vw,66px);font-weight:600;line-height:1}
+.legend{display:flex;flex-direction:column;gap:8px;font-size:clamp(12px,1.1vw,19px);
+  color:var(--ink-2);margin-top:10px}
+.legend i{width:1em;height:1em;display:inline-block;border-radius:2px;margin-right:9px;
+  vertical-align:-.08em}
+.marknote{margin-top:11px;max-width:36em;font-size:clamp(12px,1.06vw,18px);
+  line-height:1.4;color:var(--ink-2)}
+.statrow{display:flex;gap:clamp(20px,3.2vw,58px);flex-wrap:wrap;margin-top:14px;
+  align-items:flex-end}
+.stat b{display:block;font-family:var(--display);font-size:clamp(32px,3.8vw,92px);
+  font-weight:600;line-height:1.04}
+.stat span{font-size:clamp(11.5px,1.02vw,22px);color:var(--ink-3)}
+/* One-number slides: the number IS the slide, so it gets its own scale. */
+.statrow.hero{gap:clamp(26px,4vw,90px)}
+.statrow.hero .stat b{font-size:clamp(64px,11.5vw,270px);line-height:.98}
+.statrow.hero .stat span{font-size:clamp(13px,1.4vw,30px)}
+.statrow.hero .big{font-size:clamp(48px,7.5vw,190px)}
+/* Statement slides carry little ink, so centre the block instead of pinning the
+   last line to the bottom — margin-top:auto opened a void of up to 64% of the
+   slide on a 1920-wide display. */
+.slide.center{justify-content:center}
+.slide.center .foot{position:absolute}
+/* Do NOT pin the heading on a centred slide. Taking it out of flow leaves the
+   body floating in the middle with a hole above it — that made the gaps worse
+   (31% where centring alone gives 7%). The whole column centres together. */
+.pill{display:inline-block;padding:3px 12px;border-radius:999px;
+  font-size:clamp(11.5px,1.05vw,18px);font-weight:600;background:var(--match-soft);
+  color:var(--match)}
+.pill.warn{background:var(--accent-soft);color:var(--accent)}
+table.t{border-collapse:collapse;width:100%;margin-top:16px;
+  font-size:clamp(14px,1.5vw,36px)}
+table.t td{padding:clamp(9px,1.05vw,22px) 10px;border-bottom:1px solid var(--rule-2)}
+table.t tr:last-child td{border-bottom:0}
+table.t .num{font-family:var(--display);font-size:clamp(24px,2.7vw,68px);font-weight:600;
+  text-align:right;white-space:nowrap}
+table.t .lab{color:var(--ink-3);font-size:clamp(11.5px,1.05vw,22px)}
+.rowlist{margin-top:10px}
+.rowlist .r{display:grid;grid-template-columns:clamp(88px,9.5vw,164px) 1fr;
+  gap:clamp(10px,1.5vw,28px);padding:clamp(8px,.95vw,16px) 0;
+  border-bottom:1px solid var(--rule-2)}
+.rowlist .r:last-child{border-bottom:0}
+.rowlist .who{font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  font-size:clamp(10.5px,1vw,21px)}
+.rowlist .say{font-size:clamp(13px,1.35vw,32px);line-height:1.34}
+.quad{display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px,1.3vw,20px);margin-top:14px}
+.quad div{border-radius:8px;padding:clamp(11px,1.25vw,21px)}
+.quad .m{background:var(--accent-soft)} .quad .x{background:var(--tint)}
+.quad b{display:block;font-size:clamp(15px,1.62vw,34px);margin-bottom:4px}
+.quad span{font-size:clamp(10px,.88vw,14px);font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3)}
+.quad .m span{color:var(--accent)}
+.progress{position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--rule-2)}
+.progress i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.hint{position:absolute;right:clamp(32px,5vw,78px);bottom:clamp(16px,2.4vh,28px);
+  text-align:right;color:var(--ink-3);cursor:pointer;user-select:none;
+  font-size:clamp(10.5px,.88vw,15px)}
+.hint:hover{color:var(--accent)}
+.hint b{color:var(--ink-2)}
+#tip{position:fixed;z-index:12;pointer-events:none;background:var(--ink);color:#F4F7FA;
+  padding:7px 11px;border-radius:7px;font-size:clamp(12px,1.05vw,18px);line-height:1.35;
+  box-shadow:0 6px 22px rgba(0,0,0,.28);transform:translate(-50%,-118%);white-space:nowrap}
+#tip[hidden]{display:none}
+#tip b{font-family:var(--display);font-size:1.25em}
+:root[data-theme="dark"] #tip{background:#2A3541}
+.hit{cursor:crosshair}
+/* A line chart holds still until it is clicked: the shape sits there as a grey
+   ghost with one dot on the first year, and the coloured line draws itself only
+   when you ask. Lets the sentence come first and the picture second, which is
+   the order it gets talked about in. */
+.chart{display:inline-block}
+/* Reveals are deck fragments now, driven by the arrow keys like any other step,
+   so a chart carries no button of its own. Progress shows as dots in the corner. */
+.dots{display:inline-flex;gap:5px;margin-left:9px;vertical-align:.5px}
+.dots i{width:7px;height:7px;border-radius:999px;background:var(--rule);
+  transition:background .25s}
+.dots i.on{background:var(--accent)}
+/* Lines draw themselves in; squares grow from nothing. Both are pure CSS
+   transitions kicked off one frame after the node lands in the DOM. */
+/* --len has a fallback so the dash pattern is VALID on the very first paint.
+   Without it `stroke-dasharray:var(--len)` is invalid, the line renders solid,
+   and setting --len afterwards animates it AWAY — the line visibly undrew
+   before it drew. Transition is off until .anim is added a frame later, so
+   arming never animates either. */
+.stage{visibility:hidden}
+.stage.on{visibility:visible}
+.draw{stroke-dasharray:var(--len,4000);stroke-dashoffset:var(--len,4000)}
+.draw.anim{transition:stroke-dashoffset var(--dur,3.4s) linear}
+.draw.go{stroke-dashoffset:0}
+.pop{transition:transform .5s cubic-bezier(.28,1.15,.45,1),opacity .34s;
+  transform-box:fill-box;transform-origin:center;transform:scale(0);opacity:0}
+.pop.go{transform:scale(1);opacity:1}
+/* Grid squares need ONE transition rule covering both the entrance and the
+   year-to-year move, because a second declaration would replace the first.
+   Without the geometry properties here the slider could only rebuild the whole
+   SVG each tick, which restarted the staggered entrance 22 times during a drag. */
+.cell{transform-box:fill-box;transform-origin:center;transform:scale(0);opacity:0;
+  transition:transform .5s cubic-bezier(.28,1.15,.45,1),opacity .34s,
+             x .42s ease,y .42s ease,width .42s ease,height .42s ease,fill .42s ease}
+.cell.go{transform:scale(1);opacity:1}
+#notes{position:absolute;right:0;top:0;bottom:0;width:min(560px,44vw);z-index:8;
+  background:var(--card);border-left:1px solid var(--rule);padding:24px 28px;
+  overflow:auto;font-size:15px;line-height:1.62;white-space:pre-wrap;color:var(--ink-2);
+  box-shadow:-14px 0 40px rgba(0,0,0,.10)}
+#notes[hidden]{display:none}
+#notes h4{margin:0 0 12px;font-family:var(--body);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent)}
+#help{position:absolute;inset:0;background:rgba(15,23,32,.88);color:#fff;display:grid;
+  place-items:center;font-size:clamp(14px,1.25vw,21px);z-index:9;cursor:pointer}
+#help[hidden]{display:none}
+#help div{max-width:54ch;line-height:1.75;cursor:auto}
+#help .close{margin-top:20px;font-size:.84em;color:#cfd6dd}
+kbd{font-family:var(--mono);background:rgba(255,255,255,.17);padding:1px 7px;border-radius:4px}
+@media (max-width:900px){.cols,.quad{grid-template-columns:1fr}
+  #notes{width:100%} .foot{right:clamp(88px,22vw,150px)}}
+</style>
+</head><body>
+<div class="deck" id="deck"></div>
+<div class="progress"><i id="bar"></i></div>
+<aside id="notes" hidden><h4>Speaker notes</h4><div id="notesbody"></div></aside>
+<div id="help" hidden><div>
+  <b>Polarization II — Sorting</b><br><br>
+  <kbd>→</kbd> / <kbd>space</kbd> next &nbsp; <kbd>←</kbd> back &nbsp;
+  <kbd>N</kbd> speaker notes &nbsp; <kbd>F</kbd> fullscreen &nbsp;
+  <kbd>T</kbd> light/dark &nbsp; <kbd>?</kbd> this help<br><br>
+  Answer the two survey questions when they come up and that square is outlined on
+  every grid afterwards, with the arithmetic worked out. On the grid steps, drag the
+  year slider or press Play.<br><br>
+  Jump straight to a slide by number — <kbd>…sorting-interactive.html#12</kbd>. The
+  corner shows the current one.<br><br>
+  Same twenty-one slides as the PowerPoint, same numbers, same notes. ANES cumulative
+  file, weighted; Mason's coding.
+  <div class="close">Press <kbd>Esc</kbd> or click anywhere to close.</div>
+</div></div>
+<div class="hint" id="hint"></div>
+<div id="tip" hidden></div>
+<script>
+const D = {"years":[1972,1974,1976,1978,1980,1982,1984,1986,1988,1990,1992,1994,1996,1998,2000,2002,2004,2008,2012,2016,2020,2024],"grids":{"y1972":[[0.453,3.689,2.006,4.725,1.294,0.971,0.065],[0.388,2.395,3.43,10.874,4.272,3.172,0.129],[0.712,2.071,2.977,4.142,1.553,0.777,0.129],[0.259,0.712,1.618,4.79,2.654,0.906,0.324],[0.0,0.453,1.618,4.207,3.689,1.748,0.324],[0.065,0.453,1.489,5.113,4.66,2.524,0.453],[0.194,0.194,0.583,3.56,2.718,4.142,0.324]],"y1974":[[0.609,4.264,2.741,3.046,2.132,1.523,0.914],[0.609,4.569,3.655,8.223,2.132,2.132,0.305],[0.609,3.959,1.827,6.497,0.305,1.827,0.305],[0.914,2.741,1.523,6.396,2.741,3.35,0.609],[0.0,0.609,0.305,2.437,1.218,1.827,0.609],[0.0,0.914,0.914,5.787,3.959,3.35,0.305],[0.0,0.609,0.305,1.218,2.132,2.741,0.305]],"y1976":[[1.073,2.026,1.748,4.529,1.311,0.834,0.358],[0.477,4.45,4.291,9.456,2.702,2.741,0.596],[0.358,1.907,2.94,5.324,1.828,0.477,0.238],[0.199,0.834,1.351,8.542,1.629,2.026,0.119],[0.119,0.954,1.152,4.489,2.662,2.662,0.556],[0.0,0.675,1.073,5.483,3.894,2.702,0.238],[0.0,0.358,0.238,1.589,3.298,2.821,0.675]],"y1978":[[0.603,2.413,2.413,5.428,1.327,1.327,0.483],[0.302,2.714,3.981,9.047,3.86,1.93,0.483],[0.784,2.895,3.317,6.333,1.809,0.663,0.181],[0.483,1.448,1.508,6.092,2.111,1.809,0.302],[0.0,0.483,1.267,3.317,3.197,2.413,0.302],[0.06,0.483,0.724,4.463,4.403,3.438,0.543],[0.06,0.241,0.121,1.87,1.749,3.981,0.844]],"y1980":[[1.195,3.088,2.59,5.179,1.394,1.693,0.598],[0.299,2.49,4.084,8.167,3.884,2.789,0.398],[0.697,2.291,2.689,4.183,2.092,1.096,0.398],[0.199,0.797,1.195,4.382,2.689,1.693,0.199],[0.1,0.199,0.996,3.187,3.088,3.685,0.299],[0.0,0.299,1.494,4.183,5.378,3.486,0.498],[0.0,0.1,0.498,1.295,2.49,5.378,0.896]],"y1982":[[0.561,4.377,3.367,7.071,1.684,1.796,0.673],[0.449,2.132,3.143,9.203,3.704,2.357,0.449],[0.561,1.459,2.357,5.387,1.796,1.122,0.112],[0.337,0.449,1.01,3.816,1.908,1.571,0.449],[0.112,0.112,1.01,3.367,2.806,2.245,0.224],[0.112,0.449,0.561,4.938,4.377,3.928,0.337],[0.0,0.112,0.224,1.122,3.479,5.948,1.235]],"y1984":[[0.776,4.14,2.458,5.304,1.488,2.07,0.259],[0.582,2.07,3.558,7.827,3.493,1.035,0.065],[0.388,1.746,3.105,4.204,0.906,0.841,0.194],[0.388,0.647,0.776,4.787,1.488,1.035,0.259],[0.065,0.776,0.776,3.816,4.334,3.105,0.388],[0.065,0.194,1.552,5.304,5.239,3.364,0.323],[0.065,0.841,0.712,2.005,3.169,7.18,0.841]],"y1986":[[0.555,3.391,3.144,6.227,1.356,1.911,0.247],[0.247,1.541,4.377,8.816,3.761,1.85,0.308],[0.185,1.48,2.528,4.377,1.603,0.925,0.062],[0.0,0.863,0.801,5.487,2.528,1.233,0.247],[0.123,0.123,1.418,4.192,3.083,2.836,0.37],[0.123,0.247,1.418,5.425,5.364,3.144,0.185],[0.123,0.247,0.555,2.466,2.528,5.364,0.617]],"y1988":[[0.987,2.607,3.171,5.004,2.114,1.48,0.493],[0.493,1.621,3.171,6.413,3.03,1.762,0.423],[0.352,1.903,2.819,4.087,1.762,1.057,0.211],[0.282,0.564,0.916,4.369,1.832,1.057,0.352],[0.141,0.493,0.775,4.863,4.51,3.312,0.423],[0.211,0.423,1.48,4.158,5.285,2.96,0.211],[0.0,0.211,0.775,2.326,3.171,7.893,2.044]],"y1990":[[0.913,4.259,2.662,7.072,2.586,1.369,0.76],[0.304,1.977,3.65,7.529,3.118,1.293,0.38],[0.456,2.357,2.205,4.563,2.357,1.141,0.228],[0.228,0.304,0.608,3.498,1.293,1.065,0.228],[0.076,0.913,1.369,5.171,3.042,2.433,0.228],[0.0,0.532,1.141,6.16,5.323,3.042,0.304],[0.076,0.456,0.456,2.433,3.118,4.335,0.989]],"y1992":[[0.82,4.567,1.874,4.567,1.756,1.288,0.585],[0.703,2.459,2.81,5.855,2.225,1.054,0.703],[1.054,3.279,2.342,4.801,1.639,0.703,0.117],[0.117,0.703,1.756,5.972,1.756,0.82,0.351],[0.0,0.351,1.756,4.215,4.333,3.396,0.703],[0.0,0.468,1.288,4.918,5.269,2.342,0.234],[0.0,0.585,0.351,2.81,2.81,5.855,1.639]],"y1994":[[0.792,2.691,1.518,5.203,0.847,2.206,0.296],[0.461,1.188,1.782,10.66,2.716,1.758,0.125],[0.374,1.465,1.24,6.689,1.007,1.651,0.228],[0.0,0.275,0.282,3.977,2.113,1.292,0.437],[0.08,0.113,0.364,4.569,3.627,3.485,0.501],[0.0,0.298,0.949,6.083,3.477,3.818,0.473],[0.0,0.116,0.078,1.958,3.505,10.939,2.291]],"y1996":[[1.016,3.703,2.637,6.191,1.825,0.887,0.0],[0.35,4.052,4.458,4.234,3.172,1.493,0.302],[0.705,3.015,2.78,8.039,1.529,0.603,0.355],[0.0,0.89,1.386,2.926,1.062,0.69,0.702],[0.0,0.0,0.465,3.911,4.495,3.449,0.0],[0.0,0.193,0.867,5.901,6.069,2.364,0.0],[0.0,0.0,0.403,2.337,2.522,6.758,1.264]],"y1998":[[1.496,4.421,2.502,6.624,1.673,1.342,0.883],[0.433,0.786,3.901,7.875,2.594,1.46,0.245],[0.342,2.261,3.035,5.837,1.575,0.953,0.08],[0.056,0.445,0.791,5.58,1.066,0.829,0.23],[0.117,0.475,0.758,4.93,3.409,1.746,0.164],[0.127,0.386,0.931,4.754,6.892,3.89,0.431],[0.0,0.299,0.302,1.112,2.783,6.024,1.154]],"y2000":[[0.836,5.248,3.022,4.143,1.718,3.211,0.1],[0.231,2.238,3.018,5.834,1.33,1.296,0.0],[0.969,2.55,3.193,6.297,1.126,1.978,0.0],[0.067,1.023,1.135,4.241,1.347,1.112,0.684],[0.0,0.779,0.943,4.971,4.386,2.101,1.234],[0.161,0.352,1.025,4.329,3.84,3.217,0.619],[0.0,0.157,0.261,1.434,2.229,8.351,1.671]],"y2002":[[1.213,5.418,2.28,2.963,1.263,0.532,0.654],[0.0,3.948,5.192,5.797,2.252,2.241,0.0],[1.399,5.149,1.151,4.386,1.92,1.317,0.0],[0.0,0.436,1.786,3.688,1.147,0.462,0.0],[0.0,1.142,1.921,1.717,1.957,2.823,0.431],[0.0,1.707,0.571,3.188,5.461,5.833,0.72],[0.108,1.266,0.0,0.914,3.226,8.087,2.336]],"y2004":[[1.318,5.521,2.524,4.654,1.091,0.944,0.0],[0.448,2.12,2.162,6.0,1.93,1.02,0.215],[1.207,2.592,3.528,8.563,0.972,1.443,0.173],[0.0,0.403,0.208,3.752,0.847,0.986,0.248],[0.098,0.425,0.914,3.916,2.862,3.053,0.709],[0.0,0.389,0.832,3.741,5.221,3.973,0.207],[0.0,0.183,0.128,2.627,3.036,10.389,2.429]],"y2008":[[2.056,6.085,2.636,4.865,1.657,1.351,0.377],[0.423,2.968,3.288,4.331,1.272,0.669,0.145],[0.983,2.765,3.708,6.098,1.717,0.647,0.147],[0.176,0.549,0.6,5.733,1.216,0.982,0.226],[0.0,0.426,0.542,3.845,3.265,3.047,0.86],[0.035,0.2,0.714,2.895,4.832,5.079,0.618],[0.033,0.041,0.229,1.156,2.065,10.728,1.721]],"y2012":[[1.939,6.609,2.791,5.448,1.145,1.011,0.504],[0.285,2.291,3.737,6.297,1.578,0.722,0.114],[0.539,1.386,2.961,5.09,1.158,0.343,0.085],[0.265,0.355,0.958,8.78,1.571,1.031,0.267],[0.032,0.115,0.49,3.46,4.036,3.235,0.78],[0.011,0.221,0.559,3.795,4.47,3.581,0.256],[0.069,0.16,0.198,1.583,1.66,9.424,2.602]],"y2016":[[2.475,8.667,3.052,4.416,0.879,0.633,0.171],[0.477,2.312,3.515,4.328,1.185,0.775,0.0],[1.041,2.749,3.143,4.004,0.796,0.145,0.035],[0.126,0.836,1.365,5.771,1.965,0.86,0.112],[0.094,0.127,0.465,4.075,4.137,3.269,0.749],[0.0,0.223,0.564,3.018,4.534,3.435,0.419],[0.058,0.059,0.187,1.523,1.966,12.054,3.208]],"y2020":[[2.778,9.668,3.43,5.077,0.915,0.442,0.147],[0.535,2.486,3.459,3.89,0.483,0.219,0.036],[1.252,2.592,3.409,3.9,0.605,0.107,0.04],[0.216,0.602,0.857,5.932,1.31,0.561,0.026],[0.051,0.141,0.396,3.278,3.436,3.597,0.634],[0.117,0.103,0.321,3.06,3.527,3.565,0.378],[0.107,0.198,0.251,1.746,1.793,13.254,5.073]],"y2024":[[3.156,10.622,3.054,4.87,0.724,0.591,0.338],[0.752,2.693,3.504,3.717,0.789,0.152,0.045],[1.015,2.315,3.159,6.189,0.959,0.346,0.069],[0.067,0.157,0.281,3.144,0.605,0.176,0.073],[0.031,0.222,0.47,4.132,4.918,4.142,0.552],[0.063,0.117,0.445,2.412,3.436,3.864,0.232],[0.3,0.218,0.163,1.942,2.605,11.258,4.915]]},"classGrid":[[36.842,0.0,5.263,0.0,0.0,0.0,0.0],[2.632,0.0,2.632,0.0,0.0,0.0,0.0],[5.263,13.158,2.632,5.263,0.0,0.0,0.0],[0.0,2.632,2.632,5.263,0.0,2.632,0.0],[0.0,0.0,0.0,2.632,2.632,5.263,0.0],[0.0,0.0,0.0,2.632,0.0,0.0,0.0],[0.0,0.0,0.0,0.0,0.0,0.0,0.0]],"sorting":{"1972":0.2069,"1974":0.2138,"1976":0.2053,"1978":0.2096,"1980":0.2344,"1982":0.2357,"1984":0.2409,"1986":0.2147,"1988":0.2471,"1990":0.2251,"1992":0.2397,"1994":0.2517,"1996":0.2468,"1998":0.2388,"2000":0.2583,"2002":0.298,"2004":0.2832,"2008":0.2976,"2012":0.2804,"2016":0.3237,"2020":0.3545,"2024":0.3581},"matched":{"1972":68.97,"1974":72.07,"1976":71.24,"1978":72.22,"1980":71.22,"1982":72.4,"1984":75.23,"1986":71.4,"1988":73.59,"1990":69.5,"1992":75.76,"1994":77.27,"1996":80.41,"1998":76.28,"2000":77.23,"2002":77.02,"2004":83.21,"2008":84.85,"2012":86.06,"2016":90.54,"2020":93.27,"2024":91.63},"noIdeo":{"1972":42.77,"1974":29.94,"1976":34.92,"1978":27.39,"1980":37.79,"1982":36.74,"1984":31.1,"1986":24.95,"1988":30.15,"1990":33.48,"1992":23.89,"1994":27.92,"1996":30.21,"1998":22.89,"2000":65.84,"2002":20.35,"2004":25.17,"2008":25.05,"2012":8.68,"2016":26.42,"2020":17.37,"2024":16.52},"fit":{"pre_y1972":0.20354,"pre_y2004":0.27293,"post_y2004":0.27421,"post_y2024":0.35829,"slope_pre_dec":0.02168,"slope_post_dec":0.04204,"slope_p_diff":0.03659},"classSorting":0.4975,"cv":[{"label":"Sorting score","cls":0.4975,"anes":0.3581,"comparable":true},{"label":"Issue extremity","cls":0.5949,"anes":0.5172,"comparable":false},{"label":"Dislike of the other party","cls":0.3981,"anes":0.4814,"comparable":true}],"notes":["SECOND VERSION. The first had too many moving parts and too much method. This one is built around three things: what she concludes, how it settles the Fiorina\u2013Abramowitz argument, and how sorting is actually measured.\n\nThe measurement block runs in a deliberate order \u2014 the two survey questions as respondents see them, then what people answered, then the formula LAST. Do not reverse it. The reason the first version failed is that it asked them to trust a score before they had any picture of what it summarizes.\n\nThe most useful fact in the deck is the 69-to-92 slide: in 1972, 69% of partisans had an ideological label matching their party; in 2024, 92%. That is sorting stated without a formula, and if they take one number away it should be that one.\n\nTHE OPENING QUESTION RAN THIRTY MINUTES the first time and was the best part of the session. Let it run. If it does, you have about fifty minutes for the rest, and the triage order is:\n  1. The trend line. The 69-to-92 number carries the same point.\n  2. The people who could not answer. Excellent, but it is enrichment.\n  3. Your issue positions. Keep \"You against the country\" instead; it is the comparison built on identical questions.\n  4. Compress the two grids into one flip rather than dwelling on 1972.\nDo not cut the two survey-question slides or the grids. They are the session.\n\nGONE ON PURPOSE: regression tables, matching, the panel, H2, the replication audit, the minimal-group experiment.\n\nIf a student challenges the article's numbers, materials/2026-09-08-mason-replication.R rebuilds the paper twice \u2014 from the raw ANES and from her own Dataverse files \u2014 and everything published reproduces. It also finds three things the article does not say, all about the anger measure. Not slide material, but it is there.","Up before the bell. \"Start talking\" is the whole instruction.\n\nThe pink background is the deck's only signal that a slide is theirs rather than yours \u2014 it appears twice, here and on the survey-comparison slide near the end. Black is reserved for the title, the two statement slides and the closing card, so the quote you are about to show reads as something to listen to rather than something to answer.\n\nTHIS RAN THIRTY MINUTES THE FIRST TIME IT WAS USED, and that was the best half hour of the session. The timing note is deliberately off the slide now \u2014 do not cap it at five minutes because the slide used to say five. If it is going well, let it go, and cut from the other end. Triage order for the rest of the deck is in the title-slide notes.\n\nWHY THIS QUESTION. They have read Mason, so anything shaped like \"name a rival you cannot argue with\" tells them the answer before they open their mouths and you get performance instead of discovery. This one is unguessable: they cannot tell what you are going to do with their answers, because you are not going to do anything with them for another twenty minutes.\n\nIt also does real work. Anger is one of Mason's three outcomes \u2014 the one that produces her largest effects \u2014 and this puts a column of it on the board, generated by the room, before she has defined anything.\n\nCOLLECT EIGHT OR TEN TRIGGERS, in their words, short. Do not comment on them, do not group them, do not look pleased. You want the list to look like an ordinary list.\n\nWHAT TO WATCH FOR, and do not say it yet: nearly every trigger will be an EVENT, a PERSON, or a RESULT. An election night. A speech. Something an uncle said at Thanksgiving. A verdict. A post. Very few will be \"a policy I oppose took effect and my life got worse.\"\n\nBe honest about the exceptions, because there will be some and they matter. Dobbs is a real policy outcome and students name it. So are tariffs, student loans, immigration enforcement. Write those down like the rest \u2014 the point is the PROPORTION, and a tally of \"three of eleven\" is more convincing than a rigged sweep.\n\nLEAVE THE LIST ON THE BOARD. You point at it twice: on the conclusion slide next, and again on Mason's move, where the two-column distinction turns out to be a description of what they already wrote.\n\nIf the room is quiet, seed it with the least partisan example you have and move on. Five minutes of them talking beats a good example from you.\n\nDo not mention Mason yet.","Open here. Read it aloud, then stop talking.\n\nThe whole session unpacks one sentence, and putting it first gives everything afterward somewhere to attach. Last time the conclusion arrived late and buried, which was the central mistake.\n\nPOINT AT THE BOARD FIRST. They have just filled it with things that made them angry, and almost none of those things is a policy disagreement. Say only that much \u2014 \"hold onto that list\" \u2014 and then read the sentence. The connection gets made properly two slides from now; here you are only planting it.\n\nDraw out the two halves, because students hear the second and skip the first:\n  \u00b7 \"agrees on many things\" \u2014 a claim about issue positions. This is Fiorina's claim.\n  \u00b7 \"bitterly divided\" \u2014 a claim about feeling, closer to what Abramowitz was after.\n\nThen the question that runs the hour: how can both be true at once, and what would you have to measure to show it?\n\nDo not define sorting yet. It is the answer, and it lands better after they have felt the puzzle.","Four minutes. They met both of these last Thursday, so this is recall \u2014 go faster than feels comfortable.\n\nThe point to make sharply: this was not a dispute about facts. Both had good survey data, both were careful, both kept publishing. What they never did was agree on what the word meant.\n\nFiorina's strongest card is abortion, which they saw last week: large majorities in the middle for fifty years, and the distribution barely moves even after Dobbs. Abramowitz's strongest card is consistency \u2014 knowing someone's party in 2024 tells you far more about their other opinions than it did in 1972.\n\nAsk before advancing: are these two claims actually incompatible? Let it sit. Most will say yes at first. The answer is no, and that is Mason's whole contribution.\n\nIf someone gets there early \u2014 \"they're measuring different things\" \u2014 say so, name them, and move on. The next slide is that thought made precise.","The payoff of the first third, and the one thing they should be able to reconstruct a week from now.\n\nThe move is conceptual, not empirical. She does not produce a better dataset than Fiorina or Abramowitz. She points out that \"polarization\" had been picking out two things that can move independently, and that the field had good instruments for only one of them.\n\nNOW GO BACK TO THE BOARD, and this is the moment the opening question was for. Read their anger list against these two columns and ask which column each item belongs in. An election result, a speech, a verdict, something an uncle said \u2014 those are the right-hand column. Almost nothing they wrote is a policy position they hold differing from a policy position someone else holds.\n\nThey generated the distinction themselves, half an hour before seeing it named. That is worth pointing out explicitly, because it is the difference between a definition they accept and one they believe.\n\nWorth saying plainly: this is what a real contribution often looks like in social science. Not a new fact \u2014 a distinction that makes existing facts stop contradicting each other.\n\nThe asymmetry in the two boxes is why the argument lasted. Issue positions had fifty years of survey items behind them; feelings toward the other party had almost nothing. People looked where the light was.\n\nThen the setup for the rest of the hour: if social polarization is what moved, what moved it? Her answer is sorting, and everything after this is what that word means and how you would count it.","The definition students most often get wrong, so go slow and use the bottom line twice.\n\nSorting is NOT becoming more extreme. It is the two labels coming into alignment. Use the footer example: a conservative Democrat who becomes a conservative Republican has sorted without changing a single opinion. Her views stayed put; her team moved to match them.\n\nThe history in one breath, and they have it from Thursday: the mid-century parties each contained their own opposite. Southern Democrats were conservative. Northeastern Republicans were liberal. Over fifty years those people, or their children, ended up in the party matching their label \u2014 through generational replacement and party switching, not through opinions shifting.\n\nCrucially: the distribution of opinion in the country can be IDENTICAL at both ends of that process. That is what makes sorting compatible with Fiorina being right.\n\nThen set up what follows. Everyone nods at a definition like this. The question is how you would actually count it, and that is the next six slides.","Fifteen seconds, but it earns its place.\n\nStudents assume a construct called \"partisan-ideological sorting\" must be complicated. It is not, and the surprise is useful: two questions, asked the same way since 1972, and the rest is arithmetic.\n\nSaying so also does something for the course. A great deal of quantitative political science is exactly this \u2014 ordinary questions asked consistently for a long time, combined simply. The sophistication is usually in the consistency, not the statistics.","Put the actual question in front of them. Most students have never seen the wording of an item whose results they have been reading about for two weeks.\n\nThree things to point out:\n  \u00b7 It is a question about IDENTITY, not opinion. \"Do you think of yourself as.\" Nothing in it mentions a policy.\n  \u00b7 The follow-up is what produces seven points rather than three: independents are asked whether they lean, and leaners behave like partisans on nearly every measure, which is why they are counted as partisans here.\n  \u00b7 It has been asked in these words since 1952. That consistency is the only reason a fifty-year trend exists, and it is worth admiring for a second.\n\nIf someone asks why \"Independent\" sits in the middle rather than off to one side: the scale encodes direction and strength at once. That is a real design choice, and it is why a pure independent scores zero on the sorting measure later.","Same treatment, same observation: a question about self-description, not about positions. Where would you place YOURSELF \u2014 not what do you think about taxes.\n\nThat distinction does real work in Mason's argument. Calling yourself a conservative and holding conservative positions are two different things, and they come apart more than anyone expects. Ellis and Stimson, whom she cites, put it as Americans being symbolically conservative and operationally liberal: the label is more popular than the policies.\n\nFlag the escape hatch in the footer now, because the non-placement chart later is built on it. Respondents can decline to place themselves, and in the early years an enormous share did.\n\nOne sentence for why these two questions and no others: the whole measure is a comparison of two self-descriptions. Where do you put your team, and where do you put your label.","Let them read the axes before you say anything. Party runs down the left with Democrat at the top; ideology runs across with liberal at the left. Top-left is a liberal Democrat, bottom-right a conservative Republican.\n\nRed is matched, blue is mismatched. In 1972 there is real blue mass \u2014 conservative Democrats especially, which is the Southern Democratic party still intact.\n\nDO NOT GIVE AWAY 2024. Ask them to predict what changes: does the cloud move out to the corners, or does it collapse onto the diagonal? Those are different claims and only one of them is sorting. Take a show of hands, then advance.\n\nThat distinction is worth making explicit because it is the same one as the whole session. Moving to the CORNERS is issue extremity. Collapsing onto the DIAGONAL is sorting. They can happen separately, and only one of them did.","Flip back and forth between this and the previous slide two or three times. The animation in their heads is the argument and does more work than anything you can say over it.\n\nPoint at three things:\n  \u00b7 The top-left and bottom-right blocks have thickened.\n  \u00b7 The conservative-Democrat cells have thinned badly.\n  \u00b7 The mass has NOT run to the far corners. The extreme cells are still small.\n\nLabor that last one, because it is the difference between Mason and Abramowitz at his strongest. The country did not become a nation of extremists. It became a nation where your party predicts your label.\n\nBoth grids share a scale, so sizes are comparable across the two slides. Say it once; someone always asks.\n\nTwo things to have ready if a careful student asks how the picture was made. Square AREA is proportional to the share of respondents, not the side length, so a square that looks twice as wide holds four times as many people. And the ANES figures are weighted with the cumulative file's own full-sample weight, because these are meant as estimates of the country rather than of who answered the phone. Mason does not weight her regressions, which is a defensible choice for coefficients and not for a picture like this one; weighting moves the 2024 matched share by less than a point.\n\nIf a student objects that some of this is just more people being willing to use the labels at all \u2014 they are right, and they have found the next slide on their own. Tell them so and hold it for thirty seconds.","One slide, one number, and it goes on the board.\n\nSixty-nine to ninety-two. Nearly a quarter of the partisan electorate moved from a mismatched pair of labels to a matched one \u2014 and say it again \u2014 without anyone's opinions necessarily changing.\n\nBe precise about the denominator, because a sharp student will ask. Partisans only, leaners included. Pure independents and self-described moderates are excluded because they have nothing to match. Including them would mean deciding whether a moderate Democrat counts as sorted, which is exactly the judgment the full score handles with its strength terms.\n\nConnect back to the Fiorina\u2013Abramowitz slide. Abramowitz said consistency rose; this is that rise, measured. What Mason adds is that consistency of LABELS is not extremity of POSITIONS \u2014 which is why Fiorina's data could look flat over the very same period.","This is not in Mason's article and it is the best thing in the deck for making the measure feel real.\n\nIn 1972 the ideology question had no answer for 43% of Americans. Not \"moderate\" \u2014 no answer at all. Half a century later that is down to about 17%.\n\nTwo readings, and put both to the room:\n  \u00b7 The optimistic one. People are more politically literate, better able to locate themselves in a vocabulary that now saturates the media environment.\n  \u00b7 The uncomfortable one. The vocabulary has become unavoidable. Party and ideology are bundled so tightly that knowing your team tells you which label to claim, whether or not you have thought about the content.\n\nMason's argument leans toward the second, and you can see why: if the label is downstream of the team, a rise in \"consistency\" is not evidence that anyone thought harder about politics.\n\nThere is also one honest limit worth stating, and it is the only methodological point in the session: the people answering this question in 1972 are not the same population answering it in 2024. Some of the measured sorting is people ENTERING the measure rather than changing. That belongs in the room because it qualifies the headline number, not because it is a technique.\n\nThe 2000 spike is a questionnaire artifact \u2014 non-placement jumps to 63% \u2014 so it is dropped from the line. Say so if anyone notices the gap.","Now, and only now, the formula \u2014 and it should feel like a summary rather than a definition, because they have already seen everything it summarizes.\n\nWalk the three ingredients. Alignment is the diagonal from the grids. The two strength terms are why a strong liberal Democrat counts for more than a leaner who says \"slightly liberal.\"\n\nThe question worth asking if there is time: why multiply instead of add? A moderate pure independent has |4 \u2212 4| = 0, which is perfect alignment on the first ingredient alone \u2014 adding would score them high. Multiplying by two strength terms of 1 each sends them to the bottom, which is right, because they have no identities to align. That is a nice example of a measure encoding a theory, and it is the only formula detail worth defending here.\n\nTHE BEST OBJECTION TO THIS MEASURE, and if a student finds it they have found something real. Walk a Strong Democrat across the ideology scale and watch the score:\n\n    extremely liberal   1.00\n    liberal              .62\n    slightly liberal     .31\n    MODERATE             .09   <- the bottom\n    slightly cons.       .16\n    conservative         .16\n    extremely cons.      .09\n\nIt is not monotonic. It falls to a minimum at Moderate and then RISES again. A strong Democrat who calls himself slightly conservative scores as MORE sorted (.16) than one who calls himself moderate (.09) \u2014 even though the first is the textbook cross-pressured partisan and the second simply has no ideological identity.\n\nWhy it happens: the score multiplies alignment by two strength terms. Alignment falls steadily as you move right (7, 6, 5, 4, 3, 2, 1) but ideological strength is V-shaped (4, 3, 2, 1, 2, 3, 4), and the product of a falling line and a V is not monotonic. For a strong Democrat the product runs 28, 18, 10, 4, 6, 6, 4.\n\nWhy it matters: her own theory says cross-cutting identities DAMPEN hostility. The measure ranks the cross-pressured partisan above the one with no ideological identity, which is backwards for the mechanism she is arguing for. It is not a rounding quirk either \u2014 it happens in 16 of the 24 relevant cells.\n\nWhy it is survivable, and be fair to her: everyone affected is crowded into a narrow band at the bottom of the scale, .09 to .19 on a 0-to-1 measure, so in practice they are all \"barely sorted\" together and the misordering among them is small. The cells involved are also emptying out \u2014 17% of respondents sat in one in 1972, only 5% by 2024. Her footnote 4 explains the multiplication as making sure people without identities cannot count as aligned, which is a defensible aim; this is the side effect.\n\nThe fix a methodologist would suggest is to sign the alignment term rather than fold it, so opposite labels go below zero instead of bouncing back up. That is a genuinely good short-paper prompt.\n\nThe interactive companion computes the score live, so you can walk the scale in front of them and let them watch it turn around.\n\nDo not go further into mechanics than this. If they can say \"matching labels, weighted by how strongly you hold each,\" they have it.","THIS IS THE POINT OF THE SLIDE: the slope is steeper after 2004. Say it in those words.\n\nSorting rose about 2.2 points a decade across the thirty-two years Mason studied, and about 4.2 points a decade in the twenty years since. Roughly double. The interaction test puts the difference at p = .04, so it is not something you are reading into noise.\n\nWhy that matters, and this is the sentence to land: she identified a trend in 2015 using data that stopped in 2004, and rather than flattening out afterward it accelerated. Most findings from 2015 have shrunk. This one got bigger, and the mechanism she described has had twenty more years to run.\n\nDraw the eye deliberately. The grey dots and thin line are the observed data and are held back on purpose; the two thick lines are the fitted trends, and the change in angle at the dashed line is the whole message. Point at the elbow.\n\nHONEST QUALIFIERS, and give them if a student is sharp:\n  \u00b7 A straight line through all twenty-two points still fits well, R-squared .88. Nobody should walk away thinking the pre-2004 era was flat \u2014 it was rising the whole time, just less steeply.\n  \u00b7 The break is imposed at 2004 because that is where her data end, not because the data told us to look there. That is a defensible choice for this comparison and it is not the same as finding a breakpoint.\n  \u00b7 Twenty years is five presidential samples. The post-2004 slope rests on fewer observations than the pre-2004 one and is correspondingly less certain.\n\nTHE 2012 DIP IS NOISE and you can say so confidently. It falls .017, only the THIRD largest single-period drop in the series \u2014 1986 fell .026 and 1990 fell .022 and nobody tells a story about those. A series this noisy produces a dip like that regularly.\n\nIf someone asks whether issue positions accelerated too: they rose about 5 points since 2004 on a comparable measure, so identity is still the faster mover and her ordering holds. The gap has narrowed. That is Thursday.\n\nCUT THIS SLIDE FIRST if you are behind. The 69-to-92 number carries the core point without the trend.","Make them commit before the reveal. Two minutes, hands or shout-outs, and write two or three guesses on the board beside the 92% national figure.\n\nThey will mostly guess the room is more sorted than the country, and they are right \u2014 but ask WHY, because the reasons matter. Young, at a university, in a course about political division, and lopsided in party terms. Each predicts sorting for a different reason.\n\nQuestion 2 does the teaching work. More sorted and more extreme are not the same thing, and this is the third time in the session they have had to hold that apart. If anyone conflates them here, go back to the two grids for ten seconds.\n\nDo not skip the wording caveat. Our general ideology item is 5-point and cannot feed Mason's four-level strength scale, so this uses the social-issues item, which is a true 7-point. Real difference; they should hear it from you rather than find it later.","The reveal, and it lands harder than you expect because it is about them.\n\nZero cross-cutting students. Not a small number \u2014 zero. Nationally about 8% of partisans hold mismatched labels, so in a room this size you would expect two or three, and there are none.\n\nSay the scaling caveat before someone catches it: this grid is scaled to its own maximum, because with 47 people a single respondent is over two percent. Sizes are not comparable to the previous two slides. The PATTERN is what you are comparing.\n\nWhere to take it. This is not a criticism of them and must not sound like one. It is a fact about who ends up in a 300-level political science elective at a private university in a blue city. Ask what population this room is a sample of, and what it is not. They will get there.\n\nThe useful follow-up: could you test Mason's argument with this room? No \u2014 and for a specific reason. Her comparison is between matched and mismatched people holding issue positions constant, and the mismatched cell here is empty. You cannot compare a group to a group that does not exist.","Three columns side by side. Let them read it.\n\nThe room is not a national sample and nothing here estimates anything. What it is good for is making the measure concrete: they know what the number means because they answered the two questions that produce it, and they can see where their own answers put them.\n\nThe framing to close this block with: you are not more polarized than the country. You are more SORTED than the country. Those are different, and telling them apart is the whole point of the article.\n\nIf you have time for one more beat, the interesting wrinkle from the full comparison is that this room is more sorted than the country AND rates the other party less coldly than the country does. More aligned identities, less hostility. That is a real tension with Mason's mechanism at the individual level, and the plausible explanations \u2014 age, a university, self-selection into this course, and knowing their professor reads the answers \u2014 are all testable. Good policy-brief seed. Numbers are in materials/2026-09-08-ces-vs-anes.R.","This is the slide that puts the whole session back together, and the right-hand column is the reason it is honest.\n\nRow by row:\n  \u00b7 SORTING. Identical questions, identical coding, and the gap is large. This room is much further along the alignment trend than the country.\n  \u00b7 ISSUE EXTREMITY. Same construction \u2014 fold each item at its midpoint, average \u2014 but DIFFERENT policies. The ANES asks about federal spending, health insurance, aid to minorities, defense and guaranteed jobs. We asked about state spending on welfare, health care, education, law enforcement and transportation. Structurally the same measure, substantively different questions. So the +8 is suggestive and nothing more, and you should say so.\n  \u00b7 DISLIKE. Identical 0-100 party thermometers, so this one is exact.\n\nThe pattern is the argument. On the measure where we can compare cleanly, you are well above the country. On opinions you are barely distinguishable. And on hostility you are BELOW it.\n\nThat is Mason's distinction, alive in your own data: sorting and extremity and dislike are three different things, and this room scores differently on each. If they were one thing you would be high on all three.\n\nTHE THIRD ROW IS THE INTERESTING ONE and worth a minute if you have it. More aligned identities but less hostility runs against the mechanism at the individual level. The plausible explanations are all testable, and all of them are good policy-brief seeds:\n  \u00b7 Age. Affective polarization rises steeply with age and almost none of them have voted in more than one presidential election.\n  \u00b7 Contact. A university is close to a natural experiment in forced cross-partisan contact.\n  \u00b7 Selection. They chose a course about political division, which may select for people who find hostility interesting rather than natural.\n  \u00b7 Social desirability. Their professor reads these answers.\n\nAsk which of those they could test with a survey they design. Numbers and the full comparison are in materials/2026-09-08-ces-vs-anes.R.","Close the loop. Four minutes and most of it should be them.\n\nThe sentence at the bottom is the one you opened with. Ask whether it means more now than it did fifty minutes ago, and make somebody say why.\n\nThe answer you are fishing for: \"agrees on many things\" is Fiorina's finding, \"bitterly divided\" is what Abramowitz was reaching for, and sorting is the mechanism that lets both be true at once.\n\nTwo questions to leave open, depending on the room:\n  \u00b7 If sorting keeps rising \u2014 and the trend line says it is \u2014 does issue extremity eventually follow? There is some evidence it has begun to. Live research question, not settled.\n  \u00b7 Is sorting bad? Be careful. A party system where labels predict votes is what most democratic theory ASKS for; incoherent parties are hard to hold accountable. The cost is in the hostility, not the coherence. That tension is the best essay prompt in the unit.\n\nDo not resolve either. Thursday is affective polarization, which is what happens next in the story.","Leave up while they pack.\n\nThursday is the direct sequel and you can say so. Mason showed hostility does not require disagreement. Iyengar and colleagues named that hostility affective polarization and measured how far it has gone. Fiorina's chapter 3 is his reply, arguing it is being overstated in turn \u2014 so the protagonist from last Thursday comes back one more time.\n\nThree sessions, one continuous argument, and they have now watched it from the inside."]};
+const PID = ["Strong Democrat", "Not very strong Democrat", "Independent \u2014 closer to Democrats", "Independent", "Independent \u2014 closer to Republicans", "Not very strong Republican", "Strong Republican"], IDEO = ["Extremely liberal", "Liberal", "Slightly liberal", "Moderate, middle of the road", "Slightly conservative", "Conservative", "Extremely conservative"], PIDS = ["Strong Democrat", "Weak Democrat", "Leans Democrat", "Independent", "Leans Republican", "Weak Republican", "Strong Republican"], IDEOS = ["extremely liberal", "liberal", "slightly liberal", "moderate", "slightly conservative", "conservative", "extremely conservative"];
+const $ = (s,r=document)=>r.querySelector(s);
+// Two grid steps and two question steps emit the same ids, so a bare
+// querySelector always returns the FIRST one in the document — which is the
+// hidden slide 10, not the visible slide 11. Everything inside a slide must be
+// looked up within the slide that is actually on screen.
+const $on = s => document.querySelector(".slide.on "+s);
+const TIP=()=>document.getElementById("tip");
+function tipOn(e,html){const t=TIP();t.innerHTML=html;t.hidden=false;
+  const r=e.target.getBoundingClientRect();
+  t.style.left=(r.left+r.width/2)+"px"; t.style.top=r.top+"px";}
+function tipOff(){TIP().hidden=true;}
+// Kick the CSS transitions one frame after insertion, so the browser has a
+// starting value to animate away from.
+function play(root){
+  root.querySelectorAll(".draw").forEach(n=>{
+    if(n.closest(".reveal")) return;          // armed charts arm themselves
+    try{n.style.setProperty("--len",n.getTotalLength());}catch(_){}
+    n.classList.add("anim");
+  });
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    root.querySelectorAll(".draw,.pop,.cell").forEach(n=>{
+      if(!n.closest(".reveal")) n.classList.add("go");});}));
+}
+const NS = "http://www.w3.org/2000/svg";
+function el(n,a={},kids=[]){const e=document.createElementNS(NS,n);
+  for(const k in a)e.setAttribute(k,a[k]);kids.forEach(c=>e.appendChild(c));return e;}
+const state={step:0,sub:0,year:2024,pid:null,ideo:null};
+const SUBLETTER=n=>n?String.fromCharCode(96+n):"";   // 1 -> a, 2 -> b
+// One number owns the pace of a line reveal: the CSS duration and every dot's
+// delay are both derived from it, so they cannot drift apart.
+const DRAW_MS=3400;
+const STR=v=>[4,3,2,1,2,3,4][v-1];
+const score=(p,i)=>((7-Math.abs(p-i))*STR(p)*STR(i)-7)/105;
+const cellClass=(i,j)=>(i===4||j===4)?"none":(((i<4&&j<4)||(i>4&&j>4))?"match":"cross");
+const COL={match:"var(--match)",cross:"var(--cross)",none:"var(--none)"};
+const mark=()=>(state.pid&&state.ideo)?[state.pid,state.ideo]:null;
+const GMAX=Math.max(...Object.values(D.grids).flatMap(g=>g.flat()));
+
+function gridSide(){return Math.round(Math.max(250,Math.min(innerHeight*0.56,innerWidth*0.36,760)));}
+function gridSVG(grid,{side=gridSide(),mark=null,scaleTo=null}={}){
+  const g=side/7,pad=Math.round(side*0.21),fs=Math.max(9,Math.round(side/30));
+  const max=scaleTo??Math.max(...grid.flat());
+  const svg=el("svg",{width:side+pad+14,height:side+pad+10,
+    viewBox:`0 0 ${side+pad+14} ${side+pad+10}`,role:"img",
+    "aria-label":"party identity by ideological identity"});
+  const X=j=>pad+(j-1)*g,Y=i=>14+(i-1)*g;
+  for(let i=1;i<=7;i++)for(let j=1;j<=7;j++)
+    svg.appendChild(el("rect",{x:X(j),y:Y(i),width:g,height:g,fill:"var(--card)",
+      stroke:"var(--rule-2)","stroke-width":.6}));
+  // Every one of the 49 cells exists from the start, even at zero share, so a
+  // year change can move the squares that are already on screen instead of
+  // throwing them away and building 49 new ones.
+  const cells=[];
+  for(let i=1;i<=7;i++)for(let j=1;j<=7;j++){
+    const sq=el("rect",{rx:1.5,fill:COL[cellClass(i,j)],class:"cell",
+      style:`transition-delay:${((i+j)*60)}ms`});
+    svg.appendChild(sq);
+    const hit=el("rect",{x:X(j),y:Y(i),width:g,height:g,fill:"transparent",class:"hit"});
+    const cell={i,j,sq,hit,v:0};
+    hit.addEventListener("pointerenter",e=>tipOn(e,
+      `<b>${cell.v.toFixed(1)}%</b><br>${PIDS[i-1]}<br>${IDEOS[j-1]}`));
+    hit.addEventListener("pointerleave",tipOff);
+    svg.appendChild(hit);
+    cells.push(cell);}
+  svg.__update=(gr,scale)=>{
+    const mx=scale??Math.max(...gr.flat());
+    cells.forEach(c=>{
+      const v=gr[c.i-1][c.j-1]; c.v=v;
+      const d=v>0?Math.max(3,Math.sqrt(v/mx)*g*0.92):0;
+      c.sq.setAttribute("x",X(c.j)+g/2-d/2); c.sq.setAttribute("y",Y(c.i)+g/2-d/2);
+      c.sq.setAttribute("width",d); c.sq.setAttribute("height",d);});
+  };
+  svg.__settle=()=>cells.forEach(c=>c.sq.style.transitionDelay="0ms");
+  svg.__update(grid,max);
+  if(mark){const[mi,mj]=mark;
+    svg.appendChild(el("rect",{x:X(mj)+1,y:Y(mi)+1,width:g-2,height:g-2,rx:3,fill:"none",
+      stroke:"var(--accent)","stroke-width":2.5}));
+    svg.appendChild(el("circle",{cx:X(mj)+g-4,cy:Y(mi)+4,r:Math.max(3,fs*.28),
+      fill:"var(--accent)"}));}
+  const lab=(t,x,y,an)=>svg.appendChild(el("text",{x,y,"text-anchor":an,"font-size":fs,
+    fill:"var(--ink-3)","font-family":"var(--body)"},[document.createTextNode(t)]));
+  lab("very liberal",X(1)+g/2,side+14+fs*1.9,"middle");
+  lab("moderate",X(4)+g/2,side+14+fs*1.9,"middle");
+  lab("very cons.",X(7)+g/2,side+14+fs*1.9,"middle");
+  lab("Strong Dem",pad-9,Y(1)+g/2+fs*.35,"end");
+  lab("Independent",pad-9,Y(4)+g/2+fs*.35,"end");
+  lab("Strong Rep",pad-9,Y(7)+g/2+fs*.35,"end");
+  return svg;}
+const legendHTML=`<div class="legend">
+  <div><i style="background:var(--match)"></i>labels match</div>
+  <div><i style="background:var(--cross)"></i>labels point opposite ways</div>
+  <div><i style="background:var(--none)"></i>moderate or independent — nothing to match</div></div>`;
+function markNote(){
+  if(!(state.pid&&state.ideo))
+    return `<span style="color:var(--ink-3)">Answer the two survey questions and that
+      square is outlined here.</span>`;
+  return `<span style="color:var(--accent);font-weight:600">▢ your answer:</span>
+    ${PIDS[state.pid-1]}, ${IDEOS[state.ideo-1]}
+    <span class="nums" style="color:var(--ink-3)">· sorting ${score(state.pid,state.ideo).toFixed(2)}</span>`;}
+
+function lineSVG(pts,{yMin,yMax,fmt=v=>v.toFixed(2),colour="var(--blue)",dashAt=null,
+                     fits=null,staged=false}={}){
+  const w=Math.round(Math.max(430,Math.min(innerWidth*0.52,1180)));
+  const h=Math.round(Math.max(230,Math.min(innerHeight*0.50,560)));
+  const fs=Math.max(9,Math.round(h/26)),L=fs*5,R=14,T=16,Bm=fs*3.2;
+  const PW=w-L-R,PH=h-T-Bm,xs=pts.map(p=>p[0]);
+  const x0=Math.min(...xs),x1=Math.max(...xs);
+  const X=v=>L+(v-x0)/(x1-x0)*PW,Y=v=>T+(yMax-v)/(yMax-yMin)*PH;
+  const svg=el("svg",{width:w,height:h,viewBox:`0 0 ${w} ${h}`,role:"img",
+    style:`--dur:${DRAW_MS}ms`});
+  const step=(yMax-yMin)/5;
+  for(let v=yMin;v<=yMax+1e-9;v+=step){
+    svg.appendChild(el("line",{x1:L,y1:Y(v),x2:L+PW,y2:Y(v),stroke:"var(--rule-2)"}));
+    svg.appendChild(el("text",{x:L-8,y:Y(v)+fs*.35,"text-anchor":"end","font-size":fs,
+      fill:"var(--ink-3)","font-family":"var(--mono)"},[document.createTextNode(fmt(v))]));}
+  [1972,1984,1996,2004,2012,2024].filter(y=>y>=x0&&y<=x1).forEach(y=>
+    svg.appendChild(el("text",{x:X(y),y:h-fs,"text-anchor":"middle","font-size":fs,
+      fill:y===dashAt?"var(--ink)":"var(--ink-3)","font-weight":y===dashAt?700:400,
+      "font-family":"var(--mono)"},[document.createTextNode(y)])));
+  if(dashAt){
+    svg.appendChild(el("line",{x1:X(dashAt),y1:T-6,x2:X(dashAt),y2:T+PH,
+      stroke:"var(--ink-3)","stroke-width":1.2,"stroke-dasharray":"5 4"}));
+    svg.appendChild(el("text",{x:X(dashAt)-8,y:T+fs*.4,"text-anchor":"end","font-size":fs,
+      "font-weight":700,fill:"var(--ink-3)","font-family":"var(--body)"},
+      [document.createTextNode("Mason’s data stop here")]));}
+  const path=pts.map(p=>`${X(p[0])},${Y(p[1])}`).join(" ");
+  // The ghost: the shape, faint enough to read as "something goes here".
+  svg.appendChild(el("polyline",{fill:"none",stroke:"var(--ghost)","stroke-width":1.6,
+    points:path}));
+  // The one dot that is there before anything is asked of it.
+  svg.appendChild(el("circle",{cx:X(pts[0][0]),cy:Y(pts[0][1]),
+    r:Math.max(3.4,fs/3),fill:colour}));
+  // Everything below waits for a click. Each .stage is one click: the trend
+  // chart walks the argument in four — her window, then what happened after,
+  // then a fitted trend on each — so the slope change is something you arrive
+  // at rather than something dumped on screen.
+  const rev=el("g",{class:"reveal"});
+  const segLen=ps=>{let t=0;for(let n=1;n<ps.length;n++)
+    t+=Math.hypot(X(ps[n][0])-X(ps[n-1][0]),Y(ps[n][1])-Y(ps[n-1][1]));return t;};
+  const whole=segLen(pts)||1;
+  // One stage: a polyline over `ps`, with each dot timed to the moment the pen
+  // reaches it — cumulative PATH length, not x-position, which on a series this
+  // jagged is a different number entirely. Pen speed is constant across stages.
+  const drawStage=(ps,{skipFirst=true}={})=>{
+    const g=el("g",{class:"stage"});
+    const dur=Math.max(700,Math.round(DRAW_MS*segLen(ps)/whole));
+    g.setAttribute("style",`--dur:${dur}ms`);
+    g.appendChild(el("polyline",{fill:"none",stroke:colour,"stroke-width":2.6,
+      class:"draw",points:ps.map(p=>`${X(p[0])},${Y(p[1])}`).join(" ")}));
+    const cum=[0];
+    for(let n=1;n<ps.length;n++) cum.push(cum[n-1] +
+      Math.hypot(X(ps[n][0])-X(ps[n-1][0]),Y(ps[n][1])-Y(ps[n-1][1])));
+    const tot=cum[cum.length-1]||1;
+    ps.forEach((p,n)=>{ if(skipFirst&&!n) return;
+      g.appendChild(el("circle",{cx:X(p[0]),cy:Y(p[1]),r:Math.max(2.6,fs/3.4),
+        fill:colour,class:"pop",
+        style:`transition-delay:${Math.round(cum[n]/tot*dur)}ms`}));});
+    return g;
+  };
+  if(staged&&dashAt){
+    rev.appendChild(drawStage(pts.filter(p=>p[0]<=dashAt)));
+    rev.appendChild(drawStage(pts.filter(p=>p[0]>=dashAt)));   // shares the 2004 point
+    (fits||[]).forEach(f=>{
+      const g=el("g",{class:"stage",style:"--dur:900ms"});
+      g.appendChild(el("line",{x1:X(f[0]),y1:Y(f[1]),x2:X(f[2]),y2:Y(f[3]),
+        stroke:f[4],"stroke-width":3.4,"stroke-linecap":"round",class:"draw"}));
+      rev.appendChild(g);});
+  }else{
+    rev.appendChild(drawStage(pts));
+  }
+  svg.appendChild(rev);
+  // Hover readouts stay live from the start — the numbers are not the surprise.
+  pts.forEach(p=>{
+    const hit=el("circle",{cx:X(p[0]),cy:Y(p[1]),r:Math.max(13,fs*1.4),
+      fill:"transparent",class:"hit"});
+    hit.addEventListener("pointerenter",e=>tipOn(e,`<b>${fmt(p[1])}</b> &nbsp;${p[0]}`));
+    hit.addEventListener("pointerleave",tipOff);
+    svg.appendChild(hit);});
+  return svg;}
+
+// Charts are mounted rather than dropped in, so each gets its wrapper, its cue
+// and its click handler. Clicking again replays it.
+function mountChart(host,svg){
+  const box=document.createElement("div");
+  box.className="chart";
+  box.appendChild(svg);
+  host.replaceChildren(box);
+  return box;
+}
+// Measure the dash lengths with transitions off, then set whichever stages this
+// sub-step calls for. Arriving from the right lands fully revealed and still,
+// which is why .go is applied before .anim rather than after.
+function chartInit(box,sub){
+  const stages=[...box.querySelectorAll(".stage")];
+  box.__stages=stages;
+  box.querySelectorAll(".draw").forEach(n=>{
+    n.classList.remove("anim","go");
+    try{n.style.setProperty("--len",n.getTotalLength());}catch(_){}});
+  box.querySelectorAll(".pop").forEach(n=>n.classList.remove("go"));
+  stages.forEach((g,i)=>{
+    const on=i<sub; g.classList.toggle("on",on);
+    if(on) g.querySelectorAll(".draw,.pop").forEach(n=>n.classList.add("go"));});
+  requestAnimationFrame(()=>requestAnimationFrame(()=>
+    box.querySelectorAll(".draw").forEach(n=>n.classList.add("anim"))));
+}
+function chartSub(box,sub){
+  (box.__stages||[]).forEach((g,i)=>{
+    const want=i<sub, has=g.classList.contains("on");
+    if(want&&!has){ g.classList.add("on");
+      requestAnimationFrame(()=>requestAnimationFrame(()=>
+        g.querySelectorAll(".draw,.pop").forEach(n=>n.classList.add("go"))));
+    }else if(!want&&has){ g.classList.remove("on");
+      g.querySelectorAll(".draw,.pop").forEach(n=>n.classList.remove("go"));}});
+}
+const activeChart=()=>document.querySelector(".slide.on .chart");
+const stagesHere=()=>{const c=activeChart();return c?(c.__stages||[]).length:0;};
+function radios(host,opts,key){
+  host.innerHTML=opts.map((o,k)=>`<label class="opt" data-k="${k+1}">
+    <input type="radio" name="${key}" value="${k+1}"><span>${o}</span></label>`).join("");
+  host.querySelectorAll("input").forEach(r=>r.addEventListener("change",e=>{
+    state[key]=+e.target.value;paint(host,key);
+    const s=$on("#pickstate");if(s)s.innerHTML=markNote();}));
+  paint(host,key);}
+function paint(host,key){host.querySelectorAll(".opt").forEach(l=>{
+  const on=+l.dataset.k===state[key];
+  l.classList.toggle("sel",on);l.querySelector("input").checked=on;});}
+const smap=col=>`<div class="smap"><div class="hd">scale</div><div class="hd">strength</div>
+  <div></div>${[4,3,2,1,2,3,4].map((st,k)=>
+  `<b style="background:${col}">${k+1}</b><div style="text-align:center">${st}</div>
+   <div style="color:var(--ink-3);font-size:.86em">${
+     k===0?"strongest, one end":k===3?"no direction at all":k===6?"strongest, other end":""}</div>`
+  ).join("")}</div>`;
+function gridBlock(){return `<div class="gridwrap"><div><div id="grid"></div>
+    <div class="marknote" id="marknote"></div></div>
+  <div class="side"><div class="yr nums" id="yrlabel"></div><div id="yrnote"></div>${legendHTML}
+    <div class="ctl"><input type="range" id="yr" min="0" max="${D.years.length-1}" step="1">
+      <button id="play">▶ Play</button></div>
+    <div class="ctl"><button id="j72">1972</button><button id="j04">2004</button>
+      <button id="j24">2024</button></div></div></div>
+  <div class="foot">ANES, weighted. Square area is proportional to the share of
+  respondents; the scale is fixed across years, so sizes are comparable as you drag.</div>`;}
+
+const S=[
+{slug:"title",k:"light",h:()=>`<p class="kicker">Polarization II</p><h1>Sorting</h1>
+  <p class="lede" style="font-family:var(--display);font-size:clamp(18px,1.8vw,31px)">
+    Mason 2015 — and how she counts it</p>
+  <div class="foot">84-309 · Scaife Hall 234 · <b>?</b> for keys, <b>N</b> for notes</div>`},
+
+{slug:"anger",k:"wash",h:()=>`<p class="kicker">Before we start — in your group</p>
+  <h1 style="max-width:19ch">When did politics last make you genuinely angry?</h1>
+  <p class="punch" style="color:var(--accent);margin-top:12px">Not annoyed. Not
+    disappointed. Angry.</p>
+  <p class="lede" style="color:#5A3038">Say what actually happened — the specific moment.
+    A result, an announcement, something somebody said. Specific enough that the rest of
+    us could picture it.</p>
+  <div class="foot"><b>one each, then pick two for the board</b></div>`},
+
+{slug:"conclusion",k:"dark center",h:()=>`<p class="kicker">Her conclusion, before any of the evidence</p>
+  <h1 style="max-width:17ch">“The result is a nation that agrees on many things but is
+    bitterly divided nonetheless.”</h1>
+  <p class="lede">Mason 2015, 128</p>
+  <p class="punch" style="color:var(--accent);max-width:44ch">Two claims
+    in one sentence. We agree more than you would think. We cannot stand each other
+    anyway.</p>`},
+
+{slug:"the-debate",k:"light center",h:()=>`<h2>The argument she walked into</h2>
+  <p class="kicker">Two senior scholars, twenty years, no resolution</p>
+  <div class="cols">
+    <div class="card"><h3>Fiorina</h3><p class="claim">“The public is not polarized.”</p>
+      <ul><li>Most Americans sit in the middle on most issues.</li>
+      <li>Closely divided is not deeply divided.</li>
+      <li>The polarization is in Washington, not in the country.</li></ul></div>
+    <div class="card"><h3 class="a">Abramowitz</h3><p class="claim">“Yes it is.”</p>
+      <ul><li>Party and ideology line up far more consistently than they used to.</li>
+      <li>The engaged public is further apart than ever.</li>
+      <li>The center really has been disappearing.</li></ul></div></div>
+  <p class="punch">Both had good data. Neither convinced the other.</p>
+  <div class="foot">Fiorina, <i>Culture War?</i> (2005) and after · Abramowitz,
+    <i>The Disappearing Center</i> (2010)</div>`},
+
+{slug:"masons-move",k:"light center",h:()=>`<h2>Mason’s move</h2>
+  <p class="kicker">One word had been doing two jobs</p>
+  <div class="cols">
+    <div class="card"><h3>Issue polarization</h3>
+      <p class="claim">How far apart our positions are</p>
+      <p style="font-weight:700;margin:0;font-size:clamp(14px,1.3vw,23px)">Barely moving.</p>
+      <p class="lede" style="font-size:clamp(12.5px,1.14vw,20px)">Fiorina was measuring
+        this, and he was right about it.</p></div>
+    <div class="card"><h3 class="a">Social polarization</h3>
+      <p class="claim">How we feel about the other side</p>
+      <p style="font-weight:700;margin:0;font-size:clamp(14px,1.3vw,23px)">Rising fast.</p>
+      <p class="lede" style="font-size:clamp(12.5px,1.14vw,20px)">Almost nobody was
+        measuring this, which is why the argument stuck.</p></div></div>
+  <p class="punch">Separate the two and the twenty-year argument dissolves. Both men
+    were right.</p>
+  <div class="foot">Mason 2015, 128–29.</div>`},
+
+{slug:"sorting",k:"light center",h:()=>`<h2>Her answer: sorting</h2>
+  <p class="kicker">Not what you believe — whether your two labels match</p>
+  <p class="punch" style="margin-top:8px;max-width:42ch">Fifty years ago you could easily
+    be a conservative Democrat, or a liberal Republican. Now you almost cannot.</p>
+  <div class="quad">
+    <div class="m"><b>Liberal Democrat</b><span>matched</span></div>
+    <div class="x"><b>Conservative Democrat</b><span>mismatched</span></div>
+    <div class="m"><b>Conservative Republican</b><span>matched</span></div>
+    <div class="x"><b>Liberal Republican</b><span>mismatched</span></div></div>
+  <p class="punch" style="color:var(--accent)">Nobody had to change a single opinion for
+    this to happen.</p>
+  <div class="foot">A conservative Democrat who becomes a conservative Republican has
+    sorted. Her views did not move. Her team did.</div>`},
+
+{slug:"two-questions",k:"dark center",h:()=>`<p class="kicker">So how do you count something like that?</p>
+  <h1 style="max-width:16ch">The whole measure comes from two survey questions.</h1>
+  <p class="lede">Not a battery of a dozen items. Not a factor analysis. Two questions the
+    ANES has asked in the same words for fifty years.</p>
+  <p class="punch" style="color:var(--accent)">Here they are — and you are
+    going to answer them.</p>`},
+
+{slug:"q-party",k:"light",id:"q1",h:()=>`<h2>Question one — which team</h2>
+  <p class="kicker">ANES, asked in this form since 1952</p>
+  <div class="cols">
+    <div class="card"><p class="qstem">Generally speaking, do you usually think of
+      yourself as a Republican, a Democrat, an Independent, or what?</p>
+      <div id="qpid"></div></div>
+    <div><p class="kicker" style="color:var(--ink-3)">What it becomes</p>${smap("var(--accent)")}
+      <p class="lede" style="font-size:clamp(12.5px,1.16vw,20px)">It asks what you
+        <b>are</b>, not what you believe. Strength folds the scale at the middle.</p></div></div>
+  <div class="foot">ANES cumulative file, VCF0301. Leaners count as partisans, as Mason
+    does. &nbsp; <span id="pickstate"></span></div>`},
+
+{slug:"q-ideology",k:"light",id:"q2",h:()=>`<h2>Question two — which label</h2>
+  <p class="kicker">ANES, asked in this form since 1972</p>
+  <div class="cols">
+    <div class="card"><p class="qstem">We hear a lot of talk these days about liberals and
+      conservatives. Where would you place yourself on this scale?</p>
+      <div id="qideo"></div></div>
+    <div><p class="kicker" style="color:var(--ink-3)">What it becomes</p>${smap("var(--blue)")}
+      <p class="lede" style="font-size:clamp(12.5px,1.16vw,20px)">Also a label you wear,
+        not a policy you hold. Sorting compares the two positions and weights each by its
+        strength.</p></div></div>
+  <div class="foot">ANES cumulative file, VCF0803. Respondents may also decline to place
+    themselves — and a lot do. &nbsp; <span id="pickstate"></span></div>`},
+
+{slug:"grid-1972",k:"light",id:"grid",y:1972,h:()=>`<h2>What people answered — 1972</h2>
+  <p class="kicker">Each square is one combination of the two answers. Bigger = more
+    people.</p>${gridBlock()}`},
+
+{slug:"grid-2024",k:"light",id:"grid",y:2024,h:()=>`<h2>What people answered — 2024</h2>
+  <p class="kicker">Same two questions, same scale, fifty-two years later</p>${gridBlock()}`},
+
+{slug:"sixty-nine-to-ninety-two",k:"dark center",h:()=>`<p class="kicker">The same thing, as one number</p>
+  <p class="lede" style="margin:2px 0 0">Share of partisans whose ideological label
+    matches their party</p>
+  <div class="statrow hero" style="margin:22px 0 10px">
+    <div class="stat"><b style="color:#8E9AA6">${Math.round(D.matched[1972])}%</b><span>1972</span></div>
+    <div class="big" style="color:#8E9AA6">→</div>
+    <div class="stat"><b style="color:var(--accent)">${Math.round(D.matched[2024])}%</b><span>2024</span></div></div>
+  <p class="punch">If you remember one number from this article,
+    make it this one.</p>
+  <div class="foot">ANES, weighted. Partisans include leaners; pure independents and
+    self-described moderates are excluded — they have no label to match.</div>`},
+
+{slug:"no-answer",k:"light",id:"noideo",h:()=>`<h2>And the people who could not answer</h2>
+  <p class="kicker">Share who decline to place themselves on the ideology scale</p>
+  <div class="gridwrap"><div id="noideo"></div>
+    <div class="side"><div class="yr nums">${Math.round(D.noIdeo[1972])}% →
+      ${Math.round(D.noIdeo[2024])}%</div>
+      <p class="lede" style="font-size:clamp(12.5px,1.16vw,20px)">In 1972 more than four
+        in ten Americans would not put themselves anywhere on the liberal–conservative
+        scale. Today it is about one in six.</p>
+      <p class="punch" style="color:var(--accent);font-size:clamp(15px,1.45vw,25px)">
+        Americans learned the vocabulary.</p></div></div>
+  <div class="foot">ANES, weighted. 2000 omitted — a questionnaire change that year pushed
+    non-placement past 60% and it is not comparable.</div>`},
+
+{slug:"the-score",k:"light",id:"score",h:()=>`<h2>Only now, the score</h2>
+  <p class="kicker">Everything you have just seen, compressed to one number per person</p>
+  <div id="scorebox"></div>
+  <div class="foot">Mason 2015, 132. Multiplying rather than adding is what keeps a
+    moderate independent from counting as “perfectly aligned” by default.</div>`},
+
+{slug:"trend",k:"light",id:"trend",h:()=>`<h2>Sorting is not just rising — it is rising faster</h2>
+  <p class="kicker">The score by year, with a separate trend fitted either side of 2004</p>
+  <div class="gridwrap"><div id="trend"></div>
+    <div class="side">
+      <div class="stat" style="margin-bottom:14px">
+        <b style="color:var(--accent)">+${(D.fit.slope_pre_dec*100).toFixed(1)}</b>
+        <span>points a decade, 1972–2004</span></div>
+      <div class="stat"><b style="color:var(--match)">+${(D.fit.slope_post_dec*100).toFixed(1)}</b>
+        <span>points a decade, 2004–2024</span></div>
+      <p class="lede" style="font-size:clamp(12.5px,1.16vw,20px);margin-top:16px">The pace
+        roughly doubled after her data end. The difference is statistically
+        distinguishable (p = ${D.fit.slope_p_diff.toFixed(2)}).</p></div></div>
+  <div class="foot">ANES, weighted. Separate least-squares fits either side of 2004; grey
+    line and dots are the observed series.</div>`},
+
+{slug:"and-now-you",k:"wash",h:()=>`<p class="kicker">And now you</p>
+  <h1 style="max-width:19ch">We asked you the same two questions.</h1>
+  <p class="lede" style="color:#5A3038">In Week 1, in the Cervas Election Study — same
+    party scale, same seven points. The ideology item is our social-issues version, the
+    one on our survey with all seven.</p>
+  <p class="lede" style="color:#5A3038;margin-top:14px"><b>Before I show you:</b> where
+    does this room land against the country? More sorted, or less? And is that the same
+    thing as more extreme?</p>
+  <div class="foot"><b>2 minutes · then we look</b></div>`},
+
+{slug:"your-grid",k:"light",id:"cgrid",h:()=>`<h2>Your answers, on the same grid</h2>
+  <p class="kicker">Cervas Election Study 2026 · the 47 of us</p>
+  <div class="gridwrap"><div><div id="cgrid"></div>
+      <div class="marknote" id="cmarknote"></div></div>
+    <div class="side">
+      <p class="punch" style="color:var(--match);margin-top:0">Every square is teal.</p>
+      <p class="lede" style="font-size:clamp(12.5px,1.16vw,20px)">Not one person here
+        holds a party label and an ideological label pointing in opposite directions.
+        Nationally about one partisan in twelve does.</p>
+      <p class="punch" style="font-size:clamp(14px,1.36vw,24px)">100% matched, against
+        ${Math.round(D.matched[2024])}% nationally.</p></div></div>
+  <div class="foot">Scaled to its own maximum, so square sizes are not comparable to the
+    national grids — with 47 people one person is over two percent.</div>`},
+
+{slug:"you-vs-country",k:"light center",h:()=>`<h2>You against the country</h2>
+  <p class="kicker">Mason’s own measure, two ways</p>
+  <table class="t">
+    <tr><td>Share of partisans whose two labels match</td>
+      <td class="num" style="color:var(--ink-3)">${Math.round(D.matched[1972])}%</td>
+      <td class="num">${Math.round(D.matched[2024])}%</td>
+      <td class="num" style="color:var(--accent)">100%</td></tr>
+    <tr><td>Mean sorting score, 0–1</td>
+      <td class="num" style="color:var(--ink-3)">${D.sorting[1972].toFixed(2)}</td>
+      <td class="num">${D.sorting[2024].toFixed(2)}</td>
+      <td class="num" style="color:var(--accent)">${D.classSorting.toFixed(2)}</td></tr>
+    <tr><td></td><td class="lab" style="text-align:right">ANES 1972</td>
+      <td class="lab" style="text-align:right">ANES 2024</td>
+      <td class="lab" style="text-align:right;color:var(--accent)">this room</td></tr></table>
+  <p class="punch">You are further along the same trend than the country is — about where
+    it is heading.</p>
+  <div class="foot">CES 2026, n = 47, scored with Mason’s formula. The ideology input is
+    our 7-point social-issues item.</div>`},
+
+{slug:"your-issues",k:"light center",h:()=>`<h2>And your issue positions?</h2>
+  <p class="kicker">The other half of her distinction, asked of you</p>
+  <table class="t">${D.cv.map(r=>{const up=r.cls>r.anes,d=Math.round((r.cls-r.anes)*100);
+    return `<tr><td><b>${r.label}</b></td>
+      <td class="num" style="color:var(--accent)">${r.cls.toFixed(2)}</td>
+      <td class="num">${r.anes.toFixed(2)}</td>
+      <td class="num" style="font-size:clamp(13px,1.2vw,21px);
+        color:${up?'var(--accent)':'var(--blue)'}">${up?"▲":"▼"} ${up?"+":""}${d}</td>
+      <td class="lab" style="color:${r.comparable?'var(--ink-3)':'var(--blue)'};
+        font-weight:${r.comparable?400:700}">${r.comparable?"identical questions":"DIFFERENT questions"}</td></tr>`;
+    }).join("")}
+    <tr><td></td><td class="lab" style="text-align:right;color:var(--accent)">this room</td>
+      <td class="lab" style="text-align:right">the country</td><td></td><td></td></tr></table>
+  <p class="punch" style="font-size:clamp(15px,1.5vw,26px)">Much more sorted. A little
+    more extreme. And warmer toward the other side than the country is.</p>
+  <div class="foot">CES 2026 against ANES 2024, weighted. The middle row is not a
+    like-for-like gap — our survey asks about different policies than the ANES does.</div>`},
+
+{slug:"who-was-right",k:"light center",h:()=>`<h2>So who was right?</h2>
+  <p class="kicker">Back to where we started</p>
+  <div class="rowlist">
+    <div class="r"><div class="who" style="color:var(--blue)">Fiorina</div>
+      <div class="say">Right about issue positions. Americans really do agree more than
+        the coverage suggests, and the middle really is crowded.</div></div>
+    <div class="r"><div class="who" style="color:var(--accent)">Abramowitz</div>
+      <div class="say">Right that something large changed. Party and ideology line up now
+        in a way they simply did not in 1972.</div></div>
+    <div class="r"><div class="who">Mason</div>
+      <div class="say">Right that they were answering different questions. Sorting rose
+        without extremity rising, so both sets of numbers were real.</div></div></div>
+  <p class="punch" style="font-style:italic">“A nation that agrees on many things but is
+    bitterly divided nonetheless.”</p>`},
+
+{slug:"next",k:"dark center",h:()=>`<p class="kicker">Next</p>
+  <div class="rowlist" style="margin-top:14px">
+    <div class="r" style="border-color:#2A3541">
+      <div class="who" style="color:var(--accent)">Thu, Sep 10</div>
+      <div class="say"><b style="font-family:var(--display);font-size:1.22em">Polarization
+        III: Affective Polarization</b><br><span style="color:#8E9AA6;font-size:.86em">
+        Iyengar et al. 2019 · Finkel et al. 2020 · Fiorina, <i>Unstable Majorities
+        Continue</i>, ch. 3</span></div></div>
+    <div class="r" style="border:0"><div class="who" style="color:var(--accent)">Tue, Sep 15</div>
+      <div class="say"><b style="font-family:var(--display);font-size:1.22em">Student-led
+        sessions begin</b><br><span style="color:#8E9AA6;font-size:.86em">Teams and topics
+        as assigned Sep 1</span></div></div></div>
+  <p class="lede" style="margin-top:22px;color:#C6D0DA">Board post due 9:00 a.m. Thursday
+    · Piazza, sep10 folder</p>`},
+];
+
+function drawGrid(rebuild){
+  const y=D.years[+$on("#yr").value];state.year=y;
+  const host=$on("#grid");
+  let svg=host.querySelector("svg");
+  if(rebuild||!svg||!svg.__update){
+    svg=gridSVG(D.grids["y"+y],{mark:mark(),scaleTo:GMAX});
+    host.replaceChildren(svg);
+  }else{
+    // Squares slide and resize from where they already are; the stagger was the
+    // entrance and would only make a drag feel laggy.
+    svg.__settle(); svg.__update(D.grids["y"+y],GMAX);
+  }
+  $on("#yrlabel").textContent=y;
+  $on("#yrnote").innerHTML=`<div style="font-size:clamp(12.5px,1.16vw,20px);
+    color:var(--ink-2);line-height:1.5;margin:6px 0 2px">
+    <b>${D.matched[y].toFixed(0)}%</b> of partisans have a matching label<br>
+    <b>${D.noIdeo[y].toFixed(0)}%</b> will not place themselves</div>`;
+  $on("#marknote").innerHTML=markNote();}
+let timer=null;
+function togglePlay(){const b=$on("#play");if(!b)return;
+  if(timer){clearInterval(timer);timer=null;b.textContent="▶ Play";
+    b.setAttribute("aria-pressed","false");return;}
+  b.textContent="❚❚ Pause";b.setAttribute("aria-pressed","true");
+  timer=setInterval(()=>{const r=$on("#yr");let v=+r.value+1;
+    if(v>=D.years.length){v=D.years.length-1;togglePlay();}
+    r.value=v;drawGrid();},520);}
+function scoreBox(){
+  const host=$on("#scorebox");if(!host)return;
+  const rows=`<div class="rowlist" style="margin-top:8px">
+    <div class="r"><div class="who">1 · match</div><div class="say">Do your two labels
+      match? <b class="nums">7 − |party − ideology|</b> — a liberal Democrat scores 7, a
+      conservative Democrat 1.</div></div>
+    <div class="r"><div class="who">2 · party</div><div class="say">How strongly you hold
+      the party label. <b class="nums">strong 4 · weak 3 · leaner 2 · independent 1</b></div></div>
+    <div class="r"><div class="who">3 · ideology</div><div class="say">How strongly the
+      ideological one. <b class="nums">extreme 4 · regular 3 · slight 2 · moderate 1</b></div></div></div>
+    <p class="punch" style="margin-top:12px">Multiply the three, rescale to 0–1, and that
+      is the sorting score.</p>`;
+  if(!(state.pid&&state.ideo)){host.innerHTML=rows+
+    `<p class="lede">Answer the two survey questions and your own arithmetic appears here.</p>`;return;}
+  const p=state.pid,i=state.ideo,a=7-Math.abs(p-i),sc=score(p,i),cl=cellClass(p,i);
+  host.innerHTML=rows+`<div class="statrow">
+    <div class="stat"><b style="color:var(--accent)">${sc.toFixed(2)}</b><span>your answer</span></div>
+    <div class="stat"><b>${D.sorting[2024].toFixed(2)}</b><span>the country, 2024</span></div>
+    <div class="stat"><b>${D.classSorting.toFixed(2)}</b><span>this room</span></div></div>
+  <p class="lede" style="margin-top:12px"><b>${PIDS[p-1]}</b>, <b>${IDEOS[i-1]}</b> —
+    alignment <b class="nums">${a}</b> × party strength <b class="nums">${STR(p)}</b> ×
+    ideological strength <b class="nums">${STR(i)}</b> → <b class="nums">${sc.toFixed(2)}</b>
+    &nbsp;<span class="pill ${cl==="match"?"":"warn"}">${
+      cl==="match"?"labels match":cl==="cross"?"labels point opposite ways"
+      :"one answer is the middle option — nothing to match"}</span></p>`;}
+function initStep(){
+  const st=S[state.step];
+  if(st.id==="q1"){radios($on("#qpid"),PID,"pid");$on("#pickstate").innerHTML=markNote();}
+  if(st.id==="q2"){radios($on("#qideo"),IDEO,"ideo");$on("#pickstate").innerHTML=markNote();}
+  if(st.id==="grid"){
+    if(st.y)state.year=st.y;
+    const r=$on("#yr");r.value=D.years.indexOf(state.year);
+    // NOT `addEventListener("input",drawGrid)` — the listener would hand the
+    // Event in as `rebuild`, which is truthy, and every tick would rebuild.
+    r.addEventListener("input",()=>drawGrid());
+    $on("#play").addEventListener("click",togglePlay);
+    const jump=y=>{state.year=y;r.value=D.years.indexOf(y);drawGrid();};
+    // A fresh SVG on entry so the staggered entrance plays once.
+    $on("#j72").onclick=()=>jump(1972);$on("#j04").onclick=()=>jump(2004);
+    $on("#j24").onclick=()=>jump(2024);
+    drawGrid(true);}
+  if(st.id==="noideo") mountChart($on("#noideo"), lineSVG(
+    D.years.filter(y=>y!==2000).map(y=>[y,D.noIdeo[y]]),
+    {yMin:0,yMax:50,fmt:v=>v.toFixed(0)+"%"}));
+  if(st.id==="score")scoreBox();
+  if(st.id==="trend") mountChart($on("#trend"), lineSVG(
+    D.years.map(y=>[y,D.sorting[y]]),{yMin:0.15,yMax:0.40,dashAt:2004,staged:true,
+    fits:[[1972,D.fit.pre_y1972,2004,D.fit.pre_y2004,"var(--accent)"],
+          [2004,D.fit.post_y2004,2024,D.fit.post_y2024,"var(--match)"]]}));
+  if(st.id==="cgrid"){$on("#cgrid").replaceChildren(gridSVG(D.classGrid,{mark:mark()}));
+    $on("#cmarknote").innerHTML=markNote();}}
+function render(){
+  if(document.getElementById("tip")) tipOff();
+  $("#deck").innerHTML=S.map((s,k)=>
+    `<section class="slide ${s.k}${k===state.step?" on":""}">${s.h()}</section>`).join("");
+  $("#bar").style.width=((state.step+1)/S.length*100)+"%";
+  $("#notesbody").textContent=D.notes[state.step]||"No notes for this slide.";
+  initStep();
+  const on=document.querySelector(".slide.on"); if(on) play(on);}
+function go(n,sub=0,push=true){if(timer)togglePlay();
+  state.step=Math.max(0,Math.min(S.length-1,n));
+  state.sub=0;
+  render();
+  // `Infinity` means "however many this slide has" — used when stepping
+  // backwards onto a slide that should already be fully drawn.
+  const max=stagesHere();
+  state.sub=sub===Infinity?max:Math.max(0,Math.min(max,sub));
+  const c=activeChart(); if(c) chartInit(c,state.sub);
+  stamp(push);}
+function setSub(n){
+  const max=stagesHere();
+  state.sub=Math.max(0,Math.min(max,n));
+  const c=activeChart(); if(c) chartSub(c,state.sub);
+  stamp(true);}
+function stamp(push){
+  if(push) location.hash=(state.step+1)+SUBLETTER(state.sub);
+  const max=stagesHere();
+  $("#hint").innerHTML=`<b class="nums">#${state.step+1}${SUBLETTER(state.sub)}</b><span
+    style="opacity:.7"> of ${S.length} · ${S[state.step].slug}</span>`
+    +(max?`<span class="dots">${Array.from({length:max},(_,i)=>
+      `<i class="${i<state.sub?"on":""}"></i>`).join("")}</span>`:"")
+    +`<br>? help · N notes`;}
+function next(){ state.sub<stagesHere() ? setSub(state.sub+1) : go(state.step+1,0); }
+function prev(){ state.sub>0 ? setSub(state.sub-1) : go(state.step-1,Infinity); }
+// Slides are addressable by NUMBER — sorting-interactive.html#12 — because that
+// is what anyone reads off the corner of the screen and says out loud. The
+// slugs still resolve on the way in, so any link written earlier keeps working
+// and #the-score is there if you prefer a name; navigating rewrites it to the
+// number.
+function fromHash(){
+  const h=decodeURIComponent(location.hash.replace(/^#/,""));
+  const m=h.match(/^(\d+)([a-z]?)$/);
+  if(m) return [Math.min(S.length,Math.max(1,+m[1]))-1,
+                m[2]?m[2].charCodeAt(0)-96:0];
+  const i=S.findIndex(x=>x.slug===h);
+  return i<0 ? null : [i,0];
+}
+addEventListener("hashchange",()=>{const h=fromHash();
+  if(h&&(h[0]!==state.step||h[1]!==state.sub)) go(h[0],h[1],false);});
+function help(on){const h=$("#help");h.hidden=(on===undefined)?!h.hidden:!on;
+  $("#hint").style.visibility=h.hidden?"visible":"hidden";}
+function notes(on){const n=$("#notes");n.hidden=(on===undefined)?!n.hidden:!on;}
+$("#help").addEventListener("click",()=>help(false));
+$("#hint").addEventListener("click",()=>help(true));
+addEventListener("keydown",e=>{
+  const typing=/^(INPUT|TEXTAREA)$/.test(e.target.tagName);
+  if(typing&&!["Escape","ArrowRight","ArrowLeft"].includes(e.key))return;
+  switch(e.key){
+    case "ArrowRight":case " ":case "PageDown":next();e.preventDefault();break;
+    case "ArrowLeft":case "PageUp":prev();e.preventDefault();break;
+    case "Home":go(0);break;
+    case "End":go(S.length-1,Infinity);break;
+    case "n":case "N":notes();break;
+    case "f":case "F":document.fullscreenElement?document.exitFullscreen()
+      :document.documentElement.requestFullscreen?.();break;
+    case "t":case "T":{const r=document.documentElement;
+      r.dataset.theme=r.dataset.theme==="dark"?"light":"dark";break;}
+    case "?":help();break;
+    case "Escape":help(false);notes(false);break;}});
+// Click anywhere to advance, the way a remote would. Controls are exempt so the
+// year slider, the jump buttons and the survey radios still do their own jobs.
+$("#deck").addEventListener("click",e=>{
+  if(e.target.closest("input,button,label,select,textarea,a,.hit")) return;
+  next();});
+{const h=fromHash(); if(h){state.step=h[0]; state.sub=h[1];}}
+go(state.step,state.sub,true);
+let rz;addEventListener("resize",()=>{clearTimeout(rz);
+  rz=setTimeout(()=>go(state.step,state.sub,false),140);});
+</script>
+</body></html>
