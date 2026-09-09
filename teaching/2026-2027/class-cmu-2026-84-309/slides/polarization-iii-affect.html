@@ -1,0 +1,584 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Affective polarization, 1978&ndash;2024</title>
+<style>
+:root{
+  --ink:#141414; --paper:#fff; --muted:#6e6e6e; --dim:#d8d8d8; --rule:#e8e8e8;
+  --accent:#c41230; --soft:#f7dde1; --tint:#f6f6f6;
+  --in:#17706b; --out:#7b4b9e; --gap:#4a4a4a; --blue:#1f4e79;
+  --serif:Cambria,Georgia,'Times New Roman',serif;
+  --sans:Calibri,'Segoe UI',system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme=light]){
+    --ink:#f0f0f0; --paper:#131313; --muted:#9a9a9a; --dim:#3a3a3a; --rule:#2a2a2a;
+    --soft:#2a1a1e; --tint:#1c1c1c; --in:#39a89f; --out:#a986cf; --gap:#b6b6b6;
+    --blue:#7fb2e0; --accent:#f2647c;
+  }
+}
+:root[data-theme=dark]{
+  --ink:#f0f0f0; --paper:#131313; --muted:#9a9a9a; --dim:#3a3a3a; --rule:#2a2a2a;
+  --soft:#2a1a1e; --tint:#1c1c1c; --in:#39a89f; --out:#a986cf; --gap:#b6b6b6;
+  --blue:#7fb2e0; --accent:#f2647c;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+     font-size:16px;line-height:1.5}
+.wrap{max-width:960px;margin:0 auto;padding:0 22px 90px}
+header{border-top:5px solid var(--accent);padding:30px 0 8px}
+.kicker{font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+        color:var(--accent);margin:0 0 8px}
+h1{font-family:var(--serif);font-size:38px;line-height:1.1;margin:0 0 8px;font-weight:700}
+h2{font-family:var(--serif);font-size:24px;margin:0 0 4px;font-weight:700}
+.sub{color:var(--muted);font-size:15px;margin:0}
+section{border-top:1px solid var(--rule);padding:34px 0 4px;margin-top:8px}
+.lede{font-size:15.5px;max-width:68ch;margin:10px 0 18px}
+.fig{background:var(--tint);border-radius:6px;padding:16px 14px 10px;margin:0 0 12px;
+     overflow-x:auto}
+svg{display:block;width:100%;height:auto;min-width:520px}
+.controls{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;margin:0 0 14px}
+button.tog{font:inherit;font-size:13px;padding:5px 11px;border-radius:99px;cursor:pointer;
+  border:1px solid var(--dim);background:transparent;color:var(--muted)}
+button.tog[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+button.tog:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+label.rng{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)}
+input[type=range]{accent-color:var(--accent);width:190px}
+.readout{font-family:var(--serif);font-size:15px}
+.readout b{font-size:19px}
+.note{font-size:13px;color:var(--muted);max-width:74ch;margin:8px 0 0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
+.stat{background:var(--tint);border-radius:6px;padding:13px 15px}
+.stat .n{font-family:var(--serif);font-size:29px;font-weight:700;line-height:1.05}
+.stat .l{font-size:12.5px;color:var(--muted);margin-top:3px}
+.you{background:var(--soft);border-radius:6px;padding:18px 18px 14px;margin:0 0 14px}
+.you h3{margin:0 0 12px;font-family:var(--serif);font-size:18px}
+.slider-row{display:flex;align-items:center;gap:12px;margin:0 0 9px;flex-wrap:wrap}
+.slider-row .nm{width:150px;font-size:13.5px}
+.slider-row output{font-family:var(--serif);font-size:17px;font-weight:700;width:2.6em}
+.pill{display:inline-flex;gap:6px}
+footer{border-top:1px solid var(--rule);margin-top:34px;padding:18px 0;
+       font-size:12.5px;color:var(--muted)}
+kbd{font:inherit;font-size:11.5px;border:1px solid var(--dim);border-bottom-width:2px;
+    border-radius:4px;padding:1px 5px}
+a{color:var(--accent)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--muted);margin:2px 0 12px}
+.legend i{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:5px}
+@media print{.controls,footer .k{display:none}body{font-size:12px}}
+</style>
+<div class="wrap">
+<header>
+  <p class="kicker">84-309 &middot; Polarization III &middot; Thursday, September 10, 2026</p>
+  <h1>Affective polarization, 1978&ndash;2024</h1>
+  <p class="sub">Iyengar, Lelkes, Levendusky, Malhotra &amp; Westwood 2019, rebuilt from the
+  ANES cumulative file and carried past where the article stops &mdash; with this class in it.</p>
+</header>
+
+<section id="s1">
+  <h2>1. Their Figure&nbsp;1, with a movable end year</h2>
+  <p class="lede">The article was written in 2018 and its series ends in 2016. Leave the
+  slider there and you see what the authors saw, including the dip they were careful to
+  flag. Then drag it to 2024.</p>
+  <div class="controls">
+    <label class="rng">show data through
+      <input type="range" id="endYear" min="1988" max="2024" step="1" value="2016">
+      <output id="endYearOut">2016</output>
+    </label>
+    <span class="pill">
+      <button class="tog" id="tIn"  aria-pressed="true">in-party</button>
+      <button class="tog" id="tOut" aria-pressed="true">out-party</button>
+      <button class="tog" id="tGap" aria-pressed="true">the gap</button>
+    </span>
+    <button class="tog" id="tLean" aria-pressed="true">count leaners as partisans</button>
+  </div>
+  <div class="fig"><svg id="fig1" viewBox="0 0 900 420" role="img"
+    aria-label="Feeling thermometer ratings of the in-party and out-party, 1978 to 2024"></svg></div>
+  <p class="readout" id="fig1read"></p>
+  <p class="note">Turning leaners off drops everyone who says &ldquo;independent, closer to
+  the Democrats&rdquo; from the count. Every year comes in several degrees higher, because
+  leaners are the least hostile partisans in the file. The authors count them; so does the
+  default here.</p>
+</section>
+
+<section id="s2">
+  <h2>2. Put yourself on it</h2>
+  <p class="lede">The two questions the ANES has asked since 1978, and which you answered in
+  August. Move the sliders and the page places your gap on the national series.</p>
+  <div class="you">
+    <h3>How warm do you feel toward &hellip;</h3>
+    <div class="slider-row"><span class="nm">the Democratic Party</span>
+      <input type="range" id="ftD" min="0" max="100" value="70"><output id="ftDo">70</output></div>
+    <div class="slider-row"><span class="nm">the Republican Party</span>
+      <input type="range" id="ftR" min="0" max="100" value="30"><output id="ftRo">30</output></div>
+    <div class="slider-row"><span class="nm">and you think of yourself as</span>
+      <span class="pill">
+        <button class="tog" id="pD" aria-pressed="true">closer to the Democrats</button>
+        <button class="tog" id="pR" aria-pressed="false">closer to the Republicans</button>
+      </span></div>
+  </div>
+  <div class="fig"><svg id="fig2" viewBox="0 0 900 350" role="img"
+    aria-label="Your affective polarization score against the national series"></svg></div>
+  <p class="readout" id="fig2read"></p>
+  <div class="grid2" id="fig2stats"></div>
+  <p class="note">The class figures are the real answers from the Cervas Election Study,
+  not a live poll of the room.</p>
+</section>
+
+<section id="s3">
+  <h2>3. What a mean of 20 is hiding</h2>
+  <p class="lede">Every partisan in 2024, sorted into ten-degree bins. The out-party
+  distribution is not a bell curve around a cool average; it is a pile against the floor.</p>
+  <div class="controls"><span class="pill">
+    <button class="tog" id="hOut" aria-pressed="true">out-party</button>
+    <button class="tog" id="hIn"  aria-pressed="true">in-party</button>
+  </span></div>
+  <div class="fig"><svg id="fig3" viewBox="0 0 900 330" role="img"
+    aria-label="Distribution of in-party and out-party thermometer ratings in 2024"></svg></div>
+  <p class="readout" id="fig3read"></p>
+</section>
+
+<section id="s4">
+  <h2>4. How cold is cold?</h2>
+  <p class="lede">The share of partisans who put the other party at the very bottom of the
+  scale &mdash; and, on the second row of buttons, the share who put a party <em>above</em>
+  50, the neutral point the question itself defines. Neither asks you to believe that the
+  distance from 40 to 30 means the same as the distance from 10 to 0, which is what a mean
+  assumes. This is not in the article, which reports means.</p>
+  <div class="controls"><span class="pill">
+    <button class="tog" id="z0"  aria-pressed="true">other party rated 0</button>
+    <button class="tog" id="z10" aria-pressed="false">10 or below</button>
+    <button class="tog" id="z50" aria-pressed="false">below 50</button>
+  </span>
+  <span class="pill">
+    <button class="tog" id="w1" aria-pressed="false">own party above 50</button>
+    <button class="tog" id="w2" aria-pressed="false">other party above 50</button>
+    <button class="tog" id="w3" aria-pressed="false">warm toward both</button>
+  </span></div>
+  <div class="fig"><svg id="fig4" viewBox="0 0 900 360" role="img"
+    aria-label="Share of partisans rating the out-party at the bottom of the scale"></svg></div>
+  <p class="readout" id="fig4read"></p>
+</section>
+
+<section id="s5">
+  <h2>5. Who is hostile?</h2>
+  <p class="lede">The same series split four ways. Notice that the bands move together: the
+  gap between youngest and oldest is about as wide at the start as at the end, which is not
+  what a story about one cohort replacing another would look like.</p>
+  <div class="controls"><span class="pill">
+    <button class="tog" id="a18" aria-pressed="true">18&ndash;29</button>
+    <button class="tog" id="a30" aria-pressed="true">30&ndash;44</button>
+    <button class="tog" id="a45" aria-pressed="true">45&ndash;64</button>
+    <button class="tog" id="a65" aria-pressed="true">65+</button>
+  </span>
+  <button class="tog" id="aParty" aria-pressed="false">show by party instead</button></div>
+  <div class="fig"><svg id="fig5" viewBox="0 0 900 380" role="img"
+    aria-label="Affective polarization by age band"></svg></div>
+  <p class="readout" id="fig5read"></p>
+</section>
+
+<section id="s6">
+  <h2>6. Does sorting explain it?</h2>
+  <p class="lede">The article says sorting accounts for &ldquo;only about 5% of the
+  variance&rdquo; in affective polarization (p.&nbsp;142). Split the country by how sorted
+  people are, on Mason&rsquo;s own score from last session, and judge for yourself.</p>
+  <div class="controls"><span class="pill">
+    <button class="tog" id="cRel" aria-pressed="true">terciles within each year</button>
+    <button class="tog" id="cFix" aria-pressed="false">fixed cut at 0.40</button>
+  </span></div>
+  <div class="fig"><svg id="fig6" viewBox="0 0 900 380" role="img"
+    aria-label="Affective polarization by level of partisan-ideological sorting"></svg></div>
+  <p class="readout" id="fig6read"></p>
+  <p class="note">Both halves are true and the session says so. The least sorted got much
+  more hostile while their sorting barely moved &mdash; so sorting cannot be what moved the
+  country. And the distance between the most and least sorted grew, on either cut &mdash;
+  so &ldquo;about 5% of the variance&rdquo; does not describe these data either. The two
+  numbers answer different questions: theirs is about explaining the change over time,
+  this is about predicting the level within a year.</p>
+</section>
+
+<section id="s7">
+  <h2>7. Party feeling spills into everything else</h2>
+  <p class="lede">Eight feeling thermometers from our own survey. Not one of these questions
+  mentions a party. Bars are this class&rsquo;s Democrats; the dots are the country, split by
+  party, on the four groups the 2024 ANES also asks about. The room has five Republicans, so
+  the mirror image has to come from the national data &mdash; and the evangelical row is
+  where you can see it.</p>
+  <div class="fig"><svg id="fig7" viewBox="0 0 900 360" role="img"
+    aria-label="Class and national feeling thermometers for eight social groups"></svg></div>
+  <p class="readout" id="fig7read"></p>
+  <p class="note">Bars: this class, Democrats and Democratic leaners only &mdash; five
+  Republicans is too few to report. Dots: ANES 2024, which asks four of the eight; labor
+  unions and Christian fundamentalists are near matches for our union members and
+  evangelicals rather than the same question.</p>
+</section>
+
+<footer>
+  <p><b>Sources.</b> ANES cumulative data file, VCF0218 and VCF0224, partisans
+  including leaners unless stated. Cervas Election Study 2026.
+  Built by <code>materials/build-affect-interactive.py</code> from the same CSVs the
+  PowerPoint reads, so the two cannot disagree.</p>
+  <p class="k"><kbd>T</kbd> light / dark. Everything here works offline.</p>
+</footer>
+</div>
+<script>
+const D = {"series":{"inparty":[[1978,70.7286],[1980,72.031],[1982,73.8527],[1984,74.3463],[1986,74.0011],[1988,75.6694],[1990,70.8743],[1992,69.6387],[1994,69.9372],[1996,71.3688],[1998,70.103],[2000,72.1862],[2004,73.159],[2008,70.2896],[2012,69.441],[2016,66.8011],[2020,71.0773],[2024,69.9616]],"outparty":[[1978,47.9861],[1980,46.5759],[1982,44.2663],[1984,45.9007],[1986,46.1894],[1988,45.5274],[1990,46.7125],[1992,41.8272],[1994,42.4858],[1996,41.2139],[1998,41.1631],[2000,41.5706],[2004,39.5625],[2008,34.6702],[2012,27.8646],[2016,26.0597],[2020,19.2586],[2024,20.5762]],"affpol":[[1978,22.6471],[1980,25.4298],[1982,29.5419],[1984,28.4343],[1986,27.73],[1988,30.1275],[1990,24.0399],[1992,27.7988],[1994,27.4278],[1996,30.2434],[1998,29.1097],[2000,30.6341],[2004,33.6553],[2008,35.5908],[2012,41.5748],[2016,40.7666],[2020,51.8726],[2024,49.3902]],"inparty_s":[[1978,73.9484],[1980,75.0679],[1982,76.2774],[1984,76.813],[1986,76.4357],[1988,77.6298],[1990,73.7137],[1992,72.6263],[1994,72.4329],[1996,74.1487],[1998,73.2901],[2000,76.6417],[2004,77.5627],[2008,74.2868],[2012,72.9573],[2016,70.3348],[2020,74.5877],[2024,74.4212]],"outparty_s":[[1978,46.9583],[1980,45.6558],[1982,43.4292],[1984,44.9399],[1986,45.0527],[1988,43.9609],[1990,45.5328],[1992,40.8455],[1994,40.9866],[1996,39.8478],[1998,40.101],[2000,39.9507],[2004,37.0944],[2008,31.7067],[2012,25.9656],[2016,24.6168],[2020,18.1184],[2024,18.1257]],"affpol_s":[[1978,26.9231],[1980,29.3926],[1982,32.8115],[1984,31.8687],[1986,31.3306],[1988,33.6759],[1990,28.0558],[1992,31.7558],[1994,31.4481],[1996,34.4032],[1998,33.4421],[2000,36.7099],[2004,40.5039],[2008,42.5567],[2012,46.987],[2016,45.7607],[2020,56.5264],[2024,56.3175]],"outzero":[[1978,5.3944],[1980,6.865],[1982,7.2697],[1984,7.9129],[1986,7.8333],[1988,8.149],[1990,7.6552],[1992,8.2931],[1994,6.774],[1996,8.6916],[1998,9.4066],[2000,8.3696],[2004,12.3374],[2008,14.8177],[2012,22.7581],[2016,22.2155],[2020,39.9874],[2024,33.1782]],"inwarm":[[1978,80.895],[1980,85.1628],[1982,88.9731],[1984,86.7895],[1986,86.4909],[1988,85.6069],[1990,80.4309],[1992,82.5948],[1994,82.4088],[1996,86.3868],[1998,83.7522],[2000,85.0195],[2004,87.08],[2008,82.0778],[2012,81.8571],[2016,78.3596],[2020,83.4749],[2024,81.4601]],"outwarm":[[1978,31.2065],[1980,35.3928],[1982,29.8394],[1984,33.9352],[1986,33.8889],[1988,29.8603],[1990,34.8403],[1992,25.8715],[1994,25.8684],[1996,27.1688],[1998,25.6378],[2000,23.5242],[2004,24.4195],[2008,15.5344],[2012,9.897],[2016,10.5826],[2020,6.2561],[2024,6.5142]],"warmboth":[[1978,29.4612],[1980,33.2008],[1982,27.6042],[1984,31.6878],[1986,31.9512],[1988,27.0692],[1990,31.2061],[1992,23.0844],[1994,22.7145],[1996,24.3918],[1998,21.2793],[2000,21.5181],[2004,22.1089],[2008,14.6008],[2012,8.5875],[2016,8.8614],[2020,4.7849],[2024,4.7199]],"outle10":[[1978,5.8005],[1980,7.0938],[1982,8.115],[1984,8.2315],[1986,8.2222],[1988,9.0221],[1990,8.1977],[1992,9.1151],[1994,7.4989],[1996,9.906],[1998,11.0177],[2000,11.2829],[2004,12.9898],[2008,15.7449],[2012,26.4277],[2016,29.1648],[2020,43.9926],[2024,39.2715]],"outlt50":[[1978,33.9907],[1980,40.8848],[1982,48.3516],[1984,40.7329],[1986,41.8333],[1988,40.5704],[1990,39.0597],[1992,52.5219],[1994,49.6169],[1996,54.503],[1998,54.9438],[2000,52.0202],[2004,56.069],[2008,63.4099],[2012,75.8992],[2016,78.2129],[2020,84.7134],[2024,84.9371]],"dem":[[1978,24.0965],[1980,24.8896],[1982,31.6333],[1984,30.3512],[1986,29.5005],[1988,30.5288],[1990,26.6209],[1992,31.0226],[1994,23.3676],[1996,31.2896],[1998,33.7206],[2000,31.519],[2004,34.9606],[2008,39.4534],[2012,45.483],[2016,43.8825],[2020,49.6563],[2024,48.8605]],"rep":[[1978,20.1638],[1980,26.269],[1982,25.9026],[1984,26.1243],[1986,25.2436],[1988,29.6633],[1990,20.3353],[1992,23.5087],[1994,31.9887],[1996,28.8377],[1998,22.7382],[2000,29.4377],[2004,32.0773],[2008,30.3181],[2012,36.9531],[2016,37.1694],[2020,54.3108],[2024,49.9582]],"age18":[[1978,19.1871],[1980,22.1067],[1982,26.8301],[1984,26.8896],[1986,25.4754],[1988,27.9079],[1990,20.5615],[1992,23.4952],[1994,25.7085],[1996,27.7216],[1998,25.5409],[2000,25.6225],[2004,30.5251],[2008,33.788],[2012,41.4559],[2016,36.0416],[2020,45.5283],[2024,43.1127]],"age30":[[1978,21.5302],[1980,23.3388],[1982,29.1746],[1984,26.442],[1986,25.9635],[1988,30.0251],[1990,22.5763],[1992,26.8046],[1994,28.8287],[1996,29.5086],[1998,26.7725],[2000,27.828],[2004,29.898],[2008,33.9007],[2012,40.2834],[2016,39.7912],[2020,48.5415],[2024,45.7154]],"age45":[[1978,23.1964],[1980,26.0368],[1982,29.3988],[1984,29.8887],[1986,29.6754],[1988,28.9459],[1990,26.098],[1992,27.8728],[1994,27.1664],[1996,29.5831],[1998,31.5502],[2000,34.6845],[2004,35.3613],[2008,37.533],[2012,41.941],[2016,41.71],[2020,53.8911],[2024,49.7304]],"age65":[[1978,30.0],[1980,32.5897],[1982,33.5955],[1984,31.7555],[1986,31.3092],[1988,34.698],[1990,27.7057],[1992,33.6207],[1994,27.4101],[1996,36.0324],[1998,34.2099],[2000,34.8889],[2004,40.2117],[2008,36.1741],[2012,43.1121],[2016,45.2629],[2020,57.4646],[2024,57.5185]],"sortLow":[[1978,19.0105],[1980,18.0881],[1982,24.8683],[1984,23.4142],[1986,24.5655],[1988,25.4178],[1990,21.4592],[1992,22.6248],[1994,19.8728],[1996,23.2284],[1998,25.3738],[2000,24.5604],[2004,26.1058],[2008,28.4496],[2012,34.1648],[2016,28.4981],[2020,37.3152],[2024,36.0779]],"sortMid":[[1978,16.6809],[1980,20.0172],[1982,22.0035],[1984,22.3883],[1986,21.2496],[1988,22.7267],[1990,18.8903],[1992,21.7039],[1994,22.5372],[1996,28.0953],[1998,23.2497],[2000,28.4021],[2004,28.786],[2008,30.4924],[2012,34.9529],[2016,36.8499],[2020,57.5827],[2024,56.3178]],"sortHigh":[[1978,35.246],[1980,39.3636],[1982,43.013],[1984,43.3452],[1986,43.0774],[1988,43.4127],[1990,37.466],[1992,42.8155],[1994,46.5098],[1996,46.0306],[1998,40.9643],[2000,46.8135],[2004,51.1305],[2008,49.6658],[2012,58.0119],[2016,60.2279],[2020,76.8693],[2024,76.7725]],"fixLow":[[1978,19.0864],[1980,20.6728],[1982,25.7727],[1984,24.5705],[1986,24.3921],[1988,26.0876],[1990,21.316],[1992,24.2837],[1994,22.4187],[1996,25.2746],[1998,25.3138],[2000,26.1767],[2004,27.243],[2008,29.405],[2012,34.5146],[2016,31.2832],[2020,40.7511],[2024,40.0122]],"fixHigh":[[1978,35.2121],[1980,40.1287],[1982,41.8072],[1984,43.848],[1986,43.7595],[1988,44.3664],[1990,38.8476],[1992,43.004],[1994,49.708],[1996,46.0306],[1998,42.0753],[2000,46.8135],[2004,51.1305],[2008,49.6658],[2012,58.0119],[2016,56.7645],[2020,67.7002],[2024,65.7492]],"fixShare":[[1978,17.3684],[1980,19.5652],[1982,20.8805],[1984,21.3256],[1986,16.8683],[1988,20.8765],[1990,17.6768],[1992,21.799],[1994,25.3765],[1996,25.4684],[1998,20.4714],[2000,25.2097],[2004,28.4183],[2008,33.0511],[2012,31.1367],[2016,37.2322],[2020,41.7781],[2024,39.1747]]},"hist":{"outparty":[39.1781,21.361,14.3221,9.3015,9.313,3.5805,1.8169,0.3951,0.4997,0.2321],"inparty":[1.5419,0.9546,2.517,4.7672,8.6199,17.6941,21.4799,6.2554,21.3781,14.7919]},"cls":{"inparty":67.79,"outparty":21.52,"affpol":46.27,"out_zero":12.1,"out_lt50":87.9,"n_resp":47.0,"n_partisan":33.0,"n_dem":29.0,"n_rep":5.0,"match_year":1992.0,"sorting":0.5},"anes24":{"inparty":70.0,"outparty":20.6,"affpol":49.4,"out_zero":33.2,"out_lt50":84.9},"young24":{"inparty":66.4,"outparty":23.3,"affpol":43.1,"out_zero":29.6,"out_lt50":81.5},"spill":[{"gk":"black","label":"Black Americans","val":93.1,"side":"D","n":39},{"gk":"union","label":"union members","val":84.7,"side":"D","n":41},{"gk":"lgb","label":"gay, lesbian or bisexual people","val":91.8,"side":"D","n":40},{"gk":"atheist","label":"atheists and agnostics","val":86.5,"side":"D","n":43},{"gk":"evangelical","label":"evangelical Christians","val":51.2,"side":"R","n":42},{"gk":"south","label":"people in the South","val":72.2,"side":"R","n":43},{"gk":"old","label":"people 65 or older","val":75.1,"side":"R","n":43},{"gk":"rich","label":"people earning over $250k","val":64.5,"side":"R","n":41}],"natgrp":{"black":{"dem":78.7,"rep":71.6},"union":{"dem":72.4,"rep":58.7},"lgb":{"dem":74.7,"rep":55.6},"evangelical":{"dem":41.5,"rep":65.0}}};
+const $ = s => document.querySelector(s);
+const SVGNS = "http://www.w3.org/2000/svg";
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const f1 = v => v.toFixed(1);
+
+function el(tag, attrs, text){
+  const n = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  if (text !== undefined) n.textContent = text;
+  return n;
+}
+function clear(svg){ while (svg.firstChild) svg.removeChild(svg.firstChild); }
+
+/* A small linear-axis chart. Years on x, value on y, one or more line series.
+   Written out rather than pulled from a library because this page has to open
+   with no network at all. */
+function chart(svg, cfg){
+  clear(svg);
+  const vb = svg.viewBox.baseVal, W = vb.width, H = vb.height;
+  const P = Object.assign({l:52, r:150, t:16, b:34}, cfg.pad||{});
+  const x0=P.l, x1=W-P.r, y0=P.t, y1=H-P.b;
+  const [xa,xb] = cfg.xdom, [ya,yb] = cfg.ydom;
+  const px = v => x0 + (v-xa)/(xb-xa)*(x1-x0);
+  const py = v => y1 - (v-ya)/(yb-ya)*(y1-y0);
+  const RULE=css('--rule'), MUT=css('--muted');
+
+  (cfg.bands||[]).forEach(b=>svg.appendChild(el('rect',
+    {x:px(b.from), y:y0, width:px(b.to)-px(b.from), height:y1-y0,
+     fill:css('--accent'), opacity:0.07})));
+
+  cfg.yticks.forEach(v=>{
+    svg.appendChild(el('line',{x1:x0,x2:x1,y1:py(v),y2:py(v),stroke:RULE,'stroke-width':1}));
+    svg.appendChild(el('text',{x:x0-9,y:py(v)+4,'text-anchor':'end','font-size':12,
+      fill:MUT},(cfg.yfmt?cfg.yfmt(v):v)));
+  });
+  cfg.xticks.forEach(v=>svg.appendChild(el('text',
+    {x:px(v),y:y1+21,'text-anchor':'middle','font-size':12,fill:MUT},v)));
+
+  (cfg.rules||[]).forEach(r=>{
+    svg.appendChild(el('line',{x1:px(r.at),x2:px(r.at),y1:y0-6,y2:y1,
+      stroke:r.color||MUT,'stroke-width':1.3,'stroke-dasharray':'5 4'}));
+    if (r.label) svg.appendChild(el('text',{x:px(r.at)-8,y:y0+5,'text-anchor':'end',
+      'font-size':11.5,'font-weight':700,fill:r.color||MUT}, r.label));
+  });
+
+  cfg.lines.forEach(L=>{
+    const d = L.data.filter(p=>p[0]>=xa && p[0]<=xb);
+    if (!d.length) return;
+    svg.appendChild(el('polyline',{points:d.map(p=>px(p[0])+','+py(p[1])).join(' '),
+      fill:'none', stroke:L.color, 'stroke-width':L.w||2.5,
+      'stroke-linejoin':'round','stroke-linecap':'round',
+      'stroke-dasharray':L.dash||'none', opacity:L.op||1}));
+    if (L.dots!==false) d.forEach(p=>svg.appendChild(el('circle',
+      {cx:px(p[0]),cy:py(p[1]),r:L.w>2?3.2:2.4,fill:L.color, opacity:L.op||1})));
+    if (L.label){
+      const p = d[d.length-1];
+      svg.appendChild(el('text',{x:px(p[0])+10,y:py(p[1])+4,'font-size':12.5,
+        'font-weight':700,fill:L.color, opacity:L.op||1}, L.label));
+    }
+  });
+  (cfg.marks||[]).forEach(m=>{
+    svg.appendChild(el('circle',{cx:px(m.x),cy:py(m.y),r:m.r||6,fill:m.color,
+      stroke:css('--paper'),'stroke-width':2}));
+    if (m.label) svg.appendChild(el('text',{x:px(m.x)+12,y:py(m.y)+4.5,'font-size':13,
+      'font-weight':700,fill:m.color}, m.label));
+  });
+  return {px,py,x0,x1,y0,y1};
+}
+
+function toggle(id, fn){
+  const b = $(id);
+  b.addEventListener('click', ()=>{
+    b.setAttribute('aria-pressed', b.getAttribute('aria-pressed')==='true' ? 'false':'true');
+    fn();
+  });
+  return () => $(id).getAttribute('aria-pressed')==='true';
+}
+const at = (s,y) => { const r = D.series[s].find(p=>p[0]===y); return r ? r[1] : null; };
+const lastAtOrBefore = (s,y) => {
+  const d = D.series[s].filter(p=>p[0]<=y); return d.length ? d[d.length-1] : null; };
+
+/* ---- 1. figure 1 ------------------------------------------------------- */
+const onIn=toggle('#tIn',draw1), onOut=toggle('#tOut',draw1),
+      onGap=toggle('#tGap',draw1), onLean=toggle('#tLean',draw1);
+$('#endYear').addEventListener('input', draw1);
+function draw1(){
+  const end = +$('#endYear').value;
+  $('#endYearOut').textContent = end;
+  const sfx = onLean() ? '' : '_s';
+  const lines = [];
+  if (onIn())  lines.push({data:D.series['inparty'+sfx],  color:css('--in'),  w:3, label:'in-party'});
+  if (onOut()) lines.push({data:D.series['outparty'+sfx], color:css('--out'), w:3, label:'out-party'});
+  if (onGap()) lines.push({data:D.series['affpol'+sfx],   color:css('--gap'), w:2.5, label:'the gap'});
+  chart($('#fig1'), {
+    xdom:[1978,end], ydom:[0,80], yticks:[0,20,40,60,80],
+    xticks:[1978,1990,2000,2012,2024].filter(y=>y<=end),
+    lines});
+  const g = lastAtOrBefore('affpol'+sfx, end);
+  const i = lastAtOrBefore('inparty'+sfx, end), o = lastAtOrBefore('outparty'+sfx, end);
+  const dIn = i[1]-D.series['inparty'+sfx][0][1];
+  const dOut = o[1]-D.series['outparty'+sfx][0][1];
+  $('#fig1read').innerHTML =
+    `<b>${g[0]}:</b> the gap is <b>${f1(g[1])}</b> degrees &mdash; in-party ${f1(i[1])},
+     out-party ${f1(o[1])}. Since 1978 in-party feeling has moved
+     <b>${dIn>=0?'+':''}${f1(dIn)}</b> and out-party feeling
+     <b>${dOut>=0?'+':''}${f1(dOut)}</b>.` +
+    (end < 2020 ? ' <span style="color:var(--accent)">Now drag the slider past 2016.</span>' : '');
+}
+
+/* ---- 2. you on the series --------------------------------------------- */
+let side = 'D';
+$('#pD').addEventListener('click', ()=>{side='D'; setSide(); draw2();});
+$('#pR').addEventListener('click', ()=>{side='R'; setSide(); draw2();});
+function setSide(){
+  $('#pD').setAttribute('aria-pressed', side==='D');
+  $('#pR').setAttribute('aria-pressed', side==='R');
+}
+['#ftD','#ftR'].forEach(id=>$(id).addEventListener('input', draw2));
+function draw2(){
+  const d = +$('#ftD').value, r = +$('#ftR').value;
+  $('#ftDo').textContent = d; $('#ftRo').textContent = r;
+  const inp = side==='D' ? d : r, out = side==='D' ? r : d;
+  const you = inp - out;
+  const S = D.series.affpol;
+  const peak = S.reduce((a,b)=>b[1]>a[1]?b:a);
+  const low  = S.reduce((a,b)=>b[1]<a[1]?b:a);
+
+  // Where the national series last stood at the student's own level. Only
+  // meaningful if the level is INSIDE the range the country has actually
+  // occupied — an earlier version reported "the country was last near that in
+  // 2020" for a score of 80, which the country has never been anywhere near.
+  let cross = null;
+  if (you <= peak[1] && you >= low[1]){
+    let best = S[0];
+    S.forEach(pt=>{ if (Math.abs(pt[1]-you) < Math.abs(best[1]-you)) best = pt; });
+    cross = best;
+  }
+  const YOU_AT = 2027;
+  const lo = Math.min(0, you - 6), hi = Math.max(80, you + 6);
+  const ticks = [];
+  for (let v = Math.ceil(lo/20)*20; v <= hi; v += 20) ticks.push(v);
+
+  chart($('#fig2'), {
+    xdom:[1978,YOU_AT+1], ydom:[lo,hi], yticks:ticks,
+    xticks:[1978,1990,2000,2012,2024], pad:{r:120,b:34},
+    lines:[{data:S, color:css('--gap'), w:2.5, label:''},
+           {data:[[1978,D.cls.affpol],[YOU_AT,D.cls.affpol]], color:css('--accent'),
+            w:1.5, dash:'5 5', dots:false, label:'this class'},
+           {data:[[1978,you],[YOU_AT,you]], color:css('--blue'),
+            w:1.2, dash:'2 5', dots:false, label:''}],
+    marks:[{x:YOU_AT, y:you, color:css('--blue'), r:7, label:'you'}]
+           .concat(cross ? [{x:cross[0], y:cross[1], color:css('--gap'), r:4.5}] : [])});
+
+  const where = cross
+    ? `The country was last at that level in <b>${cross[0]}</b> (${f1(cross[1])}).`
+    : (you > peak[1]
+        ? `That is <b>higher than the country has ever been</b> on this measure &mdash;
+           the peak is ${f1(peak[1])}, in ${peak[0]}.`
+        : `That is <b>lower than the country has been</b> at any point since 1978 &mdash;
+           the low is ${f1(low[1])}, in ${low[0]}.`);
+  const flip = you < 0
+    ? ` A negative score means you rate the other party <em>warmer</em> than your own,
+        which the measure allows but was not built for.`
+    : '';
+  $('#fig2read').innerHTML =
+    `Your score is <b>${you}</b>. ${where}${flip} This class averages ${f1(D.cls.affpol)};
+     America in 2024 is ${f1(D.anes24.affpol)}; Americans aged 18&ndash;29 are
+     ${f1(D.young24.affpol)}.`;
+
+  const cards = [
+    ['your in-party rating', inp, 'the country: '+f1(D.anes24.inparty)],
+    ['your out-party rating', out, 'the country: '+f1(D.anes24.outparty)],
+    ['your gap', you, 'this class: '+f1(D.cls.affpol)]];
+  $('#fig2stats').innerHTML = cards.map(c=>
+    `<div class="stat"><div class="n">${c[1]}</div><div class="l">${c[0]}<br>${c[2]}</div></div>`
+  ).join('');
+}
+
+/* ---- 3. the 2024 distribution ----------------------------------------- */
+const onHOut=toggle('#hOut',draw3), onHIn=toggle('#hIn',draw3);
+function draw3(){
+  const svg = $('#fig3'); clear(svg);
+  const vb=svg.viewBox.baseVal, W=vb.width, H=vb.height;
+  const x0=52, x1=W-24, y1=H-46, y0=18;
+  const mx = Math.max(...D.hist.outparty, ...D.hist.inparty);
+  const bw = (x1-x0)/10;
+  const show = [];
+  if (onHOut()) show.push(['outparty', css('--out')]);
+  if (onHIn())  show.push(['inparty',  css('--in')]);
+  [0,10,20,30,40].forEach(v=>{
+    svg.appendChild(el('line',{x1:x0,x2:x1,y1:y1-(v/mx)*(y1-y0),y2:y1-(v/mx)*(y1-y0),
+      stroke:css('--rule')}));
+    svg.appendChild(el('text',{x:x0-9,y:y1-(v/mx)*(y1-y0)+4,'text-anchor':'end',
+      'font-size':12,fill:css('--muted')}, v+'%'));
+  });
+  D.hist.outparty.forEach((_,k)=>{
+    show.forEach((sh,si)=>{
+      const v = D.hist[sh[0]][k];
+      const w = bw*0.80/show.length;
+      const bx = x0 + k*bw + bw*0.10 + si*w;
+      const bh = Math.max(1,(v/mx)*(y1-y0));
+      svg.appendChild(el('rect',{x:bx,y:y1-bh,width:w,height:bh,fill:sh[1],
+        opacity: show.length>1 ? 0.85 : 1}));
+    });
+    svg.appendChild(el('text',{x:x0+k*bw+bw/2,y:y1+20,'text-anchor':'middle',
+      'font-size':11.5,fill:css('--muted')}, (k*10)+'–'+(k*10+10)));
+  });
+  svg.appendChild(el('line',{x1:x0,x2:x1,y1:y1,y2:y1,stroke:css('--dim')}));
+  svg.appendChild(el('text',{x:(x0+x1)/2,y:H-8,'text-anchor':'middle','font-size':12,
+    fill:css('--muted')},'feeling thermometer rating'));
+  $('#fig3read').innerHTML =
+    `<b>${D.hist.outparty[0].toFixed(0)}%</b> of partisans put the other party in the bottom
+     ten degrees. <b>${D.hist.inparty[0].toFixed(1)}%</b> put their own party there.`;
+}
+
+/* ---- 4. the zero share ------------------------------------------------- */
+const onZ0=toggle('#z0',draw4), onZ10=toggle('#z10',draw4), onZ50=toggle('#z50',draw4),
+      onW1=toggle('#w1',draw4), onW2=toggle('#w2',draw4), onW3=toggle('#w3',draw4);
+function draw4(){
+  const lines=[];
+  if (onZ50()) lines.push({data:D.series.outlt50, color:css('--dim'), w:2, label:'other below 50'});
+  if (onZ10()) lines.push({data:D.series.outle10, color:css('--blue'), w:2.5, label:'other 10 or less'});
+  if (onZ0())  lines.push({data:D.series.outzero, color:css('--out'), w:3, label:'other exactly 0'});
+  if (onW1())  lines.push({data:D.series.inwarm,  color:css('--in'),  w:3, label:'own above 50'});
+  if (onW2())  lines.push({data:D.series.outwarm, color:css('--out'), w:3, dash:'6 4', label:'other above 50'});
+  if (onW3())  lines.push({data:D.series.warmboth,color:css('--accent'), w:2.5, label:'warm toward both'});
+  chart($('#fig4'), {xdom:[1978,2024], ydom:[0,100], yticks:[0,25,50,75,100],
+    xticks:[1978,1990,2000,2012,2024], yfmt:v=>v+'%', lines});
+  const warmOn = onW1()||onW2()||onW3();
+  $('#fig4read').innerHTML = warmOn
+    ? `Rating their OWN party above 50: <b>${at('inwarm',1978).toFixed(0)}%</b> in 1978,
+       <b>${at('inwarm',2024).toFixed(0)}%</b> in 2024 &mdash; flat. Rating the OTHER party
+       above 50: <b>${at('outwarm',1978).toFixed(0)}%</b> falling to
+       <b>${at('outwarm',2024).toFixed(0)}%</b>. Americans warm toward both parties, including
+       independents: ${at('warmboth',1978).toFixed(0)}% to ${at('warmboth',2024).toFixed(0)}%.`
+    : `<b>${at('outzero',1980).toFixed(1)}%</b> of partisans put the other party at absolute
+       zero in 1980. In 2024 it is <b>${at('outzero',2024).toFixed(1)}%</b>, and the peak is
+       ${at('outzero',2020).toFixed(1)}% in 2020.`;
+}
+
+/* ---- 5. who ------------------------------------------------------------ */
+const onA18=toggle('#a18',draw5), onA30=toggle('#a30',draw5),
+      onA45=toggle('#a45',draw5), onA65=toggle('#a65',draw5),
+      onParty=toggle('#aParty',draw5);
+function draw5(){
+  let lines;
+  if (onParty()){
+    lines = [{data:D.series.dem, color:css('--blue'), w:3, label:'Democrats'},
+             {data:D.series.rep, color:css('--accent'), w:3, label:'Republicans'}];
+  } else {
+    lines = [];
+    if (onA65()) lines.push({data:D.series.age65, color:css('--out'), w:3, label:'65+'});
+    if (onA45()) lines.push({data:D.series.age45, color:'#a98bc4', w:2, label:'45–64', dots:false});
+    if (onA30()) lines.push({data:D.series.age30, color:'#9fb8d8', w:2, label:'30–44', dots:false});
+    if (onA18()) lines.push({data:D.series.age18, color:css('--blue'), w:3, label:'18–29'});
+  }
+  chart($('#fig5'), {xdom:[1978,2024], ydom:[15,60], yticks:[15,30,45,60],
+    xticks:[1978,1990,2000,2012,2024], lines});
+  $('#fig5read').innerHTML = onParty()
+    ? `In 2024 Democrats score ${f1(at('dem',2024))} and Republicans ${f1(at('rep',2024))}.
+       For most of the series Democrats ran higher; since 2020 they are level.`
+    : `In 2024 Americans aged 18&ndash;29 score <b>${f1(at('age18',2024))}</b> and Americans
+       over 65 score <b>${f1(at('age65',2024))}</b> &mdash; a gap of
+       <b>${f1(at('age65',2024)-at('age18',2024))}</b> degrees, larger than the entire
+       national rise between 1978 and 2008.`;
+}
+
+/* ---- 6. sorting -------------------------------------------------------- */
+const onRel=toggle('#cRel',()=>{$('#cFix').setAttribute('aria-pressed',
+  $('#cRel').getAttribute('aria-pressed')==='true'?'false':'true'); draw6();});
+$('#cFix').addEventListener('click', ()=>{
+  $('#cRel').setAttribute('aria-pressed',
+    $('#cRel').getAttribute('aria-pressed')==='true'?'false':'true');
+  draw6();
+});
+function draw6(){
+  const rel = $('#cRel').getAttribute('aria-pressed')==='true';
+  $('#cFix').setAttribute('aria-pressed', String(!rel));
+  const lines = rel
+    ? [{data:D.series.sortHigh, color:css('--accent'), w:3, label:'most sorted third'},
+       {data:D.series.sortMid,  color:'#c9a227', w:2, label:'middle', dots:false},
+       {data:D.series.sortLow,  color:css('--in'), w:3, label:'least sorted third'}]
+    : [{data:D.series.fixHigh, color:css('--accent'), w:3, label:'sorting ≥ 0.40'},
+       {data:D.series.fixLow,  color:css('--in'), w:3, label:'below 0.40'}];
+  chart($('#fig6'), {xdom:[1978,2024], ydom:[10,90], yticks:[10,30,50,70,90],
+    xticks:[1978,1990,2000,2012,2024], pad:{r:170}, lines});
+  const hi = rel ? 'sortHigh' : 'fixHigh', lo = rel ? 'sortLow' : 'fixLow';
+  const dHi = at(hi,2024)-at(hi,1978), dLo = at(lo,2024)-at(lo,1978);
+  $('#fig6read').innerHTML =
+    `1978 &rarr; 2024: the more sorted group rose <b>${dHi>=0?'+':''}${f1(dHi)}</b> degrees
+     and the less sorted group rose <b>${dLo>=0?'+':''}${f1(dLo)}</b>. The distance between
+     them went from ${f1(at(hi,1978)-at(lo,1978))} degrees to
+     <b>${f1(at(hi,2024)-at(lo,2024))}</b>.` +
+    (rel ? '' : ` Under the fixed cut the groups mean the same thing every year, and
+     ${at('fixShare',2024).toFixed(0)}% of partisans are above it in 2024 against
+     ${at('fixShare',1978).toFixed(0)}% in 1978.`);
+}
+
+/* ---- 7. the leak ------------------------------------------------------- */
+function draw7(){
+  const svg = $('#fig7'); clear(svg);
+  const vb=svg.viewBox.baseVal, W=vb.width, H=vb.height;
+  const x0=250, x1=W-210, rowH=(H-56)/D.spill.length;
+  const dem = D.spill.filter(g=>g.side==='D'), rep = D.spill.filter(g=>g.side==='R');
+  const mean = a => a.reduce((s,g)=>s+g.val,0)/a.length;
+  const vx = v => x0 + v/100*(x1-x0);
+  const COLD = css('--blue'), COLR = css('--accent');
+
+  [25,50,75,100].forEach(v=>{
+    svg.appendChild(el('line',{x1:vx(v),x2:vx(v),y1:24,y2:H-26,stroke:css('--rule')}));
+    svg.appendChild(el('text',{x:vx(v),y:H-8,'text-anchor':'middle','font-size':11.5,
+      fill:css('--muted')}, v));
+  });
+  [['this room',x1+34,css('--out')],['US Dem.',x1+104,COLD],['US Rep.',x1+174,COLR]]
+    .forEach(h=>svg.appendChild(el('text',{x:h[1],y:18,'text-anchor':'end','font-size':11,
+      'font-weight':700,fill:h[2]}, h[0])));
+
+  D.spill.forEach((g,i)=>{
+    const y = 30 + i*rowH, col = g.side==='D' ? css('--in') : css('--out');
+    svg.appendChild(el('rect',{x:x0,y:y,width:vx(g.val)-x0,height:rowH*0.58,fill:col}));
+    svg.appendChild(el('text',{x:x0-12,y:y+rowH*0.44,'text-anchor':'end','font-size':13,
+      fill:css('--ink')}, g.label));
+    const n = D.natgrp[g.gk];
+    const cy = y + rowH*0.29;
+    if (n) [[n.dem,COLD],[n.rep,COLR]].forEach(d=>{
+      svg.appendChild(el('circle',{cx:vx(d[0]),cy:cy,r:7,fill:css('--paper')}));
+      svg.appendChild(el('circle',{cx:vx(d[0]),cy:cy,r:5,fill:d[1]}));
+    });
+    [[g.val,x1+34,css('--out')], n?[n.dem,x1+104,COLD]:null, n?[n.rep,x1+174,COLR]:null]
+      .forEach(c=>{ if(!c) return;
+        svg.appendChild(el('text',{x:c[1],y:y+rowH*0.44,'text-anchor':'end','font-size':13,
+          'font-weight':700,fill:c[2]}, c[0].toFixed(0))); });
+  });
+
+  const ev = D.natgrp['evangelical'];
+  $('#fig7read').innerHTML =
+    `Democrats in this class rate the four Democratic-coded groups at
+     <b>${mean(dem).toFixed(0)}</b> and the four Republican-coded groups at
+     <b>${mean(rep).toFixed(0)}</b> &mdash; ${(mean(dem)-mean(rep)).toFixed(0)} degrees apart,
+     on questions that never mention a party. Nationally the pattern reverses where you would
+     expect it to: on Christian fundamentalists, Democrats sit at <b>${ev.dem.toFixed(0)}</b>
+     and Republicans at <b>${ev.rep.toFixed(0)}</b>.`;
+}
+
+/* ---- theme ------------------------------------------------------------- */
+addEventListener('keydown', e=>{
+  if (e.key==='t' || e.key==='T'){
+    const cur = document.documentElement.getAttribute('data-theme');
+    const dark = cur ? cur==='dark'
+      : matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
+    drawAll();
+  }
+});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', drawAll);
+
+function drawAll(){ draw1(); draw2(); draw3(); draw4(); draw5(); draw6(); draw7(); }
+setSide();
+drawAll();
+</script>

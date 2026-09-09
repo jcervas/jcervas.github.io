@@ -220,7 +220,7 @@ kbd{font-family:var(--mono);background:rgba(255,255,255,.17);padding:1px 7px;bor
   Jump straight to a slide by number — <kbd>…sorting-interactive.html#12</kbd>. The
   corner shows the current one.<br><br>
   Same twenty-one slides as the PowerPoint, same numbers, same notes. ANES cumulative
-  file, weighted; Mason's coding.
+  file; Mason's coding.
   <div class="close">Press <kbd>Esc</kbd> or click anywhere to close.</div>
 </div></div>
 <div class="hint" id="hint"></div>
@@ -467,14 +467,14 @@ function gridBlock(){return `<div class="gridwrap"><div><div id="grid"></div>
       <button id="play">▶ Play</button></div>
     <div class="ctl"><button id="j72">1972</button><button id="j04">2004</button>
       <button id="j24">2024</button></div></div></div>
-  <div class="foot">ANES, weighted. Square area is proportional to the share of
+  <div class="foot">ANES. Square area is proportional to the share of
   respondents; the scale is fixed across years, so sizes are comparable as you drag.</div>`;}
 
 const S=[
 {slug:"title",k:"light",h:()=>`<p class="kicker">Polarization II</p><h1>Sorting</h1>
   <p class="lede" style="font-family:var(--display);font-size:clamp(18px,1.8vw,31px)">
     Mason 2015 — and how she counts it</p>
-  <div class="foot">84-309 · Scaife Hall 234 · <b>?</b> for keys, <b>N</b> for notes</div>`},
+  <div class="foot">84-309 · <b>?</b> for keys, <b>N</b> for notes</div>`},
 
 {slug:"anger",k:"wash",h:()=>`<p class="kicker">Before we start — in your group</p>
   <h1 style="max-width:19ch">When did politics last make you genuinely angry?</h1>
@@ -587,7 +587,7 @@ const S=[
     <div class="stat"><b style="color:var(--accent)">${Math.round(D.matched[2024])}%</b><span>2024</span></div></div>
   <p class="punch">If you remember one number from this article,
     make it this one.</p>
-  <div class="foot">ANES, weighted. Partisans include leaners; pure independents and
+  <div class="foot">ANES. Partisans include leaners; pure independents and
     self-described moderates are excluded — they have no label to match.</div>`},
 
 {slug:"no-answer",k:"light",id:"noideo",h:()=>`<h2>And the people who could not answer</h2>
@@ -600,7 +600,7 @@ const S=[
         scale. Today it is about one in six.</p>
       <p class="punch" style="color:var(--accent);font-size:clamp(15px,1.45vw,25px)">
         Americans learned the vocabulary.</p></div></div>
-  <div class="foot">ANES, weighted. 2000 omitted — a questionnaire change that year pushed
+  <div class="foot">ANES. 2000 omitted — a questionnaire change that year pushed
     non-placement past 60% and it is not comparable.</div>`},
 
 {slug:"the-score",k:"light",id:"score",h:()=>`<h2>Only now, the score</h2>
@@ -621,7 +621,7 @@ const S=[
       <p class="lede" style="font-size:clamp(12.5px,1.16vw,20px);margin-top:16px">The pace
         roughly doubled after her data end. The difference is statistically
         distinguishable (p = ${D.fit.slope_p_diff.toFixed(2)}).</p></div></div>
-  <div class="foot">ANES, weighted. Separate least-squares fits either side of 2004; grey
+  <div class="foot">ANES. Separate least-squares fits either side of 2004; grey
     line and dots are the observed series.</div>`},
 
 {slug:"and-now-you",k:"wash",h:()=>`<p class="kicker">And now you</p>
@@ -682,7 +682,7 @@ const S=[
       <td class="lab" style="text-align:right">the country</td><td></td><td></td></tr></table>
   <p class="punch" style="font-size:clamp(15px,1.5vw,26px)">Much more sorted. A little
     more extreme. And warmer toward the other side than the country is.</p>
-  <div class="foot">CES 2026 against ANES 2024, weighted. The middle row is not a
+  <div class="foot">CES 2026 against ANES 2024. The middle row is not a
     like-for-like gap — our survey asks about different policies than the ANES does.</div>`},
 
 {slug:"who-was-right",k:"light center",h:()=>`<h2>So who was right?</h2>
