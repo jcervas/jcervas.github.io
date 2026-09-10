@@ -523,14 +523,14 @@ const S=[
  <p class="lede">We are missing important context by evaluating everyone in the aggregate.</p>`},
 
 {slug:"cancel",k:"light",subs:5,notes:
- "Reveal it one cell at a time — right arrow or click, stages #3a to #3e. The order is the argument: their own party, then the SAME people on the other one, then the other side doing the mirror image, then the averages. Do not skip to the end; the point is that they see 20.1 land under 69.9 before you show them what averaging does to the pair. Ask before the last stage: what happens if I average down these columns? Somebody will get it.",
+ "Reveal it one cell at a time — right arrow or click, stages #3a to #3e. The order is the argument, and it goes down the diagonal first: both parties rating THEMSELVES (69.9 and 70.0, the same number twice), then both parties rating THE OTHER ONE (21.1 and 20.1, the same number twice again). Taking it row by row made the point once per party and put the two numbers being compared three clicks apart; this way each pair lands together and the symmetry is visible rather than described. Do not skip to the end. Ask before the last stage: what happens if I average down these columns? Somebody will get it.",
  h:(k=0)=>{
    const beat=[
      `Same two questions. This time, split by who is answering.`,
      `Democrats rate their own party at <b>${f1(D.natsplit.demR_ftD)}</b>. No surprise yet.`,
-     `The same people, on the other party: <b>${f1(D.natsplit.demR_ftR)}</b>. Forty-nine degrees lower.`,
-     `Now the other side. Republicans put the Democratic Party at <b>${f1(D.natsplit.repR_ftD)}</b> — almost exactly what Democrats gave them.`,
-     `And their own at <b>${f1(D.natsplit.repR_ftR)}</b>. A near-perfect mirror image.`,
+     `Republicans rate their own at <b>${f1(D.natsplit.repR_ftR)}</b>. Both sides like their own side by the same amount.`,
+     `Now the other party. Democrats put the Republicans at <b>${f1(D.natsplit.demR_ftR)}</b> — forty-nine degrees lower.`,
+     `And Republicans put the Democrats at <b>${f1(D.natsplit.repR_ftD)}</b>. A near-perfect mirror image.`,
      `Average down each column: <b>${f1(D.raw.ftD.anes)}</b> and <b>${f1(D.raw.ftR.anes)}</b> — numbers that describe nobody in the table.`][k];
    const c=(n,v,own)=>`<td class="cell ${own?'inp':'outp'}${k<n?' pend':''}">${f1(v)}</td>`;
    return `<h2>Because the two sides cancel</h2>
@@ -538,15 +538,15 @@ const S=[
  <table class="matrix">
    <tr><th class="rh"></th><th>rate the<br>Democratic Party</th><th>rate the<br>Republican Party</th></tr>
    <tr><th class="rh"><b>Democrats</b>n = 2,637</th>
-     ${c(1,D.natsplit.demR_ftD,true)}${c(2,D.natsplit.demR_ftR,false)}</tr>
+     ${c(1,D.natsplit.demR_ftD,true)}${c(3,D.natsplit.demR_ftR,false)}</tr>
    <tr><th class="rh"><b>Republicans</b>n = 2,456</th>
-     ${c(3,D.natsplit.repR_ftD,false)}${c(4,D.natsplit.repR_ftR,true)}</tr>
+     ${c(4,D.natsplit.repR_ftD,false)}${c(2,D.natsplit.repR_ftR,true)}</tr>
    <tr class="marg${k<5?' pend':''}"><th class="rh"><b>Everyone, averaged</b></th>
      <td>${f1(D.raw.ftD.anes)}</td><td>${f1(D.raw.ftR.anes)}</td></tr>
  </table>
- <div class="mlegend" style="opacity:${k>=1?1:0}">
-   <span><i style="background:var(--match-soft);border:1px solid var(--match)"></i>rating their own party</span>
-   <span><i style="background:var(--cross-soft);border:1px solid var(--cross)"></i>rating the other one</span>
+ <div class="mlegend">
+   <span style="opacity:${k>=1?1:0}"><i style="background:var(--match-soft);border:1px solid var(--match)"></i>rating their own party</span>
+   <span style="opacity:${k>=3?1:0}"><i style="background:var(--cross-soft);border:1px solid var(--cross)"></i>rating the other one</span>
  </div>
  <p class="punch beat">${beat}</p>
  <div class="foot">ANES 2024, partisans including leaners</div>`}},
