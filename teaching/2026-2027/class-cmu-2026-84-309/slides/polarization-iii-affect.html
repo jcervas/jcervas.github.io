@@ -11,7 +11,7 @@
   --rule:#B9C1CA; --rule-2:#DDE2E7;
   --accent:#C41230; --accent-soft:#F7DDE1;
   --blue:#1F4E79;
-  --match:#17706B; --match-soft:#D3E7E5; --cross:#E09B2D;--cross-ink:#8A5D10;--match-soft:#E3F1EF;--cross-soft:#FBEFDA; --none:#C9CFD5;
+  --match:#17706B; --match-soft:#D3E7E5; --cross:#E09B2D;--cross-ink:#8A5D10;--match-soft:#E3F1EF;--cross-soft:#FBEFDA;
   --ghost:#D3D9E0;
   --display:'Iowan Old Style',Georgia,'Times New Roman',serif;
   --body:'IBM Plex Sans','Helvetica Neue',Arial,sans-serif;
@@ -21,7 +21,7 @@
   --paper:#0F1720; --card:#161F29; --tint:#1B242E;
   --ink:#EEF2F6; --ink-2:#B7C2CD; --ink-3:#8A96A3;
   --rule:#39434E; --rule-2:#26303A; --accent:#FF6B7F; --accent-soft:#3A1C24;
-  --blue:#7FB2E5; --match:#4FC4B8; --match-soft:#12312F; --cross:#F0B860;--cross-ink:#F0B860;--match-soft:#12332F;--cross-soft:#33291A; --none:#4A545F;
+  --blue:#7FB2E5; --match:#4FC4B8; --match-soft:#12312F; --cross:#F0B860;--cross-ink:#F0B860;--match-soft:#12332F;--cross-soft:#33291A;
   --ghost:#28323C;
 }
 *{box-sizing:border-box}
@@ -30,7 +30,7 @@ body{background:var(--paper);color:var(--ink);font-family:var(--body);
   -webkit-font-smoothing:antialiased;overflow:hidden}
 .deck{position:relative;width:100%;height:100%}
 .slide{position:absolute;inset:0;padding:clamp(32px,4vh,58px) clamp(32px,5vw,78px)
-  clamp(56px,8vh,86px);display:none;flex-direction:column;overflow:auto}
+  clamp(30px,4.5vh,54px);display:none;flex-direction:column;overflow:auto}
 .slide.on{display:flex}
 .slide.dark{background:var(--ink);color:#F4F7FA}
 .slide.dark .foot{color:#8E9AA6}
@@ -47,10 +47,16 @@ p.lede{font-size:clamp(15px,1.48vw,34px);line-height:1.45;color:var(--ink-2);
 .punch{font-family:var(--display);font-size:clamp(17px,1.85vw,44px);font-weight:600;
   margin-top:18px;line-height:1.22}
 .big{font-family:var(--display);font-size:clamp(40px,6.4vw,168px);font-weight:600;line-height:1}
-.foot{position:absolute;left:clamp(32px,5vw,78px);right:clamp(118px,13vw,210px);
-  bottom:clamp(16px,2.4vh,28px);font-size:clamp(11px,.92vw,16px);color:var(--ink-3);
-  line-height:1.4}
+.foot{margin-top:auto;padding-top:clamp(6px,1vh,14px);
+  padding-right:clamp(86px,11vw,168px);font-size:clamp(11px,.92vw,16px);
+  color:var(--ink-3);line-height:1.4}
 .nums{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.discuss{margin-top:auto;padding:clamp(10px,1.5vh,20px) clamp(14px,1.5vw,24px);
+  padding-right:clamp(86px,11vw,168px);border-left:4px solid var(--accent);
+  background:var(--accent-soft);border-radius:0 8px 8px 0}
+.discuss .dtag{display:block;font-family:var(--mono);font-size:clamp(9px,.72vw,12px);
+  letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.discuss p{margin:0;font-size:clamp(15px,1.58vw,34px);line-height:1.42;color:var(--ink)}
 .smap{display:grid;grid-template-columns:auto auto 1fr;gap:5px clamp(12px,1.3vw,24px);
   align-items:center;font-size:clamp(12.5px,1.15vw,20px);margin-top:6px}
 .smap .hd{font-size:clamp(9.5px,.82vw,14px);font-weight:700;letter-spacing:.1em;
@@ -84,7 +90,9 @@ button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);co
    last line to the bottom — margin-top:auto opened a void of up to 64% of the
    slide on a 1920-wide display. */
 .slide.center{justify-content:center}
-.slide.center .foot{position:absolute}
+.slide.center .foot{position:absolute;left:clamp(32px,5vw,78px);
+  right:clamp(118px,13vw,210px);bottom:clamp(16px,2.4vh,28px);
+  margin-top:0;padding-top:0;padding-right:0}
 /* Do NOT pin the heading on a centered slide. Taking it out of flow leaves the
    body floating in the middle with a hole above it — that made the gaps worse
    (31% where centering alone gives 7%). The whole column centers together. */
@@ -220,6 +228,11 @@ tr.marg td,tr.marg th{transition:opacity .3s ease}
    than display, so the dash lengths can be measured while it waits. */
 .stage{visibility:hidden}
 .stage.on{visibility:visible}
+/* A .lead stage is the point of the chart and the .recede stages are what it
+   was computed from: once the answer is drawn, the inputs step back rather
+   than disappear, so you can still see where it came from. */
+.stage.recede{transition:opacity .5s ease}
+svg:has(.stage.lead.on) .stage.recede{opacity:.18}
 .pop{transform-box:fill-box;transform-origin:center;transform:scale(0);opacity:0;
   transition:transform .34s cubic-bezier(.28,1.15,.45,1),opacity .24s}
 .pop.go{transform:scale(1);opacity:1}
@@ -410,7 +423,9 @@ function chart(svg, cfg){
     // so animating one would erase the dash pattern. Dashed series are context
     // — the national reference, the neutral rule — and never stage.
     const staged = !L.dash && L.ghost!==false;
-    const host = staged ? el('g',{class:'stage',style:`--dur:${dur}ms`}) : svg;
+    const host = staged
+      ? el('g',{class:'stage'+(L.stageClass?' '+L.stageClass:''),style:`--dur:${dur}ms`})
+      : svg;
     host.appendChild(el('polyline',Object.assign(
       {points:XY.map(q=>q.join(',')).join(' '),
        fill:'none', stroke:L.color, 'stroke-width':L.w||3,
@@ -459,7 +474,12 @@ function svgMark(g,x,y,color,label){
   if(label!==undefined) g.svg.appendChild(el('text',{x:g.px(x),y:g.py(y)-16,
     'text-anchor':'middle','font-size':15,'font-weight':700,fill:color},label));
 }
-const SVG = (id,h) => `<div class="chart"><svg id="${id}" viewBox="0 0 1000 ${h||430}"></svg></div>`;
+// The svg scales to the column width, so its rendered height is width*H/1000 --
+// a fixed number the slide cannot negotiate with. 430 put eight chart slides
+// over the bottom of a 720p frame, which scrolls on a laptop and is simply
+// missing on a projector. Audited at 1280x720; see the note at the foot of
+// this file for how to re-run that check.
+const SVG = (id,h) => `<div class="chart"><svg id="${id}" viewBox="0 0 1000 ${h||384}"></svg></div>`;
 const pressed = id => $(id).getAttribute('aria-pressed')==='true';
 function bindToggles(ids, fn){
   ids.forEach(id=>$(id).addEventListener('click',()=>{
@@ -491,9 +511,12 @@ const TWO=(a,b)=>`<div class="two"><div class="tbox">
   <b>${b.head}</b><p>${b.text}</p></div></div>`;
 const BAND=(k,t)=>`<div class="band"><span class="tag">${k}</span><p>${t}</p></div>`;
 
-/* The deck. Order mirrors 2026-09-10-polarization-iii.pptx one for one; the
-   only web-only slide is "you", which has no PowerPoint equivalent because it
-   needs a control. Each slide is {slug, k, h, draw, notes}. */
+/* The deck. Every BADGED slide of 2026-09-10-polarization-iii.pptx appears here
+   in the same order -- the check at the bottom of this file enforces it against
+   that deck's ORDER array. The web deck additionally heads a few slides the
+   PowerPoint leaves unbadged (the opener, the closers), which is why the check
+   is a subsequence rather than an equality.
+   Each slide is {slug, k, h, draw, notes}. */
 const S=[
 {slug:"title",k:"dark center",notes:
  "Open here. The whole hour unpacks one sentence: Americans came to dislike each other without coming to disagree more.",
@@ -663,8 +686,9 @@ const S=[
  Election Study asks these two items verbatim — questions 54 and 55, answered in August.</div>`},
 
 {slug:"arithmetic",k:"light",notes:
- "One subtraction. The national averages came out a point apart because Democrats and Republicans cancel; subtract WITHIN the person and nothing cancels. Then the catch: a difference score is two numbers pretending to be one.",
- h:()=>`<h2>The arithmetic</h2>
+ "One subtraction. The national averages came out a point apart because Democrats and Republicans cancel; subtract WITHIN the person and nothing cancels. Then the catch: a difference score is two numbers pretending to be one. THE DISCUSSION IS ON THE NEXT PRESS (#12a), and it is the most important four minutes in the hour. Expect three different answers — their voters, their leaders, their policies — and that disagreement IS the finding. If a room of people who answered the question three weeks ago cannot agree what their own number meant, the validity problem is not academic. DO NOT RESOLVE IT. Say you are leaving it open, and that the last two slides are Fiorina making exactly this complaint in print. This is the plant; the payoff is the discussion on the last Fiorina slide, which asks the same question with his name on it.",
+ subs:1,
+ h:(k)=>`<h2>The arithmetic</h2>
  <p class="kicker">One subtraction, and it carries the whole literature</p>
  <div class="two" style="grid-template-columns:1fr 1fr 1fr">
    <div class="tbox"><span class="tag" style="color:var(--match)">Your party</span>
@@ -677,9 +701,9 @@ const S=[
  </div>
  <p class="punch" style="color:var(--accent)">Subtract within the person first. Then average.
  Nothing cancels.</p>
- <div class="foot">What it throws away: a gap of 40 can be 90 minus 50, or 60 minus 20. Warm about
- your own side and lukewarm about theirs is not the same country as indifferent about your own and
- freezing toward theirs.</div>`},
+ ${k?`<div class="discuss"><span class="dtag">Discuss</span><p>You answered this question in August. When you typed a number for the other party, what were you reporting — how you feel about their voters, how you feel about their leaders, or how much you disagree with their policies?</p></div>`:`<div class="foot">What it throws away: a gap of 40 can
+ be 90 minus 50, or 60 minus 20. Warm about your own side and lukewarm about theirs is not the same
+ country as indifferent about your own and freezing toward theirs.</div>`}`},
 
 {slug:"figure-1",k:"light",notes:
  "Park the slider on 2016 and you see what the authors saw, including the dip they were careful to flag. Then drag it to 2024. A trend claim made at the edge of the data is a claim about the future.",
@@ -717,7 +741,7 @@ const S=[
  "THE slide. In-party feeling 70.7 in 1978 and 70.0 in 2024 — flat across forty-six years. Out-party feeling 48.0 to 20.6. One line is doing all the work. Americans did not come to love their own side more; they came to hate the other one.",
  h:(k=0)=>`<h2>One line is doing all the work</h2>
  <p class="kicker">The same two series, with the gap taken out — and the forty-six-year change
- on each</p>${SVG('fig1b',360)}
+ on each</p>${SVG('fig1b',286)}
  <div class="two${k<3?' hold':''}">
  ${[['IN-PARTY FEELING','inparty','var(--match)'],
     ['OUT-PARTY FEELING','outparty','var(--cross)']]
@@ -759,7 +783,7 @@ const S=[
  "Finkel's figure, rebuilt from the same two ANES columns as Figure 1. Their construction: love = in-party minus 50, hate = 50 minus out-party, and the line is love minus hate. Above zero, warmth toward your own side is the stronger force; below zero, coldness toward the other side is. It crosses in 2012 and does not come back. Reveal the zero line first, then the series, then the crossing.",
  h:(k=0)=>`<h2>When hate outgrew love</h2>
  <p class="kicker">Finkel et al., figure 2 — the same two questions, arranged differently</p>
- ${SVG('figLH')}
+ ${SVG('figLH',366)}
  <p class="punch beat">${[
    `Their construction: <b>love</b> is how far above neutral you put your own party, <b>hate</b> is how far below neutral you put the other. The line is love minus hate.`,
    `Above zero, warmth toward your own side is the stronger force. Below zero, coldness toward the other side is.`,
@@ -782,48 +806,6 @@ const S=[
      svgMark(g,c[0],c[1],css('--accent'),D.lovehateCross); }
  }},
 
-{slug:"you",k:"wash",notes:
- "Their own two numbers on the national series. A negative score means they rate the other party warmer than their own, which the measure allows but was not built for.",
- h:()=>`<h2>Put yourself on it</h2>
- <p class="kicker">The same gap, computed from your two answers</p>
- <div class="ctl"><label>Democratic Party
-   <input type="range" id="ftD" min="0" max="100" value="70"><output id="ftDo">70</output></label>
-   <label>Republican Party
-   <input type="range" id="ftR" min="0" max="100" value="30"><output id="ftRo">30</output></label>
-   <span class="pill"><button class="tog" id="pD" aria-pressed="true">closer to the Democrats</button>
-   <button class="tog" id="pR" aria-pressed="false">closer to the Republicans</button></span>
- </div>${SVG('fig2',300)}<p class="punch" id="fig2read"></p>`,
- draw:()=>{ let side='D';
-   const f=()=>{
-     const d=+$('#ftD').value, r=+$('#ftR').value;
-     $('#ftDo').textContent=d; $('#ftRo').textContent=r;
-     $('#pD').setAttribute('aria-pressed',side==='D'); $('#pR').setAttribute('aria-pressed',side==='R');
-     const inp=side==='D'?d:r, out=side==='D'?r:d, you=inp-out;
-     const Sr=D.series.affpol, peak=Sr.reduce((a,b)=>b[1]>a[1]?b:a), low=Sr.reduce((a,b)=>b[1]<a[1]?b:a);
-     let cross=null;
-     if(you<=peak[1]&&you>=low[1]){ let best=Sr[0];
-       Sr.forEach(p=>{ if(Math.abs(p[1]-you)<Math.abs(best[1]-you)) best=p; }); cross=best; }
-     const lo=Math.min(0,you-6), hi=Math.max(80,you+6), ticks=[];
-     for(let v=Math.ceil(lo/20)*20; v<=hi; v+=20) ticks.push(v);
-     chart($('#fig2'),{xdom:[1978,2028],ydom:[lo,hi],yticks:ticks,
-       xticks:[1978,1990,2000,2012,2024],pad:{r:130},
-       ylab:'in-party minus out-party, degrees',
-       lines:[{data:Sr,color:css('--ink-2'),w:2.5,label:'the country',
-               ask:'How big is the average American’s gap, year by year?'},
-              {data:[[1978,D.cls.affpol],[2027,D.cls.affpol]],color:css('--accent'),
-               w:1.5,dash:'6 6',dots:false,label:'this class'},
-              {data:[[1978,you],[2027,you]],color:css('--blue'),w:1.2,dash:'2 6',dots:false}],
-       marks:[{x:2027,y:you,color:css('--blue'),label:'you'}]
-              .concat(cross?[{x:cross[0],y:cross[1],color:css('--ink-2'),r:5}]:[])});
-     $('#fig2read').innerHTML=`Your gap is <b>${you}</b>. `+(cross
-       ? `The country was last there in <b>${cross[0]}</b>.`
-       : (you>peak[1] ? `Higher than the country has ever been — the peak is ${f1(peak[1])} in ${peak[0]}.`
-                      : `Lower than the country has been since 1978 — the low is ${f1(low[1])} in ${low[0]}.`))
-       +` This class: ${f1(D.cls.affpol)}. America in 2024: ${f1(D.anes24.affpol)}.`;
-   };
-   ['#ftD','#ftR'].forEach(i=>$(i).addEventListener('input',f));
-   $('#pD').addEventListener('click',()=>{side='D';f();});
-   $('#pR').addEventListener('click',()=>{side='R';f();}); f(); }},
 
 {slug:"how-cold",k:"light",notes:
  "A mean of 20 can be everyone at 20, or a third of the country at the floor. The zero share separates them, and it is not in the article — the authors report means. Go look at the distribution whenever a summary statistic surprises you.",
@@ -841,14 +823,16 @@ const S=[
      ask:'What percentage of partisans rate the other party at 0 — the very bottom of the scale?'});
    if(pressed('#z10')) L.push({data:D.series.outle10,color:css('--blue'),w:2.5,label:'other ≤10',
      ask:'And at 10 or below?'});
-   if(pressed('#z50')) L.push({data:D.series.outlt50,color:css('--none'),w:2,label:'other <50',
+   if(pressed('#z50')) L.push({data:D.series.outlt50,color:css('--accent'),w:3,label:'other <50',
      ask:'And anywhere on the cold half of the scale, below 50?'});
    chart($('#fig4'),{xdom:[1978,2024],ydom:[0,100],yticks:[0,25,50,75,100],
      ylab:'share of partisans',
      xticks:[1978,1990,2000,2012,2024],yfmt:v=>v+'%',lines:L});
-   $('#fig4read').innerHTML = `<b>${at('outzero',1980).toFixed(1)}%</b> of partisans put the other
-     party at absolute zero in 1980. In 2024 it is <b>${at('outzero',2024).toFixed(1)}%</b>, and the
-     peak is ${at('outzero',2020).toFixed(1)}% in 2020.`;
+   $('#fig4read').innerHTML = `Rating the other party at absolute zero:
+     ${at('outzero',1980).toFixed(1)}% in 1980, <b>${at('outzero',2024).toFixed(1)}%</b> in 2024
+     (peak ${at('outzero',2020).toFixed(1)}% in 2020). At 10 or below:
+     ${at('outle10',1980).toFixed(1)}% to <b>${at('outle10',2024).toFixed(1)}%</b>. Anywhere below
+     50: ${at('outlt50',1980).toFixed(1)}% to <b>${at('outlt50',2024).toFixed(1)}%</b>.`;
    }; bindToggles(['#z0','#z10','#z50'],f); f(); }},
 
 {slug:"warm-side",k:"light",notes:
@@ -859,7 +843,7 @@ const S=[
    <button class="tog" id="w1" aria-pressed="true">their own party</button>
    <button class="tog" id="w2" aria-pressed="true">the other party</button>
    <button class="tog" id="w3" aria-pressed="false">warm toward both</button></span></div>
- ${SVG('fig4b')}<p class="punch" id="fig4bread"></p>
+ ${SVG('fig4b',348)}<p class="punch" id="fig4bread"></p>
  <div class="foot">In- and out-party shares are among partisans including leaners; “warm toward
  both” is among all respondents, independents included.</div>`,
  draw:()=>{ const f=()=>{
@@ -873,11 +857,11 @@ const S=[
    chart($('#fig4b'),{xdom:[1978,2024],ydom:[0,100],yticks:[0,25,50,75,100],
      ylab:'share rating above 50',
      xticks:[1978,1990,2000,2012,2024],yfmt:v=>v+'%',lines:L,pad:{r:190}});
-   $('#fig4bread').innerHTML=`Rating their OWN party above 50:
-     <b>${at('inwarm',1978).toFixed(0)}%</b> in 1978, <b>${at('inwarm',2024).toFixed(0)}%</b> in
-     2024 — flat. The OTHER party above 50: <b>${at('outwarm',1978).toFixed(0)}%</b> falling to
-     <b>${at('outwarm',2024).toFixed(0)}%</b>. Americans warm toward BOTH parties, independents
-     included: ${at('warmboth',1978).toFixed(0)}% to ${at('warmboth',2024).toFixed(0)}%.`;
+   $('#fig4bread').innerHTML=`Their OWN party above 50:
+     <b>${at('inwarm',1978).toFixed(0)}%</b> to <b>${at('inwarm',2024).toFixed(0)}%</b> — flat.
+     The other party: <b>${at('outwarm',1978).toFixed(0)}%</b> to
+     <b>${at('outwarm',2024).toFixed(0)}%</b>. Warm toward both:
+     ${at('warmboth',1978).toFixed(0)}% to ${at('warmboth',2024).toFixed(0)}%.`;
    }; bindToggles(['#w1','#w2','#w3'],f); f(); }},
 
 {slug:"distribution",k:"light",notes:
@@ -1003,7 +987,7 @@ const S=[
 
 {slug:"media",k:"light",notes:
  "Ask who thinks media is the main cause — most hands. Then the identification problem, and three studies that disagree with each other. Land on: not 'media doesn't matter', but that the confident version they read everywhere is unsupported.",
- h:()=>`<h2>Cause two: partisan media</h2>
+ h:()=>`<h2>Does partisan media explain it?</h2>
  <p class="kicker">The explanation everyone believes</p>
  ${BAND('The problem with every study of it',
    'Polarized people choose partisan news. Partisan news polarizes people. A correlation cannot tell them apart.')}
@@ -1015,34 +999,17 @@ const S=[
         text:'People assigned NOT to watch, who then discussed the election with people who did, polarized anyway.',src:'AJPS'}])}
  <div class="foot">“It is far from clear that partisan news actually causes affective polarization.” — p. 135</div>`},
 
-{slug:"attention",k:"wash",notes:
- "The room pays LESS attention than the country and reproduces the national correlation almost exactly. That is a nice result and it establishes nothing about causation in either sample — which is the point.",
- h:()=>`<h2>Attention: this room against the country</h2>
- <table class="cmp"><tr><th>How much attention did you pay?</th><th>this room</th><th>USA 2024</th></tr>
- ${['low','mid','high'].map(k=>`<tr><td>${D.attn[k].label}</td>
-   <td>${D.attn[k].class.toFixed(0)}%</td><td>${D.attn[k].anes.toFixed(0)}%</td></tr>`).join('')}
- </table>
- <div class="cols2" style="margin-top:18px">
-   <div class="big" style="color:var(--accent)">r = +${D.attn.r_class.class.toFixed(2)}
-     <span class="lbl">this room, n = ${D.attn.r_class.n}</span></div>
-   <div class="big" style="color:var(--ink-2)">r = +${D.attn.r_anes.class.toFixed(2)}
-     <span class="lbl">USA 2024, n = ${D.attn.r_anes.n.toLocaleString()}</span></div>
- </div>
- <p class="punch">The room reproduces the national correlation almost exactly —
- and neither one tells you which way it runs.</p>
- <div class="foot">Near match: the ANES asks interest in the campaign on three points,
- the CES attention on five, folded to three.</div>`},
 
 {slug:"campaigns",k:"light",notes:
  "The best-identified of the three: the same people measured a year apart, so 'polarized people choose the campaign' is not available. Not airtight either — everyone gets the campaign at once, so the treatment is confounded with the calendar.",
- h:()=>`<h2>Cause three: the campaign that never ends</h2>
+ h:()=>`<h2>Does the permanent campaign explain it?</h2>
  <p class="kicker">The best-identified of the three — and the least talked about</p>
- ${R3([{tag:'Sood & Iyengar 2016',big:'50–150%',color:'var(--accent)',
-        text:'More affectively polarized by election day than the same people were a year earlier. Not more than someone else — more than themselves.',src:'working paper'},
-       {tag:'The same study',big:'and the ads',color:'var(--cross)',
-        text:'People in the media market of a neighboring battleground state get more campaign than their neighbors, for reasons unrelated to them. Negative advertising does the most.',src:''}])}
- ${BAND('Why this design is better',
-   'The comparison is within the same person over time — so “polarized people choose the campaign” is not available as an explanation.')}`},
+ ${R3([{tag:'Sood & Iyengar 2016 · the same people, twice',big:'+50–150%',color:'var(--accent)',
+        text:'How much WIDER their own gap was by election day than it had been a year earlier. Not wider than someone else’s gap — wider than their own, a year before.',src:'working paper, cited p. 135'},
+       {tag:'The same study · a natural experiment',big:'negative ads',color:'var(--cross)',
+        text:'Live in the TV market of a neighboring battleground state and you get swamped with campaign advertising for a race you cannot vote in. Those people move most, and negative advertising does the most work.',src:'cited p. 135'}])}
+ ${BAND('WHY THIS DESIGN BEATS THE OTHER TWO',
+   'Sorting and media both compare different people. This compares the same person to herself a year earlier — so “polarized people go looking for campaigns” cannot explain it. The catch: everyone gets the campaign at the same time, so the effect is tangled up with the calendar.')}`},
 
 {slug:"never-stops",k:"light",notes:
  "Ties the causes section back to the concept. An identity is only as strong as how often it is switched on. If governing has become the next campaign, the switch is never off.",
@@ -1068,18 +1035,6 @@ const S=[
  understate least.</p>
  <div class="foot">The article makes this argument on p. 133. The next two slides are the evidence.</div>`},
 
-{slug:"not-ask",k:"light",notes:
- "The third row is why this follows the last slide: explicit partisan bias is HIGHER than implicit, and on race it inverts. That is a prediction the previous slide made before you showed the numbers. Be honest that the IAT is contested.",
- h:()=>`<h2>Measures that do not ask</h2>
- <p class="kicker">Reaction times, not opinions</p>
- ${R3([{tag:'The party IAT',big:'~70%',color:'var(--cross)',
-        text:'of Democrats and Republicans show implicit bias toward their own party — measured by how fast they sort words, which you cannot manage the way you manage an answer.',src:'Iyengar & Westwood 2015'},
-       {tag:'Against race',big:'.50 vs .18',color:'var(--accent)',
-        text:'Implicit PARTISAN bias, in the same respondents, runs well above implicit RACIAL bias on the same instrument.',src:'same study'},
-       {tag:'And the tell',big:'91% / 75%',color:'var(--blue)',
-        text:'EXPLICIT partisan bias is higher than implicit. On race it is the other way round — exactly what the previous slide predicts.',src:'same study'}])}
- <div class="foot">Treat .50-against-.18 as a direction, not a ratio: two IATs are not on a common
- substantive scale, and the IAT is contested as a predictor of individual behavior.</div>`},
 
 {slug:"actually-do",k:"light",notes:
  "Run the experiment on the room before showing a number. Two applicants, similar records, one Young Democrats and one Young Republicans — who gets it? Then: does it change at 4.0 against 3.5? Then give the question at the bottom real time.",
@@ -1155,7 +1110,7 @@ const S=[
    'The price of the partisan cue, in that study, was people going without health insurance.')}`},
 
 {slug:"economy",k:"light",notes:
- "The president's co-partisans are more optimistic in 18 of 18 readings. The lines TRADE PLACES at nearly every change of administration — no account in which people report the economy accurately produces that.",
+ "The president's co-partisans are more optimistic in 18 of 18 readings. The lines TRADE PLACES at nearly every change of administration — no account in which people report the economy accurately produces that. THE THIRD STAGE is the one to wait for: the two party lines step back and the difference between them is drawn on its own. Ask what it would look like if partisans were reporting the economy rather than their side — a flat line near zero, wobbling with the actual economy. What you get instead is a line that crosses zero at every change of administration. Note it does not get SMALLER under the other party's president; it changes sign, which is a different and worse fact.",
  h:()=>`<h2>Your party wins, the economy improves</h2>
  <p class="kicker">Net “better” minus “worse” · shaded = Republican president</p>
  ${SVG('fig8')}<p class="punch" id="fig8read"></p>`,
@@ -1163,26 +1118,36 @@ const S=[
    const RB=[{from:1981,to:1993},{from:2001,to:2009},{from:2017,to:2021}];
    D.series.econPres.forEach(p=>{ const inR=RB.some(b=>p[0]>=b.from&&p[0]<b.to);
      if(inR===(p[1]===1)) console.warn('shading disagrees at',p[0]); });
-   chart($('#fig8'),{xdom:[1980,2024],ydom:[-100,80],yticks:[-100,-50,0,50],
+   // The gap is a subtraction of the two series already on the chart, so it is
+   // derived here rather than in R: it cannot drift from lines it is made of.
+   const REP=new Map(D.series.econRep);
+   const gap=D.series.econDem.filter(q=>REP.has(q[0]))
+                             .map(q=>[q[0], q[1]-REP.get(q[0])]);
+   chart($('#fig8'),{xdom:[1980,2024],ydom:[-100,92],yticks:[-100,-50,0,50],
      xticks:[1980,1992,2004,2016,2024],bands:RB,pad:{r:150},
-     lines:[{data:D.series.econDem,color:css('--blue'),label:'Democrats',
+     ylab:'net “better” minus “worse”',
+     lines:[{data:D.series.econDem,color:css('--blue'),label:'Democrats',stageClass:'recede',
         ask:'Under each president, what did Democrats say the economy was doing?'},
-            {data:D.series.econRep,color:css('--accent'),label:'Republicans',
-        ask:'And Republicans — same country, same year, same economy?'}]});
-   $('#fig8read').innerHTML=`In <b>2024</b>, under Biden, Democrats sit at
-     <b>+${at('econDem',2024).toFixed(0)}</b> and Republicans at
-     <b>${at('econRep',2024).toFixed(0)}</b>. In 2020, under Trump, it was
-     ${at('econDem',2020).toFixed(0)} and ${at('econRep',2020).toFixed(0)}.
-     This class, in August 2026: <b>${D.econCls.worse.toFixed(0)}%</b> say it got worse.`;}},
+            {data:D.series.econRep,color:css('--accent'),label:'Republicans',stageClass:'recede',
+        ask:'And Republicans — same country, same year, same economy?'},
+            {data:gap,color:css('--ink'),w:3.5,label:'the gap',stageClass:'lead',
+        ask:'Now the distance between them. Where does it sit when a Republican is president?'}]});
+   const g24=gap.find(q=>q[0]===2024)[1], g20=gap.find(q=>q[0]===2020)[1];
+   const wrong=gap.filter(q=>(q[1]>0)===RB.some(b=>q[0]>=b.from&&q[0]<b.to)).length;
+   $('#fig8read').innerHTML=`The gap is <b>${g24>0?'+':''}${g24.toFixed(0)}</b> in 2024 under Biden
+     and <b>${g20>0?'+':''}${g20.toFixed(0)}</b> in 2020 under Trump — it does not shrink, it
+     changes SIDES. Positive under every Democratic president and negative under every Republican
+     one, <b>${gap.length - wrong} readings out of ${gap.length}</b>. This class, in August 2026:
+     <b>${D.econCls.worse.toFixed(0)}%</b> say it got worse.`;}},
 
 {slug:"spillover",k:"light",notes:
  "Bars are this class's Democrats; dots are the country split by party. The evangelical row is the mirror: nationally Democrats 42, Republicans 65. Same instrument, same respondents, opposite sign.",
  h:()=>`<h2>Party feeling spills into everything else</h2>
  <p class="kicker">Eight group thermometers. None of these questions mentions a party.</p>
- ${SVG('fig7',430)}<p class="punch" id="fig7read"></p>`,
+ ${SVG('fig7',408)}<p class="punch" id="fig7read"></p>`,
  draw:()=>{
    const svg=$('#fig7'); clear(svg);
-   const W=1000,H=430,x0=300,x1=W-220,rowH=(H-70)/D.spill.length;
+   const W=1000,H=408,x0=300,x1=W-220,rowH=(H-70)/D.spill.length;
    const vx=v=>x0+v/100*(x1-x0), COLD=css('--blue'), COLR=css('--accent');
    [25,50,75,100].forEach(v=>{ svg.appendChild(el('line',{x1:vx(v),x2:vx(v),y1:26,y2:H-34,
        stroke:css('--rule-2')}));
@@ -1284,18 +1249,19 @@ const S=[
  them are.</p>`},
 
 {slug:"fiorina-2",k:"light",notes:
- "Objection four is the one. Social identity theory predicts in-group love FIRST; the two-lines slide shows the reverse. Your answer to objection three is the warm-side slide — a count above a threshold the question itself defines, with no interval assumption.",
- h:()=>`<h2>And the two that actually hurt</h2>
+ "Objection four is the one. Social identity theory predicts in-group love FIRST; the two-lines slide shows the reverse. Your answer to objection three is the warm-side slide — a count above a threshold the question itself defines, with no interval assumption. THE CLOSING DISCUSSION IS ON THE NEXT PRESS. This is the debate the course is named for, so give it five minutes and do not settle it for them. Two things to push on. First, call back to the arithmetic slide: they gave three different answers to what their own thermometer number meant, and that was before they had heard of Fiorina — so his complaint is one they already made. Second, do not let it stop at 'who is right'. Push for what WOULD settle it: a validated instrument, an experiment that separates policy disagreement from dislike, or a measure that is not a survey at all. Note that Fiorina is arguing about SEQUENCE, not about whether the danger is real, which is a distinction most of the room will collapse.",
+ subs:1,
+ h:(k)=>`<h2>And the two that actually hurt</h2>
  <p class="kicker">One about the instrument, one about the theory</p>
  ${R3([{tag:'Objection three',big:'never validated',color:'var(--accent)',
         text:'Has the thermometer ever been shown to measure AFFECT rather than policy disagreement? Does a low Trump rating mean dislike of the man, or of his positions? A literature was built on an assumption nobody checked.',src:'ch. 3, pp. 7–8'},
        {tag:'Objection four',big:'the theory predicts the opposite',color:'var(--accent)',
         text:'Social identity theory says in-group love comes FIRST. The two-lines slide showed in-party feeling flat and out-party feeling collapsing. Iyengar et al. report that as their headline and note the tension in a subordinate clause.',src:'ch. 3, p. 8'}])}
  <p class="punch" style="color:var(--accent)">Objection four uses our best slide against us.</p>
- <div class="foot">Your answer to objection three is the warm-side slide: the share rating the other
- party above 50 fell from ${at('outwarm',1978).toFixed(0)}% to ${at('outwarm',2024).toFixed(0)}%
- while own-party warmth did not move — a count above a threshold the question itself defines, with
- no interval assumption at all.</div>`},
+ ${k?`<div class="discuss"><span class="dtag">Discuss</span><p>Fiorina says you cannot study the consequences of a thing before you have measured it. Iyengar and Finkel spend most of their pages on consequences. Who is right — and what would settle it?</p></div>`:`<div class="foot">Your answer to objection three is the warm-side slide: the share rating
+ the other party above 50 fell from ${at('outwarm',1978).toFixed(0)}% to
+ ${at('outwarm',2024).toFixed(0)}% while own-party warmth did not move — a count above a threshold
+ the question itself defines, with no interval assumption at all.</div>`}`},
 
 {slug:"close",k:"dark center",notes:
  "Would you rather live in 1978? The 1978 electorate was warm toward both parties — and had parties so incoherent that a vote could get you a segregationist or a liberal. Low affective polarization was bought with parties that did not stand for anything.",
