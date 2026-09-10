@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### Updated: September 06, 2026
+#### Updated: September 10, 2026
 
 > Professor Jonathan Cervas\
 > Office: Posner Hall 374\
@@ -360,6 +360,16 @@ else’s work, not just your own:
 - [Census Academy — *Discovering the American Community
   Survey*](https://www.census.gov/data/academy/courses/discovering-the-american-community-survey.html)
   — **all six modules**
+- Transcripts, if you would rather read than watch: [1 —
+  Introduction](https://canvas.cmu.edu/courses/55218/files/14798631), [2
+  — Geography](https://canvas.cmu.edu/courses/55218/files/14798632), [3
+  — Data products](https://canvas.cmu.edu/courses/55218/files/14798633),
+  [4 — Guidance for data
+  users](https://canvas.cmu.edu/courses/55218/files/14798634), [5 —
+  Summary File and
+  PUMS](https://canvas.cmu.edu/courses/55218/files/14798635), [6 —
+  Pulling it all
+  together](https://canvas.cmu.edu/courses/55218/files/14798636)
 
 ### Week 4 — Part II opens
 
