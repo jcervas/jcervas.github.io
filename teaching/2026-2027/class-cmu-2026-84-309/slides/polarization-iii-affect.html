@@ -174,6 +174,48 @@ table.cmp td:first-child{text-align:left;font-family:var(--body);
   font-size:clamp(12px,1.1vw,20px)}
 table.cmp tr.hi td{background:var(--tint);font-weight:700}
 .close{margin-top:14px;color:var(--ink-3);font-size:.88em}
+.rows,.steps{margin:clamp(8px,1.6vh,20px) 0;flex:1;display:flex;flex-direction:column;
+  justify-content:center}
+.two,.map{flex:0 0 auto}
+.row{display:grid;grid-template-columns:minmax(150px,2.1fr) 4.4fr minmax(80px,1.2fr);
+  gap:clamp(12px,2vw,34px);align-items:start;padding:clamp(9px,1.5vh,19px) 0;
+  border-bottom:1px solid var(--rule-2)}
+.row:last-child{border-bottom:0}
+.tag{display:block;font-size:clamp(10px,.86vw,16px);font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;margin-bottom:5px}
+.rbig{font-family:var(--display);font-size:clamp(19px,2.15vw,39px);line-height:1.08;
+  display:block;color:var(--ink)}
+.rt{font-size:clamp(14px,1.34vw,25px);line-height:1.45;color:var(--ink)}
+.rs{font-size:clamp(10px,.84vw,15px);font-style:italic;color:var(--ink-3);line-height:1.3}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.4vw,40px);
+  margin:clamp(10px,2vh,26px) 0}
+.tbox{background:var(--tint);border-radius:8px;padding:clamp(12px,2vh,24px) clamp(14px,1.8vw,28px)}
+.tbox b{font-family:var(--display);font-size:clamp(19px,2.1vw,38px);display:block;
+  line-height:1.1;margin-bottom:8px}
+.tbox p{margin:0;font-size:clamp(13.5px,1.26vw,23px);line-height:1.4;color:var(--ink)}
+.band{background:var(--accent-soft);border-radius:8px;
+  padding:clamp(12px,2vh,24px) clamp(14px,1.8vw,28px);margin:clamp(10px,2vh,24px) 0}
+.band .tag{color:var(--accent)}
+.band p{margin:0;font-family:var(--display);font-size:clamp(16px,1.8vw,32px);line-height:1.22}
+.step{display:grid;grid-template-columns:auto 1fr;gap:clamp(12px,1.6vw,26px);
+  align-items:start;padding:clamp(8px,1.4vh,18px) 0;border-bottom:1px solid var(--rule-2)}
+.step:last-child{border-bottom:0}
+.stepn{width:clamp(26px,2.4vw,42px);height:clamp(26px,2.4vw,42px);border-radius:50%;
+  display:grid;place-items:center;color:#fff;font-weight:700;
+  font-size:clamp(13px,1.1vw,20px)}
+.step b{font-family:var(--display);font-size:clamp(18px,2vw,36px);display:block;
+  line-height:1.1;margin-bottom:5px}
+.step p{margin:0;font-size:clamp(13.5px,1.26vw,23px);line-height:1.42;color:var(--ink)}
+.map{margin:clamp(8px,1.6vh,20px) 0;flex:1;display:flex;flex-direction:column;
+  justify-content:center}
+.maprow{display:grid;grid-template-columns:minmax(140px,1.6fr) auto 5fr;
+  gap:clamp(10px,1.8vw,30px);align-items:baseline;padding:clamp(7px,1.2vh,16px) 0;
+  border-bottom:1px solid var(--rule-2)}
+.maprow:last-child{border-bottom:0}
+.maprow .p{font-size:clamp(10px,.85vw,15px);color:var(--ink-3);font-family:var(--mono)}
+.maprow .d{font-size:clamp(14px,1.32vw,24px);line-height:1.4}
+.quote{font-family:var(--display);font-size:clamp(22px,2.8vw,52px);line-height:1.18;
+  margin:clamp(10px,2vh,28px) 0 clamp(6px,1vh,14px)}
 </style>
 </head><body>
 <div class="deck" id="deck"></div>
@@ -267,9 +309,27 @@ function bindToggles(ids, fn){
     $(id).setAttribute('aria-pressed', pressed(id)?'false':'true'); fn(); }));
 }
 
-/* ─── the deck. Each slide is {slug, k, h, draw, notes}; `draw` paints the SVG
-   after the slide is in the DOM, because a chart cannot be measured before it
-   exists. Only the active slide is rendered, so ids never collide. ───────── */
+/* ─── layout helpers, mirroring the PowerPoint's own ─────────────────────
+   R3() is the web twin of findings() in the .pptx builder and carries the
+   same cap: at most three rows a slide. If a section grows a fourth it gets
+   another slide, not a smaller font. ──────────────────────────────────── */
+function R3(rows){
+  if(rows.length>3) throw new Error("R3(): "+rows.length+" rows — split the slide");
+  return `<div class="rows">`+rows.map(r=>`<div class="row">
+    <div class="rl"><span class="tag" style="color:${r.color||'var(--accent)'}">${r.tag}</span>
+      <span class="rbig">${r.big}</span></div>
+    <div class="rt">${r.text}</div>
+    <div class="rs">${r.src||''}</div></div>`).join('')+`</div>`;
+}
+const TWO=(a,b)=>`<div class="two"><div class="tbox">
+  <span class="tag" style="color:var(--blue)">${a.tag}</span><b>${a.head}</b><p>${a.text}</p></div>
+  <div class="tbox"><span class="tag" style="color:var(--accent)">${b.tag}</span>
+  <b>${b.head}</b><p>${b.text}</p></div></div>`;
+const BAND=(k,t)=>`<div class="band"><span class="tag">${k}</span><p>${t}</p></div>`;
+
+/* The deck. Order mirrors 2026-09-10-polarization-iii.pptx one for one; the
+   only web-only slide is "you", which has no PowerPoint equivalent because it
+   needs a control. Each slide is {slug, k, h, draw, notes}. */
 const S=[
 {slug:"title",k:"dark center",notes:
  "Open here. The whole hour unpacks one sentence: Americans came to dislike each other without coming to disagree more.",
@@ -312,6 +372,99 @@ const S=[
  </div>
  <p class="punch">Each party is rated near 70 by its own side and near 20 by the other.</p>
  <div class="foot">ANES 2024, partisans including leaners</div>`},
+
+{slug:"conclusion",k:"dark center",notes:
+ "Read it aloud, then stop talking. Notice what is missing: not one word about issues, policy or ideology. This claim is compatible with Fiorina being completely right about September 3.",
+ h:()=>`<p class="kicker">Their conclusion, before any of the evidence</p>
+ <p class="quote">“Ordinary Americans increasingly dislike and distrust those from the other party.”</p>
+ <p class="lede">Iyengar, Lelkes, Levendusky, Malhotra &amp; Westwood 2019, 129</p>
+ <p class="punch" style="color:var(--accent)">Notice what is missing. Not one word about issues, policy, or ideology.</p>`},
+
+{slug:"a-field",k:"light",notes:
+ "Mason was one study and we could rebuild her figure. This is a review — 96 sources in fourteen pages, no original data. A review is the field talking to itself about what it now believes. The five rows are the hour.",
+ h:()=>`<h2>This is a field, not a study</h2>
+ <p class="kicker">An annual review — 96 sources in fourteen pages</p>
+ <div class="map">
+ ${[['Where it comes from','p. 130','Partisanship is a social identity, and identities produce hostility.','var(--match)'],
+    ['How it is measured','p. 131','Surveys, implicit tests, behavior. Today is mostly the first.','var(--blue)'],
+    ['What caused it','p. 134','Sorting, partisan media, permanent campaigns. None is settled.','var(--accent)'],
+    ['What it does','p. 136','Marriage, hiring, what you believe about the economy, trust in government.','var(--cross)'],
+    ['Can it be fixed','p. 139','Two things work in a laboratory. Nothing has been shown to work outside one.','var(--ink-3)']]
+   .map(r=>`<div class="maprow"><span class="tag" style="color:${r[3]}">${r[0]}</span>
+     <span class="p">${r[1]}</span><span class="d">${r[2]}</span></div>`).join('')}
+ </div>
+ <p class="punch">No single result to check. Read it for the shape of a literature — and notice
+ that a field this size rests on one survey question.</p>`},
+
+{slug:"three-quantities",k:"light",notes:
+ "Three different variables, not three views of one thing. They can and do move independently — the article says so on p. 131. A country can agree about policy and still despise itself.",
+ h:()=>`<h2>Three sessions, three different quantities</h2>
+ <p class="kicker">And they can move independently — that is the whole point</p>
+ <div class="map">
+ ${[['Sep 3 · Fiorina vs Abramowitz','Issue positions','How far apart are Americans on what government should do?','var(--blue)'],
+    ['Sep 8 · Mason','Identity alignment','Do your party label and your other labels line up?','var(--match)'],
+    ['Today · Iyengar et al.','Feeling toward people','How warm are you toward your side, and how cold toward theirs?','var(--accent)']]
+   .map(r=>`<div class="maprow"><span class="tag" style="color:${r[3]}">${r[0]}</span>
+     <span class="p">${r[1]}</span><span class="d">${r[2]}</span></div>`).join('')}
+ </div>
+ <p class="punch">A country can agree about policy and still despise itself.</p>`},
+
+{slug:"decline",k:"light",notes:
+ "They have seen these two columns before, on Sept 8. Mason settled that argument by splitting one word in two; these authors change the subject. Is that a solution or an evasion? Genuinely open — the answer decides how much of today you believe.",
+ h:()=>`<h2>The argument they decline to join</h2>
+ <p class="kicker">September 3 comes back — and this time nobody answers it</p>
+ ${TWO({tag:'Fiorina',head:'“The public is not polarized.”',
+        text:'Most Americans sit in the middle on most issues.'},
+       {tag:'Abramowitz',head:'“Yes it is.”',
+        text:'Party and ideology line up far more consistently than they used to.'})}
+ ${BAND('The article, p. 131','“We do not take a position on this ongoing debate.”')}
+ <p class="punch">Mason settled it by splitting one word in two. These authors change the subject.</p>
+ <div class="foot">Is that a solution or an evasion? Genuinely open — and worth five minutes.</div>`},
+
+{slug:"hostility",k:"light",notes:
+ "The concept, and the first step is not about politics. Tajfel: sort strangers by a coin flip and they favour their own. If a meaningless line does that, what does one you inherited and are reminded of daily do? Hostility needs no disagreement.",
+ h:()=>`<h2>Where the hostility comes from</h2>
+ <p class="kicker">The article’s answer, and the first step is not about politics at all</p>
+ <div class="steps">
+ ${[['1','ANY group line produces bias.','Sort strangers into two groups by something meaningless — a coin flip, a preference between two painters — and they immediately favour their own and think less of the others.','var(--match)'],
+    ['2','Party is not a weak line.','Acquired young and rarely changed. And campaigns — the occasions for expressing it — now never really stop, so the identity is switched on almost all the time.','var(--blue)'],
+    ['3','So hostility needs no disagreement.','Nothing in steps 1 and 2 requires anybody to hold a policy view. The dislike is a by-product of the group line, not of anything anyone believes.','var(--accent)']]
+   .map(r=>`<div class="step"><div class="stepn" style="background:${r[3]}">${r[0]}</div>
+     <div><b>${r[1]}</b><p>${r[2]}</p></div></div>`).join('')}
+ </div>
+ <p class="punch" style="color:var(--accent)">If a coin flip is enough, a party is more than enough.</p>`},
+
+{slug:"instrument",k:"light",notes:
+ "An ordinary, even boring survey item carrying an entire literature. It does not have to be clever — it has to be asked the same way for sixty years. Questions 54 and 55 of your own survey are these two items.",
+ h:()=>`<h2>The instrument</h2>
+ <p class="kicker">ANES, asked in these words since 1964</p>
+ <p class="quote" style="font-size:clamp(15px,1.5vw,27px);line-height:1.4">“Ratings between 50 degrees
+ and 100 degrees mean that you feel favorable and warm toward the person. Ratings between 0 degrees
+ and 50 degrees mean that you don’t feel favorable toward the person and that you don’t care too much
+ for that person. You would rate the person at the 50-degree mark if you don’t feel particularly warm
+ or cold.”</p>
+ <p class="punch">The two questions we care about: the Democratic Party, and the Republican Party.</p>
+ <div class="foot">Wording as quoted in Fiorina, Unstable Majorities Continue, ch. 3 · the Cervas
+ Election Study asks these two items verbatim — questions 54 and 55, answered in August.</div>`},
+
+{slug:"arithmetic",k:"light",notes:
+ "One subtraction. The national averages came out a point apart because Democrats and Republicans cancel; subtract WITHIN the person and nothing cancels. Then the catch: a difference score is two numbers pretending to be one.",
+ h:()=>`<h2>The arithmetic</h2>
+ <p class="kicker">One subtraction, and it carries the whole literature</p>
+ <div class="two" style="grid-template-columns:1fr 1fr 1fr">
+   <div class="tbox"><span class="tag" style="color:var(--match)">Your party</span>
+     <b>in-party rating</b></div>
+   <div class="tbox"><span class="tag" style="color:var(--cross)">The other party</span>
+     <b>out-party rating</b></div>
+   <div class="tbox" style="background:var(--accent-soft)">
+     <span class="tag" style="color:var(--accent)">The difference</span>
+     <b>affective polarization</b></div>
+ </div>
+ <p class="punch" style="color:var(--accent)">Subtract within the person first. Then average.
+ Nothing cancels.</p>
+ <div class="foot">What it throws away: a gap of 40 can be 90 minus 50, or 60 minus 20. Warm about
+ your own side and lukewarm about theirs is not the same country as indifferent about your own and
+ freezing toward theirs.</div>`},
 
 {slug:"figure-1",k:"light",notes:
  "Park the slider on 2016 and you see what the authors saw, including the dip they were careful to flag. Then drag it to 2024. A trend claim made at the edge of the data is a claim about the future.",
@@ -393,35 +546,49 @@ const S=[
    $('#pR').addEventListener('click',()=>{side='R';f();}); f(); }},
 
 {slug:"how-cold",k:"light",notes:
- "A mean of 20 can be everyone at 20 or a third of the country at the floor. The zero share separates them, and it is not in the article. The second row of buttons is the warm end — a count above a threshold the question itself defines, with no interval assumption at all.",
- h:()=>`<h2>How cold is cold — and how warm is warm?</h2>
+ "A mean of 20 can be everyone at 20, or a third of the country at the floor. The zero share separates them, and it is not in the article — the authors report means. Go look at the distribution whenever a summary statistic surprises you.",
+ h:()=>`<h2>How cold is cold?</h2>
  <div class="ctl"><span class="pill">
    <button class="tog" id="z0" aria-pressed="true">other party rated 0</button>
    <button class="tog" id="z10" aria-pressed="false">10 or below</button>
    <button class="tog" id="z50" aria-pressed="false">below 50</button></span>
-   <span class="pill">
-   <button class="tog" id="w1" aria-pressed="false">own party above 50</button>
-   <button class="tog" id="w2" aria-pressed="false">other above 50</button>
-   <button class="tog" id="w3" aria-pressed="false">warm toward both</button></span>
  </div>${SVG('fig4')}<p class="punch" id="fig4read"></p>`,
  draw:()=>{ const f=()=>{
    const L=[];
    if(pressed('#z50')) L.push({data:D.series.outlt50,color:css('--none'),w:2,label:'other <50'});
    if(pressed('#z10')) L.push({data:D.series.outle10,color:css('--blue'),w:2.5,label:'other ≤10'});
    if(pressed('#z0'))  L.push({data:D.series.outzero,color:css('--cross'),label:'other = 0'});
-   if(pressed('#w1'))  L.push({data:D.series.inwarm,color:css('--match'),label:'own >50'});
-   if(pressed('#w2'))  L.push({data:D.series.outwarm,color:css('--cross'),dash:'7 5',label:'other >50'});
-   if(pressed('#w3'))  L.push({data:D.series.warmboth,color:css('--accent'),w:2.5,label:'both >50'});
    chart($('#fig4'),{xdom:[1978,2024],ydom:[0,100],yticks:[0,25,50,75,100],
      xticks:[1978,1990,2000,2012,2024],yfmt:v=>v+'%',lines:L});
-   const warm=pressed('#w1')||pressed('#w2')||pressed('#w3');
-   $('#fig4read').innerHTML = warm
-     ? `Rating their OWN party above 50: <b>${at('inwarm',1978).toFixed(0)}%</b> then,
-        <b>${at('inwarm',2024).toFixed(0)}%</b> now — flat. The OTHER party above 50:
-        <b>${at('outwarm',1978).toFixed(0)}%</b> falling to <b>${at('outwarm',2024).toFixed(0)}%</b>.`
-     : `<b>${at('outzero',1980).toFixed(1)}%</b> put the other party at absolute zero in 1980.
-        In 2024 it is <b>${at('outzero',2024).toFixed(1)}%</b>.`;
-   }; bindToggles(['#z0','#z10','#z50','#w1','#w2','#w3'],f); f(); }},
+   $('#fig4read').innerHTML = `<b>${at('outzero',1980).toFixed(1)}%</b> of partisans put the other
+     party at absolute zero in 1980. In 2024 it is <b>${at('outzero',2024).toFixed(1)}%</b>, and the
+     peak is ${at('outzero',2020).toFixed(1)}% in 2020.`;
+   }; bindToggles(['#z0','#z10','#z50'],f); f(); }},
+
+{slug:"warm-side",k:"light",notes:
+ "The mirror of the last slide, and it answers Fiorina before he asks. Own-party warmth is flat at ~81% across forty-six years; other-party warmth collapses from 31% to 7%. Both are COUNTS above a threshold the question itself defines — no interval assumption at all.",
+ h:()=>`<h2>And the warm side of the same scale</h2>
+ <p class="kicker">Share rating each party above 50 — the neutral point the question itself defines</p>
+ <div class="ctl"><span class="pill">
+   <button class="tog" id="w1" aria-pressed="true">their own party</button>
+   <button class="tog" id="w2" aria-pressed="true">the other party</button>
+   <button class="tog" id="w3" aria-pressed="false">warm toward both</button></span></div>
+ ${SVG('fig4b')}<p class="punch" id="fig4bread"></p>
+ <div class="foot">In- and out-party shares are among partisans including leaners; “warm toward
+ both” is among all respondents, independents included.</div>`,
+ draw:()=>{ const f=()=>{
+   const L=[];
+   if(pressed('#w1')) L.push({data:D.series.inwarm,color:css('--match'),label:'their own party'});
+   if(pressed('#w2')) L.push({data:D.series.outwarm,color:css('--cross'),label:'the other party'});
+   if(pressed('#w3')) L.push({data:D.series.warmboth,color:css('--accent'),w:2.5,label:'both'});
+   chart($('#fig4b'),{xdom:[1978,2024],ydom:[0,100],yticks:[0,25,50,75,100],
+     xticks:[1978,1990,2000,2012,2024],yfmt:v=>v+'%',lines:L,pad:{r:190}});
+   $('#fig4bread').innerHTML=`Rating their OWN party above 50:
+     <b>${at('inwarm',1978).toFixed(0)}%</b> in 1978, <b>${at('inwarm',2024).toFixed(0)}%</b> in
+     2024 — flat. The OTHER party above 50: <b>${at('outwarm',1978).toFixed(0)}%</b> falling to
+     <b>${at('outwarm',2024).toFixed(0)}%</b>. Americans warm toward BOTH parties, independents
+     included: ${at('warmboth',1978).toFixed(0)}% to ${at('warmboth',2024).toFixed(0)}%.`;
+   }; bindToggles(['#w1','#w2','#w3'],f); f(); }},
 
 {slug:"distribution",k:"light",notes:
  "Two out of five partisans put the other party in the bottom ten degrees. One in fifty puts their own party there. It is not a bell curve; it is a pile against a wall.",
@@ -491,6 +658,19 @@ const S=[
  <div class="foot">Cervas Election Study 2026, n = ${D.cls.n_partisan} partisans
  (${D.cls.n_dem} Democrats, ${D.cls.n_rep} Republicans) · ANES 2024</div>`},
 
+{slug:"caused",k:"light",notes:
+ "Three candidates. The test to write on the board: would this also raise hostility among people it did not touch? A cause of a NATIONAL rise has to explain movement among people the mechanism never reached.",
+ h:()=>`<h2>So what caused it?</h2>
+ <p class="kicker">The article offers three, and is honest that none is nailed down</p>
+ <div class="steps">
+ ${[['1','Sorting','Party and ideology line up, so the other side looks alien. Mason, Sept 8 — and the next slide tests it.','var(--match)'],
+    ['2','Partisan media','A high-choice environment rewards outrage about the other side. The evidence is much weaker than you expect.','var(--cross)'],
+    ['3','Campaigns','Permanent campaigning keeps partisanship switched on. People are 50–150% more polarized by election day.','var(--blue)']]
+   .map(r=>`<div class="step"><div class="stepn" style="background:${r[3]}">${r[0]}</div>
+     <div><b>${r[1]}</b><p>${r[2]}</p></div></div>`).join('')}
+ </div>
+ <p class="punch">Ask of each: would it also raise hostility among people it did not touch?</p>`},
+
 {slug:"sorting",k:"light",notes:
  "Both halves are true. The least sorted third got much more hostile while its sorting barely moved — so sorting cannot be what moved the country. And the gap between most and least sorted widened, so 'about 5% of the variance' does not describe this either.",
  h:()=>`<h2>Does sorting explain it?</h2>
@@ -519,6 +699,20 @@ const S=[
    $('#cFix').addEventListener('click',()=>{$('#cFix').setAttribute('aria-pressed','true');
      $('#cRel').setAttribute('aria-pressed','false');f();}); f(); }},
 
+{slug:"media",k:"light",notes:
+ "Ask who thinks media is the main cause — most hands. Then the identification problem, and three studies that disagree with each other. Land on: not 'media doesn't matter', but that the confident version they read everywhere is unsupported.",
+ h:()=>`<h2>Cause two: partisan media</h2>
+ <p class="kicker">The explanation everyone believes</p>
+ ${BAND('The problem with every study of it',
+   'Polarized people choose partisan news. Partisan news polarizes people. A correlation cannot tell them apart.')}
+ ${R3([{tag:'Boxell et al. 2017',big:'the offline old',color:'var(--blue)',
+        text:'Affective polarization rose FASTEST among the groups least likely to be online. If the mechanism is the internet, that is backwards.',src:'PNAS'},
+       {tag:'Lelkes et al. 2017',big:'a small +',color:'var(--cross)',
+        text:'Broadband access has a small POSITIVE effect on partisan affect — the opposite sign, on the same question.',src:'AJPS'},
+       {tag:'Druckman et al. 2018',big:'no need to watch',color:'var(--match)',
+        text:'People assigned NOT to watch, who then discussed the election with people who did, polarized anyway.',src:'AJPS'}])}
+ <div class="foot">“It is far from clear that partisan news actually causes affective polarization.” — p. 135</div>`},
+
 {slug:"attention",k:"wash",notes:
  "The room pays LESS attention than the country and reproduces the national correlation almost exactly. That is a nice result and it establishes nothing about causation in either sample — which is the point.",
  h:()=>`<h2>Attention: this room against the country</h2>
@@ -536,6 +730,127 @@ const S=[
  and neither one tells you which way it runs.</p>
  <div class="foot">Near match: the ANES asks interest in the campaign on three points,
  the CES attention on five, folded to three.</div>`},
+
+{slug:"campaigns",k:"light",notes:
+ "The best-identified of the three: the same people measured a year apart, so 'polarized people choose the campaign' is not available. Not airtight either — everyone gets the campaign at once, so the treatment is confounded with the calendar.",
+ h:()=>`<h2>Cause three: the campaign that never ends</h2>
+ <p class="kicker">The best-identified of the three — and the least talked about</p>
+ ${R3([{tag:'Sood & Iyengar 2016',big:'50–150%',color:'var(--accent)',
+        text:'More affectively polarized by election day than the same people were a year earlier. Not more than someone else — more than themselves.',src:'working paper'},
+       {tag:'The same study',big:'and the ads',color:'var(--cross)',
+        text:'People in the media market of a neighbouring battleground state get more campaign than their neighbours, for reasons unrelated to them. Negative advertising does the most.',src:''}])}
+ ${BAND('Why this design is better',
+   'The comparison is within the same person over time — so “polarized people choose the campaign” is not available as an explanation.')}`},
+
+{slug:"never-stops",k:"light",notes:
+ "Ties the causes section back to the concept. An identity is only as strong as how often it is switched on. If governing has become the next campaign, the switch is never off.",
+ h:()=>`<h2>Because the campaign never stops</h2>
+ <p class="kicker">An identity is only as strong as how often it is switched on</p>
+ ${R3([{tag:'Lee 2016, via p. 130',big:'permanent',color:'var(--blue)',
+        text:'Governance is now conducted as the next campaign. Partisan cues arrive from elites continuously rather than for eight weeks every four years.',src:'Insecure Majorities'},
+       {tag:'Michelitch & Utych 2018',big:'existential',color:'var(--match)',
+        text:'Campaigns make partisanship salient, and increasingly portray the other side as a threat to the country rather than as wrong about policy.',src:'J. Politics'}])}
+ <p class="punch" style="color:var(--accent)">A coin flip was enough. A line you are reminded of
+ every single day is more than enough.</p>`},
+
+{slug:"survey-free",k:"light",notes:
+ "Let them raise the objection first. Then the norm asymmetry, which inverts an instinct they have been taught: there is no norm against saying you dislike Republicans, so partisan animus may be the one kind we understate least.",
+ h:()=>`<h2>A survey answer is free</h2>
+ <p class="kicker">So why believe any of the last ten slides?</p>
+ ${BAND('The objection',
+   'Nothing stops you from typing 0. No cost, no consequence, and nobody will think less of you for it.')}
+ <p class="lede" style="font-size:clamp(13px,1.2vw,22px)">On race, gender and religion there are
+ strong norms against saying you dislike a group, so self-reports understate. On party there is no
+ such norm — if anything, elites model the hostility.</p>
+ <p class="punch">So the usual worry runs backwards here: partisan animus may be the one kind we
+ understate least.</p>
+ <div class="foot">The article makes this argument on p. 133. The next two slides are the evidence.</div>`},
+
+{slug:"not-ask",k:"light",notes:
+ "The third row is why this follows the last slide: explicit partisan bias is HIGHER than implicit, and on race it inverts. That is a prediction the previous slide made before you showed the numbers. Be honest that the IAT is contested.",
+ h:()=>`<h2>Measures that do not ask</h2>
+ <p class="kicker">Reaction times, not opinions</p>
+ ${R3([{tag:'The party IAT',big:'~70%',color:'var(--cross)',
+        text:'of Democrats and Republicans show implicit bias toward their own party — measured by how fast they sort words, which you cannot manage the way you manage an answer.',src:'Iyengar & Westwood 2015'},
+       {tag:'Against race',big:'.50 vs .18',color:'var(--accent)',
+        text:'Implicit PARTISAN bias, in the same respondents, runs well above implicit RACIAL bias on the same instrument.',src:'same study'},
+       {tag:'And the tell',big:'91% / 75%',color:'var(--blue)',
+        text:'EXPLICIT partisan bias is higher than implicit. On race it is the other way round — exactly what the previous slide predicts.',src:'same study'}])}
+ <div class="foot">Treat .50-against-.18 as a direction, not a ratio: two IATs are not on a common
+ substantive scale, and the IAT is contested as a predictor of individual behaviour.</div>`},
+
+{slug:"actually-do",k:"light",notes:
+ "Run the experiment on the room before showing a number. Two applicants, similar records, one Young Democrats and one Young Republicans — who gets it? Then: does it change at 4.0 against 3.5? Then give the question at the bottom real time.",
+ h:()=>`<h2>And what people actually do</h2>
+ <p class="kicker">The scholarship experiment — real decision, real consequence</p>
+ ${R3([{tag:'The choice',big:'80%',color:'var(--accent)',
+        text:'Asked to award a scholarship between two high-school students with similar records, partisans picked the co-partisan four times in five.',src:'Iyengar & Westwood 2015'},
+       {tag:'And the grades',big:'4.0 vs 3.5',color:'var(--cross)',
+        text:'It held even when the out-partisan was the stronger student. The chance of choosing the better-qualified opponent never rose above 30%.',src:'same study'},
+       {tag:'The same design, on race',big:'almost none',color:'var(--blue)',
+        text:'Little racial discrimination in the same experiment — in fact a slight preference for the Black applicant. The norm asymmetry, in one comparison.',src:'same study'}])}
+ <p class="punch">Should it be legal to refuse to hire a Republican?</p>`},
+
+{slug:"money",k:"light",notes:
+ "The Ghana row is the only non-American evidence in the deck, and a market rather than a laboratory. The box is the methodological point of the session: every method is individually attackable, and they agree.",
+ h:()=>`<h2>The same thing, with money attached</h2>
+ <p class="kicker">Games, markets, and one study from outside the United States</p>
+ ${R3([{tag:'Trust and dictator games',big:'bonus / penalty',color:'var(--match)',
+        text:'Given real money to divide, players consistently give more to co-partisans and less to opponents.',src:'Carlin & Love 2013'},
+       {tag:'Ghanaian taxis',big:'16% / 6%',color:'var(--cross)',
+        text:'Non-coethnic counter-partisans pay 16% more for the same ride; coethnic counter-partisans 6% more. A real market, real money, not the United States.',src:'Michelitch 2015'}])}
+ ${BAND('Why the three methods together are the argument',
+   'Self-reports are cheap talk. Implicit measures are contested. Games are artificial and played among strangers. Every method is individually attackable — and they agree.')}`},
+
+{slug:"not-stay",k:"light",notes:
+ "4-5% in 1960; a third and a half by 2010. The baseball benchmark in the footer is the article's own attempt to say how big 'big' is. The 80% row: the finding is selection rather than convergence, and the voter-file estimate is ten points lower.",
+ h:()=>`<h2>It does not stay in politics</h2>
+ <p class="kicker">The most quoted statistic in this literature</p>
+ ${R3([{tag:'1960',big:'4–5%',color:'var(--ink-3)',
+        text:'of parents were displeased by the prospect of a child marrying across party lines.',src:'via Iyengar et al. 2012'},
+       {tag:'2010',big:'⅓ and ½',color:'var(--accent)',
+        text:'A third of Democrats and half of Republicans. A rise of roughly 35 points in fifty years, and larger in the United States than in Britain.',src:'Iyengar et al. 2012'},
+       {tag:'And who they did marry',big:'80%',color:'var(--cross)',
+        text:'of married couples share a party identification — and it is selection at the start rather than spouses converging over time.',src:'Iyengar et al. 2018; 70% in voter files'}])}
+ <div class="foot">Compare the apolitical benchmark the article offers: 17–20% would not want their
+ child marrying a fan of an opposing baseball team.</div>`},
+
+{slug:"avoiding",k:"light",notes:
+ "The best criticism in today's reading. Tell people the in-law is apolitical and cross-party opposition collapses. Then the reply, and name it as a move they can reuse: a critique of a LEVEL cannot explain a change in a TREND unless the confound itself grew.",
+ h:()=>`<h2>Or are they avoiding people who talk about politics?</h2>
+ <p class="kicker">The best criticism in today’s reading — and it is on the optional list</p>
+ ${R3([{tag:'Klar, Krupnikov & Ryan 2018',big:'tell them it is apolitical',color:'var(--accent)',
+        text:'Opposition to a cross-party in-law falls sharply when respondents are told the person is largely apolitical — and opposition to a SAME-party in-law rises when told they discuss politics constantly.',src:'Public Opinion Q.'},
+       {tag:'So what is measured?',big:'partisanship, or politics?',color:'var(--cross)',
+        text:'Part of what looks like animus toward Republicans may be aversion to the kind of person who brings up politics at dinner.',src:'the article, p. 132'},
+       {tag:'And the reply',big:'levels vs trends',color:'var(--blue)',
+        text:'A critique of a measure’s LEVEL cannot explain a change in its TREND — unless the confound itself grew. Has America become more allergic to political talk since 1960?',src:'p. 132'}])}
+ <p class="punch">If it has, then Klar’s objection and the article’s finding are the same thing
+ wearing different clothes.</p>`},
+
+{slug:"labour",k:"light",notes:
+ "Every other kind of discrimination here would be illegal. The McConnell row rewards a second reading: workers took LESS money from a co-partisan and then worked worse — both halves in-group favouritism, neither out-group hostility.",
+ h:()=>`<h2>And it reaches the labour market</h2>
+ <p class="kicker">The one kind of discrimination with no legal protection at all</p>
+ ${R3([{tag:'Getting hired',big:'2.4 / 5.6 pts',color:'var(--blue)',
+        text:'Résumés signalling the locally dominant party get more callbacks — 2.4 points in a Democratic county, 5.6 in a Republican one. Real applications, real employers.',src:'Gift & Gift 2015'},
+       {tag:'Once hired',big:'−6.5%',color:'var(--cross)',
+        text:'Workers accept lower pay from a co-partisan employer — and then do lower-quality work and exert less effort. Both halves are in-group favouritism; neither is out-group hostility.',src:'McConnell et al. 2018'},
+       {tag:'As a customer',big:'15–20%',color:'var(--accent)',
+        text:'Less willing to accept a gift card from a firm that donates to the other party. A field replication cut it to about five points.',src:'Panagopoulos et al. 2016'}])}
+ <div class="foot">Note the size of these next to the marriage numbers. Partisan discrimination in
+ markets is real and small; in private life it is large.</div>`},
+
+{slug:"belief",k:"light",notes:
+ "The enrolment study is the best finding in the article and should be the last thing you say. Same insurance, same price, two doorways — and the cost of the label was people going without coverage.",
+ h:()=>`<h2>And into what people believe is true</h2>
+ <p class="kicker">Not who you like — what you think is the case about the world</p>
+ ${R3([{tag:'The doctor’s advice',big:'politicised only',color:'var(--match)',
+        text:'Republican and Democratic physicians give different advice on politicised health issues — abortion, drug use — and the same advice on everything else.',src:'Hersh & Goldenberg 2016'},
+       {tag:'The same plan, two doors',big:'20 pts',color:'var(--accent)',
+        text:'Uninsured Americans sent to a private site rather than the government marketplace — identical plans, identical prices. No effect on Democrats or independents. Republicans enrolled twenty points more often.',src:'Lerman et al. 2017'}])}
+ ${BAND('And the cost of the label',
+   'The price of the partisan cue, in that study, was people going without health insurance.')}`},
 
 {slug:"economy",k:"light",notes:
  "The president's co-partisans are more optimistic in 18 of 18 readings. The lines TRADE PLACES at nearly every change of administration — no account in which people report the economy accurately produces that.",
@@ -555,20 +870,6 @@ const S=[
      <b>${at('econRep',2024).toFixed(0)}</b>. In 2020, under Trump, it was
      ${at('econDem',2020).toFixed(0)} and ${at('econRep',2020).toFixed(0)}.
      This class, in August 2026: <b>${D.econCls.worse.toFixed(0)}%</b> say it got worse.`;}},
-
-{slug:"turnout",k:"light",notes:
- "The one consequence that might be good news, and the one to believe least. People who care enough to hate the other side are the same people who vote, and nothing here separates those.",
- h:()=>`<h2>Does disliking them make you vote?</h2>
- <p class="kicker">Self-reported turnout, by how affectively polarized the respondent is</p>
- ${SVG('fig9')}<p class="punch" id="fig9read"></p>`,
- draw:()=>{ chart($('#fig9'),{xdom:[1978,2024],ydom:[35,95],yticks:[40,60,80],
-     xticks:[1978,1990,2000,2012,2024],yfmt:v=>v+'%',pad:{r:200},
-     lines:[{data:D.series.turnHi,color:css('--accent'),label:'most polarized third'},
-            {data:D.series.turnLo,color:css('--ink-3'),label:'least polarized third'}]});
-   $('#fig9read').innerHTML=`A <b>${D.turnGap.within.toFixed(1)}-point</b> gap, averaged
-     within year, positive in all <b>${D.turnGap.nyears.toFixed(0)}</b> years. Pool the years
-     instead and it looks like ${D.turnGap.pooled.toFixed(0)} — wrong, because pooling sorts
-     people partly by era rather than by affect.`;}},
 
 {slug:"spillover",k:"light",notes:
  "Bars are this class's Democrats; dots are the country split by party. The evangelical row is the mirror: nationally Democrats 42, Republicans 65. Same instrument, same respondents, opposite sign.",
@@ -606,6 +907,90 @@ const S=[
      Christian fundamentalists: Democrats ${D.natgrp.evangelical.dem.toFixed(0)},
      Republicans ${D.natgrp.evangelical.rep.toFixed(0)}.`;}},
 
+{slug:"turnout",k:"light",notes:
+ "The one consequence that might be good news, and the one to believe least. People who care enough to hate the other side are the same people who vote, and nothing here separates those.",
+ h:()=>`<h2>Does disliking them make you vote?</h2>
+ <p class="kicker">Self-reported turnout, by how affectively polarized the respondent is</p>
+ ${SVG('fig9')}<p class="punch" id="fig9read"></p>`,
+ draw:()=>{ chart($('#fig9'),{xdom:[1978,2024],ydom:[35,95],yticks:[40,60,80],
+     xticks:[1978,1990,2000,2012,2024],yfmt:v=>v+'%',pad:{r:200},
+     lines:[{data:D.series.turnHi,color:css('--accent'),label:'most polarized third'},
+            {data:D.series.turnLo,color:css('--ink-3'),label:'least polarized third'}]});
+   $('#fig9read').innerHTML=`A <b>${D.turnGap.within.toFixed(1)}-point</b> gap, averaged
+     within year, positive in all <b>${D.turnGap.nyears.toFixed(0)}</b> years. Pool the years
+     instead and it looks like ${D.turnGap.pooled.toFixed(0)} — wrong, because pooling sorts
+     people partly by era rather than by affect.`;}},
+
+{slug:"democracy",k:"light",notes:
+ "The bridge to October 6. Broockman et al. reduced affective polarization experimentally and found no effect on support for undemocratic practices. Disliking them and being willing to cheat to beat them are different variables.",
+ h:()=>`<h2>Does it matter for democracy?</h2>
+ <p class="kicker">The consequence the unit is built to reach — and the argument about it</p>
+ ${TWO({tag:'The worry',head:'It corrodes the system',
+        text:'Animus fuels participation, but the hostile kind. Trust collapses for whichever side is out of power. Scandal stops costing anything. Losing becomes a legitimacy question rather than a result.'},
+       {tag:'The pushback',head:'Maybe not',
+        text:'Broockman, Kalla &amp; Westwood (2023) reduce affective polarization experimentally — and find no effect on support for undemocratic practices.'})}
+ <p class="punch">Hating them and wanting to beat them by any means are two different things.</p>
+ <div class="foot">In this room: ${D.cls.n_dem} out-partisans under an administration they did not
+ vote for. One group, one prediction, no control group — which is exactly the problem.</div>`},
+
+{slug:"remedies",k:"light",notes:
+ "Resist making it hopeful; the article does not. Ahler and Sood is the cheerful part — the hostility rests partly on a factual error, and errors can be corrected. Then the verdict: nobody has shown any of it survives outside an experiment.",
+ h:()=>`<h2>Can anything be done?</h2>
+ <p class="kicker">Two things work in a laboratory. Nobody has shown they work anywhere else.</p>
+ ${R3([{tag:'Correct the facts',big:'Ahler & Sood 2018',color:'var(--match)',
+        text:'People overestimate how many of the other party are union members, evangelicals, wealthy or gay — by 342%. Correct the error and animus falls.',src:'J. Politics'},
+       {tag:'Make us all Americans',big:'Levendusky 2018a',color:'var(--blue)',
+        text:'Prime a shared national identity and subjects are 25% less likely to rate the other party at zero.',src:'J. Politics'}])}
+ ${BAND('And the authors’ own verdict',
+   '“We should not expect reduction of partisan animus to be easy, even in the survey context … many sensible strategies will fail.”')}`},
+
+{slug:"open-1",k:"light",notes:
+ "A review earns its keep by saying what the field does not know. Question one is the sharpest and the most useful: economics separates taste-based from statistical discrimination, and this literature has not.",
+ h:()=>`<h2>What the field admits it does not know</h2>
+ <p class="kicker">The last two pages — and the best place in this course to find a question</p>
+ ${R3([{tag:'Open question one',big:'hatred, or an inference?',color:'var(--accent)',
+        text:'Refusing to trade with an opponent might be raw animus — or a reasonable guess that they will treat you badly. Economics separates taste-based from statistical discrimination. This literature has not.',src:'p. 141'},
+       {tag:'Open question two',big:'love, or hate?',color:'var(--cross)',
+        text:'Social identity theory says loving your own side comes first. The thermometers say the opposite. Which dominates probably depends on the situation, and nobody has mapped when.',src:'pp. 141–142'}])}
+ <p class="punch">Question one is the more useful of the two, and the article gives you the
+ vocabulary to attack it.</p>`},
+
+{slug:"open-2",k:"light",notes:
+ "Three should unsettle them: if hostility also drives people to adopt their party's positions, a lot of published work has the model backwards. Four is the accessible one — a reading and synthesis problem, which is what a policy brief is.",
+ h:()=>`<h2>And two the field has barely started on</h2>
+ <p class="kicker">If you want a policy brief nobody else will write</p>
+ ${R3([{tag:'Open question three',big:'which way round?',color:'var(--blue)',
+        text:'Everything today treated affect as the thing to be explained. If it also drives people to adopt their party’s positions and to pick extreme candidates, the arrow runs both ways and a lot of published work has the model backwards.',src:'p. 142'},
+       {tag:'Open question four',big:'is any of it American?',color:'var(--match)',
+        text:'Almost no bridge to comparative politics, where group identity, ethnic parties and political violence have been studied for fifty years under other names.',src:'pp. 142–143'}])}
+ <p class="punch">Three is probably too hard without new data. Four is wide open and mostly a
+ reading problem.</p>`},
+
+{slug:"fiorina-1",k:"light",notes:
+ "Fiorina's chapter was assigned for today. Objection one is about language, not data — but the policy conclusions people draw depend entirely on the interpretation. Objection two they met on the economy slide.",
+ h:()=>`<h2>Fiorina’s reply</h2>
+ <p class="kicker">“A runaway train that roared through a number of scientific stations”</p>
+ ${R3([{tag:'Objection one',big:'a 20 is a 20',color:'var(--blue)',
+        text:'“There are days when my wife rates me at 20 degrees. I doubt she would say she loathes me.” He does not dispute the trend. He disputes “loathing,” “poisonous cocktail,” “staggeringly high antipathy.”',src:'ch. 3, p. 3'},
+       {tag:'Objection two',big:'cheap talk',color:'var(--cross)',
+        text:'Two friends at a Giants–Dodgers game would each rate the other’s fans at zero. Answering a survey is costless — why not just cheer for your side?',src:'ch. 3, p. 3'}])}
+ <p class="punch">He is not saying the numbers are wrong. He is saying the words wrapped around
+ them are.</p>`},
+
+{slug:"fiorina-2",k:"light",notes:
+ "Objection four is the one. Social identity theory predicts in-group love FIRST; the two-lines slide shows the reverse. Your answer to objection three is the warm-side slide — a count above a threshold the question itself defines, with no interval assumption.",
+ h:()=>`<h2>And the two that actually hurt</h2>
+ <p class="kicker">One about the instrument, one about the theory</p>
+ ${R3([{tag:'Objection three',big:'never validated',color:'var(--accent)',
+        text:'Has the thermometer ever been shown to measure AFFECT rather than policy disagreement? Does a low Trump rating mean dislike of the man, or of his positions? A literature was built on an assumption nobody checked.',src:'ch. 3, pp. 7–8'},
+       {tag:'Objection four',big:'the theory predicts the opposite',color:'var(--accent)',
+        text:'Social identity theory says in-group love comes FIRST. The two-lines slide showed in-party feeling flat and out-party feeling collapsing. Iyengar et al. report that as their headline and note the tension in a subordinate clause.',src:'ch. 3, p. 8'}])}
+ <p class="punch" style="color:var(--accent)">Objection four uses our best slide against us.</p>
+ <div class="foot">Your answer to objection three is the warm-side slide: the share rating the other
+ party above 50 fell from ${at('outwarm',1978).toFixed(0)}% to ${at('outwarm',2024).toFixed(0)}%
+ while own-party warmth did not move — a count above a threshold the question itself defines, with
+ no interval assumption at all.</div>`},
+
 {slug:"close",k:"dark center",notes:
  "Would you rather live in 1978? The 1978 electorate was warm toward both parties — and had parties so incoherent that a vote could get you a segregationist or a liberal. Low affective polarization was bought with parties that did not stand for anything.",
  h:()=>`<h2 style="font-size:clamp(28px,3.6vw,64px)">The country is not arguing about policy
@@ -613,9 +998,22 @@ const S=[
  <p class="lede">· Is that a problem for democracy, or only unpleasant?<br>
  · If nobody changed their mind about policy, what exactly changed?<br>
  · Would you rather live in 1978 — and what would you be giving up?</p>
- <div class="foot">84-309 · Polarization III · Iyengar et al. 2019</div>`}
+ <div class="foot">84-309 · Polarization III · Iyengar et al. 2019</div>`},
+
+{slug:"next",k:"dark",notes:
+ "Leave up while they pack. Registration for the Constitution Day symposium closes today. The op-ed rough draft is due Monday the 21st with no class in between.",
+ h:()=>`<p class="kicker">Next</p>
+ <div class="map" style="margin-top:clamp(14px,3vh,40px)">
+ ${[['Sep 15 &amp; 17','NO CLASS — Eradicate Hate; Constitution Day Symposium','You are expected at the symposium during class hours. Registration closes Wed, Sep 10.'],
+    ['Mon, Sep 21','DUE 11:59 p.m. — op-ed rough draft','The one hard deadline in the course. Two classmates are assigned to read you.'],
+    ['Tue, Sep 22','Polarization IV: Negative Partisanship','Abramowitz &amp; Webster 2016 · Abramowitz 2025 · Fiorina, ch. 5']]
+   .map(r=>`<div class="maprow" style="border-color:#2A3540"><span class="tag"
+     style="color:var(--accent)">${r[0]}</span><span class="p"></span>
+     <span class="d"><b style="font-family:var(--display);font-size:1.15em">${r[1]}</b><br>
+     <span style="color:var(--ink-3)">${r[2]}</span></span></div>`).join('')}
+ </div>
+ <div class="foot">The annotated article and the PowerPoint are in Canvas.</div>`}
 ];
-const SLIDE_COUNT = S.length;
 
 function render(){
   const s=S[state.step];
