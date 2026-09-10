@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### Updated: September 03, 2026
+#### Updated: September 10, 2026
 
 > Professor **Jonathan Cervas**\
 > Office: Posner Hall 374\
@@ -50,21 +50,23 @@ The course grade will be a weighted average of the following components:
 
 ## Due Dates
 
-| Assignment               | Due Date                         |
-|--------------------------|----------------------------------|
-| Discussion board post    | 9:00 a.m., each class day        |
-| Surveys (3)              | August 26, October 7, final week |
-| Op-ed, first draft       | September 21                     |
-| Op-ed peer review        | September 24                     |
-| Op-ed final draft        | September 28                     |
-| Book Review (slides)     | November 23                      |
-| Group Project            | December 1/3                     |
-| Group Project reflection | December 4                       |
+| Assignment                | Due Date                             |
+|---------------------------|--------------------------------------|
+| Discussion board post     | 9:00 a.m., each class day            |
+| Surveys (3)               | August 26, October 7, final week     |
+| Op-ed topic, on the board | September 15 (subject), 17 (replies) |
+| Op-ed, first draft        | September 21                         |
+| Op-ed peer review         | September 24                         |
+| Op-ed final draft         | September 28                         |
+| Book Review (slides)      | November 23                          |
+| Group Project             | December 1/3                         |
+| Group Project reflection  | December 4                           |
 
 ## The Essentials
 
 - **Before every class**: one short discussion-board post, due **9:00
-  a.m.**, in Canvas.
+  a.m.**, in Canvas. Two more fall in the no-class week of **September
+  15**, where the class settles op-ed subjects.
 - **Attendance is 25%.** The first three absences cost almost nothing;
   four to six is where a semester goes wrong.
 - **Late work** costs one point per hour, but never drops below 50% —

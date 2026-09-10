@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### DRAFT Updated: September 03, 2026
+#### DRAFT Updated: September 10, 2026
 
 > Professor **Jonathan Cervas**\
 > Office: Posner Hall 374\
@@ -93,16 +93,17 @@ The course grade will be a weighted average of the following components:
 
 ## Due Dates
 
-| Assignment               | Due Date                         |
-|--------------------------|----------------------------------|
-| Discussion board post    | 9:00 a.m., each class day        |
-| Surveys (3)              | August 26, October 7, final week |
-| Op-ed, first draft       | September 21                     |
-| Op-ed peer review        | September 24                     |
-| Op-ed final draft        | September 28                     |
-| Book Review (slides)     | November 23                      |
-| Group Project            | December 1/3                     |
-| Group Project reflection | December 4                       |
+| Assignment                | Due Date                             |
+|---------------------------|--------------------------------------|
+| Discussion board post     | 9:00 a.m., each class day            |
+| Surveys (3)               | August 26, October 7, final week     |
+| Op-ed topic, on the board | September 15 (subject), 17 (replies) |
+| Op-ed, first draft        | September 21                         |
+| Op-ed peer review         | September 24                         |
+| Op-ed final draft         | September 28                         |
+| Book Review (slides)      | November 23                          |
+| Group Project             | December 1/3                         |
+| Group Project reflection  | December 4                           |
 
 ## Assignment Details
 
@@ -122,7 +123,9 @@ bites.</figcaption>
   nothing; four to six is where a semester goes wrong.
 - **Discussion Board** (15%). One short post before every class, due
   **9:00 a.m.** on the day we meet. Either raise something or answer
-  someone. Your two lowest scores are dropped.
+  someone. Your two lowest scores are dropped. Twenty-three boards in
+  all: one per class, plus two in the no-class week of September 15 that
+  carry the op-ed topic exchange.
 - **Student Led Topics** (9%). In a team of four or five you pick a
   topic, assign the readings, set the questions, and run one
   eighty-minute session — plus a short reflection within three days of
@@ -135,7 +138,9 @@ bites.</figcaption>
 - **Op-Ed Project** (20%). A rough draft (10%), two peer reviews (8%),
   and a final draft (2%). **The draft deadline is the one hard deadline
   in this course** — two classmates are assigned to read you, and
-  whatever exists is what they get.
+  whatever exists is what they get. The subject gets settled first, on
+  the discussion board on **September 15 and 17**, where the class helps
+  you narrow it before you write.
 - **Group Policy Brief** (17%). A written brief (10%), a presentation in
   finals week (5%), and an individual reflection (2%).
 
@@ -229,13 +234,20 @@ are on that session’s page in Canvas.*
 
 #### Tue, Sep 15 — **NO CLASS.** Eradicate Hate Conference.
 
+- **DUE 9:00 a.m.** — **discussion board**, in the `sep15` folder: post
+  the **subject of your op-ed**. The issue, and which way you expect to
+  come down. We do not meet this week, but the board runs.
+
 #### Thu, Sep 17 — **NO CLASS.** Constitution Day Symposium.
 
+- **DUE 9:00 a.m.** — **discussion board**, back in the `sep15` folder:
+  reply to several classmates’ op-ed subjects, on their threads — a
+  suggestion, something they should know, or the objection they have not
+  answered yet.
 - **You are expected to attend**, at least during our normal class
   hours. [CMU Constitution Day
   Symposium](https://www.givecampus.com/schools/CarnegieMellonUniversity/events/cmu-constitution-day-symposium)
-  — Simmons Auditorium, Tepper. Free, but **registration closes Wed, Sep
-  10**.
+  — Simmons Auditorium, Tepper. Free.
 - **DUE Mon, Sep 21, 11:59 p.m.** — the **op-ed rough draft**. We do not
   meet at all this week, so note it now: this is the one hard deadline
   in the course. Late costs 10% at once and 1% an hour after that, with
