@@ -785,13 +785,14 @@ const S=[
 {slug:"you",k:"wash",notes:
  "Their own two numbers on the national series. A negative score means they rate the other party warmer than their own, which the measure allows but was not built for.",
  h:()=>`<h2>Put yourself on it</h2>
+ <p class="kicker">The same gap, computed from your two answers</p>
  <div class="ctl"><label>Democratic Party
    <input type="range" id="ftD" min="0" max="100" value="70"><output id="ftDo">70</output></label>
    <label>Republican Party
    <input type="range" id="ftR" min="0" max="100" value="30"><output id="ftRo">30</output></label>
    <span class="pill"><button class="tog" id="pD" aria-pressed="true">closer to the Democrats</button>
    <button class="tog" id="pR" aria-pressed="false">closer to the Republicans</button></span>
- </div>${SVG('fig2',360)}<p class="punch" id="fig2read"></p>`,
+ </div>${SVG('fig2',300)}<p class="punch" id="fig2read"></p>`,
  draw:()=>{ let side='D';
    const f=()=>{
      const d=+$('#ftD').value, r=+$('#ftR').value;
@@ -806,17 +807,19 @@ const S=[
      for(let v=Math.ceil(lo/20)*20; v<=hi; v+=20) ticks.push(v);
      chart($('#fig2'),{xdom:[1978,2028],ydom:[lo,hi],yticks:ticks,
        xticks:[1978,1990,2000,2012,2024],pad:{r:130},
-       lines:[{data:Sr,color:css('--ink-2'),w:2.5},
+       ylab:'in-party minus out-party, degrees',
+       lines:[{data:Sr,color:css('--ink-2'),w:2.5,label:'the country',
+               ask:'How big is the average American’s gap, year by year?'},
               {data:[[1978,D.cls.affpol],[2027,D.cls.affpol]],color:css('--accent'),
                w:1.5,dash:'6 6',dots:false,label:'this class'},
               {data:[[1978,you],[2027,you]],color:css('--blue'),w:1.2,dash:'2 6',dots:false}],
        marks:[{x:2027,y:you,color:css('--blue'),label:'you'}]
               .concat(cross?[{x:cross[0],y:cross[1],color:css('--ink-2'),r:5}]:[])});
-     $('#fig2read').innerHTML=`Your score is <b>${you}</b>. `+(cross
-       ? `The country was last at that level in <b>${cross[0]}</b> (${f1(cross[1])}).`
+     $('#fig2read').innerHTML=`Your gap is <b>${you}</b>. `+(cross
+       ? `The country was last there in <b>${cross[0]}</b>.`
        : (you>peak[1] ? `Higher than the country has ever been — the peak is ${f1(peak[1])} in ${peak[0]}.`
                       : `Lower than the country has been since 1978 — the low is ${f1(low[1])} in ${low[0]}.`))
-       +` This class averages ${f1(D.cls.affpol)}; America in 2024 is ${f1(D.anes24.affpol)}.`;
+       +` This class: ${f1(D.cls.affpol)}. America in 2024: ${f1(D.anes24.affpol)}.`;
    };
    ['#ftD','#ftR'].forEach(i=>$(i).addEventListener('input',f));
    $('#pD').addEventListener('click',()=>{side='D';f();});
