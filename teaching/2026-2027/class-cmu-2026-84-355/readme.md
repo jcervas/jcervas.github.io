@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### Updated: September 10, 2026
+#### Updated: September 12, 2026
 
 > Professor Jonathan Cervas\
 > Office: Posner Hall 374\
@@ -324,6 +324,19 @@ else’s work, not just your own:
   the Introduction is the part to read. Fienberg wrote it while he was
   CMU’s Maurice Falk University Professor of Statistics and Social
   Science.
+  <!-- Added mid-semester, Sep 2026, after the proposed rule was submitted. The
+     gift link is the author's own and gets past the paywall; keep it intact. -->
+- *Optional*: [*NYT* — the administration’s proposed rewrite of the 2030
+  census](https://www.nytimes.com/2026/09/09/us/politics/trump-census-immigrants-race.html?unlocked_article_code=1.AFE.KZsP.c7JBkHLLir_x&smid=nytcore-ios-share)
+  — the Census Bureau submitted a proposed rule in September 2026 that
+  would count citizens and lawful permanent residents and leave everyone
+  else out, including refugees, asylum seekers and people with temporary
+  legal status, and would drop the race and ethnicity questions. Both
+  halves bear on this session: the Fourteenth Amendment apportions seats
+  by the “whole number of persons in each State,” and the race questions
+  are the ones we spend a later session taking apart. Nothing is settled
+  — it is a proposal, and the first Trump term’s version of it lost in
+  court.
 
 ### Week 2 — Part I
 
@@ -360,16 +373,10 @@ else’s work, not just your own:
 - [Census Academy — *Discovering the American Community
   Survey*](https://www.census.gov/data/academy/courses/discovering-the-american-community-survey.html)
   — **all six modules**
-- Transcripts, if you would rather read than watch: [1 —
-  Introduction](https://canvas.cmu.edu/courses/55218/files/14798631), [2
-  — Geography](https://canvas.cmu.edu/courses/55218/files/14798632), [3
-  — Data products](https://canvas.cmu.edu/courses/55218/files/14798633),
-  [4 — Guidance for data
-  users](https://canvas.cmu.edu/courses/55218/files/14798634), [5 —
-  Summary File and
-  PUMS](https://canvas.cmu.edu/courses/55218/files/14798635), [6 —
-  Pulling it all
-  together](https://canvas.cmu.edu/courses/55218/files/14798636)
+- [Slides and transcripts for all six
+  modules](https://canvas.cmu.edu/courses/55218/pages/course-discovering-the-american-community-survey-census-bureau)
+  — on Canvas, if you would rather read than watch: every slide from
+  each recording, lined up against what is said over it
 
 ### Week 4 — Part II opens
 
