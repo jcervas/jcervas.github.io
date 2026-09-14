@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### Updated: September 12, 2026
+#### Updated: September 14, 2026
 
 > Professor Jonathan Cervas\
 > Office: Posner Hall 374\
@@ -404,8 +404,9 @@ else’s work, not just your own:
 
 #### Thu, Sep 24 — Data Session 4 — Election polls: the horse race, and what a margin hides
 
-- [Bailey, *Polling at a Crossroads* (2023), ch. 1,
-  3–22](https://www.cambridge.org/9781108482790)
+- [Bailey, *Polling at a Crossroads* (2024), ch. 1,
+  3–22](https://cmu.primo.exlibrisgroup.com/discovery/fulldisplay?docid=alma991020180419304436&context=L&vid=01CMU_INST:01CMU)
+  — the library’s online copy; sign in with your Andrew ID
 - [*NYT* — are political polls
   accurate?](https://www.nytimes.com/2026/08/14/briefing/are-political-polls-accurate.html)
 - [*NYT* — election polls, confusion, and prediction
