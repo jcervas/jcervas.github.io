@@ -37,6 +37,7 @@
     seatEditor: $("cs-seat-editor"), seatGrid: $("cs-seat-grid"),
     seatTotal: $("cs-seat-total"), seatCopy: $("cs-seat-copy"), seatOne: $("cs-seat-one"),
     solve: $("cs-solve"), auto: $("cs-auto"), reset: $("cs-reset"),
+    download: $("cs-download"),
     progress: $("cs-progress"), fill: $("cs-progress-fill"), plabel: $("cs-progress-label"),
     statPlace: $("cs-stat-place"), statCells: $("cs-stat-cells"),
     statMatch: $("cs-stat-match"), statRef: $("cs-stat-ref"), statAdj: $("cs-stat-adj"),
@@ -287,7 +288,162 @@
   const geomPath = (g) =>
     path(g.type === "Polygon" ? g.coordinates : g.coordinates.flat());
 
+  /* The last solve, kept so it can be exported. Rendering consumes `res` and
+   * then drops it; downloading needs it again. */
+  let lastRes = null;
+
+  /* ------------------------------------------------------------- export ----
+   * The solve as one GeoJSON FeatureCollection: every cell, every outline,
+   * every label, flattened into one shared coordinate space so the file opens
+   * in mapshaper, QGIS or anything else that reads GeoJSON.
+   *
+   * Three things are worth knowing about what comes out.
+   *
+   * Coordinates are pixels in the design frame, not longitude and latitude. A
+   * cartogram has no projection to invert, so there is no CRS to declare and
+   * the file is deliberately unprojected.
+   *
+   * The y axis is flipped on the way out. SVG counts y downward and GIS counts
+   * it upward, so without this the map opens upside down.
+   *
+   * Cells are clipped to their state here. On screen the browser does that with
+   * a clipPath, which is a painting instruction and does not survive an export
+   * -- unclipped, every edge cell would run out to its state's bounding box and
+   * the map would read as a spray of wedges. Each cell is convex, being a power
+   * diagram cell, so the state can be clipped by it with Sutherland-Hodgman,
+   * which needs the CLIP polygon to be convex and says nothing about the
+   * subject. That is the right way round for this pair.
+   */
+  function clipToConvex(ring, convex) {
+    const inside = (p, a, b) =>
+      (b[0] - a[0]) * (p[1] - a[1]) - (b[1] - a[1]) * (p[0] - a[0]) >= -1e-9;
+    const cut = (p, q, a, b) => {
+      const r = [q[0] - p[0], q[1] - p[1]], t = [b[0] - a[0], b[1] - a[1]];
+      const den = r[0] * t[1] - r[1] * t[0];
+      if (!den) return q.slice();
+      const u = ((a[0] - p[0]) * t[1] - (a[1] - p[1]) * t[0]) / den;
+      return [p[0] + u * r[0], p[1] + u * r[1]];
+    };
+    // orient the clip counter-clockwise so "inside" is one consistent side
+    let area = 0;
+    for (let i = 0, j = convex.length - 1; i < convex.length; j = i++)
+      area += convex[j][0] * convex[i][1] - convex[i][0] * convex[j][1];
+    const C = area < 0 ? convex.slice().reverse() : convex;
+
+    let out = ring.slice();
+    for (let i = 0, j = C.length - 1; i < C.length && out.length; j = i++) {
+      const a = C[j], b = C[i], src = out;
+      out = [];
+      for (let k = 0; k < src.length; k++) {
+        const cur = src[k], prv = src[(k + src.length - 1) % src.length];
+        const ci = inside(cur, a, b), pi = inside(prv, a, b);
+        if (ci) {
+          if (!pi) out.push(cut(prv, cur, a, b));
+          out.push(cur);
+        } else if (pi) out.push(cut(prv, cur, a, b));
+      }
+    }
+    if (out.length < 3) return null;
+    out.push(out[0].slice());
+    return out.map((q) => [+q[0].toFixed(1), +q[1].toFixed(1)]);
+  }
+
+  function toFeatureCollection() {
+    const res = lastRes;
+    if (!res || !payload) return null;
+    const byState = {};
+    for (const s of payload.states) byState[s.st] = s;
+    const cellsBySt = {};
+    if (res.cells) for (const c of res.cells.states) cellsBySt[c.st] = c;
+
+    const H = payload.design.height, W = payload.design.width;
+    const dw = payload.design.w, dh = payload.design.h;
+    const freeMode = res.place && res.place.mode === "free";
+    const features = [];
+
+    for (const b of res.bodies) {
+      const s = byState[b.st];
+      const at = ([x, y]) =>
+        [+(b.tx + x * b.scale).toFixed(1), +(H - (b.ty + y * b.scale)).toFixed(1)];
+      const rings = (s.outline.type === "Polygon"
+        ? [s.outline.coordinates] : s.outline.coordinates).map((poly) => poly[0]);
+      const common = { st: s.st, seats: (cellsBySt[b.st] || {}).k || s.seats || null };
+
+      const carved = cellsBySt[b.st];
+      const match = res.match && res.match.byState[b.st];
+      if (carved) {
+        carved.cells.forEach((cell, i) => {
+          if (!cell || cell.length < 3) return;
+          // clip the state by this cell, one outer ring at a time
+          const parts = [];
+          for (const ring of rings) {
+            const piece = clipToConvex(ring, cell);
+            if (piece) parts.push([piece.map(at)]);
+          }
+          if (!parts.length) return;
+          const dist = match && match[i];
+          features.push({
+            type: "Feature",
+            properties: { ...common, kind: "cell", cell: i + 1,
+                          district: dist ? dist.id : null,
+                          party: dist ? dist.p : null },
+            geometry: parts.length === 1
+              ? { type: "Polygon", coordinates: parts[0] }
+              : { type: "MultiPolygon", coordinates: parts },
+          });
+        });
+      }
+
+      const outline = s.outline.type === "Polygon"
+        ? { type: "Polygon", coordinates: s.outline.coordinates.map((r) => r.map(at)) }
+        : { type: "MultiPolygon",
+            coordinates: s.outline.coordinates.map((p) => p.map((r) => r.map(at))) };
+      features.push({
+        type: "Feature",
+        properties: { ...common, kind: "outline", cells: carved ? carved.cells.length : 0 },
+        geometry: outline,
+      });
+
+      const lab = (s.label && !freeMode)
+        ? [(s.label[0] / dw) * W + (b.tx - b.seedTx), (s.label[1] / dh) * H + (b.ty - b.seedTy)]
+        : [s.centroid[0] * b.scale + b.tx, s.centroid[1] * b.scale + b.ty];
+      features.push({
+        type: "Feature",
+        properties: { ...common, kind: "label", text: s.st },
+        geometry: { type: "Point",
+                    coordinates: [+lab[0].toFixed(1), +(H - lab[1]).toFixed(1)] },
+      });
+    }
+
+    return {
+      type: "FeatureCollection",
+      meta: {
+        title: "Cartogram studio export",
+        generated: new Date().toISOString(),
+        width: W, height: H,
+        coordinateSpace: "Pixels in a " + W + " x " + H + " frame, y increasing upward.",
+        note: "Not longitude/latitude: a cartogram has no projection to invert.",
+        mode: res.place ? res.place.mode : null,
+        seed: payload.defaults ? payload.defaults.seed : null,
+      },
+      palette: payload.palette,
+      features,
+    };
+  }
+
+  function downloadGeoJSON() {
+    const fc = toFeatureCollection();
+    if (!fc) return;
+    const blob = new Blob([JSON.stringify(fc)], { type: "application/geo+json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "cartogram.geojson";
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+
   function render(res) {
+    lastRes = res;
     const frag = document.createDocumentFragment();
     const defs = document.createElementNS(SVG, "defs");
     const byState = {};
@@ -651,6 +807,7 @@
     c.addEventListener("input", () => schedule(220));
   for (const c of [el.seats, el.cells, el.seed]) c.addEventListener("change", () => schedule(0));
   el.placement.addEventListener("change", () => { syncOutputs(); solve(); });
+  el.download.addEventListener("click", downloadGeoJSON);
   for (const c of [el.tweaks, el.groupNE, el.colour]) c.addEventListener("change", () => schedule(0));
   el.ghost.addEventListener("change", () => schedule(0));
 
