@@ -41,3 +41,32 @@
   letter-spacing: -0.01em;
   line-height: 1.2;
 }
+
+/* ---------------------------------------------------- seat-change figure --
+ * Colours are set per mark in the SVG, because they carry direction and have to
+ * match the map above; everything else is text, and wears the page's ink. */
+.sc-wrap { margin: 1.75rem 0; overflow-x: auto; }
+.sc { width: 100%; max-width: 660px; height: auto; display: block; }
+.sc text { fill: currentColor; font-family: inherit; }
+.sc-head { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; opacity: .6; }
+.sc-side { font-size: 11px; opacity: .45; font-style: italic; }
+.sc-name { font-size: 13.5px; font-weight: 600; }
+.sc-seats { font-size: 13px; opacity: .55; font-variant-numeric: tabular-nums; }
+.sc-range { font-size: 12.5px; font-weight: 700; }
+.sc-key { font-size: 11.5px; opacity: .6; }
+.sc-rule { stroke: currentColor; opacity: .15; stroke-width: 1; }
+/* A pale block is the same hue at a fraction of its weight, outlined so it keeps
+ * its edge against either surface. */
+.sc-blk.sc-maybe { fill-opacity: .18; stroke-width: 1.25; stroke-opacity: .55; }
+.sc-row:hover .sc-name { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ------------------------------------------------------- state silhouettes -- */
+/* The source outlines each come in a square viewBox, already padded so every
+ * state reads at a comparable size. So the mark has to be square too -- in a
+ * wider box the square content fits the short side and every state shrinks. */
+.state-mark {
+  width: 1.5em; height: 1.5em; vertical-align: -0.35em; margin-right: .4em;
+  fill: currentColor; opacity: .32;
+}
+.cgdoc h3 .state-mark { opacity: .38; }
+.sc-zero { stroke: currentColor; opacity: .3; stroke-width: 1; }
