@@ -104,17 +104,23 @@ defaults:
       wide: true
       order: 8
   - scope:
+      path: "maps/cartogram-editor/index.html"
+    values:
+      breadcrumb: "Cartogram editor"
+      wide: true
+      order: 9
+  - scope:
       path: "maps/alpine-lake-construction/index.html"
     values:
       breadcrumb: "Alpine Lake construction"
       wide: true
-      order: 9
+      order: 10
   - scope:
       path: "maps/packed-cartogram/index.html"
     values:
       breadcrumb: "Packed cartogram"
       wide: true
-      order: 10
+      order: 11
 
 # Primary navigation (edit here to change the menu everywhere)
 nav:
