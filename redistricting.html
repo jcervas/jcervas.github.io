@@ -12,50 +12,11 @@ breadcrumb: "Redistricting"
 </p>
 
 <p class="feature-banner">
-  <a href="{{ '/maps/citizen-apportionment/' | relative_url }}">
-    <strong>New:</strong> Who counts in 2030 &mdash; the Census Bureau has proposed
-    counting only citizens and green-card holders for apportionment. Three seats
-    would move, and Texas loses one. Comments close October&nbsp;13 &rarr;
+  <a href="{{ '/resources/' | relative_url }}">
+    <strong>Resources:</strong> interactive maps and cartograms I have built, plus the
+    redistricting data, tools, and election-law news I rely on &rarr;
   </a>
 </p>
-
-<p class="feature-banner">
-  <a href="{{ '/maps/mid-decade-redistricting/' | relative_url }}">
-    <strong>Interactive map:</strong> Mid-decade congressional redistricting &mdash;
-    expected partisan seat shifts from newly enacted 2026 maps &rarr;
-  </a>
-</p>
-
-<p class="feature-banner">
-  <a href="{{ '/maps/us-house-2022-cartogram/' | relative_url }}">
-    <strong>Interactive map:</strong> The 2022 U.S. House on an equal-area cartogram &mdash;
-    every district drawn the same size, morphing to and from the geographic map &rarr;
-  </a>
-</p>
-
-<p class="feature-banner">
-  <strong>Interactive maps:</strong> Change in House apportionment &mdash;
-  which states gained and lost seats, and how many.
-  <span class="banner-links">
-    <a href="{{ '/maps/apportionment-2020-2030/' | relative_url }}">2020 to 2030 (projected)</a>
-    <span class="banner-sep">&middot;</span>
-    <a href="{{ '/maps/apportionment-2010-2020/' | relative_url }}">2010 to 2020</a>
-    <span class="banner-sep">&middot;</span>
-    <a href="{{ '/maps/apportionment-2000-2010/' | relative_url }}">2000 to 2010</a>
-  </span>
-</p>
-
-<p class="feature-banner">
-  <strong>How these maps are built:</strong> sizing each state to its seat count,
-  carving it into equal-area districts, and matching those to the real ones.
-  <span class="banner-links">
-    <a href="{{ '/maps/cartogram-placement/' | relative_url }}">How it is built</a>
-    <span class="banner-sep">&middot;</span>
-    <a href="{{ '/maps/cartogram-studio/' | relative_url }}">Solve one yourself</a>
-  </span>
-</p>
-
-<p><a class="more-link" href="{{ '/maps/' | relative_url }}">Browse all interactive maps &rarr;</a></p>
 
 {% assign cases = site.cases | where_exp: "c", "c.order" | sort: "order" %}
 <div class="case-grid">

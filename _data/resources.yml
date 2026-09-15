@@ -1,0 +1,70 @@
+# Resources page (/resources/) — data-driven.
+#
+# Each entry under `sections` renders as a titled block on the page. Every
+# section has a list of `links`. To add a resource, drop a new item under the
+# right section — nothing else to touch.
+#
+#   title    (required) link text
+#   url      (required) internal path (/maps/...) or full external URL
+#   note     (optional) one-line description shown after the title
+#   internal (optional) true for links to my own pages on this site; these
+#            open in the same tab. External links open in a new tab.
+#
+# Order within a section is the order links appear here.
+
+sections:
+  - id: visualizations
+    title: "Interactive Maps &amp; Visualizations"
+    intro: "Maps and cartograms I build for research and teaching. Explore a few below, or browse the full collection."
+    links:
+      - title: "Who counts in 2030"
+        url: "/maps/citizen-apportionment/"
+        note: "If apportionment counted only citizens and green-card holders, three seats would move — and Texas would lose one."
+        internal: true
+      - title: "Mid-decade congressional redistricting"
+        url: "/maps/mid-decade-redistricting/"
+        note: "Expected partisan seat shifts from the newly enacted 2026 maps."
+        internal: true
+      - title: "The 2022 U.S. House on an equal-area cartogram"
+        url: "/maps/us-house-2022-cartogram/"
+        note: "Every district drawn the same size, morphing to and from the geographic map."
+        internal: true
+      - title: "Change in House apportionment"
+        url: "/maps/apportionment-2020-2030/"
+        note: "Which states gained and lost seats, from 2000 through the 2030 projection."
+        internal: true
+      - title: "Browse all interactive maps"
+        url: "/maps/"
+        note: "The complete set, including the cartogram studio and method write-ups."
+        internal: true
+
+  - id: data
+    title: "Data &amp; Mapping Tools"
+    intro: "Where I go for clean redistricting data and for tools to draw and score maps."
+    links:
+      - title: "Redistricting Data Hub"
+        url: "https://redistrictingdatahub.org/"
+        note: "Cleaned, precinct-level election results and census data, ready for analysis."
+      - title: "Dave's Redistricting App"
+        url: "https://davesredistricting.org/"
+        note: "Draw and evaluate district maps in the browser, with partisan and demographic scoring."
+      - title: "PlanScore"
+        url: "https://planscore.org/"
+        note: "Nonpartisan gerrymandering analysis and partisan-fairness scores for enacted and proposed plans."
+      - title: "Census Bureau — Redistricting Data Program"
+        url: "https://www.census.gov/programs-surveys/decennial-census/about/rdo.html"
+        note: "The official P.L. 94-171 population and geographic files states use to redistrict."
+
+  - id: law
+    title: "Law, Litigation &amp; Commentary"
+    intro: "The sources I follow for redistricting law, court cases, and day-to-day developments."
+    links:
+      - title: "All About Redistricting"
+        url: "https://redistricting.lls.edu/"
+        note: "Justin Levitt's guide to the rules and the litigation, tracked state by state."
+      - title: "Election Law Blog"
+        url: "https://electionlawblog.org/"
+        note: "Rick Hasen's running coverage of election law, including redistricting cases."
+      - title: "Princeton Gerrymandering Project"
+        url: "https://gerrymander.princeton.edu/"
+        note: "Redistricting Report Card grades and analysis of maps nationwide."

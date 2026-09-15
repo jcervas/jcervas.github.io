@@ -1,0 +1,32 @@
+---
+layout: page
+title: Resources
+permalink: /resources/
+description: "Redistricting resources from Jonathan Cervas: interactive maps and cartograms, plus curated links to redistricting data, mapping tools, and election-law news and analysis."
+breadcrumb: "Resources"
+---
+
+<p class="section-lead">
+  Interactive maps I have built, and the data, tools, and news I rely on in my redistricting
+  work &mdash; gathered here for students, journalists, and anyone following the field.
+</p>
+
+{% for s in site.data.resources.sections %}
+<section class="resource-section" id="{{ s.id }}">
+  <h2>{{ s.title }}</h2>
+  {% if s.intro %}<p class="section-lead">{{ s.intro }}</p>{% endif %}
+  <ul class="resource-list">
+    {% for link in s.links %}
+    <li class="resource">
+      {% if link.internal %}
+      <a class="resource__title" href="{{ link.url | relative_url }}">{{ link.title }}</a>
+      {% else %}
+      <a class="resource__title" href="{{ link.url }}" target="_blank" rel="noopener">{{ link.title }}
+        <span class="resource__ext" aria-hidden="true">&#8599;</span></a>
+      {% endif %}
+      {% if link.note %}<span class="resource__note">{{ link.note }}</span>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endfor %}

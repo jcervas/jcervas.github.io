@@ -322,6 +322,20 @@ img { max-width: 100%; height: auto; }
 .collection p { margin: 0 0 .6rem; font-size: .95rem; color: var(--muted); }
 .media-more { margin-top: 1rem; font-weight: 600; }
 
+/* ---------- Resources page ---------- */
+.resource-section { margin: 2rem 0; }
+.resource-section > h2 { margin-bottom: .25rem; }
+.resource-list { list-style: none; margin: .75rem 0 0; padding: 0; }
+.resource {
+  border-top: 1px solid var(--line); padding: .85rem 0;
+}
+.resource:last-child { border-bottom: 1px solid var(--line); }
+.resource__title { font-weight: 600; }
+.resource__ext { font-size: .8em; color: var(--muted); margin-left: .15rem; }
+.resource__note {
+  display: block; color: var(--muted); font-size: .95rem; margin-top: .2rem;
+}
+
 .media-year {
   font-size: 1.05rem; color: var(--muted);
   border-bottom: 1px solid var(--line); padding-bottom: .3rem; margin: 1.75rem 0 .75rem;
