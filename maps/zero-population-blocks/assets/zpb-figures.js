@@ -49,7 +49,12 @@ function zpbData(sel, url, draw) {
     }).then(draw).catch(restore);
   }
 
-  if (!el || !window.IntersectionObserver || document.hidden) return go();
+  /* The bundle is shared with the landing page, which carries only the
+     national map. A figure whose container is not on this page has
+     nothing to draw and nothing to fetch. */
+  if (!el) return;
+
+  if (!window.IntersectionObserver || document.hidden) return go();
 
   var io = new IntersectionObserver(function (es) {
     for (var i = 0; i < es.length; i++) {
