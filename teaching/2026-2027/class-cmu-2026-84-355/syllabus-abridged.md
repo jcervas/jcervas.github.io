@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### Updated: September 14, 2026
+#### Updated: September 16, 2026
 
 > Professor Jonathan Cervas\
 > Office: Posner Hall 374\
