@@ -33,7 +33,11 @@ description: "Interactive maps and cartograms by Jonathan Cervas: congressional 
     {% endif %}
     <div class="case__body">
       <h3><a href="{{ m.url | relative_url }}">{{ m.title }}</a></h3>
-      <p>{{ m.description }}</p>
+      {% comment %}
+        `summary` is the card line, as on the case cards; `description` is the
+        page's meta description. A page with only the one key uses it for both.
+      {% endcomment %}
+      <p>{{ m.summary | default: m.description }}</p>
       <a class="more-link" href="{{ m.url | relative_url }}">Open the map &rarr;</a>
     </div>
   </div>
