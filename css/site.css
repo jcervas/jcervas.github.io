@@ -272,9 +272,19 @@ img { max-width: 100%; height: auto; }
 .case-highlights li { margin-bottom: .3rem; }
 .case__img-link { display: block; background: none; padding: 0; }
 
-/* Maps index: same card as a case, but with no thumbnail above the title, so
-   the heading needs the breathing room .case__sub would otherwise have given. */
-.map-card .case__body h3 { margin-bottom: .45rem; }
+/* Maps index: same card as a case, but usually with no thumbnail above the
+   title, so the heading needs the breathing room .case__sub would otherwise
+   have given. A card that does carry one keeps the case spacing. */
+.map-card:not(.has-thumb) .case__body h3 { margin-bottom: .45rem; }
+
+/* Map thumbnails are drawings, not photographs: show the whole thing rather
+   than cropping to fill, and let the card's own surface be the letterbox so
+   the gutter follows the theme. */
+.map-card.has-thumb img { object-fit: contain; padding: .35rem; }
+
+/* Only some map cards have a thumbnail, so top-align them: a stretched
+   text-only card next to a taller one is just a block of empty space. */
+.case-grid--maps { align-items: start; }
 
 /* ---------- Media ---------- */
 .media-inquiries {

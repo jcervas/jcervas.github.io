@@ -127,6 +127,7 @@ defaults:
       breadcrumb: "Media markets"
       wide: true
       order: 12
+      thumb: "/maps/media-markets/thumb.svg"
 
 # Primary navigation (edit here to change the menu everywhere)
 nav:
