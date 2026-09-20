@@ -121,6 +121,12 @@ defaults:
       breadcrumb: "Packed cartogram"
       wide: true
       order: 11
+  - scope:
+      path: "maps/media-markets/index.html"
+    values:
+      breadcrumb: "Media markets"
+      wide: true
+      order: 12
 
 # Primary navigation (edit here to change the menu everywhere)
 nav:
