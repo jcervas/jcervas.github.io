@@ -10,8 +10,7 @@ description: "An interactive map of the 206 lower-48 Nielsen television markets 
 
 <div class="mm-root">
 <div class="mm-wrap">
-<header>
-  <p class="eyebrow">Chapter 3 &middot; Media markets</p>
+<header class="mm-head">
   <h1>The Map Politics Forgot</h1>
   <p class="standfirst">American television is carved into <b>210 Designated Market Areas</b> &mdash; Nielsen's county-by-county map of who watches which local stations. Nobody drew them around states, districts, or voters. Yet they decide whose news you see and where campaigns can buy an ad. <b>Half the country</b> lives in a market that straddles a state line &mdash; and half of all congressional districts are split across two or more of them.</p>
 </header>
@@ -104,7 +103,7 @@ description: "An interactive map of the 206 lower-48 Nielsen television markets 
     <div class="tile cd"><span class="n" id="c-split">—</span><span class="c">of 432 districts are split across two or more markets; <b id="c-four">—</b> across four or more</span></div>
     <div class="tile hi"><span class="n" id="c-reach">—</span><span class="c">people you pay for per district resident, in the median district's main market</span></div>
     <div class="tile"><span class="n" id="c-ny">—</span><span class="c">districts sit at least partly inside the New York market alone</span></div>
-    <div class="tile"><span class="n" id="c-chg">—</span><span class="c">districts were redrawn for 2026 &mdash; the amber outlines on the map</span></div>
+    <div class="tile"><span class="n" id="c-chg">—</span><span class="c">districts were redrawn for 2026 &mdash; the red outlines on the map</span></div>
   </div>
   <p class="plabel" style="border:0;padding:0;margin-bottom:9px">Three cycles, one unmoved constraint</p>
   <div class="flat" id="flat"></div>
@@ -219,11 +218,11 @@ function tier(r){ return r==null?null : r<=10?0 : r<=25?1 : r<=50?2 : r<=100?3 :
 let mode="pop";
 function fill(d){
   const r=d.rec;
-  if(!r || r.pop===0) return "var(--mm-nodata)";
+  if(!r || r.pop===0) return "var(--nodata)";
   if(mode==="pop"){ let i=0; while(i<popBreaks.length && r.pop>=popBreaks[i]) i++; return popRamp[i]; }
   if(mode==="states"){ return stateRamp[Math.min(5,r.states.filter(s=>s[1]>0).length)]||"#e7ebf1"; }
-  if(mode==="vote"){ const m=margin(r); return m==null?"var(--mm-nodata)":voteScale(m); }
-  if(mode==="tier"){ const t=tier(r.rank); return t==null?"var(--mm-nodata)":tierRamp[t]; }
+  if(mode==="vote"){ const m=margin(r); return m==null?"var(--nodata)":voteScale(m); }
+  if(mode==="tier"){ const t=tier(r.rank); return t==null?"var(--nodata)":tierRamp[t]; }
 }
 
 /* ---------- legend ---------- */
@@ -243,8 +242,8 @@ function legend(){
   const cdOn=!document.getElementById("mapcard").classList.contains("hidden-cd");
   document.getElementById("leg").innerHTML =
     keys.map(([l,c])=>`<span class="lkey"><span class="sw" style="background:${c}"></span>${l}</span>`).join("")
-    + `<span class="lkey"><span class="sw" style="background:var(--mm-nodata)"></span>no data</span>`
-    + (cdOn&&CDC().summary.changed?`<span class="lkey" style="color:var(--mm-signal)"><span class="sw" style="background:var(--mm-signal);border-radius:1px;height:3px"></span>redrawn for ${cycle}</span>`:"");
+    + `<span class="lkey"><span class="sw" style="background:var(--nodata)"></span>no data</span>`
+    + (cdOn&&CDC().summary.changed?`<span class="lkey" style="color:var(--signal)"><span class="sw" style="background:var(--signal);border-radius:1px;height:3px"></span>redrawn for ${cycle}</span>`:"");
 }
 
 /* ---------- state + render ---------- */
@@ -318,10 +317,10 @@ function fillPanel(r){
 
   if(r.tot>0){
     const gp=100*r.gop/r.tot, dp=100*r.dem/r.tot;
-    $("v-vbar").innerHTML=`<i style="width:${dp}%;background:var(--mm-dem)"></i><i style="width:${gp}%;background:var(--mm-gop)"></i>`;
+    $("v-vbar").innerHTML=`<i style="width:${dp}%;background:var(--dem)"></i><i style="width:${gp}%;background:var(--gop)"></i>`;
     $("v-vote").innerHTML=
-      `<span class="dot" style="background:var(--mm-dem)"></span><b>Harris</b><span>${dp.toFixed(1)}%</span>`+
-      `<span class="dot" style="background:var(--mm-gop)"></span><b>Trump</b><span>${gp.toFixed(1)}%</span>`+
+      `<span class="dot" style="background:var(--dem)"></span><b>Harris</b><span>${dp.toFixed(1)}%</span>`+
+      `<span class="dot" style="background:var(--gop)"></span><b>Trump</b><span>${gp.toFixed(1)}%</span>`+
       `<span class="dot" style="background:transparent"></span><b>Total votes</b><span>${fmt(r.tot)}</span>`;
   } else { $("v-vbar").innerHTML=""; $("v-vote").innerHTML=`<span class="dot"></span><b>\u2014</b><span>no data</span>`; }
 
@@ -332,7 +331,7 @@ function fillPanel(r){
       (cdm.whole?` \u00b7 ${cdm.whole} wholly inside`:"");
     $("v-cd").innerHTML = cdm.top.slice(0,7).map(([sd,s])=>{
       const rec=CDBY[sd];
-      return `<span class="dot" style="background:${rec&&rec.chg?"var(--mm-signal)":"var(--mm-accent)"}"></span>`+
+      return `<span class="dot" style="background:${rec&&rec.chg?"var(--signal)":"var(--accent)"}"></span>`+
         `<b>${sd}</b><span>${(s*100).toFixed(0)}% of it</span>`;}).join("")
       + (cdm.n>7?`<span class="dot" style="background:transparent"></span><span>+${cdm.n-7} more</span><span></span>`:"");
   } else { $("l-cd").hidden=true; $("v-cdn").hidden=true; $("v-cd").hidden=true; }
@@ -409,7 +408,7 @@ $("tb-states").innerHTML = SUM.statewise.filter(r=>r[3]>=5).slice(0,15).map(([s,
     .map(([n])=>n.split(",")[0].trim()).join(", ");
   return `<tr><td><b>${s}</b></td>
     <td><span class="minibar" style="width:${Math.max(2,pc*.75)}px"></span><span class="pct">${pc.toFixed(1)}%</span></td>
-    <td>${fmt(out)}</td><td style="text-align:left;color:var(--mm-muted)">${top||"\u2014"}</td></tr>`;
+    <td>${fmt(out)}</td><td style="text-align:left;color:var(--muted)">${top||"\u2014"}</td></tr>`;
 }).join("");
 
 const ranked=DMAS.filter(d=>d.rank).sort((a,b)=>a.rank-b.rank).slice(0,25);
@@ -420,7 +419,7 @@ $("tb-top").innerHTML = ranked.map(r=>{
     <td style="text-align:left"><button class="rowbtn" data-i="${r.i}">${r.name}</button></td>
     <td>${fmt(r.pop)}</td><td>${r.nc}</td>
     <td>${ns.length>1?`<span class="pct">${ns.map(s=>s[0]).join(" ")}</span>`:ns[0][0]}</td>
-    <td style="color:${m==null?"var(--mm-muted)":(m>0?"var(--mm-gop)":"var(--mm-dem)")}">${ms}</td></tr>`;
+    <td style="color:${m==null?"var(--muted)":(m>0?"var(--gop)":"var(--dem)")}">${ms}</td></tr>`;
 }).join("");
 
 const mname=i=>{const d=byIndex.get(i); return d?d.name:"\u2014";};
@@ -428,7 +427,7 @@ const mshort=i=>{const n=mname(i).split("(")[0].trim();
   return n.length>24?n.slice(0,23).replace(/[\s,-]+$/,"")+"\u2026":n;};
 const mpop=i=>{const d=byIndex.get(i); return d?d.pop:0;};
 const marg=m=>m==null?"\u2014":(m<0?`R+${(-m*100).toFixed(0)}`:`D+${(m*100).toFixed(0)}`);
-const mcol=m=>m==null?"var(--mm-muted)":(m<0?"var(--mm-gop)":"var(--mm-dem)");
+const mcol=m=>m==null?"var(--muted)":(m<0?"var(--gop)":"var(--dem)");
 
 function renderCd(){
 const CS=CDC().summary;
@@ -438,7 +437,7 @@ $("c-reach").textContent=CS.median_reach.toFixed(1)+"\u00d7";
 $("c-ny").textContent=(CDC().mk[String(DMAS.find(d=>d.rank===1).i)]||{n:0}).n;
 $("c-chg").textContent=CS.changed;
 $("c-chg").nextElementSibling.innerHTML = CS.changed
-  ? `districts were redrawn for ${cycle} \u2014 the amber outlines on the map`
+  ? `districts were redrawn for ${cycle} \u2014 the red outlines on the map`
   : `districts were redrawn for ${cycle}: these are the post-census lines everything else is measured against`;
 
 const perMkt={}, costList=[];
@@ -450,14 +449,14 @@ for(const c of CDC().cds.filter(c=>c.reach).sort((a,b)=>b.reach-a.reach)){
 $("tb-cost").innerHTML = costList
  .map(c=>`<tr><td style="text-align:left"><button class="rowbtn" data-i="${c.prim}">${c.sd}</button>${c.chg?'<span class="cdtag">2026</span>':''}</td>
    <td style="color:${mcol(c.mar)}">${marg(c.mar)}</td>
-   <td style="text-align:left;color:var(--mm-muted)" title="${mname(c.prim)}">${mshort(c.prim)}</td>
+   <td style="text-align:left;color:var(--muted)" title="${mname(c.prim)}">${mshort(c.prim)}</td>
    <td><span class="xr">${c.reach.toFixed(1)}\u00d7</span></td></tr>`).join("");
 
 $("tb-frag").innerHTML = CDC().cds.slice().sort((a,b)=>b.n-a.n||a.primsh-b.primsh).slice(0,12)
  .map(c=>`<tr><td style="text-align:left"><button class="rowbtn" data-i="${c.prim}">${c.sd}</button>${c.chg?'<span class="cdtag">2026</span>':''}</td>
    <td><span class="pct">${c.n}</span></td>
    <td>${(c.primsh*100).toFixed(0)}%</td>
-   <td style="text-align:left;color:var(--mm-muted)" title="${mname(c.prim)}">${mshort(c.prim)}</td></tr>`).join("");
+   <td style="text-align:left;color:var(--muted)" title="${mname(c.prim)}">${mshort(c.prim)}</td></tr>`).join("");
 
 document.querySelectorAll("#tb-cost .rowbtn,#tb-frag .rowbtn").forEach(b=>b.onclick=()=>rowJump(b,true));
 }
