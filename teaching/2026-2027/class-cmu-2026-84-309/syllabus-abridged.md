@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### Updated: September 22, 2026
+#### Updated: September 23, 2026
 
 > Professor **Jonathan Cervas**\
 > Office: Posner Hall 374\
@@ -69,10 +69,10 @@ The course grade will be a weighted average of the following components:
   15**, where the class settles op-ed subjects.
 - **Attendance is 25%.** The first three absences cost almost nothing;
   four to six is where a semester goes wrong.
-- **Late work** costs one point per hour, but never drops below 50% —
-  with one exception: the **op-ed rough draft (September 21)** loses 10%
-  immediately, then 1% per hour, with no floor and no exceptions,
-  because two classmates are waiting on it.
+- **Late work** costs one point per hour, but never drops below 50%. The
+  **op-ed rough draft (September 21)** is the one deadline with no
+  exceptions: it loses 10% immediately, then 1% per hour, down to the
+  same 50% floor, because two classmates are waiting on it.
 - **Devices stay in bags.** Non-class use of a laptop or phone means
   being marked absent for that session.
 - **Surveys** and their screenshot receipts run through **Canvas, under

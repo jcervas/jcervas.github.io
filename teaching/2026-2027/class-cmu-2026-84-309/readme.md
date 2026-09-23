@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### DRAFT Updated: September 22, 2026
+#### DRAFT Updated: September 23, 2026
 
 > Professor **Jonathan Cervas**\
 > Office: Posner Hall 374\
@@ -250,8 +250,9 @@ are on that session’s page in Canvas.*
   — Simmons Auditorium, Tepper. Free.
 - **DUE Mon, Sep 21, 11:59 p.m.** — the **op-ed rough draft**. We do not
   meet at all this week, so note it now: this is the one hard deadline
-  in the course. Late costs 10% at once and 1% an hour after that, with
-  no floor, because two classmates are assigned to read you.
+  in the course. Late costs 10% at once and 1% an hour after that, down
+  to the course’s 50% floor, because two classmates are assigned to read
+  you.
 
 ### Week 5 — Polarization unit
 
