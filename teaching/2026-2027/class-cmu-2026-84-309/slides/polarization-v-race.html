@@ -1,0 +1,1682 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Polarization V — Race and Polarization</title>
+<style>
+
+:root{
+  color-scheme: light;
+  --paper:#F2F4F7; --card:#FFFFFF; --tint:#E9ECF1;
+  --ink:#0F1720; --ink-2:#3E4A57; --ink-3:#6B7683;
+  --rule:#B9C1CA; --rule-2:#DDE2E7;
+  --accent:#C41230; --accent-soft:#F7DDE1;
+  --blue:#1F4E79;
+  --match:#17706B; --match-soft:#D3E7E5; --cross:#E09B2D;--cross-ink:#8A5D10;--match-soft:#E3F1EF;--cross-soft:#FBEFDA;
+  --ghost:#D3D9E0;
+  --display:'Iowan Old Style',Georgia,'Times New Roman',serif;
+  --body:'IBM Plex Sans','Helvetica Neue',Arial,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+:root[data-theme="dark"]{
+  --paper:#0F1720; --card:#161F29; --tint:#1B242E;
+  --ink:#EEF2F6; --ink-2:#B7C2CD; --ink-3:#8A96A3;
+  --rule:#39434E; --rule-2:#26303A; --accent:#FF6B7F; --accent-soft:#3A1C24;
+  --blue:#7FB2E5; --match:#4FC4B8; --match-soft:#12312F; --cross:#F0B860;--cross-ink:#F0B860;--match-soft:#12332F;--cross-soft:#33291A;
+  --ghost:#28323C;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);
+  -webkit-font-smoothing:antialiased;overflow:hidden}
+.deck{position:relative;width:100%;height:100%}
+.slide{position:absolute;inset:0;padding:clamp(32px,4vh,58px) clamp(32px,5vw,78px)
+  clamp(30px,4.5vh,54px);display:none;flex-direction:column;overflow:auto}
+.slide.on{display:flex}
+.slide.dark{background:var(--ink);color:#F4F7FA}
+.slide.dark .foot{color:#8E9AA6}
+.slide.dark p.lede{color:#B9C4CF}
+.slide.wash{background:var(--accent-soft)}
+.kicker{font-size:clamp(12px,1.02vw,18px);font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+h1{font-family:var(--display);font-size:clamp(32px,4.5vw,94px);line-height:1.04;
+  margin:0 0 8px;font-weight:600;letter-spacing:-.01em}
+h2{font-family:var(--display);font-size:clamp(26px,3.1vw,62px);line-height:1.07;
+  margin:0 0 4px;font-weight:600;letter-spacing:-.006em}
+p.lede{font-size:clamp(15px,1.48vw,34px);line-height:1.45;color:var(--ink-2);
+  max-width:62ch;margin:8px 0 0}
+.punch{font-family:var(--display);font-size:clamp(17px,1.85vw,44px);font-weight:600;
+  margin-top:18px;line-height:1.22}
+.big{font-family:var(--display);font-size:clamp(40px,6.4vw,168px);font-weight:600;line-height:1}
+.foot{margin-top:auto;padding-top:clamp(6px,1vh,14px);
+  padding-right:clamp(86px,11vw,168px);font-size:clamp(11px,.92vw,16px);
+  color:var(--ink-3);line-height:1.4}
+.nums{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.discuss{margin-top:auto;padding:clamp(10px,1.5vh,20px) clamp(14px,1.5vw,24px);
+  padding-right:clamp(86px,11vw,168px);border-left:4px solid var(--accent);
+  background:var(--accent-soft);border-radius:0 8px 8px 0}
+.discuss .dtag{display:block;font-family:var(--mono);font-size:clamp(9px,.72vw,12px);
+  letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.discuss p{margin:0;font-size:clamp(15px,1.58vw,34px);line-height:1.42;color:var(--ink)}
+.smap{display:grid;grid-template-columns:auto auto 1fr;gap:5px clamp(12px,1.3vw,24px);
+  align-items:center;font-size:clamp(12.5px,1.15vw,20px);margin-top:6px}
+.smap .hd{font-size:clamp(9.5px,.82vw,14px);font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3)}
+.smap b{width:1.85em;height:1.85em;border-radius:999px;display:grid;place-items:center;
+  color:#fff;font-size:.84em;font-weight:700}
+svg{overflow:visible}
+.ctl{display:flex;align-items:center;gap:clamp(8px,.9vw,15px);margin-top:12px;flex-wrap:wrap}
+input[type=range]{width:clamp(230px,23vw,460px);accent-color:var(--accent)}
+button{font-family:var(--body);font-size:clamp(12px,1.05vw,18px);font-weight:600;
+  padding:clamp(5px,.55vw,11px) clamp(12px,1.15vw,22px);cursor:pointer;
+  border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:999px}
+button:hover{border-color:var(--accent);color:var(--accent)}
+button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
+.yr{font-family:var(--display);font-size:clamp(34px,3.6vw,66px);font-weight:600;line-height:1}
+.legend{display:flex;flex-direction:column;gap:8px;font-size:clamp(12px,1.1vw,19px);
+  color:var(--ink-2);margin-top:10px}
+.legend i{width:1em;height:1em;display:inline-block;border-radius:2px;margin-right:9px;
+  vertical-align:-.08em}
+.statrow{display:flex;gap:clamp(20px,3.2vw,58px);flex-wrap:wrap;margin-top:14px;
+  align-items:flex-end}
+.stat b{display:block;font-family:var(--display);font-size:clamp(32px,3.8vw,92px);
+  font-weight:600;line-height:1.04}
+.stat span{font-size:clamp(11.5px,1.02vw,22px);color:var(--ink-3)}
+/* One-number slides: the number IS the slide, so it gets its own scale. */
+.statrow.hero{gap:clamp(26px,4vw,90px)}
+.statrow.hero .stat b{font-size:clamp(64px,11.5vw,270px);line-height:.98}
+.statrow.hero .stat span{font-size:clamp(13px,1.4vw,30px)}
+.statrow.hero .big{font-size:clamp(48px,7.5vw,190px)}
+/* Statement slides carry little ink, so center the block instead of pinning the
+   last line to the bottom — margin-top:auto opened a void of up to 64% of the
+   slide on a 1920-wide display. */
+.slide.center{justify-content:center}
+.slide.center .foot{position:absolute;left:clamp(32px,5vw,78px);
+  right:clamp(118px,13vw,210px);bottom:clamp(16px,2.4vh,28px);
+  margin-top:0;padding-top:0;padding-right:0}
+/* Do NOT pin the heading on a centered slide. Taking it out of flow leaves the
+   body floating in the middle with a hole above it — that made the gaps worse
+   (31% where centering alone gives 7%). The whole column centers together. */
+.pill{display:inline-block;padding:3px 12px;border-radius:999px;
+  font-size:clamp(11.5px,1.05vw,18px);font-weight:600;background:var(--match-soft);
+  color:var(--match)}
+.pill.warn{background:var(--accent-soft);color:var(--accent)}
+table.t{border-collapse:collapse;width:100%;margin-top:16px;
+  font-size:clamp(14px,1.5vw,36px)}
+table.t td{padding:clamp(9px,1.05vw,22px) 10px;border-bottom:1px solid var(--rule-2)}
+table.t tr:last-child td{border-bottom:0}
+table.t .num{font-family:var(--display);font-size:clamp(24px,2.7vw,68px);font-weight:600;
+  text-align:right;white-space:nowrap}
+table.t .lab{color:var(--ink-3);font-size:clamp(11.5px,1.05vw,22px)}
+.rowlist{margin-top:10px}
+.rowlist .r{display:grid;grid-template-columns:clamp(88px,9.5vw,164px) 1fr;
+  gap:clamp(10px,1.5vw,28px);padding:clamp(8px,.95vw,16px) 0;
+  border-bottom:1px solid var(--rule-2)}
+.rowlist .r:last-child{border-bottom:0}
+.rowlist .who{font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  font-size:clamp(10.5px,1vw,21px)}
+.rowlist .say{font-size:clamp(13px,1.35vw,32px);line-height:1.34}
+.progress{position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--rule-2)}
+.progress i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.hint{position:absolute;right:clamp(32px,5vw,78px);bottom:clamp(16px,2.4vh,28px);
+  text-align:right;color:var(--ink-3);cursor:pointer;user-select:none;
+  font-size:clamp(10.5px,.88vw,15px)}
+.hint:hover{color:var(--accent)}
+.hint b{color:var(--ink-2)}
+#tip{position:fixed;z-index:12;pointer-events:none;background:var(--ink);color:#F4F7FA;
+  padding:7px 11px;border-radius:7px;font-size:clamp(12px,1.05vw,18px);line-height:1.35;
+  box-shadow:0 6px 22px rgba(0,0,0,.28);transform:translate(-50%,-118%);white-space:nowrap}
+#tip[hidden]{display:none}
+#tip b{font-family:var(--display);font-size:1.25em}
+:root[data-theme="dark"] #tip{background:#2A3541}
+.hit{cursor:crosshair}
+/* A line chart holds still until it is clicked: the shape sits there as a gray
+   ghost with one dot on the first year, and the colored line draws itself only
+   when you ask. Lets the sentence come first and the picture second, which is
+   the order it gets talked about in. */
+.chart{display:inline-block}
+/* Reveals are deck fragments now, driven by the arrow keys like any other step,
+   so a chart carries no button of its own. Progress shows as dots in the corner. */
+.dots{display:inline-flex;gap:5px;margin-left:9px;vertical-align:.5px}
+.dots i{width:7px;height:7px;border-radius:999px;background:var(--rule);
+  transition:background .25s}
+.dots i.on{background:var(--accent)}
+/* Lines draw themselves in; squares grow from nothing. Both are pure CSS
+   transitions kicked off one frame after the node lands in the DOM. */
+/* --len has a fallback so the dash pattern is VALID on the very first paint.
+   Without it `stroke-dasharray:var(--len)` is invalid, the line renders solid,
+   and setting --len afterwards animates it AWAY — the line visibly undrew
+   before it drew. Transition is off until .anim is added a frame later, so
+   arming never animates either. */
+.stage{visibility:hidden}
+.stage.on{visibility:visible}
+#notes{position:absolute;right:0;top:0;bottom:0;width:min(560px,44vw);z-index:8;
+  background:var(--card);border-left:1px solid var(--rule);padding:24px 28px;
+  overflow:auto;font-size:15px;line-height:1.62;white-space:pre-wrap;color:var(--ink-2);
+  box-shadow:-14px 0 40px rgba(0,0,0,.10)}
+#notes[hidden]{display:none}
+#notes h4{margin:0 0 12px;font-family:var(--body);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent)}
+#help{position:absolute;inset:0;background:rgba(15,23,32,.88);color:#fff;display:grid;
+  place-items:center;font-size:clamp(14px,1.25vw,21px);z-index:9;cursor:pointer}
+#help[hidden]{display:none}
+#help div{max-width:54ch;line-height:1.75;cursor:auto}
+#help .close{margin-top:20px;font-size:.84em;color:#cfd6dd}
+kbd{font-family:var(--mono);background:rgba(255,255,255,.17);padding:1px 7px;border-radius:4px}
+@media (max-width:900px){.cols,.quad,.cols2,.two{grid-template-columns:1fr}
+  #notes{width:100%} .foot{right:clamp(88px,22vw,150px)}}
+
+/* deck additions for this session: comparison tables and the number pairs */
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px,1.6vh,26px)
+  clamp(20px,3vw,54px);margin:clamp(10px,2vh,26px) 0}
+.big{font-family:var(--display);font-size:clamp(30px,4.2vw,72px);line-height:1}
+.big .lbl{display:block;font-family:var(--body);font-size:clamp(11px,.95vw,17px);
+  font-weight:600;color:var(--ink-3);margin-top:4px;letter-spacing:.02em}
+table.matrix{width:100%;border-collapse:separate;border-spacing:clamp(5px,.7vw,11px);
+  margin:clamp(8px,1.6vh,24px) 0;table-layout:fixed}
+table.matrix th{font:600 clamp(10.5px,.95vw,17px)/1.25 var(--body);color:var(--ink-3);
+  text-align:center;vertical-align:bottom;padding:0 0 3px}
+table.matrix th.rh{text-align:right;vertical-align:middle;padding:0 clamp(8px,1vw,16px) 0 0;
+  width:26%}
+table.matrix th.rh b{display:block;font-family:var(--display);font-weight:700;
+  font-size:clamp(13px,1.25vw,23px);color:var(--ink)}
+table.matrix td{font-family:var(--display);font-size:clamp(24px,3.2vw,55px);line-height:1;
+  text-align:center;border-radius:8px;padding:clamp(9px,1.6vh,20px) 4px}
+td.inp{background:var(--match-soft);color:var(--match)}
+td.outp{background:var(--cross-soft);color:var(--cross-ink)}
+tr.marg td{background:transparent;color:var(--ink);border-radius:0;
+  font-size:clamp(18px,2.2vw,38px);border-top:2px solid var(--rule-2)}
+tr.marg th.rh b{font-weight:400;color:var(--ink-3)}
+table.gap4 td.plain{background:var(--tint);color:var(--ink)}
+table.gap4 td.gapc{background:transparent;color:var(--ink-3);
+  font-size:clamp(20px,2.5vw,42px)}
+table.gap4 td.gapc.hot{color:var(--accent)}
+/* cells fill in one at a time; the empty box holds its place so the table
+   geometry never shifts under the reveal */
+table.matrix td.cell{transition:background .28s ease,color .28s ease}
+table.matrix td.cell.pend{background:transparent!important;color:transparent!important;
+  box-shadow:inset 0 0 0 1.5px var(--rule-2)}
+tr.marg.pend td,tr.marg.pend th{opacity:0;transition:opacity .3s ease}
+tr.marg td,tr.marg th{transition:opacity .3s ease}
+.beat{min-height:2.9em}
+/* Staged reveal for blocks rather than table cells. The matrix has its own rule
+   further up, because a cell has to keep its box while it waits its turn; a
+   panel just gets out of the way. Separate class name on purpose — a generic
+   .pend would also null the opacity of those cells and take their borders. */
+.hold{opacity:0}
+/* The question that announces the next line. Exactly one is visible at a time,
+   parked where that line is about to arrive, and all of them go dark once the
+   chart is fully drawn. Big and bold on purpose: it is the thing being said
+   out loud, and the line is the answer to it. */
+.ask{opacity:0;transition:opacity .34s ease}
+.ask.on{opacity:1}
+/* The readout under a staged chart answers the question the chart is still
+   asking, so hold it back until every line is down. Captions with no id belong
+   to slides that do not stage and are never hidden. */
+#deck[data-drawn="0"] .punch[id]{opacity:0}
+.punch[id]{transition:opacity .3s ease}
+.tbox,.band,.step{transition:opacity .32s ease}
+/* Lines draw themselves in, dots grow, bars rise from their baseline.
+   The dash values are set INLINE from JS rather than through a CSS custom
+   property. The custom-property version is what the sorting deck uses, and it
+   half-works here: stroke-dasharray resolves var(--len) but stroke-dashoffset
+   silently falls back to the placeholder, so the line sits invisible for most
+   of the duration and then snaps. Driving both from play() removes the guess.
+   The transition still stays off until .anim is added a frame later, so arming
+   a chart never animates it. */
+.draw.anim{transition:stroke-dashoffset var(--dur,.9s) linear}
+.ghost-line{opacity:.5}
+/* A staged series is present but invisible until its turn. visibility rather
+   than display, so the dash lengths can be measured while it waits. */
+.stage{visibility:hidden}
+.stage.on{visibility:visible}
+/* A .lead stage is the point of the chart and the .recede stages are what it
+   was computed from: once the answer is drawn, the inputs step back rather
+   than disappear, so you can still see where it came from. */
+.stage.recede{transition:opacity .5s ease}
+svg:has(.stage.lead.on) .stage.recede{opacity:.18}
+.pop{transform-box:fill-box;transform-origin:center;transform:scale(0);opacity:0;
+  transition:transform .34s cubic-bezier(.28,1.15,.45,1),opacity .24s}
+.pop.go{transform:scale(1);opacity:1}
+.growy{transform-box:fill-box;transform-origin:bottom;transform:scaleY(0);
+  transition:transform .5s cubic-bezier(.28,1.1,.45,1)}
+.growy.go{transform:scaleY(1)}
+.growx{transform-box:fill-box;transform-origin:left;transform:scaleX(0);
+  transition:transform .55s cubic-bezier(.28,1.1,.45,1)}
+.growx.go{transform:scaleX(1)}
+@media (prefers-reduced-motion:reduce){
+  .draw{stroke-dasharray:none;stroke-dashoffset:0}
+  .pop,.growy,.growx{transform:none;opacity:1;transition:none}
+}
+.mlegend{display:flex;gap:clamp(14px,2vw,30px);margin-left:26%;font-size:clamp(10.5px,.9vw,16px);
+  color:var(--ink-3);margin-top:-6px}
+.mlegend i{display:inline-block;width:12px;height:12px;border-radius:3px;
+  margin-right:6px;vertical-align:-1px}
+table.cmp{width:100%;border-collapse:collapse;margin:clamp(8px,1.6vh,22px) 0;
+  font-size:clamp(14px,1.35vw,24px)}
+table.cmp th{text-align:right;font-size:clamp(10px,.86vw,15px);font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);
+  padding:0 0 8px 18px;border-bottom:1px solid var(--rule-2)}
+table.cmp th:first-child{text-align:left}
+table.cmp td{padding:clamp(6px,1.1vh,14px) 0 clamp(6px,1.1vh,14px) 18px;
+  text-align:right;font-family:var(--display);border-bottom:1px solid var(--rule-2)}
+table.cmp td:first-child{text-align:left;font-family:var(--body);
+  font-size:clamp(12px,1.1vw,20px)}
+table.cmp tr.hi td{background:var(--tint);font-weight:700}
+.close{margin-top:14px;color:var(--ink-3);font-size:.88em}
+.rows,.steps{margin:clamp(8px,1.6vh,20px) 0;flex:1;display:flex;flex-direction:column;
+  justify-content:center}
+.two,.map{flex:0 0 auto}
+.row{display:grid;grid-template-columns:minmax(150px,2.1fr) 4.4fr minmax(80px,1.2fr);
+  gap:clamp(12px,2vw,34px);align-items:start;padding:clamp(9px,1.5vh,19px) 0;
+  border-bottom:1px solid var(--rule-2)}
+.row:last-child{border-bottom:0}
+.tag{display:block;font-size:clamp(10px,.86vw,16px);font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;margin-bottom:5px}
+.rbig{font-family:var(--display);font-size:clamp(19px,2.15vw,39px);line-height:1.08;
+  display:block;color:var(--ink)}
+.rt{font-size:clamp(14px,1.34vw,25px);line-height:1.45;color:var(--ink)}
+.rs{font-size:clamp(10px,.84vw,15px);font-style:italic;color:var(--ink-3);line-height:1.3}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.4vw,40px);
+  margin:clamp(10px,2vh,26px) 0}
+.tbox{background:var(--tint);border-radius:8px;padding:clamp(12px,2vh,24px) clamp(14px,1.8vw,28px)}
+.tbox b{font-family:var(--display);font-size:clamp(19px,2.1vw,38px);display:block;
+  line-height:1.1;margin-bottom:8px}
+.tbox p{margin:0;font-size:clamp(13.5px,1.26vw,23px);line-height:1.4;color:var(--ink)}
+.band{background:var(--accent-soft);border-radius:8px;
+  padding:clamp(12px,2vh,24px) clamp(14px,1.8vw,28px);margin:clamp(10px,2vh,24px) 0}
+.band .tag{color:var(--accent)}
+.band p{margin:0;font-family:var(--display);font-size:clamp(16px,1.8vw,32px);line-height:1.22}
+.step{display:grid;grid-template-columns:auto 1fr;gap:clamp(12px,1.6vw,26px);
+  align-items:start;padding:clamp(8px,1.4vh,18px) 0;border-bottom:1px solid var(--rule-2)}
+.step:last-child{border-bottom:0}
+.stepn{width:clamp(26px,2.4vw,42px);height:clamp(26px,2.4vw,42px);border-radius:50%;
+  display:grid;place-items:center;color:#fff;font-weight:700;
+  font-size:clamp(13px,1.1vw,20px)}
+.step b{font-family:var(--display);font-size:clamp(18px,2vw,36px);display:block;
+  line-height:1.1;margin-bottom:5px}
+.step p{margin:0;font-size:clamp(13.5px,1.26vw,23px);line-height:1.42;color:var(--ink)}
+.map{margin:clamp(8px,1.6vh,20px) 0;flex:1;display:flex;flex-direction:column;
+  justify-content:center}
+.maprow{display:grid;grid-template-columns:minmax(140px,1.6fr) auto 5fr;
+  gap:clamp(10px,1.8vw,30px);align-items:baseline;padding:clamp(7px,1.2vh,16px) 0;
+  border-bottom:1px solid var(--rule-2)}
+.maprow:last-child{border-bottom:0}
+.maprow .p{font-size:clamp(10px,.85vw,15px);color:var(--ink-3);font-family:var(--mono)}
+.maprow .d{font-size:clamp(14px,1.32vw,24px);line-height:1.4}
+.quote{font-family:var(--display);font-size:clamp(22px,2.8vw,52px);line-height:1.18;
+  margin:clamp(10px,2vh,28px) 0 clamp(6px,1vh,14px)}
+
+/* Polarization V additions ----------------------------------------------- */
+.chart svg text{font-family:var(--body)}
+h2 .badge{display:inline-grid;place-items:center;width:1.25em;height:1.25em;border-radius:50%;
+  background:var(--accent);color:#fff;font-family:var(--body);font-size:.62em;font-weight:700;
+  margin-right:.45em;vertical-align:.18em}
+.reported{display:inline-block;font-family:var(--body);font-size:clamp(9px,.7vw,13px);font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);border:1px solid var(--rule);
+  border-radius:4px;padding:3px 9px;vertical-align:.4em;margin-left:.6em}
+.look{font-style:italic;color:var(--ink-3);font-size:clamp(13px,1.15vw,21px);margin:2px 0 10px}
+.hold{opacity:.06}
+.bigstate{font-family:var(--display);font-weight:700;font-size:clamp(26px,3.3vw,64px);line-height:1.18;
+  text-align:center;max-width:22ch;margin:clamp(20px,8vh,110px) auto 0}
+.bigstate.huge{font-size:clamp(48px,7vw,140px)}
+.lede.center{text-align:center;max-width:52ch;margin:18px auto 0}
+.cards{display:grid;gap:clamp(10px,1.2vw,22px);margin-top:clamp(14px,5vh,60px);align-items:stretch}
+.cards.n2{grid-template-columns:repeat(2,1fr)} .cards.n3{grid-template-columns:repeat(3,1fr)}
+.cards.n4{grid-template-columns:repeat(4,1fr)} .cards.n5{grid-template-columns:repeat(5,1fr)}
+.cards.arrows.n3{grid-template-columns:1fr auto 1fr auto 1fr}
+.cards.arrows.n4{grid-template-columns:1fr auto 1fr auto 1fr auto 1fr}
+.cards .arr{align-self:center;font-size:2em;color:var(--ink-3);transition:opacity .3s}
+.card{background:var(--card);border:1px solid var(--rule-2);border-top:6px solid;padding:clamp(12px,1.3vw,26px);
+  min-height:clamp(150px,30vh,340px);display:flex;flex-direction:column;transition:opacity .32s}
+.card b{font-family:var(--display);font-size:clamp(18px,2vw,40px);line-height:1.12;display:block;min-height:2.3em}
+.cards.n4 .card b,.cards.n5 .card b{font-size:clamp(15px,1.5vw,30px)}
+.card p{font-size:clamp(14px,1.45vw,28px);line-height:1.3;color:var(--ink);margin-top:.4em;flex:1}
+.cards.n4 .card p,.cards.n5 .card p{font-size:clamp(12px,1.15vw,22px)}
+.card .tag{margin-top:10px}
+.card.hi{background:var(--ink);border-color:var(--ink)} .card.hi p{color:#C6D0DA}
+.stats{display:grid;margin-top:clamp(40px,15vh,170px)} .stats.n1{grid-template-columns:1fr}
+.stats.n2{grid-template-columns:1fr 1fr} .stats.n3{grid-template-columns:1fr 1fr 1fr}
+.st{text-align:center;padding:0 12px;border-left:1px solid var(--rule-2);transition:opacity .32s}
+.st:first-child{border-left:0}
+.st .tag{display:block;color:var(--ink-3);margin-bottom:14px}
+.st b{font-family:var(--display);font-size:clamp(40px,5.6vw,110px);line-height:1}
+.stats.n3 .st b{font-size:clamp(32px,4.2vw,84px)}
+blockquote.mq{font-family:var(--display);font-style:italic;font-size:clamp(18px,2.1vw,40px);line-height:1.3;
+  background:var(--tint);border-left:6px solid var(--accent);padding:clamp(14px,1.6vw,30px);margin:14px 0 clamp(18px,4vh,44px)}
+.pc{display:grid;grid-template-columns:14em 1fr;align-items:baseline;gap:16px;margin:clamp(8px,2vh,24px) 0;transition:opacity .32s}
+.pc b{font-family:var(--display);font-size:clamp(20px,2.3vw,44px)}
+.qlist{display:flex;flex-direction:column;gap:clamp(6px,1vh,14px);margin-top:10px}
+.qrow{display:grid;grid-template-columns:1fr 12em;gap:14px;align-items:center;background:var(--card);
+  padding:clamp(8px,1vw,16px) 14px;border-radius:6px;transition:opacity .32s}
+.qrow.try{grid-template-columns:1.2fr auto 9em}
+.qrow .q{font-family:var(--display);font-style:italic;font-size:clamp(14px,1.3vw,25px);line-height:1.28}
+.qrow.try .q{font-size:clamp(12px,1.02vw,19px)}
+.qrow .key{font-size:clamp(11px,.9vw,16px);color:var(--accent);font-weight:700;text-align:right}
+.ans{display:flex;gap:4px;flex-wrap:wrap}
+.ans button{font-size:clamp(10px,.78vw,14px);padding:4px 9px}
+.segs{display:inline-flex;gap:4px;padding:3px;background:transparent}
+.segs button{font-size:clamp(11px,.9vw,16px)}
+.tl{display:grid;gap:18px;margin-top:clamp(20px,6vh,70px)} .tl.n4{grid-template-columns:repeat(4,1fr)}
+.tl .ev{border-top:4px solid var(--accent);padding-top:12px;transition:opacity .32s}
+.tl .ev .yr{font-family:var(--display);font-size:clamp(28px,3vw,58px);color:var(--accent);font-weight:700;display:block}
+.tl .ev b{font-family:var(--display);font-size:clamp(18px,1.8vw,34px);display:block;margin:6px 0}
+.tl .ev p{font-size:clamp(14px,1.3vw,25px);line-height:1.3}
+.mb{transition:x .45s ease,width .45s ease}
+@media (prefers-reduced-motion:reduce){ .mb{transition:none} }
+</style>
+</head><body>
+<div class="deck" id="deck"></div>
+<div class="progress"><i id="bar"></i></div>
+<aside id="notes" hidden><h4>Speaker notes</h4><div id="notesbody"></div></aside>
+<div id="help" hidden><div>
+  <b>Polarization V &mdash; Race and Polarization</b><br><br>
+  <kbd>&rarr;</kbd> / <kbd>space</kbd> next &nbsp; <kbd>&larr;</kbd> back &nbsp;
+  <kbd>&darr;</kbd> / <kbd>&uarr;</kbd> skip a whole slide &nbsp;
+  <kbd>N</kbd> speaker notes &nbsp; <kbd>F</kbd> fullscreen &nbsp;
+  <kbd>T</kbd> light/dark &nbsp; <kbd>?</kbd> this help<br><br>
+  Slide for slide the same as the PowerPoint, with the same numbers and the same
+  speaker notes: both are drawn from one file. Most slides build a piece at a time
+  on <kbd>&rarr;</kbd>. Four do more here: answer the four resentment items yourself
+  (nothing is saved or sent), switch the answer distributions by race, drag the
+  racialization slider, and switch the nominee chart between the two measures.<br><br>
+  Every number is rebuilt from the ANES cumulative file by
+  <span class="nums">2026-09-24-race-descriptives.R</span>, except the two slides
+  marked <i>reported from the article</i>.<br><br>
+  Jump to a slide by number &mdash; <kbd>&hellip;#13</kbd>, or a stage, <kbd>#13b</kbd>.
+  <div class="close">Press <kbd>Esc</kbd> or click anywhere to close.</div>
+</div></div>
+<div class="hint" id="hint"></div>
+<script>
+const D = {"rows":[{"block":"res","grp":"D","var":"mean","i":1986,"val":0.5691,"se":null,"n":374},{"block":"res","grp":"R","var":"mean","i":1986,"val":0.6147,"se":null,"n":353},{"block":"res","grp":"W","var":"mean","i":1986,"val":0.5955,"se":null,"n":836},{"block":"res","grp":"W","var":"rPid","i":1986,"val":0.0639,"se":null,"n":830},{"block":"res","grp":"W","var":"rIdeo","i":1986,"val":0.2633,"se":null,"n":661},{"block":"res","grp":"B","var":"mean","i":1986,"val":0.3613,"se":null,"n":155},{"block":"res","grp":"D","var":"mean","i":1988,"val":0.6073,"se":null,"n":535},{"block":"res","grp":"R","var":"mean","i":1988,"val":0.6486,"se":null,"n":654},{"block":"res","grp":"W","var":"mean","i":1988,"val":0.6364,"se":null,"n":1349},{"block":"res","grp":"W","var":"rPid","i":1988,"val":0.0788,"se":null,"n":1345},{"block":"res","grp":"W","var":"rIdeo","i":1988,"val":0.215,"se":null,"n":1012},{"block":"res","grp":"B","var":"mean","i":1988,"val":0.3997,"se":null,"n":201},{"block":"res","grp":"D","var":"mean","i":1990,"val":0.5562,"se":null,"n":337},{"block":"res","grp":"R","var":"mean","i":1990,"val":0.5937,"se":null,"n":314},{"block":"res","grp":"W","var":"mean","i":1990,"val":0.5816,"se":null,"n":737},{"block":"res","grp":"W","var":"rPid","i":1990,"val":0.0787,"se":null,"n":735},{"block":"res","grp":"W","var":"rIdeo","i":1990,"val":0.3032,"se":null,"n":527},{"block":"res","grp":"B","var":"mean","i":1990,"val":0.3653,"se":null,"n":124},{"block":"res","grp":"D","var":"mean","i":1992,"val":0.5789,"se":null,"n":327},{"block":"res","grp":"R","var":"mean","i":1992,"val":0.6475,"se":null,"n":353},{"block":"res","grp":"W","var":"mean","i":1992,"val":0.6191,"se":null,"n":780},{"block":"res","grp":"W","var":"rPid","i":1992,"val":0.1307,"se":null,"n":774},{"block":"res","grp":"W","var":"rIdeo","i":1992,"val":0.3096,"se":null,"n":631},{"block":"res","grp":"B","var":"mean","i":1992,"val":0.3683,"se":null,"n":119},{"block":"res","grp":"D","var":"mean","i":1994,"val":0.6171,"se":null,"n":327},{"block":"res","grp":"R","var":"mean","i":1994,"val":0.6811,"se":null,"n":368},{"block":"res","grp":"W","var":"mean","i":1994,"val":0.654,"se":null,"n":784},{"block":"res","grp":"W","var":"rPid","i":1994,"val":0.1423,"se":null,"n":779},{"block":"res","grp":"W","var":"rIdeo","i":1994,"val":0.2694,"se":null,"n":609},{"block":"res","grp":"B","var":"mean","i":1994,"val":0.3978,"se":null,"n":101},{"block":"res","grp":"D","var":"mean","i":2000,"val":0.5817,"se":null,"n":511},{"block":"res","grp":"R","var":"mean","i":2000,"val":0.6896,"se":null,"n":528},{"block":"res","grp":"W","var":"mean","i":2000,"val":0.6406,"se":null,"n":1189},{"block":"res","grp":"W","var":"rPid","i":2000,"val":0.2149,"se":null,"n":1181},{"block":"res","grp":"W","var":"rIdeo","i":2000,"val":0.3903,"se":null,"n":468},{"block":"res","grp":"B","var":"mean","i":2000,"val":0.4182,"se":null,"n":149},{"block":"res","grp":"D","var":"mean","i":2004,"val":0.5611,"se":null,"n":305},{"block":"res","grp":"R","var":"mean","i":2004,"val":0.6958,"se":null,"n":377},{"block":"res","grp":"W","var":"mean","i":2004,"val":0.6376,"se":null,"n":754},{"block":"res","grp":"W","var":"rPid","i":2004,"val":0.2726,"se":null,"n":745},{"block":"res","grp":"W","var":"rIdeo","i":2004,"val":0.4055,"se":null,"n":617},{"block":"res","grp":"B","var":"mean","i":2004,"val":0.4106,"se":null,"n":152},{"block":"res","grp":"D","var":"mean","i":2008,"val":0.5621,"se":null,"n":442},{"block":"res","grp":"R","var":"mean","i":2008,"val":0.726,"se":null,"n":464},{"block":"res","grp":"W","var":"mean","i":2008,"val":0.6478,"se":null,"n":1039},{"block":"res","grp":"W","var":"rPid","i":2008,"val":0.332,"se":null,"n":1028},{"block":"res","grp":"W","var":"rIdeo","i":2008,"val":0.4297,"se":null,"n":822},{"block":"res","grp":"B","var":"mean","i":2008,"val":0.4681,"se":null,"n":492},{"block":"res","grp":"D","var":"mean","i":2012,"val":0.5552,"se":null,"n":1294},{"block":"res","grp":"R","var":"mean","i":2012,"val":0.7527,"se":null,"n":1521},{"block":"res","grp":"W","var":"mean","i":2012,"val":0.6668,"se":null,"n":3274},{"block":"res","grp":"W","var":"rPid","i":2012,"val":0.3951,"se":null,"n":3264},{"block":"res","grp":"W","var":"rIdeo","i":2012,"val":0.4409,"se":null,"n":3107},{"block":"res","grp":"B","var":"mean","i":2012,"val":0.4137,"se":null,"n":957},{"block":"res","grp":"D","var":"mean","i":2016,"val":0.4137,"se":null,"n":1037},{"block":"res","grp":"R","var":"mean","i":2016,"val":0.7061,"se":null,"n":1269},{"block":"res","grp":"W","var":"mean","i":2016,"val":0.5825,"se":null,"n":2624},{"block":"res","grp":"W","var":"rPid","i":2016,"val":0.4865,"se":null,"n":2617},{"block":"res","grp":"W","var":"rIdeo","i":2016,"val":0.5795,"se":null,"n":2190},{"block":"res","grp":"B","var":"mean","i":2016,"val":0.3353,"se":null,"n":338},{"block":"res","grp":"D","var":"mean","i":2020,"val":0.271,"se":null,"n":2223},{"block":"res","grp":"R","var":"mean","i":2020,"val":0.676,"se":null,"n":2602},{"block":"res","grp":"W","var":"mean","i":2020,"val":0.5102,"se":null,"n":5370},{"block":"res","grp":"W","var":"rPid","i":2020,"val":0.6184,"se":null,"n":5363},{"block":"res","grp":"W","var":"rIdeo","i":2020,"val":0.6685,"se":null,"n":4796},{"block":"res","grp":"B","var":"mean","i":2020,"val":0.25,"se":null,"n":641},{"block":"res","grp":"D","var":"mean","i":2024,"val":0.2957,"se":null,"n":1545},{"block":"res","grp":"R","var":"mean","i":2024,"val":0.6713,"se":null,"n":1801},{"block":"res","grp":"W","var":"mean","i":2024,"val":0.5149,"se":null,"n":3545},{"block":"res","grp":"W","var":"rPid","i":2024,"val":0.6173,"se":null,"n":3535},{"block":"res","grp":"W","var":"rIdeo","i":2024,"val":0.6625,"se":null,"n":3202},{"block":"res","grp":"B","var":"mean","i":2024,"val":0.2898,"se":null,"n":436},{"block":"aidb","grp":"W","var":"res","i":1986,"val":-0.4494,"se":0.0377,"n":627},{"block":"pidres","grp":"W","var":"res","i":1986,"val":-0.0143,"se":0.0562,"n":659},{"block":"hc","grp":"W","var":"res","i":1988,"val":0.0225,"se":0.0457,"n":910},{"block":"aidb","grp":"W","var":"res","i":1988,"val":-0.5499,"se":0.0329,"n":943},{"block":"pidres","grp":"W","var":"res","i":1988,"val":0.0258,"se":0.0434,"n":1009},{"block":"aidb","grp":"W","var":"res","i":1990,"val":-0.5933,"se":0.0398,"n":496},{"block":"pidres","grp":"W","var":"res","i":1990,"val":-0.0263,"se":0.0612,"n":527},{"block":"hc","grp":"W","var":"res","i":1992,"val":-0.1367,"se":0.0583,"n":570},{"block":"aidb","grp":"W","var":"res","i":1992,"val":-0.5256,"se":0.0442,"n":597},{"block":"pidres","grp":"W","var":"res","i":1992,"val":0.1054,"se":0.0554,"n":629},{"block":"hc","grp":"W","var":"res","i":1994,"val":-0.1261,"se":0.0576,"n":584},{"block":"aidb","grp":"W","var":"res","i":1994,"val":-0.5744,"se":0.0441,"n":586},{"block":"pidres","grp":"W","var":"res","i":1994,"val":0.0913,"se":0.0582,"n":607},{"block":"pidres","grp":"W","var":"res","i":2000,"val":0.2039,"se":0.0622,"n":467},{"block":"hc","grp":"W","var":"res","i":2004,"val":-0.0083,"se":0.0514,"n":586},{"block":"aidb","grp":"W","var":"res","i":2004,"val":-0.5336,"se":0.0399,"n":561},{"block":"pidres","grp":"W","var":"res","i":2004,"val":0.1327,"se":0.0492,"n":612},{"block":"hc","grp":"W","var":"res","i":2008,"val":-0.0992,"se":0.0638,"n":373},{"block":"aidb","grp":"W","var":"res","i":2008,"val":-0.5643,"se":0.0359,"n":729},{"block":"pidres","grp":"W","var":"res","i":2008,"val":0.1479,"se":0.0415,"n":816},{"block":"hc","grp":"W","var":"res","i":2012,"val":-0.1846,"se":0.0223,"n":2973},{"block":"aidb","grp":"W","var":"res","i":2012,"val":-0.5674,"se":0.0168,"n":2824},{"block":"pidres","grp":"W","var":"res","i":2012,"val":0.1874,"se":0.021,"n":3100},{"block":"hc","grp":"W","var":"res","i":2016,"val":-0.1801,"se":0.0247,"n":2041},{"block":"aidb","grp":"W","var":"res","i":2016,"val":-0.5355,"se":0.0199,"n":2031},{"block":"pidres","grp":"W","var":"res","i":2016,"val":0.2015,"se":0.0214,"n":2188},{"block":"hc","grp":"W","var":"res","i":2020,"val":-0.149,"se":0.0169,"n":4502},{"block":"aidb","grp":"W","var":"res","i":2020,"val":-0.5904,"se":0.0143,"n":4493},{"block":"pidres","grp":"W","var":"res","i":2020,"val":0.2555,"se":0.014,"n":4792},{"block":"hc","grp":"W","var":"res","i":2024,"val":-0.188,"se":0.0221,"n":2928},{"block":"aidb","grp":"W","var":"res","i":2024,"val":-0.5149,"se":0.0178,"n":2916},{"block":"pidres","grp":"W","var":"res","i":2024,"val":0.2893,"se":0.0179,"n":3198},{"block":"voteres","grp":"W","var":"res","i":1988,"val":0.1963,"se":0.0558,"n":766},{"block":"voteres","grp":"W","var":"res","i":1992,"val":0.2029,"se":0.0694,"n":420},{"block":"voteres","grp":"W","var":"res","i":2000,"val":0.172,"se":0.083,"n":373},{"block":"voteres","grp":"W","var":"res","i":2004,"val":0.1659,"se":0.0588,"n":506},{"block":"voteres","grp":"W","var":"res","i":2008,"val":0.3321,"se":0.0552,"n":654},{"block":"voteres","grp":"W","var":"res","i":2012,"val":0.2752,"se":0.0282,"n":2456},{"block":"voteres","grp":"W","var":"res","i":2016,"val":0.3949,"se":0.0288,"n":1701},{"block":"voteres","grp":"W","var":"res","i":2020,"val":0.4076,"se":0.0188,"n":4182},{"block":"voteres","grp":"W","var":"res","i":2024,"val":0.2472,"se":0.0216,"n":2764},{"block":"presres","grp":"Reagan","var":"res","i":1986,"val":0.1665,"se":0.038,"n":647},{"block":"presres","grp":"Reagan","var":"res","i":1988,"val":0.2029,"se":0.0315,"n":1005},{"block":"presres","grp":"Bush","var":"res","i":1990,"val":0.0384,"se":0.0394,"n":526},{"block":"presres","grp":"Bush","var":"res","i":1992,"val":0.0787,"se":0.0392,"n":626},{"block":"presres","grp":"Clinton","var":"res","i":1994,"val":-0.0654,"se":0.0421,"n":606},{"block":"presres","grp":"Clinton","var":"res","i":2000,"val":-0.0635,"se":0.0467,"n":463},{"block":"presres","grp":"G.W. Bush","var":"res","i":2004,"val":0.1563,"se":0.0396,"n":612},{"block":"presres","grp":"G.W. Bush","var":"res","i":2008,"val":0.146,"se":0.0346,"n":816},{"block":"presres","grp":"Obama","var":"res","i":2012,"val":-0.2258,"se":0.0175,"n":3098},{"block":"presres","grp":"Obama","var":"res","i":2016,"val":-0.3084,"se":0.0195,"n":2184},{"block":"presres","grp":"Biden","var":"res","i":2024,"val":-0.1625,"se":0.0158,"n":3195},{"block":"bw","grp":"W","var":"gov","i":1988,"val":38.8676,"se":null,"n":1307},{"block":"bw","grp":"B","var":"gov","i":1988,"val":48.8038,"se":null,"n":209},{"block":"bw","grp":"W","var":"gov","i":1992,"val":50.9358,"se":null,"n":748},{"block":"bw","grp":"B","var":"gov","i":1992,"val":64.6552,"se":null,"n":116},{"block":"bw","grp":"W","var":"gov","i":1994,"val":34.1855,"se":null,"n":733},{"block":"bw","grp":"B","var":"gov","i":1994,"val":59.4748,"se":null,"n":84},{"block":"bw","grp":"W","var":"gov","i":2000,"val":41.7475,"se":null,"n":691},{"block":"bw","grp":"B","var":"gov","i":2000,"val":57.3231,"se":null,"n":104},{"block":"bw","grp":"W","var":"gov","i":2004,"val":44.0647,"se":null,"n":795},{"block":"bw","grp":"B","var":"gov","i":2004,"val":52.2845,"se":null,"n":156},{"block":"bw","grp":"W","var":"gov","i":2008,"val":43.3351,"se":null,"n":522},{"block":"bw","grp":"B","var":"gov","i":2008,"val":60.7932,"se":null,"n":259},{"block":"bw","grp":"W","var":"gov","i":2012,"val":32.0522,"se":null,"n":3340},{"block":"bw","grp":"B","var":"gov","i":2012,"val":50.4497,"se":null,"n":907},{"block":"bw","grp":"W","var":"gov","i":2016,"val":34.5893,"se":null,"n":2742},{"block":"bw","grp":"B","var":"gov","i":2016,"val":48.4648,"se":null,"n":323},{"block":"bw","grp":"W","var":"gov","i":2020,"val":39.8249,"se":null,"n":5428},{"block":"bw","grp":"B","var":"gov","i":2020,"val":55.6011,"se":null,"n":573},{"block":"bw","grp":"W","var":"gov","i":2024,"val":45.1121,"se":null,"n":3483},{"block":"bw","grp":"B","var":"gov","i":2024,"val":58.7842,"se":null,"n":403},{"block":"cand","grp":"nominee","var":"Bush","i":1988,"val":0.0351,"se":0.041,"n":1187},{"block":"cand","grp":"party","var":"GOP","i":1988,"val":-0.0194,"se":0.0365,"n":1168},{"block":"candres","grp":"nominee","var":"Bush","i":1988,"val":0.0972,"se":0.0327,"n":987},{"block":"candres","grp":"party","var":"GOP","i":1988,"val":0.1032,"se":0.0278,"n":975},{"block":"cand","grp":"nominee","var":"Bush","i":1992,"val":-0.0917,"se":0.0536,"n":727},{"block":"cand","grp":"party","var":"GOP","i":1992,"val":-0.0291,"se":0.0462,"n":720},{"block":"candres","grp":"nominee","var":"Bush","i":1992,"val":0.0664,"se":0.0414,"n":603},{"block":"candres","grp":"party","var":"GOP","i":1992,"val":0.0236,"se":0.0343,"n":598},{"block":"cand","grp":"nominee","var":"Dole","i":1996,"val":-0.1436,"se":0.0867,"n":234},{"block":"cand","grp":"party","var":"GOP","i":1996,"val":-0.1284,"se":0.0777,"n":234},{"block":"cand","grp":"nominee","var":"Bush","i":2000,"val":-0.0248,"se":0.0518,"n":532},{"block":"cand","grp":"party","var":"GOP","i":2000,"val":-0.1186,"se":0.0449,"n":534},{"block":"candres","grp":"nominee","var":"Bush","i":2000,"val":0.0518,"se":0.044,"n":460},{"block":"candres","grp":"party","var":"GOP","i":2000,"val":0.0614,"se":0.0388,"n":458},{"block":"cand","grp":"nominee","var":"Bush","i":2004,"val":-0.0319,"se":0.0497,"n":802},{"block":"cand","grp":"party","var":"GOP","i":2004,"val":-0.0888,"se":0.0393,"n":795},{"block":"candres","grp":"nominee","var":"Bush","i":2004,"val":0.1348,"se":0.0418,"n":612},{"block":"candres","grp":"party","var":"GOP","i":2004,"val":0.0737,"se":0.0327,"n":606},{"block":"cand","grp":"nominee","var":"McCain","i":2008,"val":-0.0444,"se":0.0297,"n":1425},{"block":"cand","grp":"party","var":"GOP","i":2008,"val":-0.0676,"se":0.0281,"n":1420},{"block":"candres","grp":"nominee","var":"McCain","i":2008,"val":0.1424,"se":0.0312,"n":808},{"block":"candres","grp":"party","var":"GOP","i":2008,"val":0.1444,"se":0.029,"n":806},{"block":"cand","grp":"nominee","var":"Romney","i":2012,"val":-0.0206,"se":0.0183,"n":4824},{"block":"cand","grp":"party","var":"GOP","i":2012,"val":-0.0272,"se":0.0164,"n":4817},{"block":"candres","grp":"nominee","var":"Romney","i":2012,"val":0.1069,"se":0.0176,"n":3056},{"block":"candres","grp":"party","var":"GOP","i":2012,"val":0.0839,"se":0.0156,"n":3053},{"block":"cand","grp":"nominee","var":"Trump","i":2016,"val":0.172,"se":0.0269,"n":2801},{"block":"cand","grp":"party","var":"GOP","i":2016,"val":0.0921,"se":0.0228,"n":2779},{"block":"candres","grp":"nominee","var":"Trump","i":2016,"val":0.2879,"se":0.0219,"n":2166},{"block":"candres","grp":"party","var":"GOP","i":2016,"val":0.1196,"se":0.0182,"n":2153},{"block":"cand","grp":"nominee","var":"Trump","i":2020,"val":0.0888,"se":0.0173,"n":6005},{"block":"cand","grp":"party","var":"GOP","i":2020,"val":0.0248,"se":0.0148,"n":6079},{"block":"candres","grp":"nominee","var":"Trump","i":2020,"val":0.3125,"se":0.0139,"n":4634},{"block":"candres","grp":"party","var":"GOP","i":2020,"val":0.1746,"se":0.0119,"n":4686},{"block":"cand","grp":"nominee","var":"Trump","i":2024,"val":0.0133,"se":0.0184,"n":4139},{"block":"cand","grp":"party","var":"GOP","i":2024,"val":-0.0096,"se":0.0164,"n":4134},{"block":"candres","grp":"nominee","var":"Trump","i":2024,"val":0.1922,"se":0.0164,"n":3181},{"block":"candres","grp":"party","var":"GOP","i":2024,"val":0.1096,"se":0.0145,"n":3178},{"block":"candp","grp":"D","var":"Romney","i":2012,"val":0.0635,"se":0.0266,"n":2474},{"block":"candp","grp":"I","var":"Romney","i":2012,"val":0.0016,"se":0.061,"n":614},{"block":"candp","grp":"R","var":"Romney","i":2012,"val":-0.0794,"se":0.027,"n":1736},{"block":"candp","grp":"D","var":"Trump","i":2016,"val":0.2457,"se":0.0334,"n":1259},{"block":"candp","grp":"I","var":"Trump","i":2016,"val":0.1439,"se":0.0961,"n":276},{"block":"candp","grp":"R","var":"Trump","i":2016,"val":0.1315,"se":0.0454,"n":1266},{"block":"candp","grp":"D","var":"Trump","i":2020,"val":0.1353,"se":0.0197,"n":2818},{"block":"candp","grp":"I","var":"Trump","i":2020,"val":0.43,"se":0.0718,"n":574},{"block":"candp","grp":"R","var":"Trump","i":2020,"val":0.0167,"se":0.0272,"n":2613},{"block":"candp","grp":"D","var":"Trump","i":2024,"val":0.1294,"se":0.0211,"n":2080},{"block":"candp","grp":"I","var":"Trump","i":2024,"val":-0.0502,"se":0.1082,"n":191},{"block":"candp","grp":"R","var":"Trump","i":2024,"val":-0.0417,"se":0.0305,"n":1868},{"block":"cold","grp":"ftB","var":"below50","i":1984,"val":11.1526,"se":null,"n":1874},{"block":"cold","grp":"ftB","var":"mean","i":1984,"val":64.0584,"se":null,"n":1874},{"block":"cold","grp":"ftH","var":"below50","i":1984,"val":15.5517,"se":null,"n":1749},{"block":"cold","grp":"ftH","var":"mean","i":1984,"val":59.2985,"se":null,"n":1749},{"block":"cold","grp":"ftG","var":"below50","i":1984,"val":61.5047,"se":null,"n":1821},{"block":"cold","grp":"ftG","var":"mean","i":1984,"val":29.9341,"se":null,"n":1821},{"block":"cold","grp":"ftB","var":"below50","i":1986,"val":9.7763,"se":null,"n":2056},{"block":"cold","grp":"ftB","var":"mean","i":1986,"val":66.1902,"se":null,"n":2056},{"block":"cold","grp":"ftB","var":"below50","i":1988,"val":11.8922,"se":null,"n":1707},{"block":"cold","grp":"ftB","var":"mean","i":1988,"val":61.5246,"se":null,"n":1707},{"block":"cold","grp":"ftH","var":"below50","i":1988,"val":16.2676,"se":null,"n":1629},{"block":"cold","grp":"ftH","var":"mean","i":1988,"val":56.9337,"se":null,"n":1629},{"block":"cold","grp":"ftG","var":"below50","i":1988,"val":62.5298,"se":null,"n":1676},{"block":"cold","grp":"ftG","var":"mean","i":1988,"val":28.5197,"se":null,"n":1676},{"block":"cold","grp":"ftB","var":"below50","i":1990,"val":8.4603,"se":null,"n":1903},{"block":"cold","grp":"ftB","var":"mean","i":1990,"val":69.149,"se":null,"n":1903},{"block":"cold","grp":"ftB","var":"below50","i":1992,"val":7.449,"se":null,"n":980},{"block":"cold","grp":"ftB","var":"mean","i":1992,"val":65.3128,"se":null,"n":980},{"block":"cold","grp":"ftH","var":"below50","i":1992,"val":11.9073,"se":null,"n":949},{"block":"cold","grp":"ftH","var":"mean","i":1992,"val":61.4968,"se":null,"n":949},{"block":"cold","grp":"ftG","var":"below50","i":1992,"val":47.0405,"se":null,"n":963},{"block":"cold","grp":"ftG","var":"mean","i":1992,"val":39.325,"se":null,"n":963},{"block":"cold","grp":"ftB","var":"below50","i":1994,"val":13.7538,"se":null,"n":989},{"block":"cold","grp":"ftB","var":"mean","i":1994,"val":62.8603,"se":null,"n":989},{"block":"cold","grp":"ftH","var":"below50","i":1994,"val":15.0494,"se":null,"n":966},{"block":"cold","grp":"ftH","var":"mean","i":1994,"val":60.6966,"se":null,"n":966},{"block":"cold","grp":"ftG","var":"below50","i":1994,"val":54.4132,"se":null,"n":1000},{"block":"cold","grp":"ftG","var":"mean","i":1994,"val":33.3314,"se":null,"n":1000},{"block":"cold","grp":"ftB","var":"below50","i":1996,"val":5.7594,"se":null,"n":327},{"block":"cold","grp":"ftB","var":"mean","i":1996,"val":67.7967,"se":null,"n":327},{"block":"cold","grp":"ftH","var":"below50","i":1996,"val":5.625,"se":null,"n":324},{"block":"cold","grp":"ftH","var":"mean","i":1996,"val":65.0539,"se":null,"n":324},{"block":"cold","grp":"ftG","var":"below50","i":1996,"val":40.308,"se":null,"n":327},{"block":"cold","grp":"ftG","var":"mean","i":1996,"val":41.8608,"se":null,"n":327},{"block":"cold","grp":"ftB","var":"below50","i":1998,"val":4.9911,"se":null,"n":1203},{"block":"cold","grp":"ftB","var":"mean","i":1998,"val":68.8777,"se":null,"n":1203},{"block":"cold","grp":"ftG","var":"below50","i":1998,"val":36.0679,"se":null,"n":1211},{"block":"cold","grp":"ftG","var":"mean","i":1998,"val":44.7582,"se":null,"n":1211},{"block":"cold","grp":"ftB","var":"below50","i":2000,"val":6.9163,"se":null,"n":1452},{"block":"cold","grp":"ftB","var":"mean","i":2000,"val":66.8551,"se":null,"n":1452},{"block":"cold","grp":"ftH","var":"below50","i":2000,"val":10.2603,"se":null,"n":1438},{"block":"cold","grp":"ftH","var":"mean","i":2000,"val":63.6688,"se":null,"n":1438},{"block":"cold","grp":"ftG","var":"below50","i":2000,"val":33.1254,"se":null,"n":1448},{"block":"cold","grp":"ftG","var":"mean","i":2000,"val":46.7832,"se":null,"n":1448},{"block":"cold","grp":"ftB","var":"below50","i":2004,"val":3.6258,"se":null,"n":1042},{"block":"cold","grp":"ftB","var":"mean","i":2004,"val":72.0009,"se":null,"n":1042},{"block":"cold","grp":"ftH","var":"below50","i":2004,"val":6.09,"se":null,"n":1037},{"block":"cold","grp":"ftH","var":"mean","i":2004,"val":67.4929,"se":null,"n":1037},{"block":"cold","grp":"ftG","var":"below50","i":2004,"val":34.2933,"se":null,"n":1044},{"block":"cold","grp":"ftG","var":"mean","i":2004,"val":47.4085,"se":null,"n":1044},{"block":"cold","grp":"ftB","var":"below50","i":2008,"val":6.0357,"se":null,"n":2055},{"block":"cold","grp":"ftB","var":"mean","i":2008,"val":68.5109,"se":null,"n":2055},{"block":"cold","grp":"ftH","var":"below50","i":2008,"val":9.5855,"se":null,"n":2050},{"block":"cold","grp":"ftH","var":"mean","i":2008,"val":65.0483,"se":null,"n":2050},{"block":"cold","grp":"ftG","var":"below50","i":2008,"val":30.2079,"se":null,"n":2041},{"block":"cold","grp":"ftG","var":"mean","i":2008,"val":49.2919,"se":null,"n":2041},{"block":"cold","grp":"ftB","var":"below50","i":2012,"val":13.0325,"se":null,"n":5450},{"block":"cold","grp":"ftB","var":"mean","i":2012,"val":64.6848,"se":null,"n":5450},{"block":"cold","grp":"ftH","var":"below50","i":2012,"val":15.7576,"se":null,"n":5449},{"block":"cold","grp":"ftH","var":"mean","i":2012,"val":63.2971,"se":null,"n":5449},{"block":"cold","grp":"ftG","var":"below50","i":2012,"val":27.0856,"se":null,"n":5446},{"block":"cold","grp":"ftG","var":"mean","i":2012,"val":51.5161,"se":null,"n":5446},{"block":"cold","grp":"ftB","var":"below50","i":2016,"val":9.4714,"se":null,"n":3570},{"block":"cold","grp":"ftB","var":"mean","i":2016,"val":68.8332,"se":null,"n":3570},{"block":"cold","grp":"ftH","var":"below50","i":2016,"val":9.85,"se":null,"n":3572},{"block":"cold","grp":"ftH","var":"mean","i":2016,"val":67.8736,"se":null,"n":3572},{"block":"cold","grp":"ftG","var":"below50","i":2016,"val":18.368,"se":null,"n":3598},{"block":"cold","grp":"ftG","var":"mean","i":2016,"val":60.2331,"se":null,"n":3598},{"block":"cold","grp":"ftB","var":"below50","i":2020,"val":5.1009,"se":null,"n":7098},{"block":"cold","grp":"ftB","var":"mean","i":2020,"val":71.9409,"se":null,"n":7098},{"block":"cold","grp":"ftH","var":"below50","i":2020,"val":3.7469,"se":null,"n":7109},{"block":"cold","grp":"ftH","var":"mean","i":2020,"val":71.5307,"se":null,"n":7109},{"block":"cold","grp":"ftG","var":"below50","i":2020,"val":13.6852,"se":null,"n":7321},{"block":"cold","grp":"ftG","var":"mean","i":2020,"val":64.5247,"se":null,"n":7321},{"block":"cold","grp":"ftB","var":"below50","i":2024,"val":5.4855,"se":null,"n":4661},{"block":"cold","grp":"ftB","var":"mean","i":2024,"val":70.4967,"se":null,"n":4661},{"block":"cold","grp":"ftH","var":"below50","i":2024,"val":6.0273,"se":null,"n":4684},{"block":"cold","grp":"ftH","var":"mean","i":2024,"val":69.5775,"se":null,"n":4684},{"block":"cold","grp":"ftG","var":"below50","i":2024,"val":17.5207,"se":null,"n":4856},{"block":"cold","grp":"ftG","var":"mean","i":2024,"val":60.4861,"se":null,"n":4856},{"block":"wwc","grp":"ideo","var":"hi","i":1988,"val":78.327,"se":null,"n":263},{"block":"wwc","grp":"ideo","var":"lo","i":1988,"val":28.0899,"se":null,"n":89},{"block":"wwc","grp":"res","var":"hi","i":1988,"val":65.5602,"se":null,"n":482},{"block":"wwc","grp":"res","var":"lo","i":1988,"val":47.1074,"se":null,"n":121},{"block":"wwc","grp":"all","var":"rep","i":1988,"val":60.9023,"se":null,"n":665},{"block":"wwc","grp":"res","var":"shareHi","i":1988,"val":73.1411,"se":null,"n":659},{"block":"wwc","grp":"ideo","var":"hi","i":1992,"val":74.4681,"se":null,"n":94},{"block":"wwc","grp":"ideo","var":"lo","i":1992,"val":14.2857,"se":null,"n":63},{"block":"wwc","grp":"res","var":"hi","i":1992,"val":48.5849,"se":null,"n":212},{"block":"wwc","grp":"res","var":"lo","i":1992,"val":34.4262,"se":null,"n":61},{"block":"wwc","grp":"all","var":"rep","i":1992,"val":45.6954,"se":null,"n":302},{"block":"wwc","grp":"res","var":"shareHi","i":1992,"val":70.1987,"se":null,"n":302},{"block":"wwc","grp":"ideo","var":"hi","i":2000,"val":80.554,"se":null,"n":93},{"block":"wwc","grp":"ideo","var":"lo","i":2000,"val":24.7735,"se":null,"n":50},{"block":"wwc","grp":"res","var":"hi","i":2000,"val":59.931,"se":null,"n":378},{"block":"wwc","grp":"res","var":"lo","i":2000,"val":47.7972,"se":null,"n":92},{"block":"wwc","grp":"all","var":"rep","i":2000,"val":55.4395,"se":null,"n":533},{"block":"wwc","grp":"res","var":"shareHi","i":2000,"val":72.0362,"se":null,"n":528},{"block":"wwc","grp":"ideo","var":"hi","i":2004,"val":85.7382,"se":null,"n":143},{"block":"wwc","grp":"ideo","var":"lo","i":2004,"val":13.7161,"se":null,"n":54},{"block":"wwc","grp":"res","var":"hi","i":2004,"val":66.4006,"se":null,"n":271},{"block":"wwc","grp":"res","var":"lo","i":2004,"val":40.8501,"se":null,"n":67},{"block":"wwc","grp":"all","var":"rep","i":2004,"val":60.409,"se":null,"n":368},{"block":"wwc","grp":"res","var":"shareHi","i":2004,"val":74.0009,"se":null,"n":367},{"block":"wwc","grp":"ideo","var":"hi","i":2008,"val":86.3852,"se":null,"n":194},{"block":"wwc","grp":"ideo","var":"lo","i":2008,"val":18.437,"se":null,"n":101},{"block":"wwc","grp":"res","var":"hi","i":2008,"val":65.9714,"se":null,"n":405},{"block":"wwc","grp":"res","var":"lo","i":2008,"val":18.3832,"se":null,"n":76},{"block":"wwc","grp":"all","var":"rep","i":2008,"val":56.1723,"se":null,"n":523},{"block":"wwc","grp":"res","var":"shareHi","i":2008,"val":77.7012,"se":null,"n":522},{"block":"wwc","grp":"ideo","var":"hi","i":2012,"val":88.7773,"se":null,"n":654},{"block":"wwc","grp":"ideo","var":"lo","i":2012,"val":10.4091,"se":null,"n":294},{"block":"wwc","grp":"res","var":"hi","i":2012,"val":69.429,"se":null,"n":1141},{"block":"wwc","grp":"res","var":"lo","i":2012,"val":18.1216,"se":null,"n":218},{"block":"wwc","grp":"all","var":"rep","i":2012,"val":59.6653,"se":null,"n":1489},{"block":"wwc","grp":"res","var":"shareHi","i":2012,"val":77.0436,"se":null,"n":1477},{"block":"wwc","grp":"ideo","var":"hi","i":2016,"val":91.5717,"se":null,"n":431},{"block":"wwc","grp":"ideo","var":"lo","i":2016,"val":13.3189,"se":null,"n":175},{"block":"wwc","grp":"res","var":"hi","i":2016,"val":82.2382,"se":null,"n":681},{"block":"wwc","grp":"res","var":"lo","i":2016,"val":24.7543,"se":null,"n":227},{"block":"wwc","grp":"all","var":"rep","i":2016,"val":65.9191,"se":null,"n":1010},{"block":"wwc","grp":"res","var":"shareHi","i":2016,"val":67.2886,"se":null,"n":996},{"block":"wwc","grp":"ideo","var":"hi","i":2020,"val":93.2479,"se":null,"n":991},{"block":"wwc","grp":"ideo","var":"lo","i":2020,"val":7.139,"se":null,"n":474},{"block":"wwc","grp":"res","var":"hi","i":2020,"val":86.069,"se":null,"n":1275},{"block":"wwc","grp":"res","var":"lo","i":2020,"val":19.5704,"se":null,"n":682},{"block":"wwc","grp":"all","var":"rep","i":2020,"val":64.4155,"se":null,"n":2230},{"block":"wwc","grp":"res","var":"shareHi","i":2020,"val":59.6032,"se":null,"n":2202},{"block":"wwc","grp":"ideo","var":"hi","i":2024,"val":92.6488,"se":null,"n":694},{"block":"wwc","grp":"ideo","var":"lo","i":2024,"val":6.0549,"se":null,"n":269},{"block":"wwc","grp":"res","var":"hi","i":2024,"val":83.2516,"se":null,"n":835},{"block":"wwc","grp":"res","var":"lo","i":2024,"val":21.497,"se":null,"n":368},{"block":"wwc","grp":"all","var":"rep","i":2024,"val":64.1521,"se":null,"n":1390},{"block":"wwc","grp":"res","var":"shareHi","i":2024,"val":58.758,"se":null,"n":1369},{"block":"comp","grp":"D","var":"black","i":2024,"val":19.0746,"se":null,"n":2642},{"block":"item","grp":"anes","var":"favorsAgree","i":2024,"val":42.1662,"se":null,"n":4699},{"block":"item","grp":"anes","var":"slaveryAgree","i":2024,"val":49.405,"se":null,"n":4908},{"block":"itemdist","grp":"favors","var":"all:1","i":2024,"val":20.9178,"se":null,"n":4699},{"block":"itemdist","grp":"favors","var":"all:2","i":2024,"val":21.2483,"se":null,"n":4699},{"block":"itemdist","grp":"favors","var":"all:3","i":2024,"val":23.5045,"se":null,"n":4699},{"block":"itemdist","grp":"favors","var":"all:4","i":2024,"val":14.0926,"se":null,"n":4699},{"block":"itemdist","grp":"favors","var":"all:5","i":2024,"val":20.2367,"se":null,"n":4699},{"block":"itemdist","grp":"favors","var":"White:1","i":2024,"val":23.7342,"se":null,"n":3406},{"block":"itemdist","grp":"favors","var":"White:2","i":2024,"val":22.9956,"se":null,"n":3406},{"block":"itemdist","grp":"favors","var":"White:3","i":2024,"val":22.4173,"se":null,"n":3406},{"block":"itemdist","grp":"favors","var":"White:4","i":2024,"val":13.4233,"se":null,"n":3406},{"block":"itemdist","grp":"favors","var":"White:5","i":2024,"val":17.4296,"se":null,"n":3406},{"block":"itemdist","grp":"favors","var":"Black:1","i":2024,"val":11.1418,"se":null,"n":417},{"block":"itemdist","grp":"favors","var":"Black:2","i":2024,"val":14.8838,"se":null,"n":417},{"block":"itemdist","grp":"favors","var":"Black:3","i":2024,"val":21.5771,"se":null,"n":417},{"block":"itemdist","grp":"favors","var":"Black:4","i":2024,"val":14.7829,"se":null,"n":417},{"block":"itemdist","grp":"favors","var":"Black:5","i":2024,"val":37.6144,"se":null,"n":417},{"block":"itemdist","grp":"favors","var":"Hispanic:1","i":2024,"val":20.664,"se":null,"n":483},{"block":"itemdist","grp":"favors","var":"Hispanic:2","i":2024,"val":19.027,"se":null,"n":483},{"block":"itemdist","grp":"favors","var":"Hispanic:3","i":2024,"val":28.8506,"se":null,"n":483},{"block":"itemdist","grp":"favors","var":"Hispanic:4","i":2024,"val":12.9908,"se":null,"n":483},{"block":"itemdist","grp":"favors","var":"Hispanic:5","i":2024,"val":18.4677,"se":null,"n":483},{"block":"itemdist","grp":"slavery","var":"all:1","i":2024,"val":24.3036,"se":null,"n":4908},{"block":"itemdist","grp":"slavery","var":"all:2","i":2024,"val":25.1013,"se":null,"n":4908},{"block":"itemdist","grp":"slavery","var":"all:3","i":2024,"val":16.0766,"se":null,"n":4908},{"block":"itemdist","grp":"slavery","var":"all:4","i":2024,"val":16.6207,"se":null,"n":4908},{"block":"itemdist","grp":"slavery","var":"all:5","i":2024,"val":17.8978,"se":null,"n":4908},{"block":"itemdist","grp":"slavery","var":"White:1","i":2024,"val":19.9331,"se":null,"n":3551},{"block":"itemdist","grp":"slavery","var":"White:2","i":2024,"val":24.4222,"se":null,"n":3551},{"block":"itemdist","grp":"slavery","var":"White:3","i":2024,"val":15.4303,"se":null,"n":3551},{"block":"itemdist","grp":"slavery","var":"White:4","i":2024,"val":19.7234,"se":null,"n":3551},{"block":"itemdist","grp":"slavery","var":"White:5","i":2024,"val":20.491,"se":null,"n":3551},{"block":"itemdist","grp":"slavery","var":"Black:1","i":2024,"val":48.1269,"se":null,"n":437},{"block":"itemdist","grp":"slavery","var":"Black:2","i":2024,"val":23.6107,"se":null,"n":437},{"block":"itemdist","grp":"slavery","var":"Black:3","i":2024,"val":12.2894,"se":null,"n":437},{"block":"itemdist","grp":"slavery","var":"Black:4","i":2024,"val":7.7287,"se":null,"n":437},{"block":"itemdist","grp":"slavery","var":"Black:5","i":2024,"val":8.2443,"se":null,"n":437},{"block":"itemdist","grp":"slavery","var":"Hispanic:1","i":2024,"val":25.7094,"se":null,"n":504},{"block":"itemdist","grp":"slavery","var":"Hispanic:2","i":2024,"val":27.1868,"se":null,"n":504},{"block":"itemdist","grp":"slavery","var":"Hispanic:3","i":2024,"val":19.0244,"se":null,"n":504},{"block":"itemdist","grp":"slavery","var":"Hispanic:4","i":2024,"val":12.9173,"se":null,"n":504},{"block":"itemdist","grp":"slavery","var":"Hispanic:5","i":2024,"val":15.1622,"se":null,"n":504},{"block":"itemdist","grp":"deserve","var":"all:1","i":2024,"val":15.8088,"se":null,"n":4898},{"block":"itemdist","grp":"deserve","var":"all:2","i":2024,"val":21.2594,"se":null,"n":4898},{"block":"itemdist","grp":"deserve","var":"all:3","i":2024,"val":25.6115,"se":null,"n":4898},{"block":"itemdist","grp":"deserve","var":"all:4","i":2024,"val":17.1043,"se":null,"n":4898},{"block":"itemdist","grp":"deserve","var":"all:5","i":2024,"val":20.216,"se":null,"n":4898},{"block":"itemdist","grp":"deserve","var":"White:1","i":2024,"val":11.2496,"se":null,"n":3545},{"block":"itemdist","grp":"deserve","var":"White:2","i":2024,"val":18.6154,"se":null,"n":3545},{"block":"itemdist","grp":"deserve","var":"White:3","i":2024,"val":25.5154,"se":null,"n":3545},{"block":"itemdist","grp":"deserve","var":"White:4","i":2024,"val":21.0328,"se":null,"n":3545},{"block":"itemdist","grp":"deserve","var":"White:5","i":2024,"val":23.5869,"se":null,"n":3545},{"block":"itemdist","grp":"deserve","var":"Black:1","i":2024,"val":41.0996,"se":null,"n":437},{"block":"itemdist","grp":"deserve","var":"Black:2","i":2024,"val":33.8534,"se":null,"n":437},{"block":"itemdist","grp":"deserve","var":"Black:3","i":2024,"val":14.0794,"se":null,"n":437},{"block":"itemdist","grp":"deserve","var":"Black:4","i":2024,"val":4.2568,"se":null,"n":437},{"block":"itemdist","grp":"deserve","var":"Black:5","i":2024,"val":6.7108,"se":null,"n":437},{"block":"itemdist","grp":"deserve","var":"Hispanic:1","i":2024,"val":15.6754,"se":null,"n":502},{"block":"itemdist","grp":"deserve","var":"Hispanic:2","i":2024,"val":22.2125,"se":null,"n":502},{"block":"itemdist","grp":"deserve","var":"Hispanic:3","i":2024,"val":31.5153,"se":null,"n":502},{"block":"itemdist","grp":"deserve","var":"Hispanic:4","i":2024,"val":11.852,"se":null,"n":502},{"block":"itemdist","grp":"deserve","var":"Hispanic:5","i":2024,"val":18.7448,"se":null,"n":502},{"block":"itemdist","grp":"tryhard","var":"all:1","i":2024,"val":12.2402,"se":null,"n":4902},{"block":"itemdist","grp":"tryhard","var":"all:2","i":2024,"val":18.5455,"se":null,"n":4902},{"block":"itemdist","grp":"tryhard","var":"all:3","i":2024,"val":22.4106,"se":null,"n":4902},{"block":"itemdist","grp":"tryhard","var":"all:4","i":2024,"val":18.8084,"se":null,"n":4902},{"block":"itemdist","grp":"tryhard","var":"all:5","i":2024,"val":27.9953,"se":null,"n":4902},{"block":"itemdist","grp":"tryhard","var":"White:1","i":2024,"val":12.5439,"se":null,"n":3546},{"block":"itemdist","grp":"tryhard","var":"White:2","i":2024,"val":21.1165,"se":null,"n":3546},{"block":"itemdist","grp":"tryhard","var":"White:3","i":2024,"val":22.8517,"se":null,"n":3546},{"block":"itemdist","grp":"tryhard","var":"White:4","i":2024,"val":18.3324,"se":null,"n":3546},{"block":"itemdist","grp":"tryhard","var":"White:5","i":2024,"val":25.1554,"se":null,"n":3546},{"block":"itemdist","grp":"tryhard","var":"Black:1","i":2024,"val":7.5598,"se":null,"n":437},{"block":"itemdist","grp":"tryhard","var":"Black:2","i":2024,"val":11.586,"se":null,"n":437},{"block":"itemdist","grp":"tryhard","var":"Black:3","i":2024,"val":16.021,"se":null,"n":437},{"block":"itemdist","grp":"tryhard","var":"Black:4","i":2024,"val":16.5071,"se":null,"n":437},{"block":"itemdist","grp":"tryhard","var":"Black:5","i":2024,"val":48.326,"se":null,"n":437},{"block":"itemdist","grp":"tryhard","var":"Hispanic:1","i":2024,"val":15.2599,"se":null,"n":504},{"block":"itemdist","grp":"tryhard","var":"Hispanic:2","i":2024,"val":14.4914,"se":null,"n":504},{"block":"itemdist","grp":"tryhard","var":"Hispanic:3","i":2024,"val":22.7915,"se":null,"n":504},{"block":"itemdist","grp":"tryhard","var":"Hispanic:4","i":2024,"val":21.851,"se":null,"n":504},{"block":"itemdist","grp":"tryhard","var":"Hispanic:5","i":2024,"val":25.6062,"se":null,"n":504},{"block":"ident_all","grp":"All","var":"Everyone","i":1988,"val":0.5971,"se":null,"n":1746},{"block":"ident_all","grp":"Race","var":"Black","i":1988,"val":0.3997,"se":null,"n":201},{"block":"ident_all","grp":"Race","var":"Hispanic","i":1988,"val":0.547,"se":null,"n":136},{"block":"ident_all","grp":"Race","var":"White","i":1988,"val":0.6364,"se":null,"n":1349},{"block":"ident_all","grp":"Party","var":"Democrat","i":1988,"val":0.5453,"se":null,"n":827},{"block":"ident_all","grp":"Party","var":"Independent","i":1988,"val":0.6415,"se":null,"n":192},{"block":"ident_all","grp":"Party","var":"Republican","i":1988,"val":0.6429,"se":null,"n":719},{"block":"ident_all","grp":"Ideology","var":"Conservative","i":1988,"val":0.6378,"se":null,"n":571},{"block":"ident_all","grp":"Ideology","var":"Liberal","i":1988,"val":0.4911,"se":null,"n":300},{"block":"ident_all","grp":"Ideology","var":"Moderate","i":1988,"val":0.5878,"se":null,"n":383},{"block":"ident_all","grp":"Education","var":"Four-year degree","i":1988,"val":0.5107,"se":null,"n":361},{"block":"ident_all","grp":"Education","var":"No four-year degree","i":1988,"val":0.621,"se":null,"n":1355},{"block":"ident_all","grp":"Age","var":"18-29","i":1988,"val":0.593,"se":null,"n":375},{"block":"ident_all","grp":"Age","var":"30-44","i":1988,"val":0.5808,"se":null,"n":619},{"block":"ident_all","grp":"Age","var":"45-64","i":1988,"val":0.6069,"se":null,"n":441},{"block":"ident_all","grp":"Age","var":"65+","i":1988,"val":0.621,"se":null,"n":310},{"block":"ident_all","grp":"Gender","var":"Men","i":1988,"val":0.6147,"se":null,"n":759},{"block":"ident_all","grp":"Gender","var":"Women","i":1988,"val":0.5835,"se":null,"n":987},{"block":"ident_White","grp":"All","var":"Everyone","i":1988,"val":0.6364,"se":null,"n":1349},{"block":"ident_White","grp":"Party","var":"Democrat","i":1988,"val":0.6073,"se":null,"n":535},{"block":"ident_White","grp":"Party","var":"Independent","i":1988,"val":0.6806,"se":null,"n":156},{"block":"ident_White","grp":"Party","var":"Republican","i":1988,"val":0.6486,"se":null,"n":654},{"block":"ident_White","grp":"Ideology","var":"Conservative","i":1988,"val":0.659,"se":null,"n":498},{"block":"ident_White","grp":"Ideology","var":"Liberal","i":1988,"val":0.5458,"se":null,"n":209},{"block":"ident_White","grp":"Ideology","var":"Moderate","i":1988,"val":0.6152,"se":null,"n":305},{"block":"ident_White","grp":"Education","var":"Four-year degree","i":1988,"val":0.5272,"se":null,"n":311},{"block":"ident_White","grp":"Education","var":"No four-year degree","i":1988,"val":0.6702,"se":null,"n":1018},{"block":"ident_White","grp":"Age","var":"18-29","i":1988,"val":0.6448,"se":null,"n":262},{"block":"ident_White","grp":"Age","var":"30-44","i":1988,"val":0.623,"se":null,"n":470},{"block":"ident_White","grp":"Age","var":"45-64","i":1988,"val":0.6428,"se":null,"n":351},{"block":"ident_White","grp":"Age","var":"65+","i":1988,"val":0.6437,"se":null,"n":265},{"block":"ident_White","grp":"Gender","var":"Men","i":1988,"val":0.6482,"se":null,"n":618},{"block":"ident_White","grp":"Gender","var":"Women","i":1988,"val":0.6263,"se":null,"n":731},{"block":"ident_all","grp":"All","var":"Everyone","i":2024,"val":0.475,"se":null,"n":4900},{"block":"ident_all","grp":"Race","var":"Asian American","i":2024,"val":0.4652,"se":null,"n":169},{"block":"ident_all","grp":"Race","var":"Black","i":2024,"val":0.2898,"se":null,"n":436},{"block":"ident_all","grp":"Race","var":"Hispanic","i":2024,"val":0.4635,"se":null,"n":504},{"block":"ident_all","grp":"Race","var":"White","i":2024,"val":0.5149,"se":null,"n":3545},{"block":"ident_all","grp":"Party","var":"Democrat","i":2024,"val":0.2994,"se":null,"n":2391},{"block":"ident_all","grp":"Party","var":"Independent","i":2024,"val":0.5293,"se":null,"n":319},{"block":"ident_all","grp":"Party","var":"Republican","i":2024,"val":0.6586,"se":null,"n":2169},{"block":"ident_all","grp":"Ideology","var":"Conservative","i":2024,"val":0.6568,"se":null,"n":1726},{"block":"ident_all","grp":"Ideology","var":"Liberal","i":2024,"val":0.2346,"se":null,"n":1484},{"block":"ident_all","grp":"Ideology","var":"Moderate","i":2024,"val":0.4742,"se":null,"n":1051},{"block":"ident_all","grp":"Education","var":"Four-year degree","i":2024,"val":0.3783,"se":null,"n":2260},{"block":"ident_all","grp":"Education","var":"No four-year degree","i":2024,"val":0.5306,"se":null,"n":2598},{"block":"ident_all","grp":"Age","var":"18-29","i":2024,"val":0.4106,"se":null,"n":458},{"block":"ident_all","grp":"Age","var":"30-44","i":2024,"val":0.4353,"se":null,"n":1156},{"block":"ident_all","grp":"Age","var":"45-64","i":2024,"val":0.5128,"se":null,"n":1523},{"block":"ident_all","grp":"Age","var":"65+","i":2024,"val":0.5081,"se":null,"n":1546},{"block":"ident_all","grp":"Gender","var":"Men","i":2024,"val":0.5024,"se":null,"n":2262},{"block":"ident_all","grp":"Gender","var":"Women","i":2024,"val":0.4488,"se":null,"n":2608},{"block":"ident_White","grp":"All","var":"Everyone","i":2024,"val":0.5149,"se":null,"n":3545},{"block":"ident_White","grp":"Party","var":"Democrat","i":2024,"val":0.2957,"se":null,"n":1545},{"block":"ident_White","grp":"Party","var":"Independent","i":2024,"val":0.5946,"se":null,"n":189},{"block":"ident_White","grp":"Party","var":"Republican","i":2024,"val":0.6713,"se":null,"n":1801},{"block":"ident_White","grp":"Ideology","var":"Conservative","i":2024,"val":0.6776,"se":null,"n":1424},{"block":"ident_White","grp":"Ideology","var":"Liberal","i":2024,"val":0.2344,"se":null,"n":1071},{"block":"ident_White","grp":"Ideology","var":"Moderate","i":2024,"val":0.5194,"se":null,"n":707},{"block":"ident_White","grp":"Education","var":"Four-year degree","i":2024,"val":0.397,"se":null,"n":1743},{"block":"ident_White","grp":"Education","var":"No four-year degree","i":2024,"val":0.5868,"se":null,"n":1779},{"block":"ident_White","grp":"Age","var":"18-29","i":2024,"val":0.4476,"se":null,"n":243},{"block":"ident_White","grp":"Age","var":"30-44","i":2024,"val":0.4673,"se":null,"n":783},{"block":"ident_White","grp":"Age","var":"45-64","i":2024,"val":0.5539,"se":null,"n":1097},{"block":"ident_White","grp":"Age","var":"65+","i":2024,"val":0.538,"se":null,"n":1270},{"block":"ident_White","grp":"Gender","var":"Men","i":2024,"val":0.5345,"se":null,"n":1663},{"block":"ident_White","grp":"Gender","var":"Women","i":2024,"val":0.4956,"se":null,"n":1869},{"block":"resRace","grp":"White","var":"mean","i":1986,"val":0.5955,"se":null,"n":836},{"block":"resRace","grp":"Black","var":"mean","i":1986,"val":0.3613,"se":null,"n":155},{"block":"resRace","grp":"White","var":"mean","i":1988,"val":0.6364,"se":null,"n":1349},{"block":"resRace","grp":"Black","var":"mean","i":1988,"val":0.3997,"se":null,"n":201},{"block":"resRace","grp":"Hispanic","var":"mean","i":1988,"val":0.547,"se":null,"n":136},{"block":"resRace","grp":"White","var":"mean","i":1990,"val":0.5816,"se":null,"n":737},{"block":"resRace","grp":"Black","var":"mean","i":1990,"val":0.3653,"se":null,"n":124},{"block":"resRace","grp":"Hispanic","var":"mean","i":1990,"val":0.5509,"se":null,"n":79},{"block":"resRace","grp":"White","var":"mean","i":1992,"val":0.6191,"se":null,"n":780},{"block":"resRace","grp":"Black","var":"mean","i":1992,"val":0.3683,"se":null,"n":119},{"block":"resRace","grp":"Hispanic","var":"mean","i":1992,"val":0.5504,"se":null,"n":74},{"block":"resRace","grp":"White","var":"mean","i":1994,"val":0.654,"se":null,"n":784},{"block":"resRace","grp":"Black","var":"mean","i":1994,"val":0.3978,"se":null,"n":101},{"block":"resRace","grp":"Hispanic","var":"mean","i":1994,"val":0.5892,"se":null,"n":90},{"block":"resRace","grp":"White","var":"mean","i":2000,"val":0.6406,"se":null,"n":1189},{"block":"resRace","grp":"Black","var":"mean","i":2000,"val":0.4182,"se":null,"n":149},{"block":"resRace","grp":"Hispanic","var":"mean","i":2000,"val":0.6039,"se":null,"n":105},{"block":"resRace","grp":"White","var":"mean","i":2004,"val":0.6376,"se":null,"n":754},{"block":"resRace","grp":"Black","var":"mean","i":2004,"val":0.4106,"se":null,"n":152},{"block":"resRace","grp":"Hispanic","var":"mean","i":2004,"val":0.5758,"se":null,"n":93},{"block":"resRace","grp":"White","var":"mean","i":2008,"val":0.6478,"se":null,"n":1039},{"block":"resRace","grp":"Black","var":"mean","i":2008,"val":0.4681,"se":null,"n":492},{"block":"resRace","grp":"Hispanic","var":"mean","i":2008,"val":0.5735,"se":null,"n":456},{"block":"resRace","grp":"White","var":"mean","i":2012,"val":0.6668,"se":null,"n":3274},{"block":"resRace","grp":"Black","var":"mean","i":2012,"val":0.4137,"se":null,"n":957},{"block":"resRace","grp":"Hispanic","var":"mean","i":2012,"val":0.6377,"se":null,"n":914},{"block":"resRace","grp":"Asian American","var":"mean","i":2012,"val":0.6503,"se":null,"n":84},{"block":"resRace","grp":"White","var":"mean","i":2016,"val":0.5825,"se":null,"n":2624},{"block":"resRace","grp":"Black","var":"mean","i":2016,"val":0.3353,"se":null,"n":338},{"block":"resRace","grp":"Hispanic","var":"mean","i":2016,"val":0.532,"se":null,"n":372},{"block":"resRace","grp":"Asian American","var":"mean","i":2016,"val":0.5227,"se":null,"n":114},{"block":"resRace","grp":"White","var":"mean","i":2020,"val":0.5102,"se":null,"n":5370},{"block":"resRace","grp":"Black","var":"mean","i":2020,"val":0.25,"se":null,"n":641},{"block":"resRace","grp":"Hispanic","var":"mean","i":2020,"val":0.4434,"se":null,"n":654},{"block":"resRace","grp":"Asian American","var":"mean","i":2020,"val":0.4752,"se":null,"n":246},{"block":"resRace","grp":"White","var":"mean","i":2024,"val":0.5149,"se":null,"n":3545},{"block":"resRace","grp":"Black","var":"mean","i":2024,"val":0.2898,"se":null,"n":436},{"block":"resRace","grp":"Hispanic","var":"mean","i":2024,"val":0.4635,"se":null,"n":504},{"block":"resRace","grp":"Asian American","var":"mean","i":2024,"val":0.4652,"se":null,"n":169},{"block":"item","grp":"class","var":"favorsAgree","i":2026,"val":12.5,"se":null,"n":40},{"block":"item","grp":"class","var":"slaveryAgree","i":2026,"val":77.5,"se":null,"n":40},{"block":"comp","grp":"class","var":"guessMedian","i":2026,"val":25.0,"se":null,"n":47},{"block":"comp","grp":"class","var":"guessMean","i":2026,"val":26.3617,"se":null,"n":47},{"block":"comp","grp":"class","var":"guessOver","i":2026,"val":80.8511,"se":null,"n":47},{"block":"ccap_exp","grp":"health","var":"B","i":2009,"val":-0.4218,"se":0.0468,"n":556},{"block":"ccap_exp","grp":"stimulus","var":"B","i":2009,"val":-0.3781,"se":0.0447,"n":517},{"block":"ccap_exp","grp":"health","var":"C","i":2009,"val":-0.2719,"se":0.0486,"n":554},{"block":"ccap_exp","grp":"stimulus","var":"C","i":2009,"val":-0.1854,"se":0.0504,"n":513},{"block":"ccap_exp","grp":"health","var":"D","i":2009,"val":-0.4497,"se":0.0506,"n":536},{"block":"ccap_exp","grp":"stimulus","var":"D","i":2009,"val":-0.4195,"se":0.0513,"n":497},{"block":"ccap_panel","grp":"voluntary","var":"least","i":2007,"val":14.6702,"se":null,"n":1693},{"block":"ccap_panel","grp":"voluntary","var":"most","i":2007,"val":48.1081,"se":null,"n":1693},{"block":"ccap_panel","grp":"voluntary","var":"least","i":2009,"val":4.4767,"se":null,"n":1693},{"block":"ccap_panel","grp":"voluntary","var":"most","i":2009,"val":75.2043,"se":null,"n":1693}]};
+const $ = s => document.querySelector(s);
+const SVGNS = "http://www.w3.org/2000/svg";
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const f1 = v => v.toFixed(1);
+const at = (s,y) => { const r = D.series[s].find(p=>p[0]===y); return r ? r[1] : null; };
+const lastAtOrBefore = (s,y) => { const d = D.series[s].filter(p=>p[0]<=y);
+  return d.length ? d[d.length-1] : null; };
+const mean = a => a.reduce((x,y)=>x+y,0)/a.length;
+
+function el(tag, attrs, text){
+  const n = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  if (text !== undefined) n.textContent = text;
+  return n;
+}
+function clear(svg){ while (svg.firstChild) svg.removeChild(svg.firstChild); }
+
+/* A small linear-axis chart. Written out rather than pulled from a library
+   because this page has to open with no network at all. */
+// Pen speed for the drawing lines, in px per ms. One constant for the deck so
+// every chart draws at the same rate; duration falls out of the path length.
+const DRAW_PX_PER_MS = 0.30;   // ~2.6s across a full-width series, as in the sorting deck
+const ASK_FS = 30;                       // big enough to be read from the back
+// SVG text does not wrap, so break the question into rows by hand. Words only:
+// a mid-word break in 30px bold is more distracting than a short line.
+function wrapAsk(str, max){
+  const out=[]; let cur='';
+  for (const w of String(str).split(/\s+/)){
+    if (cur && (cur+' '+w).length > max){ out.push(cur); cur=w; }
+    else cur = cur ? cur+' '+w : w;
+  }
+  if (cur) out.push(cur);
+  return out;
+}
+function chart(svg, cfg){
+  clear(svg);
+  const vb = svg.viewBox.baseVal, W = vb.width, H = vb.height;
+  const P = Object.assign({l:64, r:170, t:20, b:44}, cfg.pad||{});
+  const x0=P.l, x1=W-P.r, y0=P.t, y1=H-P.b;
+  const [xa,xb] = cfg.xdom, [ya,yb] = cfg.ydom;
+  const px = v => x0 + (v-xa)/(xb-xa)*(x1-x0);
+  const py = v => y1 - (v-ya)/(yb-ya)*(y1-y0);
+  const RULE=css('--rule-2'), MUT=css('--ink-3');
+
+  (cfg.bands||[]).forEach(b=>svg.appendChild(el('rect',
+    {x:px(b.from), y:y0, width:px(b.to)-px(b.from), height:y1-y0,
+     fill:css('--accent'), opacity:0.09})));
+  cfg.yticks.forEach(v=>{
+    svg.appendChild(el('line',{x1:x0,x2:x1,y1:py(v),y2:py(v),stroke:RULE,'stroke-width':1}));
+    svg.appendChild(el('text',{x:x0-11,y:py(v)+5,'text-anchor':'end','font-size':15,
+      fill:MUT},(cfg.yfmt?cfg.yfmt(v):v)));
+  });
+  cfg.xticks.forEach(v=>svg.appendChild(el('text',
+    {x:px(v),y:y1+26,'text-anchor':'middle','font-size':15,fill:MUT},v)));
+  // What the vertical axis actually is. Several of these charts plot a
+  // quantity -- the in-party minus out-party gap -- that is obvious to whoever
+  // built the slide and invisible to the room.
+  if (cfg.ylab) svg.appendChild(el('text',
+    {x:18,y:(y0+y1)/2,'text-anchor':'middle','font-size':15,'font-weight':700,
+     fill:MUT,transform:`rotate(-90 18 ${(y0+y1)/2})`}, cfg.ylab));
+  (cfg.rules||[]).forEach(r=>{
+    svg.appendChild(el('line',{x1:px(r.at),x2:px(r.at),y1:y0-6,y2:y1,
+      stroke:r.color||MUT,'stroke-width':1.4,'stroke-dasharray':'6 5'}));
+    if (r.label) svg.appendChild(el('text',{x:px(r.at)-10,y:y0+6,'text-anchor':'end',
+      'font-size':14,'font-weight':700,fill:r.color||MUT}, r.label));
+  });
+  let stageIx = 0;                       // which .stage this line will become
+  cfg.lines.forEach(L=>{
+    const d = L.data.filter(p=>p[0]>=xa && p[0]<=xb);
+    if (!d.length) return;
+    const XY = d.map(p=>[px(p[0]),py(p[1])]);
+    // Cumulative PATH length, which on a jagged series is a different number
+    // from x-position: a dot must pop at the moment the pen reaches it, not at
+    // its share of the width.
+    const cum=[0];
+    for(let k=1;k<XY.length;k++) cum.push(cum[k-1] +
+      Math.hypot(XY[k][0]-XY[k-1][0], XY[k][1]-XY[k-1][1]));
+    const tot = cum[cum.length-1] || 1;
+    // Constant pen speed across every line in the deck, so a short series does
+    // not crawl and a long one does not race.
+    const dur = Math.max(700, Math.min(3400, Math.round(tot / DRAW_PX_PER_MS)));
+
+    // The ghost: the whole shape, faint, so the reader sees that something goes
+    // here before it is drawn. Outside the stage — it is visible from the start.
+    if (!L.dash && L.ghost!==false)
+      svg.appendChild(el('polyline',{class:'ghost-line',fill:'none',
+        stroke:css('--ghost'),'stroke-width':1.6,
+        points:XY.map(q=>q.join(',')).join(' ')}));
+
+    // A DASHED line cannot also be a drawing line: .draw owns stroke-dasharray,
+    // so animating one would erase the dash pattern. Dashed series are context
+    // — the national reference, the neutral rule — and never stage.
+    const staged = !L.dash && L.ghost!==false;
+    const host = staged
+      ? el('g',{class:'stage'+(L.stageClass?' '+L.stageClass:''),style:`--dur:${dur}ms`})
+      : svg;
+    host.appendChild(el('polyline',Object.assign(
+      {points:XY.map(q=>q.join(',')).join(' '),
+       fill:'none', stroke:L.color, 'stroke-width':L.w||3,
+       'stroke-linejoin':'round','stroke-linecap':'round',
+       'stroke-dasharray':L.dash||'none', opacity:L.op||1,
+       style:`--dur:${dur}ms`},
+      staged ? {class:'draw'} : {})));
+    if (L.dots!==false) d.forEach((p,k)=>host.appendChild(el('circle',
+      {class:staged?'pop':'',cx:XY[k][0],cy:XY[k][1],r:(L.w||3)>2.5?4:3,fill:L.color,
+       opacity:L.op||1,
+       style:`transition-delay:${staged?Math.round(cum[k]/tot*dur):0}ms`})));
+    if (staged) svg.appendChild(host);
+    if (L.label){ const p=d[d.length-1];
+      (staged?host:svg).appendChild(el('text',{x:px(p[0])+12,y:py(p[1])+5,
+        'font-size':16,'font-weight':700,fill:L.color, opacity:L.op||1}, L.label)); }
+
+    // The question this line answers, parked at the point the line will reach,
+    // right-aligned so it grows leftward into empty plot rather than off the
+    // edge. Tagged with its own stage index; paintStages shows the one whose
+    // turn is next.
+    if (staged && L.ask){
+      const p = d[d.length-1], ax = px(p[0]) - 16;
+      const rows = wrapAsk(L.ask, Math.max(18, Math.floor((ax - x0) / (ASK_FS*0.5))));
+      let ay = py(p[1]) - 20 - (rows.length-1)*(ASK_FS+4);
+      if (ay < y0 + ASK_FS) ay = py(p[1]) + 34;          // no room above; go below
+      const gAsk = el('g',{class:'ask','data-stage':String(stageIx)});
+      rows.forEach((r,i)=>gAsk.appendChild(el('text',
+        {x:ax, y:ay + i*(ASK_FS+4), 'text-anchor':'end', 'font-size':ASK_FS,
+         'font-weight':700, fill:css('--ink')}, r)));
+      svg.appendChild(gAsk);
+    }
+    if (staged) stageIx++;
+  });
+  (cfg.marks||[]).forEach(m=>{
+    svg.appendChild(el('circle',{cx:px(m.x),cy:py(m.y),r:m.r||8,fill:m.color,
+      stroke:css('--card'),'stroke-width':2.5}));
+    if (m.label) svg.appendChild(el('text',{x:px(m.x)+14,y:py(m.y)+6,'font-size':17,
+      'font-weight':700,fill:m.color}, m.label));
+  });
+  return {px,py,x0,x1,y0,y1,svg};
+}
+/* A labeled dot on a chart, for calling out one point. */
+function svgMark(g,x,y,color,label){
+  g.svg.appendChild(el('circle',{cx:g.px(x),cy:g.py(y),r:8,fill:css('--paper')}));
+  g.svg.appendChild(el('circle',{cx:g.px(x),cy:g.py(y),r:5.5,fill:color}));
+  if(label!==undefined) g.svg.appendChild(el('text',{x:g.px(x),y:g.py(y)-16,
+    'text-anchor':'middle','font-size':15,'font-weight':700,fill:color},label));
+}
+// The svg scales to the column width, so its rendered height is width*H/1000 --
+// a fixed number the slide cannot negotiate with. 430 put eight chart slides
+// over the bottom of a 720p frame, which scrolls on a laptop and is simply
+// missing on a projector. Audited at 1280x720; see the note at the foot of
+// this file for how to re-run that check.
+const SVG = (id,h) => `<div class="chart"><svg id="${id}" viewBox="0 0 1000 ${h||384}"></svg></div>`;
+const pressed = id => $(id).getAttribute('aria-pressed')==='true';
+function bindToggles(ids, fn){
+  ids.forEach(id=>$(id).addEventListener('click',()=>{
+    $(id).setAttribute('aria-pressed', pressed(id)?'false':'true');
+    // a toggle rebuilds the chart: re-arm, then restore what was already shown
+    fn(); const deck=$("#deck"); arm(deck);
+    state.stages=deck.querySelectorAll('.stage').length;
+    const shown = Math.max(1, Math.min(state.sub||99, state.stages));
+    paintStages(deck, shown, false);
+    deck.dataset.drawn = (shown >= state.stages) ? "1" : "0";
+  }));
+}
+
+/* ─── layout helpers, mirroring the PowerPoint's own ─────────────────────
+   R3() is the web twin of findings() in the .pptx builder and carries the
+   same cap: at most three rows a slide. If a section grows a fourth it gets
+   another slide, not a smaller font. ──────────────────────────────────── */
+function R3(rows){
+  if(rows.length>3) throw new Error("R3(): "+rows.length+" rows — split the slide");
+  return `<div class="rows">`+rows.map(r=>`<div class="row">
+    <div class="rl"><span class="tag" style="color:${r.color||'var(--accent)'}">${r.tag}</span>
+      <span class="rbig">${r.big}</span></div>
+    <div class="rt">${r.text}</div>
+    <div class="rs">${r.src||''}</div></div>`).join('')+`</div>`;
+}
+const TWO=(a,b)=>`<div class="two"><div class="tbox">
+  <span class="tag" style="color:var(--blue)">${a.tag}</span><b>${a.head}</b><p>${a.text}</p></div>
+  <div class="tbox"><span class="tag" style="color:var(--accent)">${b.tag}</span>
+  <b>${b.head}</b><p>${b.text}</p></div></div>`;
+const BAND=(k,t)=>`<div class="band"><span class="tag">${k}</span><p>${t}</p></div>`;
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Polarization V — Race and Polarization.  THE SLIDES, DEFINED ONCE.
+
+   Both decks render from this file:
+     2026-09-24-polarization-v.build.js           → the PowerPoint
+     materials/build-polarization-v-interactive.py → the web deck
+   so the two cannot drift. Edit a slide here and rebuild both
+   (./build-polarization-v.sh).
+
+   THE RULE FOR EVERY SLIDE: one job.
+     title   the takeaway, as a sentence. Readable in three seconds.
+     look    what you are looking at, in plain words (charts only).
+     body    ONE chart, ONE number, or at most four short phrases.
+     notes   everything else, as SHOWS / SAY / ASK.
+   If a slide needs a paragraph to be understood, it is two slides.
+
+   The module is plain JavaScript with no dependencies: it is `require`d by
+   node and pasted into the web page as-is. It takes the rows of
+   materials/2026-09-24-race.csv and returns the slide list.
+   ─────────────────────────────────────────────────────────────────────────── */
+function buildSlides(ROWS){
+  const find = (b,g,v,y) => ROWS.find(r => r.block===b && r.grp===g && r.var===v && r.i===y);
+  const V = (b,g,v,y) => { const r = find(b,g,v,y);
+    if (!r) throw new Error(`race.csv has no ${b}/${g}/${v}/${y}`); return r.val; };
+  const SER = (b,g,v) => ROWS.filter(r => r.block===b && r.grp===g && r.var===v)
+    .sort((a,c)=>a.i-c.i).map(r => [r.i, r.val, r.se]);
+  const ident = (dim,g,y) => { const r = find('ident_all',dim,g,y); return r ? r.val : null; };
+  const f0 = v => Math.round(v).toString();
+  const f2 = v => v.toFixed(2).replace(/^(-?)0\./,'$1.');
+  const gap = grp => SER('wwc',grp,'hi').map(([y,v]) => [y, v - V('wwc',grp,'lo',y)]);
+  const first = a => a[0], last = a => a[a.length-1];
+
+  const RESG = gap('res'), IDEOG = gap('ideo');
+  const rPid = y => V('res','W','rPid',y), rIdeo = y => V('res','W','rIdeo',y);
+  const resP = (p,y) => V('res',p,'mean',y);
+  const hc = SER('hc','W','res'), pid = SER('pidres','W','res'), vr = SER('voteres','W','res');
+  const coef = (s,y) => s.find(r=>r[0]===y)[1];
+  const nomRows = blk => ROWS.filter(r=>r.block===blk && r.grp==='nominee').sort((a,b)=>a.i-b.i);
+  const cand = y => V('cand','nominee', nomRows('cand').find(r=>r.i===y).var, y);
+  const gop  = y => V('cand','party','GOP',y);
+  const gp = (dim,a,b,y) => ident(dim,a,y) - ident(dim,b,y);
+  const itemShare = (k,smp,c) => V('itemdist',k,`${smp}:${c}`,2024);
+
+  const ITEMS = [
+    {k:'favors', hi:'agree', text:'Irish, Italians, Jewish and many other minorities overcame prejudice and worked their way up. Blacks should do the same without any special favors.', short:'“…without any special favors.”'},
+    {k:'slavery', hi:'disagree', text:'Generations of slavery and discrimination have created conditions that make it difficult for Blacks to work their way out of the lower class.', short:'“Generations of slavery and discrimination…”'},
+    {k:'deserve', hi:'disagree', text:'Over the past few years, Blacks have gotten less than they deserve.', short:'“…gotten less than they deserve.”'},
+    {k:'tryhard', hi:'agree', text:'It’s really a matter of some people not trying hard enough; if Blacks would only try harder they could be just as well off as Whites.', short:'“…if Blacks would only try harder…”'},
+  ];
+  const ordered = (it,smp) => (it.hi==='agree'?[1,2,3,4,5]:[5,4,3,2,1]).map(c=>itemShare(it.k,smp,c));
+  const stackRows = smp => ITEMS.map(it => ({label: it.short, shares: ordered(it,smp)}));
+
+  const OBAMA = {from:2009, to:2017, label:'Obama in office'};
+  const SRC_ANES = 'ANES cumulative file, weighted.';
+
+  const S = [];
+  const add = o => S.push(o);
+
+  /* ═══════════════════════════════ opening ═══════════════════════════════ */
+  add({type:'title', id:'title', kicker:'Polarization V', title:'Race and Polarization',
+    sub:'The oldest dividing line, and how it gets into everything else',
+    foot:'84-309 · Thursday, September 24, 2026',
+    notes:`THE ONE SENTENCE: racial attitudes did not become more common. They became more POLITICAL. The level fell; the weight rose.
+
+HOW THE DECK WORKS. Every slide has one job. The title is the takeaway; the small gray line says what you are looking at. Read the title, point at the picture, and the notes below each slide tell you what to say.
+
+SIX PARTS: (1) Tuesday's missing bar, (2) how you measure racial attitudes, (3) race sorted into party, (4) spillover: Tesler, (5) activation: Mason, (6) the big picture.
+
+IF YOU ARE SHORT ON TIME, the section dividers are natural cut points. Part 2 can be compressed to the resentment slides alone; Part 5 can stop after the nominee chart.
+
+Peer reviews are due tonight at 11:59. Say it now and at the end.`});
+
+  add({type:'cards', id:'unit', title:'The unit so far', look:'Five sessions, one question',
+    highlight:4, cards:[
+      {h:'Ideology', t:'Parties split. Public, less.', tag:'I'},
+      {h:'Sorting', t:'Party lines up with identity.', tag:'II'},
+      {h:'Affect', t:'We dislike the other side.', tag:'III'},
+      {h:'Negative partisanship', t:'We vote against them.', tag:'IV'},
+      {h:'Race', t:'Sorted first. Sorts hardest.', tag:'V · TODAY'}],
+    notes:`SHOWS: where today fits.
+SAY: Every session has been one question in different clothes: what turns a disagreement into an identity? Race is not a sixth topic. It is the case where every mechanism from the first four sessions is strongest, and the oldest.`});
+
+  add({type:'statement', id:'question', title:'Today’s question',
+    big:'How does a feeling about a group become a feeling about a party?',
+    notes:`SHOWS: the question for the whole session.
+SAY: Hold on to "a feeling about a group." Everything today is about how that feeling gets attached to something political: a party, a policy, a candidate.`});
+
+  /* ═══════════════════════ part 1: Tuesday's missing bar ═════════════════ */
+  add({type:'section', id:'s1', part:'Part 1', title:'Tuesday’s missing bar',
+    notes:`Start from where they already are: Tuesday's test of the White working class.`});
+
+  add({type:'cards', id:'tuesday', title:'Tuesday: ideology beat economics',
+    look:'Why are White voters without a degree Republican? Three answers we tested',
+    cards:[{h:'Ideology', t:'Big, and steady for forty years', color:'ideo'},
+           {h:'Income', t:'Points the wrong way', color:'mut'},
+           {h:'Economic mood', t:'Flips with the president', color:'mut'}],
+    notes:`SHOWS: Tuesday's result, in three words each.
+SAY: Ideology predicted the vote every election. Income ran backwards for the economic story. Feelings about the economy flipped sign depending on which party held the White House, which means they follow party rather than drive it.`});
+
+  add({type:'statement', id:'untested', title:'What we did not test',
+    big:'Race.',
+    sub:'Abramowitz’s own argument names “economic, racial and cultural issues.” We tested two of the three.',
+    notes:`SAY: Abramowitz's realignment is about economic, racial AND cultural issues. We charted the economic and ideological parts.
+ASK: If we add a bar for racial attitudes, will it be bigger or smaller than ideology? Growing or flat? Get two predictions on the board before the next slide.`});
+
+  add({type:'line', id:'fifth-bar', title:'Race now splits the White working class',
+    look:'How much more Republican: most vs. least resentful (purple), conservatives vs. liberals (gray)',
+    xdom:[1988,2024], xticks:RESG.map(r=>r[0]), ydom:[0,100], yticks:[0,25,50,75,100], yfmt:'pts',
+    series:[{label:'Ideology gap', color:'ideo', data:IDEOG},
+            {label:'Racial resentment gap', color:'res', data:RESG}],
+    callouts:[{x:first(RESG)[0], y:first(RESG)[1], text:`${f0(first(RESG)[1])} pts`, color:'res', pos:'below'},
+              {x:last(RESG)[0], y:last(RESG)[1], text:`${f0(last(RESG)[1])} pts`, color:'res', pos:'below'}],
+    source:'White voters without a four-year degree. Two-party presidential vote. “Resentful” = above the scale midpoint. '+SRC_ANES,
+    notes:`SHOWS: among White voters without a degree, the difference in Republican vote between the most and least racially resentful.
+SAY: ${f0(first(RESG)[1])} points in ${first(RESG)[0]}. ${f0(last(RESG)[1])} points in ${last(RESG)[0]}. It more than tripled, and the big jump comes in 2008, the first election with a Black nominee.
+SAY: The ideology gap grew too. The two lines are not independent: resentment and conservatism travel together more every year. That overlap is itself the story of today.
+DON'T compare the heights of the two lines; compare how they changed.`});
+
+  /* ═══════════════════ part 2: measuring racial attitudes ════════════════ */
+  add({type:'section', id:'s2', part:'Part 2', title:'How do you measure racial attitudes?',
+    notes:`Most students have never seen how this is done. Take your time here; everything later depends on it.`});
+
+  add({type:'cards', id:'three-q', title:'Three questions people mix up',
+    cards:[{h:'Level', t:'How many people hold the attitude?', color:'mut'},
+           {h:'Sorting', t:'Which party are they in?', color:'blue'},
+           {h:'Weight', t:'How much does it drive other opinions?', color:'accent'}],
+    notes:`SHOWS: the three different things "race matters more in politics" can mean.
+SAY: People usually mean LEVEL: more prejudice. Political scientists usually mean SORTING and WEIGHT. All three can move independently, and today you will see the level fall while the weight rises.
+ANALOGY: the share of tall people barely changes; whether height predicts who plays in the NBA changed a lot.`});
+
+  add({type:'cards', id:'cant-ask', title:'You can’t just ask “are you racist?”',
+    cards:[{h:'They won’t say', t:'The norm against prejudice is strong', color:'accent'},
+           {h:'They may not know', t:'Attitudes can work without being endorsed', color:'res'},
+           {h:'Everyone passes', t:'Old questions no longer tell people apart', color:'ideo'}],
+    notes:`SHOWS: why measuring racial attitudes is hard.
+SAY: (1) Social desirability: people give the answer the norm requires, especially to an interviewer. (2) People can sincerely deny attitudes that still shape their judgments. (3) Questions like "should schools be segregated?" once split the country; now almost everyone gives the same answer, so they can't explain anything.
+ASK: "If you had to measure this, what would you ask?" They will reinvent the next six slides.`});
+
+  const MEAS = [
+    {id:'m1', name:'Old-fashioned racism', ex:'“Should White and Black students go to the same schools or separate schools?”',
+     pro:'Clear meaning; 70 years of data', con:'Almost everyone now gives the same answer', dir:'direct',
+     notes:`SHOWS: the oldest kind of measure.
+SAY: From the General Social Survey and its predecessors, asked since the 1940s. Support for separate schools fell from a majority of White Americans to single digits: one of the largest attitude changes ever recorded. Great news, useless measure: when everyone agrees, it can't predict anything.`},
+    {id:'m2', name:'Feeling thermometer', ex:'“How warm or cold do you feel toward Black Americans?” 0 to 100',
+     pro:'Simple; same scale for every group', con:'Easy to see the “right” answer', dir:'direct',
+     notes:`SHOWS: the instrument they know from Sept 10.
+SAY: Same weaknesses as with parties: answers pile up at 50 and 100, and people know what a warm answer looks like. Mason et al. use it because it covers many groups on one scale.`},
+    {id:'m3', name:'Stereotype ratings', ex:'“Where would you rate Blacks from hard-working to lazy?” 1 to 7',
+     pro:'Unmistakably about race', con:'People hide these answers', dir:'direct',
+     notes:`SHOWS: the most direct survey measure still in use.
+SAY: ANES since 1992. Tesler uses it as his second measure because nobody can say it is "really about conservatism." Its weakness is the mirror image: it is so obviously about race that people shade their answers or choose the middle.`},
+    {id:'m4', name:'Racial resentment', ex:'Agree or disagree: “If Blacks would only try harder they could be just as well off as Whites.”',
+     pro:'People answer candidly', con:'Overlaps with conservatism', dir:'around',
+     notes:`SHOWS: the measure every chart today uses.
+SAY: Instead of asking about the group, ask how people EXPLAIN racial inequality: effort or discrimination? People answer candidly because it sounds like a view about hard work. That same feature is why critics say it partly measures conservatism. More in a few slides.`},
+    {id:'m5', name:'Implicit Association Test', ex:'How fast you pair Black and White faces with “good” and “bad” words',
+     pro:'Hard to fake', con:'Unstable; weak link to behavior', dir:'around',
+     notes:`SHOWS: the measure students have most likely heard of.
+SAY: Reaction times, not answers. The problems are serious: the same person's score changes a lot between sittings, and scores predict individual behavior weakly. Political scientists rarely use it.`},
+    {id:'m6', name:'Hidden-answer designs', ex:'“How many of these make you angry?” Half the sample’s list adds “a Black family moving next door.”',
+     pro:'Nobody reveals their own answer', con:'Only a group average; can’t link to a vote', dir:'around',
+     notes:`SHOWS: list experiments (and their cousin, audit studies).
+SAY: Nobody says WHICH items anger them, only how many. The difference in averages between the two halves estimates the share angered by the added item. Kuklinski, Cobb and Gilens (1997) found far more of it in the South than direct questions showed. Audit studies send identical résumés with different names (Bertrand and Mullainathan 2004) and measure behavior. The limit: you learn about a group, never a person, so you can't ask whether it predicts that person's vote.`},
+  ];
+  MEAS.forEach((m,i)=>add({type:'measure', id:m.id, title:`Measure ${i+1}: ${m.name}`,
+    look: m.dir==='direct' ? 'Asking directly' : 'Asking around the question', ...m}));
+
+  add({type:'cards', id:'tradeoff', title:'Every measure makes a trade',
+    cards:[{h:'Ask directly', t:'Clearly about race — so people shade their answers', color:'accent'},
+           {h:'Ask around it', t:'Candid answers — but is it really about race?', color:'blue'}],
+    notes:`SHOWS: the six measures in two groups.
+SAY: Direct: old-fashioned racism, thermometers, stereotypes. Indirect: resentment, implicit measures, hidden-answer designs. There is no measure without a weakness. The honest move, which both readings make, is to use two measures with OPPOSITE weaknesses and see if they agree.`});
+
+  add({type:'cards', id:'replaced', title:'What replaced old-fashioned racism',
+    cards:[{h:'1950s–60s', t:'“Black people are inferior; keep the races apart”', color:'mut'},
+           {h:'1980s on', t:'“Discrimination is over; they should try harder”', color:'accent'}],
+    source:'Kinder and Sears 1981 (“symbolic racism”); Kinder and Sanders 1996 (“racial resentment”).',
+    notes:`SHOWS: the idea behind the resentment scale.
+SAY: By the 1980s almost nobody gave the old answers, yet racial attitudes still predicted opposition to busing and affirmative action. Kinder and Sears called what remained "symbolic racism": a moral judgment that Black Americans violate values like hard work and self-reliance. Kinder and Sanders renamed it racial resentment.`});
+
+  add({type:'cards', id:'themes', title:'Four themes, one question each',
+    cards:[{h:'Effort', t:'They should try harder'},{h:'Discrimination', t:'It no longer holds anyone back'},
+           {h:'Demands', t:'They want special favors'},{h:'Deservingness', t:'They get more than they deserve'}],
+    notes:`SHOWS: the four ideas the scale measures.
+SAY: Each maps to one question on the next slide. All four are about EXPLANATIONS for inequality, not about liking or disliking anyone.`});
+
+  add({type:'items', id:'instrument', title:'The four questions the ANES asks',
+    look:'Racial resentment, since 1986. Agree or disagree, five points.',
+    items: ITEMS.map(it => ({text: it.text, tag:`resentful if you ${it.hi.toUpperCase()}`, k:it.k, hi:it.hi})),
+    refs:[['Black', ident('Race','Black',2024), 'blk'], ['Democrats', ident('Party','Democrat',2024), 'dem'],
+          ['Everyone', ident('All','Everyone',2024), 'ideo'], ['Republicans', ident('Party','Republican',2024), 'rep']],
+    source:'Averaged into one score from 0 (least) to 1 (most). Two items point each way.',
+    notes:`SHOWS: the actual instrument.
+SAY: Read the first one aloud. Point out that two are resentful if you AGREE and two if you DISAGREE. That guards against people who agree with everything.
+WEB VERSION: the buttons are live. Let them answer on their own devices; the score appears on their screen only. Nothing is saved or sent.`});
+
+  add({type:'items', id:'sr2k', title:'The full symbolic racism scale adds four more',
+    look:'Symbolic Racism 2000 Scale (Henry and Sears 2002): the four items the ANES does not ask',
+    items:[{text:'Some say that Black leaders have been trying to push too fast. Others feel they haven’t pushed fast enough. What do you think?', tag:'resentful if “TOO FAST”'},
+           {text:'How much of the racial tension that exists in the United States today do you think Blacks are responsible for creating?', tag:'resentful if “ALL” or “MOST”'},
+           {text:'How much discrimination against Blacks do you feel there is in the United States today, limiting their chances to get ahead?', tag:'resentful if “LITTLE” or “NONE”'},
+           {text:'Over the past few years, Blacks have gotten more economically than they deserve.', tag:'resentful if you AGREE'}],
+    source:'The other four items are the ANES’s four. Same theory, longer instrument.',
+    notes:`SHOWS: what "symbolic racism" looks like as a measure.
+SAY: The full eight-item scale (Henry and Sears 2002) is what psychologists use; the ANES asks the four on the previous slide to save time. People use the two names almost interchangeably.
+ONE SENTENCE OF HISTORY: early 1970s versions included questions about busing itself. Critics (Sniderman and Tetlock 1986) said you can't use a scale that contains busing to "explain" opinions on busing. That is why no item mentions a program.`});
+
+  add({type:'stack', id:'answers', title:'The country splits roughly in thirds',
+    look:'How Americans answered in 2024. Resentful answers on the left, whatever the wording.',
+    rows: stackRows('all'), rowsFor: stackRows,
+    samples:[['all','Everyone'],['White','White'],['Black','Black'],['Hispanic','Hispanic']],
+    source:'ANES 2024, all respondents, weighted. Number at left: share giving a resentful answer.',
+    notes:`SHOWS: answers to each item. Red = resentful side, blue = the other side, gray = neither.
+SAY: No item is lopsided. On every one, about a third give the resentful answer, a third the other, and a big middle won't commit.
+WEB VERSION: switch to White and Black respondents. On "special favors," ${f0(itemShare('favors','White',1)+itemShare('favors','White',2))}% of White respondents agree vs. ${f0(itemShare('favors','Black',1)+itemShare('favors','Black',2))}% of Black respondents.`});
+
+  add({type:'hbars', id:'class', title:'This class is far less resentful than the country',
+    look:'Share who AGREE with each statement. You answered two of the four in August.',
+    series:[{label:'This class', color:'accent'},{label:'The country, 2024', color:'ideo'}],
+    rows:[{label:'“…without any special favors”', vals:[V('item','class','favorsAgree',2026), V('item','anes','favorsAgree',2024)]},
+          {label:'“Generations of slavery and discrimination…”', vals:[V('item','class','slaveryAgree',2026), V('item','anes','slaveryAgree',2024)]}],
+    domain:[0,100], fmt:'pct',
+    source:`${find('item','class','favorsAgree',2026).n} students. Same words, same scale. The room is younger, more educated, more Asian American and more Democratic than the country.`,
+    notes:`SHOWS: the room vs. the country on identical wording.
+SAY: ${f0(V('item','class','favorsAgree',2026))}% here agree with "special favors," ${f0(V('item','anes','favorsAgree',2024))}% of the country. ${f0(V('item','class','slaveryAgree',2026))}% here agree with "slavery and discrimination," ${f0(V('item','anes','slaveryAgree',2024))}% of the country.
+ASK: "Why might a room like this answer so differently?" Age, education, party: all correct, and all things the scale tracks. That sets up "is it really about race?"`});
+
+  const YRS = [{label:'1988', color:'light'},{label:'2024', color:'res'}];
+  add({type:'hbars', id:'by-race', title:'Black Americans score lowest. White Americans highest.',
+    look:'Average racial resentment, 0 (least) to 1 (most)', series:YRS, domain:[0,.8], fmt:'r2',
+    rows:['White','Hispanic','Asian American','Black'].map(g=>({label:g, vals:[ident('Race',g,1988), ident('Race',g,2024)]})),
+    source:'Asian Americans too few to estimate in 1988. '+SRC_ANES,
+    notes:`SHOWS: resentment by race and ethnicity, 1988 (gray) and 2024 (purple).
+SAY: The racial gap is the biggest gap there is: Black respondents ${f2(ident('Race','Black',2024))}, White respondents ${f2(ident('Race','White',2024))}. And every group is lower in 2024 than in 1988.`});
+
+  add({type:'hbars', id:'by-party', title:'In 1988 the parties barely differed. Now they do.',
+    look:'Average racial resentment, 0 to 1', series:YRS, domain:[0,.8], fmt:'r2',
+    rows:['Republican','Independent','Democrat'].map(g=>({label:g+'s', vals:[ident('Party',g,1988), ident('Party',g,2024)]}))
+      .concat(['Conservative','Moderate','Liberal'].map(g=>({label:g+'s', vals:[ident('Ideology',g,1988), ident('Ideology',g,2024)]}))),
+    source:'All respondents; partisans include leaners. '+SRC_ANES,
+    notes:`SHOWS: resentment by party and ideology, 1988 vs. 2024.
+SAY: Democrats ${f2(ident('Party','Democrat',1988))} → ${f2(ident('Party','Democrat',2024))}. Republicans ${f2(ident('Party','Republican',1988))} → ${f2(ident('Party','Republican',2024))}. Republicans barely moved; Democrats fell by almost half. Liberals vs. conservatives: same story, sharper.`});
+
+  add({type:'hbars', id:'by-edu-age', title:'College graduates and the young score lower',
+    look:'Average racial resentment, 0 to 1', series:YRS, domain:[0,.8], fmt:'r2',
+    rows:[['No four-year degree','No degree'],['Four-year degree','Degree']].map(g=>({label:g[1], vals:[ident('Education',g[0],1988), ident('Education',g[0],2024)]}))
+      .concat(['65+','45-64','30-44','18-29'].map(g=>({label:'Age '+g.replace('-','–'), vals:[ident('Age',g,1988), ident('Age',g,2024)]}))),
+    source:SRC_ANES,
+    notes:`SHOWS: resentment by education and age.
+SAY: A degree gap in both years. The age gap is new: in 1988 the young scored the same as the old; in 2024 18–29 year-olds are lowest (${f2(ident('Age','18-29',2024))} vs. ${f2(ident('Age','65+',2024))} for 65+). This is the row about the people in this room.`});
+
+  add({type:'line', id:'race-time', title:'Every group dropped after 2012',
+    look:'Average racial resentment, 0 to 1, by race and ethnicity',
+    xdom:[1986,2024], xticks:[1986,1994,2004,2012,2016,2020,2024], ydom:[.2,.7], yticks:[.2,.3,.4,.5,.6,.7], yfmt:'r2',
+    series:[{label:'White', color:'ideo', data:SER('resRace','White','mean')},
+            {label:'Hispanic', color:'hisp', data:SER('resRace','Hispanic','mean')},
+            {label:'Asian American', color:'res', data:SER('resRace','Asian American','mean')},
+            {label:'Black', color:'blk', data:SER('resRace','Black','mean')}],
+    source:'Hispanic from 1988, Asian American from 2012, when samples reach 60. '+SRC_ANES,
+    notes:`SHOWS: resentment over time for each group.
+SAY: Flat for 25 years, then every group falls between 2012 and 2020 at the same time.
+ASK: What happened? Ferguson (2014), George Floyd (2020), Trump making it partisan, and a change in what people feel comfortable saying. We can't separate those here, and you should say so.`});
+
+  add({type:'stats', id:'gaps', title:'The race gap held. The party gap tripled.',
+    look:'Difference in average resentment between groups, 1988 → 2024',
+    stats:[{label:'White minus Black', value:`${f2(gp('Race','White','Black',1988))} → ${f2(gp('Race','White','Black',2024))}`, color:'mut'},
+           {label:'Republicans minus Democrats', value:`${f2(gp('Party','Republican','Democrat',1988))} → ${f2(gp('Party','Republican','Democrat',2024))}`, color:'accent'},
+           {label:'65+ minus 18–29', value:`${f2(gp('Age','65+','18-29',1988))} → ${f2(gp('Age','65+','18-29',2024))}`, color:'blue'}],
+    notes:`SHOWS: the three previous slides reduced to three numbers.
+SAY: Groups that already differed still differ by the same amount. The gap that CHANGED is party. That is sorting, and it is Part 3.`});
+
+  add({type:'cards', id:'fight', title:'Is it prejudice, or conservatism?',
+    cards:[{h:'Prejudice', t:'The questions name Black Americans. Nobody asks them about the Irish.', color:'accent'},
+           {h:'Conservatism', t:'They’re about effort and government help. A small-government conservative could agree.', color:'ideo'}],
+    source:'The standard fix: hold ideology constant, and check a second measure. Both readings do this.',
+    notes:`SHOWS: the long-running fight over the measure.
+SAY: Every result today is open to the objection on the right. Better they hear it from you now. Left side: the items are about one group in particular, and they predict racial-policy views even among people with identical views on government. Right side (Sniderman and Tetlock; Carmines, Sniderman and Easter): the items use the vocabulary of individualism, so they are bound to track conservatism.
+DON'T resolve it. The next chart makes it harder.`});
+
+  /* ═══════════════════════ part 3: race sorted into party ════════════════ */
+  add({type:'section', id:'s3', part:'Part 3', title:'Race sorted into party',
+    notes:`From "who scores high" to "which party they're in."`});
+
+  add({type:'line', id:'sorted', title:'Resentment now predicts party as well as ideology',
+    look:'How closely resentment tracks party ID (purple) and ideology (gray). White respondents.',
+    xdom:[1986,2024], xticks:[1986,1994,2004,2012,2024], ydom:[0,.8], yticks:[0,.2,.4,.6,.8], yfmt:'r2', ylab:'correlation',
+    bands:[OBAMA],
+    series:[{label:'with ideology', color:'ideo', data:SER('res','W','rIdeo')},
+            {label:'with party ID', color:'res', data:SER('res','W','rPid')}],
+    callouts:[{x:1986, y:rPid(1986), text:f2(rPid(1986)), color:'res', pos:'above'},
+              {x:2024, y:rPid(2024), text:f2(rPid(2024)), color:'res', pos:'below'}],
+    source:'Correlation: 0 = no relationship, 1 = perfect. '+SRC_ANES,
+    notes:`SHOWS: how well a White American's resentment score predicts their party.
+SAY: In 1986, almost not at all: r = ${f2(rPid(1986))}. By 2024: ${f2(rPid(2024))}. That is about as strong as relationships in survey data get, and now as strong as resentment's link to ideology.
+SAY: This is Sept 8's sorting, measured on one attitude.
+ASK: "To guess a White American's party, would you rather know their ideology or their answers to these four questions?" In 1986 the answer was obvious. Now it's close.`});
+
+  add({type:'timeline', id:'history', title:'How race became partisan',
+    events:[{y:'1964', h:'The switch', t:'Civil Rights Act. Parties trade sides.'},
+            {y:'1984', h:'A face', t:'Jesse Jackson ties Democrats to Black voters.'},
+            {y:'2008', h:'A president', t:'Obama puts race on everything he touches.'},
+            {y:'2016', h:'A candidate', t:'Trump campaigns on group hostility.'}],
+    source:'“Issue evolution” (Carmines and Stimson 1989): leaders move first; voters sort to match.',
+    notes:`SHOWS: the long version of the previous chart.
+SAY: The concept is ISSUE EVOLUTION. Race did not become partisan because voters changed their minds. Leaders took opposite sides (1964), and voters slowly sorted into the matching party.
+SAY: Each later date adds a new way to attach race to a party: a face (Jackson; Tesler calls it the "original spillover"), a president (Tesler's case), a candidate (Mason's case).`});
+
+  add({type:'line', id:'one-side', title:'White Democrats moved. White Republicans didn’t.',
+    look:'Average racial resentment, 0 to 1, by party (leaners included)',
+    xdom:[1986,2024], xticks:[1986,1994,2004,2012,2024], ydom:[.2,.8], yticks:[.2,.4,.6,.8], yfmt:'r2',
+    series:[{label:'White Republicans', color:'rep', data:SER('res','R','mean')},
+            {label:'White Democrats', color:'dem', data:SER('res','D','mean')},
+            {label:'Black respondents', color:'blk', data:SER('res','B','mean'), dash:true}],
+    callouts:[{x:2012, y:resP('D',2012), text:f2(resP('D',2012)), color:'dem', pos:'below'},
+              {x:2024, y:resP('R',2024), text:f2(resP('R',2024)), color:'rep', pos:'above'}],
+    source:SRC_ANES,
+    notes:`SHOWS: resentment among White Democrats, White Republicans, and (dashed) Black respondents.
+SAY: The gap opened slowly, then blew open after 2012, and it's almost all the blue line: White Democrats ${f2(resP('D',2012))} in 2012 → ${f2(resP('D',2024))} in 2024. White Republicans ${f2(resP('R',2012))} → ${f2(resP('R',2024))}.
+SAY: By 2020 White Democrats score about where Black respondents do. Journalists call this "the Great Awokening."
+ASK: "Is that polarization, if only one side moved?"`});
+
+  add({type:'stats', id:'level-weight', title:'The level fell. The weight rose.',
+    stats:[{label:'LEVEL · average resentment, White Americans', value:`${f2(V('res','W','mean',1988))} → ${f2(V('res','W','mean',2024))}`, color:'mut'},
+           {label:'WEIGHT · how well it predicts party', value:`${f2(rPid(1988))} → ${f2(rPid(2024))}`, color:'accent'}],
+    notes:`SHOWS: THE slide of the session. If they remember one, it's this.
+SAY: Less resentment on average. Far more political weight. Both true at once, because sorting doesn't require anyone to change their mind, only that people holding each view end up in different parties.
+SAY: Racialization means MORE POLITICS attached to whatever attitudes exist, not more prejudice.
+CAVEAT: some of the fall in the level is people answering more carefully. The weight survives that.`});
+
+  /* ═══════════════════════ part 4: spillover ═════════════════════════════ */
+  add({type:'section', id:'s4', part:'Part 4', title:'Spillover: from a president to a policy',
+    notes:`Tesler 2012. The first mechanism.`});
+
+  add({type:'racialize', id:'drawn', title:'Racialization means a steeper line',
+    look:'Illustration: support for a policy, from least to most resentful',
+    notes:`SHOWS: what "racialized" means, as a picture.
+SAY: Left: resentful and non-resentful people support the policy equally; race is irrelevant to it. Right: same average support, but now it depends on racial attitudes. Nothing about overall support changed, only WHO supports it.
+SAY: Every coefficient in this part is the height difference between the two ends of this line.
+WEB VERSION: drag the slider. The ring in the middle (average support) never moves.`});
+
+  add({type:'cards', id:'two-ways', title:'Two ways to make a policy racial',
+    cards:[{h:'The message', t:'Racial cues in coverage: welfare, crime', color:'mut', tag:'Gilens 1999'},
+           {h:'The messenger', t:'A racialized person becomes its face', color:'accent', tag:'Tesler 2012'}],
+    notes:`SHOWS: the two mechanisms that steepen the line.
+SAY: Gilens showed welfare opinion began tracking racial attitudes once news coverage pictured recipients as Black. Tesler's addition: the cue can be the MESSENGER. No coded language needed.
+WHY IT MATTERS: a coded appeal can be called out. Calling a law "Obamacare" breaks no norm.`});
+
+  add({type:'cards', id:'three-tests', title:'Tesler’s test: health care in 2009',
+    look:'A policy with no racial content, and three ways to check',
+    cards:[{h:'Compare years', t:'Did the line get steeper with Obama?'},
+           {h:'Follow the same people', t:'Did THEIR opinions change?'},
+           {h:'Change the label', t:'Same plan: “Clinton’s” or “Obama’s”?'}],
+    notes:`SHOWS: the research design.
+SAY: Health care is a hard case for a racial explanation, which makes it a good test. Each design rules out something: different people (→ panels), Obama's party rather than his race (→ the label experiment: both are Democrats).
+ASK: "What else differs between 'Clinton's 1993 plan' and 'Obama's plan' besides race?" (One is 16 years old and failed; the other is on the news every night.)`});
+
+  /* ── Tesler's own data: the CCAP reinterview (readings/tesler-ccap-reinterview-2009) ── */
+  const X = (o,F) => -V('ccap_exp',o,F,2009)*100;
+  const CCAP_NOTE = 'Rebuilt from Tesler’s own survey (CCAP reinterview, Nov. 2009), White respondents, party and ideology held constant. The data files do not record which form got which label: the flatter form is identified as the Clinton / Congress form because it is flatter in BOTH experiments, as the article reports; the other two cannot be told apart.';
+  const pv = (w,y) => V('ccap_panel','voluntary',w,y);
+  add({type:'stats', id:'t-panel', title:'Same people, two years apart',
+    look:'How much more likely the most resentful were than the least to say health care should be left to individuals',
+    stats:[{label:'December 2007 · before Obama', value:`+${Math.round(pv('most',2007)-pv('least',2007))} pts`, color:'mut'},
+           {label:'November 2009 · Obama’s plan', value:`+${Math.round(pv('most',2009)-pv('least',2009))} pts`, color:'accent'}],
+    source:'Rebuilt from Tesler’s own panel (CCAP, the same White respondents in both years; party, ideology and tax views held constant). He reported “just over 30” and “nearly 60”; ours is larger in 2009 because resentment here is measured in 2009, not March 2008.',
+    notes:`SHOWS: Tesler's Figure 1, rebuilt from his own data files.
+SAY: Same people, same question, two years apart. In December 2007, before Obama was the face of health reform, the most resentful White respondents were ${Math.round(pv('most',2007)-pv('least',2007))} points more likely than the least resentful to say health care should be left to individuals. In November 2009: ${Math.round(pv('most',2009)-pv('least',2009))} points. The line doubled in steepness within the same people.
+HONEST NOTE: Tesler reported roughly 30 → 60. Ours is larger in 2009 because I measured resentment in the same 2009 survey (he used March 2008). Resentment measured at the same moment as the opinion can absorb some of it, so his version is the more careful one; the doubling is the point either way.`});
+
+  add({type:'vbars', id:'t-experiment', title:'Same plan, Clinton’s name: a much flatter line',
+    look:'How much resentment moved support for universal coverage and a public option, by label (% of scale)',
+    cats:['“Clinton’s 1993 plan”','Other label','Other label'], domain:[0,50], fmt:'pct',
+    series:[{label:'effect', colors:['mut','accent','accent'], values:[X('health','C'), X('health','B'), X('health','D')]}],
+    source:CCAP_NOTE,
+    notes:`SHOWS: Tesler's experiment, rerun on his data. Random thirds of the sample got identical policies with different labels: no name, "President Clinton's 1993 plan," or "President Obama's plan."
+SAY: One form is far flatter than the other two: ${Math.round(X('health','C'))}% of the scale vs. ${Math.round(X('health','B'))}% and ${Math.round(X('health','D'))}%. Tesler reports the Clinton label at 23% and Obama's at 40%, with the no-name version close to Obama's.
+BE STRAIGHT WITH THEM: the files don't record which form carried which label. The flatter form is the Clinton form by elimination: it is also the flatter form in the separate stimulus experiment (next slide), which matches the article. The rerun confirms the pattern; it can't independently confirm the labels.`});
+
+  add({type:'vbars', id:'t-stimulus', title:'Credit Congress for the stimulus, and the effect halves',
+    look:'How much resentment moved support for the 2009 stimulus, by who got the credit (% of scale)',
+    cats:['“Congressional Democrats”','Other label','Other label'], domain:[0,50], fmt:'pct',
+    series:[{label:'effect', colors:['mut','accent','accent'], values:[X('stimulus','C'), X('stimulus','B'), X('stimulus','D')]}],
+    source:CCAP_NOTE,
+    notes:`SHOWS: the stimulus experiment, on the same data. The same bill, described as Obama's, as simply "the stimulus," or as passed by congressional Democrats.
+SAY: Same party throughout. Credit congressional Democrats and the racial slope falls to ${Math.round(X('stimulus','C'))}% of the scale, against ${Math.round(X('stimulus','B'))}% and ${Math.round(X('stimulus','D'))}%. Take Obama's face off the policy and much of the race comes off with it.
+SAY: And it ran both ways: under Obama's name racial LIBERALS became more supportive. Average support barely moved.`});
+
+  add({type:'cards', id:'everywhere', title:'Spillover showed up everywhere',
+    look:'Four more places Tesler found Obama’s race attached to something that had none',
+    cards:[{h:'A dog', t:'Bo vs. Splash', color:'res'},{h:'A judge', t:'Sonia Sotomayor', color:'blue'},
+           {h:'A moral issue', t:'Same-sex marriage', color:'accent'},{h:'The presidency', t:'Obama vs. every predecessor', color:'ideo'}],
+    source:'Collected in Sasha Issenberg, “Race Wars,” Slate, June 1, 2012, which profiles Tesler’s research.',
+    notes:`SHOWS: a roadmap for the next four slides.
+SAY: If spillover were only about health care, it could be something about health care. Tesler's argument is that it attaches to ANYTHING the president is associated with. Here are four tests of that, from the silly to the serious. Issenberg's Slate profile (2012) collects most of them and is a good optional read.`});
+
+  add({type:'vbars', id:'t-bo', reported:true, title:'Even the president’s dog got racialized',
+    look:'One dog photo, two owners. Drop in favorability from least to most resentful.',
+    cats:['“Splash,” Ted Kennedy’s dog','“Bo,” Obama’s dog'], domain:[0,60], fmt:'pts',
+    series:[{label:'drop', colors:['mut','accent'], values:[20,50], labels:['under 20 pts','over 50 pts']}],
+    source:'Tesler, “The Spillover of Racialization into Evaluations of Bo Obama,” YouGov, April 10, 2012. 1,000 respondents; the article reports the drops as “more than 50” and “less than 20” points, so the bars are drawn at those bounds.',
+    notes:`SHOWS: Tesler's follow-up experiment, and the most memorable result in this literature.
+SAY: 1,000 YouGov respondents saw the same photo of a Portuguese water dog. Half were told it was Bo, the Obamas' dog; half were told it was Splash, Ted Kennedy's dog. Same dog, same picture; only the owner changed, and both owners are Democrats.
+SAY: Moving from least to most racially resentful cut favorability by more than 50 points for "Bo" and less than 20 for "Splash."
+SAY: And overall favorability did NOT differ between the two. Racial liberals liked Bo more; racial conservatives liked him less. The same "slope, not level" lesson, on the least political object imaginable.
+ASK: "If a dog can be racialized, what can't be?" That is Tesler's point: spillover reaches anything the president is attached to.
+NOTE: the bar heights are the article's bounds ("more than 50," "less than 20"), not exact estimates. The slide says so.`});
+
+  add({type:'stats', id:'sotomayor', reported:true, title:'A Supreme Court nominee, with and without Obama',
+    look:'CNN poll, August 2009: half of respondents heard that Obama nominated Sotomayor; half did not',
+    stats:[{label:'How much more views on discrimination predicted support when Obama was named', value:'3×', color:'accent'}],
+    source:'Tesler’s analysis of a CNN split-sample poll, as reported in Issenberg, Slate, June 1, 2012.',
+    notes:`SHOWS: spillover onto a person, not a policy.
+SAY: Same nominee, same question. Mentioning Obama as the nominating president made respondents' views about discrimination three times as predictive of their support for Sotomayor. The poll was in the field during the Henry Louis Gates "beer summit," when Obama and race were in the news together.`});
+
+  add({type:'vbars', id:'md-marriage', reported:true, title:'Obama endorsed. Black voters followed.',
+    look:'Black Maryland voters’ support for same-sex marriage, before and after Obama’s May 2012 endorsement',
+    cats:['March 2012','May 2012, after the endorsement'], domain:[0,70], fmt:'pct',
+    series:[{label:'support', colors:['mut','accent'], values:[39,55]}],
+    source:'Public Policy Polling, as reported in Issenberg, Slate, June 1, 2012. Opposition fell from 56% to 36%.',
+    notes:`SHOWS: spillover running the OTHER way: toward Obama's position, among his strongest supporters.
+SAY: In March 2012, 39% of Black Maryland voters supported same-sex marriage and 56% opposed. Obama endorsed it on May 9. In May: 55% support, 36% opposed. A 36-point swing in the margin, in two months.
+SAY: This is the second half of Tesler 2012: a Black president's positions can move Black opinion, widening or closing racial gaps. Here it closed one.
+CAVEAT: two polls, one state, no control group. Suggestive, not proof.`});
+
+  const PR = ROWS.filter(r=>r.block==='presres').sort((a,b)=>a.i-b.i);
+  const DEMP = ['Clinton','Obama','Biden'];
+  add({type:'vbars', id:'presidents', title:'Obama’s ratings split by race more than any president’s',
+    look:'Effect of resentment on White Americans’ rating of the sitting president (party and ideology held constant)',
+    cats:PR.map(r=>`${r.grp} ${r.i}`), domain:[-.35,.25], fmt:'r2',
+    series:[{label:'effect', colors:PR.map(r=>r.grp==='Obama'?'res':DEMP.includes(r.grp)?'dem':'rep'), values:PR.map(r=>r.val)}],
+    source:'Red: Republican presidents. Blue: Democrats. Purple: Obama. Above zero: the resentful rate him higher; below, lower. Trump’s 2020 rating is not in the cumulative file. '+SRC_ANES,
+    notes:`SHOWS: racialization of presidential evaluations, rebuilt on the ANES. Tesler and Sears found the same with Pew data from Obama's first 100 days.
+SAY: For every president, resentment moves ratings a bit, in the direction you'd expect from each party's coalition. For Obama it moves them far more: ${f2(PR.find(r=>r.grp==='Obama'&&r.i===2012).val)} in 2012 and ${f2(PR.find(r=>r.grp==='Obama'&&r.i===2016).val)} in 2016, versus ${f2(PR.find(r=>r.grp==='Clinton'&&r.i===1994).val)} for Clinton, the last Democratic president before him.
+SAY: Biden is ${f2(PR.find(r=>r.grp==='Biden').val)}: smaller than Obama, bigger than Clinton. That's the spillover into party: by 2024 a White Democratic president inherits some of it.`});
+
+  const hcPre = hc.filter(r=>r[0]<=2008), hcPost = hc.filter(r=>r[0]>=2008);
+  add({type:'line', id:'table1', title:'Health care stayed racialized after Obama left',
+    look:'Effect of resentment on White support for government insurance (party and ideology held constant)',
+    xdom:[1986,2024], xticks:hc.map(r=>r[0]), ydom:[-.3,.15], yticks:[-.3,-.2,-.1,0,.1], yfmt:'r2', zero:true,
+    bands:[OBAMA],
+    series:[{label:'Tesler’s years', color:'mut', data:hcPre, ci:true},
+            {label:'After Tesler', color:'res', data:hcPost, ci:true}],
+    callouts:[{x:2024, y:coef(hc,2024), text:f2(coef(hc,2024)), color:'res', pos:'below'},
+              {x:2004, y:coef(hc,2004), text:f2(coef(hc,2004)), color:'mut', pos:'above'}],
+    source:'Below zero = the more resentful, the less supportive. Lines show 95% intervals. 2000 not asked. '+SRC_ANES,
+    notes:`SHOWS: Tesler's Table 1, rebuilt from the raw data and carried to 2024. Closer to zero = flat line; lower = steep line.
+SAY: Before Obama, near zero most years (${f2(coef(hc,2004))} in 2004). From 2012: ${f2(coef(hc,2012))}, ${f2(coef(hc,2016))}, ${f2(coef(hc,2020))}, ${f2(coef(hc,2024))}.
+SAY: Tesler predicted spillover would fade after Obama. Eight years later it hasn't.
+ASK: Why not? The name stuck ("Obamacare"); the coalitions formed and stayed; or race moved into party itself (next slide).
+REPLICATION: our 1988–2008 numbers match his within noise; say so once.`});
+
+  add({type:'line', id:'into-party', title:'Then race spilled into party itself',
+    look:'Effect of resentment on White party ID (ideology held constant)',
+    xdom:[1986,2024], xticks:[1986,1994,2004,2012,2024], ydom:[-.15,.4], yticks:[-.1,0,.1,.2,.3,.4], yfmt:'r2', zero:true,
+    bands:[OBAMA],
+    series:[{label:'toward Republican', color:'res', data:pid, ci:true}],
+    callouts:[{x:1988, y:coef(pid,1988), text:f2(coef(pid,1988)), color:'res', pos:'below'},
+              {x:2024, y:coef(pid,2024), text:f2(coef(pid,2024)), color:'res', pos:'above'}],
+    source:'Party ID from 0 (strong Democrat) to 1 (strong Republican). Lines show 95% intervals. '+SRC_ANES,
+    notes:`SHOWS: among White Americans with the SAME ideology, how much resentment pushes toward the Republican Party.
+SAY: Zero in the 1980s. ${f2(coef(pid,2024))} in 2024: almost two steps on the seven-point scale, from racial attitudes alone.
+SAY: Once racial attitudes are in party ID, anything partisan carries them automatically. That's why health care stayed racialized: Sept 8's sorting and today's spillover are one process.`});
+
+  /* ── Tesler 2013: old-fashioned racism returns (not assigned) ─────────────
+     Built from the article's abstract only; the full text was not available
+     when these slides were written, so no numbers from it appear here. */
+  const OFR = 'Tesler 2013, “The Return of Old-Fashioned Racism to White Americans’ Partisan Preferences in the Early Obama Era,” Journal of Politics 75(1): 110–123. Not assigned. Summarized from the abstract.';
+  add({type:'statement', id:'ofr-intro', reported:true, title:'Even old-fashioned racism came back',
+    big:'An attitude that had said nothing about party for decades suddenly did.',
+    sub:'Tesler 2013, Journal of Politics. Not assigned — the next four slides are the whole story.',
+    notes:`SHOWS: a second Tesler study, not assigned, that pushes the spillover argument to its hardest case.
+SAY: Everything so far used racial resentment, the SUBTLE measure. Critics can always say resentment is partly conservatism. So Tesler asked: what about the BLATANT kind, the old-fashioned racism from Measure 1, which nobody can call "just conservatism"?
+SAY: The answer is the title of the slide.`});
+
+  add({type:'cards', id:'ofr-measure', reported:true, title:'The measure: opposition to interracial dating',
+    look:'Old-fashioned racism — Measure 1, from earlier in the hour',
+    cards:[{h:'What it captures', t:'Open, traditional prejudice — not a view about government', color:'accent'},
+           {h:'Why it’s a hard test', t:'Before 2009 it was unrelated to party in 12 surveys', color:'ideo'}],
+    source:OFR,
+    notes:`SHOWS: the measure and why it makes a strong test.
+SAY: Opposition to interracial dating is old-fashioned racism in its plainest form. It has nothing to do with taxes or the size of government, so if it predicts party, the "it's just conservatism" objection does not apply.
+SAY: And for the whole post-civil-rights era it did NOT predict party. Tesler checks twelve earlier surveys and finds no relationship with White party identification in any of them. Both parties had people who held this view.
+TIE BACK: this is the attitude whose LEVEL collapsed (Measure 1: "almost everyone now gives the same answer"). The question is whether the minority who still hold it sorted.`});
+
+  add({type:'cards', id:'ofr-tests', reported:true, title:'Four ways Tesler checked',
+    cards:[{h:'Compare years', t:'Unrelated to party in 12 surveys; related in 2009', color:'ideo'},
+           {h:'Follow people', t:'Predicted who changed party, 2006 → 2011', color:'blue'},
+           {h:'Midterm votes', t:'Mattered more in 2010 than in 2006', color:'res'},
+           {h:'Experiment', t:'Linking Obama to candidates raised its effect', color:'accent'}],
+    source:OFR,
+    notes:`SHOWS: the research design: the same logic as the health care paper, applied to party.
+SAY: (1) Compare years: no relationship with party in twelve earlier surveys, a significant one in 2009. (2) Follow the same people: among panelists interviewed in 2006 and again in 2011, old-fashioned racism predicted who CHANGED their party. (3) Votes: it predicted 2010 House vote preferences more strongly than 2006 ones. (4) Experiment: telling respondents about congressional candidates' connection to Obama increased the link between old-fashioned racism and their 2010 preferences.
+SAY: Four designs, one direction. As with health care, the experiment is what rules out "it was just the times."`});
+
+  add({type:'statement', id:'ofr-mediation', reported:true, title:'It ran entirely through Obama',
+    big:'Account for how people felt about Obama, and the link to party disappears.',
+    sub:'In the jargon: evaluations of Obama “completely mediated” the relationship. '+'Tesler 2013.',
+    notes:`SHOWS: the mechanism, and a methods idea worth teaching: MEDIATION.
+SAY: If old-fashioned racism predicts party, WHY? Tesler's test: add people's feelings about Obama to the model. If the link between old-fashioned racism and party vanishes, then the path runs attitude → Obama → party. That is what he finds, for party ID in 2009 and again for 2010 vote preferences.
+SAY: In plain words: these voters did not suddenly decide the Democratic Party had changed its policies. They reacted to the man at the top of it, and the party came along.
+ASK: "Why is mediation stronger evidence for spillover than the correlation alone?" (Because it shows the route, not just the destination.)`});
+
+  add({type:'cards', id:'ofr-why', title:'Why it matters',
+    cards:[{h:'Dormant is not gone', t:'An attitude can sit unused for decades, then return', color:'res', tag:'Mason’s reservoir'},
+           {h:'A person can move a party', t:'One leader carried an attitude into partisanship', color:'blue', tag:'spillover'},
+           {h:'Levels mislead', t:'Rare, and newly tied to party', color:'accent', tag:'level vs. weight'}],
+    notes:`SHOWS: the three takeaways, each tied to something else today.
+SAY: (1) Old-fashioned racism was a reservoir long before Mason et al. used the word. It was dormant, not gone. (2) It entered party through a person, not a policy: spillover in its purest form. (3) This is the most extreme case of "the level fell, the weight rose": the attitude is rare, and yet for the first time in decades it is tied to party.
+SAY: It is also the cleanest answer to "is resentment just conservatism?" An attitude that has nothing to do with conservatism sorted in exactly the same way.`});
+
+  add({type:'line', id:'bw', title:'Asked without Obama’s name, the Black–White gap didn’t grow',
+    look:'Share favoring government health insurance, by race',
+    xdom:[1988,2024], xticks:SER('bw','W','gov').map(r=>r[0]), ydom:[20,80], yticks:[20,40,60,80], yfmt:'pct',
+    bands:[OBAMA],
+    series:[{label:'Black respondents', color:'blk', data:SER('bw','B','gov')},
+            {label:'White respondents', color:'ideo', data:SER('bw','W','gov')}],
+    source:'Tesler’s polls asked about “Obama’s plan” and found the gap growing from 26 to 45 points. The ANES question names no president.',
+    notes:`SHOWS: a check on Tesler's second claim.
+SAY: His polls named Obama; the gap grew. The ANES question doesn't; the gap stays around 15 points. That fits his argument: the NAME did the work. This chart is the control condition he didn't have.
+CUT THIS FIRST if short on time.`});
+
+  /* ═══════════════════════ part 5: activation ════════════════════════════ */
+  add({type:'section', id:'s5', part:'Part 5', title:'Activation: from a reservoir to a candidate',
+    notes:`Mason, Wronski and Kane 2021. The second mechanism.`});
+
+  add({type:'cards', id:'reservoir-idea', title:'Hostility waits for someone to use it', arrows:true,
+    cards:[{h:'A reservoir', t:'Some people are cold toward certain groups', color:'mut'},
+           {h:'A lightning rod', t:'A politician makes that hostility the pitch', color:'accent'},
+           {h:'Support', t:'They are drawn to him, in any party', color:'res'}],
+    notes:`SHOWS: activation as a sequence.
+SAY: The attitude already exists and is usually dormant. A leader gives it somewhere to go. Mason et al.'s words: a "reservoir" and a "lightning rod." Trump did not create the hostility; he attracted it.
+TIE TO TUESDAY: this is out-group HATE, not in-group love.`});
+
+  add({type:'cards', id:'compare', title:'Two mechanisms, one result',
+    cards:[{h:'Spillover', t:'Obama’s IDENTITY → his policy', color:'blue', tag:'Tesler'},
+           {h:'Activation', t:'Trump’s RHETORIC → support for him', color:'accent', tag:'Mason et al.'}],
+    source:'Tesler’s own version (Monkey Cage, Nov. 22, 2016): Obama polarized opinion by who he was; Trump, by what he said.',
+    notes:`SHOWS: how the two readings differ.
+SAY: Obama never had to mention race; his race attached itself to his policies. Trump's appeal was explicitly about groups. Both end the same way: a feeling about a group becomes a political choice.`});
+
+  add({type:'line', id:'vote-res', title:'Race mattered more for Trump than for Obama',
+    look:'Effect of resentment on White Republican presidential vote (party and ideology held constant)',
+    xdom:[1988,2024], xticks:vr.map(r=>r[0]), ydom:[0,.5], yticks:[0,.1,.2,.3,.4,.5], yfmt:'r2',
+    bands:[{from:2007, to:2013, label:'Obama on the ballot'}],
+    series:[{label:'least to most resentful', color:'res', data:vr, ci:true}],
+    callouts:[{x:2012, y:coef(vr,2012), text:f2(coef(vr,2012)), color:'res', pos:'below'},
+              {x:2016, y:coef(vr,2016), text:f2(coef(vr,2016)), color:'res', pos:'above'},
+              {x:2024, y:coef(vr,2024), text:f2(coef(vr,2024)), color:'res', pos:'below'}],
+    source:'Tesler’s test (Washington Post, Monkey Cage, Nov. 22, 2016), rebuilt on the ANES and extended. Change in the probability of voting Republican. Lines show 95% intervals. '+SRC_ANES,
+    notes:`SHOWS: Tesler's November 2016 claim, rebuilt on the ANES: how much racial resentment changed the chance a White voter chose the Republican, holding party and ideology fixed.
+SAY: Before Obama, about ${f2(coef(vr,2004))} (2004). With Obama on the ballot: ${f2(coef(vr,2008))} in 2008, ${f2(coef(vr,2012))} in 2012. With Trump: ${f2(coef(vr,2016))} in 2016 and ${f2(coef(vr,2020))} in 2020 — higher than when an actual Black candidate was running. That is Tesler's headline, and it holds in a different survey.
+SAY: A ${f2(coef(vr,2016))} means the most resentful White voter was about ${Math.round(coef(vr,2016)*100)} points more likely to vote for Trump than the least resentful one with the same party and ideology.
+SAY: 2024: ${f2(coef(vr,2024))}, back to Obama-era levels. Same pattern as the nominee chart coming up: by 2024 it is carried by party, which the model holds constant.
+CAVEAT (Tesler's own): some voters may adjust their racial attitudes to fit their candidate. Racial attitudes are stable enough that this is a small worry, not a large one.`});
+
+  add({type:'cards', id:'why-trump', reported:true, title:'Why race mattered more in 2016',
+    look:'Tesler’s three reasons (Monkey Cage, November 22, 2016)',
+    cards:[{h:'The Obama years', t:'Eight years made politics about race', color:'blue', tag:'spillover'},
+           {h:'Clinton', t:'Moved left of Obama on race', color:'mut'},
+           {h:'Trump', t:'Explicit appeals no nominee had made', color:'accent', tag:'activation · the biggest'}],
+    notes:`SHOWS: Tesler's explanation for the previous chart.
+SAY: (1) Obama's presidency spilled racial attitudes into party ID, congressional voting, policy views, and even evaluations of Hillary Clinton. Race was salient going in, whoever the nominees were. (2) Clinton moved left of Obama on race to hold a coalition of minorities and racially liberal Whites. (3) The most important, in his view: Trump went where earlier Republican nominees would not, with explicit appeals to racial resentment and White identity. Tesler notes that racial attitudes predicted a Trump–Clinton matchup more strongly than hypothetical Cruz–Clinton or Rubio–Clinton matchups.
+SAY: Reason 1 is spillover (Part 4). Reason 3 is activation (Mason et al.). Tesler saw both in one election.`});
+
+  add({type:'vbars', id:'m-unique', reported:true, title:'Hostility predicted Trump — and no one else',
+    look:'Rise in 2018 favorability, least to most hostile toward Democratic-aligned groups in 2011',
+    cats:['Trump','Paul Ryan','Mitch McConnell','Republican Party'], domain:[0,30], fmt:'pts',
+    series:[{label:'rise', colors:['accent','mut','mut','mut'], values:[23,0,0,0], labels:['+23','≈ 0','≈ 0','≈ 0']}],
+    source:'Mason, Wronski and Kane 2021, Figure 2. Groups: Black Americans, Hispanics, Muslims, gay and lesbian Americans. Others not significant.',
+    notes:`SHOWS: Mason et al.'s headline.
+SAY: Same people, attitudes measured in 2011, before Trump ran. Those attitudes predict Trump in 2018 and nothing for the party or its congressional leaders.
+ASK: "Is Ryan and McConnell the right comparison?" They were establishment figures many Trump voters disliked. Hold that; we test it in three slides.`});
+
+  add({type:'vbars', id:'m-parties', reported:true, title:'…in every party',
+    look:'Rise in Trump favorability, least to most hostile, by party',
+    cats:['Democrats','Republicans','Independents'], domain:[0,35], fmt:'pts',
+    series:[{label:'rise', colors:['dem','rep','mut'], values:[15,15,30], labels:['+15','+15','+30']}],
+    source:'Mason, Wronski and Kane 2021, Figure 3.',
+    notes:`SHOWS: the effect within each party.
+SAY: Same size among Democrats and Republicans; twice as large among independents. The reservoir doesn't belong to a party.
+CAVEAT (their footnote 12): the independents result is mostly feelings toward gay and lesbian Americans.`});
+
+  add({type:'line', id:'reservoir', title:'The reservoir is shrinking',
+    look:'Share rating each group below 50 on the 0–100 feeling thermometer',
+    xdom:[1984,2024], xticks:[1984,1992,2000,2008,2016,2024], ydom:[0,70], yticks:[0,20,40,60], yfmt:'pct',
+    series:[{label:'Gay men and lesbians', color:'res', data:SER('cold','ftG','below50')},
+            {label:'Hispanics', color:'hisp', data:SER('cold','ftH','below50')},
+            {label:'Black Americans', color:'blk', data:SER('cold','ftB','below50')}],
+    source:`Mason et al. found 13% cold toward Black Americans in 2011; the ANES found ${f0(V('cold','ftB','below50',2012))}% in 2012. Muslims are not in the cumulative file. `+SRC_ANES,
+    notes:`SHOWS: how many people are cold toward each group.
+SAY: Coldness toward gay Americans ${f0(V('cold','ftG','below50',1988))}% → ${f0(V('cold','ftG','below50',2024))}%. Toward Black Americans ${f0(V('cold','ftB','below50',1988))}% → ${f0(V('cold','ftB','below50',2024))}%.
+SAY: Smaller than ever, and more politically consequential than ever. Same lesson as "the level fell, the weight rose."`});
+
+  const nomC = nomRows('cand'), nomR = nomRows('candres');
+  const nomVariant = (blk) => { const rs = nomRows(blk);
+    return {cats: rs.map(r=>`${r.var} ${r.i}`),
+      series:[{label:'the nominee', colors: rs.map(r=>r.var==='Trump'?'accent':'mut'), values: rs.map(r=>r.val)},
+              {label:'the party', colors: rs.map(()=> 'light'), values: rs.map(r=>V(blk,'party','GOP',r.i)), nolabels:true}]}; };
+  add({type:'vbars', id:'nominees', title:'In 2016, Trump was unlike every nominee before him',
+    look:'How much group coldness predicts warmth toward the nominee (dark) vs. the party (light)',
+    ...nomVariant('cand'), domain:[-.2,.25], fmt:'r2', legend:true,
+    variants:{cold:{label:'Group coldness (Mason)', ...nomVariant('cand')},
+              res:{label:'Resentment, White respondents (Tesler)', ...nomVariant('candres')}},
+    source:'Controls: party ID, ideology, race, education. Every presidential election, same survey. '+SRC_ANES,
+    notes:`SHOWS: Mason's test with a better comparison: every Republican nominee since 1988, not Ryan and McConnell.
+SAY: Bush through Romney: about zero. Trump 2016: ${f2(cand(2016))}, far above anyone else and above his party (${f2(gop(2016))}). Mason et al. are confirmed, in a different survey, against a harder comparison.
+SAY: 2020 smaller (${f2(cand(2020))}). 2024: ${f2(cand(2024))}, no different from the party.
+WEB VERSION: switch to the resentment measure. The 2016 spike is there on both.`});
+
+  add({type:'stats', id:'to-party', title:'By 2024, Trump’s edge was gone',
+    look:'Coldness toward groups predicting Trump vs. the Republican Party',
+    stats:[{label:'2016 · Trump vs. party', value:`${f2(cand(2016))} vs. ${f2(gop(2016))}`, color:'accent'},
+           {label:'2024 · Trump vs. party', value:`${f2(cand(2024))} vs. ${f2(gop(2024))}`, color:'mut'}],
+    notes:`SHOWS: the distinctiveness disappearing.
+SAY: The tempting reading: the link weakened. The better reading: the candidate became the party. The models hold party ID constant, so once Trump's coalition IS the party, the model can't see it anymore.
+EVIDENCE: resentment's pull on party ID kept rising over the same years (${f2(coef(pid,2016))} → ${f2(coef(pid,2024))}; the "spilled into party" slide).`});
+
+  add({type:'statement', id:'absorbs', title:'Activation turns into sorting',
+    big:'What a candidate activates, the party absorbs.',
+    notes:`SHOWS: the synthesis of the two readings.
+ASK: "Is that better or worse for democracy than a candidate-specific effect?" A candidate leaves. A party coalition doesn't. That question goes straight to October 6.`});
+
+  /* ═══════════════════════ part 6: the big picture ═══════════════════════ */
+  add({type:'section', id:'s6', part:'Part 6', title:'The big picture',
+    notes:`Bring it back to the unit.`});
+
+  add({type:'cards', id:'chain', title:'The chain', arrows:true, look:'Every session in the unit is one link',
+    cards:[{h:'Groups', t:'race, religion, place', color:'mut', tag:'Sept 8'},
+           {h:'Parties', t:'leaders pick sides; voters sort', color:'blue', tag:'Sept 3 · 8'},
+           {h:'Everything else', t:'policies, candidates', color:'res', tag:'today'},
+           {h:'The other side', t:'disliked, voted against', color:'accent', tag:'Sept 10 · 22'}],
+    notes:`SHOWS: the unit as one process.
+SAY: Groups attach to parties (sorting). Then anything a party touches carries group attitudes (spillover, activation). Then the other party becomes a group you feel about (affect, negative partisanship).
+SAY: This answers Fiorina's challenge from Sept 3: how can a public that isn't more extreme be more polarized? Nobody had to become more extreme; the extremes had to find their parties.
+ASK: "Where would you break the chain?" Every answer maps to a literature.`});
+
+  add({type:'cards', id:'open', title:'Three arguments still open',
+    cards:[{h:'Race or ideology?', t:'Can any survey still tell them apart?', color:'accent'},
+           {h:'Leaders or voters?', t:'Who attached race to party?', color:'blue'},
+           {h:'Cause or correlation?', t:'Only one experiment isolates race', color:'ideo'}],
+    source:'Any of the three would make a strong policy-brief question.',
+    notes:`SHOWS: where a careful reader should push back.
+SAY: (1) Resentment and conservatism now correlate at ${f2(rIdeo(2024))} among White Americans. The success of sorting makes the measurement harder. (2) Abramowitz says voters sorted by their views; today's readings say leaders attached group attitudes. Different remedies. (3) Nearly everything today is correlational.`});
+
+  add({type:'questions', id:'close', big:'Racial attitudes did not become more common. They became more political.',
+    qs:[{q:'Tesler expected spillover to fade after Obama. Why didn’t it?'},
+        {q:'Is a coalition built on hostility different in kind from one built on policy?', tag:'Oct 6'},
+        {q:'Does the evidence support Mason et al.’s call to “reconcile with these attitudes”?'}],
+    notes:`Five minutes; let them talk.
+SAY the headline. Ask who disagrees. The best objection: some of the fall in the level is people answering more carefully. Grant it; the weight still rose.`});
+
+  add({type:'next', id:'next', rows:[
+      ['Tonight','DUE 11:59 p.m. — two op-ed peer reviews','Say what the op-ed argues before what to fix.'],
+      ['Mon, Sep 28','DUE 11:59 p.m. — op-ed final draft','Note at the top what you changed.'],
+      ['Tue, Sep 29','Polarization VII: Geographic','Brown & Enos, Partisan Segregation.']],
+    foot:'Both annotated readings are in Canvas.',
+    notes:`Say out loud: peer reviews are due TONIGHT. Tuesday is geography: sorting again, with a map.`});
+
+  /* Badges: every slide that is not a title, divider, or closer gets a number. */
+  let n = 0;
+  S.forEach(s => { if (!['title','section','questions','next'].includes(s.type)) s.num = ++n; });
+  const ids = new Set(); S.forEach(s => { if (ids.has(s.id)) throw new Error('duplicate slide id '+s.id); ids.add(s.id); });
+  return S;
+}
+if (typeof module !== 'undefined') module.exports = buildSlides;
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Polarization V — the WEB RENDERER.
+
+   The slides themselves are defined once, in
+   ../2026-09-24-polarization-v.slides.js (buildSlides), which the PowerPoint
+   also renders. build-polarization-v-interactive.py pastes that file into the
+   page ahead of this one and supplies D.rows (the R script's CSV). This file
+   only turns each slide spec into HTML and SVG, one function per type, the
+   same way the .build.js does for the PowerPoint.
+
+   On the web, most slides BUILD: cards, numbers, and chart lines arrive one
+   per → press, so the slide can be talked through a piece at a time. ↓ skips
+   the rest of a slide. Four slides are interactive: the instrument (answer
+   the items yourself), the answer distributions (switch by race), the
+   racialization picture (a slider), and the nominee chart (switch measures).
+   ─────────────────────────────────────────────────────────────────────────── */
+
+const SPEC = buildSlides(D.rows);
+const C = { res:'#7B4B9E', ideo:'#4A4A4A', blk:'#17706B', dem:'#1F4E79', rep:'#C41230',
+            hisp:'#D08A1E', mut:'#8A8A8A', light:'#CFCFCF', green:'#17706B' };
+const colr = c => c==='accent' ? css('--accent') : c==='blue' ? css('--blue') : (C[c] || c || css('--ink'));
+const f2 = v => v.toFixed(2).replace(/^(-?)0\./,'$1.');
+const FMT = {pts: v => `${Math.round(v)} pts`, r2: f2, pct: v => `${Math.round(v)}%`};
+const fmtr = k => FMT[k] || (v => String(v));
+const HD = sp => `<h2>${sp.num?`<span class="badge">${sp.num}</span>`:''}${sp.title}${sp.reported?' <span class="reported">Reported from the article</span>':''}</h2>`
+  + (sp.look ? `<p class="look">${sp.look}</p>` : '');
+const SRC = sp => sp.source ? `<div class="foot">${sp.source}</div>` : '';
+const hold = (k,i) => k<=i ? ' hold' : '';
+
+/* ── vertical bars, adapted from the Polarization I and IV decks ───────────── */
+function bars(svg, cfg){
+  clear(svg);
+  const vb = svg.viewBox.baseVal, W = vb.width, H = vb.height;
+  const P = Object.assign({l:56, r:20, t:30, b:64}, cfg.pad||{});
+  const x0=P.l, x1=W-P.r, y0=P.t, y1=H-P.b;
+  const cats = cfg.cats, n = cats.length, S = cfg.series;
+  const slot = (x1-x0)/n, gap = slot*(cfg.gap ?? 0.3), bw = (slot-gap) / S.length;
+  const lo = cfg.ymin ?? 0, hi = cfg.ymax, py = v => y1 - (v-lo)/(hi-lo)*(y1-y0);
+  const base = py(Math.max(lo, 0)), MUT = css('--ink-3');
+  cats.forEach((c,i)=>{ const cx = x0 + slot*i + slot/2, tr = /Trump/.test(c);
+    const lines = n>6 ? [c.replace(/ (\d{4})$/,''), (c.match(/(\d{4})$/)||[''])[0]] : [c];
+    lines.forEach((t,k)=>svg.appendChild(el('text',{x:cx,y:y1+26+k*18,'text-anchor':'middle','font-size':n>6?14:19,
+      'font-weight':(tr||n<=4)?700:400, fill:tr?css('--accent'):(n<=4?css('--ink'):MUT)}, t))); });
+  S.forEach((s,si)=>{
+    const host = el('g',{class:'stage'});
+    s.values.forEach((v,i)=>{
+      const bx = x0 + slot*i + gap/2 + bw*si, top = Math.min(py(v), base), h = Math.abs(py(v)-base);
+      const col = colr(s.colors ? s.colors[i] : s.color);
+      host.appendChild(el('rect',{x:bx,y:top,width:bw-3,height:Math.max(1.5,h),rx:3,fill:col,class:'growy',
+        style:`transform-origin:${v<0?'top':'bottom'};transition-delay:${i*55}ms`}));
+      if (!s.nolabels) host.appendChild(el('text',{x:bx+(bw-3)/2, y:(v<0?top+h+22:top-10),'text-anchor':'middle',
+        'font-size':n>6?15:26,'font-weight':700,fill:col,class:'pop',style:`transition-delay:${i*55+120}ms`},
+        s.labels ? s.labels[i] : fmtr(cfg.fmt)(v)));
+    });
+    svg.appendChild(host);
+  });
+  svg.appendChild(el('line',{x1:x0,x2:x1,y1:base,y2:base,stroke:lo<0?MUT:css('--rule'),'stroke-width':1.5}));
+  if (cfg.legend){ let lx = x1-300;
+    S.forEach((s,j)=>{ svg.appendChild(el('rect',{x:lx,y:4,width:14,height:14,rx:3,fill:j?C.light:C.mut}));
+      svg.appendChild(el('text',{x:lx+20,y:16,'font-size':15,fill:MUT}, s.label)); lx += 150; }); }
+}
+
+/* ── horizontal grouped bars: groups compared across two years or samples ─── */
+function hbars(svg, sp){
+  clear(svg);
+  const H = svg.viewBox.baseVal.height, lx = 320, x1 = 930, [lo,hi] = sp.domain;
+  const px = v => lx + (v-lo)/(hi-lo)*(x1-lx), n = sp.rows.length, rh = (H-40)/n;
+  const ns = sp.series.length, bh = Math.min(28, (rh-14)/ns), f = fmtr(sp.fmt);
+  let gx = lx; sp.series.forEach(se=>{ svg.appendChild(el('rect',{x:gx,y:2,width:15,height:15,rx:3,fill:colr(se.color)}));
+    svg.appendChild(el('text',{x:gx+22,y:15,'font-size':16,'font-weight':700,fill:se.color==='light'?css('--ink-3'):colr(se.color)},se.label));
+    gx += 60 + se.label.length*9; });
+  const stages = sp.series.map(()=>el('g',{class:'stage'}));
+  sp.rows.forEach((r,i)=>{
+    const y = 34 + i*rh;
+    svg.appendChild(el('text',{x:lx-16,y:y+rh/2+6,'text-anchor':'end','font-size':n>4?18:20,fill:css('--ink'),
+      'font-style':n<=2?'italic':'normal'}, r.label));
+    r.vals.forEach((v,j)=>{ if (v==null) return;
+      const yy = y + (rh-ns*bh)/2 + j*bh, c = colr(sp.series[j].color);
+      stages[j].appendChild(el('rect',{x:lx,y:yy,width:Math.max(1,px(v)-lx),height:bh-4,rx:3,fill:c,class:'growx',
+        style:'transform-origin:left'}));
+      stages[j].appendChild(el('text',{x:px(v)+8,y:yy+bh/2+3,'font-size':15,'font-weight':700,
+        fill:sp.series[j].color==='light'?css('--ink-3'):c,class:'pop'}, f(v)));
+    });
+  });
+  stages.forEach(g=>svg.appendChild(g));
+}
+
+/* ── the answer distributions ─────────────────────────────────────────────── */
+function stack(svg, rows){
+  clear(svg);
+  const cols = [css('--accent'),'#E8909E','#CFCFCF','#93AECB',css('--blue')], x0 = 120, x1 = 990, rh = 76;
+  rows.forEach((r,i)=>{ const y = 26 + i*rh;
+    svg.appendChild(el('text',{x:x0,y:y,'font-size':17,'font-style':'italic',fill:css('--ink')}, r.label));
+    svg.appendChild(el('text',{x:x0-16,y:y+33,'text-anchor':'end','font-size':26,'font-weight':700,fill:css('--accent')},
+      Math.round(r.shares[0]+r.shares[1])+'%'));
+    let cx = x0; r.shares.forEach((v,j)=>{ const w = (x1-x0)*v/100;
+      svg.appendChild(el('rect',{x:cx,y:y+10,width:Math.max(0,w-2),height:32,fill:cols[j],class:'mb'}));
+      if (v>=6) svg.appendChild(el('text',{x:cx+w/2,y:y+31,'text-anchor':'middle','font-size':14,'font-weight':700,
+        fill:j===2?css('--ink'):'#fff'}, Math.round(v)));
+      cx += w; }); });
+  let lx = x0; [['resentful, strongly',0],['somewhat',1],['neither',2],['somewhat',3],['not resentful, strongly',4]]
+    .forEach(l=>{ svg.appendChild(el('rect',{x:lx,y:rows.length*rh+14,width:14,height:14,fill:cols[l[1]]}));
+      svg.appendChild(el('text',{x:lx+20,y:rows.length*rh+26,'font-size':14,fill:css('--ink-3')},l[0])); lx += 44 + l[0].length*7.5; });
+}
+
+/* ── the racialization picture ────────────────────────────────────────────── */
+const PTS = (()=>{ let z = 7; const r = () => (z = (z*9301+49297)%233280)/233280;
+  return Array.from({length:70},()=>({x:r(), e:(r()+r()+r()-1.5)*0.22})); })();
+function racialize(svg, slope){
+  clear(svg);
+  const H=svg.viewBox.baseVal.height, x0=80,x1=960,y0=20,y1=H-50, MUT=css('--ink-3');
+  const px = v => x0+v*(x1-x0), py = v => y1-v*(y1-y0), yAt = x => 0.5 - slope*(x-0.5);
+  const col = slope > .05 ? css('--accent') : C.ideo;
+  svg.appendChild(el('line',{x1:x0,x2:x1,y1:y1,y2:y1,stroke:MUT,'stroke-width':1.5}));
+  svg.appendChild(el('line',{x1:x0,x2:x0,y1:y0,y2:y1,stroke:MUT,'stroke-width':1.5}));
+  svg.appendChild(el('text',{x:x0,y:H-16,'font-size':17,fill:MUT},'least resentful'));
+  svg.appendChild(el('text',{x:x1,y:H-16,'text-anchor':'end','font-size':17,fill:MUT},'most resentful'));
+  svg.appendChild(el('text',{x:x0+10,y:y0+16,'font-size':17,fill:MUT},'↑ support for the policy'));
+  PTS.forEach(p=>svg.appendChild(el('circle',{cx:px(p.x),cy:py(Math.max(.02,Math.min(.98,yAt(p.x)+p.e))),r:5,fill:col,opacity:.35})));
+  svg.appendChild(el('line',{x1:px(0),x2:px(1),y1:py(yAt(0)),y2:py(yAt(1)),stroke:col,'stroke-width':5,'stroke-linecap':'round'}));
+  svg.appendChild(el('circle',{cx:px(.5),cy:py(.5),r:9,fill:css('--card'),stroke:col,'stroke-width':3}));
+  svg.appendChild(el('text',{x:px(.5)+16,y:py(.5)-14,'font-size':17,'font-weight':700,fill:col},'average support: unchanged'));
+}
+
+/* A segmented control: one button pressed at a time. */
+const seg = (id, opts, on) => `<span class="pill segs" id="${id}">${opts.map(o=>
+  `<button data-v="${o[0]}" aria-pressed="${o[0]===on}">${o[1]}</button>`).join('')}</span>`;
+function bindSeg(id, fn){
+  const box = $(id);
+  box.querySelectorAll('button').forEach(b=>b.addEventListener('click',ev=>{ ev.stopPropagation();
+    box.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed', x===b?'true':'false'));
+    fn(b.dataset.v); }));
+}
+// After a control redraws a chart, show everything already revealed.
+function relight(){ const deck=$('#deck'); arm(deck); state.stages=deck.querySelectorAll('.stage').length;
+  paintStages(deck, Math.max(1, Math.min(state.sub||99, state.stages)), false); }
+
+const MINE = {};   // the viewer's own answers to the four items: never stored or sent
+
+/* The instrument: answer the four items yourself, and see where you land. */
+function instrument(sp){
+  const ANS = ['Agree strongly','Agree somewhat','Neither','Disagree somewhat','Disagree strongly'];
+  return {k:'light', h:()=>`${HD(sp)}
+    <div class="qlist">${sp.items.map(it=>`<div class="qrow try"><p class="q">“${it.text}”</p>
+      <div class="ans" data-item="${it.k}">${ANS.map((a,c)=>`<button data-c="${c+1}" aria-pressed="${MINE[it.k]===c+1}">${a}</button>`).join('')}</div>
+      <span class="key">${it.tag}</span></div>`).join('')}</div>${SVG('mine',96)}`,
+    draw:()=>{
+      const paint = () => { const svg = $('#mine'); clear(svg);
+        const x0=40,x1=960,px=v=>x0+v*(x1-x0),y=44,MUT=css('--ink-3');
+        svg.appendChild(el('line',{x1:x0,x2:x1,y1:y,y2:y,stroke:css('--rule'),'stroke-width':3}));
+        [[0,'0 · least'],[1,'most · 1']].forEach(t=>svg.appendChild(el('text',{x:px(t[0]),y:y+30,'text-anchor':'middle','font-size':13,fill:MUT},t[1])));
+        sp.refs.forEach((r,i)=>{ svg.appendChild(el('line',{x1:px(r[1]),x2:px(r[1]),y1:y-10,y2:y+10,stroke:colr(r[2]),'stroke-width':3}));
+          svg.appendChild(el('text',{x:px(r[1])+(i===0?-8:i===1?8:0),y:y-16,'text-anchor':i===0?'end':i===1?'start':'middle',
+            'font-size':14,'font-weight':700,fill:colr(r[2])}, `${r[0]} ${f2(r[1])}`)); });
+        const sc = sp.items.map(it => MINE[it.k]==null ? null : (it.hi==='agree' ? (5-MINE[it.k])/4 : (MINE[it.k]-1)/4)).filter(v=>v!=null);
+        if (sc.length >= 3){ const m = sc.reduce((a,b)=>a+b,0)/sc.length;
+          svg.appendChild(el('circle',{cx:px(m),cy:y,r:11,fill:css('--accent'),stroke:css('--card'),'stroke-width':3}));
+          svg.appendChild(el('text',{x:px(m),y:y+34,'text-anchor':'middle','font-size':16,'font-weight':700,fill:css('--accent')}, `you ${f2(m)}`)); }
+        else svg.appendChild(el('text',{x:px(.5),y:y+34,'text-anchor':'middle','font-size':15,fill:MUT},
+          'Answer at least three to see where you land. Nothing is saved or sent.'));
+      };
+      document.querySelectorAll('.ans').forEach(box=>box.querySelectorAll('button').forEach(b=>
+        b.addEventListener('click',ev=>{ ev.stopPropagation(); MINE[box.dataset.item] = +b.dataset.c;
+          box.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false')); paint(); })));
+      paint();
+    }};
+}
+
+/* ── one web renderer per slide type ──────────────────────────────────────── */
+const WEB = {
+  title: sp => ({k:'dark center', h:()=>`<p class="kicker">${sp.kicker}</p><h1>${sp.title}</h1>
+    <p class="lede">${sp.sub}</p><div class="foot">${sp.foot} · <b>?</b> for keys, <b>N</b> for notes</div>`}),
+
+  section: sp => ({k:'dark center', h:()=>`<p class="kicker">${sp.part}</p><h1 style="max-width:20ch">${sp.title}</h1>`}),
+
+  statement: sp => ({k:'wash', h:()=>`${HD(sp)}<p class="bigstate${sp.big.length<20?' huge':''}">${sp.big}</p>
+    ${sp.sub?`<p class="lede center">${sp.sub}</p>`:''}`}),
+
+  cards: sp => ({k:'light', subs:sp.cards.length, h:(k=0)=>`${HD(sp)}
+    <div class="cards n${sp.cards.length}${sp.arrows?' arrows':''}">${sp.cards.map((c,i)=>
+      `${sp.arrows&&i?`<span class="arr${hold(k,i)}">→</span>`:''}<div class="card${sp.highlight===i?' hi':''}${hold(k,i)}"
+        style="border-top-color:${colr(c.color||(sp.highlight===i?'accent':'ideo'))}">
+        <b style="color:${sp.highlight===i?'#fff':colr(c.color||'ideo')}">${c.h}</b><p>${c.t}</p>
+        ${c.tag?`<span class="tag" style="color:${sp.highlight===i?'var(--accent)':colr(c.color||'ideo')}">${c.tag}</span>`:''}</div>`).join('')}</div>${SRC(sp)}`}),
+
+  stats: sp => ({k:'light', subs:sp.stats.length, h:(k=0)=>`${HD(sp)}
+    <div class="stats n${sp.stats.length}">${sp.stats.map((st,i)=>`<div class="st${hold(k,i)}">
+      <span class="tag">${st.label}</span><b style="color:${colr(st.color)}">${st.value}</b></div>`).join('')}</div>${SRC(sp)}`}),
+
+  measure: sp => ({k:'light', subs:2, h:(k=0)=>`${HD(sp)}
+    <blockquote class="mq">${sp.ex}</blockquote>
+    <div class="pc${hold(k,0)}"><span class="tag" style="color:var(--match)">✓ Why it works</span><b>${sp.pro}</b></div>
+    <div class="pc${hold(k,1)}"><span class="tag" style="color:var(--accent)">✗ Why it fails</span><b>${sp.con}</b></div>`}),
+
+  items: sp => sp.refs ? instrument(sp) : ({k:'light', subs:sp.items.length, h:(k=0)=>`${HD(sp)}
+    <div class="qlist">${sp.items.map((it,i)=>`<div class="qrow${hold(k,i)}"><p class="q">“${it.text}”</p>
+      <span class="key">${it.tag}</span></div>`).join('')}</div>${SRC(sp)}`}),
+
+  stack: sp => ({k:'light', h:()=>`${HD(sp)}
+    <div class="ctl">${seg('smp', sp.samples, 'all')}</div>${SVG('dist',360)}${SRC(sp)}`,
+    draw:()=>{ stack($('#dist'), sp.rows); bindSeg('#smp', v=>stack($('#dist'), sp.rowsFor(v))); }}),
+
+  hbars: sp => ({k:'light', h:()=>`${HD(sp)}${SVG('hb', sp.rows.length>4?400:250)}${SRC(sp)}`,
+    draw:()=>hbars($('#hb'), sp)}),
+
+  vbars: sp => ({k:'light', h:()=>`${HD(sp)}
+    ${sp.variants?`<div class="ctl">${seg('var', Object.entries(sp.variants).map(([k,v])=>[k,v.label]), 'cold')}</div>`:''}
+    ${SVG('vb', sp.variants?360:390)}${SRC(sp)}`,
+    draw:()=>{ const go_ = v => bars($('#vb'), {cats:v.cats, series:v.series, ymin:sp.domain[0], ymax:sp.domain[1],
+        fmt:sp.fmt, legend:sp.legend, gap:sp.cats.length>6?0.28:0.4});
+      go_(sp); if (sp.variants) bindSeg('#var', v=>{ go_(sp.variants[v]); relight(); }); }}),
+
+  line: sp => ({k:'light', h:()=>`${HD(sp)}${SVG('ln',400)}${SRC(sp)}`,
+    draw:()=>{
+      const g = chart($('#ln'),{xdom:sp.xdom, ydom:sp.ydom, yticks:sp.yticks, yfmt:fmtr(sp.yfmt), xticks:sp.xticks,
+        bands:sp.bands, pad:{r:200},
+        lines:sp.series.map(L=>({data:L.data.map(r=>[r[0],r[1]]), color:colr(L.color), w:L.dash?2.4:3.4,
+          label:L.label, ask:L.label, op:L.dash?.85:1}))});
+      (sp.bands||[]).forEach(b=>g.svg.appendChild(el('text',{x:(g.px(b.from)+g.px(b.to))/2,y:g.y0+16,
+        'text-anchor':'middle','font-size':14,'font-weight':700,fill:css('--accent')}, b.label)));
+      if (sp.zero) g.svg.insertBefore(el('line',{x1:g.x0,x2:g.x1,y1:g.py(0),y2:g.py(0),stroke:css('--ink-3'),'stroke-width':1.5}), g.svg.firstChild);
+      const stages = g.svg.querySelectorAll('.stage');
+      sp.series.forEach((L,j)=>{ if (!L.ci) return; const host = stages[j] || g.svg;
+        L.data.forEach(r=>{ if (r[2]==null) return;
+          host.appendChild(el('line',{x1:g.px(r[0]),x2:g.px(r[0]),y1:g.py(r[1]+1.96*r[2]),y2:g.py(r[1]-1.96*r[2]),
+            stroke:colr(L.color),'stroke-width':2,opacity:.7,class:'pop'})); }); });
+      const lastStage = stages[stages.length-1] || g.svg;
+      (sp.callouts||[]).forEach(c=>lastStage.appendChild(el('text',{x:g.px(c.x),y:g.py(c.y)+(c.pos==='above'?-16:30),
+        'text-anchor':'middle','font-size':20,'font-weight':700,fill:colr(c.color),class:'pop'}, c.text)));
+    }}),
+
+  timeline: sp => ({k:'light', subs:sp.events.length, h:(k=0)=>`${HD(sp)}
+    <div class="tl n${sp.events.length}">${sp.events.map((e,i)=>`<div class="ev${hold(k,i)}"><span class="yr">${e.y}</span>
+      <b>${e.h}</b><p>${e.t}</p></div>`).join('')}</div>${SRC(sp)}`}),
+
+  racialize: sp => ({k:'light', h:()=>`${HD(sp)}
+    <div class="ctl"><label>how racialized <input type="range" id="slope" min="0" max="0.9" step="0.01" value="0"></label>
+      <output id="slopeOut" class="pill">not racialized</output></div>${SVG('rz',340)}
+    <div class="foot">Illustration, not data. Drag the slider: the ring (average support) never moves.</div>`,
+    draw:()=>{ const f=()=>{ const v=+$('#slope').value; racialize($('#rz'),v);
+      $('#slopeOut').textContent = v<.05?'not racialized':v<.35?'a little':v<.65?'racialized':'heavily racialized'; };
+      $('#slope').addEventListener('input',f); $('#slope').addEventListener('click',e=>e.stopPropagation()); f(); }}),
+
+  questions: sp => ({k:'dark center', h:()=>`<h1 style="max-width:22ch">${sp.big}</h1>
+    <div class="rowlist" style="margin-top:22px">${sp.qs.map((q,i)=>`<div class="r" style="border-color:${i<sp.qs.length-1?'#2A3541':'transparent'}">
+      <div class="say">${q.q}${q.tag?` <b style="color:var(--accent)">${q.tag}</b>`:''}</div></div>`).join('')}</div>`}),
+
+  next: sp => ({k:'dark', h:()=>`<p class="kicker">Next</p><div class="rowlist" style="margin-top:14px">
+    ${sp.rows.map((r,i)=>`<div class="r" style="border-color:${i<sp.rows.length-1?'#2A3541':'transparent'}">
+      <div class="who" style="color:var(--accent)">${r[0]}</div><div class="say"><b style="font-family:var(--display);font-size:1.18em">${r[1]}</b><br>
+      <span style="color:#8E9AA6;font-size:.86em">${r[2]}</span></div></div>`).join('')}</div><div class="foot">${sp.foot}</div>`}),
+};
+
+const S = SPEC.map(sp => {
+  const r = WEB[sp.type];
+  if (!r) throw new Error(`web deck: no renderer for "${sp.type}" (${sp.id})`);
+  return Object.assign({slug: sp.id, notes: sp.notes || ''}, r(sp));
+});
+
+/* Sub-steps. A slide declares `subs: n` to mean it has n reveal stages after
+   its initial view; h() and draw() receive the current stage. Addressable the
+   way the sorting deck does it: #3 is the slide, #3a its first stage. Slides
+   without `subs` are unaffected — h() simply ignores the argument. */
+// declared steps for text reveals, chart stages for the charts, whichever is more
+const SUBS = i => (i===state.step)
+  ? Math.max(S[i].subs||0, state.stages||0)
+  : (S[i].subs||0);
+// Kick the CSS transitions one frame after insertion, so the browser has a
+// starting value to animate away from. getTotalLength() throws on a detached or
+// zero-length node, hence the try.
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)');
+
+/* Charts ARM rather than play. On arrival you get the ghost — the shape, faint —
+   and nothing else; each → sweeps one more series across. That is the sorting
+   deck's behavior, and the reason its charts read as an argument being walked
+   rather than a picture dropped on the screen.
+
+   arm()          hides every stage and measures its dash length with the
+                  transition off. Unstaged animatables (bars, table cells) are
+                  not part of the argument, so they just land.
+   paintStages()  shows the first n stages. Only the newly-reached one animates;
+                  the rest land instantly, so re-rendering a slide does not
+                  replay everything already on screen.                          */
+function setStage(g, on, animate){
+  const draws=[...g.querySelectorAll('.draw')], pops=[...g.querySelectorAll('.pop')];
+  const len = n => { try{ return n.getTotalLength(); }catch(_){ return 0; } };
+  if(!on){
+    draws.forEach(n=>{ const L=len(n); n.style.strokeDashoffset = L? L+'px':'0px'; });
+    pops.forEach(n=>n.classList.remove('go'));
+    return;
+  }
+  if(animate && !REDUCED.matches){
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      draws.forEach(n=>n.style.strokeDashoffset='0px');
+      pops.forEach(n=>n.classList.add('go'));
+    }));
+  } else {                                   // land it, no motion
+    [...draws,...pops].forEach(n=>n.style.transition='none');
+    draws.forEach(n=>n.style.strokeDashoffset='0px');
+    pops.forEach(n=>n.classList.add('go'));
+    void g.getBoundingClientRect();
+    [...draws,...pops].forEach(n=>n.style.transition='');
+  }
+}
+function arm(root){
+  root.querySelectorAll('.stage').forEach(g=>g.classList.remove('on'));
+  root.querySelectorAll('.draw').forEach(n=>{
+    n.classList.remove('anim');
+    n.style.transition='none';
+    let L=0; try{ L=n.getTotalLength(); }catch(_){}
+    n.style.strokeDasharray  = L? L+'px':'none';
+    n.style.strokeDashoffset = L? L+'px':'0px';
+  });
+  root.querySelectorAll('.stage .pop').forEach(n=>n.classList.remove('go'));
+  void root.getBoundingClientRect();          // flush, or removing the transition does nothing
+  root.querySelectorAll('.draw').forEach(n=>{ n.style.transition=''; n.classList.add('anim'); });
+  root.querySelectorAll('.growy,.growx').forEach(n=>n.classList.add('go'));
+  root.querySelectorAll('.pop').forEach(n=>{ if(!n.closest('.stage')) n.classList.add('go'); });
+}
+function paintStages(root, n, animateLast){
+  const gs=[...root.querySelectorAll('.stage')];
+  gs.forEach((g,i)=>{
+    const on = i < n;
+    g.classList.toggle('on', on);
+    setStage(g, on, on && animateLast && i === n-1);
+  });
+  // Stage i is painted once n > i, so the question tagged i is the one that has
+  // not been answered yet. When n reaches the stage count, none match and the
+  // chart is left to speak for itself.
+  root.querySelectorAll('.ask').forEach(a=>
+    a.classList.toggle('on', +a.dataset.stage === n));
+  return gs.length;
+}
+// Click a chart to replay it: back to the ghost, then sweep the revealed stages.
+function replay(svg){
+  const shown=[...svg.querySelectorAll('.stage')].filter(g=>g.classList.contains('on')).length || 1;
+  arm(svg);
+  paintStages(svg, 0, false);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    for(let i=1;i<shown;i++) paintStages(svg,i,false);   // earlier stages land
+    paintStages(svg, shown, true);                        // the last one sweeps
+  }));
+}
+function render(){
+  const s=S[state.step];
+  // h()/draw() see only the slide's DECLARED steps. Chart stages are counted
+  // after the draw and clamped separately — passing a raw 99 (which is how
+  // "land this slide fully revealed" is expressed) straight into h() is how
+  // captions came out as "undefined".
+  const kH = Math.min(state.sub, s.subs||0);
+  $("#deck").dataset.drawn = "0";
+  $("#deck").innerHTML=`<section class="slide ${s.k} on">${s.h(kH)}</section>`;
+  $("#bar").style.width=((state.step+1)/S.length*100)+"%";
+  $("#notesbody").textContent=s.notes||"No notes for this slide.";
+  if(s.draw) s.draw(kH);
+  const deck=$("#deck");
+  arm(deck);
+  // A slide's step count is the greater of what it declares and what its chart
+  // provides, so adding a series to a chart adds a step without touching nav.
+  state.stages = deck.querySelectorAll('.stage').length;
+  const maxSub = Math.max(s.subs||0, state.stages);
+  if(state.sub > maxSub) state.sub = maxSub;
+  // Animate only when we stepped FORWARD one notch within the same slide;
+  // arriving at a slide, or jumping, lands whatever is due without motion.
+  const stepped = (state.step===state.lastStep) && (state.sub===state.lastSub+1);
+  paintStages(deck, state.sub, stepped);
+  deck.dataset.drawn = (state.sub >= state.stages) ? "1" : "0";
+  state.lastStep=state.step; state.lastSub=state.sub;
+}
+const state={step:0,sub:0,stages:0,lastStep:-1,lastSub:-1};
+const subTag = n => n>0 ? String.fromCharCode(96+n) : "";
+function go(n,push=true,sub=0){
+  state.step=Math.max(0,Math.min(S.length-1,n));
+  // Only the lower bound can be clamped here: the upper bound is the chart's
+  // stage count, which is not known until the slide has rendered. Clamping
+  // against the OUTGOING slide's count is how stepping backwards onto a chart
+  // used to land it half-drawn.
+  state.sub=Math.max(0,sub);
+  render();                       // clamps state.sub, then paints
+  if(push) location.hash=String(state.step+1)+subTag(state.sub);
+  hint();
+}
+function hint(){
+  const tag=`#${state.step+1}${subTag(state.sub)}`;
+  // One dot per stage on this slide, filled as far as you have got. Without it
+  // a chart that arms looks finished on arrival and nobody presses again. The
+  // sorting deck has always shown these; this deck did not, and that was the
+  // only difference between the two corners.
+  const max=SUBS(state.step);
+  const dots = max
+    ? `<span class="dots">${Array.from({length:max},(_,i)=>
+        `<i class="${i<state.sub?"on":""}"></i>`).join("")}</span>`
+    : "";
+  $("#hint").innerHTML=`<b class="nums">${tag}</b><span style="opacity:.7">`
+    +` of ${S.length} · ${S[state.step].slug}</span>${dots}<br>? help · N notes`;
+}
+function next(){ if(state.sub<SUBS(state.step)) go(state.step,true,state.sub+1);
+                 else go(state.step+1,true,0); }
+function prev(){ if(state.sub>0) go(state.step,true,state.sub-1);
+                 else go(state.step-1,true,99); }   // land the previous slide fully drawn
+function fromHash(){
+  const h=decodeURIComponent(location.hash.replace(/^#/,""));
+  const m=h.match(/^(\d+)([a-z]?)$/);
+  if(m) return [Math.min(S.length,Math.max(1,+m[1]))-1,
+                m[2]?m[2].charCodeAt(0)-96:0];
+  const i=S.findIndex(x=>x.slug===h);
+  return i<0?null:[i,0];
+}
+addEventListener("hashchange",()=>{const h=fromHash();
+  if(h&&(h[0]!==state.step||h[1]!==state.sub)) go(h[0],false,h[1]);});
+function help(on){const h=$("#help");h.hidden=(on===undefined)?!h.hidden:!on;
+  $("#hint").style.visibility=h.hidden?"visible":"hidden";}
+function notes(on){const n=$("#notes");n.hidden=(on===undefined)?!n.hidden:!on;}
+$("#help").addEventListener("click",()=>help(false));
+$("#hint").addEventListener("click",()=>help(true));
+addEventListener("keydown",e=>{
+  const typing=/^(INPUT|TEXTAREA)$/.test(e.target.tagName);
+  if(typing&&!["Escape","ArrowRight","ArrowLeft"].includes(e.key))return;
+  switch(e.key){
+    case "ArrowRight":case " ":case "PageDown":next();e.preventDefault();break;
+    case "ArrowLeft":case "PageUp":prev();e.preventDefault();break;
+    case "ArrowDown":go(state.step+1);e.preventDefault();break;   // skip the stages
+    case "ArrowUp":go(state.step-1);e.preventDefault();break;
+    case "Home":go(0);break;
+    case "End":go(S.length-1);break;
+    case "n":case "N":notes();break;
+    case "f":case "F":document.fullscreenElement?document.exitFullscreen()
+      :document.documentElement.requestFullscreen?.();break;
+    case "t":case "T":{const r=document.documentElement;
+      r.dataset.theme=r.dataset.theme==="dark"?"light":"dark";render();break;}
+    case "?":help();break;
+    case "Escape":help(false);notes(false);break;}});
+// Click anywhere to advance, the way a remote would — controls exempt.
+$("#deck").addEventListener("click",e=>{
+  if(e.target.closest("input,button,label,select,textarea,a,.hit")) return;
+  const svg=e.target.closest("svg");
+  if(svg){ replay(svg); return; }            // clicking a chart replays it
+  next();});
+{const h=fromHash(); if(h){ state.step=h[0]; state.sub=h[1]; }}
+go(state.step,true,state.sub);
+let rz;addEventListener("resize",()=>{clearTimeout(rz);
+  rz=setTimeout(()=>go(state.step,false,state.sub),140);});
+</script>
+</body></html>
