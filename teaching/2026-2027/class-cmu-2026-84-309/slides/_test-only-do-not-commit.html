@@ -336,7 +336,11 @@ table.cmp td.nums{font-family:var(--display);font-size:1.35em;font-weight:600}
     fill .45s ease,opacity .3s ease}
 .md{transition:cx .6s cubic-bezier(.4,0,.2,1),cy .6s cubic-bezier(.4,0,.2,1),
     fill .45s ease,opacity .45s ease}
-@media (prefers-reduced-motion:reduce){ .mb,.md{transition:none} }
+/* Same idea as .mb/.md for a line whose endpoints move instead of a mark's
+   position -- the scatter's regression line glides between years rather
+   than being torn down and redrawn. */
+.mline{transition:x1 .5s ease,y1 .5s ease,x2 .5s ease,y2 .5s ease,opacity .3s ease}
+@media (prefers-reduced-motion:reduce){ .mb,.md,.mline{transition:none} }
 /* The player sits under its chart and reads as a control, not as content. */
 .ctl .yr{font-size:clamp(20px,2.1vw,38px);color:var(--accent);min-width:3.4em;
   display:inline-block}
@@ -393,9 +397,9 @@ function clear(svg){ while (svg.firstChild) svg.removeChild(svg.firstChild); }
 // Pen speed for the drawing lines, in px per ms. One constant for the deck so
 // every chart draws at the same rate; duration falls out of the path length.
 const DRAW_PX_PER_MS = 0.30;   // ~2.6s across a full-width series, as in the sorting deck
-const ASK_FS = 30;                       // big enough to be read from the back
+const ASK_FS = 18;                       // legible, but small enough to park in the margin
 // SVG text does not wrap, so break the question into rows by hand. Words only:
-// a mid-word break in 30px bold is more distracting than a short line.
+// a mid-word break in bold is more distracting than a short line.
 function wrapAsk(str, max){
   const out=[]; let cur='';
   for (const w of String(str).split(/\s+/)){
@@ -438,6 +442,9 @@ function chart(svg, cfg){
       'font-size':14,'font-weight':700,fill:r.color||MUT}, r.label));
   });
   let stageIx = 0;                       // which .stage this line will become
+  const labelQ = [];   // end-of-line labels, placed once every line has run --
+                        // two series that converge by the last year would
+                        // otherwise print their labels on top of each other.
   cfg.lines.forEach(L=>{
     const d = L.data.filter(p=>p[0]>=xa && p[0]<=xb);
     if (!d.length) return;
@@ -480,26 +487,39 @@ function chart(svg, cfg){
        style:`transition-delay:${staged?Math.round(cum[k]/tot*dur):0}ms`})));
     if (staged) svg.appendChild(host);
     if (L.label){ const p=d[d.length-1];
-      (staged?host:svg).appendChild(el('text',{x:px(p[0])+12,y:py(p[1])+5,
-        'font-size':16,'font-weight':700,fill:L.color, opacity:L.op||1}, L.label)); }
+      labelQ.push({host:(staged?host:svg), x:px(p[0])+12, y:py(p[1])+5,
+        color:L.color, op:L.op||1, text:L.label}); }
 
-    // The question this line answers, parked at the point the line will reach,
-    // right-aligned so it grows leftward into empty plot rather than off the
-    // edge. Tagged with its own stage index; paintStages shows the one whose
-    // turn is next.
+    // The question this line answers, parked in the right margin -- the same
+    // strip its end-label will occupy once the line is drawn (that .stage is
+    // still visibility:hidden, so the strip is empty while the ask shows).
+    // Left-aligned there instead of pinned to the line's own endpoint: the
+    // old version sat on top of the ghost line itself, since the endpoint IS
+    // a point on that line. Tagged with its own stage index; paintStages
+    // shows the one whose turn is next.
     if (staged && L.ask){
-      const p = d[d.length-1], ax = px(p[0]) - 16;
-      const rows = wrapAsk(L.ask, Math.max(18, Math.floor((ax - x0) / (ASK_FS*0.5))));
-      let ay = py(p[1]) - 20 - (rows.length-1)*(ASK_FS+4);
-      if (ay < y0 + ASK_FS) ay = py(p[1]) + 34;          // no room above; go below
+      const ax = x1 + 14, askW = Math.max(80, W - ax - 8);
+      const rows = wrapAsk(L.ask, Math.max(10, Math.floor(askW / (ASK_FS*0.52))));
+      const ay = (y0+y1)/2 - (rows.length-1)*(ASK_FS+4)/2;
       const gAsk = el('g',{class:'ask','data-stage':String(stageIx)});
       rows.forEach((r,i)=>gAsk.appendChild(el('text',
-        {x:ax, y:ay + i*(ASK_FS+4), 'text-anchor':'end', 'font-size':ASK_FS,
+        {x:ax, y:ay + i*(ASK_FS+4), 'text-anchor':'start', 'font-size':ASK_FS,
          'font-weight':700, fill:css('--ink')}, r)));
       svg.appendChild(gAsk);
     }
     if (staged) stageIx++;
   });
+  // De-collide the end labels: push apart any pair closer than one line-height,
+  // forward then backward so the nudge lands roughly centered on the cluster
+  // rather than shoving everything toward one edge. Order is preserved.
+  const LABEL_GAP = 18;
+  labelQ.sort((a,b)=>a.y-b.y);
+  for(let i=1;i<labelQ.length;i++)
+    if(labelQ[i].y < labelQ[i-1].y+LABEL_GAP) labelQ[i].y = labelQ[i-1].y+LABEL_GAP;
+  for(let i=labelQ.length-2;i>=0;i--)
+    if(labelQ[i].y > labelQ[i+1].y-LABEL_GAP) labelQ[i].y = labelQ[i+1].y-LABEL_GAP;
+  labelQ.forEach(L=>L.host.appendChild(el('text',{x:L.x,y:L.y,
+    'font-size':16,'font-weight':700,fill:L.color,opacity:L.op}, L.text)));
   (cfg.marks||[]).forEach(m=>{
     svg.appendChild(el('circle',{cx:px(m.x),cy:py(m.y),r:m.r||8,fill:m.color,
       stroke:css('--card'),'stroke-width':2.5}));
@@ -586,6 +606,67 @@ const TH = D.therm, LY = D.loyalty, LT = D.loyalByTherm, CL = D.claim,
       DS = D.defSize, WB = D.wwcBy, NB = D.nbBy, WI = D.wwcIdeo,
       RS = D.rootShare, SP = D.straight7pool, SC = D.splitCells;
 
+/* Two series NOT from the ANES/D pipeline above -- rebuilt straight from
+   Jonathan's own election archives for the nationalization subsection.
+   HPC: district-level Pearson r between the two-party presidential vote
+   share and the two-party House vote share, one point per presidential
+   election, from house_elections_1968_2024.csv joined to pres_cd_1952_2020
+   on state+district+year (at-large districts normalized to district 1).
+   SSD: count of states whose two sitting senators are from different
+   parties, one point per even year through 2020 from the Dataverse
+   county-level Senate returns (1908-2020) -- terms are six years, so a
+   seat's holder is whoever last won that class's race at or before the
+   year in question -- then 2022 and 2024 folded in from each state's own
+   certified general-election result (Wikipedia's compiled results tables,
+   cross-checked against the six 2020 holdover states). One hand-fix:
+   Georgia's 2020 Class II race (Perdue vs. Ossoff) went to a January 2021
+   runoff that Ossoff won, which the county-returns file -- capped at
+   November 2020 -- has no way to see; left uncorrected it reports Perdue
+   and wrongly counts Georgia as split from 2020 on. */
+const HPC = [[1968,.553],[1972,.292],[1976,.630],[1980,.578],[1984,.575],
+  [1988,.579],[1992,.672],[1996,.781],[2000,.734],[2004,.798],[2008,.756],
+  [2012,.878],[2016,.861],[2020,.925]];
+const SSD = [[1970,19],[1972,21],[1974,21],[1976,23],[1978,26],[1980,25],
+  [1982,24],[1984,23],[1986,21],[1988,21],[1990,22],[1992,21],[1994,18],
+  [1996,21],[1998,19],[2000,14],[2002,14],[2004,14],[2006,14],[2008,11],
+  [2010,15],[2012,16],[2014,14],[2016,12],[2018,9],[2020,6],[2022,5],
+  [2024,3]];
+/* States under unified party control (governor + both chambers, same
+   party) and states with a split legislature (Senate and House/Assembly
+   held by opposite parties), 1992-2026. Both counted straight from
+   Ballotpedia's own year-by-year state-by-state control tables
+   ("Historical and potential changes in trifectas"); Nebraska excluded
+   (nonpartisan, unicameral, no chamber-control figure to compare). */
+const TRIFECTA = [[1992,19],[1993,21],[1994,20],[1995,23],[1996,21],
+  [1997,18],[1998,19],[1999,23],[2000,24],[2001,21],[2002,20],[2003,21],
+  [2004,21],[2005,20],[2006,20],[2007,24],[2008,23],[2009,26],[2010,24],
+  [2011,32],[2012,34],[2013,37],[2014,36],[2015,30],[2016,29],[2017,30],
+  [2018,33],[2019,35],[2020,35],[2021,37],[2022,36],[2023,38],[2024,39],
+  [2025,37],[2026,38]];
+const CHAMBERSPLIT = [[1992,11],[1993,14],[1994,15],[1995,10],[1996,13],
+  [1997,10],[1998,9],[1999,10],[2000,10],[2001,12],[2002,12],[2003,9],
+  [2004,9],[2005,8],[2006,8],[2007,11],[2008,11],[2009,8],[2010,7],
+  [2011,7],[2012,5],[2013,5],[2014,6],[2015,8],[2016,8],[2017,5],
+  [2018,4],[2019,1],[2020,1],[2021,1],[2022,2],[2023,2],[2024,1],
+  [2025,2],[2026,2]];
+/* Favorability toward named public figures, split by leaned party ID --
+   UMass Lowell / YouGov National Survey of American Adults, fielded March
+   26-30, 2026, N=1,000. "gap" is Democrats' favorable % minus Republicans'
+   favorable %, signed (positive = liked more by Democrats). The last two
+   rows are the non-political comparison the deck needed: Zuckerberg is
+   near zero because BOTH sides dislike him; Parton is near zero because
+   BOTH sides like her -- the same poll, the same week, two opposite ways
+   of not being polarizing. */
+const FIGFAV = [
+  {name:'Barack|Obama',    d:90, r:14},
+  {name:'Donald|Trump',    d:3,  r:77},
+  {name:'Kamala|Harris',   d:74, r:7},
+  {name:'Elon|Musk',       d:7,  r:59},
+  {name:'Taylor|Swift',    d:53, r:23},
+  {name:'Mark|Zuckerberg', d:8,  r:13},
+  {name:'Dolly|Parton',    d:78, r:73},
+];
+
 /* The funnel's two end years, pulled out so the speaker notes can quote them
    without hard-coding numbers that the next rebuild might move. */
 const flowAt = y => D.pidFlow.filter(r => r.year === y &&
@@ -594,6 +675,17 @@ const PF72 = flowAt(1972), PF24 = flowAt(2024);
 const PF72tot = PF72.reduce((s,r)=>s+r.pct,0), PF24tot = PF24.reduce((s,r)=>s+r.pct,0);
 /* `row()` keys on .year; the flow rows key on .pid, so the notes need this. */
 const atPid = (rows,k) => ({pct: rows.filter(r=>r.pid===k).reduce((s,r)=>s+r.pct,0)});
+
+/* The same pidFlow crosstab the-funnel animates as a flow, collapsed once
+   per year instead: pid 1-3 are root Democrats plus leaning independents,
+   5-7 the Republican mirror, 4 the leftover who will not lean either way.
+   This is the standard "party ID, leaners folded in" series -- the answer
+   to the question the-question leaves open. */
+const LEANFOLD = D.rootShare.map(r=>r.year).map(year=>{
+  const rows = D.pidFlow.filter(r=>r.year===year);
+  const sum = pids => rows.filter(r=>pids.includes(r.pid)).reduce((s,r)=>s+r.pct,0);
+  return {year, dem:sum([1,2,3]), rep:sum([5,6,7]), ind:sum([4])};
+});
 
 /* ── this room ──────────────────────────────────────────────────────────────
    The Cervas Election Study asks the party-identification pair in the ANES's
@@ -690,6 +782,24 @@ function bars(svg, cfg){
   }
   return {py,x0,x1,y0,y1,svg};
 }
+/* bars() is called fresh on every render (clear(svg) wipes the old marks),
+   and arm() unconditionally re-adds the .go class to every .growy/.pop it
+   finds -- so a bar revealed on an earlier stage would replay its entrance
+   animation every time a LATER stage is added, alongside the genuinely new
+   bar. Call this on any bar/label that should already be sitting at its
+   revealed end-state before arm() runs, so arm()'s blanket .go-add has
+   nothing left to animate. (Same "land it, no motion" idea as setStage()
+   uses for lines; bars need their own copy because they are rebuilt from
+   scratch instead of toggling a persistent .stage wrapper.) */
+function settleBar(el, endTransform){
+  el.style.transition='none';
+  el.style.transform=endTransform;
+  el.classList.add('go');
+}
+// True only when this render is one step forward from the last one -- a
+// fresh jump onto the slide (or a jump past several stages) should land
+// everything instantly, the same distinction paintStages() makes for lines.
+const steppedForward = () => state.step===state.lastStep && state.sub===state.lastSub+1;
 
 /* ── the year player ────────────────────────────────────────────────────────
    A slider and a play button under a chart that has one frame per year. Four
@@ -961,6 +1071,18 @@ function histo(svg){
    unrelated, and a cloud shows that in a way a correlation coefficient does
    not. Dots are created once and their positions transitioned, so a year
    change reads as the same people moving.                                  */
+/* Ordinary least squares, y on x -- just the two coefficients, nothing
+   fancier. Used once, for the scatter's fit line. */
+function olsFit(pts){
+  const n = pts.length;
+  if (n < 2) return null;
+  const mx = pts.reduce((s,p)=>s+p.x,0)/n, my = pts.reduce((s,p)=>s+p.y,0)/n;
+  const sxy = pts.reduce((s,p)=>s+(p.x-mx)*(p.y-my),0);
+  const sxx = pts.reduce((s,p)=>s+(p.x-mx)*(p.x-mx),0);
+  if (sxx === 0) return null;
+  const b = sxy/sxx, a = my - b*mx;
+  return {a,b};
+}
 function scatterPlot(svg){
   clear(svg);
   const vb = svg.viewBox.baseVal, W = vb.width, H = vb.height;
@@ -980,6 +1102,14 @@ function scatterPlot(svg){
   svg.appendChild(el('text',{x:px(78),y:py(84),'font-size':14,'font-weight':700,
     fill:css('--ink-3'),transform:`rotate(-33 ${px(78)} ${py(84)})`},
     'feel the same about both'));
+  // The actual best-fit line, against that dashed diagonal: if the two
+  // feelings were one axis with two ends, this would BE the diagonal. It
+  // is close to flat instead -- the visual version of "r near zero" --
+  // and it glides between years rather than being rebuilt (see .mline).
+  const fit = el('line',{class:'mline',stroke:css('--ink'),'stroke-width':2.6,
+    opacity:0}); svg.appendChild(fit);
+  const fitLabel = el('text',{'font-size':14,'font-weight':700,fill:css('--ink'),
+    opacity:0}); svg.appendChild(fitLabel);
   svg.appendChild(el('text',{x:18,y:(y0+y1)/2,'text-anchor':'middle','font-size':15,
     'font-weight':700,fill:css('--ink-3'),
     transform:`rotate(-90 18 ${(y0+y1)/2})`}, 'warmth toward the OTHER party'));
@@ -1006,6 +1136,19 @@ function scatterPlot(svg){
     });
     const rr = D.thermCorr.find(r => r.year === year);
     rlab.textContent = rr && rr.r !== null ? `r = ${rr.r.toFixed(2)}` : '';
+    const fitCoef = olsFit(pts);
+    if (fitCoef) {
+      const yAt0 = fitCoef.a, yAt100 = fitCoef.a + fitCoef.b*100;
+      fit.setAttribute('x1', px(0)); fit.setAttribute('y1', py(Math.max(0,Math.min(100,yAt0))));
+      fit.setAttribute('x2', px(100)); fit.setAttribute('y2', py(Math.max(0,Math.min(100,yAt100))));
+      fit.setAttribute('opacity', 0.85);
+      fitLabel.setAttribute('x', px(100)+8);
+      fitLabel.setAttribute('y', py(Math.max(0,Math.min(100,yAt100)))+5);
+      fitLabel.textContent = 'best fit';
+      fitLabel.setAttribute('opacity', 1);
+    } else {
+      fit.setAttribute('opacity', 0); fitLabel.setAttribute('opacity', 0);
+    }
   };
   // The room, as ringed dots on top of the national cloud. Bigger and outlined
   // so they read as "us" against "them" rather than as more of the same sample.
@@ -1102,25 +1245,15 @@ const S=[
 
 /* ═══════════════════════════════════════ opening ════════════════════════ */
 {slug:"title",k:"dark center",notes:
- "Slide 2 should be up before the bell. Do not talk first.\n\nTwo halves today and they are the same argument twice. First: why do Americans vote a straight ticket at record rates while calling themselves independents at record rates? Abramowitz and Webster say it is because partisanship went negative. Second: did the white working class break for Trump, and if so why? Fiorina says the break is fifty years old and the 2016 story was overblown; Abramowitz says it is real and it is about ideology, not the economy.\n\nEVERYTHING ON THE CHARTS IS REBUILT FROM THE ANES, 1952 to 2024. Two of the rebuilds are the best slides in the deck and neither is in any of the three readings: #19, where the diploma divide turns out to be college graduates moving rather than non-college whites moving, and #23, where the economic explanation flips sign with whoever holds the White House.\n\nOne housekeeping note to make early: their op-ed rough draft was due last night, peer reviews are due Thursday.",
+ "Slide 3 should be up before the bell. Do not talk first.\n\nTwo halves today and they are the same argument twice. First: why do Americans vote a straight ticket at record rates while calling themselves independents at record rates? Abramowitz and Webster say it is because partisanship went negative. Second: did the white working class break for Trump, and if so why? Fiorina says the break is fifty years old and the 2016 story was overblown; Abramowitz says it is real and it is about ideology, not the economy.\n\nEVERYTHING ON THE CHARTS IS REBUILT FROM THE ANES, 1952 to 2024. Two of the rebuilds are the best slides in the deck and neither is in any of the three readings: #32, where the diploma divide turns out to be college graduates moving rather than non-college whites moving, and #36, where the economic explanation flips sign with whoever holds the White House.\n\nOne housekeeping note to make early: their op-ed rough draft was due last night, peer reviews are due Thursday.",
  h:()=>`<p class="kicker">Polarization IV</p>
  <h1>Negative partisanship<br>and the working class</h1>
  <p class="lede">Abramowitz &amp; Webster 2016 · Abramowitz 2025 · Fiorina essay 5 —
  rebuilt from the ANES, 1952 to 2024.</p>
  <div class="foot">84-309 · Tue, Sep 22 · <b>?</b> for keys, <b>N</b> for notes</div>`},
 
-{slug:"entry",k:"wash",notes:
- "Before the bell, and let it run five or six minutes.\n\nWHY THIS QUESTION. Every other way of asking it telegraphs the answer. 'Do you dislike the other party?' gets you performance. This one is a question about a feeling they have actually had, and it is unguessable because you are not going to do anything with the answers for twenty minutes.\n\nCOLLECT EIGHT OR TEN, in their words, on the board. Two columns and do not label them yet: things they were glad about because someone LOST, and things they were glad about because someone WON.\n\nWHAT WILL HAPPEN, and do not say it: the losing column fills up faster, is more vivid, and gets more laughs. People remember relief better than they remember hope.\n\nThat is the entire Abramowitz and Webster thesis, generated by the room, before anyone has seen a thermometer. You point at the board again on #5 and once more on #10.\n\nIf the room is quiet, seed it with a non-partisan example -- a sports rival, a reality show -- and then ask for the political version.",
- h:()=>`<p class="kicker">Before we start — in your group</p>
- <h1 style="max-width:18ch">Think of an election night you were glad about.</h1>
- <p class="punch" style="color:var(--accent);margin-top:12px">Were you glad someone
- <em>won</em>, or glad someone <em>lost</em>?</p>
- <p class="lede" style="color:#5A3038">Be honest about which one it actually was. Name the
- race and the year. If both — say which feeling was bigger.</p>
- <div class="foot"><b>5 minutes · two for the board</b></div>`},
-
 {slug:"two-halves",k:"light",notes:
- "One minute. It is a map, not content.\n\nThe thing to say out loud: these are not two topics that happen to share a day. The second half is the first half applied to one group. Negative partisanship explains why a voter sticks with a party they do not much like; the white working class is the case where everyone has a story about why a group switched.\n\nIf you are behind, the cut order is #12, then #11, then compress #16-18 into one flip. Do not cut #19 or #23.",
+ "One minute. It is a map, not content.\n\nThe thing to say out loud: these are not two topics that happen to share a day. The second half is the first half applied to one group. Negative partisanship explains why a voter sticks with a party they do not much like; the white working class is the case where everyone has a story about why a group switched.\n\nIf you are behind, the cut order is #14, then #13, then compress #18-20 into one flip. Do not cut #32 or #36.",
  h:()=>`<h2>Two halves, one argument</h2>
  <p class="kicker">And the second is the first applied to one group</p>
  <div class="steps">
@@ -1136,6 +1269,16 @@ const S=[
  it stops being a preference and becomes an identity.</p>
  <div class="foot">Op-ed peer reviews due Thursday 11:59 p.m. — two each, on your assigned
  threads.</div>`},
+
+{slug:"entry",k:"wash",notes:
+ "Before the bell, and let it run five or six minutes.\n\nWHY THIS QUESTION, AND WHY NOT 'ELECTION NIGHT.' Every direct way of asking it telegraphs the answer — including the election framing itself, three weeks in. This version is unguessable because it is not obviously about politics yet, and it is a question about a feeling they have actually had, not a performance.\n\nCOLLECT EIGHT OR TEN, in their words, on the board. Two columns and do not label them yet: things they were glad about because someone/something LOST, and things they were glad about because someone/something WON.\n\nWHAT WILL HAPPEN, and do not say it: the losing column fills up faster, is more vivid, and gets more laughs. People remember relief better than they remember hope. It will not matter that most of the examples are sports, reality TV, or a rival at work — that is the point, not a failure of the prompt.\n\nTHEN BRIDGE IT, once the board has eight or ten items: 'Now think of the last election you actually cared about. Which column were you really in?' Most of the room moves to the LOST column, or admits they were already there.\n\nThat is the entire Abramowitz and Webster thesis, generated by the room, before anyone has seen a thermometer. You point at the board again on #5 and once more on #11.",
+ h:()=>`<p class="kicker">Before we start — in your group</p>
+ <h1 style="max-width:18ch">Think of a contest, game, or vote that mattered to you.</h1>
+ <p class="punch" style="color:var(--accent);margin-top:12px">Were you gladder about who
+ <em>won</em>, or who <em>lost</em>?</p>
+ <p class="lede" style="color:#5A3038">Sports, a reality show, an election — anything with
+ a winner and a loser. Name it. If both feelings were there, say which was bigger.</p>
+ <div class="foot"><b>5 minutes · two for the board</b></div>`},
 
 /* ═══════════════════════════ half one — negative partisanship ═══════════ */
 {slug:"puzzle",k:"light",subs:2,notes:
@@ -1215,6 +1358,37 @@ const S=[
      {start: 1972, jumps:[1972, 2000, 2024], ms: 640});
  }},
 
+{slug:"leaned-camps",k:"light",subs:3,notes:
+ "The chart version of the picture they just watched flow. Four minutes.\n\nSame three questions as “Look at the question itself” — Democrat, Republican, Independent — but now every leaner is folded into the party they lean toward, exactly the way the last slide showed the amber block draining. Root partisans plus their leaners on each side; only the ones who will not lean at all are left in the middle.\n\nREVEAL DEMOCRATS FIRST: " + f0(row(LEANFOLD,1972).dem) + "% in 1972, " + f0(row(LEANFOLD,2024).dem) + "% now — basically flat, same story as the root question.\n\nTHEN REPUBLICANS: " + f0(row(LEANFOLD,1972).rep) + "% to " + f0(row(LEANFOLD,2024).rep) + "% — a real rise, and bigger than the root question showed, because it is picking up the leaners the root question was missing.\n\nTHEN THE PUNCHLINE, and let it sit: pure independents, " + f0(row(LEANFOLD,1972).ind) + "% in 1972 to " + f0(row(LEANFOLD,2024).ind) + "% now. NOT a rise. A fall — to the lowest point on the whole chart.\n\nPUT IT NEXT TO THE LAST LINE-CHART SLIDE THEY SAW: 'Look at the question itself' ended on 'the country is drifting out of the parties.' That was true of the first thing out of their mouth. It was never true of how they actually sort once you ask the follow-up. Two charts, same underlying respondents, opposite headline — and the difference is one question.\n\nTHIS IS THE METHODOLOGICAL PAYLOAD OF THE WHOLE OPENING: which one is 'true' depends entirely on whether you count leaners as partisans, and the deck has now shown you the data to answer that for yourself rather than being told.",
+ subsHint:"Democrats, then Republicans, then the independents who are left",
+ h:(k=0)=>`<h2>Fold the leaners back in</h2>
+ <p class="kicker">Same three questions — with the follow-up counted this time</p>
+ ${SVG('leanfold', 330)}
+ <p class="punch beat">${
+   k>=3?`Pure independents: <b>${f0(row(LEANFOLD,1972).ind)}% → ${f0(row(LEANFOLD,2024).ind)}%</b>.
+     Not a rise. The lowest point on the chart. The last slide's “drifting out” was true of the
+     first thing out of their mouth — never true of how they actually sort.`
+   :k>=2?`Republicans, leaners included: <b>${f0(row(LEANFOLD,1972).rep)}% →
+     ${f0(row(LEANFOLD,2024).rep)}%</b>. A real rise — bigger than the root question showed.`
+   :k>=1?`Democrats, leaners included: <b>${f0(row(LEANFOLD,1972).dem)}% →
+     ${f0(row(LEANFOLD,2024).dem)}%</b>. Basically flat.`
+   :`Same respondents as the last chart. This time, every leaner counts.`}</p>
+ <div class="foot">ANES, VCF0301 by VCF0303 — the same crosstab the funnel animated, one
+ cross-section per year instead of a flow. Leaners counted as partisans throughout the
+ rest of this deck, as “So is a leaner a partisan?” showed why.</div>`,
+ draw:()=>{
+   chart($('#leanfold'),{xdom:[1972,2024],ydom:[0,60],yticks:[0,20,40,60],
+     yfmt:v=>v+'%',xticks:[1972,1984,1996,2008,2024], ylab:'share of adults',
+     pad:{r:190},
+     lines:[
+       {data:ser(LEANFOLD,'dem'),color:css('--blue'),w:3.2,label:'Democrat (+leaners)',
+        ask:'How many are Democrats once leaners are counted?'},
+       {data:ser(LEANFOLD,'rep'),color:css('--accent'),w:3.2,label:'Republican (+leaners)',
+        ask:'And Republicans?'},
+       {data:ser(LEANFOLD,'ind'),color:css('--cross'),w:3.2,label:'pure independent',
+        ask:'Who is left in the middle?'}]});
+ }},
+
 {slug:"our-funnel",k:"light",notes:
  "The same two questions, asked of this room in August, and it is worth five minutes because the answer is NOT the national one.\n\nEvery dot is one of them. The row tells you what they said at the first ask; the dots show where the follow-up put them.\n\nAt the first ask: " + cesRoot('Democrat') + " said Democrat, " + cesRoot('Republican') + " said Republican, and " + cesRoot('Independent or none') + " would not name a party.\n\nOf the " + CE.indLean.n + " of those who then placed themselves on the seven-point scale: " + CE.indLean.lean + " lean toward a party, " + CE.indLean.pure + " are pure independents.\n\nSO THIS ROOM IS " + f0(100*CE.indLean.lean/CE.indLean.n) + "% LEANERS AMONG ITS INDEPENDENTS, AGAINST 82% NATIONALLY. Say that slowly, because it runs the other way from the national slide they just watched. The independents in this room are more likely to be genuinely independent than the country's are.\n\nWHY THAT MIGHT BE, and put it to them rather than answering:\n  · Age. Almost none of them have voted in more than one presidential election, and partisan attachment strengthens with each one.\n  · Selection. They chose a course about political division, which may select for people who are self-conscious about their own partisanship.\n  · Social desirability. Their professor reads these answers, in a class about polarization.\n  · Small numbers. " + CE.indLean.n + " people. One person moving is eight points.\n\nTHE LAST ONE MATTERS MOST AND SAY IT FIRST. With thirteen people in the middle block the honest statement is 'about half,' not '54%.' Put the confidence interval in words: you could not tell this room apart from a room that was two-thirds leaners.\n\nThat is the right lesson for a class that has spent three weeks reading percentages off national surveys with thousands of respondents. Their own data is the place to learn what a small n feels like.\n\nWHERE THE LOPSIDEDNESS SHOWS: only four Republicans at the first ask. Nothing in this room can speak to how Republicans behave, and the deck does not try.",
  h:()=>`<h2>The same two questions, asked of you</h2>
@@ -1271,16 +1445,26 @@ const S=[
               stage:false}]});
    const rects=[...$('#leaners').querySelectorAll('.growy')];
    const labs=[...$('#leaners').querySelectorAll('.pop')];
-   const on = i => k>=3 ? true
-                 : k===2 ? (i!==3 ? true : true)
-                 : k===1 ? (i===0||i===1||i===5||i===6)
-                 : false;
-   rects.forEach((r,i)=>{ if(!on(i)) r.setAttribute('opacity','0.12'); });
-   labs.forEach((t,i)=>{ if(!on(i)) t.setAttribute('opacity','0'); });
-   if (k===2) { // leaners arrive with the pure independent still greyed
-     [2,4].forEach(i=>{ rects[i].setAttribute('opacity','1');
-       labs[i].setAttribute('opacity','1'); });
-   }
+   // Which stage each bar brightens at (replaces a ternary that always
+   // evaluated true at k===2 and let the pure independent, index 3, light
+   // up a stage early instead of staying greyed until k===3).
+   const enterStage = i => (i===0||i===1||i===5||i===6) ? 1 : (i===2||i===4) ? 2 : 3;
+   // Every bar is at least dimly visible from the moment the chart is first
+   // drawn -- the reveal here is a brightness change, never a height change
+   // -- but bars() rebuilds every rect from scratch on every render and
+   // arm() would otherwise replay the whole scaleY grow on all seven bars
+   // every keypress. Bars never need to animate here; only a label popping
+   // in for the first time does.
+   const stepped = steppedForward();
+   rects.forEach((r,i)=>{
+     r.setAttribute('opacity', k>=enterStage(i) ? '1' : '0.12');
+     settleBar(r,'scaleY(1)');
+   });
+   labs.forEach((t,i)=>{
+     if (k < enterStage(i)) { t.setAttribute('opacity','0'); return; }
+     t.setAttribute('opacity','1');
+     if (enterStage(i)!==k || !stepped) settleBar(t,'scale(1)');
+   });
  }},
 
 {slug:"their-answer",k:"dark center",notes:
@@ -1316,6 +1500,29 @@ const S=[
         ask:'And toward the other one?'}]});
  }},
 
+{slug:"figure-gap",k:"light",subs:1,notes:
+ "Two minutes. The last slide was about feelings toward THE PARTIES as abstractions. This is the same feeling attached to actual names.\n\nSOURCE: UMass Lowell / YouGov National Survey of American Adults, fielded March 26-30, 2026, N=1,000 (the same house that runs the presidential-approval numbers you may see in the news). It asked favorable/unfavorable on a long list of public figures, crossed by leaned party ID. The bar is Democrats' favorable percent minus Republicans' favorable percent for that person -- positive bars are liked more by Democrats, negative bars more by Republicans.\n\nTHE FIRST FOUR ARE THE EXPECTED STORY: Obama +76, Trump -74, Harris +67, Musk -52. A sitting or former president, a vice-president, the world's most talked-about businessman -- all split the country by 50 to 76 points, the same order of magnitude as the party thermometers themselves.\n\nTAYLOR SWIFT IS THE TRANSITIONAL CASE: +30. A pop star, not a politician, but one who has publicly endorsed candidates -- and the gap shows it. Partisanship reaches exactly as far as she has waded into politics, no further.\n\nTHE LAST TWO ARE THE PUNCHLINE AND THEY LAND FOR OPPOSITE REASONS. Zuckerberg is near zero -- +5 -- because BOTH sides mostly dislike him: 8% of Democrats and 13% of Republicans call him favorable. Dolly Parton is ALSO near zero -- also +5 -- but because both sides like her: 78% of Democrats AND 73% of Republicans. Same poll, same week, same near-zero gap, opposite reason. Ask the room to guess which is which before you reveal the labels.\n\nSAY THE POINT PLAINLY: negative partisanship is not a rule about arithmetic that makes every public figure split 50/50 by party. It is a rule about what a person has come to REPRESENT. Step outside politics far enough -- a country singer nobody has to take sides on -- and the gap simply is not there.",
+ h:(k=0)=>`<h2>The same gap, with names attached</h2>
+ <p class="kicker">Favorability gap between Democrats and Republicans, named public figures</p>
+ ${SVG('figgap', 380)}
+ <p class="punch beat">${k>=1?`Obama, Trump, Harris and Musk split the country by <b>50 to 76</b> points —
+   right in line with the party thermometers themselves. Zuckerberg and Dolly Parton both land
+   near zero, for opposite reasons: one because both sides dislike him, the other because both
+   sides like her.`
+   :`Presidents and running mates split the country by 50-plus points. Guess how big the gap is
+   for a country music star nobody has to take sides on.`}</p>
+ <div class="foot">UMass Lowell / YouGov National Survey of American Adults, fielded March
+ 26–30, 2026, N=1,000, crossed by leaned party ID. Bar = % favorable among Democrats minus
+ % favorable among Republicans.</div>`,
+ draw:()=>{
+   const g = bars($('#figgap'),{
+     cats:FIGFAV.map(f=>f.name),
+     ymin:-90, ymax:90, yticks:[-80,-40,0,40,80], yfmt:v=>(v>0?'+':'')+v,
+     vfmt:v=>(v>0?'+':'')+v.toFixed(0), pad:{l:58,r:24,b:74}, legend:false,
+     series:[{values:FIGFAV.map(f=>f.d-f.r),
+              color:v=>v>=0?css('--blue'):css('--accent')}]});
+ }},
+
 {slug:"the-histogram",k:"light",notes:
  "The averages on the last slide hide the shape, and the shape is the thing. Five minutes, and let them drive it again.\n\nThis is the whole distribution of how party supporters rate the OTHER party. Red bins are dislike, grey is exactly neutral, teal is warmth.\n\nSTART AT 1978 AND LOOK AT IT BEFORE YOU PLAY. It is a normal-ish hump centered on 50. The modal American partisan in 1978 felt neutral about the other party. Say that out loud, because it is almost unimaginable to a room this age.\n\nThen play it.\n\nThe mountain walks left and then piles up against the wall at zero. By 2024 the biggest single bin is 0-9, at " + f0(D.thermHist.filter(r=>r.year===2024&&r.bin===1)[0].pct) + "%, and " + f0(row(TH,2024).at0) + "% give the other party an exact zero.\n\nTHE MOMENT TO PAUSE ON is somewhere around 2000-2008, where the hump is visibly flattening and sliding but has not yet hit the wall. Drag back and forth across it. That is the transition the article was written in the middle of.\n\nWHY THIS IS BETTER THAN THE LINE CHART: a mean of 21 could be everybody at 21, or half the country at 42 and half at zero. It is closer to the second. The distribution is not a hump that moved; it is a hump that became a pile against a boundary, and that is a different kind of fact about a country.\n\nIF SOMEONE ASKS ABOUT THE SPIKES at 50, 60, 70, 85: real, and they are an artifact of how people use a 0-100 scale — round numbers and the ends. Every thermometer analysis lives with it. Binning by tens mostly hides it, which is why these bins are tens.",
  h:()=>`<h2>Now watch the whole distribution</h2>
@@ -1329,7 +1536,7 @@ const S=[
    const svg = histo($('#hist'));
    const years = D.thermHist.map(r => r.year);
    yearPlayer('#hist-ctl', years, y => svg.__update(y),
-     {start: years[0], jumps:[1978, 2000, 2024], ms: 560,
+     {start: years[0], jumps:[1978, 2000, 2024], ms: 320,
       toggle: 'add this room', onToggle: on => svg.__class(on)});
  }},
 
@@ -1384,15 +1591,16 @@ const S=[
  }},
 
 {slug:"the-scatter",k:"light",notes:
- "The claim that makes 'negative partisanship' a separate thing rather than a restatement, and it is worth four minutes because it is easy to miss in the text.\n\nEach dot is one respondent. Across: how warm they are toward their OWN party. Up: how warm toward the OTHER one. The dashed diagonal is where you feel the same about both.\n\nTHE CLAIM: these two feelings are nearly INDEPENDENT. Abramowitz and Webster report an average correlation of about −.09, and after controlling for strength of identification, essentially zero. This rebuild gives " + D.thermCorr.map(r=>r.r).filter(r=>r!==null).reduce((s,r,_,a)=>s+r/a.length,0).toFixed(2) + " on average — same answer.\n\nWHAT THAT MEANS, and this is the part to labor: loving your own side and hating theirs are not two ends of one feeling. They are two different feelings that happen to live in the same person. You can adore your party and be fine with the other one. You can be lukewarm about your own and despise theirs — and that combination is now common.\n\nPLAY IT. The cloud does not rotate or tighten. It SLIDES DOWN. The horizontal spread barely changes; the vertical position collapses. That is the same fact as the two-line chart, but here you can see that it is happening to individual people rather than to an average.\n\nWATCH THE BOTTOM EDGE FILL. By 2020 there is a solid bar of dots sitting on the floor — people who gave the other party a zero — spread across every level of warmth toward their own side. Those are the pure negative partisans, and some of them do not even like their own party much.\n\nGOOD QUESTION TO ASK: what would this picture look like if partisanship were one feeling with two ends? A tight negative diagonal. It is nothing like that, in any year.\n\nThe dots are a weighted sample of about 220 per year, seeded, so the picture is identical every time the deck is built.",
+ "The claim that makes 'negative partisanship' a separate thing rather than a restatement, and it is worth four minutes because it is easy to miss in the text.\n\nEach dot is one respondent. Across: how warm they are toward their OWN party. Up: how warm toward the OTHER one. The dashed diagonal is where you feel the same about both. The solid black line is the actual best fit through the cloud, rebuilt fresh for whatever year is on screen.\n\nTHE CLAIM: these two feelings are nearly INDEPENDENT. Abramowitz and Webster report an average correlation of about −.09, and after controlling for strength of identification, essentially zero. This rebuild gives " + D.thermCorr.map(r=>r.r).filter(r=>r!==null).reduce((s,r,_,a)=>s+r/a.length,0).toFixed(2) + " on average — same answer.\n\nUSE THE BEST-FIT LINE AS THE PAYOFF OF THE GOOD QUESTION BELOW: ask what this picture would look like if partisanship were one feeling with two ends, let them say 'a tight negative diagonal,' THEN reveal that the actual fit line is close to flat, nearly the mirror image of that guess. A flat best-fit line is what near-zero correlation looks like — own-party warmth barely predicts other-party warmth at all.\n\nWHAT THAT MEANS, and this is the part to labor: loving your own side and hating theirs are not two ends of one feeling. They are two different feelings that happen to live in the same person. You can adore your party and be fine with the other one. You can be lukewarm about your own and despise theirs — and that combination is now common.\n\nPLAY IT. The cloud does not rotate or tighten. It SLIDES DOWN, and the fit line slides down with it while staying close to flat the whole way. The horizontal spread barely changes; the vertical position collapses. That is the same fact as the two-line chart, but here you can see that it is happening to individual people rather than to an average.\n\nWATCH THE BOTTOM EDGE FILL. By 2020 there is a solid bar of dots sitting on the floor — people who gave the other party a zero — spread across every level of warmth toward their own side. Those are the pure negative partisans, and some of them do not even like their own party much.\n\nThe dots are a weighted sample of about 220 per year, seeded, so the picture is identical every time the deck is built.",
  h:()=>`<h2>Two feelings, not one</h2>
  <p class="kicker">One dot per respondent — warmth toward their own party against warmth
  toward the other</p>
  ${SVG('scat', 396)}
  <div id="scat-ctl"></div>
- <div class="foot">ANES, a weighted sample of about 220 respondents a year. If
- partisanship were a single feeling with two ends, this would be a tight diagonal. It is
- not one, in any year — which is why the other party needs its own measure.</div>`,
+ <div class="foot">ANES, a weighted sample of about 220 respondents a year. The dashed
+ diagonal is what a single feeling with two ends would look like; the solid best-fit line
+ is what the data actually do. It is close to flat, not diagonal, in any year — which is
+ why the other party needs its own measure.</div>`,
  draw:()=>{
    const svg = scatterPlot($('#scat'));
    const years = [...new Set(D.scatter.map(p => p.year))];
@@ -1505,21 +1713,90 @@ const S=[
  <div class="foot">Abramowitz &amp; Webster 2016, 15–16. All three differences significant
  at p &lt; .001. Reported figures, not rebuilt here.</div>`},
 
-{slug:"nationalization",k:"light",notes:
- "The consequence half of the article, and four minutes is plenty.\n\nIf every voter reads every race through the same lens — which party must be kept out — then every race starts to look like the presidential race. That is what nationalization means and these correlations are the evidence.\n\nHouse: the district-level correlation between the presidential and House vote went from .54 in the 1970s to .94 by 2012-14. Senate: .16 to .84.\n\nThe Senate number is the one to dwell on. In the 1970s knowing how a state voted for president told you almost NOTHING about its Senate race — .16 is essentially noise. Split delegations were ordinary. Today it tells you nearly everything.\n\nThe casualty is the incumbency advantage, and the article is precise about where it went: loyalty to incumbents of your OWN party barely moved, while willingness to vote for an incumbent of the other party collapsed. House voters facing an opposing-party incumbent went from 53% loyal to 78%. Incumbency did not stop mattering; it stopped being able to override party.\n\nGOOD DISCUSSION SEED IF YOU HAVE A MINUTE: a moderate incumbent in a district that leans the other way used to be the standard way a party expanded. That politician is now close to extinct. Ask what that does to who is willing to run.\n\nThursday's geography session picks this up from the map side.",
- h:()=>`<h2>And it nationalized everything</h2>
- <p class="kicker">Correlation between the presidential and the down-ballot vote</p>
- <table class="cmp">
-   <tr><th>Correlation with the presidential vote</th><th>1972–80</th><th>1992–2000</th>
-       <th>2012–14</th></tr>
-   <tr><td>House districts</td><td>.54</td><td>.78</td><td class="nums">.94</td></tr>
-   <tr class="hi"><td>States, Senate races</td><td>.16</td><td>.42</td>
-       <td class="nums">.84</td></tr>
- </table>
+{slug:"nationalization",k:"light",subs:1,notes:
+ "The consequence half of the article, and four minutes is plenty.\n\nIf every voter reads every race through the same lens — which party must be kept out — then every race starts to look like the presidential race. That is what nationalization means and this line is the evidence.\n\nTHIS IS OUR OWN REBUILD, not the article's — district-level House returns from 1968 to 2024 against district-level presidential returns from 1952 to 2020, correlated year by year. It lands almost exactly on Abramowitz & Webster's own number: they report .54 in 1972–80 rising to .94 by 2012–14 from their data; ours goes .55 in 1968 to .93 in 2020. Two independent builds, same finding.\n\nPOINT AT 1972: the one dip in an otherwise rising line. Nixon's landslide carried plenty of districts that kept electing a Democrat to the House — a reminder that ticket-splitting was not just common in the 1970s, it could survive even a blowout at the top of the ticket. That is now unthinkable.\n\nThe casualty is the incumbency advantage, and the article is precise about where it went: loyalty to incumbents of your OWN party barely moved, while willingness to vote for an incumbent of the other party collapsed. House voters facing an opposing-party incumbent went from 53% loyal to 78%. Incumbency did not stop mattering; it stopped being able to override party.\n\nGOOD DISCUSSION SEED IF YOU HAVE A MINUTE: a moderate incumbent in a district that leans the other way used to be the standard way a party expanded. That politician is now close to extinct. Ask what that does to who is willing to run.\n\nNext slide takes the same question to the Senate, where the swing is even bigger. Thursday's geography session picks this up from the map side.",
+ h:(k=0)=>`<h2>And it nationalized everything</h2>
+ <p class="kicker">District-level correlation between the presidential and House vote</p>
+ ${SVG('natl', 340)}
+ <p class="punch beat">${k>=1?`From <b>.55</b> in 1968 to <b>.93</b> in 2020 — almost exactly
+   Abramowitz &amp; Webster’s own number (.54 to .94, through 2014, from their data). Knowing
+   who carried a district now tells you almost everything about who won its House seat.`
+   :`If every voter reads every race through the same lens, every race starts to look like
+   the presidential race.`}</p>
  ${BAND('WHAT IT COST',
    'The personal advantage of incumbency. Loyalty to an incumbent of your own party barely moved; willingness to vote for an incumbent of the <em>other</em> party collapsed — House voters facing one went from 53% loyal to their own party to 78%. Incumbency did not stop mattering. It stopped being able to override party.')}
- <div class="foot">Abramowitz &amp; Webster 2016, 17–19. In the 1970s, knowing how a state
- voted for president told you almost nothing about its Senate race.</div>`},
+ <div class="foot">Rebuilt from district-level House returns, 1968–2024, against district-level
+ presidential returns, 1952–2020 (Brunell 1952–2012, Daily Kos 2016–2020). Compare Abramowitz
+ &amp; Webster 2016, 17–19, who report .54 (1972–80) to .94 (2012–14) from their own data.</div>`,
+ draw:()=>{
+   chart($('#natl'),{xdom:[1968,2020],ydom:[0,1],yticks:[0,.2,.4,.6,.8,1],
+     yfmt:v=>v.toFixed(1), xticks:[1968,1980,1992,2004,2020],
+     ylab:'correlation (r)', pad:{r:190},
+     lines:[{data:HPC,color:css('--accent'),w:3.2,label:'House vs. president',
+             ask:'How tightly does a district’s presidential vote predict its House vote?'}]});
+ }},
+
+{slug:"senate-split",k:"light",subs:1,notes:
+ "Four minutes — the same question, one office up, and the swing is bigger.\n\nA state has two senators, elected six years apart on staggered terms, so at any moment each state either has two senators from the same party or a split delegation — one of each. This line counts how many states are in the second group, year by year.\n\nOUR OWN REBUILD, from the Dataverse's county-level Senate returns back to 1908: aggregate each county up to a state-and-seat-class result, take the winner, and carry that winner forward as the seat's holder until the next election for that same class. Do that for both of a state's classes and check whether they match. 2022 and 2024 are not in that file yet, so those two points come from each state's own certified result instead — same method, newer input.\n\nTHE SHAPE: a plateau around 20–26 states through the late 1970s and 1980s — roughly HALF the country had a split delegation, and nobody thought that was strange. Then a fairly steady slide: 14 by 2000, 11 by 2008, 6 by 2020.\n\nSAY THE CONSEQUENCE: the six 2020 holdouts were Maine, Montana, Ohio, Pennsylvania, West Virginia and Wisconsin. Three of those six paired up in 2024 alone — Montana, Ohio and West Virginia all elected a second Republican, leaving only Maine, Pennsylvania and Wisconsin still split. A split delegation used to be an ordinary way for a swing state to hedge. It is now down to three states and shrinking.\n\nTHIS IS THE SAME STORY AS THE LAST SLIDE, one office up: nationalization did not stop at the House. It reached the body designed, by the Framers, to represent STATES rather than the national mood.",
+ h:(k=0)=>`<h2>Split Senate delegations, gone</h2>
+ <p class="kicker">States with one Democratic and one Republican senator</p>
+ ${SVG('sensplit', 340)}
+ <p class="punch beat">${k>=1?`Peaked at <b>26</b> states in 1978 — roughly half the country.
+   Down to <b>3</b> by 2024. A state hedging its bet used to be routine.`
+   :`In the 1970s a state’s two senators being from different parties was ordinary. Guess how
+   many states that is true of today.`}</p>
+ <div class="foot">Rebuilt from Amlani &amp; Algara’s county-level U.S. Senate returns, 1908–2020
+ (Harvard Dataverse), each seat’s current party carried forward from its most recent election;
+ 2022 and 2024 added from each state’s own certified result. Georgia’s 2020 runoff (won by
+ Ossoff in January 2021, after the county file’s November cutoff) is hand-corrected.</div>`,
+ draw:()=>{
+   chart($('#sensplit'),{xdom:[1970,2024],ydom:[0,30],yticks:[0,10,20,30],
+     yfmt:v=>v, xticks:[1970,1980,1990,2000,2010,2020,2024],
+     ylab:'states, split delegation', pad:{r:190},
+     lines:[{data:SSD,color:css('--blue'),w:3.2,label:'split delegations',
+             ask:'How many states still split their two Senate seats between the parties?'}]});
+ }},
+
+{slug:"trifectas",k:"light",subs:1,notes:
+ "Three minutes — same story, one more level down. A state government is a 'trifecta' when one party holds the governorship and both legislative chambers at once; anything else is divided government, which is what the Framers who designed checks and balances mostly assumed you would get.\n\nSOURCE: Ballotpedia keeps the definitive year-by-year table of this, going back to 1992 for all 50 states plus a chamber-control grid it publishes alongside it. Nebraska is left out of the legislative side here because it is nonpartisan and unicameral, so 'both chambers' does not apply.\n\nTHE SHAPE: bounces in the high teens and low twenties through the 1990s — most states divided, trifectas the exception — then a sharp climb starting around 2010 to the high 30s, where it has stayed. 39 of 50 states in 2024 is 78%. Divided state government, once the norm, is now the exception.\n\nWHY THIS TRACKS THE LAST TWO SLIDES: the same nationalization that erased split House districts and split Senate delegations also erased split control WITHIN a single state's own government. A voter who reads every race through 'which party do I trust' does not split their ballot for governor, state senate, and state house any more than for president and Congress.\n\nASK: what does it cost when 39 states can pass whatever their trifecta wants, with no other party's veto in the building? Note that the answer cuts both ways depending on which party holds it — this is not a partisan point, it is a structural one.\n\nNext slide takes it one level further down: even within a divided-government state, are the two legislative chambers themselves still ever split between the parties?",
+ h:(k=0)=>`<h2>One-party state governments are now the norm</h2>
+ <p class="kicker">States where one party holds the governorship and both legislative chambers</p>
+ ${SVG('trifecta', 340)}
+ <p class="punch beat">${k>=1?`From <b>19</b> states in 1992 to <b>39</b> in 2024 — nearly four in five state
+   governments now run through one party, with no other party holding a veto in the building.`
+   :`In the early 1990s most states had divided government — one party never held everything.
+   Guess how many states that is still true of today.`}</p>
+ <div class="foot">Ballotpedia, "Historical and potential changes in trifectas," year-by-year
+ partisan control of the governorship, state senate and state house, 1992–2026. Nebraska
+ excluded (nonpartisan, unicameral legislature).</div>`,
+ draw:()=>{
+   chart($('#trifecta'),{xdom:[1992,2026],ydom:[0,40],yticks:[0,10,20,30,40],
+     yfmt:v=>v, xticks:[1992,2000,2008,2016,2024],
+     ylab:'states, unified control', pad:{r:190},
+     lines:[{data:TRIFECTA,color:css('--accent'),w:3.2,label:'trifecta states',
+             ask:'How many states have one party controlling the governorship and both chambers?'}]});
+ }},
+
+{slug:"chamber-split",k:"light",subs:1,notes:
+ "Two minutes and it rhymes hard with the Senate-delegation slide, so it goes fast.\n\nThis is not about which party controls a state overall — it is narrower: of the states that are NOT trifectas, how many still have their own two legislative chambers split between the parties (one party's Senate, the other party's House or Assembly)? A generation ago that was one of the most ordinary shapes a state legislature could take.\n\nSAME SOURCE as the last slide, same exclusion (Nebraska, nonpartisan unicameral). 'Split' here means a clean opposite-party split, Senate one party and House the other; the handful of tied or bipartisan-coalition chambers Ballotpedia marks separately are not counted either way.\n\nTHE SHAPE: mid-teens through the 1990s — Michigan, Virginia, Washington, Iowa, Montana and others regularly split their own two chambers between the parties. Then the same steady collapse as everything else in this half of class: single digits by the 2010s, and since 2019 it has never been more than two states in the same year. In 2024 exactly one state had a split legislature.\n\nSAY IT PLAINLY: three different levels of American government — the House, the Senate, and now a state's own two legislative chambers — all show the identical shape, all landing in the same place at the same time. That convergence, more than any one number, is the strongest evidence in the whole unit that this is one national phenomenon and not three separate stories.\n\nBridge to discussion: nationalization did not just nationalize WHO wins. It nationalized what winning even looks like — uniform, all-or-nothing, top to bottom of the ballot.",
+ h:(k=0)=>`<h2>Split state legislatures: also nearly gone</h2>
+ <p class="kicker">States whose Senate and House (or Assembly) are held by different parties</p>
+ ${SVG('chambersplit', 340)}
+ <p class="punch beat">${k>=1?`From <b>15</b> states in 1994 to as few as <b>1</b> in recent years.
+   The House, the Senate, and a state's own two chambers — three separate levels, the same
+   collapse, on the same timeline.`
+   :`A state's own two legislative chambers, held by different parties, used to be ordinary too.
+   How many states still split their own legislature?`}</p>
+ <div class="foot">Ballotpedia, "Historical and potential changes in trifectas," state senate vs.
+ state house/assembly control, 1992–2026. Nebraska excluded (nonpartisan, unicameral);
+ bipartisan-coalition or tied chambers counted as neither split nor unified.</div>`,
+ draw:()=>{
+   chart($('#chambersplit'),{xdom:[1992,2026],ydom:[0,16],yticks:[0,4,8,12,16],
+     yfmt:v=>v, xticks:[1992,2000,2008,2016,2024],
+     ylab:'states, split legislature', pad:{r:190},
+     lines:[{data:CHAMBERSPLIT,color:css('--blue'),w:3.2,label:'split legislatures',
+             ask:'How many states still split their own Senate and House between the parties?'}]});
+ }},
 
 {slug:"discuss-1",k:"wash",notes:
  "Eight minutes, and it is the hinge between the two halves.\n\nThis is a normative question with an empirical spine, which is the kind this course is trying to build. Let them argue.\n\nARGUMENTS THAT WILL COME UP:\n\n'Nothing — a vote is a vote.' Push back: then why do we care about representation at all?\n\n'They owe you the policies their party promised.' Good, and it is the responsible-party-government answer. Then ask: what if you voted for them only to keep the other side out and you disagree with half their platform? Who is being represented?\n\n'It is fine, because the parties are now coherent.' This is the strongest version and it is the one political theory tends to endorse — coherent parties are accountable parties. The cost shows up as hostility, not as incoherence. That tension is the best essay prompt in the unit.\n\n'It means they can ignore you.' Correct and it is the article's own conclusion: there is little incentive to consider the views of the other party's supporters because it has become very hard to win their votes.\n\nDO NOT RESOLVE IT. Take three answers and move to the second half.",
@@ -1534,7 +1811,7 @@ const S=[
 
 /* ═══════════════════════════ half two — the working class ═══════════════ */
 {slug:"the-story",k:"dark center",notes:
- "Thirty seconds to set the frame, and read the quote as though you believed it — because most of the country did, and a lot of it still does.\n\nThe claim in the air after 2016: a group that had been Democratic broke, suddenly, and put Trump in the White House. The blue wall fell because Pennsylvania, Michigan and Wisconsin working-class whites switched.\n\nTwo questions in the second half and keep them separate, because almost every argument about this runs them together:\n\n  1. Did it happen? Fiorina says it happened, slowly, starting fifty years ago, and that 2016 is a continuation rather than a rupture.\n  2. If it happened, why? Abramowitz says ideology. The conventional story says economic distress.\n\nYou will find that the answer to the first one depends almost entirely on how you define working class, which is #15.",
+ "Thirty seconds to set the frame, and read the quote as though you believed it — because most of the country did, and a lot of it still does.\n\nThe claim in the air after 2016: a group that had been Democratic broke, suddenly, and put Trump in the White House. The blue wall fell because Pennsylvania, Michigan and Wisconsin working-class whites switched.\n\nTwo questions in the second half and keep them separate, because almost every argument about this runs them together:\n\n  1. Did it happen? Fiorina says it happened, slowly, starting fifty years ago, and that 2016 is a continuation rather than a rupture.\n  2. If it happened, why? Abramowitz says ideology. The conventional story says economic distress.\n\nYou will find that the answer to the first one depends almost entirely on how you define working class, which is #28.",
  h:()=>`<p class="kicker">The second half — the story everyone tells</p>
  <p class="quote">“Donald J. Trump won the presidency by riding an enormous wave of support
  among white working-class voters.”</p>
@@ -1543,16 +1820,20 @@ const S=[
  <p class="punch" style="color:var(--accent)">Two questions, and keep them apart. Did it
  happen? And if it did, why?</p>`},
 
-{slug:"definitions",k:"light",subs:2,notes:
- "The slide that should make them suspicious of every number they have read on this subject.\n\nThere is no agreed definition of working class. Fiorina walks through three — occupation, education, income — and says all of them are crude. Sociologists prefer occupation. Data journalists have settled on 'no four-year degree,' because it is one easy survey item.\n\nThe two on this slide are the two you can actually track over seventy years, and they cover wildly different shares of white America: " + f0(row(DS,2012).byClass) + "% by subjective class against " + f0(row(DS,2012).byDegree) + "% by degree, in 2012.\n\nSAY THE CONSEQUENCE PLAINLY: a claim about 'the white working class' can be a claim about two-thirds of white America or about two-fifths of it, and which one decides whether a lot of findings hold.\n\nFiorina's own point about the degree measure is worth quoting: a college degree meant something different in 1960, when a tenth of adults had one, than it does now that a third do. A measure whose meaning drifts is a bad instrument for a fifty-year trend.\n\nHis choice is the subjective item, because it has been asked in the same words since 1952. Ours has to be both, and the reason is on the next slide but one: the subjective item leaves the ANES cumulative file after " + D.lastClass + ", so it cannot see 2020 or 2024.\n\nWorth asking: which definition would YOU use, and does it change what you would conclude? Hold it — #19 answers it and the answer is yes.",
- subsHint:"the two definitions, then how much they cover",
+{slug:"definitions",k:"light",subs:3,notes:
+ "The slide that should make them suspicious of every number they have read on this subject.\n\nThere is no agreed definition of working class. Fiorina walks through three — occupation, education, income — and says all of them are crude. Sociologists prefer occupation. Data journalists have settled on 'no four-year degree,' because it is one easy survey item.\n\nThe two on this slide are the two you can actually track over seventy years, and they cover wildly different shares of white America: " + f0(row(DS,2012).byClass) + "% by subjective class against " + f0(row(DS,2012).byDegree) + "% by degree, in 2012.\n\nSAY THE CONSEQUENCE PLAINLY: a claim about 'the white working class' can be a claim about two-thirds of white America or about two-fifths of it, and which one decides whether a lot of findings hold.\n\nFiorina's own point about the degree measure is worth quoting: a college degree meant something different in 1960, when a tenth of adults had one, than it does now that a third do. A measure whose meaning drifts is a bad instrument for a fifty-year trend.\n\nHis choice is the subjective item, because it has been asked in the same words since 1952. Ours has to be both, and the reason is on the next slide but one: the subjective item leaves the ANES cumulative file after " + D.lastClass + ", so it cannot see 2020 or 2024.\n\nTHE FOURTH BEAT IS BRAND NEW AND IS THE ONE TO LINGER ON: two live national surveys, asked months apart, that between them add up to more than 100%. Gallup's own five-way class question -- upper, upper-middle, middle, working, lower, pick exactly one -- has run steady since 2019 at 54% middle-or-upper-middle. Pew, in January 2026, asked a DIFFERENT question -- not 'pick one class,' just 'does the phrase \"working class\" describe you' -- and got 60% yes, including half of people with a four-year degree and half of upper-income adults.\n\nDO THE ARITHMETIC ON THE BOARD: 54% + 60% is 114%. These cannot both be exclusive majorities of the same country. Nobody lied to either pollster. The instrument decided the answer before a single American opened their mouth: force one pick among five neat categories and you get a middle-class nation; ask a plain yes/no about one evocative phrase and you get a working-class nation. That is Fiorina's crude-instrument point, live, this year, at national-poll scale -- not a 1950s-item losing its meaning over decades, but two different rulers held up to the same country in the same year giving flatly different answers.\n\nWorth asking: which definition would YOU use, and does it change what you would conclude? Hold it — #32 answers it and the answer is yes.",
+ subsHint:"the two definitions, how much they cover, then two 2026 polls that don't add up",
  h:(k=0)=>`<h2>First: who is the working class?</h2>
  <p class="kicker">There is no agreed answer, and the choice does real work</p>
  ${TWO({tag:'FIORINA’S CHOICE',head:'What you call yourself',
         text:'“Most people say they belong either to the middle class or the working class. Do you ever think of yourself as belonging in one of these classes?” Asked in these words since 1952.'},
        {tag:'EVERYONE ELSE’S',head:'No four-year degree',
         text:'One easy survey item, which is why data journalists use it. But a degree meant something different in 1960, when a tenth of adults had one, than now that a third do.'})}
- <p class="punch beat">${k>=2?`In 2012 the two definitions covered
+ <p class="punch beat">${k>=3?`Two live polls, months apart in 2026. Gallup: <b>54%</b> pick
+   “middle” or “upper-middle” when forced to choose exactly one class. Pew: <b>60%</b> say
+   “working class” describes them, including half of degree-holders and half of upper-income
+   adults. <b>54 + 60 = 114%.</b> The ruler decides the answer, not the country.`
+   :k>=2?`In 2012 the two definitions covered
    <b>${f0(row(DS,2012).byClass)}%</b> and <b>${f0(row(DS,2012).byDegree)}%</b> of white
    America. A claim about “the white working class” can be a claim about two-fifths of it
    or two-thirds.`
@@ -1560,7 +1841,10 @@ const S=[
      meaning.`
    :`Before you can ask whether they switched, you have to say who they are.`}</p>
  <div class="foot">Fiorina, essay 5, “Measures of Social Class.” Sociologists prefer
- occupation; the ANES has no usable occupation series.</div>`},
+ occupation; the ANES has no usable occupation series. Gallup, “Steady 54% of Americans
+ Identify as Middle Class,” May 2024 (five-category forced choice, asked annually since
+ 2002). Pew Research Center, “Which Americans See Themselves as Working Class?” Aug. 31,
+ 2026 (fielded Jan. 20–26, 2026, n=8,512, a separate yes/no item).</div>`},
 
 {slug:"class-id",k:"light",subs:1,notes:
  "His figure 2, rebuilt. Twenty seconds, and it is context rather than argument.\n\nWhite Americans calling themselves working class: " + f0(cs0.working) + "% in " + cs0.year + ", " + f0(cs1.working) + "% by " + cs1.year + ".\n\nTwo things to point at:\n\n  · The long decline, which is the industrial economy shrinking and schooling rising.\n  · The 2008 bump. Working-class identification jumps about seven points in the Great Recession and then resumes its fall. People's sense of their own class responds to events, which is a nice reminder that this is an identity item, not a demographic one.\n\nThe series stops at " + cs1.year + " because the item leaves the ANES cumulative file after that. Say it here, because it constrains three of the next four slides.",
@@ -1604,20 +1888,25 @@ const S=[
  }},
 
 {slug:"class-pid",k:"light",subs:3,notes:
- "His figure 4, and it is the stronger version of the same point because party identification is far stickier than a vote.\n\nDemocratic identification among white working-class respondents — identifiers and leaners — from " + f0(row(CP,1952).wkDem||row(CP,CP[0].year).wkDem) + "% in the 1950s to about " + f0(last(CP).wkDem) + "%.\n\nHIS SHARPEST OBSERVATION, and students always miss it: the Republicans did not gain most of what the Democrats lost. Republican identification among this group rose maybe ten points over seventy years. The growth category is independents.\n\nSo the story is not 'the white working class became Republican.' It is 'the white working class stopped being Democratic,' which is a different and slower thing, and it leaves a large bloc that is detached rather than converted.\n\nThat detached bloc is exactly who a candidate running against both parties is positioned to win, which is the connection to 2016 that Fiorina thinks is real — and it is a much more interesting mechanism than 'they switched teams.'\n\nNote we count leaners as partisans here, as the rest of this unit does. Fiorina's figure uses root identifiers only and runs about ten points lower; the shape is identical. The script prints both.",
- h:(k=0)=>`<h2>They did not become Republicans</h2>
+ "His figure 4, and it is the stronger version of the same point because party identification is far stickier than a vote.\n\nDemocratic identification among white working-class respondents — identifiers and leaners — from " + f0(row(CP,1952).wkDem||row(CP,CP[0].year).wkDem) + "% in the 1950s to about " + f0(last(CP).wkDem) + "%.\n\nCORRECTION TO THE OLDER VERSION OF THIS SLIDE, SAY SO IF YOU TAUGHT IT BEFORE: Republicans DID gain most of what the Democrats lost, not independents. Do the arithmetic on the board — it is the whole point. Democratic identification fell " + f0(CP[0].wkDem-last(CP).wkDem) + " points. Republican identification rose " + f0(last(CP).wkRep-CP[0].wkRep) + " points; pure independents rose " + f0(last(CP).wkPure-CP[0].wkPure) + ". Those two gains have to sum to the Democratic loss, and they do (" + f0(last(CP).wkRep-CP[0].wkRep) + " + " + f0(last(CP).wkPure-CP[0].wkPure) + " ≈ " + f0(CP[0].wkDem-last(CP).wkDem) + "). Republicans took about " + f0(100*(last(CP).wkRep-CP[0].wkRep)/(CP[0].wkDem-last(CP).wkDem)) + "% of the exodus, independents the other " + f0(100*(last(CP).wkPure-CP[0].wkPure)/(CP[0].wkDem-last(CP).wkDem)) + "%.\n\nSO THE HONEST STORY HAS TWO PARTS, NOT ONE: most of the movement is real conversion to the Republican Party — this was not purely detachment. But the independent share nearly doubled too (" + f0(CP[0].wkPure) + "% to " + f0(last(CP).wkPure) + "%), which is a genuinely large bloc that neither party has locked up, and it is still worth a minute on its own.\n\nWHY THIS MATTERS METHODOLOGICALLY, and it is worth saying out loud: a claim can sound right — 'a growing detached middle, not a partisan switch' — and still be wrong once you do the arithmetic on the chart's own numbers. Always check whether the pieces you are comparing actually sum to the thing you are explaining.\n\nNote we count leaners as partisans here, as the rest of this unit does. Fiorina's figure uses root identifiers only and runs about ten points lower; the shape is identical. The script prints both.",
+ h:(k=0)=>`<h2>Where did the Democrats go?</h2>
  <p class="kicker">Party identification among white working-class respondents</p>
  ${SVG('clspid', 380)}
  <p class="punch beat">${
-   k>=3?`Democrats lost them. Republicans did not gain most of them. The growth category
-     is <b>independents</b> — detached, not converted. And a bloc that has detached from
-     both parties is exactly who a candidate running against both can win.`
-   :k>=2?`Republicans picked up perhaps ten points in seventy years. Nothing like what
-     the Democrats lost.`
+   k>=3?`Of the <b>${f0(CP[0].wkDem-last(CP).wkDem)}-point</b> Democratic decline,
+     Republicans took about <b>${f0(100*(last(CP).wkRep-CP[0].wkRep)/(CP[0].wkDem-last(CP).wkDem))}%</b>
+     and independents the other <b>${f0(100*(last(CP).wkPure-CP[0].wkPure)/(CP[0].wkDem-last(CP).wkDem))}%</b>.
+     Most of this is real conversion — but the detached bloc nearly doubled too, and no
+     party has it.`
+   :k>=2?`Republicans rose <b>${f0(last(CP).wkRep-CP[0].wkRep)}</b> points; pure
+     independents rose <b>${f0(last(CP).wkPure-CP[0].wkPure)}</b>. Close — but Republicans
+     gained more.`
    :k>=1?`Democratic identification: <b>${f0(CP[0].wkDem)}% → ${f0(last(CP).wkDem)}%</b>.`
    :`A vote can swing back. Party identification is far stickier.`}</p>
  <div class="foot">ANES. Identifiers and leaners, as elsewhere in this unit; Fiorina's
- figure uses root identifiers and runs about ten points lower with the same shape.</div>`,
+ figure uses root identifiers and runs about ten points lower with the same shape. The two
+ gains (Republican, independent) sum to the Democratic loss by construction — all three
+ categories add to 100% at every point.</div>`,
  draw:()=>{
    chart($('#clspid'),{xdom:[1952,2016],ydom:[10,65],yticks:[10,25,40,55],yfmt:v=>v+'%',
      xticks:[1952,1968,1984,2000,2016], ylab:'share of the group', pad:{r:175},
@@ -1721,8 +2010,17 @@ const S=[
    // sequence of four numbers, and chart() only stages whole series.
    const rects=[...$('#test').querySelectorAll('.growy')];
    const labs=[...$('#test').querySelectorAll('.pop')];
-   rects.forEach((r,i)=>{ if(i>=k) r.setAttribute('opacity','0'); });
-   labs.forEach((t,i)=>{ if(i>=k) t.setAttribute('opacity','0'); });
+   // Only the single newest bar (index k-1, and only when this stage was
+   // actually just stepped to) gets to play its entrance -- see settleBar().
+   const stepped = steppedForward();
+   rects.forEach((r,i)=>{
+     if(i>=k) r.setAttribute('opacity','0');
+     else if(i!==k-1 || !stepped) settleBar(r,'scaleY(1)');
+   });
+   labs.forEach((t,i)=>{
+     if(i>=k) t.setAttribute('opacity','0');
+     else if(i!==k-1 || !stepped) settleBar(t,'scale(1)');
+   });
  }},
 
 {slug:"thermostat",k:"light",subs:2,notes:
@@ -1787,31 +2085,6 @@ const S=[
  }},
 
 /* ═══════════════════════════════════════ closing ════════════════════════ */
-{slug:"scorecard",k:"light",notes:
- "Put the session back together. Four minutes, and be fair to both.\n\nRow by row:\n\nFIORINA is right about timing and right about definitions, and the diploma slide is better evidence for him than anything in his own chapter. The group everyone writes about barely moved.\n\nABRAMOWITZ is right about mechanism. Among the white working class, ideology predicts the Republican vote enormously and consistently; economic distress does not, and income runs backwards. His 2025 claim survives every test on this deck.\n\nAND THEY ARE COMPATIBLE, which is the thing to land. A slow fifty-year sort, not a rupture — which is Fiorina's timing and Abramowitz's mechanism at once. The two of them have been arguing since September 3 and this is the session where the honest answer is that each is right about his own half.\n\nThe fourth row is the one nobody wrote: the biggest movement in the data is college graduates, and neither man is really studying them.\n\nIf you want one sentence for the board: the white working class did not switch parties so much as its conservatives stopped being Democrats — while college graduates switched parties outright.",
- h:()=>`<h2>So who was right?</h2>
- <p class="kicker">Back to where the second half started</p>
- <div class="rowlist">
-   <div class="r"><div class="who" style="color:var(--blue)">Fiorina</div>
-     <div class="say">Right about <b>timing</b>, and right that the definition does the
-       work. No 2016 rupture — a fifty-year drift. And the group everyone writes about
-       moved about ${f0(Math.abs(ev1.noBA-ev0.noBA))} points in seventy-two years.</div></div>
-   <div class="r"><div class="who" style="color:var(--accent)">Abramowitz</div>
-     <div class="say">Right about <b>mechanism</b>. Inside this group ideology predicts the
-       Republican vote by ${pp(meanOf(IDEO,'ideoGap'))} points, every election; economic
-       distress does not, and income runs backwards.</div></div>
-   <div class="r"><div class="who">Both</div>
-     <div class="say">A slow sort rather than a rupture — Fiorina's timing with
-       Abramowitz's mechanism. They are arguing about different halves of the same
-       sentence, which is the fourth time that has happened in this unit.</div></div>
-   <div class="r"><div class="who" style="color:var(--match)">Neither</div>
-     <div class="say">The largest movement in the data is <b>college graduates</b>, up
-       ${f0(ev1.BA-ev0.BA)} points toward the Democrats. Neither of them is really
-       studying that.</div></div>
- </div>
- <p class="punch" style="font-style:italic">The working class did not switch parties so
- much as its conservatives stopped being Democrats.</p>`},
-
 {slug:"close",k:"dark center",notes:
  "Two minutes, and it is the through-line of the whole unit.\n\nFour sessions, one finding, each time in a different place:\n  · Sep 3 — party and ideology came into alignment.\n  · Sep 8 — that alignment is an identity, and identities produce hostility without requiring disagreement.\n  · Sep 10 — the hostility is measurable and it is large.\n  · Today — the hostility is what holds the coalitions together, and the coalition everyone argues about was assembled by the same sorting.\n\nThe question to leave open, and do not answer it: if partisanship is now mostly negative, what happens to a party that wins? It has a majority assembled out of people who agree about who they are against. That is a hard thing to govern with, and it is a decent description of the last twenty years of American government.\n\nThursday is race and polarization — Tesler and Mason — and it is the sharpest version of the identity argument. Say that it will be a harder session, in the sense that the material is more uncomfortable, and that it is the one where the readings matter most.",
  h:()=>`<p class="kicker">Four sessions, one finding</p>
