@@ -636,7 +636,7 @@ function buildSlides(ROWS){
 
 HOW THE DECK WORKS. Every slide has one job. The title is the takeaway; the small gray line says what you are looking at. Read the title, point at the picture, and the notes below each slide tell you what to say.
 
-SIX PARTS: (1) Tuesday's missing bar, (2) how you measure racial attitudes, (3) race sorted into party, (4) spillover: Tesler, (5) activation: Mason, (6) the big picture.
+SIX PARTS: (1) the explanation we have not yet tested (race, added to Tuesday's test), (2) how you measure racial attitudes, (3) race sorted into party, (4) spillover: Tesler, (5) activation: Mason, (6) the big picture.
 
 IF YOU ARE SHORT ON TIME, the section dividers are natural cut points. Part 2 can be compressed to the resentment slides alone; Part 5 can stop after the nominee chart.
 
@@ -657,19 +657,19 @@ SAY: Every session has been one question in different clothes: what turns a disa
     notes:`SHOWS: the question for the whole session.
 SAY: Hold on to "a feeling about a group." Everything today is about how that feeling gets attached to something political: a party, a policy, a candidate.`});
 
-  /* ═══════════════════════ part 1: Tuesday's missing bar ═════════════════ */
-  add({type:'section', id:'s1', part:'Part 1', title:'Tuesday’s missing bar',
+  /* ═══════════════════════ part 1: the explanation we have not yet tested ══ */
+  add({type:'section', id:'s1', part:'Part 1', title:'The explanation we have not yet tested',
     notes:`Start from where they already are: Tuesday's test of the White working class.`});
 
   add({type:'cards', id:'tuesday', title:'Tuesday: ideology beat economics',
     look:'Why are White voters without a degree Republican? Three answers we tested',
-    cards:[{h:'Ideology', t:'Big, and steady for forty years', color:'ideo'},
+    cards:[{h:'Ideology', t:'Biggest, and growing: 47\u00a0→\u00a087 points since 1972', color:'ideo'},
            {h:'Income', t:'Points the wrong way', color:'mut'},
            {h:'Economic mood', t:'Flips with the president', color:'mut'}],
     notes:`SHOWS: Tuesday's result, in three words each.
-SAY: Ideology predicted the vote every election. Income ran backwards for the economic story. Feelings about the economy flipped sign depending on which party held the White House, which means they follow party rather than drive it.`});
+SAY: Ideology predicted the vote in every election, and the gap GREW: conservatives vs. liberals among White voters without a degree differed by 47 points in 1972 and 87 in 2024, mostly after 1988. That growth is Abramowitz's realignment. Income ran backwards for the economic story. Feelings about the economy flipped sign depending on which party held the White House, which means they follow party rather than drive it.`});
 
-  add({type:'statement', id:'untested', title:'What we did not test',
+  add({type:'statement', id:'untested', title:'What Tuesday’s test left out',
     big:'Race.',
     sub:'Abramowitz’s own argument names “economic, racial and cultural issues.” We tested two of the three.',
     notes:`SAY: Abramowitz's realignment is about economic, racial AND cultural issues. We charted the economic and ideological parts.
