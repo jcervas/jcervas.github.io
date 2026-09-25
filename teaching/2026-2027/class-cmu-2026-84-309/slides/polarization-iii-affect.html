@@ -352,9 +352,9 @@ function clear(svg){ while (svg.firstChild) svg.removeChild(svg.firstChild); }
 // Pen speed for the drawing lines, in px per ms. One constant for the deck so
 // every chart draws at the same rate; duration falls out of the path length.
 const DRAW_PX_PER_MS = 0.30;   // ~2.6s across a full-width series, as in the sorting deck
-const ASK_FS = 18;                       // legible, but small enough to park in the margin
+const ASK_FS = 30;                       // big enough to be read from the back
 // SVG text does not wrap, so break the question into rows by hand. Words only:
-// a mid-word break in bold is more distracting than a short line.
+// a mid-word break in 30px bold is more distracting than a short line.
 function wrapAsk(str, max){
   const out=[]; let cur='';
   for (const w of String(str).split(/\s+/)){
@@ -397,9 +397,6 @@ function chart(svg, cfg){
       'font-size':14,'font-weight':700,fill:r.color||MUT}, r.label));
   });
   let stageIx = 0;                       // which .stage this line will become
-  const labelQ = [];   // end-of-line labels, placed once every line has run --
-                        // two series that converge by the last year would
-                        // otherwise print their labels on top of each other.
   cfg.lines.forEach(L=>{
     const d = L.data.filter(p=>p[0]>=xa && p[0]<=xb);
     if (!d.length) return;
@@ -442,39 +439,26 @@ function chart(svg, cfg){
        style:`transition-delay:${staged?Math.round(cum[k]/tot*dur):0}ms`})));
     if (staged) svg.appendChild(host);
     if (L.label){ const p=d[d.length-1];
-      labelQ.push({host:(staged?host:svg), x:px(p[0])+12, y:py(p[1])+5,
-        color:L.color, op:L.op||1, text:L.label}); }
+      (staged?host:svg).appendChild(el('text',{x:px(p[0])+12,y:py(p[1])+5,
+        'font-size':16,'font-weight':700,fill:L.color, opacity:L.op||1}, L.label)); }
 
-    // The question this line answers, parked in the right margin -- the same
-    // strip its end-label will occupy once the line is drawn (that .stage is
-    // still visibility:hidden, so the strip is empty while the ask shows).
-    // Left-aligned there instead of pinned to the line's own endpoint: the
-    // old version sat on top of the ghost line itself, since the endpoint IS
-    // a point on that line. Tagged with its own stage index; paintStages
-    // shows the one whose turn is next.
+    // The question this line answers, parked at the point the line will reach,
+    // right-aligned so it grows leftward into empty plot rather than off the
+    // edge. Tagged with its own stage index; paintStages shows the one whose
+    // turn is next.
     if (staged && L.ask){
-      const ax = x1 + 14, askW = Math.max(80, W - ax - 8);
-      const rows = wrapAsk(L.ask, Math.max(10, Math.floor(askW / (ASK_FS*0.52))));
-      const ay = (y0+y1)/2 - (rows.length-1)*(ASK_FS+4)/2;
+      const p = d[d.length-1], ax = px(p[0]) - 16;
+      const rows = wrapAsk(L.ask, Math.max(18, Math.floor((ax - x0) / (ASK_FS*0.5))));
+      let ay = py(p[1]) - 20 - (rows.length-1)*(ASK_FS+4);
+      if (ay < y0 + ASK_FS) ay = py(p[1]) + 34;          // no room above; go below
       const gAsk = el('g',{class:'ask','data-stage':String(stageIx)});
       rows.forEach((r,i)=>gAsk.appendChild(el('text',
-        {x:ax, y:ay + i*(ASK_FS+4), 'text-anchor':'start', 'font-size':ASK_FS,
+        {x:ax, y:ay + i*(ASK_FS+4), 'text-anchor':'end', 'font-size':ASK_FS,
          'font-weight':700, fill:css('--ink')}, r)));
       svg.appendChild(gAsk);
     }
     if (staged) stageIx++;
   });
-  // De-collide the end labels: push apart any pair closer than one line-height,
-  // forward then backward so the nudge lands roughly centered on the cluster
-  // rather than shoving everything toward one edge. Order is preserved.
-  const LABEL_GAP = 18;
-  labelQ.sort((a,b)=>a.y-b.y);
-  for(let i=1;i<labelQ.length;i++)
-    if(labelQ[i].y < labelQ[i-1].y+LABEL_GAP) labelQ[i].y = labelQ[i-1].y+LABEL_GAP;
-  for(let i=labelQ.length-2;i>=0;i--)
-    if(labelQ[i].y > labelQ[i+1].y-LABEL_GAP) labelQ[i].y = labelQ[i+1].y-LABEL_GAP;
-  labelQ.forEach(L=>L.host.appendChild(el('text',{x:L.x,y:L.y,
-    'font-size':16,'font-weight':700,fill:L.color,opacity:L.op}, L.text)));
   (cfg.marks||[]).forEach(m=>{
     svg.appendChild(el('circle',{cx:px(m.x),cy:py(m.y),r:m.r||8,fill:m.color,
       stroke:css('--card'),'stroke-width':2.5}));
@@ -936,16 +920,6 @@ const S=[
      : `In 2024 Americans aged 18–29 score <b>${f1(at('age18',2024))}</b> and Americans over
         65 <b>${f1(at('age65',2024))}</b> — a gap of
         <b>${f1(at('age65',2024)-at('age18',2024))}</b> degrees.`;
-   // A toggle click rebuilds the chart outside the normal render() cycle, so
-   // unlike an ordinary slide landing it has to re-arm and re-paint itself --
-   // otherwise the fresh .stage groups never get their "on" class and the
-   // lines stay invisible ghosts forever (the bug: switching "by age"/"by
-   // party" back and forth left the chart permanently blank after the first click).
-   const deck=$('#deck'); arm(deck);
-   state.stages=deck.querySelectorAll('.stage').length;
-   const shown=Math.max(1, Math.min(state.sub||99, state.stages));
-   paintStages(deck, shown, false);
-   deck.dataset.drawn=(shown>=state.stages)?"1":"0";
    };
    $('#aAge').addEventListener('click',()=>{$('#aAge').setAttribute('aria-pressed','true');
      $('#aPty').setAttribute('aria-pressed','false');f();});
@@ -1005,12 +979,6 @@ const S=[
      <b>+${f1(at(hi,2024)-at(hi,1978))}</b> degrees, the less sorted
      <b>+${f1(at(lo,2024)-at(lo,1978))}</b>. The distance between them went from
      ${f1(at(hi,1978)-at(lo,1978))} to <b>${f1(at(hi,2024)-at(lo,2024))}</b>.`;
-   // Same re-arm/re-paint fix as the "who" slide above -- see its comment.
-   const deck=$('#deck'); arm(deck);
-   state.stages=deck.querySelectorAll('.stage').length;
-   const shown=Math.max(1, Math.min(state.sub||99, state.stages));
-   paintStages(deck, shown, false);
-   deck.dataset.drawn=(shown>=state.stages)?"1":"0";
    };
    $('#cRel').addEventListener('click',()=>{$('#cRel').setAttribute('aria-pressed','true');
      $('#cFix').setAttribute('aria-pressed','false');f();});
