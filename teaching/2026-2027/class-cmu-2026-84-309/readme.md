@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### DRAFT Updated: September 23, 2026
+#### DRAFT Updated: September 24, 2026
 
 > Professor **Jonathan Cervas**\
 > Office: Posner Hall 374\
@@ -161,8 +161,8 @@ will result in a lower grade.
 
 ## Schedule
 
-*Required readings only. Optional readings, and fuller notes on each,
-are on that session’s page in Canvas.*
+*Optional readings are marked* Optional. *Notes on each reading are on
+that session’s page in Canvas.*
 
 ### Week 1 — the course, and the Fence
 
@@ -209,6 +209,11 @@ are on that session’s page in Canvas.*
   Public](https://canvas.cmu.edu/courses/55941/files/14695393)
 - [Abramowitz et al. 2008 — Is Polarization a
   Myth?](https://canvas.cmu.edu/courses/55941/files/14695394)
+- *Optional*: McCarty, Poole & Rosenthal — *Polarized America: The Dance
+  of Ideology and Unequal Riches*
+- *Optional*: [Homans 2026 — Moderates See Socialists as a Threat to the
+  Democratic Party. Socialists
+  Agree.](https://www.nytimes.com/2026/08/13/magazine/democratic-socialism-dsa-elections-primaries.html)
 
 ### Week 3 — Polarization unit
 
@@ -218,6 +223,9 @@ are on that session’s page in Canvas.*
   Agree’](https://canvas.cmu.edu/courses/55941/files/14695558)
 - [Ahler et al. 2018 — The Parties in Our
   Heads](https://canvas.cmu.edu/courses/55941/files/14695396)
+- *Optional*: [Mason 2018 — *Uncivil Agreement*, **chs. 1–2** (print
+  only, Hunt
+  Library)](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991019580374304436)
 
 #### Thu, Sep 10 — Polarization III: Affective Polarization
 
@@ -229,6 +237,12 @@ are on that session’s page in Canvas.*
 - [Fiorina 2026 — *Unstable Majorities Continue*, **Chapter 3**: “What
   About *Affective*
   Polarization?”](https://www.hoover.org/research/what-about-affective-polarization)
+- *Optional*: [Klar et al. 2018 — Affective Polarization or Partisan
+  Disdain? Untangling a Dislike for the Opposing Party from a Dislike of
+  Partisanship](https://canvas.cmu.edu/courses/55941/files/14695399)
+- *Optional*: [Broockman et al. 2023 — Does Affective Polarization
+  Undermine Democratic Norms or Accountability? Maybe
+  Not](https://canvas.cmu.edu/courses/55941/files/14695557)
 
 ### Week 4 — NO CLASS (Sep 15–17)
 
@@ -266,6 +280,16 @@ are on that session’s page in Canvas.*
 - [Fiorina 2026 — *Unstable Majorities Continue*, **Chapter 5**: “The
   White Working Class in 2016 (and
   Earlier)”](https://www.hoover.org/research/white-working-class)
+- *Optional*: [Iyengar et al. 2015 — Fear and Loathing across Party
+  Lines](https://canvas.cmu.edu/courses/55941/files/14695400)
+- *Optional*: [Fiorina 2026 — *Unstable Majorities Continue*, **Chapter
+  4**: “Economic Anxiety or Cultural Backlash: Which Is Key to Trump’s
+  Support?”](https://www.hoover.org/research/economic-anxiety-or-cultural-backlash-which-key-trumps-support)
+- *Optional*: [Abramowitz et al. 2018 — Negative Partisanship: Why
+  Americans Dislike Parties But Behave Like Rabid
+  Partisans](https://canvas.cmu.edu/courses/55941/files/14695401)
+- *Optional*: [Lopez 2026 — This Is Why So Many Voters Hate Both
+  Parties](https://www.nytimes.com/interactive/2026/09/17/opinion/liberal-conservative-politics-heterodoxy.html)
 
 #### Thu, Sep 24 — Polarization V: Race and Polarization
 
@@ -274,6 +298,18 @@ are on that session’s page in Canvas.*
   Care](https://canvas.cmu.edu/courses/55941/files/14695402)
 - [Mason et al. 2021 — Activating Animus: The Uniquely Social Roots of
   Trump Support](https://canvas.cmu.edu/courses/55941/files/14695403)
+- *Optional*: [Jardina 2019 — *White Identity Politics*, **ch. 1**
+  (online via the
+  library)](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991019870288804436)
+- *Optional*: [Voelkel et al. 2024 — Megastudy Testing 25 Treatments to
+  Reduce Antidemocratic Attitudes and Partisan
+  Animosity](https://canvas.cmu.edu/courses/55941/files/14695556)
+- *Optional*: [Kleinfeld 2023 — *Polarization, Democracy, and Political
+  Violence in the United
+  States*](https://carnegieendowment.org/research/2023/09/polarization-democracy-and-political-violence-in-the-united-states-what-the-research-says?lang=en)
+- *Optional*: [Issenberg 2012 — Race Wars: Michael Tesler’s Theory That
+  All Political Positions Come Down to Racial Bias
+  (*Slate*)](https://slate.com/news-and-politics/2012/06/racialization-michael-teslers-theory-that-all-political-positions-come-down-to-racial-bias.html)
 
 ### Week 6 — Polarization unit · geography
 
@@ -298,6 +334,53 @@ are on that session’s page in Canvas.*
   Elections](https://news.stanford.edu/stories/2019/06/urban-rural-divide-shapes-elections)
 - [Cervas 2026 — The Effects of Mid-Decade Redistricting on Electoral
   Outcomes](https://cervas.medium.com/the-effects-of-mid-decade-redistricting-on-electoral-outcomes-d870c772942b)
+- *Optional*: [Abrams et al. 2012 — ‘The Big Sort’ That Wasn’t: A
+  Skeptical
+  Reexamination](https://canvas.cmu.edu/courses/55941/files/14695411)
+- *Optional*: [Chen et al. 2015 — Cutting Through the
+  Thicket](https://www.brennancenter.org/sites/default/files/legal-work/Chen_Rodden_Through_the_Thicket_2015.pdf)
+- *Optional*: [“How the Other Half Votes: The Big Counties Versus the
+  Rest of the Country
+  in](https://centerforpolitics.org/crystalball/how-the-other-half-votes-the-big-counties-versus-the-rest-of-the-country-in-2024/)
+- *Optional*: [Petry — How the Efficiency Gap Works (Brennan
+  Center)](https://www.brennancenter.org/sites/default/files/legal-work/How_the_Efficiency_Gap_Standard_Works.pdf)
+- *Optional*: [Kenny et al. 2023 — Widespread Partisan Gerrymandering
+  Mostly Cancels Nationally, but Reduces Electoral
+  Competition](https://alarm-redist.org/posts/2023-06-13-widespread-gerrymandering-pnas/)
+- *Optional*: [Brown et al. 2026 — Partisan Sorting and Geographic
+  Polarization](https://jacobrbrown.com/files/partisan_seg_chapter.pdf)
+- *Optional*: [Brown et al. 2021 — The Measurement of Partisan Sorting
+  for 180 Million
+  Voters](https://canvas.cmu.edu/courses/55941/files/14695404)
+- *Optional*: [Mummolo et al. 2017 — Why Partisans Do Not
+  Sort](https://canvas.cmu.edu/courses/55941/files/14695405)
+- *Optional*: [Brown 2025 — Partisan Conversion Through Neighborhood
+  Influence](https://canvas.cmu.edu/courses/55941/files/14695555)
+- *Optional*: [Scala et al. 2017 — Political Polarization along the
+  Rural-Urban Continuum? The Geography of the Presidential Vote,
+  2000–2016](https://canvas.cmu.edu/courses/55941/files/14695551)
+- *Optional*: [Chen et al. 2013 — Unintentional
+  Gerrymandering](https://web.stanford.edu/~jrodden/wp/florida.pdf)
+- *Optional*: [Cervas et al. 2020 — Tools for Identifying Partisan
+  Gerrymandering with an Application to Congressional Districting in
+  Pennsylvania](https://www.sciencedirect.com/science/article/abs/pii/S0962629818303342)
+- *Optional*: [Goedert 2014 — Gerrymandering or Geography? How Democrats
+  Won the Popular Vote but Lost the Congress in
+  2012](https://canvas.cmu.edu/courses/55941/files/14695406)
+- *Optional*: [Riccardi 2026 — Redistricting War Accelerates
+  Winner-Take-All Politics Straining American
+  Democracy](https://www.pbs.org/newshour/politics/redistricting-war-accelerates-winner-take-all-politics-straining-american-democracy)
+- *Optional*: [Levitsky & Ziblatt 2023 — *Tyranny of the Minority*,
+  **ch. 1** (free
+  excerpt)](https://penguinrandomhousehighereducation.com/2023/10/16/excerpt-from-tyranny-of-the-minority/)
+- *Optional*: [Cervas et al. 2020 — Legal, Political Science and
+  Economics Approaches to Measuring
+  Malapportionment](https://onlinelibrary.wiley.com/doi/abs/10.1111/ssqu.12871)
+- *Optional*: [Pautonnier et al. 2026 — The Rural-Urban Cleavage in US
+  Presidential Elections: Stability and Sudden
+  Change](https://canvas.cmu.edu/courses/55941/files/14695550)
+- *Optional*: [US Census Bureau 2024 — Redefining
+  Rural](https://www.census.gov/library/stories/2024/08/redefining-rural.html)
 
 #### Thu, Oct 1 — Place, Identity, and Rural Consciousness
 
@@ -310,6 +393,29 @@ are on that session’s page in Canvas.*
   (pp. 380–414)](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991020185778804436)
 - [Badger & Bui 2018 — Rural and Urban Residents Feel Disparaged (Pew
   survey)](https://www.nytimes.com/2018/05/22/upshot/rural-and-urban-residents-feel-disparaged-pew-survey.html)
+- *Optional*: [Harper 2024 — An Utterly Misleading Book About Rural
+  America](https://www.theatlantic.com/ideas/archive/2024/04/white-rural-rage-criticism/677967/)
+- *Optional*: [Jacobs et al. 2024 — The Truth About ‘Rural
+  Rage’](https://reason.com/2024/03/07/the-truth-about-rural-rage/)
+- *Optional*: [Schaller et al. 2024 — An Honest Assessment of Rural
+  White Resentment Is Long
+  Overdue](https://newrepublic.com/article/180570/trump-rural-white-resentment-honest-assessment)
+- *Optional*: [Cramer 2016 — *The Politics of
+  Resentment*](https://cmu.primo.exlibrisgroup.com/permalink/01CMU_INST/6lpsnm/alma991019603989504436)
+- *Optional*: [Lunz Trujillo et al. 2022 — Symbolic versus Material
+  Concerns of Rural Consciousness in the United
+  States](https://canvas.cmu.edu/courses/55941/files/14695640)
+- *Optional*: [Nelsen et al. 2021 — Race and White Rural
+  Consciousness](https://canvas.cmu.edu/courses/55941/files/14695549)
+- *Optional*: [Jacobs et al. 2023 — Place-Based Resentment in
+  Contemporary U.S](https://canvas.cmu.edu/courses/55941/files/14695407)
+- *Optional*: [Lunz Trujillo 2024 — Feeling Out of Place: Who Are the
+  Non-Rural Rural Identifiers, and Are They Unique
+  Politically?](https://preprints.apsanet.org/engage/api-gateway/apsa/assets/orp/resource/item/63120eabbc257b6406d8bea1/original/feeling-out-of-place-who-are-the-non-rural-rural-identifiers-and-are-they-unique-politically.pdf)
+- *Optional*: [Hershewe et al. 2025 — When Politics Override
+  Place](https://canvas.cmu.edu/courses/55941/files/14695548)
+- *Optional*: [Geismer 2024 — A New Suburban
+  Politics](https://dissentmagazine.org/article/a-new-suburban-politics/)
 
 ### Week 7 — Polarization unit closes
 
