@@ -27,6 +27,7 @@ Homepage: <https://jonathancervas.com>
 ## Carnegie Mellon University
 
   *Assistant Teaching Professor*, 2024-  
+  *Affliated Faculty, Institute for Complex Social Dynamics*, 2026-  
   *Post-Doctoral Fellow*, 2020–2024  
 
 
