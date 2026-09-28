@@ -37,6 +37,10 @@ sections:
         url: "/maps/zero-population-blocks/"
         note: "The 2,368,443 census blocks that recorded no residents in 2020 — 29% of every block in the country, covering 41.5% of its land. Click a state to zoom in."
         internal: true
+      - title: "Presidential winners, stacked"
+        url: "/maps/stacked-presidential-winners/"
+        note: "Nine elections from 1992 to 2024 laid over one another as translucent sheets. Safe states go dark red or dark blue; swing states go purple."
+        internal: true
       - title: "Browse all interactive maps"
         url: "/maps/"
         note: "The complete set, including the cartogram studio and method write-ups."
