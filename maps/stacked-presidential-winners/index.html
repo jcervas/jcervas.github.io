@@ -30,7 +30,9 @@ order: 1
 .spw .card svg { display: block; width: 100%; height: auto; }
 .spw .base { fill: #fff; }
 .spw .fillst { fill: #fff; transition: fill .7s ease; }
-.spw .edge { fill: #fff; fill-opacity: 0; stroke: #fff; stroke-width: .8; stroke-linejoin: round; }
+.spw .edge { fill: #fff; fill-opacity: 0; stroke: #fff; stroke-width: .8; stroke-linejoin: round; transition: stroke .7s ease; }
+/* nothing drawn yet: white states on white paper, so show the borders */
+.spw .card.empty .edge { stroke: #9a9a9a; }
 .spw .edge:hover { stroke: #1a1a1a; stroke-width: 1.6; }
 .spw .status { font-size: .95rem; margin: 10px 2px 0; min-height: 1.5em; }
 .spw .status b { font-variant-numeric: tabular-nums; }
@@ -110,6 +112,7 @@ function show(k) {
     p.style.fill = `rgb(${colorFor(d, n - d)})`;
   });
   [...yrBox.children].forEach((b, i) => b.classList.toggle("on", drawn(i)));
+  $("card").classList.toggle("empty", !n);
   const s = $("status");
   if (!n) { s.textContent = "Press Play, or click a year."; return; }
   const y = Y[n - 1], c = META.cands[y];
