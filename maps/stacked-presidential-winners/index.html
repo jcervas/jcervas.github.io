@@ -2,8 +2,8 @@
 layout: page
 title: "Presidential winners, stacked, 1992&ndash;2024"
 breadcrumb: "Stacked winners"
-description: "Nine presidential elections laid over one another as translucent sheets of red and blue. States that vote the same way every time go dark; states that switch go purple."
-summary: "Nine presidential elections laid over one another as translucent sheets. Safe states go dark red or dark blue; swing states go purple."
+description: "Nine presidential elections laid over one another, each an equal share of the color. States that vote the same way every time stay solid red or blue; states that switch blend to purple."
+summary: "Nine presidential elections laid over one another. Safe states stay solid red or blue; swing states blend to purple."
 order: 1
 ---
 {% comment %}
@@ -25,7 +25,7 @@ order: 1
 .spw .mode button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
 .spw .yr.D { border-left-color: var(--dem); }
 .spw .yr.R { border-left-color: var(--rep); }
-/* the card stays white in both themes: the sheets are translucent over white paper */
+/* the card stays white in both themes, so the state colors read the same in either */
 .spw .card { background: #fff; border-radius: 8px; padding: 8px; position: relative; border: 1px solid var(--line); }
 .spw .card svg { display: block; width: 100%; height: auto; }
 .spw .base { fill: #fff; }
@@ -44,7 +44,7 @@ order: 1
 </style>
 
 <div class="spw">
-  <p class="lead">Each election lays a translucent sheet of red or blue over the states. States that vote the same way every time go dark; states that switch go purple.</p>
+  <p class="lead">Each election adds a layer of red or blue, and every layer thins as more are added. States that vote the same way every time stay solid; states that switch blend to purple.</p>
 
   <div class="controls">
     <div class="mode" role="group" aria-label="View">
@@ -70,15 +70,14 @@ order: 1
     <span id="spw-keylabel">After all nine elections (Dem&ndash;Rep wins):</span>
     <svg viewBox="0 0 330 46" id="spw-key"></svg>
   </div>
-  <p class="note">The popular-vote winner in each state and D.C.; Maine's and Nebraska's split electoral votes are not shown. Each sheet covers about a quarter of the white beneath it. A state's darkness comes from how many sheets are stacked, and its hue from the share that were blue or red, so the order of the elections doesn't change the color. Switch to <b>One year</b> to see a single election in solid colors. Hover over a state for its sequence.</p>
+  <p class="note">The popular-vote winner in each state and D.C.; Maine's and Nebraska's split electoral votes are not shown. Every election shown gets an equal share of a state's color: one election is solid, two are half each, nine are a ninth each. The color is the share of those elections each party won, so the order of the elections doesn't change it. Switch to <b>One year</b> to see a single election in solid colors. Hover over a state for its sequence.</p>
 </div>
 
 <script>
 {% raw %}
 (function () {
 const META = {"years":[1992,1996,2000,2004,2008,2012,2016,2020,2024],"win":{"AK":{"1992":"R","1996":"R","2000":"R","2004":"R","2008":"R","2012":"R","2016":"R","2020":"R","2024":"R"},"AL":{"1992":"R","1996":"R","2000":"R","2004":"R","2008":"R","2012":"R","2016":"R","2020":"R","2024":"R"},"AR":{"1992":"D","1996":"D","2000":"R","2004":"R","2008":"R","2012":"R","2016":"R","2020":"R","2024":"R"},"AZ":{"1992":"R","1996":"D","2000":"R","2004":"R","2008":"R","2012":"R","2016":"R","2020":"D","2024":"R"},"CA":{"1992":"D","1996":"D","2000":"D","2004":"D","2008":"D","2012":"D","2016":"D","2020":"D","2024":"D"},"CO":{"1992":"D","1996":"R","2000":"R","2004":"R","2008":"D","2012":"D","2016":"D","2020":"D","2024":"D"},"CT":{"1992":"D","1996":"D","2000":"D","2004":"D","2008":"D","2012":"D","2016":"D","2020":"D","2024":"D"},"DC":{"1992":"D","1996":"D","2000":"D","2004":"D","2008":"D","2012":"D","2016":"D","2020":"D","2024":"D"},"DE":{"1992":"D","1996":"D","2000":"D","2004":"D","2008":"D","2012":"D","2016":"D","2020":"D","2024":"D"},"FL":{"1992":"R","1996":"D","2000":"R","2004":"R","2008":"D","2012":"D","2016":"R","2020":"R","2024":"R"},"GA":{"1992":"D","1996":"R","2000":"R","2004":"R","2008":"R","2012":"R","2016":"R","2020":"D","2024":"R"},"HI":{"1992":"D","1996":"D","2000":"D","2004":"D","2008":"D","2012":"D","2016":"D","2020":"D","2024":"D"},"IA":{"1992":"D","1996":"D","2000":"D","2004":"R","2008":"D","2012":"D","2016":"R","2020":"R","2024":"R"},"ID":{"1992":"R","1996":"R","2000":"R","2004":"R","2008":"R","2012":"R","2016":"R","2020":"R","2024":"R"},"IL":{"1992":"D","1996":"D","2000":"D","2004":"D","2008":"D","2012":"D","2016":"D","2020":"D","2024":"D"},"IN":{"1992":"R","1996":"R","2000":"R","2004":"R","2008":"D","2012":"R","2016":"R","2020":"R","2024":"R"},"KS":{"1992":"R","1996":"R","2000":"R","2004":"R","2008":"R","2012":"R","2016":"R","2020":"R","2024":"R"},"KY":{"1992":"D","1996":"D","2000":"R","2004":"R","2008":"R","2012":"R","2016":"R","2020":"R","2024":"R"},"LA":{"1992":"D","1996":"D","2000":"R","2004":"R","2008":"R","2012":"R","2016":"R","2020":"R","2024":"R"},"MA":{"1992":"D","1996":"D","2000":"D","2004":"D","2008":"D","2012":"D","2016":"D","2020":"D","2024":"D"},"MD":{"1992":"D","1996":"D","2000":"D","2004":"D","2008":"D","2012":"D","2016":"D","2020":"D","2024":"D"},"ME":{"1992":"D","1996":"D","2000":"D","2004":"D","2008":"D","2012":"D","2016":"D","2020":"D","2024":"D"},"MI":{"1992":"D","1996":"D","2000":"D","2004":"D","2008":"D","2012":"D","2016":"R","2020":"D","2024":"R"},"MN":{"1992":"D","1996":"D","2000":"D","2004":"D","2008":"D","2012":"D","2016":"D","2020":"D","2024":"D"},"MO":{"1992":"D","1996":"D","2000":"R","2004":"R","2008":"R","2012":"R","2016":"R","2020":"R","2024":"R"},"MS":{"1992":"R","1996":"R","2000":"R","2004":"R","2008":"R","2012":"R","2016":"R","2020":"R","2024":"R"},"MT":{"1992":"D","1996":"R","2000":"R","2004":"R","2008":"R","2012":"R","2016":"R","2020":"R","2024":"R"},"NC":{"1992":"R","1996":"R","2000":"R","2004":"R","2008":"D","2012":"R","2016":"R","2020":"R","2024":"R"},"ND":{"1992":"R","1996":"R","2000":"R","2004":"R","2008":"R","2012":"R","2016":"R","2020":"R","2024":"R"},"NE":{"1992":"R","1996":"R","2000":"R","2004":"R","2008":"R","2012":"R","2016":"R","2020":"R","2024":"R"},"NH":{"1992":"D","1996":"D","2000":"R","2004":"D","2008":"D","2012":"D","2016":"D","2020":"D","2024":"D"},"NJ":{"1992":"D","1996":"D","2000":"D","2004":"D","2008":"D","2012":"D","2016":"D","2020":"D","2024":"D"},"NM":{"1992":"D","1996":"D","2000":"D","2004":"R","2008":"D","2012":"D","2016":"D","2020":"D","2024":"D"},"NV":{"1992":"D","1996":"D","2000":"R","2004":"R","2008":"D","2012":"D","2016":"D","2020":"D","2024":"R"},"NY":{"1992":"D","1996":"D","2000":"D","2004":"D","2008":"D","2012":"D","2016":"D","2020":"D","2024":"D"},"OH":{"1992":"D","1996":"D","2000":"R","2004":"R","2008":"D","2012":"D","2016":"R","2020":"R","2024":"R"},"OK":{"1992":"R","1996":"R","2000":"R","2004":"R","2008":"R","2012":"R","2016":"R","2020":"R","2024":"R"},"OR":{"1992":"D","1996":"D","2000":"D","2004":"D","2008":"D","2012":"D","2016":"D","2020":"D","2024":"D"},"PA":{"1992":"D","1996":"D","2000":"D","2004":"D","2008":"D","2012":"D","2016":"R","2020":"D","2024":"R"},"RI":{"1992":"D","1996":"D","2000":"D","2004":"D","2008":"D","2012":"D","2016":"D","2020":"D","2024":"D"},"SC":{"1992":"R","1996":"R","2000":"R","2004":"R","2008":"R","2012":"R","2016":"R","2020":"R","2024":"R"},"SD":{"1992":"R","1996":"R","2000":"R","2004":"R","2008":"R","2012":"R","2016":"R","2020":"R","2024":"R"},"TN":{"1992":"D","1996":"D","2000":"R","2004":"R","2008":"R","2012":"R","2016":"R","2020":"R","2024":"R"},"TX":{"1992":"R","1996":"R","2000":"R","2004":"R","2008":"R","2012":"R","2016":"R","2020":"R","2024":"R"},"UT":{"1992":"R","1996":"R","2000":"R","2004":"R","2008":"R","2012":"R","2016":"R","2020":"R","2024":"R"},"VA":{"1992":"R","1996":"R","2000":"R","2004":"R","2008":"D","2012":"D","2016":"D","2020":"D","2024":"D"},"VT":{"1992":"D","1996":"D","2000":"D","2004":"D","2008":"D","2012":"D","2016":"D","2020":"D","2024":"D"},"WA":{"1992":"D","1996":"D","2000":"D","2004":"D","2008":"D","2012":"D","2016":"D","2020":"D","2024":"D"},"WI":{"1992":"D","1996":"D","2000":"D","2004":"D","2008":"D","2012":"D","2016":"R","2020":"D","2024":"R"},"WV":{"1992":"D","1996":"D","2000":"R","2004":"R","2008":"R","2012":"R","2016":"R","2020":"R","2024":"R"},"WY":{"1992":"R","1996":"R","2000":"R","2004":"R","2008":"R","2012":"R","2016":"R","2020":"R","2024":"R"}},"names":{"AK":"Alaska","AL":"Alabama","AR":"Arkansas","AZ":"Arizona","CA":"California","CO":"Colorado","CT":"Connecticut","DC":"District of Columbia","DE":"Delaware","FL":"Florida","GA":"Georgia","HI":"Hawaii","IA":"Iowa","ID":"Idaho","IL":"Illinois","IN":"Indiana","KS":"Kansas","KY":"Kentucky","LA":"Louisiana","MA":"Massachusetts","MD":"Maryland","ME":"Maine","MI":"Michigan","MN":"Minnesota","MO":"Missouri","MS":"Mississippi","MT":"Montana","NC":"North Carolina","ND":"North Dakota","NE":"Nebraska","NH":"New Hampshire","NJ":"New Jersey","NM":"New Mexico","NV":"Nevada","NY":"New York","OH":"Ohio","OK":"Oklahoma","OR":"Oregon","PA":"Pennsylvania","RI":"Rhode Island","SC":"South Carolina","SD":"South Dakota","TN":"Tennessee","TX":"Texas","UT":"Utah","VA":"Virginia","VT":"Vermont","WA":"Washington","WI":"Wisconsin","WV":"West Virginia","WY":"Wyoming"},"cands":{"1992":{"R":"George H.W. Bush","D":"Bill Clinton"},"1996":{"R":"Bob Dole","D":"Bill Clinton"},"2000":{"R":"George W. Bush","D":"Al Gore"},"2004":{"R":"George W. Bush","D":"John Kerry"},"2008":{"R":"John McCain","D":"Barack Obama"},"2012":{"R":"Mitt Romney","D":"Barack Obama"},"2016":{"R":"Donald Trump","D":"Hillary Clinton"},"2020":{"R":"Donald Trump","D":"Joe Biden"},"2024":{"R":"Donald Trump","D":"Kamala Harris"}}};
-const ALPHA = 0.28;
-// full-strength ink of each party; one sheet lays down ALPHA of it
+// full-strength ink of each party
 const INK = { D: [24, 58, 150], R: [158, 26, 34] };
 // party that won the presidency (electoral college), for the year chips
 const NAT = {1992:"D",1996:"D",2000:"R",2004:"R",2008:"D",2012:"D",2016:"R",2020:"D",2024:"R"};
@@ -88,8 +87,8 @@ let n = 0, timer = null, single = false;   // n = elections shown; in single mod
 
 function colorFor(d, r) {
   const k = d + r; if (!k) return [255, 255, 255];
-  const cover = 1 - Math.pow(1 - ALPHA, k);
-  return [0, 1, 2].map(c => Math.round(255 * (1 - cover) + cover * (d * INK.D[c] + r * INK.R[c]) / k));
+  // k layers, each at opacity 1/k: the average of the inks, always full strength
+  return [0, 1, 2].map(c => Math.round((d * INK.D[c] + r * INK.R[c]) / k));
 }
 
 const yrBox = $("years");
