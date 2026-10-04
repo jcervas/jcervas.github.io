@@ -13,6 +13,9 @@
                                   for pages that live under a path with no index
                                   page of its own (the /maps/* pages)
     breadcrumbs: false            no trail on this page
+    breadcrumb_width: 1040px      max-width for the trail, to line it up with a
+                                  page whose content column is neither the text
+                                  column nor the 1200px `wide` maps
 
   Labels for URLs that have no page of their own live in _data/breadcrumbs.yml.
   An ancestor with no page behind it is rendered as plain text, not a dead link.
@@ -113,7 +116,7 @@
       | replace: "&quot;", '"' | replace: "&#39;", "'"
       | replace: "&amp;", "&" -%}
 
-<nav class="breadcrumbs{% if page.wide %} breadcrumbs--wide{% endif %}" aria-label="Breadcrumb">
+<nav class="breadcrumbs{% if page.wide %} breadcrumbs--wide{% endif %}"{% if page.breadcrumb_width %} style="max-width: {{ page.breadcrumb_width }}"{% endif %} aria-label="Breadcrumb">
   <ol class="breadcrumbs__list">
     <li class="breadcrumbs__item"><a href="{{ '/' | relative_url }}">Home</a></li>
     {%- for bc_url in bc_urls -%}
