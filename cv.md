@@ -10,7 +10,7 @@ chmod +x cv_build.sh
 
  -->
 
-##### Revised July 2026
+##### Revised October 2026
 
 ::: {custom-style="Address"}
 Carnegie Mellon University  
@@ -106,10 +106,10 @@ Degree GPA: 3.277
   - Dietrich General Education, *Perspectives on Justice and Injustice* 
 - *Introduction to US Constitutional Law* - 84-120 - (Spring 2026)
   - Dietrich General Education, *Humanities* 
-- *American Political Divides and Great Debates* - 84-309/609 - (Fall 2024, Fall 2025)
+- *American Political Divides and Great Debates* - 84-309/609 - (Fall 2024, Fall 2025, Fall 2026)
   - Dietrich General Education, *Perspectives on Justice and Injustice* 
   - Eberly Center Consultation on Course Design and Early Semester Feedback (Patrick Welsh, 2024, 2025)
-- Democracy's Data: Analytics and Insights into American Elections* - 84-355/655 - (Fall 2024, Fall 2025)
+- *Democracy's Data: Analytics and Insights into American Elections* - 84-355/655 - (Fall 2024, Fall 2025, Fall 2026)
   - Dietrich General Education, *Contextual Thinking* 
 - *Regression Analysis for Political Science II* - 84-702 - (Spring 2023, Spring 2024)
   - Dietrich General Education, *Scientific Inquiry* 
