@@ -1,0 +1,1595 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Polarization VI — A Threat to Democracy?</title>
+<!-- Live scoring only: if these fail to load (offline), the deck works without it. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<style>
+
+:root{
+  color-scheme: light;
+  --paper:#F2F4F7; --card:#FFFFFF; --tint:#E9ECF1;
+  --ink:#0F1720; --ink-2:#3E4A57; --ink-3:#6B7683;
+  --rule:#B9C1CA; --rule-2:#DDE2E7;
+  --accent:#C41230; --accent-soft:#F7DDE1;
+  --blue:#1F4E79;
+  --match:#17706B; --match-soft:#D3E7E5; --cross:#E09B2D;--cross-ink:#8A5D10;--match-soft:#E3F1EF;--cross-soft:#FBEFDA;
+  --ghost:#D3D9E0;
+  --display:'Iowan Old Style',Georgia,'Times New Roman',serif;
+  --body:'IBM Plex Sans','Helvetica Neue',Arial,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+:root[data-theme="dark"]{
+  --paper:#0F1720; --card:#161F29; --tint:#1B242E;
+  --ink:#EEF2F6; --ink-2:#B7C2CD; --ink-3:#8A96A3;
+  --rule:#39434E; --rule-2:#26303A; --accent:#FF6B7F; --accent-soft:#3A1C24;
+  --blue:#7FB2E5; --match:#4FC4B8; --match-soft:#12312F; --cross:#F0B860;--cross-ink:#F0B860;--match-soft:#12332F;--cross-soft:#33291A;
+  --ghost:#28323C;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);
+  -webkit-font-smoothing:antialiased;overflow:hidden}
+.deck{position:relative;width:100%;height:100%}
+.slide{position:absolute;inset:0;padding:clamp(32px,4vh,58px) clamp(32px,5vw,78px)
+  clamp(30px,4.5vh,54px);display:none;flex-direction:column;overflow:auto}
+.slide.on{display:flex}
+.slide.dark{background:var(--ink);color:#F4F7FA}
+.slide.dark .foot{color:#8E9AA6}
+.slide.dark p.lede{color:#B9C4CF}
+.slide.wash{background:var(--accent-soft)}
+.kicker{font-size:clamp(12px,1.02vw,18px);font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+h1{font-family:var(--display);font-size:clamp(32px,4.5vw,94px);line-height:1.04;
+  margin:0 0 8px;font-weight:600;letter-spacing:-.01em}
+h2{font-family:var(--display);font-size:clamp(26px,3.1vw,62px);line-height:1.07;
+  margin:0 0 4px;font-weight:600;letter-spacing:-.006em}
+p.lede{font-size:clamp(15px,1.48vw,34px);line-height:1.45;color:var(--ink-2);
+  max-width:62ch;margin:8px 0 0}
+.punch{font-family:var(--display);font-size:clamp(17px,1.85vw,44px);font-weight:600;
+  margin-top:18px;line-height:1.22}
+.big{font-family:var(--display);font-size:clamp(40px,6.4vw,168px);font-weight:600;line-height:1}
+.foot{margin-top:auto;padding-top:clamp(6px,1vh,14px);
+  padding-right:clamp(86px,11vw,168px);font-size:clamp(11px,.92vw,16px);
+  color:var(--ink-3);line-height:1.4}
+.nums{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.discuss{margin-top:auto;padding:clamp(10px,1.5vh,20px) clamp(14px,1.5vw,24px);
+  padding-right:clamp(86px,11vw,168px);border-left:4px solid var(--accent);
+  background:var(--accent-soft);border-radius:0 8px 8px 0}
+.discuss .dtag{display:block;font-family:var(--mono);font-size:clamp(9px,.72vw,12px);
+  letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.discuss p{margin:0;font-size:clamp(15px,1.58vw,34px);line-height:1.42;color:var(--ink)}
+.smap{display:grid;grid-template-columns:auto auto 1fr;gap:5px clamp(12px,1.3vw,24px);
+  align-items:center;font-size:clamp(12.5px,1.15vw,20px);margin-top:6px}
+.smap .hd{font-size:clamp(9.5px,.82vw,14px);font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3)}
+.smap b{width:1.85em;height:1.85em;border-radius:999px;display:grid;place-items:center;
+  color:#fff;font-size:.84em;font-weight:700}
+svg{overflow:visible}
+.ctl{display:flex;align-items:center;gap:clamp(8px,.9vw,15px);margin-top:12px;flex-wrap:wrap}
+input[type=range]{width:clamp(230px,23vw,460px);accent-color:var(--accent)}
+button{font-family:var(--body);font-size:clamp(12px,1.05vw,18px);font-weight:600;
+  padding:clamp(5px,.55vw,11px) clamp(12px,1.15vw,22px);cursor:pointer;
+  border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:999px}
+button:hover{border-color:var(--accent);color:var(--accent)}
+button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
+.yr{font-family:var(--display);font-size:clamp(34px,3.6vw,66px);font-weight:600;line-height:1}
+.legend{display:flex;flex-direction:column;gap:8px;font-size:clamp(12px,1.1vw,19px);
+  color:var(--ink-2);margin-top:10px}
+.legend i{width:1em;height:1em;display:inline-block;border-radius:2px;margin-right:9px;
+  vertical-align:-.08em}
+.statrow{display:flex;gap:clamp(20px,3.2vw,58px);flex-wrap:wrap;margin-top:14px;
+  align-items:flex-end}
+.stat b{display:block;font-family:var(--display);font-size:clamp(32px,3.8vw,92px);
+  font-weight:600;line-height:1.04}
+.stat span{font-size:clamp(11.5px,1.02vw,22px);color:var(--ink-3)}
+/* One-number slides: the number IS the slide, so it gets its own scale. */
+.statrow.hero{gap:clamp(26px,4vw,90px)}
+.statrow.hero .stat b{font-size:clamp(64px,11.5vw,270px);line-height:.98}
+.statrow.hero .stat span{font-size:clamp(13px,1.4vw,30px)}
+.statrow.hero .big{font-size:clamp(48px,7.5vw,190px)}
+/* Statement slides carry little ink, so center the block instead of pinning the
+   last line to the bottom — margin-top:auto opened a void of up to 64% of the
+   slide on a 1920-wide display. */
+.slide.center{justify-content:center}
+.slide.center .foot{position:absolute;left:clamp(32px,5vw,78px);
+  right:clamp(118px,13vw,210px);bottom:clamp(16px,2.4vh,28px);
+  margin-top:0;padding-top:0;padding-right:0}
+/* Do NOT pin the heading on a centered slide. Taking it out of flow leaves the
+   body floating in the middle with a hole above it — that made the gaps worse
+   (31% where centering alone gives 7%). The whole column centers together. */
+.pill{display:inline-block;padding:3px 12px;border-radius:999px;
+  font-size:clamp(11.5px,1.05vw,18px);font-weight:600;background:var(--match-soft);
+  color:var(--match)}
+.pill.warn{background:var(--accent-soft);color:var(--accent)}
+table.t{border-collapse:collapse;width:100%;margin-top:16px;
+  font-size:clamp(14px,1.5vw,36px)}
+table.t td{padding:clamp(9px,1.05vw,22px) 10px;border-bottom:1px solid var(--rule-2)}
+table.t tr:last-child td{border-bottom:0}
+table.t .num{font-family:var(--display);font-size:clamp(24px,2.7vw,68px);font-weight:600;
+  text-align:right;white-space:nowrap}
+table.t .lab{color:var(--ink-3);font-size:clamp(11.5px,1.05vw,22px)}
+.rowlist{margin-top:10px}
+.rowlist .r{display:grid;grid-template-columns:clamp(88px,9.5vw,164px) 1fr;
+  gap:clamp(10px,1.5vw,28px);padding:clamp(8px,.95vw,16px) 0;
+  border-bottom:1px solid var(--rule-2)}
+.rowlist .r:last-child{border-bottom:0}
+.rowlist .who{font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  font-size:clamp(10.5px,1vw,21px)}
+.rowlist .say{font-size:clamp(13px,1.35vw,32px);line-height:1.34}
+.progress{position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--rule-2)}
+.progress i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.hint{position:absolute;right:clamp(32px,5vw,78px);bottom:clamp(16px,2.4vh,28px);
+  text-align:right;color:var(--ink-3);cursor:pointer;user-select:none;
+  font-size:clamp(10.5px,.88vw,15px)}
+.hint:hover{color:var(--accent)}
+.hint b{color:var(--ink-2)}
+#tip{position:fixed;z-index:12;pointer-events:none;background:var(--ink);color:#F4F7FA;
+  padding:7px 11px;border-radius:7px;font-size:clamp(12px,1.05vw,18px);line-height:1.35;
+  box-shadow:0 6px 22px rgba(0,0,0,.28);transform:translate(-50%,-118%);white-space:nowrap}
+#tip[hidden]{display:none}
+#tip b{font-family:var(--display);font-size:1.25em}
+:root[data-theme="dark"] #tip{background:#2A3541}
+.hit{cursor:crosshair}
+/* A line chart holds still until it is clicked: the shape sits there as a gray
+   ghost with one dot on the first year, and the colored line draws itself only
+   when you ask. Lets the sentence come first and the picture second, which is
+   the order it gets talked about in. */
+.chart{display:inline-block}
+/* Reveals are deck fragments now, driven by the arrow keys like any other step,
+   so a chart carries no button of its own. Progress shows as dots in the corner. */
+.dots{display:inline-flex;gap:5px;margin-left:9px;vertical-align:.5px}
+.dots i{width:7px;height:7px;border-radius:999px;background:var(--rule);
+  transition:background .25s}
+.dots i.on{background:var(--accent)}
+/* Lines draw themselves in; squares grow from nothing. Both are pure CSS
+   transitions kicked off one frame after the node lands in the DOM. */
+/* --len has a fallback so the dash pattern is VALID on the very first paint.
+   Without it `stroke-dasharray:var(--len)` is invalid, the line renders solid,
+   and setting --len afterwards animates it AWAY — the line visibly undrew
+   before it drew. Transition is off until .anim is added a frame later, so
+   arming never animates either. */
+.stage{visibility:hidden}
+.stage.on{visibility:visible}
+#notes{position:absolute;right:0;top:0;bottom:0;width:min(560px,44vw);z-index:8;
+  background:var(--card);border-left:1px solid var(--rule);padding:24px 28px;
+  overflow:auto;font-size:15px;line-height:1.62;white-space:pre-wrap;color:var(--ink-2);
+  box-shadow:-14px 0 40px rgba(0,0,0,.10)}
+#notes[hidden]{display:none}
+#notes h4{margin:0 0 12px;font-family:var(--body);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent)}
+#help{position:absolute;inset:0;background:rgba(15,23,32,.88);color:#fff;display:grid;
+  place-items:center;font-size:clamp(14px,1.25vw,21px);z-index:9;cursor:pointer}
+#help[hidden]{display:none}
+#help div{max-width:54ch;line-height:1.75;cursor:auto}
+#help .close{margin-top:20px;font-size:.84em;color:#cfd6dd}
+kbd{font-family:var(--mono);background:rgba(255,255,255,.17);padding:1px 7px;border-radius:4px}
+@media (max-width:900px){.cols,.quad,.cols2,.two{grid-template-columns:1fr}
+  #notes{width:100%} .foot{right:clamp(88px,22vw,150px)}}
+
+/* deck additions for this session: comparison tables and the number pairs */
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px,1.6vh,26px)
+  clamp(20px,3vw,54px);margin:clamp(10px,2vh,26px) 0}
+.big{font-family:var(--display);font-size:clamp(30px,4.2vw,72px);line-height:1}
+.big .lbl{display:block;font-family:var(--body);font-size:clamp(11px,.95vw,17px);
+  font-weight:600;color:var(--ink-3);margin-top:4px;letter-spacing:.02em}
+table.matrix{width:100%;border-collapse:separate;border-spacing:clamp(5px,.7vw,11px);
+  margin:clamp(8px,1.6vh,24px) 0;table-layout:fixed}
+table.matrix th{font:600 clamp(10.5px,.95vw,17px)/1.25 var(--body);color:var(--ink-3);
+  text-align:center;vertical-align:bottom;padding:0 0 3px}
+table.matrix th.rh{text-align:right;vertical-align:middle;padding:0 clamp(8px,1vw,16px) 0 0;
+  width:26%}
+table.matrix th.rh b{display:block;font-family:var(--display);font-weight:700;
+  font-size:clamp(13px,1.25vw,23px);color:var(--ink)}
+table.matrix td{font-family:var(--display);font-size:clamp(24px,3.2vw,55px);line-height:1;
+  text-align:center;border-radius:8px;padding:clamp(9px,1.6vh,20px) 4px}
+td.inp{background:var(--match-soft);color:var(--match)}
+td.outp{background:var(--cross-soft);color:var(--cross-ink)}
+tr.marg td{background:transparent;color:var(--ink);border-radius:0;
+  font-size:clamp(18px,2.2vw,38px);border-top:2px solid var(--rule-2)}
+tr.marg th.rh b{font-weight:400;color:var(--ink-3)}
+table.gap4 td.plain{background:var(--tint);color:var(--ink)}
+table.gap4 td.gapc{background:transparent;color:var(--ink-3);
+  font-size:clamp(20px,2.5vw,42px)}
+table.gap4 td.gapc.hot{color:var(--accent)}
+/* cells fill in one at a time; the empty box holds its place so the table
+   geometry never shifts under the reveal */
+table.matrix td.cell{transition:background .28s ease,color .28s ease}
+table.matrix td.cell.pend{background:transparent!important;color:transparent!important;
+  box-shadow:inset 0 0 0 1.5px var(--rule-2)}
+tr.marg.pend td,tr.marg.pend th{opacity:0;transition:opacity .3s ease}
+tr.marg td,tr.marg th{transition:opacity .3s ease}
+.beat{min-height:2.9em}
+/* Staged reveal for blocks rather than table cells. The matrix has its own rule
+   further up, because a cell has to keep its box while it waits its turn; a
+   panel just gets out of the way. Separate class name on purpose — a generic
+   .pend would also null the opacity of those cells and take their borders. */
+.hold{opacity:0}
+/* The question that announces the next line. Exactly one is visible at a time,
+   parked where that line is about to arrive, and all of them go dark once the
+   chart is fully drawn. Big and bold on purpose: it is the thing being said
+   out loud, and the line is the answer to it. */
+.ask{opacity:0;transition:opacity .34s ease}
+.ask.on{opacity:1}
+/* The readout under a staged chart answers the question the chart is still
+   asking, so hold it back until every line is down. Captions with no id belong
+   to slides that do not stage and are never hidden. */
+#deck[data-drawn="0"] .punch[id]{opacity:0}
+.punch[id]{transition:opacity .3s ease}
+.tbox,.band,.step{transition:opacity .32s ease}
+/* Lines draw themselves in, dots grow, bars rise from their baseline.
+   The dash values are set INLINE from JS rather than through a CSS custom
+   property. The custom-property version is what the sorting deck uses, and it
+   half-works here: stroke-dasharray resolves var(--len) but stroke-dashoffset
+   silently falls back to the placeholder, so the line sits invisible for most
+   of the duration and then snaps. Driving both from play() removes the guess.
+   The transition still stays off until .anim is added a frame later, so arming
+   a chart never animates it. */
+.draw.anim{transition:stroke-dashoffset var(--dur,.9s) linear}
+.ghost-line{opacity:.5}
+/* A staged series is present but invisible until its turn. visibility rather
+   than display, so the dash lengths can be measured while it waits. */
+.stage{visibility:hidden}
+.stage.on{visibility:visible}
+/* A .lead stage is the point of the chart and the .recede stages are what it
+   was computed from: once the answer is drawn, the inputs step back rather
+   than disappear, so you can still see where it came from. */
+.stage.recede{transition:opacity .5s ease}
+svg:has(.stage.lead.on) .stage.recede{opacity:.18}
+.pop{transform-box:fill-box;transform-origin:center;transform:scale(0);opacity:0;
+  transition:transform .34s cubic-bezier(.28,1.15,.45,1),opacity .24s}
+.pop.go{transform:scale(1);opacity:1}
+.growy{transform-box:fill-box;transform-origin:bottom;transform:scaleY(0);
+  transition:transform .5s cubic-bezier(.28,1.1,.45,1)}
+.growy.go{transform:scaleY(1)}
+.growx{transform-box:fill-box;transform-origin:left;transform:scaleX(0);
+  transition:transform .55s cubic-bezier(.28,1.1,.45,1)}
+.growx.go{transform:scaleX(1)}
+@media (prefers-reduced-motion:reduce){
+  .draw{stroke-dasharray:none;stroke-dashoffset:0}
+  .pop,.growy,.growx{transform:none;opacity:1;transition:none}
+}
+.mlegend{display:flex;gap:clamp(14px,2vw,30px);margin-left:26%;font-size:clamp(10.5px,.9vw,16px);
+  color:var(--ink-3);margin-top:-6px}
+.mlegend i{display:inline-block;width:12px;height:12px;border-radius:3px;
+  margin-right:6px;vertical-align:-1px}
+table.cmp{width:100%;border-collapse:collapse;margin:clamp(8px,1.6vh,22px) 0;
+  font-size:clamp(14px,1.35vw,24px)}
+table.cmp th{text-align:right;font-size:clamp(10px,.86vw,15px);font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);
+  padding:0 0 8px 18px;border-bottom:1px solid var(--rule-2)}
+table.cmp th:first-child{text-align:left}
+table.cmp td{padding:clamp(6px,1.1vh,14px) 0 clamp(6px,1.1vh,14px) 18px;
+  text-align:right;font-family:var(--display);border-bottom:1px solid var(--rule-2)}
+table.cmp td:first-child{text-align:left;font-family:var(--body);
+  font-size:clamp(12px,1.1vw,20px)}
+table.cmp tr.hi td{background:var(--tint);font-weight:700}
+.close{margin-top:14px;color:var(--ink-3);font-size:.88em}
+.rows,.steps{margin:clamp(8px,1.6vh,20px) 0;flex:1;display:flex;flex-direction:column;
+  justify-content:center}
+.two,.map{flex:0 0 auto}
+.row{display:grid;grid-template-columns:minmax(150px,2.1fr) 4.4fr minmax(80px,1.2fr);
+  gap:clamp(12px,2vw,34px);align-items:start;padding:clamp(9px,1.5vh,19px) 0;
+  border-bottom:1px solid var(--rule-2)}
+.row:last-child{border-bottom:0}
+.tag{display:block;font-size:clamp(10px,.86vw,16px);font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;margin-bottom:5px}
+.rbig{font-family:var(--display);font-size:clamp(19px,2.15vw,39px);line-height:1.08;
+  display:block;color:var(--ink)}
+.rt{font-size:clamp(14px,1.34vw,25px);line-height:1.45;color:var(--ink)}
+.rs{font-size:clamp(10px,.84vw,15px);font-style:italic;color:var(--ink-3);line-height:1.3}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.4vw,40px);
+  margin:clamp(10px,2vh,26px) 0}
+.tbox{background:var(--tint);border-radius:8px;padding:clamp(12px,2vh,24px) clamp(14px,1.8vw,28px)}
+.tbox b{font-family:var(--display);font-size:clamp(19px,2.1vw,38px);display:block;
+  line-height:1.1;margin-bottom:8px}
+.tbox p{margin:0;font-size:clamp(13.5px,1.26vw,23px);line-height:1.4;color:var(--ink)}
+.band{background:var(--accent-soft);border-radius:8px;
+  padding:clamp(12px,2vh,24px) clamp(14px,1.8vw,28px);margin:clamp(10px,2vh,24px) 0}
+.band .tag{color:var(--accent)}
+.band p{margin:0;font-family:var(--display);font-size:clamp(16px,1.8vw,32px);line-height:1.22}
+.step{display:grid;grid-template-columns:auto 1fr;gap:clamp(12px,1.6vw,26px);
+  align-items:start;padding:clamp(8px,1.4vh,18px) 0;border-bottom:1px solid var(--rule-2)}
+.step:last-child{border-bottom:0}
+.stepn{width:clamp(26px,2.4vw,42px);height:clamp(26px,2.4vw,42px);border-radius:50%;
+  display:grid;place-items:center;color:#fff;font-weight:700;
+  font-size:clamp(13px,1.1vw,20px)}
+.step b{font-family:var(--display);font-size:clamp(18px,2vw,36px);display:block;
+  line-height:1.1;margin-bottom:5px}
+.step p{margin:0;font-size:clamp(13.5px,1.26vw,23px);line-height:1.42;color:var(--ink)}
+.map{margin:clamp(8px,1.6vh,20px) 0;flex:1;display:flex;flex-direction:column;
+  justify-content:center}
+.maprow{display:grid;grid-template-columns:minmax(140px,1.6fr) auto 5fr;
+  gap:clamp(10px,1.8vw,30px);align-items:baseline;padding:clamp(7px,1.2vh,16px) 0;
+  border-bottom:1px solid var(--rule-2)}
+.maprow:last-child{border-bottom:0}
+.maprow .p{font-size:clamp(10px,.85vw,15px);color:var(--ink-3);font-family:var(--mono)}
+.maprow .d{font-size:clamp(14px,1.32vw,24px);line-height:1.4}
+.quote{font-family:var(--display);font-size:clamp(22px,2.8vw,52px);line-height:1.18;
+  margin:clamp(10px,2vh,28px) 0 clamp(6px,1vh,14px)}
+
+/* Polarization V additions (shared with VI) ----------------------------------------------- */
+/* The closing "Next" slide, sized like the PowerPoint: big rows, not a list. */
+.kicker.nxk{margin-top:clamp(20px,9vh,120px)}
+.nxl{margin-top:clamp(10px,3vh,40px);display:flex;flex-direction:column;gap:clamp(14px,4.5vh,60px)}
+.nxr{display:grid;grid-template-columns:clamp(120px,17vw,320px) 1fr;align-items:baseline}
+.nxw{color:var(--accent);font-weight:700;font-size:clamp(14px,1.55vw,30px)}
+.nxt{font-family:var(--display);font-weight:700;font-size:clamp(20px,2.3vw,46px);line-height:1.2;color:#F4F7FA}
+.nxd{color:#8E9AA6;font-size:clamp(13px,1.35vw,26px);margin-top:.35em}
+.nxf{margin-top:clamp(16px,5vh,64px);color:#D5DDE5;font-size:clamp(14px,1.5vw,28px)}
+.chart svg text{font-family:var(--body)}
+h2 .badge{display:inline-grid;place-items:center;width:1.25em;height:1.25em;border-radius:50%;
+  background:var(--accent);color:#fff;font-family:var(--body);font-size:.62em;font-weight:700;
+  margin-right:.45em;vertical-align:.18em}
+.reported{display:inline-block;font-family:var(--body);font-size:clamp(9px,.7vw,13px);font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);border:1px solid var(--rule);
+  border-radius:4px;padding:3px 9px;vertical-align:.4em;margin-left:.6em}
+.look{font-style:italic;color:var(--ink-3);font-size:clamp(13px,1.15vw,21px);margin:2px 0 10px}
+.hold{opacity:.06}
+.bigstate{font-family:var(--display);font-weight:700;font-size:clamp(26px,3.3vw,64px);line-height:1.18;
+  text-align:center;max-width:22ch;margin:clamp(20px,8vh,110px) auto 0}
+.bigstate.huge{font-size:clamp(48px,7vw,140px)}
+.lede.center{text-align:center;max-width:52ch;margin:18px auto 0}
+.cards{display:grid;gap:clamp(10px,1.2vw,22px);margin-top:clamp(14px,5vh,60px);align-items:stretch}
+.cards.n2{grid-template-columns:repeat(2,1fr)} .cards.n3{grid-template-columns:repeat(3,1fr)}
+.cards.n4{grid-template-columns:repeat(4,1fr)} .cards.n5{grid-template-columns:repeat(5,1fr)}
+.cards.arrows.n3{grid-template-columns:1fr auto 1fr auto 1fr}
+.cards.arrows.n4{grid-template-columns:1fr auto 1fr auto 1fr auto 1fr}
+.cards .arr{align-self:center;font-size:2em;color:var(--ink-3);transition:opacity .3s}
+.card{background:var(--card);border:1px solid var(--rule-2);border-top:6px solid;padding:clamp(12px,1.3vw,26px);
+  min-height:clamp(150px,30vh,340px);display:flex;flex-direction:column;transition:opacity .32s}
+.card b{font-family:var(--display);font-size:clamp(18px,2vw,40px);line-height:1.12;display:block;min-height:2.3em}
+.cards.n4 .card b,.cards.n5 .card b{font-size:clamp(15px,1.5vw,30px)}
+.card p{font-size:clamp(14px,1.45vw,28px);line-height:1.3;color:var(--ink);margin-top:.4em;flex:1}
+.cards.n4 .card p,.cards.n5 .card p{font-size:clamp(12px,1.15vw,22px)}
+.card .tag{margin-top:10px}
+.card.hi{background:var(--ink);border-color:var(--ink)} .card.hi p{color:#C6D0DA}
+.stats{display:grid;margin-top:clamp(40px,15vh,170px)} .stats.n1{grid-template-columns:1fr}
+.stats.n2{grid-template-columns:1fr 1fr} .stats.n3{grid-template-columns:1fr 1fr 1fr}
+.st{text-align:center;padding:0 12px;border-left:1px solid var(--rule-2);transition:opacity .32s}
+.st:first-child{border-left:0}
+.st .tag{display:block;color:var(--ink-3);margin-bottom:14px}
+.st b{font-family:var(--display);font-size:clamp(40px,5.6vw,110px);line-height:1}
+.stats.n3 .st b{font-size:clamp(32px,4.2vw,84px)}
+.st .stsub{font-size:clamp(14px,1.3vw,24px);color:var(--ink-2);max-width:24ch;margin:12px auto 0;line-height:1.3}
+blockquote.mq{font-family:var(--display);font-style:italic;font-size:clamp(18px,2.1vw,40px);line-height:1.3;
+  background:var(--tint);border-left:6px solid var(--accent);padding:clamp(14px,1.6vw,30px);margin:14px 0 clamp(18px,4vh,44px)}
+.pc{display:grid;grid-template-columns:14em 1fr;align-items:baseline;gap:16px;margin:clamp(8px,2vh,24px) 0;transition:opacity .32s}
+.pc b{font-family:var(--display);font-size:clamp(20px,2.3vw,44px)}
+.qlist{display:flex;flex-direction:column;gap:clamp(6px,1vh,14px);margin-top:10px}
+.qrow{display:grid;grid-template-columns:1fr 12em;gap:14px;align-items:center;background:var(--card);
+  padding:clamp(8px,1vw,16px) 14px;border-radius:6px;transition:opacity .32s}
+.qrow.try{grid-template-columns:1.2fr auto 9em}
+.qrow .q{font-family:var(--display);font-style:italic;font-size:clamp(14px,1.3vw,25px);line-height:1.28}
+.qrow.try .q{font-size:clamp(12px,1.02vw,19px)}
+.qrow .q.plain{font-style:normal;font-family:var(--body)}
+.disc{margin-top:clamp(20px,6vh,70px);display:flex;flex-direction:column;gap:clamp(20px,5vh,60px)}
+.dq{display:grid;grid-template-columns:1.6em 1fr;gap:14px;transition:opacity .32s}
+.dq span{font-family:var(--display);font-size:clamp(28px,3vw,56px);font-weight:700;color:var(--accent)}
+.dq p{font-family:var(--display);font-size:clamp(18px,2.1vw,40px);font-weight:700;line-height:1.22}
+.dref{margin-top:clamp(10px,2.5vh,30px);background:var(--card);padding:8px 16px}
+.dref div{display:grid;grid-template-columns:1fr 13em;gap:12px;align-items:center;padding:5px 0;border-top:1px solid var(--rule-2)}
+.dref div:first-child{border-top:0}
+.dref p{font-family:var(--display);font-style:italic;font-size:clamp(12px,1.05vw,20px);line-height:1.25}
+.dref p.plain{font-style:normal;font-weight:700;font-family:var(--body)}
+.dref span{font-size:clamp(10px,.8vw,15px);font-weight:700;color:var(--accent);text-align:right;text-transform:uppercase;letter-spacing:.04em}
+.slide:has(.dref) .disc{gap:clamp(8px,2vh,24px);margin-top:clamp(10px,3vh,34px)}
+.slide:has(.dref) .dq p{font-size:clamp(16px,1.7vw,32px)}
+.report{margin-top:clamp(18px,4vh,50px);background:var(--card);padding:12px 18px;font-size:clamp(14px,1.4vw,26px)}
+.report b{color:var(--accent);text-transform:uppercase;letter-spacing:.08em;font-size:.8em;margin-right:.4em}
+.qrow .key{font-size:clamp(11px,.9vw,16px);color:var(--accent);font-weight:700;text-align:right}
+.ans{display:flex;gap:4px;flex-wrap:wrap}
+.ans button{font-size:clamp(10px,.78vw,14px);padding:4px 9px}
+.segs{display:inline-flex;gap:4px;padding:3px;background:transparent}
+.segs button{font-size:clamp(11px,.9vw,16px)}
+.tl{display:grid;gap:18px;margin-top:clamp(20px,6vh,70px)} .tl.n4{grid-template-columns:repeat(4,1fr)}
+.tl .ev{border-top:4px solid var(--accent);padding-top:12px;transition:opacity .32s}
+.tl .ev .yr{font-family:var(--display);font-size:clamp(28px,3vw,58px);color:var(--accent);font-weight:700;display:block}
+.tl .ev b{font-family:var(--display);font-size:clamp(18px,1.8vw,34px);display:block;margin:6px 0}
+.tl .ev p{font-size:clamp(14px,1.3vw,25px);line-height:1.3}
+.mb{transition:x .45s ease,width .45s ease}
+/* Staged bars. The engine re-renders a slide on every step and lands earlier
+   stages instantly through .pop, but replays every .growx/.growy bar, so bars
+   that were already on screen used to grow in again. Bars therefore ride on
+   .pop too, with a directional grow instead of .pop's default scale. */
+.pop.popx{transform-origin:left;transform:scaleX(0);opacity:1;transition:transform .55s cubic-bezier(.28,1.1,.45,1)}
+.pop.popx.go{transform:scaleX(1)}
+.pop.popy{transform:scaleY(0);opacity:1;transition:transform .5s cubic-bezier(.28,1.1,.45,1)}
+.pop.popy.go{transform:scaleY(1)}
+@media (prefers-reduced-motion:reduce){ .pop.popx,.pop.popy{transform:none;transition:none} }
+.cap{font-family:var(--display);font-size:clamp(16px,1.6vw,32px);font-weight:600;line-height:1.25;min-height:2.6em;margin:6px 0 0}
+.cap .dim{color:var(--ink-3);font-weight:400;font-size:.8em}
+@media (prefers-reduced-motion:reduce){ .mb{transition:none} }
+.cards.n6{grid-template-columns:repeat(6,1fr)}
+.cards.n6 .card b{font-size:clamp(14px,1.3vw,26px)} .cards.n6 .card p{font-size:clamp(11px,1vw,19px)}
+.so{margin:clamp(28px,6vh,72px) auto 0;max-width:62ch;text-align:center;font-family:var(--display);font-weight:600;font-size:clamp(17px,1.7vw,30px);line-height:1.35;color:var(--ink);border-top:2px solid var(--accent);padding-top:clamp(12px,2vh,24px);transition:opacity .4s}
+.stats.n4{grid-template-columns:repeat(4,1fr)} .stats.n4 .st b{font-size:clamp(34px,4.6vw,92px)} .stats.n4 .st .stsub{font-size:clamp(13px,1.2vw,22px)}
+/* keep the source line clear of the slide counter in the bottom-right corner */
+.slide:not(.center) > .foot{padding-right:clamp(120px,15vw,240px);box-sizing:border-box}
+/* Polarization VI ------------------------------------------------------------ */
+.tl.n2{grid-template-columns:repeat(2,1fr);gap:clamp(24px,4vw,80px)}
+.stats{margin-top:clamp(28px,10vh,120px)}
+.feat{display:grid;grid-template-columns:auto 1fr;gap:clamp(18px,2.5vw,48px);align-items:center;margin:clamp(20px,6vh,70px) 0 clamp(18px,4vh,48px)}
+.fl{display:grid;place-items:center;width:clamp(80px,9vw,170px);height:clamp(80px,9vw,170px);border-radius:50%;
+  background:var(--accent);color:#fff;font-family:var(--display);font-weight:700;font-size:clamp(44px,5.5vw,104px)}
+.fbig{font-family:var(--display);font-weight:700;font-size:clamp(24px,2.9vw,56px);line-height:1.2}
+.frow{display:grid;grid-template-columns:clamp(150px,16vw,300px) 1fr;gap:14px;align-items:center;
+  border-top:1px solid var(--rule-2);padding:clamp(10px,1.8vh,22px) 0;transition:opacity .32s}
+.frow p{font-size:clamp(15px,1.45vw,27px);line-height:1.3}
+.fsc{display:flex;gap:6px;flex-wrap:wrap}
+.fsc button{font:700 clamp(13px,1.2vw,22px) var(--body);color:var(--accent);background:transparent;border:2px solid var(--accent);
+  border-radius:6px;padding:6px 0;width:clamp(30px,3.4vw,62px);cursor:pointer}
+.fexp{font-style:italic;color:var(--ink-3);font-size:clamp(12px,1vw,18px);margin-top:8px}
+.fsc button[aria-pressed="true"]{background:var(--accent);color:#fff}
+.g2{display:grid;grid-template-columns:clamp(110px,13vw,240px) 1fr 1fr;gap:10px;margin-top:clamp(8px,2vh,24px)}
+.g2 .gh{font-size:clamp(11px,.95vw,17px);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);text-align:center}
+.g2 .gh.gl{text-align:right;align-self:end}
+.g2 .gc{text-align:center;font-weight:700;color:var(--ink-3);letter-spacing:.08em;align-self:end}
+.g2 .gr{align-self:center;text-align:right;font-weight:700;color:var(--ink-3);letter-spacing:.08em;padding-right:8px}
+.gcell{background:var(--card);border:1px solid var(--rule-2);padding:clamp(12px,1.4vw,26px);min-height:clamp(110px,22vh,240px);transition:opacity .32s}
+.gcell b{font-family:var(--display);font-size:clamp(16px,1.6vw,30px);line-height:1.2;display:block}
+.gcell p{color:var(--accent);font-weight:700;font-size:clamp(13px,1.15vw,21px);margin-top:.7em}
+.gcell.hi{background:var(--ink);border-color:var(--ink)} .gcell.hi b{color:#fff} .gcell.hi p{color:#F2B8C2}
+.scard{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:clamp(14px,3vh,36px)}
+.scard span{background:var(--card);border-radius:6px;padding:6px 12px;font-weight:700;font-size:clamp(14px,1.3vw,24px)}
+.scard i{font-style:normal;color:var(--accent);margin-right:.4em;font-family:var(--display)}
+.lvjoin{display:flex;gap:clamp(14px,2vw,32px);align-items:center;margin-top:clamp(12px,3vh,32px);
+  background:var(--card);border:1px solid var(--rule-2);border-radius:12px;padding:12px 18px;align-self:flex-start}
+.lvjoin>div:last-child{display:grid;grid-template-columns:auto auto;column-gap:clamp(18px,2.5vw,48px);align-items:center}
+.lvjoin .lvcode{grid-row:1/4;grid-column:2} .lvjoin .lvnew{justify-self:start}
+.lvqr svg{width:clamp(84px,9vw,160px);height:auto;display:block;background:#fff;border-radius:6px}
+.lvlab{font-size:clamp(11px,.9vw,16px);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lvurl{font-size:clamp(11px,.9vw,16px);color:var(--ink-3);margin-top:4px;word-break:break-all}
+.lvcode{font-family:var(--display);font-weight:700;font-size:clamp(34px,4.4vw,84px);letter-spacing:.12em;line-height:1.1;margin-top:4px}
+.lvn{font-size:clamp(13px,1.1vw,20px);color:var(--ink-2)}
+.lvnew{margin-top:8px;font:600 clamp(10px,.8vw,14px) var(--body);color:var(--ink-3);background:none;border:1px solid var(--rule-2);border-radius:5px;padding:3px 8px;cursor:pointer}
+.slide:has(.lvjoin) .cards{margin-top:clamp(8px,2vh,24px)} .slide:has(.lvjoin) .card{min-height:0}
+.lvbar{font-size:clamp(12px,1vw,18px);color:var(--ink-2);margin-top:clamp(6px,1.5vh,16px)}
+.lvdot{display:inline-block;width:.6em;height:.6em;border-radius:50%;background:var(--accent);margin-right:.5em;animation:lvp 1.6s infinite}
+@keyframes lvp{50%{opacity:.25}} @media (prefers-reduced-motion:reduce){.lvdot{animation:none}}
+.scard b{font-family:var(--display);font-size:clamp(20px,2.2vw,42px);margin-left:12px}
+</style>
+</head><body>
+<div class="deck" id="deck"></div>
+<div class="progress"><i id="bar"></i></div>
+<aside id="notes" hidden><h4>Speaker notes</h4><div id="notesbody"></div></aside>
+<div id="help" hidden><div>
+  <b>Polarization VI &mdash; A Threat to Democracy?</b><br><br>
+  <kbd>&rarr;</kbd> / <kbd>space</kbd> next &nbsp; <kbd>&larr;</kbd> back &nbsp;
+  <kbd>&darr;</kbd> / <kbd>&uarr;</kbd> skip a whole slide &nbsp;
+  <kbd>N</kbd> speaker notes &nbsp; <kbd>F</kbd> fullscreen &nbsp;
+  <kbd>T</kbd> light/dark &nbsp; <kbd>?</kbd> this help<br><br>
+  Slide for slide the same as the PowerPoint, with the same numbers and the same
+  speaker notes: both are drawn from one file. Most slides build a piece at a time
+  on <kbd>&rarr;</kbd>.<br><br>
+  On McCoy &amp; Somer&rsquo;s ten features, click a score from <b>0</b> to <b>10</b> to score
+  the U.S. (click again to clear). Scores stay in this browser only; the last
+  discussion slide adds them up.<br><br>
+  The room&rsquo;s numbers come from the Cervas Election Study, via
+  <span class="nums">2026-10-06-ces-democracy.R</span>; slides marked
+  <i>reported from the article</i> show a reading&rsquo;s own numbers.<br><br>
+  Jump to a slide by number &mdash; <kbd>&hellip;#13</kbd>, or a stage, <kbd>#13b</kbd>.
+  <div class="close">Press <kbd>Esc</kbd> or click anywhere to close.</div>
+</div></div>
+<div class="hint" id="hint"></div>
+<script>
+const D = {"rows":[{"item":"fairUS","grp":"all","cat":1,"label":"Strongly agree","pct":10.5,"n":38},{"item":"fairUS","grp":"all","cat":2,"label":"Somewhat agree","pct":55.3,"n":38},{"item":"fairUS","grp":"all","cat":3,"label":"Neither agree nor disagree","pct":13.2,"n":38},{"item":"fairUS","grp":"all","cat":4,"label":"Somewhat disagree","pct":18.4,"n":38},{"item":"fairUS","grp":"all","cat":5,"label":"Strongly disagree","pct":2.6,"n":38},{"item":"fairUS","grp":"dem","cat":1,"label":"Strongly agree","pct":7.4,"n":27},{"item":"fairUS","grp":"dem","cat":2,"label":"Somewhat agree","pct":63.0,"n":27},{"item":"fairUS","grp":"dem","cat":3,"label":"Neither agree nor disagree","pct":3.7,"n":27},{"item":"fairUS","grp":"dem","cat":4,"label":"Somewhat disagree","pct":25.9,"n":27},{"item":"fairUS","grp":"dem","cat":5,"label":"Strongly disagree","pct":0.0,"n":27},{"item":"fairState","grp":"all","cat":1,"label":"Strongly agree","pct":34.2,"n":38},{"item":"fairState","grp":"all","cat":2,"label":"Somewhat agree","pct":31.6,"n":38},{"item":"fairState","grp":"all","cat":3,"label":"Neither agree nor disagree","pct":28.9,"n":38},{"item":"fairState","grp":"all","cat":4,"label":"Somewhat disagree","pct":2.6,"n":38},{"item":"fairState","grp":"all","cat":5,"label":"Strongly disagree","pct":2.6,"n":38},{"item":"fairState","grp":"dem","cat":1,"label":"Strongly agree","pct":33.3,"n":27},{"item":"fairState","grp":"dem","cat":2,"label":"Somewhat agree","pct":37.0,"n":27},{"item":"fairState","grp":"dem","cat":3,"label":"Neither agree nor disagree","pct":22.2,"n":27},{"item":"fairState","grp":"dem","cat":4,"label":"Somewhat disagree","pct":3.7,"n":27},{"item":"fairState","grp":"dem","cat":5,"label":"Strongly disagree","pct":3.7,"n":27},{"item":"trustFed","grp":"all","cat":1,"label":"A great deal","pct":5.3,"n":38},{"item":"trustFed","grp":"all","cat":2,"label":"A fair amount","pct":15.8,"n":38},{"item":"trustFed","grp":"all","cat":3,"label":"Not very much","pct":57.9,"n":38},{"item":"trustFed","grp":"all","cat":4,"label":"None at all","pct":21.1,"n":38},{"item":"trustFed","grp":"dem","cat":1,"label":"A great deal","pct":3.7,"n":27},{"item":"trustFed","grp":"dem","cat":2,"label":"A fair amount","pct":3.7,"n":27},{"item":"trustFed","grp":"dem","cat":3,"label":"Not very much","pct":70.4,"n":27},{"item":"trustFed","grp":"dem","cat":4,"label":"None at all","pct":22.2,"n":27},{"item":"trustSt","grp":"all","cat":1,"label":"A great deal","pct":5.4,"n":37},{"item":"trustSt","grp":"all","cat":2,"label":"A fair amount","pct":59.5,"n":37},{"item":"trustSt","grp":"all","cat":3,"label":"Not very much","pct":27.0,"n":37},{"item":"trustSt","grp":"all","cat":4,"label":"None at all","pct":8.1,"n":37},{"item":"trustSt","grp":"dem","cat":1,"label":"A great deal","pct":7.4,"n":27},{"item":"trustSt","grp":"dem","cat":2,"label":"A fair amount","pct":63.0,"n":27},{"item":"trustSt","grp":"dem","cat":3,"label":"Not very much","pct":25.9,"n":27},{"item":"trustSt","grp":"dem","cat":4,"label":"None at all","pct":3.7,"n":27},{"item":"fairUS","grp":"us","cat":1,"label":"Strongly agree","pct":24.6,"n":49429},{"item":"fairUS","grp":"us","cat":2,"label":"Somewhat agree","pct":37.9,"n":49429},{"item":"fairUS","grp":"us","cat":3,"label":"Neither agree nor disagree","pct":18.9,"n":49429},{"item":"fairUS","grp":"us","cat":4,"label":"Somewhat disagree","pct":12.7,"n":49429},{"item":"fairUS","grp":"us","cat":5,"label":"Strongly disagree","pct":5.8,"n":49429},{"item":"fairUS","grp":"us1829","cat":1,"label":"Strongly agree","pct":18.6,"n":4272},{"item":"fairUS","grp":"us1829","cat":2,"label":"Somewhat agree","pct":37.7,"n":4272},{"item":"fairUS","grp":"us1829","cat":3,"label":"Neither agree nor disagree","pct":21.0,"n":4272},{"item":"fairUS","grp":"us1829","cat":4,"label":"Somewhat disagree","pct":14.8,"n":4272},{"item":"fairUS","grp":"us1829","cat":5,"label":"Strongly disagree","pct":8.0,"n":4272},{"item":"fairState","grp":"us","cat":1,"label":"Strongly agree","pct":44.9,"n":49430},{"item":"fairState","grp":"us","cat":2,"label":"Somewhat agree","pct":29.6,"n":49430},{"item":"fairState","grp":"us","cat":3,"label":"Neither agree nor disagree","pct":17.6,"n":49430},{"item":"fairState","grp":"us","cat":4,"label":"Somewhat disagree","pct":4.7,"n":49430},{"item":"fairState","grp":"us","cat":5,"label":"Strongly disagree","pct":3.1,"n":49430},{"item":"fairState","grp":"us1829","cat":1,"label":"Strongly agree","pct":39.5,"n":4272},{"item":"fairState","grp":"us1829","cat":2,"label":"Somewhat agree","pct":30.0,"n":4272},{"item":"fairState","grp":"us1829","cat":3,"label":"Neither agree nor disagree","pct":22.9,"n":4272},{"item":"fairState","grp":"us1829","cat":4,"label":"Somewhat disagree","pct":4.2,"n":4272},{"item":"fairState","grp":"us1829","cat":5,"label":"Strongly disagree","pct":3.3,"n":4272},{"item":"trustFed","grp":"us","cat":1,"label":"A great deal","pct":6.2,"n":49347},{"item":"trustFed","grp":"us","cat":2,"label":"A fair amount","pct":31.9,"n":49347},{"item":"trustFed","grp":"us","cat":3,"label":"Not very much","pct":47.2,"n":49347},{"item":"trustFed","grp":"us","cat":4,"label":"None at all","pct":14.8,"n":49347},{"item":"trustFed","grp":"us1829","cat":1,"label":"A great deal","pct":6.9,"n":4266},{"item":"trustFed","grp":"us1829","cat":2,"label":"A fair amount","pct":31.1,"n":4266},{"item":"trustFed","grp":"us1829","cat":3,"label":"Not very much","pct":48.8,"n":4266},{"item":"trustFed","grp":"us1829","cat":4,"label":"None at all","pct":13.2,"n":4266},{"item":"trustSt","grp":"us","cat":1,"label":"A great deal","pct":12.8,"n":49340},{"item":"trustSt","grp":"us","cat":2,"label":"A fair amount","pct":42.5,"n":49340},{"item":"trustSt","grp":"us","cat":3,"label":"Not very much","pct":31.6,"n":49340},{"item":"trustSt","grp":"us","cat":4,"label":"None at all","pct":13.1,"n":49340},{"item":"trustSt","grp":"us1829","cat":1,"label":"A great deal","pct":10.1,"n":4267},{"item":"trustSt","grp":"us1829","cat":2,"label":"A fair amount","pct":43.1,"n":4267},{"item":"trustSt","grp":"us1829","cat":3,"label":"Not very much","pct":34.5,"n":4267},{"item":"trustSt","grp":"us1829","cat":4,"label":"None at all","pct":12.2,"n":4267},{"item":"trustTime","grp":"all","cat":1958,"label":"most of the time or always","pct":75.7,"n":1364},{"item":"trustTime","grp":"all","cat":1964,"label":"most of the time or always","pct":77.7,"n":1424},{"item":"trustTime","grp":"all","cat":1966,"label":"most of the time or always","pct":67.9,"n":1231},{"item":"trustTime","grp":"all","cat":1968,"label":"most of the time or always","pct":62.7,"n":1310},{"item":"trustTime","grp":"all","cat":1970,"label":"most of the time or always","pct":54.7,"n":1471},{"item":"trustTime","grp":"all","cat":1972,"label":"most of the time or always","pct":54.2,"n":2232},{"item":"trustTime","grp":"all","cat":1974,"label":"most of the time or always","pct":36.9,"n":1529},{"item":"trustTime","grp":"all","cat":1976,"label":"most of the time or always","pct":34.5,"n":2168},{"item":"trustTime","grp":"all","cat":1978,"label":"most of the time or always","pct":30.0,"n":2215},{"item":"trustTime","grp":"all","cat":1980,"label":"most of the time or always","pct":25.7,"n":1576},{"item":"trustTime","grp":"all","cat":1982,"label":"most of the time or always","pct":33.7,"n":1361},{"item":"trustTime","grp":"all","cat":1984,"label":"most of the time or always","pct":44.9,"n":1884},{"item":"trustTime","grp":"all","cat":1986,"label":"most of the time or always","pct":39.2,"n":1062},{"item":"trustTime","grp":"all","cat":1988,"label":"most of the time or always","pct":41.2,"n":1747},{"item":"trustTime","grp":"all","cat":1990,"label":"most of the time or always","pct":28.4,"n":1934},{"item":"trustTime","grp":"all","cat":1992,"label":"most of the time or always","pct":29.3,"n":2223},{"item":"trustTime","grp":"all","cat":1994,"label":"most of the time or always","pct":22.0,"n":1756},{"item":"trustTime","grp":"all","cat":1996,"label":"most of the time or always","pct":33.0,"n":1524},{"item":"trustTime","grp":"all","cat":1998,"label":"most of the time or always","pct":40.2,"n":1270},{"item":"trustTime","grp":"all","cat":2000,"label":"most of the time or always","pct":44.2,"n":1545},{"item":"trustTime","grp":"all","cat":2002,"label":"most of the time or always","pct":55.4,"n":1343},{"item":"trustTime","grp":"all","cat":2004,"label":"most of the time or always","pct":46.5,"n":1062},{"item":"trustTime","grp":"all","cat":2008,"label":"most of the time or always","pct":30.5,"n":1039},{"item":"trustTime","grp":"all","cat":2012,"label":"most of the time or always","pct":22.1,"n":3002},{"item":"trustTime","grp":"all","cat":2024,"label":"most of the time or always","pct":14.6,"n":5498},{"item":"trustTime","grp":"dem","cat":1958,"label":"most of the time or always","pct":73.2,"n":758},{"item":"trustTime","grp":"dem","cat":1964,"label":"most of the time or always","pct":80.8,"n":878},{"item":"trustTime","grp":"dem","cat":1966,"label":"most of the time or always","pct":73.3,"n":673},{"item":"trustTime","grp":"dem","cat":1968,"label":"most of the time or always","pct":66.1,"n":723},{"item":"trustTime","grp":"dem","cat":1970,"label":"most of the time or always","pct":52.6,"n":801},{"item":"trustTime","grp":"dem","cat":1972,"label":"most of the time or always","pct":48.1,"n":1127},{"item":"trustTime","grp":"dem","cat":1974,"label":"most of the time or always","pct":36.5,"n":786},{"item":"trustTime","grp":"dem","cat":1976,"label":"most of the time or always","pct":30.3,"n":1098},{"item":"trustTime","grp":"dem","cat":1978,"label":"most of the time or always","pct":34.0,"n":1177},{"item":"trustTime","grp":"dem","cat":1980,"label":"most of the time or always","pct":30.3,"n":821},{"item":"trustTime","grp":"dem","cat":1982,"label":"most of the time or always","pct":31.2,"n":741},{"item":"trustTime","grp":"dem","cat":1984,"label":"most of the time or always","pct":39.9,"n":887},{"item":"trustTime","grp":"dem","cat":1986,"label":"most of the time or always","pct":31.5,"n":520},{"item":"trustTime","grp":"dem","cat":1988,"label":"most of the time or always","pct":35.7,"n":830},{"item":"trustTime","grp":"dem","cat":1990,"label":"most of the time or always","pct":25.6,"n":995},{"item":"trustTime","grp":"dem","cat":1992,"label":"most of the time or always","pct":28.8,"n":1097},{"item":"trustTime","grp":"dem","cat":1994,"label":"most of the time or always","pct":25.9,"n":828},{"item":"trustTime","grp":"dem","cat":1996,"label":"most of the time or always","pct":38.6,"n":798},{"item":"trustTime","grp":"dem","cat":1998,"label":"most of the time or always","pct":45.6,"n":652},{"item":"trustTime","grp":"dem","cat":2000,"label":"most of the time or always","pct":47.5,"n":749},{"item":"trustTime","grp":"dem","cat":2002,"label":"most of the time or always","pct":50.4,"n":616},{"item":"trustTime","grp":"dem","cat":2004,"label":"most of the time or always","pct":35.5,"n":506},{"item":"trustTime","grp":"dem","cat":2008,"label":"most of the time or always","pct":32.8,"n":606},{"item":"trustTime","grp":"dem","cat":2012,"label":"most of the time or always","pct":29.5,"n":1567},{"item":"trustTime","grp":"dem","cat":2024,"label":"most of the time or always","pct":22.4,"n":2639},{"item":"trustTime","grp":"rep","cat":1958,"label":"most of the time or always","pct":81.6,"n":462},{"item":"trustTime","grp":"rep","cat":1964,"label":"most of the time or always","pct":72.5,"n":422},{"item":"trustTime","grp":"rep","cat":1966,"label":"most of the time or always","pct":58.1,"n":389},{"item":"trustTime","grp":"rep","cat":1968,"label":"most of the time or always","pct":60.6,"n":442},{"item":"trustTime","grp":"rep","cat":1970,"label":"most of the time or always","pct":61.7,"n":472},{"item":"trustTime","grp":"rep","cat":1972,"label":"most of the time or always","pct":63.2,"n":797},{"item":"trustTime","grp":"rep","cat":1974,"label":"most of the time or always","pct":41.0,"n":492},{"item":"trustTime","grp":"rep","cat":1976,"label":"most of the time or always","pct":42.2,"n":725},{"item":"trustTime","grp":"rep","cat":1978,"label":"most of the time or always","pct":24.5,"n":670},{"item":"trustTime","grp":"rep","cat":1980,"label":"most of the time or always","pct":20.5,"n":522},{"item":"trustTime","grp":"rep","cat":1982,"label":"most of the time or always","pct":39.5,"n":440},{"item":"trustTime","grp":"rep","cat":1984,"label":"most of the time or always","pct":49.5,"n":767},{"item":"trustTime","grp":"rep","cat":1986,"label":"most of the time or always","pct":52.3,"n":384},{"item":"trustTime","grp":"rep","cat":1988,"label":"most of the time or always","pct":48.8,"n":720},{"item":"trustTime","grp":"rep","cat":1990,"label":"most of the time or always","pct":32.0,"n":706},{"item":"trustTime","grp":"rep","cat":1992,"label":"most of the time or always","pct":32.7,"n":845},{"item":"trustTime","grp":"rep","cat":1994,"label":"most of the time or always","pct":19.1,"n":742},{"item":"trustTime","grp":"rep","cat":1996,"label":"most of the time or always","pct":27.5,"n":589},{"item":"trustTime","grp":"rep","cat":1998,"label":"most of the time or always","pct":34.9,"n":466},{"item":"trustTime","grp":"rep","cat":2000,"label":"most of the time or always","pct":40.9,"n":604},{"item":"trustTime","grp":"rep","cat":2002,"label":"most of the time or always","pct":61.8,"n":605},{"item":"trustTime","grp":"rep","cat":2004,"label":"most of the time or always","pct":60.9,"n":441},{"item":"trustTime","grp":"rep","cat":2008,"label":"most of the time or always","pct":28.1,"n":295},{"item":"trustTime","grp":"rep","cat":2012,"label":"most of the time or always","pct":16.4,"n":1008},{"item":"trustTime","grp":"rep","cat":2024,"label":"most of the time or always","pct":7.2,"n":2454}]};
+const $ = s => document.querySelector(s);
+const SVGNS = "http://www.w3.org/2000/svg";
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const f1 = v => v.toFixed(1);
+const at = (s,y) => { const r = D.series[s].find(p=>p[0]===y); return r ? r[1] : null; };
+const lastAtOrBefore = (s,y) => { const d = D.series[s].filter(p=>p[0]<=y);
+  return d.length ? d[d.length-1] : null; };
+const mean = a => a.reduce((x,y)=>x+y,0)/a.length;
+
+function el(tag, attrs, text){
+  const n = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  if (text !== undefined) n.textContent = text;
+  return n;
+}
+function clear(svg){ while (svg.firstChild) svg.removeChild(svg.firstChild); }
+
+/* A small linear-axis chart. Written out rather than pulled from a library
+   because this page has to open with no network at all. */
+// Pen speed for the drawing lines, in px per ms. One constant for the deck so
+// every chart draws at the same rate; duration falls out of the path length.
+const DRAW_PX_PER_MS = 0.30;   // ~2.6s across a full-width series, as in the sorting deck
+const ASK_FS = 30;                       // big enough to be read from the back
+// SVG text does not wrap, so break the question into rows by hand. Words only:
+// a mid-word break in 30px bold is more distracting than a short line.
+function wrapAsk(str, max){
+  const out=[]; let cur='';
+  for (const w of String(str).split(/\s+/)){
+    if (cur && (cur+' '+w).length > max){ out.push(cur); cur=w; }
+    else cur = cur ? cur+' '+w : w;
+  }
+  if (cur) out.push(cur);
+  return out;
+}
+function chart(svg, cfg){
+  clear(svg);
+  const vb = svg.viewBox.baseVal, W = vb.width, H = vb.height;
+  const P = Object.assign({l:64, r:170, t:20, b:44}, cfg.pad||{});
+  const x0=P.l, x1=W-P.r, y0=P.t, y1=H-P.b;
+  const [xa,xb] = cfg.xdom, [ya,yb] = cfg.ydom;
+  const px = v => x0 + (v-xa)/(xb-xa)*(x1-x0);
+  const py = v => y1 - (v-ya)/(yb-ya)*(y1-y0);
+  const RULE=css('--rule-2'), MUT=css('--ink-3');
+
+  (cfg.bands||[]).forEach(b=>svg.appendChild(el('rect',
+    {x:px(b.from), y:y0, width:px(b.to)-px(b.from), height:y1-y0,
+     fill:css('--accent'), opacity:0.09})));
+  cfg.yticks.forEach(v=>{
+    svg.appendChild(el('line',{x1:x0,x2:x1,y1:py(v),y2:py(v),stroke:RULE,'stroke-width':1}));
+    svg.appendChild(el('text',{x:x0-11,y:py(v)+5,'text-anchor':'end','font-size':15,
+      fill:MUT},(cfg.yfmt?cfg.yfmt(v):v)));
+  });
+  cfg.xticks.forEach(v=>svg.appendChild(el('text',
+    {x:px(v),y:y1+26,'text-anchor':'middle','font-size':15,fill:MUT},v)));
+  // What the vertical axis actually is. Several of these charts plot a
+  // quantity -- the in-party minus out-party gap -- that is obvious to whoever
+  // built the slide and invisible to the room.
+  if (cfg.ylab) svg.appendChild(el('text',
+    {x:18,y:(y0+y1)/2,'text-anchor':'middle','font-size':15,'font-weight':700,
+     fill:MUT,transform:`rotate(-90 18 ${(y0+y1)/2})`}, cfg.ylab));
+  (cfg.rules||[]).forEach(r=>{
+    svg.appendChild(el('line',{x1:px(r.at),x2:px(r.at),y1:y0-6,y2:y1,
+      stroke:r.color||MUT,'stroke-width':1.4,'stroke-dasharray':'6 5'}));
+    if (r.label) svg.appendChild(el('text',{x:px(r.at)-10,y:y0+6,'text-anchor':'end',
+      'font-size':14,'font-weight':700,fill:r.color||MUT}, r.label));
+  });
+  let stageIx = 0;                       // which .stage this line will become
+  cfg.lines.forEach(L=>{
+    const d = L.data.filter(p=>p[0]>=xa && p[0]<=xb);
+    if (!d.length) return;
+    const XY = d.map(p=>[px(p[0]),py(p[1])]);
+    // Cumulative PATH length, which on a jagged series is a different number
+    // from x-position: a dot must pop at the moment the pen reaches it, not at
+    // its share of the width.
+    const cum=[0];
+    for(let k=1;k<XY.length;k++) cum.push(cum[k-1] +
+      Math.hypot(XY[k][0]-XY[k-1][0], XY[k][1]-XY[k-1][1]));
+    const tot = cum[cum.length-1] || 1;
+    // Constant pen speed across every line in the deck, so a short series does
+    // not crawl and a long one does not race.
+    const dur = Math.max(700, Math.min(3400, Math.round(tot / DRAW_PX_PER_MS)));
+
+    // The ghost: the whole shape, faint, so the reader sees that something goes
+    // here before it is drawn. Outside the stage — it is visible from the start.
+    if (!L.dash && L.ghost!==false)
+      svg.appendChild(el('polyline',{class:'ghost-line',fill:'none',
+        stroke:css('--ghost'),'stroke-width':1.6,
+        points:XY.map(q=>q.join(',')).join(' ')}));
+
+    // A DASHED line cannot also be a drawing line: .draw owns stroke-dasharray,
+    // so animating one would erase the dash pattern. Dashed series are context
+    // — the national reference, the neutral rule — and never stage.
+    const staged = !L.dash && L.ghost!==false;
+    const host = staged
+      ? el('g',{class:'stage'+(L.stageClass?' '+L.stageClass:''),style:`--dur:${dur}ms`})
+      : svg;
+    host.appendChild(el('polyline',Object.assign(
+      {points:XY.map(q=>q.join(',')).join(' '),
+       fill:'none', stroke:L.color, 'stroke-width':L.w||3,
+       'stroke-linejoin':'round','stroke-linecap':'round',
+       'stroke-dasharray':L.dash||'none', opacity:L.op||1,
+       style:`--dur:${dur}ms`},
+      staged ? {class:'draw'} : {})));
+    if (L.dots!==false) d.forEach((p,k)=>host.appendChild(el('circle',
+      {class:staged?'pop':'',cx:XY[k][0],cy:XY[k][1],r:(L.w||3)>2.5?4:3,fill:L.color,
+       opacity:L.op||1,
+       style:`transition-delay:${staged?Math.round(cum[k]/tot*dur):0}ms`})));
+    if (staged) svg.appendChild(host);
+    if (L.label){ const p=d[d.length-1];
+      (staged?host:svg).appendChild(el('text',{x:px(p[0])+12,y:py(p[1])+5,
+        'font-size':16,'font-weight':700,fill:L.color, opacity:L.op||1}, L.label)); }
+
+    // The question this line answers, parked at the point the line will reach,
+    // right-aligned so it grows leftward into empty plot rather than off the
+    // edge. Tagged with its own stage index; paintStages shows the one whose
+    // turn is next.
+    if (staged && L.ask){
+      const p = d[d.length-1], ax = px(p[0]) - 16;
+      const rows = wrapAsk(L.ask, Math.max(18, Math.floor((ax - x0) / (ASK_FS*0.5))));
+      let ay = py(p[1]) - 20 - (rows.length-1)*(ASK_FS+4);
+      if (ay < y0 + ASK_FS) ay = py(p[1]) + 34;          // no room above; go below
+      const gAsk = el('g',{class:'ask','data-stage':String(stageIx)});
+      rows.forEach((r,i)=>gAsk.appendChild(el('text',
+        {x:ax, y:ay + i*(ASK_FS+4), 'text-anchor':'end', 'font-size':ASK_FS,
+         'font-weight':700, fill:css('--ink')}, r)));
+      svg.appendChild(gAsk);
+    }
+    if (staged) stageIx++;
+  });
+  (cfg.marks||[]).forEach(m=>{
+    svg.appendChild(el('circle',{cx:px(m.x),cy:py(m.y),r:m.r||8,fill:m.color,
+      stroke:css('--card'),'stroke-width':2.5}));
+    if (m.label) svg.appendChild(el('text',{x:px(m.x)+14,y:py(m.y)+6,'font-size':17,
+      'font-weight':700,fill:m.color}, m.label));
+  });
+  return {px,py,x0,x1,y0,y1,svg};
+}
+/* A labeled dot on a chart, for calling out one point. */
+function svgMark(g,x,y,color,label){
+  g.svg.appendChild(el('circle',{cx:g.px(x),cy:g.py(y),r:8,fill:css('--paper')}));
+  g.svg.appendChild(el('circle',{cx:g.px(x),cy:g.py(y),r:5.5,fill:color}));
+  if(label!==undefined) g.svg.appendChild(el('text',{x:g.px(x),y:g.py(y)-16,
+    'text-anchor':'middle','font-size':15,'font-weight':700,fill:color},label));
+}
+// The svg scales to the column width, so its rendered height is width*H/1000 --
+// a fixed number the slide cannot negotiate with. 430 put eight chart slides
+// over the bottom of a 720p frame, which scrolls on a laptop and is simply
+// missing on a projector. Audited at 1280x720; see the note at the foot of
+// this file for how to re-run that check.
+const SVG = (id,h) => `<div class="chart"><svg id="${id}" viewBox="0 0 1000 ${h||384}"></svg></div>`;
+const pressed = id => $(id).getAttribute('aria-pressed')==='true';
+function bindToggles(ids, fn){
+  ids.forEach(id=>$(id).addEventListener('click',()=>{
+    $(id).setAttribute('aria-pressed', pressed(id)?'false':'true');
+    // a toggle rebuilds the chart: re-arm, then restore what was already shown
+    fn(); const deck=$("#deck"); arm(deck);
+    state.stages=deck.querySelectorAll('.stage').length;
+    const shown = Math.max(1, Math.min(state.sub||99, state.stages));
+    paintStages(deck, shown, false);
+    deck.dataset.drawn = (shown >= state.stages) ? "1" : "0";
+  }));
+}
+
+/* ─── layout helpers, mirroring the PowerPoint's own ─────────────────────
+   R3() is the web twin of findings() in the .pptx builder and carries the
+   same cap: at most three rows a slide. If a section grows a fourth it gets
+   another slide, not a smaller font. ──────────────────────────────────── */
+function R3(rows){
+  if(rows.length>3) throw new Error("R3(): "+rows.length+" rows — split the slide");
+  return `<div class="rows">`+rows.map(r=>`<div class="row">
+    <div class="rl"><span class="tag" style="color:${r.color||'var(--accent)'}">${r.tag}</span>
+      <span class="rbig">${r.big}</span></div>
+    <div class="rt">${r.text}</div>
+    <div class="rs">${r.src||''}</div></div>`).join('')+`</div>`;
+}
+const TWO=(a,b)=>`<div class="two"><div class="tbox">
+  <span class="tag" style="color:var(--blue)">${a.tag}</span><b>${a.head}</b><p>${a.text}</p></div>
+  <div class="tbox"><span class="tag" style="color:var(--accent)">${b.tag}</span>
+  <b>${b.head}</b><p>${b.text}</p></div></div>`;
+const BAND=(k,t)=>`<div class="band"><span class="tag">${k}</span><p>${t}</p></div>`;
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Polarization VI — Does any of this threaten democracy?
+   THE SLIDES, DEFINED ONCE.
+
+   2026-10-06-polarization-vi.build.js draws the PowerPoint from this file.
+   Same rule as the rest of the unit: one job per slide.
+     title   the takeaway, as a sentence. Readable in three seconds.
+     look    what you are looking at, in plain words.
+     body    ONE chart, ONE number, or at most four short phrases.
+     notes   everything else, as SHOWS / SAY / ASK.
+
+   BIG PICTURE, NOT THE PAPERS. The deck follows one chain, polarization →
+   democracy, link by link, with a small-group break after each. The readings
+   supply evidence in the notes; the slides carry ideas and questions.
+   (The earlier, reading-by-reading version is in _archive/…slides.v1.js.)
+
+   The room's numbers come from materials/2026-10-06-democracy.csv
+   (2026-10-06-ces-democracy.R). McCoy & Somer's ten features (pp. 246–247)
+   are PARAPHRASED, one per slide.
+
+   TIMING (80 min): opening 8 · Part 1 the referee 10 · Part 2 loyalty 15 ·
+   Part 3 dislike vs. rule-breaking 15 · Part 4 pernicious? 30 · close 2.
+   ─────────────────────────────────────────────────────────────────────────── */
+function buildSlides(ROWS){
+  const find = (it,g,c) => ROWS.find(r => r.item===it && r.grp===g && r.cat===c);
+  const P = (it,g,c) => { const r = find(it,g,c);
+    if (!r) throw new Error(`democracy.csv has no ${it}/${g}/${c}`); return r.pct; };
+  const N = (it,g) => { const r = find(it,g,1); if (!r) throw new Error(`no ${it}/${g}`); return r.n; };
+  // "agree" = strongly + somewhat agree; "trust" = a great deal + a fair amount
+  const TOP2 = (it,g) => P(it,g,1) + P(it,g,2);
+  const pct = v => Math.round(v)+'%';
+  // trust in Washington over time (ANES): [[year, pct, null], ...]
+  const TT = g => ROWS.filter(r => r.item==='trustTime' && r.grp===g).sort((a,b)=>a.cat-b.cat).map(r => [r.cat, r.pct, null]);
+  const TV = (g,y) => { const r = ROWS.find(r => r.item==='trustTime' && r.grp===g && r.cat===y);
+    if (!r) throw new Error(`democracy.csv has no trustTime/${g}/${y}`); return r.pct; };
+
+  const GS = 'Graham & Svolik 2020, American Political Science Review 114(2).';
+  const DGI = 'Druckman, Green & Iyengar 2023, The Annals 708.';
+  const MS = 'McCoy & Somer 2019, The Annals 681.';
+  const CESSRC = `Cervas Election Study 2026, everyone in both of my courses who agreed to take part (n = ${N('fairUS','all')} answered these items; ${N('fairUS','dem')} Democrats and leaners). Too few Republicans to report separately.`;
+
+  const S = [];
+  const add = o => S.push(o);
+
+  /* ═══════════════════════════════ opening ═══════════════════════════════ */
+  add({type:'title', id:'title', kicker:'Polarization VI', title:'A Threat to Democracy?',
+    sub:'Does any of this threaten democracy?',
+    foot:'84-309 · Tuesday, October 6, 2026',
+    notes:`THE ONE SENTENCE: Americans say they support democracy, but whether polarization threatens it depends on which link in the chain you look at: voters, elites, or the system.
+
+HOW TODAY WORKS. Fewer charts, more talk. Four premises, three readings, four small-group breaks. The plain-language guide to Graham & Svolik is the backbone; Druckman, Green & Iyengar push back; McCoy & Somer give us a checklist for the U.S. that we will score together.
+
+IF YOU ARE SHORT ON TIME: skip slide on Montana (Part 2) and the treatments slide (Part 4). Do not cut the McCoy & Somer scoring: it is the payoff of the whole unit.`});
+
+  add({type:'statement', id:'question', title:'Take a side before the readings do',
+    big:'Is polarization a threat to American democracy, or what democracy looks like when the stakes are real?',
+    sub:'Hands up for one: a threat · a symptom of something else · a healthy fight. We vote again at the end.',
+    notes:`SHOWS: the day's question, as a choice the room has to make before any reading weighs in.
+DO: a show of hands for each of three answers, and write the counts on the board. Leave them there all class.
+  A THREAT: polarization weakens the voters' check on rule-breakers (Graham & Svolik) and spirals into us-vs.-them politics (McCoy & Somer).
+  A SYMPTOM: the danger comes from elites and rules, and affective polarization is mostly beside the point (Druckman, Green & Iyengar).
+  A HEALTHY FIGHT: sharp disagreement gives voters real choices and brings people to the polls; even McCoy & Somer concede polarization can strengthen democracy. (Session I's Fiorina adds: the public is less divided than its leaders.)
+SAY: Every reading today makes the case for one of these. By the end you should be able to say which evidence would move you.
+ASK one or two people: why did you pick that one? What would change your mind?`});
+
+  /* ════════════════════ part 1: who stops a rule-breaker? ════════════════════ */
+  add({type:'section', id:'s1', part:'Part 1', title:'Who stops a politician who breaks the rules?',
+    notes:`The premise of the whole day, in one idea: democracy has no referee except voters.`});
+
+  add({type:'statement', id:'referee', title:'Democracy has no referee',
+    big:'The only thing that stops a rule-breaker is losing the next election.',
+    sub:'So the question is not whether Americans like democracy. It is whether they will vote against their own side to protect it.',
+    notes:`SHOWS: the premise that connects polarization to democracy.
+SAY: No outside authority steps in when a governor ignores a court or a legislature rigs a map. Courts can rule, but someone has to obey them. In the end the check is the voters: break the rules and you lose. Political scientists call this a self-enforcing system.
+And modern backsliding rarely looks like a coup. It looks like elected leaders using legal tools to escape accountability, one step at a time. (Gore conceded in 2000 over 537 votes; in 2020 the loser did not. What changed?)
+ASK: If voters are the referee, what does polarization do to the referee?`});
+
+  add({type:'cards', id:'chain', title:'From polarization to democracy: four links', look:'Today, one link at a time',
+    arrows:true, cards:[
+      {h:'We are polarized', t:'Sorted, distrustful, living apart.', tag:'THE WHOLE UNIT'},
+      {h:'We forgive our side', t:'Will voters punish their own party?', tag:'PART 2'},
+      {h:'Leaders break rules', t:'Does dislike make people want them to?', tag:'PART 3'},
+      {h:'Democracy erodes', t:'When does a fight become a spiral?', tag:'PART 4'}],
+    notes:`SHOWS: the map for the rest of the session.
+SAY: Every session so far established the first box. Today asks whether the arrows hold. A chain is only as strong as its weakest link: if any one of them fails, polarization may be ugly without being dangerous.
+Evidence for each link comes from a reading (Graham & Svolik for 2, Druckman, Green & Iyengar for 3, McCoy & Somer for 4), but the questions are ours.`});
+
+  add({type:'discuss', id:'d-1', part:'Part 1', minutes:8,
+    qs:['What would have to happen for you to say American democracy had gotten worse? Write the line as one sentence.',
+        'Is your line something leaders do, or something voters do? Which one should we be watching?'],
+    report:'one group’s line, and whether it is about leaders or voters',
+    notes:`SMALL GROUPS. About 8 minutes.
+Q1 makes them commit to a standard before the evidence arrives. Collect two or three lines on the board. Most will be leader actions: ignoring courts, refusing to leave office, rigging maps, going after journalists.
+Q2: if the line is about leaders, then mass polarization matters only through the referee: whether voters let leaders cross it. That sets up Part 2.
+REPORT: two groups.`});
+
+  /* ════════════════════ part 2: will voters punish their own? ════════════════════ */
+  add({type:'section', id:'s2', part:'Part 2', title:'Will voters punish their own side?',
+    notes:`Link 2. One piece of evidence, then why loyalty wins.`});
+
+  add({type:'stats', id:'loyalty', title:'Loyalty beats principle', reported:true,
+    look:'What Americans say, and what they do when it costs them (a 2018 experiment)',
+    stats:[
+      {label:'Say democracy is best', value:'85%+', sub:'when it costs nothing', color:'ideo'},
+      {label:'Leave their own candidate', value:'13%', sub:'when he breaks the rules', color:'rep'},
+      {label:'Penalty in a real race', value:'~3 pts', sub:'smaller than most winning margins', color:'rep'}],
+    so:'The referee is a partisan.',
+    source:GS,
+    notes:`SHOWS: the one result to remember from Graham & Svolik.
+SAY: People recognize gerrymanders, ignoring courts and prosecuting journalists as undemocratic. They punish them a little. But only about one in eight abandons their own party's candidate for it, and in a realistic two-party race the penalty is about 3.5 points, which is smaller than the margin in almost every House seat.
+Two patterns matter for the big picture: moderates do the punishing, and the farther apart the two candidates are, the less anyone punishes. Polarization raises the price of defecting.
+(If asked: the same experiment found voters punished tax cheating and affairs more than any democratic violation. A Montana special election in 2017 showed the same pattern in real votes.)`});
+
+  add({type:'cards', id:'dgi-pid', title:'Where does party identification come from?',
+    look:'Three theories of party attachment, and what each means for punishing your own side',
+    cards:[
+      {h:'Issues', t:'You identify with the party closest to your views on the issues.', tag:'IF SO, VOTERS BARGAIN'},
+      {h:'Performance', t:'Your party ID is a running tally of how each party has governed.', tag:'IF SO, VOTERS PUNISH'},
+      {h:'Group identity', t:'Your party ID follows the groups you belong to and feel close to.', tag:'IF SO, VOTERS LOOK AWAY'}],
+    source:DGI+' pp. 139–140.',
+    notes:`SHOWS: three theories of party attachment (from Druckman, Green & Iyengar), and what each means for the referee.
+1. ISSUES (spatial proximity): a voter who opposes welfare spending makes a "standing decision" for Republicans. Affect then rises and falls with how far apart the parties' platforms are. Session I.
+2. PERFORMANCE (Fiorina's running tally): attachments shift with how the president and the economy do. Evaluations of the party in power sour in recessions.
+3. GROUPS: partisanship is a weighted average of feelings toward the groups each party stands for. Their example: a white person who dislikes Black Americans and associates them with Democrats thinks less of the Democratic Party. Sessions II and V; the parties in our heads.
+SAY: Most scholars, Druckman et al. included, trace affective polarization mainly to the third: social identity.
+WHY IT MATTERS FOR TODAY: each theory implies a different check on rule-breaking. If party is about issues, a violation is a cost traded against policy (Graham & Svolik's half-the-scale). If it is about performance, voters should punish bad conduct. If it is about groups, punishing your own side means betraying your team, which is why only 13.1% defect.
+ASK: Which theory best explains your own party attachment? Which one makes Graham & Svolik's result most worrying?`});
+
+  add({type:'discuss', id:'d-2', part:'Part 2', minutes:10,
+    qs:['Is it irrational to vote for your own party’s rule-breaker when the alternative is a government whose policies you think will hurt people?',
+        'What would your party’s candidate have to do for you to vote against them? Would most of your friends say the same thing?'],
+    report:'yes or no on Q1, and what it would take',
+    notes:`SMALL GROUPS. About 10 minutes.
+Q1 has no easy answer, and that is the point. Many students will defend the vote: policy has real victims; one legislator's violation is abstract. Push: if everyone reasons that way, who is left to enforce the rules? This is a collective-action problem: each vote is individually sensible and collectively corrosive.
+Q2: answers will mostly be extreme (violence, overturning an election). Ask: if it takes something that extreme, does the voter check do much work at all? Which of the three attachments is talking when they answer?
+REPORT: show of hands on Q1; two or three answers to Q2.`});
+
+  /* ═════════════ part 3: does dislike make people want rules broken? ═════════════ */
+  add({type:'section', id:'s3', part:'Part 3', title:'Does disliking the other side make us want the rules broken?',
+    notes:`Link 3. The skeptical view, then our own survey.`});
+
+  add({type:'statement', id:'dislike', title:'Dislike is not the same as wanting rules broken',
+    big:'The people who dislike the other side most are not the ones who back breaking the rules.',
+    sub:'But dislike can still make government stop working, and broken government is an opening for leaders who will.',
+    notes:`SHOWS: the big-picture claim from Druckman, Green & Iyengar.
+SAY: Experiments that raise or lower how much partisans dislike each other barely move support for overturning elections, ignoring courts, or political violence. Where support for those things exists, it tracks other things: racial and ethnic antagonism, anti-establishment views, feeling threatened.
+What dislike DOES seem to do: partisans believe different facts, refuse compromise, judge the president by party rather than performance, and trust government only when their side runs it. That is dysfunction, not backsliding. Their argument is that dysfunction is the indirect path: crises and gridlock give leaders the excuse to grab power.
+ASK: Is that reassuring or not?`});
+
+  add({type:'hbars', id:'room', title:'Same faith in elections as the country; far less trust in Washington',
+    look:'Share who agree (elections) or trust the government a great deal or a fair amount',
+    domain:[0,100], fmt:'pct',
+    series:[{label:'This room, 2026', color:'accent'},{label:'U.S. adults 18–29, 2024', color:'ideo'},{label:'All U.S. adults, 2024', color:'light'}],
+    rows:[
+      {label:'Elections in the U.S. are fair', vals:[TOP2('fairUS','all'), TOP2('fairUS','us1829'), TOP2('fairUS','us')]},
+      {label:'My state ran a fair election', vals:[TOP2('fairState','all'), TOP2('fairState','us1829'), TOP2('fairState','us')]},
+      {label:'Trust the federal government', vals:[TOP2('trustFed','all'), TOP2('trustFed','us1829'), TOP2('trustFed','us')]},
+      {label:'Trust my state government', vals:[TOP2('trustSt','all'), TOP2('trustSt','us1829'), TOP2('trustSt','us')]}],
+    source:`This room: Cervas Election Study, Aug. 2026 (n = ${N('fairUS','all')}). U.S.: 2024 Cooperative Election Study, post-election wave, weighted (n = ${N('fairUS','us').toLocaleString('en-US')}; ${N('fairUS','us1829').toLocaleString('en-US')} aged 18–29). Same question wording in both.`,
+    notes:`SHOWS: the room against the country, on the same four questions, worded identically.
+SAY: On elections, this room looks like the country: ${pct(TOP2('fairUS','all'))} agree U.S. elections are fair, vs. ${pct(TOP2('fairUS','us'))} of all adults and ${pct(TOP2('fairUS','us1829'))} of 18-to-29-year-olds. You are, if anything, more confident than people your age.
+Washington is the gap: ${pct(TOP2('trustFed','all'))} of this room trusts the federal government, vs. ${pct(TOP2('trustFed','us'))} nationally. Your own state: ${pct(TOP2('trustSt','all'))} here vs. ${pct(TOP2('trustSt','us'))}.
+TWO CAVEATS, say them out loud: (1) the national survey was taken right after the 2024 election, with Biden in the White House; ours in August 2026, under Trump, and this room is mostly Democrats. Trust in Washington follows who runs it: partisans trust government mostly when their side is in charge. (2) The state item asked the nation about 2024 and us about "2026," before the general election; that is why so many of you said "neither."
+ASK: Is low trust in Washington a problem for democracy, or a reasonable reaction to who is in charge?`});
+
+  add({type:'line', id:'trust-time', title:'Trust in Washington follows who holds the White House',
+    look:'Trust the government in Washington to do what is right “most of the time” or “just about always”',
+    xdom:[1956,2026], ydom:[0,100], yticks:[0,25,50,75,100], yfmt:'pct',
+    xticks:[1960,1970,1980,1990,2000,2010,2020],
+    bands:[{from:2013, to:2025.5, label:'new wording'}],
+    series:[
+      {label:'Everyone', color:'ideo', data:TT('all')},
+      {label:'Democrats', color:'dem', data:TT('dem')},
+      {label:'Republicans', color:'rep', data:TT('rep')}],
+    says:['Everyone: three in four trusted Washington in 1964. About one in five did by 2012.',
+          'Democrats trust more when a Democrat is president (Carter, Clinton, Obama, Biden).',
+          'Republicans rise under Reagan and Bush and fall under Democrats. The gap flips with the White House.'],
+    source:'American National Election Studies, cumulative file 1958–2012 and 2024 Time Series; weighted. Partisans include leaners. In 2016 the ANES added “about half the time” as an answer, which lowers the share; 2024 uses the new wording and 2016–2020 are not shown.',
+    notes:`SHOWS: the longest-running measure of trust in the federal government, by party.
+SAY: Two stories. First, the collapse: ${pct(TV('all',1964))} trusted Washington most of the time in 1964; ${pct(TV('all',2012))} in 2012 (Vietnam, Watergate, and never really recovered, apart from the late-1990s boom and the months after 9/11).
+Second, the partisan seesaw: trust rises among the president's party. Republicans led under Reagan (${pct(TV('rep',1984))} vs. ${pct(TV('dem',1984))} in 1984) and Bush (${pct(TV('rep',2004))} vs. ${pct(TV('dem',2004))} in 2004); Democrats under Clinton (${pct(TV('dem',1998))} vs. ${pct(TV('rep',1998))} in 1998) and Obama (${pct(TV('dem',2012))} vs. ${pct(TV('rep',2012))} in 2012). In 2024, under Biden: Democrats ${pct(TV('dem',2024))}, Republicans ${pct(TV('rep',2024))}.
+This is what Druckman et al. (citing Hetherington & Rudolph) mean by politicized trust: partisans trust the government only when their side runs it. It is also why the room's low trust in Washington in 2026 says as much about who is president as about democracy.
+CAVEAT: the 2024 point uses the revised question (five answers, including "about half the time"), so part of the drop since 2012 is wording. Different wording from the CES item on the previous slide, too.
+ASK: If trust depends on who wins, what happens to a democracy where half the country distrusts the government at all times?`});
+
+  add({type:'discuss', id:'d-3', part:'Part 3', minutes:10,
+    qs:['If dislike isn’t what makes people accept rule-breaking, what is? Leaders, race and status, the rules of the game, the media? Pick one and defend it.',
+        'Is a government that can’t compromise or agree on facts already a threat to democracy, or just an annoying one?'],
+    report:'your driver, and threat or annoyance',
+    notes:`SMALL GROUPS. About 10 minutes.
+Q1: the candidate drivers, all from this unit: elites and their rhetoric; racial and status threat (Session V; Bartels finds ethnic antagonism predicts Republicans' rejection of democratic norms); winner-take-all rules and safe seats (Session VII); a fragmented media system (Thursday). Tally on the board.
+Q2: the dysfunction path. COVID is the example: partisans split on the facts, the response suffered, and in several countries leaders used the emergency to restrict the press and legislatures.
+Bring in the room's trust numbers: is this room's low trust in Washington about democracy, or about who runs it? Would it change after a Democratic win?
+REPORT: tally Q1; two groups on Q2.`});
+
+  /* ═══════════════ part 4: when does the fight become a spiral? ═══════════════
+     The article is a lens here, not a lesson: no tour of the eleven cases. */
+  add({type:'section', id:'s4', part:'Part 4', title:'Is the United States perniciously polarized?',
+    notes:`McCoy & Somer as a lens on the U.S., not a lecture on the article. Students read the eleven cases; we do not walk through them. One question: does their picture of pernicious polarization describe us, and what does it predict for American democracy?`});
+
+  add({type:'statement', id:'ms-line', title:'Polarized, or pernicious?',
+    big:'Two parties that disagree is normal. Two camps that cannot accept losing to each other is not.',
+    sub:'The line between healthy and pernicious polarization. Which side of it are we on?',
+    notes:`SHOWS: the distinction that matters for the U.S.
+SAY: Everything in this unit says Americans are polarized. That alone is not a threat; McCoy & Somer concede polarization can give voters clear choices and mobilize them. It turns pernicious when politics collapses into one "us vs. them" line and each side comes to see the other winning as a threat to the country. That perception, they argue, is what opens the door to breaking the rules: to keep power, or to take it.
+ASK: Where is the U.S. on that line today? Hold the answer: the next ten slides are how we decide.`});
+
+  add({type:'cards', id:'ms-us', title:'Why the U.S. is especially exposed', look:'Three American conditions that raise the stakes',
+    cards:[
+      {h:'An old fault line', t:'The divide runs along race and who counts as a full citizen, a question as old as the country.', tag:'SESSION V'},
+      {h:'Winner-take-all rules', t:'Districts, the Senate and the Electoral College turn a 50–50 country into all-or-nothing contests.', tag:'SESSION VII'},
+      {h:'Answering in kind', t:'Each side’s hardball justifies the other’s: the filibuster, the courts, the maps.', tag:'LAST WEEK'}],
+    notes:`SHOWS: the three reasons the article gives for worrying about the U.S. specifically.
+1. THE FAULT LINE: they call it a "formative rift," an unresolved founding question. For the U.S.: race and citizenship. Their claim is that polarization built on a rift like this lasts longer and does more damage, because it is about who belongs, not what policy to pick. That is Session V (Tesler; Mason, Wronski & Kane).
+2. WINNER-TAKE-ALL: their most extreme cases all have electoral systems that hand disproportionate power to the largest party. When losing means losing everything, the temptation to change the rules grows. They name gerrymandering, voter ID fights and partisan court battles as the U.S. versions.
+3. ANSWERING IN KIND: their example is the end of the filibuster for judicial nominations, first by Democrats and then by Republicans for the Supreme Court. Ours is newer: Texas redrew mid-decade, California answered.
+ASK: Which of the three could the U.S. actually change? (The fault line, no. The rules, maybe. The hardball, only if both sides stop at once.)`});
+
+  add({type:'cards', id:'ms-why', title:'Is our polarization the dangerous kind? Score it.',
+    look:'A checklist drawn from democracies where polarization ended in erosion',
+    arrows:true, cards:[
+      {h:'Why', t:'We know how polarized we are. Is it the kind that harms democracy?', tag:'THE QUESTION'},
+      {h:'How', t:'Ten warning signs, one per slide. Score each from 0 to 10 for the U.S. today.', tag:'ABOUT A MINUTE EACH'},
+      {h:'Then', t:'Add them up, out of 100. Compare totals across groups. Where do you disagree?', tag:'FINAL DISCUSSION'}],
+    notes:`SHOWS: why we are about to score ten slides, and how.
+SAY: Every session in this unit asked HOW polarized Americans are: ideology, sorting, affect, race, place. None of that tells us whether American democracy is in danger, because plenty of democracies are polarized and fine. McCoy & Somer studied countries where polarization did end in democratic erosion (Hungary, Turkey, Venezuela, among others) and listed what those cases had in common. So the list works like a set of warning signs.
+ANCHORS for the scale: a 0 on every feature is ordinary partisan disagreement; a 10 on every feature is a country split into two camps that will not accept losing to each other. Most of you will land somewhere in between; the interesting part is WHERE you disagree.
+DO: LIVE SCORING (web deck only): the panel on this slide shows a QR code, the URL and a 4-letter code. Students scan or type it on their phones and tap 0–10 on each warning sign. When you advance past a sign, the class average becomes its score; the final discussion shows all ten and the total. No phones? Groups keep score on paper, or you click the slide's own buttons. About a minute per feature: read it, give the "where we've seen it" line, take a show of fingers. Save the arguing for the final discussion.
+ASK before starting: guess your group's total now. Write it down. We'll see how close you came.`});
+
+  const FEAT = [
+    ['a','Many divisions collapse into one line between two hostile camps.','Sorting (II): Mason’s “mega-identity.” Race, religion, and place now line up with party.'],
+    ['b','The political camp becomes a social identity: a team that demands loyalty.','Affect (III): partisans rate their own side warmly and the other side coldly.'],
+    ['c','What people want from politics is set by which camp they are in.','Graham & Svolik: party outweighs democracy. Partisans adopt the party’s line on new issues (COVID).'],
+    ['d','Each side sees the other in moral terms: good vs. evil.','Druckman et al.: partisans dehumanize opponents and call them hypocritical and selfish.'],
+    ['e','The camps’ interests are seen as opposed: no common ground is possible.','Druckman et al.: polarized partisans oppose compromise, especially when their side must give.'],
+    ['f','More unity inside each camp; more hostility between them.','Negative partisanship (IV): voting against the other side; straight tickets.'],
+    ['g','Without contact, stereotypes and prejudice about the other side grow.','The parties in our heads (Ahler & Sood): people badly overestimate how “typical” each party is.'],
+    ['h','The middle drops out. Everyone gets labeled as one side or the other.','Graham & Svolik: moderates are the only ones who punish rule-breaking.'],
+    ['i','Institutions, the media included, come to belong to one bloc or the other.','Partisan news; fights over the courts. Thursday: who pays for the news?'],
+    ['j','The camps separate, in space and in their heads.','Place (VII): Brown & Enos; the neighborhoods where nobody votes the other way.']];
+  FEAT.forEach(([l,big,seen],i) => add({type:'feature', id:'ms-'+l, letter:l,
+    title:`Is this the U.S.? Feature ${l}`, look:`McCoy & Somer’s list, pp. 246–247 (paraphrased) · ${i+1} of 10`,
+    big, seen, scoreHelp:'0 = not at all true of the U.S. today · 10 = completely true. Add up your ten scores for a total out of 100.', source:MS+' The ten features are their summary of what separates pernicious polarization from healthy pluralism.',
+    notes: i===0 ? `HOW TO RUN THESE TEN: about a minute each. Groups score every feature from 0 (not at all true of the U.S. today) to 10 (completely true), on paper; ten features make a total out of 100. Read the feature, give the "where we've seen it" line, and take a quick show of fingers (0 to 10, two hands). Do not debate each one now; the debate is the next discussion.
+FEATURE ${l.toUpperCase()}: the core of their definition. Cross-cutting differences become reinforcing. This is Mason's argument exactly, and the sorting index we built in Session II.` :
+    i===2 ? `FEATURE C: interests form around identity, not the other way around. Evidence both ways: Druckman et al. cite work showing partisan identity drives policy views (Dias & Lelkes) and the COVID split. Counter: the public is still fairly moderate on many issues (Session I, Fiorina).` :
+    i===6 ? `FEATURE G: the parties in our heads (Ahler & Sood, as Druckman et al. report it): respondents guessed 31.7% of Democrats are gay, lesbian, or bisexual; the true share in the sample was 6.3%. The CES asked the same kind of question; bring up the room's guesses if you have them handy. Contact is low: Brown & Enos (Session VII).` :
+    i===7 ? `FEATURE H: a strong link to today. If the middle is what enforces democratic norms (Graham & Svolik), then the middle dropping out is not just a social change; it removes the referee.` :
+    i===8 ? `FEATURE I: the one we have studied least. McCoy & Somer find press freedom fell in every case during the polarized period. Thursday's readings pick it up: local news closing, and what fills the gap.` :
+    `FEATURE ${l.toUpperCase()}: read it, give the "where we've seen it" line, take the show of fingers (0 to 10).`}));
+
+  add({type:'cards', id:'ms-opp', title:'What should the losing side do?', look:'The choice facing whichever party is out of power',
+    cards:[
+      {h:'Answer in kind', t:'Redraw your own maps. Change the courts. Match every move.', tag:'FEEDS THE SPIRAL', color:'rep'},
+      {h:'Hold back', t:'Keep the old rules. Can look like surrender, and can lose.', tag:'RISKY', color:'hisp'},
+      {h:'Go around the voters', t:'Refuse results. Rely on the streets alone.', tag:'BACKFIRES', color:'rep'},
+      {h:'Win elections', t:'Build a bigger coalition. Use the courts within the rules.', tag:'THEIR ADVICE', color:'green'}],
+    notes:`SHOWS: the article's advice, put to the American opposition (whichever party that is).
+SAY: Across their cases, answering polarizers with the same tactics deepened the spiral, and going around the voters (coups, boycotts) handed the incumbent sympathy. What held up was winning at the ballot box and using constitutional checks patiently. One line of evidence is enough here: Venezuela's opposition tried a coup and an election boycott and strengthened Chávez both times.
+The hard American case: Texas redrew; California answered. Is that the spiral, or the only way to avoid unilateral disarmament? McCoy & Somer do not give an easy answer; they admit holding back can look like accepting the violations.
+ASK: Does their advice change depending on which party is out of power? It shouldn't. Does your answer?`});
+
+  add({type:'discuss', id:'d-4', part:'Part 4', minutes:15,
+    scorecard:true,   // web deck: shows the room's clicked scores, a–j, and the total
+    qs:['Add up your scores (out of 100). Which feature is the strongest evidence that the U.S. is perniciously polarized? Which is the weakest?',
+        'You advise the party out of power. Answer in kind, or hold back? Write your strategy, then the reason your own voters would reject it.'],
+    report:'your total, your strongest and weakest feature, and your strategy',
+    notes:`SMALL GROUPS, the last break. About 15 minutes.
+Q1: collect totals on the board; the spread is the discussion. Push the low scorers: which feature is absent? (Likely candidates: "i", institutions, and "c", interests set by camp, given what Fiorina says about the public.) Push the high scorers: if the U.S. scores high, why have power and elections kept working? (McCoy & Somer's answer: both sides can still win.)
+Q2 is Graham & Svolik again, now for elites: restraint is the democratic choice, but the base punishes it. Elites who reach across "risk being branded as traitors" (Druckman et al.).
+TIE IT TOGETHER: the chain from Part 1. Link 2 holds: voters forgive their own side. Link 3 is weak: dislike alone does not make people want rules broken. Link 4 runs through leaders answering each other. The weak link is not how much we dislike each other. It is that we will not punish our own side.
+RE-VOTE: before dismissing, take the opening question again (threat · symptom · healthy fight) next to the morning's counts on the board. Ask anyone who switched: which link did it?
+REPORT: every group gives its total; two give strategies.`});
+
+  add({type:'next', id:'next', rows:[
+      ['Thu, Oct 8','Who Pays for the News?','Darr et al. 2018; Martin & McCrain 2019; Pickard 2020. Feature i, up close.'],
+      ['Oct 13–15','Fall break','No class.'],
+      ['Tue, Oct 20','Student-led 1: Social media','The student-led sessions begin.']],
+    foot:'The unit closes. Keep your scorecard: we return to it after the midterms.',
+    notes:`Thursday picks up McCoy & Somer's feature i (institutions, especially media). After the break, student-led sessions begin. Oct. 27 (Layman et al., loser's consent) returns to the room's "elections are fair" numbers.`});
+
+  /* Badges: every slide that is not a title, divider, or closer gets a number. */
+  let n = 0;
+  S.forEach(s => { if (!['title','section','questions','next','discuss'].includes(s.type)) s.num = ++n; });
+  const ids = new Set(); S.forEach(s => { if (ids.has(s.id)) throw new Error('duplicate slide id '+s.id); ids.add(s.id); });
+  return S;
+}
+if (typeof module !== 'undefined') module.exports = buildSlides;
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Polarization VI — the WEB RENDERER.
+
+   Polarization VII's renderer without the maps and D3 charts. The slides are
+   defined once, in ../2026-10-06-polarization-vi.slides.js, which the
+   PowerPoint also renders. build-polarization-vi-interactive.py pastes that
+   file in ahead of this one and supplies D.rows (2026-10-06-democracy.csv).
+
+   Added here: `feature` (one of McCoy & Somer's ten features, with clickable
+   0–10 scores kept in this browser) and `grid` (their Figure 3, one cell per →).
+   The last discussion slide (scorecard:true) adds the scores up.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+const SPEC = buildSlides(D.rows);
+const C = { ideo:'#4A4A4A', dem:'#1F4E79', rep:'#C41230', mut:'#8A8A8A', light:'#CFCFCF', green:'#17706B', hisp:'#D08A1E', blk:'#17706B', core:'#3F007D', fringe:'#54278F', medium:'#6A51A3', small:'#807DBA', micro:'#9E9AC8', noncore:'#BCBDDC',
+            seg:'#4B2466', rural:'#D9A21B', town:'#A8893A', exurb:'#6F8F6A', suburb:'#3F7F8C', urban:'#3B2F5C' };
+const colr = c => c==='accent' ? css('--accent') : c==='blue' ? css('--blue') : c==='ink' ? css('--ink')
+  : (C[c] || (/^[0-9A-Fa-f]{6}$/.test(c||'') ? '#'+c : c) || css('--ink'));
+const f2 = v => v.toFixed(2).replace(/^(-?)0\./,'$1.');
+const FMT = {pts: v => `${Math.round(v)} pts`, r2: f2, pct: v => `${Math.round(v)}%`, pct1: v => `${v.toFixed(1)}%`, n0: v => `${Math.round(v)}`, deg: v => `${v>0.5?'+':v<-0.5?'−':''}${Math.abs(Math.round(v))}°`,
+  marg: v => v>0 ? `R+${Math.round(v)}` : v<0 ? `D+${Math.round(-v)}` : 'even', n1: v => v.toFixed(1), mil: v => `${v.toFixed(1)}M`};
+const fmtr = k => FMT[k] || (v => String(v));
+const HD = sp => `<h2>${sp.num?`<span class="badge">${sp.num}</span>`:''}${sp.title}${sp.reported?' <span class="reported">Reported from the article</span>':''}</h2>`
+  + (sp.look ? `<p class="look">${sp.look}</p>` : '');
+const SRC = sp => sp.source ? `<div class="foot">${sp.source}</div>` : '';
+const hold = (k,i) => k<=i ? ' hold' : '';
+
+/* ── vertical bars, adapted from the Polarization I and IV decks ───────────── */
+function bars(svg, cfg){
+  clear(svg);
+  const vb = svg.viewBox.baseVal, W = vb.width, H = vb.height;
+  const P = Object.assign({l:56, r:20, t:30, b:64}, cfg.pad||{});
+  const x0=P.l, x1=W-P.r, y0=P.t, y1=H-P.b;
+  const cats = cfg.cats, n = cats.length, S = cfg.series;
+  const slot = (x1-x0)/n, gap = slot*(cfg.gap ?? 0.3), bw = (slot-gap) / S.length;
+  const lo = cfg.ymin ?? 0, hi = cfg.ymax, py = v => y1 - (v-lo)/(hi-lo)*(y1-y0);
+  const base = py(Math.max(lo, 0)), MUT = css('--ink-3');
+  cats.forEach((c,i)=>{ const cx = x0 + slot*i + slot/2, tr = /Trump/.test(c);
+    const lines = c.includes('\n') ? c.split('\n') : n>6 ? [c.replace(/ (\d{4})$/,''), (c.match(/(\d{4})$/)||[''])[0]] : [c];
+    lines.forEach((t,k)=>svg.appendChild(el('text',{x:cx,y:y1+26+k*18,'text-anchor':'middle','font-size':n>6?14:19,
+      'font-weight':(tr||n<=4)?700:400, fill:tr?css('--accent'):(n<=4?css('--ink'):MUT)}, t))); });
+  S.forEach((s,si)=>{
+    const host = el('g',{class:'stage'});
+    s.values.forEach((v,i)=>{
+      const bx = x0 + slot*i + gap/2 + bw*si, top = Math.min(py(v), base), h = Math.abs(py(v)-base);
+      const col = colr(s.colors ? s.colors[i] : s.color);
+      host.appendChild(el('rect',{x:bx,y:top,width:bw-3,height:Math.max(1.5,h),rx:3,fill:col,class:'pop popy',
+        style:`transform-origin:${v<0?'top':'bottom'};transition-delay:${i*55}ms`}));
+      if (!s.nolabels) host.appendChild(el('text',{x:bx+(bw-3)/2, y:(v<0?top+h+22:top-10),'text-anchor':'middle',
+        'font-size':cfg.vfs||(n>6?15:(S.length>=3?18:26)),'font-weight':700,fill:col,class:'pop',style:`transition-delay:${i*55+120}ms`},
+        s.labels ? s.labels[i] : fmtr(cfg.fmt)(v)));
+    });
+    svg.appendChild(host);
+  });
+  svg.appendChild(el('line',{x1:x0,x2:x1,y1:base,y2:base,stroke:lo<0?MUT:css('--rule'),'stroke-width':1.5}));
+  // Callouts with an arrow to one bar each (first series). Above-zero bars get
+  // the text up and to the left; below-zero bars get it to the right of the bar's end.
+  const ANN = cfg.annot ? [].concat(cfg.annot) : [];
+  if (ANN.length){
+    const defs = el('defs'); const mk = el('marker',{id:'arw',viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:7,markerHeight:7,orient:'auto-start-reverse'});
+    mk.appendChild(el('path',{d:'M0,0 L10,5 L0,10 z',fill:css('--ink')})); defs.appendChild(mk); svg.appendChild(defs);
+  }
+  ANN.forEach(a=>{
+    const i = a.i, v = S[0].values[i], bx = x0 + slot*i + gap/2, ty = py(v), neg = v<0;
+    const g = el('g',{class:'stage'});
+    const words = a.text.split(' '), rows=[]; let cur='', wrap = a.wrap || 34;
+    words.forEach(w=>{ if ((cur+' '+w).trim().length > wrap){ rows.push(cur); cur=w; } else cur=(cur+' '+w).trim(); }); rows.push(cur);
+    if (!neg){
+      rows.forEach((r,k)=>g.appendChild(el('text',{x:bx-60,y:ty-24-(rows.length-1-k)*20,'text-anchor':'end','font-size':17,
+        'font-style':'italic','font-weight':700,fill:css('--ink'),class:'pop'},r)));
+      g.appendChild(el('line',{x1:bx-54,y1:ty-22,x2:bx-6,y2:ty+6,stroke:css('--ink'),'stroke-width':2,'marker-end':'url(#arw)',class:'pop'}));
+    } else {
+      const rx = bx + bw + 58, yc = ty - 8;
+      rows.forEach((r,k)=>g.appendChild(el('text',{x:rx,y:yc+6-(rows.length-1)*10+k*20,'text-anchor':'start','font-size':17,
+        'font-style':'italic','font-weight':700,fill:css('--ink'),class:'pop'},r)));
+      g.appendChild(el('line',{x1:rx-8,y1:yc,x2:bx+bw+2,y2:ty-4,stroke:css('--ink'),'stroke-width':2,'marker-end':'url(#arw)',class:'pop'}));
+    }
+    svg.appendChild(g);
+  });
+  if (cfg.legend){ let lx = x1 - 190*S.length;
+    S.forEach((s,j)=>{ svg.appendChild(el('rect',{x:lx,y:4,width:14,height:14,rx:3,fill:s.color?colr(s.color):(j?C.light:C.mut)}));
+      svg.appendChild(el('text',{x:lx+20,y:16,'font-size':15,fill:MUT}, s.label)); lx += 190; }); }
+}
+
+/* ── horizontal grouped bars: groups compared across two years or samples ─── */
+function hbars(svg, sp){
+  clear(svg);
+  const H = svg.viewBox.baseVal.height, lx = 320, x1 = 930, [lo,hi] = sp.domain;
+  const px = v => lx + (v-lo)/(hi-lo)*(x1-lx), n = sp.rows.length, rh = (H-40)/n;
+  const ns = sp.series.length, bh = Math.min(28, (rh-14)/ns), f = fmtr(sp.fmt);
+  let gx = lx; (sp.legend||sp.series).forEach(se=>{ svg.appendChild(el('rect',{x:gx,y:2,width:15,height:15,rx:3,fill:colr(se.color)}));
+    svg.appendChild(el('text',{x:gx+22,y:15,'font-size':16,'font-weight':700,fill:se.color==='light'?css('--ink-3'):colr(se.color)},se.label));
+    gx += 60 + se.label.length*9; });
+  const stages = sp.series.map(()=>el('g',{class:'stage'}));
+  sp.rows.forEach((r,i)=>{
+    const y = 34 + i*rh;
+    // long labels wrap onto two (or three) lines so they never run off the left edge
+    const fs = n>4?18:20, maxc = Math.floor((lx-30)/(fs*0.5)), words = r.label.split(' '), lines = [];
+    let cur = ''; words.forEach(w => { if ((cur+' '+w).trim().length > maxc && cur) { lines.push(cur); cur = w; } else cur = (cur+' '+w).trim(); }); lines.push(cur);
+    const t = el('text',{x:lx-16,y:y+rh/2+6-(lines.length-1)*fs*0.55,'text-anchor':'end','font-size':fs,fill:css('--ink'),'font-style':n<=2?'italic':'normal'});
+    lines.forEach((ln,j) => { const ts = el('tspan',{x:lx-16, dy:j?fs*1.1:0}, ln); t.appendChild(ts); });
+    svg.appendChild(t);
+    r.vals.forEach((v,j)=>{ if (v==null) return;
+      const yy = y + (rh-ns*bh)/2 + j*bh, c = colr(r.color || sp.series[j].color);
+      stages[j].appendChild(el('rect',{x:lx,y:yy,width:Math.max(1,px(v)-lx),height:bh-4,rx:3,fill:c,class:'pop popx',
+        style:'transform-origin:left'}));
+      stages[j].appendChild(el('text',{x:px(v)+8,y:yy+bh/2+3,'font-size':15,'font-weight':700,
+        fill:c,class:'pop'}, f(v)));
+    });
+  });
+  stages.forEach(g=>svg.appendChild(g));
+}
+
+// A comparison group picked on the toggle: its lines drawn dashed and unlabeled
+// UNDER the default ones, in the same colors, so the two can be read together.
+const lineOver = sp => (sp.views && sp.cur && sp.cur!=='none') ? sp.view(sp.cur) : null;
+function lineCap(sp,k){
+  const ov = lineOver(sp), base = sp.says ? (k>0 ? sp.says[Math.min(k,sp.says.length)-1] : '<span class="dim">Press → to draw each line.</span>')
+    : (k < sp.series.length ? '<span class="dim">Press → to draw each line.</span>' : '');
+  return ov ? `${base}<br><span class="dim">${ov.overlay}</span>` : base; }
+function drawLine(sp){
+      const ov = lineOver(sp);
+      const g = chart($('#ln'),{xdom:sp.xdom, ydom:sp.ydom, yticks:sp.yticks, yfmt:fmtr(sp.yfmt), xticks:sp.xticks,
+        bands:sp.bands, pad:{r:sp.direct ? 50 : 200},
+        lines:(ov ? ov.series.map(L=>({data:L.data.map(r=>[r[0],r[1]]), color:colr(L.color), w:2.6, dash:'8 6', op:.75, dots:false})) : []).concat(sp.series.map(L=>({data:L.data.map(r=>[r[0],r[1]]), color:colr(L.color), w:L.dash?2.4:3.4,
+          label:sp.direct ? undefined : L.label, op:L.dash?.85:1})))});
+      (sp.bands||[]).forEach(b=>g.svg.appendChild(el('text',{x:(g.px(b.from)+g.px(b.to))/2,y:g.y0+16,
+        'text-anchor':'middle','font-size':14,'font-weight':700,fill:css('--accent')}, b.label)));
+      if (sp.zero) g.svg.insertBefore(el('line',{x1:g.x0,x2:g.x1,y1:g.py(0),y2:g.py(0),stroke:css('--ink-3'),'stroke-width':1.5}), g.svg.firstChild);
+      const stages = g.svg.querySelectorAll('.stage');
+      sp.series.forEach((L,j)=>{ if (!L.ci) return; const host = stages[j] || g.svg;
+        L.data.forEach(r=>{ if (r[2]==null) return;
+          host.appendChild(el('line',{x1:g.px(r[0]),x2:g.px(r[0]),y1:g.py(r[1]+1.96*r[2]),y2:g.py(r[1]-1.96*r[2]),
+            stroke:colr(L.color),'stroke-width':2,opacity:.7,class:'pop'})); }); });
+      const lastStage = stages[stages.length-1] || g.svg;
+      // direct labels: each line's name on the line, arriving with the line
+      if (sp.direct) sp.series.forEach((L,j)=>{ if (!L.lab) return; (stages[j] || g.svg).appendChild(el('text',{x:g.px(L.lab.x),y:g.py(L.lab.y),
+        'text-anchor':L.lab.anchor||'middle','font-size':18,'font-weight':700,fill:colr(L.color),class:'pop'}, L.label)); });
+      (sp.callouts||[]).forEach(c=>((c.s!=null && stages[c.s]) || lastStage).appendChild(el('text',{x:g.px(c.x)+(sp.views&&c.x===sp.xdom[0]?20:0),y:g.py(c.y)+(c.pos==='above'?-16:30),
+        'text-anchor':'middle','font-size':20,'font-weight':700,fill:colr(c.color),class:'pop'}, c.text)));
+}
+
+const rangeCap = (sp,k) => { const ov = lineOver(sp), base = sp.says ? (k>0 ? sp.says[Math.min(k,sp.says.length)-1] : '<span class="dim">Press → to add each row.</span>')
+    : (k < sp.rows.length ? '<span class="dim">Press → to add each row.</span>' : '');
+  return ov ? `${base}<br><span class="dim">${ov.overlay}</span>` : base; };
+function drawRange(sp){ const svg=$('#rg'); clear(svg); const ov = lineOver(sp), H = svg.viewBox.baseVal.height;
+      const [lo,hi]=sp.domain, f=fmtr(sp.fmt), gapTxt = v => (sp.fmt==='pct'||sp.fmt==='n0') ? Math.round(v)+' pts' : f(v);
+      const x0=300, x1=880, px=v=>x0+(v-lo)/(hi-lo)*(x1-x0), n=sp.rows.length, rh=(H-40)/n, MUT=css('--ink-3'), small=n>4;
+      (sp.ticks||[lo,hi]).forEach(t=>{ svg.appendChild(el('line',{x1:px(t),x2:px(t),y1:6,y2:H-34,stroke:css('--rule-2'),'stroke-width':1}));
+        svg.appendChild(el('text',{x:px(t),y:H-12,'text-anchor':'middle','font-size':14,fill:MUT},f(t))); });
+      sp.rows.forEach((r,i)=>{ const y=10+i*rh+rh*0.55, g=el('g',{class:'stage'});
+        if ((sp.breaks||[]).includes(i)) svg.appendChild(el('line',{x1:20,x2:980,y1:10+i*rh,y2:10+i*rh,stroke:css('--rule'),'stroke-width':1}));
+        svg.appendChild(el('text',{x:x0-20,y:y+6,'text-anchor':'end','font-size':small?16:18,fill:css('--ink'),'font-family':'var(--display)'},r.label));
+        g.appendChild(el('rect',{x:px(r.lo),y:y-6,width:Math.max(1,px(r.hi)-px(r.lo)),height:12,rx:6,fill:colr(r.bar),'fill-opacity':.35,class:'pop popx'}));
+        [[r.lo,r.loC,r.loLab,'end',-12],[r.hi,r.hiC,r.hiLab,'start',12]].forEach(([v,c,lab,anc,dx])=>{
+          g.appendChild(el('circle',{cx:px(v),cy:y,r:small?7:9,fill:colr(c),class:'pop'}));
+          g.appendChild(el('text',{x:px(v),y:y-(small?12:16),'text-anchor':'middle','font-size':small?14:16,'font-weight':700,fill:colr(c),class:'pop'},f(v)));
+          g.appendChild(el('text',{x:px(v)+dx,y:y+(small?20:26),'text-anchor':anc,'font-size':12,fill:colr(c),class:'pop'},lab)); });
+        const o = ov && ov.rows[i], gx = Math.max(px(r.hi), o?px(o.hi):0)+40;
+        if (o) { g.appendChild(el('line',{x1:px(o.lo),x2:px(o.hi),y1:y,y2:y,stroke:colr(r.bar),'stroke-width':2,'stroke-dasharray':'6 5',class:'pop'}));
+          [[o.lo,r.loC],[o.hi,r.hiC]].forEach(([v,c])=>g.appendChild(el('circle',{cx:px(v),cy:y,r:small?9:12,fill:'none',stroke:colr(c),'stroke-width':2.5,class:'pop'})));
+          g.appendChild(el('text',{x:gx,y:y-(small?14:18),'font-size':14,fill:colr(r.bar),class:'pop'},`${ov.name}: ${gapTxt(o.hi-o.lo)}`)); }
+        g.appendChild(el('text',{x:gx,y:y+6,'font-size':small?16:20,'font-weight':700,fill:colr(r.bar),class:'pop'},(r.gap!=null ? r.gap : gapTxt(r.hi-r.lo))));
+        svg.appendChild(g); });
+}
+
+/* A segmented control: one button pressed at a time. */
+const seg = (id, opts, on) => `<span class="pill segs" id="${id}">${opts.map(o=>
+  `<button data-v="${o[0]}" aria-pressed="${o[0]===on}">${o[1]}</button>`).join('')}</span>`;
+function bindSeg(id, fn){
+  const box = $(id);
+  box.querySelectorAll('button').forEach(b=>b.addEventListener('click',ev=>{ ev.stopPropagation();
+    box.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed', x===b?'true':'false'));
+    fn(b.dataset.v); }));
+}
+// After a control redraws a chart, show everything already revealed.
+function relight(){ const deck=$('#deck'); arm(deck); state.stages=deck.querySelectorAll('.stage').length;
+  paintStages(deck, Math.max(1, Math.min(state.sub||99, state.stages)), false); }
+
+
+
+/* ── the scorecard for McCoy & Somer's ten features ───────────────────────── */
+const SCORES = (() => { try { return JSON.parse(localStorage.getItem('pol6-scores') || '{}'); } catch (_) { return {}; } })();
+const score = l => (l in SCORES) ? SCORES[l] : null;
+const scoreTotal = () => { const v = Object.values(SCORES); return v.length ? `${Math.round(v.reduce((a,b)=>a+b,0)*10)/10} / 100` : 'Score the ten features'; };
+function bindScore(){
+  document.querySelectorAll('#deck .fsc button').forEach(b => b.addEventListener('click', ev => { ev.stopPropagation();
+    const box = b.parentNode, l = box.dataset.l, v = +b.dataset.v;
+    if (SCORES[l] === v) delete SCORES[l]; else SCORES[l] = v;      // click again to clear
+    box.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(SCORES[l] === +x.dataset.v)));
+    try { localStorage.setItem('pol6-scores', JSON.stringify(SCORES)); } catch (_) {}
+  }));
+}
+
+/* ── one web renderer per slide type ──────────────────────────────────────── */
+const WEB = {
+  title: sp => ({k:'dark center', h:()=>`<p class="kicker">${sp.kicker}</p><h1>${sp.title}</h1>
+    <p class="lede">${sp.sub}</p><div class="foot">${sp.foot} · <b>?</b> for keys, <b>N</b> for notes</div>`}),
+
+  section: sp => ({k:'dark center', h:()=>`<p class="kicker">${sp.part}</p><h1 style="max-width:20ch">${sp.title}</h1>`}),
+
+  statement: sp => ({k:'wash', h:()=>`${HD(sp)}<p class="bigstate${sp.big.length<20?' huge':''}">${sp.big}</p>
+    ${sp.sub?`<p class="lede center">${sp.sub}</p>`:''}`}),
+
+  cards: sp => ({k:'light', subs:sp.cards.length, h:(k=0)=>`${HD(sp)}
+    <div class="cards n${sp.cards.length}${sp.arrows?' arrows':''}">${sp.cards.map((c,i)=>
+      `${sp.arrows&&i?`<span class="arr${hold(k,i)}">→</span>`:''}<div class="card${sp.highlight===i?' hi':''}${hold(k,i)}"
+        style="border-top-color:${colr(c.color||(sp.highlight===i?'accent':'ideo'))}">
+        <b style="color:${sp.highlight===i?'#fff':colr(c.color||'ideo')}">${c.h}</b><p>${c.t}</p>
+        ${c.tag?`<span class="tag" style="color:${sp.highlight===i?'var(--accent)':colr(c.color||'ideo')}">${c.tag}</span>`:''}</div>`).join('')}</div>${SRC(sp)}`}),
+
+  stats: sp => ({k:'light', subs:sp.stats.length+(sp.so?1:0), h:(k=0)=>`${HD(sp)}
+    <div class="stats n${sp.stats.length}">${sp.stats.map((st,i)=>`<div class="st${hold(k,i)}">
+      <span class="tag">${st.label}</span><b style="color:${colr(st.color)}">${st.value}</b>${st.sub?`<p class="stsub">${st.sub}</p>`:''}</div>`).join('')}</div>${sp.so?`<p class="so${hold(k,sp.stats.length)}">${sp.so}</p>`:''}${SRC(sp)}`}),
+
+  measure: sp => ({k:'light', subs:2, h:(k=0)=>`${HD(sp)}
+    <blockquote class="mq">${sp.ex}</blockquote>
+    <div class="pc${hold(k,0)}"><span class="tag" style="color:var(--match)">✓ Why it works</span><b>${sp.pro}</b></div>
+    <div class="pc${hold(k,1)}"><span class="tag" style="color:var(--accent)">✗ Why it fails</span><b>${sp.con}</b></div>`}),
+
+  items: sp => ({k:'light', subs:sp.items.length, h:(k=0)=>`${HD(sp)}
+    <div class="qlist">${sp.items.map((it,i)=>`<div class="qrow${hold(k,i)}"><p class="q${it.plain?' plain':''}">${it.plain?it.text:'“'+it.text+'”'}</p>
+      <span class="key">${it.tag.replace(/\n/g,'<br>')}</span></div>`).join('')}</div>${SRC(sp)}`}),
+
+  hbars: sp => ({k:'light', h:()=>`${HD(sp)}${SVG('hb', sp.rows.length>4?400:sp.rows.length===3?340:250)}${SRC(sp)}`,
+    draw:()=>hbars($('#hb'), sp)}),
+
+  vbars: sp => ({k:'light', h:()=>`${HD(sp)}
+    ${sp.variants?`<div class="ctl">${seg('var', Object.entries(sp.variants).map(([k,v])=>[k,v.label]), 'cold')}</div>`:''}
+    ${SVG('vb', sp.variants?360:390)}${SRC(sp)}`,
+    draw:()=>{ const go_ = v => bars($('#vb'), {cats:v.cats, series:v.series, ymin:sp.domain[0], ymax:sp.domain[1],
+        fmt:sp.fmt, legend:sp.legend, gap:sp.cats.length>6?0.28:0.4, annot:v===sp?sp.annot:null, vfs:sp.vfs});
+      go_(sp); if (sp.variants) bindSeg('#var', v=>{ go_(sp.variants[v]); relight(); }); }}),
+
+  // No question overlays on the web charts: they sat on top of the lines. Each
+  // line instead brings a plain-words caption under the chart, from sp.says.
+  line: sp => ({k:'light', subs:sp.series.length, h:(k=0)=>`${HD(sp)}
+    ${sp.views?`<div class="ctl">${seg('view', sp.views, sp.cur||sp.views[0][0])}</div>`:''}${SVG('ln',sp.views?340:370)}
+    <p class="cap">${lineCap(sp,k)}</p>${SRC(sp)}`,
+    draw:()=>{
+      if (sp.views) bindSeg('#view', v=>{ sp.cur=v; drawLine(sp);
+        const cap=document.querySelector('#deck .cap'); if (cap) cap.innerHTML = lineCap(sp, state.sub||0);
+        relight(); });
+      drawLine(sp); }}),
+
+  range: sp => ({k:'light', subs:sp.rows.length, h:(k=0)=>`${HD(sp)}
+    ${sp.views?`<div class="ctl">${seg('view', sp.views, sp.cur||sp.views[0][0])}</div>`:''}${SVG('rg',sp.views?350:380)}
+    <p class="cap">${rangeCap(sp,k)}</p>${SRC(sp)}`,
+    draw:()=>{ if (sp.views) bindSeg('#view', v=>{ sp.cur=v; drawRange(sp);
+        const cap=document.querySelector('#deck .cap'); if (cap) cap.innerHTML = rangeCap(sp, state.sub||0);
+        relight(); });
+      drawRange(sp); }}),
+
+  timeline: sp => ({k:'light', subs:sp.events.length, h:(k=0)=>`${HD(sp)}
+    <div class="tl n${sp.events.length}">${sp.events.map((e,i)=>`<div class="ev${hold(k,i)}"><span class="yr">${e.y}</span>
+      <b>${e.h}</b><p>${e.t}</p></div>`).join('')}</div>${SRC(sp)}`}),
+
+
+  // McCoy & Somer's features: click 0 / 1 / 2 to score the U.S. Kept in this
+  // browser only (localStorage, wrapped: it can be missing or blocked); the
+  // last discussion slide adds them up.
+  feature: sp => ({k:'light', subs:1, h:(k=0)=>`${HD(sp)}
+    <div class="feat"><span class="fl">${sp.letter}</span><p class="fbig">${sp.big}</p></div>
+    <div class="frow${hold(k,0)}"><span class="tag">Where we have seen it</span><p>${sp.seen}</p></div>
+    <div class="frow"><span class="tag" style="color:var(--accent)">The U.S. in 2026?</span>
+      <div><div class="fsc" data-l="${sp.letter}">${[...Array(11).keys()].map(v=>
+        `<button data-v="${v}" aria-pressed="${score(sp.letter)===v}">${v}</button>`).join('')}</div>
+      <p class="fexp">${sp.scoreHelp}</p></div></div>${SRC(sp)}`,
+    draw:()=>bindScore()}),
+
+  grid: sp => ({k:'light', subs:4, h:(k=0)=>`${HD(sp)}
+    <div class="g2"><span></span><span class="gh" style="grid-column:2/4">${sp.colHead}</span>
+      <span class="gh gl">${sp.rowHead}</span>${sp.cols.map(c=>`<span class="gc">${c}</span>`).join('')}
+      ${sp.cells.map((c,i)=>`${i%2===0?`<span class="gr">${sp.rows[i/2]}</span>`:''}<div class="gcell${c.hi?' hi':''}${hold(k,i)}"><b>${c.h}</b><p>${c.t}</p></div>`).join('')}
+    </div>${SRC(sp)}`}),
+
+  discuss: sp => ({k:'wash', subs:sp.qs.length, h:(k=0)=>`<p class="kicker">In your group · ${sp.part} · about ${sp.minutes} minutes</p>
+    <div class="disc">${sp.qs.map((q,i)=>`<div class="dq${i>0?hold(k,i):''}"><span>${i+1}</span><p>${q}</p></div>`).join('')}</div>
+    ${sp.ref?`<div class="dref">${sp.ref.map(r=>`<div><p${r.plain?' class="plain"':''}>${r.plain?r.text:'“'+r.text+'”'}</p><span>${r.tag.replace(/\n/g,'<br>')}</span></div>`).join('')}</div>`:''}
+    ${sp.scorecard?`<div class="scard">${'abcdefghij'.split('').map(l=>`<span><i>${l}</i>${score(l)==null?'–':score(l)}</span>`).join('')}<b>${scoreTotal()}</b></div>`:''}
+    ${sp.report?`<p class="report"><b>Report back:</b> ${sp.report}</p>`:''}`}),
+
+  questions: sp => ({k:'dark center', h:()=>`<h1 style="max-width:22ch">${sp.big}</h1>
+    <div class="rowlist" style="margin-top:22px">${sp.qs.map((q,i)=>`<div class="r" style="border-color:${i<sp.qs.length-1?'#2A3541':'transparent'}">
+      <div class="say">${q.q}${q.tag?` <b style="color:var(--accent)">${q.tag}</b>`:''}</div></div>`).join('')}</div>`}),
+
+  next: sp => ({k:'dark', h:()=>`<p class="kicker nxk">Next</p><div class="nxl">
+    ${sp.rows.map(r=>`<div class="nxr"><div class="nxw">${r[0]}</div>
+      <div><div class="nxt">${r[1]}</div><div class="nxd">${r[2]}</div></div></div>`).join('')}</div>
+    <p class="nxf">${sp.foot}</p>`}),
+};
+
+const S = SPEC.map(sp => {
+  const r = WEB[sp.type];
+  if (!r) throw new Error(`web deck: no renderer for "${sp.type}" (${sp.id})`);
+  return Object.assign({slug: sp.id, notes: sp.notes || ''}, r(sp));
+});
+
+/* Sub-steps. A slide declares `subs: n` to mean it has n reveal stages after
+   its initial view; h() and draw() receive the current stage. Addressable the
+   way the sorting deck does it: #3 is the slide, #3a its first stage. Slides
+   without `subs` are unaffected — h() simply ignores the argument. */
+// declared steps for text reveals, chart stages for the charts, whichever is more
+const SUBS = i => (i===state.step)
+  ? Math.max(S[i].subs||0, state.stages||0)
+  : (S[i].subs||0);
+// Kick the CSS transitions one frame after insertion, so the browser has a
+// starting value to animate away from. getTotalLength() throws on a detached or
+// zero-length node, hence the try.
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)');
+
+/* Charts ARM rather than play. On arrival you get the ghost — the shape, faint —
+   and nothing else; each → sweeps one more series across. That is the sorting
+   deck's behavior, and the reason its charts read as an argument being walked
+   rather than a picture dropped on the screen.
+
+   arm()          hides every stage and measures its dash length with the
+                  transition off. Unstaged animatables (bars, table cells) are
+                  not part of the argument, so they just land.
+   paintStages()  shows the first n stages. Only the newly-reached one animates;
+                  the rest land instantly, so re-rendering a slide does not
+                  replay everything already on screen.                          */
+function setStage(g, on, animate){
+  const draws=[...g.querySelectorAll('.draw')], pops=[...g.querySelectorAll('.pop')];
+  const len = n => { try{ return n.getTotalLength(); }catch(_){ return 0; } };
+  if(!on){
+    draws.forEach(n=>{ const L=len(n); n.style.strokeDashoffset = L? L+'px':'0px'; });
+    pops.forEach(n=>n.classList.remove('go'));
+    return;
+  }
+  if(animate && !REDUCED.matches){
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      draws.forEach(n=>n.style.strokeDashoffset='0px');
+      pops.forEach(n=>n.classList.add('go'));
+    }));
+  } else {                                   // land it, no motion
+    [...draws,...pops].forEach(n=>n.style.transition='none');
+    draws.forEach(n=>n.style.strokeDashoffset='0px');
+    pops.forEach(n=>n.classList.add('go'));
+    void g.getBoundingClientRect();
+    [...draws,...pops].forEach(n=>n.style.transition='');
+  }
+}
+function arm(root){
+  root.querySelectorAll('.stage').forEach(g=>g.classList.remove('on'));
+  root.querySelectorAll('.draw').forEach(n=>{
+    n.classList.remove('anim');
+    n.style.transition='none';
+    let L=0; try{ L=n.getTotalLength(); }catch(_){}
+    n.style.strokeDasharray  = L? L+'px':'none';
+    n.style.strokeDashoffset = L? L+'px':'0px';
+  });
+  root.querySelectorAll('.stage .pop').forEach(n=>n.classList.remove('go'));
+  void root.getBoundingClientRect();          // flush, or removing the transition does nothing
+  root.querySelectorAll('.draw').forEach(n=>{ n.style.transition=''; n.classList.add('anim'); });
+  root.querySelectorAll('.growy,.growx').forEach(n=>n.classList.add('go'));
+  root.querySelectorAll('.pop').forEach(n=>{ if(!n.closest('.stage')) n.classList.add('go'); });
+}
+function paintStages(root, n, animateLast){
+  const gs=[...root.querySelectorAll('.stage')];
+  gs.forEach((g,i)=>{
+    const on = i < n;
+    g.classList.toggle('on', on);
+    setStage(g, on, on && animateLast && i === n-1);
+  });
+  // Stage i is painted once n > i, so the question tagged i is the one that has
+  // not been answered yet. When n reaches the stage count, none match and the
+  // chart is left to speak for itself.
+  root.querySelectorAll('.ask').forEach(a=>
+    a.classList.toggle('on', +a.dataset.stage === n));
+  return gs.length;
+}
+// Click a chart to replay it: back to the ghost, then sweep the revealed stages.
+function replay(svg){
+  const shown=[...svg.querySelectorAll('.stage')].filter(g=>g.classList.contains('on')).length || 1;
+  arm(svg);
+  paintStages(svg, 0, false);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    for(let i=1;i<shown;i++) paintStages(svg,i,false);   // earlier stages land
+    paintStages(svg, shown, true);                        // the last one sweeps
+  }));
+}
+function render(){
+  const s=S[state.step];
+  // h()/draw() see only the slide's DECLARED steps. Chart stages are counted
+  // after the draw and clamped separately — passing a raw 99 (which is how
+  // "land this slide fully revealed" is expressed) straight into h() is how
+  // captions came out as "undefined".
+  const kH = Math.min(state.sub, s.subs||0);
+  $("#deck").dataset.drawn = "0";
+  $("#deck").innerHTML=`<section class="slide ${s.k} on">${s.h(kH)}</section>`;
+  $("#bar").style.width=((state.step+1)/S.length*100)+"%";
+  $("#notesbody").textContent=s.notes||"No notes for this slide.";
+  if(s.draw) s.draw(kH);
+  const deck=$("#deck");
+  arm(deck);
+  // A slide's step count is the greater of what it declares and what its chart
+  // provides, so adding a series to a chart adds a step without touching nav.
+  state.stages = deck.querySelectorAll('.stage').length;
+  const maxSub = Math.max(s.subs||0, state.stages);
+  if(state.sub > maxSub) state.sub = maxSub;
+  // Animate only when we stepped FORWARD one notch within the same slide;
+  // arriving at a slide, or jumping, lands whatever is due without motion.
+  const stepped = (state.step===state.lastStep) && (state.sub===state.lastSub+1);
+  paintStages(deck, state.sub, stepped);
+  deck.dataset.drawn = (state.sub >= state.stages) ? "1" : "0";
+  state.lastStep=state.step; state.lastSub=state.sub;
+}
+const state={step:0,sub:0,stages:0,lastStep:-1,lastSub:-1};
+const subTag = n => n>0 ? String.fromCharCode(96+n) : "";
+function go(n,push=true,sub=0){
+  state.step=Math.max(0,Math.min(S.length-1,n));
+  // Only the lower bound can be clamped here: the upper bound is the chart's
+  // stage count, which is not known until the slide has rendered. Clamping
+  // against the OUTGOING slide's count is how stepping backwards onto a chart
+  // used to land it half-drawn.
+  state.sub=Math.max(0,sub);
+  render();                       // clamps state.sub, then paints
+  if(push) location.hash=String(state.step+1)+subTag(state.sub);
+  hint();
+}
+function hint(){
+  const tag=`#${state.step+1}${subTag(state.sub)}`;
+  // One dot per stage on this slide, filled as far as you have got. Without it
+  // a chart that arms looks finished on arrival and nobody presses again. The
+  // sorting deck has always shown these; this deck did not, and that was the
+  // only difference between the two corners.
+  const max=SUBS(state.step);
+  const dots = max
+    ? `<span class="dots">${Array.from({length:max},(_,i)=>
+        `<i class="${i<state.sub?"on":""}"></i>`).join("")}</span>`
+    : "";
+  $("#hint").innerHTML=`<b class="nums">${tag}</b><span style="opacity:.7">`
+    +` of ${S.length} · ${S[state.step].slug}</span>${dots}<br>? help · N notes`;
+}
+function next(){ if(state.sub<SUBS(state.step)) go(state.step,true,state.sub+1);
+                 else go(state.step+1,true,0); }
+function prev(){ if(state.sub>0) go(state.step,true,state.sub-1);
+                 else go(state.step-1,true,99); }   // land the previous slide fully drawn
+function fromHash(){
+  const h=decodeURIComponent(location.hash.replace(/^#/,""));
+  const m=h.match(/^(\d+)([a-z]?)$/);
+  if(m) return [Math.min(S.length,Math.max(1,+m[1]))-1,
+                m[2]?m[2].charCodeAt(0)-96:0];
+  const i=S.findIndex(x=>x.slug===h);
+  return i<0?null:[i,0];
+}
+addEventListener("hashchange",()=>{const h=fromHash();
+  if(h&&(h[0]!==state.step||h[1]!==state.sub)) go(h[0],false,h[1]);});
+function help(on){const h=$("#help");h.hidden=(on===undefined)?!h.hidden:!on;
+  $("#hint").style.visibility=h.hidden?"visible":"hidden";}
+function notes(on){const n=$("#notes");n.hidden=(on===undefined)?!n.hidden:!on;}
+$("#help").addEventListener("click",()=>help(false));
+$("#hint").addEventListener("click",()=>help(true));
+addEventListener("keydown",e=>{
+  const typing=/^(INPUT|TEXTAREA)$/.test(e.target.tagName);
+  if(typing&&!["Escape","ArrowRight","ArrowLeft"].includes(e.key))return;
+  switch(e.key){
+    case "ArrowRight":case " ":case "PageDown":next();e.preventDefault();break;
+    case "ArrowLeft":case "PageUp":prev();e.preventDefault();break;
+    case "ArrowDown":go(state.step+1);e.preventDefault();break;   // skip the stages
+    case "ArrowUp":go(state.step-1);e.preventDefault();break;
+    case "Home":go(0);break;
+    case "End":go(S.length-1);break;
+    case "n":case "N":notes();break;
+    case "f":case "F":document.fullscreenElement?document.exitFullscreen()
+      :document.documentElement.requestFullscreen?.();break;
+    case "t":case "T":{const r=document.documentElement;
+      r.dataset.theme=r.dataset.theme==="dark"?"light":"dark";render();break;}
+    case "?":help();break;
+    case "Escape":help(false);notes(false);break;}});
+// Click anywhere to advance, the way a remote would — controls exempt.
+$("#deck").addEventListener("click",e=>{
+  if(e.target.closest("input,button,label,select,textarea,a,.hit")) return;
+  const svg=e.target.closest("svg");
+  if(svg){ replay(svg); return; }            // clicking a chart replays it
+  next();});
+{const h=fromHash(); if(h){ state.step=h[0]; state.sub=h[1]; }}
+go(state.step,true,state.sub);
+let rz;addEventListener("resize",()=>{clearTimeout(rz);
+  rz=setTimeout(()=>go(state.step,false,state.sub),140);});
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Polarization VI — LIVE SCORING (the deck side).
+
+   Pasted in after the engine by build-polarization-vi-interactive.py. Students
+   join at polarization-vi-vote.html with the 4-letter code shown on the
+   "Score it" slide, and tap 0–10 for whichever warning sign is on screen.
+   When the slide moves on, the class average for that sign becomes its score,
+   and the final discussion's scorecard adds the ten averages up (out of 100).
+
+   Same Supabase project and Realtime pattern as /campaigns-review: a channel
+   per code ("pol6-ABCD"), no tables, no accounts. Each phone's answers ride on
+   its presence, so the deck recounts them on every sync; the deck re-broadcasts
+   the open question every 2.5 seconds for late joiners. Votes for a sign are
+   only collected while that sign is on screen, and are kept (in this browser)
+   even after a phone disconnects.
+
+   Offline, or if the Supabase script fails to load, none of this appears and
+   the slides' own 0–10 buttons still work by hand.
+   ─────────────────────────────────────────────────────────────────────────── */
+const LV = (() => {
+  const SB_URL = "https://renowzxywrnuomxzsydn.supabase.co";
+  const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlbm93enh5d3JudW9teHpzeWRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwODc1NDgsImV4cCI6MjA3MTY2MzU0OH0.8AvSHDFDPD9b-hHOTN1DPLwrtjdWnXjmjXNpumh0YL0";
+  const VOTE_URL = "https://jonathancervas.com/teaching/2026-2027/class-cmu-2026-84-309/slides/polarization-vi-vote.html";
+  const SHORT = "jonathancervas.com/…/slides/polarization-vi-vote.html";
+  const load = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v ?? d; } catch (_) { return d; } };
+  const store = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (_) {} };
+  const newCode = () => Array.from({length: 4}, () => "ABCDEFGHJKMNPQRSTUVWXYZ"[Math.floor(Math.random() * 23)]).join("");
+  const FEATS = SPEC.filter(s => s.type === "feature");
+  const r1 = v => Math.round(v * 10) / 10;
+
+  const L = {sb: null, ch: null, ready: false, failed: false, code: load("pol6-code", null) || newCode(),
+             players: {}, votes: load("pol6-votes", {}), avg: load("pol6-avg", {}), open: null, last: null};
+  store("pol6-code", L.code);
+  const online = () => !!(window.supabase && window.supabase.createClient);
+
+  function connect() {
+    if (L.ch || !online()) return;
+    L.sb = window.supabase.createClient(SB_URL, SB_KEY);
+    const ch = L.sb.channel("pol6-" + L.code, {config: {broadcast: {self: false}, presence: {key: "host"}}});
+    ch.on("presence", {event: "sync"}, () => sync(ch.presenceState()));
+    ch.on("presence", {event: "join"}, () => push());
+    ch.on("broadcast", {event: "hello"}, () => push());
+    ch.subscribe(st => {
+      if (st === "SUBSCRIBED") { L.ready = true; L.failed = false; ch.track({role: "host"}); push(); }
+      else if (st === "CHANNEL_ERROR" || st === "TIMED_OUT" || st === "CLOSED") { L.ready = false; L.failed = true; }
+      paint();
+    });
+    L.ch = ch;
+  }
+  function sync(state) {
+    const ps = {};
+    Object.entries(state).forEach(([key, metas]) => {
+      if (key === "host") return;
+      const m = metas[metas.length - 1] || {};
+      ps[key] = m.v || {};
+    });
+    L.players = ps;
+    if (L.open) Object.entries(ps).forEach(([dev, v]) => {
+      const x = v[L.open];
+      if (typeof x === "number" && x >= 0 && x <= 10) (L.votes[L.open] = L.votes[L.open] || {})[dev] = x;
+    });
+    store("pol6-votes", L.votes);
+    paint();
+  }
+  function push() {
+    if (!L.ready) return;
+    const f = FEATS.findIndex(s => s.letter === L.open);
+    L.ch.send({type: "broadcast", event: "state",
+               payload: L.open ? {letter: L.open, big: FEATS[f].big, i: f + 1} : {letter: null}});
+  }
+  setInterval(push, 2500);
+
+  function stats(l) {
+    const v = Object.values(L.votes[l] || {});
+    return v.length ? {avg: v.reduce((a, b) => a + b, 0) / v.length, n: v.length} : null;
+  }
+  // The slide moved on: the class average becomes this sign's score.
+  function finalize(l) {
+    const st = stats(l); if (!st) return;
+    L.avg[l] = st; store("pol6-avg", L.avg);
+    SCORES[l] = r1(st.avg);
+    try { localStorage.setItem("pol6-scores", JSON.stringify(SCORES)); } catch (_) {}
+    L.last = l;
+  }
+
+  // Called BEFORE every render: leaving a warning sign locks its average in,
+  // so a slide that shows the scores (the final discussion) draws them current.
+  function beforeSlide() {
+    const sp = SPEC[state.step] || {};
+    const letter = sp.type === "feature" ? sp.letter : null;
+    if (L.open && L.open !== letter) finalize(L.open);
+  }
+  // Called after every render (each → press, each slide change).
+  function onSlide() {
+    const sp = SPEC[state.step] || {};
+    const letter = sp.type === "feature" ? sp.letter : null;
+    if (letter !== L.open) { L.open = letter; push(); }
+    if (sp.id === "ms-why" || sp.type === "feature" || sp.scorecard) connect();
+    decorate(sp);
+  }
+
+  function decorate(sp) {
+    const sec = document.querySelector("#deck .slide");
+    if (!sec || !online()) return;
+    if (sp.id === "ms-why") {
+      const box = document.createElement("div"); box.id = "lvjoin"; box.className = "lvjoin";
+      box.addEventListener("click", e => e.stopPropagation());
+      sec.appendChild(box);
+    }
+    if (sp.type === "feature") {
+      const bar = document.createElement("p"); bar.id = "lvbar"; bar.className = "lvbar";
+      sec.appendChild(bar);
+    }
+    paint();
+  }
+
+  function qr(url) {
+    if (typeof qrcode !== "function") return "";
+    try { const q = qrcode(0, "M"); q.addData(url); q.make(); return q.createSvgTag({cellSize: 4, margin: 2, scalable: true}); }
+    catch (_) { return ""; }
+  }
+
+  function paint() {
+    const n = Object.keys(L.players).length;
+    const join = document.getElementById("lvjoin");
+    if (join) {
+      const url = VOTE_URL + "?code=" + L.code;
+      const conn = L.ready ? `<b>${n}</b> ${n === 1 ? "phone" : "phones"} joined`
+        : L.failed ? "Live scoring is offline. Use the buttons on each slide." : "Connecting…";
+      join.innerHTML = `<div class="lvqr">${qr(url)}</div>
+        <div><p class="lvlab">Score on your phone</p><p class="lvurl">${SHORT}</p>
+        <p class="lvcode">${L.code}</p><p class="lvn">${conn}</p>
+        <button class="lvnew" type="button">New code (clears scores)</button></div>`;
+      join.querySelector(".lvnew").onclick = ev => { ev.stopPropagation(); reset(); };
+    }
+    const bar = document.getElementById("lvbar");
+    if (bar && L.open) {
+      const st = stats(L.open), prev = L.last && L.last !== L.open ? L.avg[L.last] : null;
+      const parts = [];
+      if (L.ready) parts.push(`<span class="lvdot"></span>Live · code <b>${L.code}</b> · <b>${st ? st.n : 0}</b> of ${n} have scored this one`);
+      if (prev) parts.push(`Warning sign ${L.last}: class average <b>${r1(prev.avg)}</b> (${prev.n} votes)`);
+      bar.innerHTML = parts.join(" &nbsp;·&nbsp; ");
+    }
+  }
+
+  function reset() {
+    if (!confirm("Start a new session? This clears every score and gives the class a new code.")) return;
+    if (L.ch) { try { L.sb.removeChannel(L.ch); } catch (_) {} }
+    L.ch = null; L.ready = false; L.players = {}; L.votes = {}; L.avg = {}; L.last = null;
+    Object.keys(SCORES).forEach(k => delete SCORES[k]);
+    L.code = newCode();
+    ["pol6-votes", "pol6-avg", "pol6-scores"].forEach(k => { try { localStorage.removeItem(k); } catch (_) {} });
+    store("pol6-code", L.code);
+    connect(); paint();
+  }
+
+  return {beforeSlide, onSlide, state: L};
+})();
+
+// Hook every render: the engine calls render() on each step and slide change.
+{ const _render = render; render = function () { LV.beforeSlide(); const r = _render.apply(this, arguments); LV.onSlide(); return r; }; }
+LV.onSlide();
+</script>
+</body></html>
