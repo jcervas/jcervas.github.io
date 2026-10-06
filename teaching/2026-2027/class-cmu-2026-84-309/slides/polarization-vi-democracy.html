@@ -1569,7 +1569,7 @@ const LV = (() => {
       const st = stats(L.open), prev = L.last && L.last !== L.open ? L.avg[L.last] : null;
       const parts = [];
       if (L.ready) parts.push(`<span class="lvdot"></span>Live · code <b>${L.code}</b> · <b>${st ? st.n : 0}</b> of ${n} have scored this one`);
-      if (prev) parts.push(`Warning sign ${L.last}: class average <b>${r1(prev.avg)}</b> (${prev.n} votes)`);
+      if (prev) parts.push(`Warning sign ${L.last}: class average <b>${r1(prev.avg)}</b> (${prev.n} ${prev.n === 1 ? "vote" : "votes"})`);
       bar.innerHTML = parts.join(" &nbsp;·&nbsp; ");
     }
   }
