@@ -450,6 +450,15 @@ blockquote.mq{font-family:var(--display);font-style:italic;font-size:clamp(18px,
 .lvbar.lvrev{font-size:clamp(16px,1.5vw,28px);color:var(--ink);display:flex;align-items:baseline;gap:.5em}
 .lvavg{font-family:var(--display);font-size:clamp(34px,3.8vw,72px);color:var(--accent);line-height:1}
 .lvbar.lvrev span{color:var(--ink-3);font-size:.8em}
+.rtop{display:flex;justify-content:flex-end;margin-top:calc(-1 * clamp(36px,6vh,72px))}
+.rall{text-align:right} .rall b{display:block;font-family:var(--display);font-size:clamp(40px,4.6vw,88px);line-height:1;color:var(--accent)}
+.rall .rsub{font-size:clamp(12px,1vw,18px);color:var(--ink-3)}
+.rgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(8px,1vw,18px);margin-top:clamp(6px,1.5vh,16px)}
+.rcell{background:var(--card);border:1px solid var(--rule-2);border-radius:8px;padding:clamp(6px,.7vw,12px)}
+.rlab{font-size:clamp(11px,.95vw,17px);font-weight:700;line-height:1.2;min-height:2.4em}
+.rlab i{font-style:normal;font-family:var(--display);color:var(--accent);margin-right:.35em;font-size:1.15em}
+.rh{display:block;width:100%;height:auto;margin-top:4px}
+.ravg{margin-top:2px} .ravg b{font-family:var(--display);font-size:clamp(18px,1.8vw,34px)} .ravg span{color:var(--ink-3);font-size:clamp(10px,.85vw,15px)}
 .lvdot{display:inline-block;width:.6em;height:.6em;border-radius:50%;background:var(--accent);margin-right:.5em;animation:lvp 1.6s infinite}
 @keyframes lvp{50%{opacity:.25}} @media (prefers-reduced-motion:reduce){.lvdot{animation:none}}
 .scard b{font-family:var(--display);font-size:clamp(20px,2.2vw,42px);margin-left:12px}
@@ -883,34 +892,41 @@ ASK: Which of the three could the U.S. actually change? (The fault line, no. The
     arrows:true, cards:[
       {h:'Why', t:'We know how polarized we are. Is it the kind that harms democracy?', tag:'THE QUESTION'},
       {h:'How', t:'Ten warning signs, one per slide. Score each from 0 to 10 for the U.S. today.', tag:'ABOUT A MINUTE EACH'},
-      {h:'Then', t:'Add them up, out of 100. Compare totals across groups. Where do you disagree?', tag:'FINAL DISCUSSION'}],
+      {h:'Then', t:'See how the room scored every sign, and the overall average. Where do we disagree?', tag:'RESULTS'}],
     notes:`SHOWS: why we are about to score ten slides, and how.
 SAY: Every session in this unit asked HOW polarized Americans are: ideology, sorting, affect, race, place. None of that tells us whether American democracy is in danger, because plenty of democracies are polarized and fine. McCoy & Somer studied countries where polarization did end in democratic erosion (Hungary, Turkey, Venezuela, among others) and listed what those cases had in common. So the list works like a set of warning signs.
 ANCHORS for the scale: a 0 on every feature is ordinary partisan disagreement; a 10 on every feature is a country split into two camps that will not accept losing to each other. Most of you will land somewhere in between; the interesting part is WHERE you disagree.
-DO: LIVE SCORING (web deck only): the panel on this slide shows a QR code, the URL and a 4-letter code. Students scan or type it on their phones and tap 0–10 on each warning sign. On each sign, the first → closes voting and shows the class average on the slide (and on their phones); the next → moves on. The averages become the scores; the final discussion shows all ten and the total. No phones? Groups keep score on paper, or you click the slide's own buttons. About a minute per feature: read it, give the "where we've seen it" line, take a show of fingers. Save the arguing for the final discussion.
-ASK before starting: guess your group's total now. Write it down. We'll see how close you came.`});
+DO: LIVE SCORING (web deck only): the panel on this slide shows a QR code, the URL and a 4-letter code. Students scan or type it on their phones and tap 0–10 on each warning sign. On each sign, the first → closes voting and shows the class average on the slide (and on their phones); the next → moves on. After the tenth sign, a results slide shows how the room voted on each one and the overall average. No phones? Take a show of fingers and click the slide's own buttons. About a minute per feature: read it, give the "where we've seen it" line, let the votes come in. Save the arguing for the final discussion.
+ASK before starting: on average, how true do you think the room will say these are, 0 to 10? Remember the guess for the results slide.`});
 
   const FEAT = [
-    ['a','Many divisions collapse into one line between two hostile camps.','Sorting (II): Mason’s “mega-identity.” Race, religion, and place now line up with party.'],
-    ['b','The political camp becomes a social identity: a team that demands loyalty.','Affect (III): partisans rate their own side warmly and the other side coldly.'],
-    ['c','What people want from politics is set by which camp they are in.','Graham & Svolik: party outweighs democracy. Partisans adopt the party’s line on new issues (COVID).'],
-    ['d','Each side sees the other in moral terms: good vs. evil.','Druckman et al.: partisans dehumanize opponents and call them hypocritical and selfish.'],
-    ['e','The camps’ interests are seen as opposed: no common ground is possible.','Druckman et al.: polarized partisans oppose compromise, especially when their side must give.'],
-    ['f','More unity inside each camp; more hostility between them.','Negative partisanship (IV): voting against the other side; straight tickets.'],
-    ['g','Without contact, stereotypes and prejudice about the other side grow.','The parties in our heads (Ahler & Sood): people badly overestimate how “typical” each party is.'],
-    ['h','The middle drops out. Everyone gets labeled as one side or the other.','Graham & Svolik: moderates are the only ones who punish rule-breaking.'],
-    ['i','Institutions, the media included, come to belong to one bloc or the other.','Partisan news; fights over the courts. Thursday: who pays for the news?'],
-    ['j','The camps separate, in space and in their heads.','Place (VII): Brown & Enos; the neighborhoods where nobody votes the other way.']];
-  FEAT.forEach(([l,big,seen],i) => add({type:'feature', id:'ms-'+l, letter:l,
+    ['a','One dividing line','Many divisions collapse into one line between two hostile camps.','Sorting (II): Mason’s “mega-identity.” Race, religion, and place now line up with party.'],
+    ['b','Party as a team','The political camp becomes a social identity: a team that demands loyalty.','Affect (III): partisans rate their own side warmly and the other side coldly.'],
+    ['c','Camp sets the wants','What people want from politics is set by which camp they are in.','Graham & Svolik: party outweighs democracy. Partisans adopt the party’s line on new issues (COVID).'],
+    ['d','Good vs. evil','Each side sees the other in moral terms: good vs. evil.','Druckman et al.: partisans dehumanize opponents and call them hypocritical and selfish.'],
+    ['e','No common ground','The camps’ interests are seen as opposed: no common ground is possible.','Druckman et al.: polarized partisans oppose compromise, especially when their side must give.'],
+    ['f','United inside, hostile across','More unity inside each camp; more hostility between them.','Negative partisanship (IV): voting against the other side; straight tickets.'],
+    ['g','Stereotypes grow','Without contact, stereotypes and prejudice about the other side grow.','The parties in our heads (Ahler & Sood): people badly overestimate how “typical” each party is.'],
+    ['h','The middle drops out','The middle drops out. Everyone gets labeled as one side or the other.','Graham & Svolik: moderates are the only ones who punish rule-breaking.'],
+    ['i','Institutions take sides','Institutions, the media included, come to belong to one bloc or the other.','Partisan news; fights over the courts. Thursday: who pays for the news?'],
+    ['j','Living apart','The camps separate, in space and in their heads.','Place (VII): Brown & Enos; the neighborhoods where nobody votes the other way.']];
+  FEAT.forEach(([l,short,big,seen],i) => add({type:'feature', id:'ms-'+l, letter:l, short,
     title:`Is this the U.S.? Feature ${l}`, look:`McCoy & Somer’s list, pp. 246–247 (paraphrased) · ${i+1} of 10`,
-    big, seen, scoreHelp:'0 = not at all true of the U.S. today · 10 = completely true. Add up your ten scores for a total out of 100.', source:MS+' The ten features are their summary of what separates pernicious polarization from healthy pluralism.',
-    notes: i===0 ? `HOW TO RUN THESE TEN: about a minute each. Groups score every feature from 0 (not at all true of the U.S. today) to 10 (completely true), on paper; ten features make a total out of 100. Read the feature, give the "where we've seen it" line, let the votes come in (or take a show of fingers), then → to reveal the average (0 to 10, two hands). Do not debate each one now; the debate is the next discussion.
+    big, seen, scoreHelp:'0 = not at all true of the U.S. today · 10 = completely true.', source:MS+' The ten features are their summary of what separates pernicious polarization from healthy pluralism.',
+    notes: i===0 ? `HOW TO RUN THESE TEN: about a minute each. Everyone scores each feature from 0 (not at all true of the U.S. today) to 10 (completely true) on their phone. Read the feature, give the "where we've seen it" line, let the votes come in, then → to reveal the class average, and → again to move on. Do not debate each one now; the debate is the next discussion.
 FEATURE ${l.toUpperCase()}: the core of their definition. Cross-cutting differences become reinforcing. This is Mason's argument exactly, and the sorting index we built in Session II.` :
     i===2 ? `FEATURE C: interests form around identity, not the other way around. Evidence both ways: Druckman et al. cite work showing partisan identity drives policy views (Dias & Lelkes) and the COVID split. Counter: the public is still fairly moderate on many issues (Session I, Fiorina).` :
     i===6 ? `FEATURE G: the parties in our heads (Ahler & Sood, as Druckman et al. report it): respondents guessed 31.7% of Democrats are gay, lesbian, or bisexual; the true share in the sample was 6.3%. The CES asked the same kind of question; bring up the room's guesses if you have them handy. Contact is low: Brown & Enos (Session VII).` :
     i===7 ? `FEATURE H: a strong link to today. If the middle is what enforces democratic norms (Graham & Svolik), then the middle dropping out is not just a social change; it removes the referee.` :
     i===8 ? `FEATURE I: the one we have studied least. McCoy & Somer find press freedom fell in every case during the polarized period. Thursday's readings pick it up: local news closing, and what fills the gap.` :
     `FEATURE ${l.toUpperCase()}: read it, give the "where we've seen it" line, take the show of fingers (0 to 10).`}));
+
+  add({type:'results', id:'ms-results', title:'How this room scored the U.S.',
+    look:'Votes on each warning sign, 0 (not at all true) to 10 (completely true), with the class average',
+    feats:FEAT.map(([l,short]) => ({letter:l, short})),
+    notes:`SHOWS: the room's results, filled in live on the web deck from the phones (in the PowerPoint this slide is blank; use the web deck). Each small chart is one warning sign: how many people chose each score, with the average marked. Top right: the average across all ten signs (out of 10) and the same thing as a total out of 100.
+SAY: Read the shapes, not just the averages. A tall single peak means the room agrees. A wide or two-humped spread means we disagree about what is happening, which is itself a kind of polarization.
+ASK: Which sign scored highest? Lowest? Where is the spread widest? Is an overall average around the middle reassuring, or is "half true" already bad news for a democracy?`});
 
   add({type:'cards', id:'ms-opp', title:'What should the losing side do?', look:'The choice facing whichever party is out of power',
     cards:[
@@ -924,16 +940,15 @@ The hard American case: Texas redrew; California answered. Is that the spiral, o
 ASK: Does their advice change depending on which party is out of power? It shouldn't. Does your answer?`});
 
   add({type:'discuss', id:'d-4', part:'Part 4', minutes:15,
-    scorecard:true,   // web deck: shows the room's clicked scores, a–j, and the total
-    qs:['Add up your scores (out of 100). Which feature is the strongest evidence that the U.S. is perniciously polarized? Which is the weakest?',
+    qs:['Look at the room’s results. Which warning sign worries you most? Where did we disagree most, and why?',
         'You advise the party out of power. Answer in kind, or hold back? Write your strategy, then the reason your own voters would reject it.'],
-    report:'your total, your strongest and weakest feature, and your strategy',
+    report:'the sign that worries you most, and your strategy',
     notes:`SMALL GROUPS, the last break. About 15 minutes.
-Q1: collect totals on the board; the spread is the discussion. Push the low scorers: which feature is absent? (Likely candidates: "i", institutions, and "c", interests set by camp, given what Fiorina says about the public.) Push the high scorers: if the U.S. scores high, why have power and elections kept working? (McCoy & Somer's answer: both sides can still win.)
+Q1: work from the results slide. Push the groups that see little danger: which feature is absent? (Likely candidates: "i", institutions, and "c", interests set by camp, given what Fiorina says about the public.) Push those who see a lot: if the U.S. scores high, why have power and elections kept working? (McCoy & Somer's answer: both sides can still win.)
 Q2 is Graham & Svolik again, now for elites: restraint is the democratic choice, but the base punishes it. Elites who reach across "risk being branded as traitors" (Druckman et al.).
 TIE IT TOGETHER: the chain from Part 1. Link 2 holds: voters forgive their own side. Link 3 is weak: dislike alone does not make people want rules broken. Link 4 runs through leaders answering each other. The weak link is not how much we dislike each other. It is that we will not punish our own side.
 RE-VOTE: before dismissing, take the opening question again (threat · symptom · healthy fight) next to the morning's counts on the board. Ask anyone who switched: which link did it?
-REPORT: every group gives its total; two give strategies.`});
+REPORT: each group names its most worrying sign; two give strategies.`});
 
   add({type:'next', id:'next', rows:[
       ['Thu, Oct 8','Who Pays for the News?','Darr et al. 2018; Martin & McCrain 2019; Pickard 2020. Feature i, up close.'],
@@ -1220,6 +1235,31 @@ const WEB = {
       <p class="fexp">${sp.scoreHelp}</p></div></div>${SRC(sp)}`,
     draw:()=>bindScore()}),
 
+  // The room's results: one small histogram per warning sign (votes 0–10, the
+  // average marked), and the overall average. Votes come from the live session
+  // (window.LVSTATE, set by polarization-vi-live.js); without one, the slide
+  // falls back to the scores clicked on each slide (averages only).
+  results: sp => ({k:'light', h:()=>{
+    const V = (window.LVSTATE && window.LVSTATE.votes) || {};
+    const r1 = v => (Math.round(v*10)/10).toFixed(1);
+    const cells = sp.feats.map(f => {
+      const vs = Object.values(V[f.letter] || {});
+      const avg = vs.length ? vs.reduce((a,b)=>a+b,0)/vs.length : (typeof score(f.letter) === 'number' ? score(f.letter) : null);
+      const cnt = Array(11).fill(0); vs.forEach(v => cnt[v]++);
+      const mx = Math.max(1, ...cnt), W = 220, H = 92, bw = W/11;
+      const bars = cnt.map((c,v) => c ? `<rect x="${v*bw+1}" y="${H-14-(H-26)*c/mx}" width="${bw-2}" height="${(H-26)*c/mx}" rx="2" fill="var(--accent)" opacity=".85"><title>${v}: ${c}</title></rect>` : '').join('');
+      const ticks = [0,5,10].map(v => `<text x="${v*bw+bw/2}" y="${H-1}" text-anchor="middle" font-size="10" fill="var(--ink-3)">${v}</text>`).join('');
+      const mark = avg != null ? `<line x1="${avg*bw+bw/2}" x2="${avg*bw+bw/2}" y1="6" y2="${H-14}" stroke="var(--ink)" stroke-width="2" stroke-dasharray="3 2"/>` : '';
+      return {f, avg, n: vs.length, svg: `<svg viewBox="0 0 ${W} ${H}" class="rh">${bars}<line x1="0" x2="${W}" y1="${H-14}" y2="${H-14}" stroke="var(--rule-2)"/>${mark}${ticks}</svg>`};
+    });
+    const have = cells.filter(c => c.avg != null);
+    const all = have.length ? have.reduce((a,c)=>a+c.avg,0)/have.length : null;
+    const nmax = Math.max(0, ...cells.map(c => c.n));
+    return `${HD(sp)}
+    <div class="rtop"><div class="rall"><span class="tag">Overall average</span><b>${all==null ? '–' : r1(all)}</b><span class="rsub">out of 10${all==null ? '' : ` · ${Math.round(all*10)} out of 100`}${nmax ? ` · up to ${nmax} votes per sign` : ''}</span></div></div>
+    <div class="rgrid">${cells.map(c => `<div class="rcell"><p class="rlab"><i>${c.f.letter}</i>${c.f.short}</p>${c.svg}
+      <p class="ravg">${c.avg==null ? '<span>no votes</span>' : `<b>${r1(c.avg)}</b> <span>${c.n ? c.n + (c.n===1?' vote':' votes') : 'set by hand'}</span>`}</p></div>`).join('')}</div>${SRC(sp)}`; }}),
+
   grid: sp => ({k:'light', subs:4, h:(k=0)=>`${HD(sp)}
     <div class="g2"><span></span><span class="gh" style="grid-column:2/4">${sp.colHead}</span>
       <span class="gh gl">${sp.rowHead}</span>${sp.cols.map(c=>`<span class="gc">${c}</span>`).join('')}
@@ -1465,6 +1505,7 @@ const LV = (() => {
   const L = {sb: null, ch: null, ready: false, failed: false, code: load("pol6-code", null) || newCode(),
              players: {}, votes: load("pol6-votes", {}), avg: load("pol6-avg", {}), open: null, last: null};
   store("pol6-code", L.code);
+  window.LVSTATE = L;   // the results slide reads the votes from here
   const online = () => !!(window.supabase && window.supabase.createClient);
 
   function connect() {
