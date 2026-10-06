@@ -40,6 +40,7 @@ button{font:700 17px var(--body);border-radius:10px;border:2px solid var(--accen
 .ask{font-weight:700;color:var(--ink)}
 .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
 .grid button{background:var(--card);color:var(--accent);padding:16px 0;font-size:22px}
+.grid button:disabled{opacity:.55;cursor:default}
 .grid button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
 .scale{display:flex;justify-content:space-between;font-size:13px;color:var(--ink-3)}
 .ok{font-weight:600;color:var(--ink);min-height:1.4em}
@@ -101,13 +102,15 @@ function paintQ() {
   if (!q || !q.letter) { show("wait"); return; }
   $("lt").textContent = q.letter; $("ix").textContent = q.i; $("stmt").textContent = q.big;
   const mine = P.votes[q.letter];
-  $("btns").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.v === mine)));
-  $("ok").textContent = typeof mine === "number" ? `Got it: ${mine}. You can change it until the slide moves on.` : "";
+  $("btns").querySelectorAll("button").forEach(b => { b.setAttribute("aria-pressed", String(+b.dataset.v === mine)); b.disabled = !!q.closed; });
+  $("ok").textContent = q.closed
+    ? `Voting closed. Class average: ${q.avg} (${q.n} ${q.n === 1 ? "vote" : "votes"})` + (typeof mine === "number" ? `. You said ${mine}.` : ".")
+    : typeof mine === "number" ? `Got it: ${mine}. You can change it until the average is shown.` : "";
   show("q");
 }
 
 function vote(v) {
-  if (!P.cur || !P.cur.letter || !P.ch) return;
+  if (!P.cur || !P.cur.letter || P.cur.closed || !P.ch) return;
   P.votes[P.cur.letter] = v;
   store("pol6-votes-" + P.code, P.votes);
   P.ch.track({dev: DEV, v: P.votes});        // the deck reads answers from presence

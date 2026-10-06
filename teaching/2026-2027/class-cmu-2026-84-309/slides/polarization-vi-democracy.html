@@ -447,6 +447,9 @@ blockquote.mq{font-family:var(--display);font-style:italic;font-size:clamp(18px,
 .lvnew{margin-top:8px;font:600 clamp(10px,.8vw,14px) var(--body);color:var(--ink-3);background:none;border:1px solid var(--rule-2);border-radius:5px;padding:3px 8px;cursor:pointer}
 .slide:has(.lvjoin) .cards{margin-top:clamp(8px,2vh,24px)} .slide:has(.lvjoin) .card{min-height:0}
 .lvbar{font-size:clamp(12px,1vw,18px);color:var(--ink-2);margin-top:clamp(6px,1.5vh,16px)}
+.lvbar.lvrev{font-size:clamp(16px,1.5vw,28px);color:var(--ink);display:flex;align-items:baseline;gap:.5em}
+.lvavg{font-family:var(--display);font-size:clamp(34px,3.8vw,72px);color:var(--accent);line-height:1}
+.lvbar.lvrev span{color:var(--ink-3);font-size:.8em}
 .lvdot{display:inline-block;width:.6em;height:.6em;border-radius:50%;background:var(--accent);margin-right:.5em;animation:lvp 1.6s infinite}
 @keyframes lvp{50%{opacity:.25}} @media (prefers-reduced-motion:reduce){.lvdot{animation:none}}
 .scard b{font-family:var(--display);font-size:clamp(20px,2.2vw,42px);margin-left:12px}
@@ -884,7 +887,7 @@ ASK: Which of the three could the U.S. actually change? (The fault line, no. The
     notes:`SHOWS: why we are about to score ten slides, and how.
 SAY: Every session in this unit asked HOW polarized Americans are: ideology, sorting, affect, race, place. None of that tells us whether American democracy is in danger, because plenty of democracies are polarized and fine. McCoy & Somer studied countries where polarization did end in democratic erosion (Hungary, Turkey, Venezuela, among others) and listed what those cases had in common. So the list works like a set of warning signs.
 ANCHORS for the scale: a 0 on every feature is ordinary partisan disagreement; a 10 on every feature is a country split into two camps that will not accept losing to each other. Most of you will land somewhere in between; the interesting part is WHERE you disagree.
-DO: LIVE SCORING (web deck only): the panel on this slide shows a QR code, the URL and a 4-letter code. Students scan or type it on their phones and tap 0–10 on each warning sign. When you advance past a sign, the class average becomes its score; the final discussion shows all ten and the total. No phones? Groups keep score on paper, or you click the slide's own buttons. About a minute per feature: read it, give the "where we've seen it" line, take a show of fingers. Save the arguing for the final discussion.
+DO: LIVE SCORING (web deck only): the panel on this slide shows a QR code, the URL and a 4-letter code. Students scan or type it on their phones and tap 0–10 on each warning sign. On each sign, the first → closes voting and shows the class average on the slide (and on their phones); the next → moves on. The averages become the scores; the final discussion shows all ten and the total. No phones? Groups keep score on paper, or you click the slide's own buttons. About a minute per feature: read it, give the "where we've seen it" line, take a show of fingers. Save the arguing for the final discussion.
 ASK before starting: guess your group's total now. Write it down. We'll see how close you came.`});
 
   const FEAT = [
@@ -901,7 +904,7 @@ ASK before starting: guess your group's total now. Write it down. We'll see how 
   FEAT.forEach(([l,big,seen],i) => add({type:'feature', id:'ms-'+l, letter:l,
     title:`Is this the U.S.? Feature ${l}`, look:`McCoy & Somer’s list, pp. 246–247 (paraphrased) · ${i+1} of 10`,
     big, seen, scoreHelp:'0 = not at all true of the U.S. today · 10 = completely true. Add up your ten scores for a total out of 100.', source:MS+' The ten features are their summary of what separates pernicious polarization from healthy pluralism.',
-    notes: i===0 ? `HOW TO RUN THESE TEN: about a minute each. Groups score every feature from 0 (not at all true of the U.S. today) to 10 (completely true), on paper; ten features make a total out of 100. Read the feature, give the "where we've seen it" line, and take a quick show of fingers (0 to 10, two hands). Do not debate each one now; the debate is the next discussion.
+    notes: i===0 ? `HOW TO RUN THESE TEN: about a minute each. Groups score every feature from 0 (not at all true of the U.S. today) to 10 (completely true), on paper; ten features make a total out of 100. Read the feature, give the "where we've seen it" line, let the votes come in (or take a show of fingers), then → to reveal the average (0 to 10, two hands). Do not debate each one now; the debate is the next discussion.
 FEATURE ${l.toUpperCase()}: the core of their definition. Cross-cutting differences become reinforcing. This is Mason's argument exactly, and the sorting index we built in Session II.` :
     i===2 ? `FEATURE C: interests form around identity, not the other way around. Evidence both ways: Druckman et al. cite work showing partisan identity drives policy views (Dias & Lelkes) and the COVID split. Counter: the public is still fairly moderate on many issues (Session I, Fiorina).` :
     i===6 ? `FEATURE G: the parties in our heads (Ahler & Sood, as Druckman et al. report it): respondents guessed 31.7% of Democrats are gay, lesbian, or bisexual; the true share in the sample was 6.3%. The CES asked the same kind of question; bring up the room's guesses if you have them handy. Contact is low: Brown & Enos (Session VII).` :
@@ -1210,7 +1213,7 @@ const WEB = {
   // last discussion slide adds them up.
   feature: sp => ({k:'light', subs:1, h:(k=0)=>`${HD(sp)}
     <div class="feat"><span class="fl">${sp.letter}</span><p class="fbig">${sp.big}</p></div>
-    <div class="frow${hold(k,0)}"><span class="tag">Where we have seen it</span><p>${sp.seen}</p></div>
+    <div class="frow"><span class="tag">Where we have seen it</span><p>${sp.seen}</p></div>
     <div class="frow"><span class="tag" style="color:var(--accent)">The U.S. in 2026?</span>
       <div><div class="fsc" data-l="${sp.letter}">${[...Array(11).keys()].map(v=>
         `<button data-v="${v}" aria-pressed="${score(sp.letter)===v}">${v}</button>`).join('')}</div>
@@ -1495,9 +1498,11 @@ const LV = (() => {
   }
   function push() {
     if (!L.ready) return;
-    const f = FEATS.findIndex(s => s.letter === L.open);
-    L.ch.send({type: "broadcast", event: "state",
-               payload: L.open ? {letter: L.open, big: FEATS[f].big, i: f + 1} : {letter: null}});
+    const l = L.open || L.shown, f = FEATS.findIndex(s => s.letter === l);
+    let payload = {letter: null};
+    if (L.open) payload = {letter: L.open, big: FEATS[f].big, i: f + 1};
+    else if (l && L.avg[l]) payload = {letter: l, big: FEATS[f].big, i: f + 1, closed: true, avg: r1(L.avg[l].avg), n: L.avg[l].n};
+    L.ch.send({type: "broadcast", event: "state", payload});
   }
   setInterval(push, 2500);
 
@@ -1516,15 +1521,18 @@ const LV = (() => {
 
   // Called BEFORE every render: leaving a warning sign locks its average in,
   // so a slide that shows the scores (the final discussion) draws them current.
+  // A sign is OPEN (taking votes) on arrival. The next → reveals the class
+  // average on the same slide and closes it; the → after that moves on.
+  const openFor = sp => (sp.type === "feature" && !state.sub) ? sp.letter : null;
   function beforeSlide() {
     const sp = SPEC[state.step] || {};
-    const letter = sp.type === "feature" ? sp.letter : null;
-    if (L.open && L.open !== letter) finalize(L.open);
+    if (L.open && L.open !== openFor(sp)) finalize(L.open);
   }
   // Called after every render (each → press, each slide change).
   function onSlide() {
     const sp = SPEC[state.step] || {};
-    const letter = sp.type === "feature" ? sp.letter : null;
+    const letter = openFor(sp);
+    L.shown = sp.type === "feature" ? sp.letter : null;    // on screen, open or revealed
     if (letter !== L.open) { L.open = letter; push(); }
     if (sp.id === "ms-why" || sp.type === "feature" || sp.scorecard) connect();
     decorate(sp);
@@ -1540,7 +1548,8 @@ const LV = (() => {
     }
     if (sp.type === "feature") {
       const bar = document.createElement("p"); bar.id = "lvbar"; bar.className = "lvbar";
-      sec.appendChild(bar);
+      const host = sec.querySelector(".fexp");       // right under the 0–10 buttons and the scale line
+      if (host) host.after(bar); else sec.appendChild(bar);
     }
     paint();
   }
@@ -1565,12 +1574,16 @@ const LV = (() => {
       join.querySelector(".lvnew").onclick = ev => { ev.stopPropagation(); reset(); };
     }
     const bar = document.getElementById("lvbar");
-    if (bar && L.open) {
-      const st = stats(L.open), prev = L.last && L.last !== L.open ? L.avg[L.last] : null;
-      const parts = [];
-      if (L.ready) parts.push(`<span class="lvdot"></span>Live · code <b>${L.code}</b> · <b>${st ? st.n : 0}</b> of ${n} have scored this one`);
-      if (prev) parts.push(`Warning sign ${L.last}: class average <b>${r1(prev.avg)}</b> (${prev.n} ${prev.n === 1 ? "vote" : "votes"})`);
-      bar.innerHTML = parts.join(" &nbsp;·&nbsp; ");
+    if (bar && L.open) {          // voting: how many have scored
+      const st = stats(L.open);
+      bar.innerHTML = L.ready ? `<span class="lvdot"></span>Live · code <b>${L.code}</b> · <b>${st ? st.n : 0}</b> of ${n} have scored this one · press → to reveal the class average` : "";
+    } else if (bar && L.shown) {  // revealed: the class average, marked on the scale
+      const a = L.avg[L.shown];
+      bar.className = "lvbar lvrev";
+      bar.innerHTML = a ? `Class average <b class="lvavg">${r1(a.avg)}</b> <span>${a.n} ${a.n === 1 ? "vote" : "votes"}</span>`
+                        : `<span>No votes on this one.</span>`;
+      if (a) document.querySelectorAll("#deck .fsc button").forEach(b =>
+        b.setAttribute("aria-pressed", String(+b.dataset.v === Math.round(a.avg))));
     }
   }
 
