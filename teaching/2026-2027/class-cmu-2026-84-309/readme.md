@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### DRAFT Updated: October 05, 2026
+#### DRAFT Updated: October 06, 2026
 
 > Professor **Jonathan Cervas**  
 > Office: Posner Hall 374  
@@ -456,6 +456,21 @@ that session’s page in Canvas.*
 - [Layman et al. 2023 — Political Parties and Loser’s Consent in
   American
   Politics](https://canvas.cmu.edu/courses/55941/files/14695410)
+- **Book club check-in.** Come having read about the first 30% of your
+  book club book, through the end of the chapter listed below. We finish
+  class in book clubs.
+  - Ruffini, *Party of the People*: through ch. 4, “The Working-Class
+    Majority” (p. 90)
+  - Carney, *Alienated America*: through ch. 5, “‘I Don’t’” (p. 88)
+  - Hemmer, *Partisans*: through ch. 3, “The Populists” (p. 92)
+  - Ripley, *High Conflict*: through ch. 2, “The Power of the Binary”
+    (p. 99)
+  - Lepore, *The Rise and Fall of the Artificial State*: through ch. 4,
+    “Computopia” (p. 71)
+  - Du Mez, *Jesus and John Wayne*: through ch. 4, “Discipline and
+    Command” (p. 87)
+- Page numbers are from the hardcover editions. If yours is a paperback
+  or e-book, go by the chapter.
 
 #### Thu, Oct 29 — Student-led 3: Death penalty
 
@@ -489,7 +504,7 @@ that session’s page in Canvas.*
 
 - **Everyone presents today.** You will not present to the room — you
   will be put into a small breakout group and present there, which is
-  how thirty-four presentations fit into eighty minutes.
+  how every presentation fits into eighty minutes.
 - Slides are due Mon, Nov 23 at 11:59 p.m., uploaded to Canvas.
 - Speak to your slides rather than reading them, and open the floor with
   a question. A group that has nothing to ask you has been given nothing
