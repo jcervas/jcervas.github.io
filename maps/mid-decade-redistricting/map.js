@@ -60,6 +60,7 @@
       electionsText.split('\n').filter(l => !l.startsWith('#')).join('\n'),
       r => ({
         abbr: r.abbr.trim(),
+        code: r.code,                            // column name in data/<ST>_map_*.csv
         label: r.label,
         year: +r.year,
         demOld: +r.dem_old, repOld: +r.rep_old,
@@ -410,51 +411,292 @@
       `<td class="c-seats"><span class="st-dem">${d}</span>` +
       `<span class="dash">&ndash;</span><span class="st-gop">${r}</span></td>`;
 
+    // ----- uniform swing: what the same elections do under a shifted vote -----
+    // data/<ST>_map_{old,new}.csv hold each district's Democratic share of the
+    // two-party vote, one column per election (named by elections.csv's code).
+    // Shifting every district by the same amount and recounting gives each plan's
+    // seats at any swing; at zero swing that reproduces elections.csv exactly.
+    const SWING_MAX = 20;                          // points either way
+    const swingGrid = d3.range(-SWING_MAX * 10, SWING_MAX * 10 + 1).map(i => i / 10);
+    const swingIndex = s => Math.round((s + SWING_MAX) * 10);
+    let swing = 0;                                 // + toward Republicans, − toward Democrats
+    let redrawSwing = null;
+
+    const partyNoun = p => (p === 'dem' ? 'Democrats' : 'Republicans');
+    const fmtSwing = s => (s > 0 ? 'R +' : s < 0 ? 'D +' : '') + (s ? Math.abs(s).toFixed(1) : '0');
+    const swingPhrase = s => (s
+      ? `a swing of ${Math.abs(s).toFixed(1)} points toward ${partyNoun(s > 0 ? 'gop' : 'dem')}`
+      : 'the actual results');
+
+    const districtCache = new Map();
+    function loadDistricts(abbr) {
+      if (!districtCache.has(abbr)) {
+        const get = which => fetch(`data/${abbr}_map_${which}.csv`)
+          .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+          .then(t => d3.csvParse(t));
+        districtCache.set(abbr, Promise.all([get('old'), get('new')]).catch(() => null));
+      }
+      return districtCache.get(abbr);
+    }
+
+    function swingModel(r, rows, [oldCsv, newCsv]) {
+      const shares = (csv, code) => csv.map(d => +d[code]);
+      const elecs = rows.map(e => ({ e, old: shares(oldCsv, e.code), nu: shares(newCsv, e.code) }));
+      if (!r.party || elecs.some(x => x.old.concat(x.nu).some(v => !isFinite(v)))) return null;
+      const dem = (vs, s) => vs.reduce((n, v) => n + (v - s / 100 > 0.5), 0);
+      const at = s => elecs.map(({ e, old, nu }) => {
+        const demOld = dem(old, s), demNew = dem(nu, s);
+        const repOld = old.length - demOld, repNew = nu.length - demNew;
+        return { label: e.label, year: e.year, demOld, repOld, demNew, repNew, gain: repNew - repOld };
+      });
+      // The chart follows the drawing party: its average seat gain from the new map
+      const orient = r.party === 'dem' ? -1 : 1;
+      const curve = swingGrid.map(s => {
+        const pts = at(s);
+        return { s, gain: orient * d3.mean(pts, p => p.gain), maxAbs: d3.max(pts, p => Math.abs(p.gain)) };
+      });
+      // The dummymander point: the smallest swing against the drawing party at
+      // which the old map would, on average, have served it better
+      const against = r.party === 'dem' ? 1 : -1;
+      const firstLoss = dir => curve
+        .filter(c => c.s * dir > 0)
+        .sort((a, b) => Math.abs(a.s) - Math.abs(b.s))
+        .find(c => c.gain < 0);
+      const flip = firstLoss(against);
+      // A map can also fall behind in the drawing party's own wave (Utah's does)
+      const flipToward = firstLoss(-against);
+      return {
+        at, curve, flip: flip ? flip.s : null, flipToward: flipToward ? flipToward.s : null,
+        max: d3.max(curve, c => c.maxAbs) || 1,
+      };
+    }
+
+    function drawSwingChart(el, r, model, onPick) {
+      el.innerHTML = '';
+      const width = Math.max(280, el.clientWidth || 640);
+      const height = width < 520 ? 190 : 220;
+      const m = { t: 22, r: 12, b: 26, l: 36 };
+      const x = d3.scaleLinear([-SWING_MAX, SWING_MAX], [m.l, width - m.r]);
+      const [lo, hi] = d3.extent(model.curve, c => c.gain);
+      const y = d3.scaleLinear([Math.min(0, lo), Math.max(0, hi)], [height - m.b, m.t]).nice(5);
+      const fmtTick = v => (v > 0 ? '+' + v : v < 0 ? '−' + Math.abs(v) : '0');
+
+      const svg = d3.select(el).append('svg')
+        .attr('viewBox', `0 0 ${width} ${height}`)
+        .attr('width', width).attr('height', height)
+        .attr('role', 'img')
+        .attr('aria-label', `${partyNoun(r.party)}' average seat gain from the new map `
+          + `under a uniform swing of up to ${SWING_MAX} points either way`
+          + (model.flip != null ? `; it falls below zero at ${swingPhrase(model.flip)}.` : '.'));
+
+      y.ticks(5).forEach(v => {
+        svg.append('line').attr('class', v === 0 ? 'swing-zero' : 'swing-grid')
+          .attr('x1', m.l).attr('x2', width - m.r).attr('y1', y(v)).attr('y2', y(v));
+        svg.append('text').attr('class', 'swing-tick').attr('x', m.l - 6).attr('y', y(v))
+          .attr('dy', '0.32em').attr('text-anchor', 'end').text(fmtTick(v));
+      });
+      [-20, -10, 0, 10, 20].forEach(s => {
+        svg.append('text').attr('class', 'swing-tick')
+          .attr('x', x(s)).attr('y', height - m.b + 17)
+          .attr('text-anchor', s === -SWING_MAX ? 'start' : s === SWING_MAX ? 'end' : 'middle')
+          .text(s ? (s > 0 ? 'R +' : 'D +') + Math.abs(s) : 'Actual');
+      });
+      svg.append('line').attr('class', 'swing-actual')
+        .attr('x1', x(0)).attr('x2', x(0)).attr('y1', m.t).attr('y2', height - m.b);
+
+      // Dummymander zone: wherever the average gain is below zero
+      svg.append('path').attr('class', 'swing-zone st-' + r.party)
+        .attr('d', d3.area().x(c => x(c.s)).y0(y(0)).y1(c => y(Math.min(0, c.gain)))(model.curve));
+      svg.append('path').attr('class', 'swing-line st-' + r.party)
+        .attr('d', d3.line().x(c => x(c.s)).y(c => y(c.gain))(model.curve));
+
+      if (model.flip != null) {
+        const fx = x(model.flip);
+        svg.append('line').attr('class', 'swing-flip')
+          .attr('x1', fx).attr('x2', fx).attr('y1', m.t - 8).attr('y2', height - m.b);
+        svg.append('text').attr('class', 'swing-flip-label')
+          .attr('x', fx + (model.flip < 0 ? -5 : 5)).attr('y', m.t - 10)
+          .attr('text-anchor', model.flip < 0 ? 'end' : 'start')
+          .text(`Backfires past ${fmtSwing(model.flip)}`);
+      }
+
+      // Hover guide (where the pointer is) and marker (the swing in force)
+      const guide = svg.append('g').attr('class', 'swing-guide').style('display', 'none');
+      guide.append('line').attr('y1', m.t).attr('y2', height - m.b);
+      const guideText = guide.append('text').attr('y', height - m.b - 6);
+      const marker = svg.append('g').attr('class', 'swing-marker');
+      marker.append('line').attr('y1', m.t).attr('y2', height - m.b);
+      marker.append('circle').attr('r', 5);
+
+      const gainText = g => (g > 0.005 ? '+' + g.toFixed(2) : g < -0.005 ? '−' + (-g).toFixed(2) : '0');
+      const place = (sel, s) => {
+        const c = model.curve[swingIndex(s)];
+        sel.attr('transform', `translate(${x(s)},0)`);
+        return c;
+      };
+      const update = s => {
+        const c = place(marker, s);
+        marker.select('circle').attr('cy', y(c.gain)).attr('class', 'st-' + r.party);
+      };
+
+      const pick = event => {
+        const [px] = d3.pointer(event, svg.node());
+        return Math.round(Math.max(-SWING_MAX, Math.min(SWING_MAX, x.invert(px))) * 10) / 10;
+      };
+      svg.append('rect').attr('class', 'swing-hit')
+        .attr('x', m.l).attr('y', 0).attr('width', width - m.l - m.r).attr('height', height)
+        .on('pointerdown', function (event) {
+          this.setPointerCapture(event.pointerId);
+          onPick(pick(event));
+        })
+        .on('pointermove', function (event) {
+          const s = pick(event);
+          if (this.hasPointerCapture(event.pointerId)) onPick(s);
+          const c = place(guide.style('display', null), s);
+          const right = x(s) > width - 110;
+          guideText.attr('x', right ? -6 : 6).attr('text-anchor', right ? 'end' : 'start')
+            .text(`${fmtSwing(s)}: ${gainText(c.gain)}`);
+        })
+        .on('pointerleave', () => guide.style('display', 'none'));
+
+      update(swing);
+      return update;
+    }
+
+    const subText = (r, pts, s) => {
+      let sub = statusText(r);
+      if (!pts.length) return sub;
+      const gains = pts.map(e => e.gain);
+      sub += ` &middot; ${gainLabel(+d3.mean(gains).toFixed(2))} on average across `
+        + `${pts.length} statewide elections (${gainLabel(d3.min(gains))} to `
+        + `${gainLabel(d3.max(gains))})`;
+      if (s) sub += `, after ${swingPhrase(s)} in every district`;
+      return sub;
+    };
+
+    function mountSwing(el, r, model, fillTable) {
+      const party = partyNoun(r.party);
+      el.innerHTML = `
+        <h3 class="swing-title">When does the new map backfire?</h3>
+        <p class="swing-flip-text">${model.flip != null
+          ? `On average, the new map becomes a <strong>dummymander</strong> &mdash; ${party} `
+            + `would do better under the old map &mdash; after ${swingPhrase(model.flip)}.`
+          : `No swing toward ${partyNoun(r.party === 'dem' ? 'gop' : 'dem')} of up to ${SWING_MAX} `
+            + `points makes the old map better for ${party}`
+            + (model.flipToward != null
+              ? `, but ${swingPhrase(model.flipToward)} would: the old lines then hand ${party} more seats.`
+              : '.')}</p>
+        <div class="swing-legend">
+          <span><i class="sw-line st-${r.party}"></i>${party}&rsquo; average seat gain from the new map</span>
+          <span><i class="sw-zone st-${r.party}"></i>Dummymander: the old map would do better</span>
+        </div>
+        <div class="swing-chart"></div>
+        <div class="swing-control">
+          <input type="range" class="swing-input" min="${-SWING_MAX}" max="${SWING_MAX}" step="0.1"
+            aria-label="Uniform swing, in points of the two-party vote">
+          <div class="swing-scale">
+            <span>&larr; Toward Democrats</span>
+            <button type="button" class="swing-reset">Actual results</button>
+            <span>Toward Republicans &rarr;</span>
+          </div>
+        </div>
+        <p class="swing-readout"></p>`;
+
+      const chartEl = el.querySelector('.swing-chart');
+      const input = el.querySelector('.swing-input');
+      const readout = el.querySelector('.swing-readout');
+      const reset = el.querySelector('.swing-reset');
+      let updateChart = () => {};
+
+      const set = s => {
+        swing = s;
+        input.value = s;
+        input.setAttribute('aria-valuetext', s ? fmtSwing(s) + ' points' : 'Actual results');
+        reset.disabled = !s;
+        updateChart(s);
+        fillTable(s);
+        const g = model.curve[swingIndex(s)].gain;
+        const at = swingPhrase(s);
+        readout.innerHTML = (g > 0.005
+          ? `With ${at}, the new map gains ${party} ${g.toFixed(2)} seats on average`
+          : g < -0.005
+            ? `With ${at}, the map is a dummymander: ${party} would win ${(-g).toFixed(2)} `
+              + `more seats on average under the old one`
+            : `With ${at}, the new map gains ${party} nothing over the old one`)
+          + '. The table below shows each election.';
+      };
+
+      const draw = () => { updateChart = drawSwingChart(chartEl, r, model, set); };
+      input.addEventListener('input', () => set(+input.value));
+      reset.addEventListener('click', () => set(0));
+      draw();
+      redrawSwing = draw;
+      set(swing);
+    }
+
+    let resizeFrame = null;
+    window.addEventListener('resize', () => {
+      if (!redrawSwing || resizeFrame) return;
+      resizeFrame = requestAnimationFrame(() => { resizeFrame = null; if (redrawSwing) redrawSwing(); });
+    });
+
     function renderDetail(abbr) {
       const r = byAbbr.get(abbr);
       if (!r) return;
       const rows = (electionsBy.get(abbr) || []).slice()
         .sort((a, b) => a.year - b.year || d3.ascending(a.label, b.label));
 
-      let sub = statusText(r);
-      if (rows.length) {
-        const gains = rows.map(e => e.gain);
-        const mean = d3.mean(gains);
-        sub += ` &middot; ${gainLabel(+mean.toFixed(2))} on average across `
-          + `${rows.length} statewide elections (${gainLabel(d3.min(gains))} to `
-          + `${gainLabel(d3.max(gains))})`;
-      }
-
       let html = `<div class="detail-head">
           <h2 class="detail-name">${esc(r.name)}</h2>
           <button type="button" class="detail-clear">Clear</button>
         </div>
-        <p class="detail-sub">${sub}</p>`;
+        <p class="detail-sub">${subText(r, rows, 0)}</p>`;
 
       if (!rows.length) {
         html += `<p class="detail-empty">No election-by-election detail for `
           + `${esc(r.name)} yet.</p>`;
       } else {
-        const max = d3.max(rows, e => Math.abs(e.gain)) || 1;
-        const body = rows.map(e =>
-          `<tr><th scope="row">${esc(e.label)} ${e.year}</th>`
-          + seatCell(e.demOld, e.repOld) + seatCell(e.demNew, e.repNew)
-          + changeCell(e.gain, max) + '</tr>').join('');
-        const mean = +d3.mean(rows, e => e.gain).toFixed(2);
-        html += `<div class="detail-scroll"><table class="detail-table">
+        html += `<div class="swing" hidden></div>
+          <div class="detail-scroll"><table class="detail-table">
             <thead><tr>
               <th scope="col">Election</th>
               <th scope="col">Old<span class="wide"> map</span> <span class="dr">D&ndash;R</span></th>
               <th scope="col">New<span class="wide"> map</span> <span class="dr">D&ndash;R</span></th>
               <th scope="col">Change</th>
             </tr></thead>
-            <tbody>${body}</tbody>
-            <tfoot><tr><th scope="row">Average</th><td></td><td></td>
-              ${changeCell(mean, max)}</tr></tfoot>
+            <tbody></tbody>
+            <tfoot></tfoot>
           </table></div>`;
       }
       detail.innerHTML = html;
       detail.querySelector('.detail-clear').addEventListener('click', () => select(null));
+      if (!rows.length) return;
+
+      const sub = detail.querySelector('.detail-sub');
+      const tbody = detail.querySelector('tbody');
+      const tfoot = detail.querySelector('tfoot');
+      const fill = (pts, max, s) => {
+        tbody.innerHTML = pts.map(e =>
+          `<tr><th scope="row">${esc(e.label)} ${e.year}</th>`
+          + seatCell(e.demOld, e.repOld) + seatCell(e.demNew, e.repNew)
+          + changeCell(e.gain, max) + '</tr>').join('');
+        const mean = +d3.mean(pts, e => e.gain).toFixed(2);
+        tfoot.innerHTML = `<tr><th scope="row">Average</th><td></td><td></td>
+          ${changeCell(mean, max)}</tr>`;
+        sub.innerHTML = subText(r, pts, s);
+      };
+      fill(rows, d3.max(rows, e => Math.abs(e.gain)) || 1, 0);
+
+      loadDistricts(abbr).then(csvs => {
+        if (selected !== abbr || !csvs) return;
+        const model = swingModel(r, rows, csvs);
+        if (!model) return;
+        const el = detail.querySelector('.swing');
+        el.hidden = false;
+        // Bars keep one scale across the whole swing range, so dragging
+        // doesn't rescale them
+        mountSwing(el, r, model, s => fill(model.at(s), model.max, s));
+      });
     }
 
     let selected = null;
@@ -464,6 +706,7 @@
       gStates.selectAll('path.has-data')
         .classed('is-selected', f => f.properties.state === selected)
         .attr('aria-pressed', f => String(f.properties.state === selected));
+      redrawSwing = null;
       if (selected) renderDetail(selected);
       else detail.innerHTML =
         '<p class="detail-hint">Select a shaded state for its election-by-election detail.</p>';

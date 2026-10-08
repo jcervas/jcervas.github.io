@@ -328,6 +328,98 @@
 .change-label.st-dem { color: var(--dem-text); }
 .change-label.st-gop { color: var(--gop-text); }
 
+/* ---------- Uniform swing panel (drives the table under it) ---------- */
+
+.swing { margin: 4px 0 20px; }
+
+.swing-title { margin: 0 0 4px; font-size: 1.05rem; }
+
+.swing-flip-text {
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  max-width: 70ch;
+}
+
+.swing-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.swing-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.swing-legend i { display: inline-block; }
+.swing-legend .sw-line { width: 18px; height: 2px; }
+.swing-legend .sw-line.st-dem { background: var(--dem-text); }
+.swing-legend .sw-line.st-gop { background: var(--gop-text); }
+.swing-legend .sw-zone { width: 14px; height: 10px; }
+.swing-legend .sw-zone.st-dem { background: var(--dem-fill); }
+.swing-legend .sw-zone.st-gop { background: var(--gop-fill); }
+
+.swing-chart { margin-top: 6px; }
+.swing-chart svg { display: block; max-width: 100%; height: auto; touch-action: none; }
+.swing-chart text { font-family: var(--font); }
+
+.swing-grid { stroke: var(--line); stroke-width: 1; }
+.swing-zero { stroke: var(--muted); stroke-width: 1; }
+.swing-actual { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 1 3; }
+.swing-tick { font-size: 11px; fill: var(--muted); font-variant-numeric: tabular-nums; }
+
+.swing-zone.st-dem { fill: var(--dem-fill); }
+.swing-zone.st-gop { fill: var(--gop-fill); }
+.swing-line { fill: none; stroke-width: 2; stroke-linejoin: round; }
+.swing-line.st-dem { stroke: var(--dem-text); }
+.swing-line.st-gop { stroke: var(--gop-text); }
+
+.swing-flip { stroke: var(--ink); stroke-width: 1; stroke-dasharray: 4 3; }
+.swing-flip-label { font-size: 11.5px; font-weight: 600; fill: var(--ink); }
+
+.swing-hit { fill: transparent; cursor: crosshair; }
+.swing-guide { pointer-events: none; }
+.swing-guide line { stroke: var(--muted); stroke-width: 1; }
+.swing-guide text {
+  font-size: 11.5px;
+  font-weight: 600;
+  fill: var(--ink);
+  paint-order: stroke fill;
+  stroke: var(--bg);
+  stroke-width: 3px;
+}
+.swing-marker { pointer-events: none; }
+.swing-marker line { stroke: var(--ink); stroke-width: 1.5; }
+.swing-marker circle { stroke: var(--bg); stroke-width: 2; }
+.swing-marker circle.st-dem { fill: var(--dem-text); }
+.swing-marker circle.st-gop { fill: var(--gop-text); }
+
+.swing-control { margin-top: 6px; }
+.swing-input { display: block; width: 100%; margin: 0; accent-color: var(--ink); }
+.swing-scale {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.swing-reset {
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--muted);
+  font: inherit;
+  padding: 1px 8px;
+  cursor: pointer;
+}
+.swing-reset:hover:not(:disabled) { color: var(--ink); border-color: var(--muted); }
+.swing-reset:disabled { opacity: 0.5; cursor: default; }
+
+.swing-readout {
+  margin: 10px 0 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
 /* ---------- Tooltip ---------- */
 
 .tooltip {
