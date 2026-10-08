@@ -328,7 +328,7 @@
 .change-label.st-dem { color: var(--dem-text); }
 .change-label.st-gop { color: var(--gop-text); }
 
-/* ---------- Uniform swing panel (drives the table under it) ---------- */
+/* ---------- Vote-share panel (drives the table under it) ---------- */
 
 .swing { margin: 4px 0 20px; }
 
@@ -356,6 +356,7 @@
 .swing-legend .sw-zone { width: 14px; height: 10px; }
 .swing-legend .sw-zone.st-dem { background: var(--dem-fill); }
 .swing-legend .sw-zone.st-gop { background: var(--gop-fill); }
+.swing-legend .sw-rug { width: 2px; height: 9px; background: var(--muted); }
 
 .swing-chart { margin-top: 6px; }
 .swing-chart svg { display: block; max-width: 100%; height: auto; touch-action: none; }
@@ -365,6 +366,9 @@
 .swing-zero { stroke: var(--muted); stroke-width: 1; }
 .swing-actual { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 1 3; }
 .swing-tick { font-size: 11px; fill: var(--muted); font-variant-numeric: tabular-nums; }
+.swing-axis-title { font-size: 11px; fill: var(--muted); }
+.swing-rug line { stroke: var(--muted); stroke-width: 1.5; }
+.swing-avg-label { font-size: 11px; fill: var(--muted); }
 
 .swing-zone.st-dem { fill: var(--dem-fill); }
 .swing-zone.st-gop { fill: var(--gop-fill); }
@@ -402,7 +406,16 @@
   font-size: 0.78rem;
   color: var(--muted);
 }
-.swing-reset {
+.swing-presets {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.swing-presets button {
   background: none;
   border: 1px solid var(--line);
   border-radius: 4px;
@@ -411,13 +424,22 @@
   padding: 1px 8px;
   cursor: pointer;
 }
-.swing-reset:hover:not(:disabled) { color: var(--ink); border-color: var(--muted); }
-.swing-reset:disabled { opacity: 0.5; cursor: default; }
+.swing-presets button:hover:not(:disabled) { color: var(--ink); border-color: var(--muted); }
+.swing-presets button[aria-pressed="true"] { color: var(--ink); border-color: var(--ink); }
+.swing-presets .swing-reset { margin-left: auto; }
+.swing-presets .swing-reset:disabled { opacity: 0.5; cursor: default; }
 
 .swing-readout {
   margin: 10px 0 0;
   font-size: 0.9rem;
   font-weight: 600;
+}
+
+.swing-note {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+  max-width: 70ch;
 }
 
 /* ---------- Tooltip ---------- */

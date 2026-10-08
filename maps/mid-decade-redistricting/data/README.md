@@ -86,6 +86,62 @@ Two gaps are not fillable from this folder. Alabama has values on the map but
 no district-level files here, so it has no detail table. South Carolina has
 files but no map value, for the reason above.
 
+## Vote share, uniform swing, and the dummymander point
+
+The "When does the new map backfire?" panel in the detail table is computed in
+the browser from these files; nothing is precomputed. It asks what each map does
+when every election is held at the same two-party split, so that a state can be
+read at, say, 45–55 rather than at whatever its particular candidates happened
+to win.
+
+An election's vote share is its average district: the mean of a column, taken
+under each plan and then averaged between the two. (The plans average slightly
+differently because turnout varies by district; taking the midpoint keeps a
+single shift for both, so they are always scored on the same votes.) To set an
+election to a Democratic share `V`, every district under both plans moves by
+`V` minus that election's own share, and seats are recounted with the 0.5 rule.
+Doing that for every election and averaging the drawing party's gain (new plan's
+seats minus old plan's, for the `party` in `../data.csv`) gives the line on the
+chart, for `V` from 25 to 75 percent in tenths of a point. Until a share is
+chosen, the table shows the unshifted counts, which are `../elections.csv` row
+for row; once one is, every row is that election moved to the chosen split.
+
+The map is a **dummymander** wherever the average gain falls below zero: with
+the same votes, the old plan would have won the drawing party more seats. The
+backfire point the page reports is the nearest such share to the average of the
+actual results, moving against the drawing party. Some maps also fall behind in
+the drawing party's own wave, when the old lines would have converted the extra
+votes into more seats; the chart shades that zone too, but the page only spells
+it out in words for Utah, the one state with no backfire point the other way.
+
+| State | Drawn by | Avg. actual D share | Backfires below (drawing party's share) | Points below its avg. | Also behind above | Gain at D 55% | at 50% | at 45% |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| CA | D | 61.4 | 55.1 | 6.3 | — | −0.42 | −5.83 | −3.83 |
+| FL | R | 46.1 | 47.7 | 6.2 | 61.3 | −3.23 | +1.62 | +3.23 |
+| LA | R | 36.5 | 45.2 | 18.3 | 70.7 | −0.31 | +1.00 | +1.00 |
+| MO | R | 42.0 | 49.1 | 8.9 | — | −2.47 | +0.37 | +1.00 |
+| NC | R | 49.6 | 47.0 | 3.4 | — | −0.70 | +0.56 | +0.19 |
+| OH | R | 44.6 | 45.9 | 9.5 | 55.8 | −0.65 | +0.95 | +0.60 |
+| TN | R | 37.7 | 53.0 | 9.3 | — | −2.00 | −3.00 | +0.25 |
+| TX | R | 46.3 | 44.2 | 9.5 | — | +0.59 | +2.00 | +3.53 |
+| UT | D | 33.6 | — | — | 48.4 | −2.69 | −1.06 | +1.00 |
+| VA | D | 53.4 | 46.0 | 7.4 | 72.0 | +3.33 | +2.08 | −1.83 |
+
+Shares are percentages of the two-party vote, and "drawing party's share" is
+the Democratic share for California, Utah, and Virginia and the Republican share
+for the rest. Gains are the drawing party's average seat gain from the new map,
+so a negative number is a dummymander at that split. A dash means no crossing
+between 25 and 75 percent. South Carolina's files would support the same
+calculation, but it has no rows in `../elections.csv`, so the page shows no
+detail table or panel for it.
+
+The usual limits of uniform swing apply. Every district moves by the same
+amount, so it says nothing about where a real swing would be concentrated; the
+average district is not the statewide vote, and can differ from it by a point or
+two; and averaging across elections smooths over candidate-specific geography:
+in North Carolina and Ohio a few of the actual elections already sit past the
+backfire point, which is why their `lo` in `../data.csv` is −1.
+
 ## `redistrict-map.csv`
 
 The state-level table the original mapshaper build styled its choropleth from:
