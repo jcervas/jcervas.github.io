@@ -427,6 +427,11 @@ that session’s page in Canvas.*
 - [Graham et al. 2020 — Democracy in America? Partisanship,
   Polarization, and the Robustness of Support for Democracy in the
   United States](https://canvas.cmu.edu/courses/55941/files/14695408)
+- *Optional*: [Svolik 2019 — Polarization versus
+  Democracy](https://www.journalofdemocracy.org/articles/polarization-versus-democracy/)
+  <!-- NOTE FOR NEXT YEAR: make Svolik 2019 required for this session and
+  use it to replace other readings here (short, free, and covers the same
+  ground as Graham & Svolik 2020 plus the Turkey/Venezuela comparison). -->
 
 #### Thu, Oct 8 — Who Pays for the News?
 
