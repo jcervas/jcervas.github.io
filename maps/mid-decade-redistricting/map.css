@@ -359,7 +359,7 @@
 .swing-legend .sw-zone { width: 14px; height: 10px; }
 .swing-legend .sw-zone.st-dem { background: var(--dem-fill); }
 .swing-legend .sw-zone.st-gop { background: var(--gop-fill); }
-.swing-legend .sw-band { width: 14px; height: 10px; background: var(--line); }
+.swing-legend .sw-band { width: 14px; height: 10px; background: var(--muted); opacity: 0.3; }
 .swing-legend .sw-rug { width: 2px; height: 9px; background: var(--muted); }
 
 .swing-chart { margin-top: 6px; }
@@ -374,7 +374,7 @@
 .swing-rug line { stroke: var(--muted); stroke-width: 1.5; }
 .swing-avg-label { font-size: 11px; fill: var(--muted); }
 
-.swing-band { fill: var(--line); opacity: 0.8; }
+.swing-band { fill: var(--muted); opacity: 0.16; }
 .swing-zone.st-dem { fill: var(--dem-fill); }
 .swing-zone.st-gop { fill: var(--gop-fill); }
 .swing-line { fill: none; stroke-width: 2; stroke-linejoin: round; }

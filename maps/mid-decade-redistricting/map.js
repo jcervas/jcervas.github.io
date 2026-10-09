@@ -464,10 +464,12 @@
       const own = (d, rp) => (r.party === 'dem' ? d : rp);
       const curve = shareGrid.map(v => {
         const pts = at(v);
+        const olds = pts.map(p => own(p.demOld, p.repOld));
+        const nus = pts.map(p => own(p.demNew, p.repNew));
         return {
           v,
-          old: d3.mean(pts, p => own(p.demOld, p.repOld)),
-          nu: d3.mean(pts, p => own(p.demNew, p.repNew)),
+          old: d3.mean(olds), oldLo: d3.min(olds), oldHi: d3.max(olds),
+          nu: d3.mean(nus), nuLo: d3.min(nus), nuHi: d3.max(nus),
           gain: orient * d3.mean(pts, p => p.gain),
           // How far the individual elections spread around that average
           gLo: d3.min(pts, p => orient * p.gain),
@@ -551,7 +553,11 @@
       [[top1, bot1], [top2, bot2]].forEach(([t, b]) => svg.append('line').attr('class', 'swing-actual')
         .attr('x1', x(model.avg)).attr('x2', x(model.avg)).attr('y1', t).attr('y2', b));
 
-      // Range of the individual elections around the average gain
+      // Range of the individual elections around each average: each map's
+      // seats above (the two bands overlap where the maps agree), the gain below
+      ['old', 'nu'].forEach(k => svg.append('path').attr('class', 'swing-band')
+        .attr('d', d3.area().x(c => x(c.v))
+          .y0(c => ySeats(c[k + 'Lo'])).y1(c => ySeats(c[k + 'Hi']))(model.curve)));
       svg.append('path').attr('class', 'swing-band')
         .attr('d', d3.area().x(c => x(c.v)).y0(c => yGain(c.gLo)).y1(c => yGain(c.gHi))(model.curve));
 
