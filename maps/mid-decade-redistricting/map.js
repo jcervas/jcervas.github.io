@@ -714,10 +714,12 @@
       const party = partyNoun(r.party);
       // The drawing party's share, for prose about it
       const own = v => ownShare(r, v);
+      // The readout's key numbers stand out: seats in the drawing party's color
+      const seatsEm = n => `<span class="ro-seats st-${r.party}">${n.toFixed(2)}</span>`;
       const gainSentence = (g, lead) => (g > 0.005
-        ? `${lead}, the new map gains ${party} ${g.toFixed(2)} seats on average`
+        ? `${lead}, the new map gains ${party} ${seatsEm(g)} seats on average`
         : g < -0.005
-          ? `${lead}, the map is a dummymander: ${party} would win ${(-g).toFixed(2)} `
+          ? `${lead}, the map is a dummymander: ${party} would win ${seatsEm(-g)} `
             + `more seats on average under the old one`
           : `${lead}, the new map gains ${party} nothing over the old one`);
 
@@ -784,9 +786,11 @@
         updateChart(v);
         fillTable(v);
         readout.innerHTML = v == null
-          ? `In the actual results, Democrats average ${pct(model.avg)}% of the two-party vote. `
+          ? `In the actual results, Democrats average <span class="ro-share">${pct(model.avg)}%</span> `
+            + 'of the two-party vote. '
             + 'Set a share to put every election at the same split.'
-          : gainSentence(model.curve[shareIndex(v)].gain, `With every election at ${fmtSplit(v)}`)
+          : gainSentence(model.curve[shareIndex(v)].gain,
+            `With every election at <span class="ro-share">${fmtSplit(v)}</span>`)
             + '. The table below shows each election.';
       };
 

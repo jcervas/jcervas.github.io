@@ -458,6 +458,17 @@
   font-weight: 600;
 }
 
+/* Key numbers in the readout: larger and bold; seats take the drawing party's color */
+.swing-readout .ro-seats,
+.swing-readout .ro-share {
+  font-size: 1.3em;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.swing-readout .ro-share { color: var(--ink); }
+.swing-readout .ro-seats.st-dem { color: var(--dem-text); }
+.swing-readout .ro-seats.st-gop { color: var(--gop-text); }
+
 .swing-note {
   margin: 4px 0 0;
   font-size: 0.8rem;
