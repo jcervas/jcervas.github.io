@@ -480,6 +480,7 @@
 .tooltip .tt-exp { font-weight: 600; }
 .tooltip .tt-exp.st-dem { color: var(--dem-text); }
 .tooltip .tt-exp.st-gop { color: var(--gop-text); }
+.tooltip .tt-backfire { margin-top: 3px; color: var(--muted); font-size: 0.8rem; }
 
 @media (max-width: 640px) {
   .map-wrap { padding: 1.5rem 0.75rem 1rem; }

@@ -359,17 +359,30 @@
       if (r.midDecade === 'court') return 'New map enacted after court ruling';
       return 'New map enacted';
     };
+    const tipHtml = r => {
+      let html = `<div class="tt-name">${r.name}</div><div class="tt-status">${statusText(r)}</div>`;
+      if (r.exp != null) {
+        const partyName = r.party === 'dem' ? 'D' : 'R';
+        html += `<div class="tt-exp st-${r.party}">${fmtExp(r.exp)} ${partyName} expected`
+          + (r.lo != null ? ` (${fmtInt(r.lo)}–${fmtInt(r.hi)})` : '') + '</div>';
+      }
+      const backfire = backfireText(r, readyModels.get(r.abbr));
+      if (backfire) html += `<div class="tt-backfire">${backfire}</div>`;
+      return html;
+    };
+    let hovered = null;
     gStates.selectAll('path.has-data')
       .on('mousemove', function (event, f) {
         const r = byAbbr.get(f.properties.state);
         if (!r) return;
-        let html = `<div class="tt-name">${r.name}</div><div class="tt-status">${statusText(r)}</div>`;
-        if (r.exp != null) {
-          const partyName = r.party === 'dem' ? 'D' : 'R';
-          html += `<div class="tt-exp st-${r.party}">${fmtExp(r.exp)} ${partyName} expected`
-            + (r.lo != null ? ` (${fmtInt(r.lo)}–${fmtInt(r.hi)})` : '') + '</div>';
+        // The backfire line needs the district files; fill it in once they load
+        if (hovered !== r.abbr) {
+          hovered = r.abbr;
+          if (!readyModels.has(r.abbr)) loadModel(r.abbr).then(() => {
+            if (hovered === r.abbr && !tooltip.hidden) tooltip.innerHTML = tipHtml(r);
+          });
         }
-        tooltip.innerHTML = html;
+        tooltip.innerHTML = tipHtml(r);
         tooltip.hidden = false;
         const rect = figure.getBoundingClientRect();
         const x = Math.min(event.clientX - rect.left + 14, rect.width - tooltip.offsetWidth - 6);
@@ -377,7 +390,7 @@
         tooltip.style.left = x + 'px';
         tooltip.style.top = y + 'px';
       })
-      .on('mouseleave', () => { tooltip.hidden = true; });
+      .on('mouseleave', () => { tooltip.hidden = true; hovered = null; });
 
     // ----- detail table: one row per election for the selected state -----
     const detail = document.getElementById('detail');
@@ -429,6 +442,7 @@
     const pct = v => String(+v.toFixed(1));
     const fmtSplit = v => `${pct(v)}&ndash;${pct(100 - v)}`;
     const plainSplit = v => `${pct(v)}–${pct(100 - v)}`;
+    const ownShare = (r, v) => (r.party === 'dem' ? v : 100 - v);  // the drawing party's share
 
     const districtCache = new Map();
     function loadDistricts(abbr) {
@@ -440,6 +454,34 @@
       }
       return districtCache.get(abbr);
     }
+
+    // One model per state, built once and shared by the map tooltip and the
+    // detail panel; readyModels holds the finished ones for synchronous use
+    const modelCache = new Map(), readyModels = new Map();
+    const electionsOf = abbr => (electionsBy.get(abbr) || []).slice()
+      .sort((a, b) => a.year - b.year || d3.ascending(a.label, b.label));
+    function loadModel(abbr) {
+      if (!modelCache.has(abbr)) {
+        const r = byAbbr.get(abbr), rows = electionsOf(abbr);
+        modelCache.set(abbr, (rows.length ? loadDistricts(abbr) : Promise.resolve(null))
+          .then(csvs => {
+            const model = csvs ? shareModel(r, rows, csvs) : null;
+            readyModels.set(abbr, model);
+            return model;
+          }));
+      }
+      return modelCache.get(abbr);
+    }
+
+    const backfireText = (r, model) => {
+      if (!model) return null;
+      const party = partyNoun(r.party);
+      if (model.flip != null) return `Backfires if ${party} fall below `
+        + `${pct(ownShare(r, model.flip))}% of the vote (avg. ${pct(ownShare(r, model.avg))}%)`;
+      if (model.flipToward != null) return `Backfires only if ${party} rise above `
+        + `${pct(ownShare(r, model.flipToward))}% of the vote`;
+      return null;
+    };
 
     function shareModel(r, rows, [oldCsv, newCsv]) {
       const shares = (csv, code) => csv.map(d => +d[code]);
@@ -656,7 +698,7 @@
     function mountShare(el, r, model, fillTable) {
       const party = partyNoun(r.party);
       // The drawing party's share, for prose about it
-      const own = v => (r.party === 'dem' ? v : 100 - v);
+      const own = v => ownShare(r, v);
       const gainSentence = (g, lead) => (g > 0.005
         ? `${lead}, the new map gains ${party} ${g.toFixed(2)} seats on average`
         : g < -0.005
@@ -752,8 +794,7 @@
     function renderDetail(abbr) {
       const r = byAbbr.get(abbr);
       if (!r) return;
-      const rows = (electionsBy.get(abbr) || []).slice()
-        .sort((a, b) => a.year - b.year || d3.ascending(a.label, b.label));
+      const rows = electionsOf(abbr);
 
       let html = `<div class="detail-head">
           <h2 class="detail-name">${esc(r.name)}</h2>
@@ -796,10 +837,8 @@
       };
       fill(rows, d3.max(rows, e => Math.abs(e.gain)) || 1, null);
 
-      loadDistricts(abbr).then(csvs => {
-        if (selected !== abbr || !csvs) return;
-        const model = shareModel(r, rows, csvs);
-        if (!model) return;
+      loadModel(abbr).then(model => {
+        if (selected !== abbr || !model) return;
         const el = detail.querySelector('.swing');
         el.hidden = false;
         // Bars keep one scale across every share, so dragging doesn't rescale them
@@ -836,6 +875,11 @@
           select(f.properties.state);
         }
       });
+
+    // Warm the models once the map has painted, so tooltips have their
+    // backfire line by the time anyone hovers
+    (window.requestIdleCallback || setTimeout)(() =>
+      rows.filter(r => r.party && electionsBy.has(r.abbr)).forEach(r => loadModel(r.abbr)));
   }).catch(err => {
     console.error(err);
     document.getElementById('map').innerHTML =
