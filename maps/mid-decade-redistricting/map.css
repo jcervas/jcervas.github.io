@@ -150,6 +150,12 @@
   stroke-width: 3px;
 }
 
+.tile .tile-backfire {
+  font-weight: 600;
+  fill: var(--muted);
+  stroke-width: 3px;
+}
+
 .tile.excluded { opacity: 0.8; }
 .tile .strike {
   stroke: var(--tile-range);

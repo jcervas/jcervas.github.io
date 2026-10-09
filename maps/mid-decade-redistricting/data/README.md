@@ -150,6 +150,14 @@ two; and averaging across elections smooths over candidate-specific geography:
 in North Carolina and Ohio a few of the actual elections already sit past the
 backfire point, which is why their `lo` in `../data.csv` is −1.
 
+The "Backfires below" column is also stored in `../data.csv` as `backfire`, so
+the map's value tiles can show it on first paint, before these files load.
+Unlike `exp`, `lo`, and `hi`, the page recomputes it from these files and logs
+a console warning for any state where the stored value differs by more than
+0.05, so a change to the district files that isn't carried into `data.csv`
+shows up in the browser console. Utah's is left empty: its map has no backfire
+point as Democrats lose ground.
+
 ## `redistrict-map.csv`
 
 The state-level table the original mapshaper build styled its choropleth from:

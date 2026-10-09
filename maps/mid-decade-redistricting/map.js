@@ -48,6 +48,9 @@
       exp: r.exp === '' ? null : +r.exp,
       lo: r.lo === '' ? null : +r.lo,
       hi: r.hi === '' ? null : +r.hi,
+      // Drawing party's two-party share below which the new map backfires;
+      // stored so tiles can lay out on first paint, checked against the live model
+      backfire: r.backfire ? +r.backfire : null,
       callais: r.callais === '1',
       dx: r.dx === '' ? 0 : +r.dx,
       dy: r.dy === '' ? 0 : +r.dy,
@@ -189,6 +192,12 @@
           .attr('y', 13)
           .text(`(${fmtInt(d.r.lo)}–${fmtInt(d.r.hi)})`);
       }
+      if (d.r.backfire != null) g.append('text')
+        .attr('class', 'tile-backfire')
+        .attr('text-anchor', 'middle')
+        .attr('font-size', '10px')
+        .attr('y', range ? 25 : 13)
+        .text(`backfires < ${d.r.backfire.toFixed(1)}%`);
       // Manual strike lines over both texts for blocked maps (SVG text-decoration
       // support is inconsistent across browsers)
       if (excluded) {
@@ -467,6 +476,12 @@
           .then(csvs => {
             const model = csvs ? shareModel(r, rows, csvs) : null;
             readyModels.set(abbr, model);
+            const live = model && model.flip != null ? ownShare(r, model.flip) : null;
+            if (r.exp != null && (live == null ? r.backfire != null
+              : r.backfire == null || Math.abs(live - r.backfire) > 0.05)) {
+              console.warn(`data.csv backfire for ${abbr} is ${r.backfire}; `
+                + `the district files give ${live == null ? 'none' : live.toFixed(1)}`);
+            }
             return model;
           }));
       }
