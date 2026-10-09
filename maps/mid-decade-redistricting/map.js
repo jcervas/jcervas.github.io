@@ -458,11 +458,22 @@
         const repOld = old.length - demOld, repNew = nu.length - demNew;
         return { label: e.label, year: e.year, demOld, repOld, demNew, repNew, gain: repNew - repOld };
       });
-      // The chart follows the drawing party: its average seat gain from the new map
+      // The chart follows the drawing party: its average seats under each plan,
+      // and the new plan's gain over the old
       const orient = r.party === 'dem' ? -1 : 1;
+      const own = (d, rp) => (r.party === 'dem' ? d : rp);
       const curve = shareGrid.map(v => {
         const pts = at(v);
-        return { v, gain: orient * d3.mean(pts, p => p.gain), maxAbs: d3.max(pts, p => Math.abs(p.gain)) };
+        return {
+          v,
+          old: d3.mean(pts, p => own(p.demOld, p.repOld)),
+          nu: d3.mean(pts, p => own(p.demNew, p.repNew)),
+          gain: orient * d3.mean(pts, p => p.gain),
+          // How far the individual elections spread around that average
+          gLo: d3.min(pts, p => orient * p.gain),
+          gHi: d3.max(pts, p => orient * p.gain),
+          maxAbs: d3.max(pts, p => Math.abs(p.gain)),
+        };
       });
       const avg = d3.mean(elecs, x => x.base);
       // The dummymander point: from the average result, the nearest share
@@ -476,6 +487,7 @@
       const flip = firstLoss(against), flipToward = firstLoss(-against);
       return {
         at, curve, avg, orient,
+        seats: oldCsv.length,
         bases: elecs.map(x => x.base),
         flip: flip ? flip.v : null, flipToward: flipToward ? flipToward.v : null,
         max: Math.max(d3.max(curve, c => c.maxAbs), d3.max(rows, e => Math.abs(e.gain))) || 1,
@@ -485,32 +497,47 @@
     function drawShareChart(el, r, model, onPick) {
       el.innerHTML = '';
       const width = Math.max(280, el.clientWidth || 640);
-      const height = width < 520 ? 210 : 240;
-      const m = { t: 22, r: 14, b: 44, l: 36 };
+      const narrow = width < 520;
+      const party = partyNoun(r.party);
+      // Two panels on one x-axis: each map's seats above, the gap between them below
+      const m = { r: 14, l: 36 };
+      const ph = narrow ? 120 : 140;                 // plot height of each panel
+      const top1 = 40, bot1 = top1 + ph;
+      const top2 = bot1 + 40, bot2 = top2 + ph;
+      const height = bot2 + 44;
       // Democratic share falls left to right, matching the table's D-left bars
       const x = d3.scaleLinear([SHARE_MAX, SHARE_MIN], [m.l, width - m.r]);
-      const [lo, hi] = d3.extent(model.curve, c => c.gain);
-      const y = d3.scaleLinear([Math.min(0, lo), Math.max(0, hi)], [height - m.b, m.t]).nice(5);
-      const fmtTick = v => (v > 0 ? '+' + v : v < 0 ? '−' + Math.abs(v) : '0');
-      const bottom = height - m.b;
+      const ySeats = d3.scaleLinear([0, model.seats], [bot1, top1]);
+      const lo = d3.min(model.curve, c => c.gLo), hi = d3.max(model.curve, c => c.gHi);
+      const yGain = d3.scaleLinear([Math.min(0, lo), Math.max(0, hi)], [bot2, top2]).nice(5);
+      const fmtGain = v => (v > 0 ? '+' + v : v < 0 ? '−' + Math.abs(v) : '0');
 
       const svg = d3.select(el).append('svg')
         .attr('viewBox', `0 0 ${width} ${height}`)
         .attr('width', width).attr('height', height)
         .attr('role', 'img')
-        .attr('aria-label', `${partyNoun(r.party)}' average seat gain from the new map at each `
-          + `two-party vote split from ${SHARE_MAX}–${SHARE_MIN} to ${SHARE_MIN}–${SHARE_MAX}, Democrats first`
-          + (model.flip != null ? `; it falls below zero at ${plainSplit(model.flip)}.` : '.'));
+        .attr('aria-label', `Seats ${party} win under the old and new maps, and the new map's `
+          + `gain over the old, at each two-party vote split from ${SHARE_MAX}–${SHARE_MIN} to `
+          + `${SHARE_MIN}–${SHARE_MAX}, Democrats first`
+          + (model.flip != null ? `; the gain falls below zero at ${plainSplit(model.flip)}.` : '.'));
 
-      y.ticks(5).forEach(v => {
-        svg.append('line').attr('class', v === 0 ? 'swing-zero' : 'swing-grid')
+      const axis = (y, ticks, fmt, zero) => ticks.forEach(v => {
+        svg.append('line').attr('class', v === zero ? 'swing-zero' : 'swing-grid')
           .attr('x1', m.l).attr('x2', width - m.r).attr('y1', y(v)).attr('y2', y(v));
         svg.append('text').attr('class', 'swing-tick').attr('x', m.l - 6).attr('y', y(v))
-          .attr('dy', '0.32em').attr('text-anchor', 'end').text(fmtTick(v));
+          .attr('dy', '0.32em').attr('text-anchor', 'end').text(fmt(v));
       });
+      axis(ySeats, ySeats.ticks(4).filter(Number.isInteger), String, 0);
+      axis(yGain, yGain.ticks(5), fmtGain, 0);
+
+      const title = (y, text) => svg.append('text').attr('class', 'swing-panel-title')
+        .attr('x', m.l).attr('y', y).text(text);
+      title(top1 - 8, `Seats ${party} win, of ${model.seats}`);
+      title(top2 - 8, `${party}’ gain from the new map`);
+
       [70, 60, 50, 40, 30].forEach(v => {
         svg.append('text').attr('class', 'swing-tick')
-          .attr('x', x(v)).attr('y', bottom + 16).attr('text-anchor', 'middle')
+          .attr('x', x(v)).attr('y', bot2 + 16).attr('text-anchor', 'middle')
           .text(`${v}–${100 - v}`);
       });
       svg.append('text').attr('class', 'swing-axis-title')
@@ -520,38 +547,57 @@
       // Where the actual elections fell, and their average
       svg.append('g').attr('class', 'swing-rug').selectAll('line')
         .data(model.bases).join('line')
-        .attr('x1', v => x(v)).attr('x2', v => x(v)).attr('y1', bottom).attr('y2', bottom - 7);
-      svg.append('line').attr('class', 'swing-actual')
-        .attr('x1', x(model.avg)).attr('x2', x(model.avg)).attr('y1', m.t).attr('y2', bottom);
+        .attr('x1', v => x(v)).attr('x2', v => x(v)).attr('y1', bot2).attr('y2', bot2 - 7);
+      [[top1, bot1], [top2, bot2]].forEach(([t, b]) => svg.append('line').attr('class', 'swing-actual')
+        .attr('x1', x(model.avg)).attr('x2', x(model.avg)).attr('y1', t).attr('y2', b));
 
-      // Dummymander zone: wherever the average gain is below zero
+      // Range of the individual elections around the average gain
+      svg.append('path').attr('class', 'swing-band')
+        .attr('d', d3.area().x(c => x(c.v)).y0(c => yGain(c.gLo)).y1(c => yGain(c.gHi))(model.curve));
+
+      // Dummymander zone, in both panels: wherever the new map wins fewer seats
+      const below = c => c.gain < 0;
       svg.append('path').attr('class', 'swing-zone st-' + r.party)
-        .attr('d', d3.area().x(c => x(c.v)).y0(y(0)).y1(c => y(Math.min(0, c.gain)))(model.curve));
-      svg.append('path').attr('class', 'swing-line st-' + r.party)
-        .attr('d', d3.line().x(c => x(c.v)).y(c => y(c.gain))(model.curve));
+        .attr('d', d3.area().defined(below)
+          .x(c => x(c.v)).y0(c => ySeats(c.old)).y1(c => ySeats(c.nu))(model.curve));
+      svg.append('path').attr('class', 'swing-zone st-' + r.party)
+        .attr('d', d3.area().x(c => x(c.v)).y0(yGain(0)).y1(c => yGain(Math.min(0, c.gain)))(model.curve));
 
-      // Labels above the plot: the average result and the backfire point,
+      svg.append('path').attr('class', 'swing-line swing-old')
+        .attr('d', d3.line().x(c => x(c.v)).y(c => ySeats(c.old))(model.curve));
+      svg.append('path').attr('class', 'swing-line st-' + r.party)
+        .attr('d', d3.line().x(c => x(c.v)).y(c => ySeats(c.nu))(model.curve));
+      svg.append('path').attr('class', 'swing-line st-' + r.party)
+        .attr('d', d3.line().x(c => x(c.v)).y(c => yGain(c.gain))(model.curve));
+
+      // Labels above the top panel: the average result and the backfire point,
       // each set on the side away from the other
       const flipLeft = model.flip != null && x(model.flip) < x(model.avg);
       const label = (v, text, cls, left) => svg.append('text').attr('class', cls)
-        .attr('x', x(v) + (left ? -5 : 5)).attr('y', m.t - 10)
+        .attr('x', x(v) + (left ? -5 : 5)).attr('y', 11)
         .attr('text-anchor', left ? 'end' : 'start').text(text);
       label(model.avg, 'Avg. result', 'swing-avg-label', model.flip != null && !flipLeft);
       if (model.flip != null) {
         const fx = x(model.flip);
         svg.append('line').attr('class', 'swing-flip')
-          .attr('x1', fx).attr('x2', fx).attr('y1', m.t - 8).attr('y2', bottom);
+          .attr('x1', fx).attr('x2', fx).attr('y1', 14).attr('y2', bot2);
         label(model.flip, `Backfires past ${plainSplit(model.flip)}`, 'swing-flip-label', flipLeft);
       }
+      // Panel titles sit over the reference lines
+      svg.selectAll('.swing-panel-title').raise();
 
-      // Hover guide (where the pointer is) and marker (the share in force)
+      // Hover guide (where the pointer is) and marker (the share in force),
+      // each running through both panels
       const guide = svg.append('g').attr('class', 'swing-guide').style('display', 'none');
-      guide.append('line').attr('y1', m.t).attr('y2', bottom);
-      const guideText = guide.append('text').attr('y', bottom - 12);
+      guide.append('line').attr('y1', top1).attr('y2', bot2);
+      const guideText = guide.append('text').attr('y', top2 + 12);
       const marker = svg.append('g').attr('class', 'swing-marker');
-      marker.append('line').attr('y1', m.t).attr('y2', bottom);
-      marker.append('circle').attr('r', 5).attr('class', 'st-' + r.party);
+      marker.append('line').attr('y1', top1).attr('y2', bot2);
+      const dotOld = marker.append('circle').attr('r', 4.5).attr('class', 'swing-old');
+      const dotNew = marker.append('circle').attr('r', 4.5).attr('class', 'st-' + r.party);
+      const dotGain = marker.append('circle').attr('r', 5).attr('class', 'st-' + r.party);
 
+      const seatsText = s => (Math.round(s * 10) / 10).toFixed(1);
       const gainText = g => (g > 0.005 ? '+' + g.toFixed(2) : g < -0.005 ? '−' + (-g).toFixed(2) : '0');
       const place = (sel, v) => {
         sel.attr('transform', `translate(${x(v)},0)`);
@@ -559,7 +605,11 @@
       };
       const update = v => {
         marker.style('display', v == null ? 'none' : null);
-        if (v != null) marker.select('circle').attr('cy', y(place(marker, v).gain));
+        if (v == null) return;
+        const c = place(marker, v);
+        dotOld.attr('cy', ySeats(c.old));
+        dotNew.attr('cy', ySeats(c.nu));
+        dotGain.attr('cy', yGain(c.gain));
       };
 
       const pick = event => {
@@ -567,7 +617,7 @@
         return Math.round(Math.max(SHARE_MIN, Math.min(SHARE_MAX, x.invert(px))) * 10) / 10;
       };
       svg.append('rect').attr('class', 'swing-hit')
-        .attr('x', m.l).attr('y', 0).attr('width', width - m.l - m.r).attr('height', bottom + 4)
+        .attr('x', m.l).attr('y', 0).attr('width', width - m.l - m.r).attr('height', bot2 + 4)
         .on('pointerdown', function (event) {
           this.setPointerCapture(event.pointerId);
           onPick(pick(event));
@@ -576,9 +626,9 @@
           const v = pick(event);
           if (this.hasPointerCapture(event.pointerId)) onPick(v);
           const c = place(guide.style('display', null), v);
-          const right = x(v) > width - 120;
+          const right = x(v) > width - 170;
           guideText.attr('x', right ? -6 : 6).attr('text-anchor', right ? 'end' : 'start')
-            .text(`${plainSplit(v)}: ${gainText(c.gain)}`);
+            .text(`${plainSplit(v)}: new ${seatsText(c.nu)}, old ${seatsText(c.old)} (${gainText(c.gain)})`);
         })
         .on('pointerleave', () => guide.style('display', 'none'));
 
@@ -627,7 +677,9 @@
         <h3 class="swing-title">When does the new map backfire?</h3>
         <p class="swing-flip-text">${flipText}</p>
         <div class="swing-legend">
-          <span><i class="sw-line st-${r.party}"></i>${party}&rsquo; average seat gain from the new map</span>
+          <span><i class="sw-line st-${r.party}"></i>New map</span>
+          <span><i class="sw-line sw-old"></i>Old map</span>
+          <span><i class="sw-band"></i>Range across elections</span>
           <span><i class="sw-zone st-${r.party}"></i>Dummymander: the old map would do better</span>
           <span><i class="sw-rug"></i>Actual elections</span>
         </div>

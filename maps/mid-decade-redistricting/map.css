@@ -353,9 +353,13 @@
 .swing-legend .sw-line { width: 18px; height: 2px; }
 .swing-legend .sw-line.st-dem { background: var(--dem-text); }
 .swing-legend .sw-line.st-gop { background: var(--gop-text); }
+.swing-legend .sw-line.sw-old {
+  background: repeating-linear-gradient(90deg, var(--muted) 0 5px, transparent 5px 8px);
+}
 .swing-legend .sw-zone { width: 14px; height: 10px; }
 .swing-legend .sw-zone.st-dem { background: var(--dem-fill); }
 .swing-legend .sw-zone.st-gop { background: var(--gop-fill); }
+.swing-legend .sw-band { width: 14px; height: 10px; background: var(--line); }
 .swing-legend .sw-rug { width: 2px; height: 9px; background: var(--muted); }
 
 .swing-chart { margin-top: 6px; }
@@ -370,11 +374,23 @@
 .swing-rug line { stroke: var(--muted); stroke-width: 1.5; }
 .swing-avg-label { font-size: 11px; fill: var(--muted); }
 
+.swing-band { fill: var(--line); opacity: 0.8; }
 .swing-zone.st-dem { fill: var(--dem-fill); }
 .swing-zone.st-gop { fill: var(--gop-fill); }
 .swing-line { fill: none; stroke-width: 2; stroke-linejoin: round; }
 .swing-line.st-dem { stroke: var(--dem-text); }
 .swing-line.st-gop { stroke: var(--gop-text); }
+.swing-line.swing-old { stroke: var(--muted); stroke-dasharray: 5 3; }
+.swing-panel-title { font-size: 12px; font-weight: 600; fill: var(--ink); }
+/* Halo so the vertical reference lines don't strike through the labels */
+.swing-panel-title,
+.swing-avg-label,
+.swing-flip-label {
+  paint-order: stroke fill;
+  stroke: var(--bg);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
 
 .swing-flip { stroke: var(--ink); stroke-width: 1; stroke-dasharray: 4 3; }
 .swing-flip-label { font-size: 11.5px; font-weight: 600; fill: var(--ink); }
@@ -395,6 +411,7 @@
 .swing-marker circle { stroke: var(--bg); stroke-width: 2; }
 .swing-marker circle.st-dem { fill: var(--dem-text); }
 .swing-marker circle.st-gop { fill: var(--gop-text); }
+.swing-marker circle.swing-old { fill: var(--muted); }
 
 .swing-control { margin-top: 6px; }
 .swing-input { display: block; width: 100%; margin: 0; accent-color: var(--ink); }

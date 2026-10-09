@@ -100,9 +100,15 @@ differently because turnout varies by district; taking the midpoint keeps a
 single shift for both, so they are always scored on the same votes.) To set an
 election to a Democratic share `V`, every district under both plans moves by
 `V` minus that election's own share, and seats are recounted with the 0.5 rule.
-Doing that for every election and averaging the drawing party's gain (new plan's
-seats minus old plan's, for the `party` in `../data.csv`) gives the line on the
-chart, for `V` from 25 to 75 percent in tenths of a point. Until a share is
+Doing that for every election and averaging, for `V` from 25 to 75 percent in
+tenths of a point, gives the chart's two panels: the drawing party's (the
+`party` in `../data.csv`) average seats under each plan, and below them the gap,
+new plan's seats minus old plan's. Each plan's seats can only move one way as
+`V` changes; the gap can rise and fall, because the plans tip their districts
+at different shares, and it returns toward zero at both ends, where either plan
+gives one party nearly every seat. Every election counts equally in the average.
+A gray band around the gap shows the lowest and highest single-election gap at
+each share, so the average can be read against how much the elections disagree. Until a share is
 chosen, the table shows the unshifted counts, which are `../elections.csv` row
 for row; once one is, every row is that election moved to the chosen split.
 
