@@ -524,9 +524,8 @@
         const olds = pts.map(p => own(p.demOld, p.repOld));
         const nus = pts.map(p => own(p.demNew, p.repNew));
         return {
-          v,
-          old: d3.mean(olds), oldLo: d3.min(olds), oldHi: d3.max(olds),
-          nu: d3.mean(nus), nuLo: d3.min(nus), nuHi: d3.max(nus),
+          v, olds, nus,                            // per election, for the small multiples
+          old: d3.mean(olds), nu: d3.mean(nus),
           gain: orient * d3.mean(pts, p => p.gain),
           // How far the individual elections spread around that average
           gLo: d3.min(pts, p => orient * p.gain),
@@ -544,9 +543,18 @@
         .sort((a, b) => Math.abs(a.v - avg) - Math.abs(b.v - avg))
         .find(c => c.gain < 0);
       const flip = firstLoss(against), flipToward = firstLoss(-against);
+      // The same point for each election on its own, measured from its own result
+      const elecFlips = elecs.map((x, i) => {
+        const c = curve
+          .filter(c => (c.v - x.base) * against > 0)
+          .sort((a, b) => Math.abs(a.v - x.base) - Math.abs(b.v - x.base))
+          .find(c => c.nus[i] < c.olds[i]);
+        return c ? c.v : null;
+      });
       return {
-        at, curve, avg, orient,
+        at, curve, avg, orient, elecFlips,
         seats: oldCsv.length,
+        labels: rows.map(e => `${e.label} ${e.year}`),
         bases: elecs.map(x => x.base),
         flip: flip ? flip.v : null, flipToward: flipToward ? flipToward.v : null,
         max: Math.max(d3.max(curve, c => c.maxAbs), d3.max(rows, e => Math.abs(e.gain))) || 1,
@@ -610,11 +618,8 @@
       [[top1, bot1], [top2, bot2]].forEach(([t, b]) => svg.append('line').attr('class', 'swing-actual')
         .attr('x1', x(model.avg)).attr('x2', x(model.avg)).attr('y1', t).attr('y2', b));
 
-      // Range of the individual elections around each average: each map's
-      // seats above (the two bands overlap where the maps agree), the gain below
-      ['old', 'nu'].forEach(k => svg.append('path').attr('class', 'swing-band')
-        .attr('d', d3.area().x(c => x(c.v))
-          .y0(c => ySeats(c[k + 'Lo'])).y1(c => ySeats(c[k + 'Hi']))(model.curve)));
+      // Range of the individual elections around the average gain; the
+      // per-election charts under the table show the spread in seats
       svg.append('path').attr('class', 'swing-band')
         .attr('d', d3.area().x(c => x(c.v)).y0(c => yGain(c.gLo)).y1(c => yGain(c.gHi))(model.curve));
 
@@ -699,6 +704,51 @@
       return update;
     }
 
+    // Small multiples: the top panel's two seat curves for each election on its
+    // own, on the same scales, so the spread the averages hide is visible
+    function drawEach(el, r, model) {
+      const party = partyNoun(r.party);
+      const W = 200, H = 90, m = { t: 4, r: 4, b: 4, l: 4 };
+      const x = d3.scaleLinear([SHARE_MAX, SHARE_MIN], [m.l, W - m.r]);
+      const y = d3.scaleLinear([0, model.seats], [H - m.b, m.t]);
+      el.innerHTML = `<h3 class="swing-title">Election by election</h3>
+        <p class="swing-each-note">Each election moved to every vote share, on the same scales as
+          the chart above: seats ${party} win under the new map (solid) and the old map (dashed),
+          shaded where the old map does better. The dotted line marks the election&rsquo;s actual
+          result.</p>
+        <div class="each-grid"></div>`;
+      const grid = d3.select(el).select('.each-grid');
+      const markers = model.labels.map((label, i) => {
+        const flip = model.elecFlips[i];
+        const fig = grid.append('figure').attr('class', 'each');
+        fig.append('figcaption').html(`<span class="each-name">${esc(label)}</span>`
+          + `<span class="each-flip">${flip != null
+            ? `backfires &lt; ${pct(ownShare(r, flip))}%` : 'no backfire point'}</span>`);
+        const svg = fig.append('svg')
+          .attr('viewBox', `0 0 ${W} ${H}`)
+          .attr('role', 'img')
+          .attr('aria-label', `${label}: seats ${party} win under each map at each vote share`
+            + (flip != null ? `; the new map falls behind at ${plainSplit(flip)}.` : '.'));
+        svg.append('line').attr('class', 'swing-zero')
+          .attr('x1', m.l).attr('x2', W - m.r).attr('y1', y(0)).attr('y2', y(0));
+        svg.append('line').attr('class', 'each-even')
+          .attr('x1', x(50)).attr('x2', x(50)).attr('y1', m.t).attr('y2', H - m.b);
+        svg.append('line').attr('class', 'swing-actual')
+          .attr('x1', x(model.bases[i])).attr('x2', x(model.bases[i])).attr('y1', m.t).attr('y2', H - m.b);
+        svg.append('path').attr('class', 'swing-zone st-' + r.party)
+          .attr('d', d3.area().defined(c => c.nus[i] < c.olds[i])
+            .x(c => x(c.v)).y0(c => y(c.olds[i])).y1(c => y(c.nus[i]))(model.curve));
+        svg.append('path').attr('class', 'swing-line swing-old')
+          .attr('d', d3.line().x(c => x(c.v)).y(c => y(c.olds[i]))(model.curve));
+        svg.append('path').attr('class', 'swing-line st-' + r.party)
+          .attr('d', d3.line().x(c => x(c.v)).y(c => y(c.nus[i]))(model.curve));
+        return svg.append('line').attr('class', 'each-marker').attr('y1', m.t).attr('y2', H - m.b);
+      });
+      return v => markers.forEach(mk => mk
+        .style('display', v == null ? 'none' : null)
+        .attr('x1', v == null ? 0 : x(v)).attr('x2', v == null ? 0 : x(v)));
+    }
+
     const subText = (r, pts, v) => {
       let sub = statusText(r);
       if (!pts.length) return sub;
@@ -710,7 +760,7 @@
       return sub;
     };
 
-    function mountShare(el, r, model, fillTable) {
+    function mountShare(el, eachEl, r, model, fillTable) {
       const party = partyNoun(r.party);
       // The drawing party's share, for prose about it
       const own = v => ownShare(r, v);
@@ -784,6 +834,7 @@
         el.querySelectorAll('[data-share]').forEach(b =>
           b.setAttribute('aria-pressed', String(v != null && +b.dataset.share === v)));
         updateChart(v);
+        updateEach(v);
         fillTable(v);
         readout.innerHTML = v == null
           ? `In the actual results, Democrats average <span class="ro-share">${pct(model.avg)}%</span> `
@@ -795,6 +846,7 @@
       };
 
       const draw = () => { updateChart = drawShareChart(chartEl, r, model, set); };
+      const updateEach = drawEach(eachEl, r, model);
       input.addEventListener('input', () => set(Math.round((100 - input.value) * 10) / 10));
       el.querySelectorAll('[data-share]').forEach(b =>
         b.addEventListener('click', () => set(+b.dataset.share)));
@@ -835,7 +887,8 @@
             </tr></thead>
             <tbody></tbody>
             <tfoot></tfoot>
-          </table></div>`;
+          </table></div>
+          <div class="swing-each" hidden></div>`;
       }
       detail.innerHTML = html;
       detail.querySelector('.detail-clear').addEventListener('click', () => select(null));
@@ -858,10 +911,10 @@
 
       loadModel(abbr).then(model => {
         if (selected !== abbr || !model) return;
-        const el = detail.querySelector('.swing');
-        el.hidden = false;
+        const el = detail.querySelector('.swing'), eachEl = detail.querySelector('.swing-each');
+        el.hidden = eachEl.hidden = false;
         // Bars keep one scale across every share, so dragging doesn't rescale them
-        mountShare(el, r, model, v => (v == null
+        mountShare(el, eachEl, r, model, v => (v == null
           ? fill(rows, model.max, null) : fill(model.at(v), model.max, v)));
       });
     }

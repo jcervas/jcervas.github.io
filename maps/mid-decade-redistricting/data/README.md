@@ -107,10 +107,11 @@ new plan's seats minus old plan's. Each plan's seats can only move one way as
 `V` changes; the gap can rise and fall, because the plans tip their districts
 at different shares, and it returns toward zero at both ends, where either plan
 gives one party nearly every seat. Every election counts equally in the average.
-Gray bands around each line show the lowest and highest single-election value
-at each share (each plan's seats in the top panel, where the two bands overlap
-wherever the plans agree, and the gap in the bottom one), so the averages can be
-read against how much the elections disagree. Until a share is
+A gray band around the gap shows the lowest and highest single-election gap at
+each share, and under the table a small chart for each election draws its own
+two seat curves on the same scales, with its own backfire point measured from
+its own result, so the averages can be read against how much the elections
+disagree. Until a share is
 chosen, the table shows the unshifted counts, which are `../elections.csv` row
 for row; once one is, every row is that election moved to the chosen split.
 
