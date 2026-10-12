@@ -483,7 +483,8 @@ that session’s page in Canvas.*
   - Ruffini, *Party of the People*: through ch. 4, “The Working-Class
     Majority” (p. 90)
   - Carney, *Alienated America*: through ch. 5, “‘I Don’t’” (p. 88)
-  - Hemmer, *Partisans*: through ch. 3, “The Populists” (p. 92)
+  - Mounk, *The Identity Trap*: through ch. 4, “The Identity Synthesis”
+    (p. 82)
   - Ripley, *High Conflict*: through ch. 2, “The Power of the Binary”
     (p. 99)
   - Lepore, *The Rise and Fall of the Artificial State*: through ch. 4,
