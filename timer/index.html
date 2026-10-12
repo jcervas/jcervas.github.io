@@ -1,0 +1,1044 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Class Timer</title>
+<!--
+  Class countdown timer. Self-contained, works offline.
+
+  URL options (all optional):
+    ?t=1h20m        duration (also 80m, 90s, 1:20:00, or a bare number of minutes)
+    &style=hourglass   digits | led | analog | hourglass | ring
+    &label=Exam%201    caption shown above the timer
+    &start=1           start counting immediately
+  Keys: Space start/pause, R reset, F full screen, H hide controls,
+        + / - add or remove a minute, 1-5 switch style.
+-->
+<style>
+:root {
+  --bg: #0d0e11;
+  --fg: #f2f3f5;
+  --muted: #8a8e98;
+  --line: rgba(255,255,255,.10);
+  --panel: rgba(24,26,31,.94);
+  --panel-fg: #e9eaee;
+  --btn: rgba(255,255,255,.07);
+  --btn-hover: rgba(255,255,255,.14);
+  --btn-on: #e9eaee;
+  --btn-on-fg: #111214;
+  --ok: #5aa9ff;
+  --warn: #ffb020;
+  --danger: #ff4d4f;
+  --track: rgba(255,255,255,.09);
+  --glass: rgba(255,255,255,.05);
+  --glass-line: rgba(255,255,255,.5);
+  --sand: #e2b65c;
+  --wood: #7a532f;
+  --wood-dark: #4f341c;
+  --led-ok: #38ff7a;
+  --font: ui-rounded, "SF Pro Rounded", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme: dark;
+}
+[data-theme="light"] {
+  --bg: #f6f5f2;
+  --fg: #16171a;
+  --muted: #6b6f78;
+  --line: rgba(0,0,0,.10);
+  --panel: rgba(255,255,255,.96);
+  --panel-fg: #1b1c1f;
+  --btn: rgba(0,0,0,.05);
+  --btn-hover: rgba(0,0,0,.10);
+  --btn-on: #1b1c1f;
+  --btn-on-fg: #fff;
+  --ok: #1f6fe0;
+  --warn: #c77800;
+  --danger: #d42a2d;
+  --track: rgba(0,0,0,.08);
+  --glass: rgba(0,40,80,.04);
+  --glass-line: rgba(0,0,0,.45);
+  --sand: #cf9c3a;
+  color-scheme: light;
+}
+
+/* State colors: normal -> warn -> danger/done */
+body { --state: var(--ok); --state-text: var(--fg); --led: var(--led-ok); }
+body[data-status="warn"] { --state: var(--warn); --state-text: var(--warn); --led: #ffb020; }
+body[data-status="danger"],
+body[data-status="done"] { --state: var(--danger); --state-text: var(--danger); --led: #ff3b30; }
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--ui);
+  overflow: hidden;
+  transition: background-color .4s;
+}
+body.idle { cursor: none; }
+
+/* ---------- Stage ---------- */
+#stage {
+  position: fixed; inset: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  padding: 3vmin 3vmin 2vmin;
+}
+#caption { grid-row: 1; }
+#display { grid-row: 2; }
+#statusLine { grid-row: 3; }
+#caption {
+  text-align: center;
+  font: 600 clamp(18px, 4.4vmin, 56px)/1.15 var(--font);
+  color: var(--fg);
+  padding: 0 284px 1vmin;   /* keep clear of the control box */
+  min-height: 0;
+}
+#caption:empty { display: none; }
+#display {
+  position: relative;
+  min-height: 0;
+  container-type: size;
+  display: flex; align-items: center; justify-content: center;
+}
+#statusLine {
+  text-align: center;
+  font: 700 clamp(18px, 5vmin, 64px)/1.2 var(--font);
+  letter-spacing: .02em;
+  visibility: hidden;
+}
+body.paused #statusLine { visibility: visible; color: var(--muted); font-weight: 600; }
+body.done #statusLine { visibility: visible; color: var(--danger); }
+body.done .pulse { animation: pulse 1.1s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .35; } }
+
+/* ---------- Numbers ---------- */
+.big { display: inline-flex; flex-direction: column; align-items: stretch; }
+.big-num {
+  font-family: var(--font);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.02em;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--state-text);
+  transition: color .4s;
+}
+.big-bar { height: max(6px, 1.2cqh); border-radius: 99px; background: var(--track); overflow: hidden; margin-top: 3cqh; }
+.big-bar > div { height: 100%; background: var(--state); transform-origin: left; border-radius: 99px; transition: background-color .4s; }
+
+/* ---------- Digital (LED) clock ---------- */
+.led-housing {
+  background: linear-gradient(#2c2d32, #121316);
+  border-radius: 3.2cqh;
+  padding: 2.4cqh;
+  box-shadow: 0 2.5cqh 6cqh rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.14), inset 0 -2px 0 rgba(0,0,0,.6);
+  position: relative;
+}
+.led-housing::after {   /* little feet */
+  content: ""; position: absolute; left: 8%; right: 8%; bottom: -1.8cqh; height: 1.8cqh;
+  background: linear-gradient(90deg, #18191c 0 9%, transparent 9% 91%, #18191c 91%);
+  border-radius: 0 0 1cqh 1cqh;
+}
+.led-screen {
+  background: radial-gradient(ellipse at 50% 25%, #1a1010, #060606 70%);
+  border-radius: 1.6cqh;
+  padding: 2.2cqh 3.4cqh 1.8cqh;
+  box-shadow: inset 0 0 3cqh rgba(0,0,0,.9);
+}
+.led-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font: 700 clamp(9px, 2.2cqh, 20px)/1 var(--ui);
+  letter-spacing: .22em;
+  color: rgba(255,255,255,.22);
+}
+.led-row:first-child { margin-bottom: 1.6cqh; }
+.led-row:last-child { margin-top: 1.6cqh; }
+.led-ind { display: inline-flex; align-items: center; gap: .6em; }
+.led-ind i { width: .8em; height: .8em; border-radius: 50%; background: rgba(255,255,255,.08); }
+.led-ind.on { color: var(--led); }
+.led-ind.on i { background: var(--led); box-shadow: 0 0 .8em var(--led); }
+.led-svg { display: block; width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 0 .7cqh var(--led)); }
+.led-svg polygon, .led-svg circle { fill: var(--led); opacity: .07; transition: fill .4s; }
+.led-svg .on { opacity: 1; }
+
+/* ---------- Analog alarm clock ---------- */
+.clock-svg, .ring-svg { width: 100%; height: 100%; display: block; }
+.clock-svg.ringing { animation: ring .08s linear infinite alternate; transform-origin: 50% 90%; }
+@keyframes ring { from { transform: rotate(-2.2deg); } to { transform: rotate(2.2deg); } }
+.clock-svg text, .ring-svg text, .hg-readout { font-family: var(--font); font-variant-numeric: tabular-nums; }
+.wedge { fill: var(--state); opacity: .88; transition: fill .4s; }
+
+/* ---------- Hourglass ---------- */
+.hg { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.hg svg { flex: 1 1 auto; min-height: 0; width: 100%; }
+.hg-readout {
+  font-size: 13cqh; font-weight: 600; line-height: 1.05; margin-top: 1cqh;
+  color: var(--state-text); transition: color .4s;
+}
+.hg-stream { stroke: var(--sand); stroke-width: 2.4; stroke-dasharray: 5 4; animation: fall .35s linear infinite; }
+@keyframes fall { to { stroke-dashoffset: -9; } }
+
+/* ---------- Ring ---------- */
+.ring-prog { stroke: var(--state); transition: stroke .4s; }
+
+body.hide-digits .readout { display: none; }
+
+/* ---------- Control box ---------- */
+.panel {
+  position: fixed; top: 12px; left: 12px; z-index: 10;
+  width: 268px;
+  max-height: calc(100vh - 24px); overflow: auto;
+  background: var(--panel); color: var(--panel-fg);
+  border: 1px solid var(--line); border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.28);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  font: 13px/1.3 var(--ui);
+  padding: 10px 12px 12px;
+  transition: opacity .5s;
+}
+.panel.idle { opacity: .1; }
+.panel.idle:hover { opacity: 1; }
+.panel[hidden] { display: none; }
+.panel-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.panel-title { font-weight: 700; font-size: 13px; }
+.panel-hint { color: var(--muted); font-size: 11px; flex: 1; }
+.section { margin-top: 10px; }
+.section-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; }
+
+button {
+  font: inherit; color: inherit;
+  background: var(--btn);
+  border: 1px solid transparent; border-radius: 8px;
+  padding: 6px 8px; cursor: pointer;
+  transition: background-color .15s;
+}
+button:hover { background: var(--btn-hover); }
+button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--ok); outline-offset: 1px; }
+button.on { background: var(--btn-on); color: var(--btn-on-fg); }
+button.primary { background: var(--ok); color: #fff; font-weight: 700; }
+button.primary:hover { filter: brightness(1.1); }
+.icon-btn { padding: 2px 8px; font-size: 16px; line-height: 1; }
+
+.presets { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
+.presets button { padding: 5px 0; font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.custom { display: flex; gap: 6px; align-items: center; }
+.custom label { display: flex; align-items: center; gap: 3px; color: var(--muted); }
+.custom input {
+  width: 46px; padding: 6px 6px; text-align: right;
+  font: inherit; color: var(--panel-fg); font-variant-numeric: tabular-nums;
+  background: var(--btn); border: 1px solid var(--line); border-radius: 8px;
+}
+.custom button { margin-left: auto; }
+input[type=number]::-webkit-inner-spin-button { opacity: .4; }
+
+.transport { display: grid; grid-template-columns: 1.4fr 1fr .8fr .8fr; gap: 5px; }
+.transport button { padding: 8px 0; }
+
+.styles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
+.styles button { display: grid; place-items: center; padding: 4px 0; }
+.styles svg { width: 24px; height: 24px; }
+
+.label-in {
+  width: 100%; padding: 7px 8px; font: inherit; color: var(--panel-fg);
+  background: var(--btn); border: 1px solid var(--line); border-radius: 8px;
+}
+details.more summary { cursor: pointer; color: var(--muted); font-size: 12px; margin-top: 10px; user-select: none; }
+.opts { display: grid; gap: 6px; margin-top: 8px; }
+.chk { display: flex; gap: 7px; align-items: center; cursor: pointer; }
+.row { display: flex; gap: 5px; align-items: center; }
+.row > span { color: var(--muted); margin-right: 4px; }
+
+.show-panel {
+  position: fixed; top: 12px; left: 12px; z-index: 10;
+  width: 38px; height: 38px; padding: 0; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--panel); border: 1px solid var(--line); color: var(--panel-fg);
+  opacity: .5;
+}
+.show-panel:hover { opacity: 1; }
+.show-panel[hidden] { display: none; }
+
+@media (max-width: 700px) {
+  #caption { padding: 0 0 1vmin; margin-top: 52px; }
+  .panel { width: calc(100vw - 24px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.done .pulse, .clock-svg.ringing, .hg-stream { animation: none; }
+}
+</style>
+</head>
+<body data-status="normal">
+
+<main id="stage" role="timer" aria-label="Countdown">
+  <div id="caption"></div>
+  <div id="display"></div>
+  <div id="statusLine" aria-live="polite">&nbsp;</div>
+</main>
+
+<aside id="panel" class="panel" aria-label="Timer controls">
+  <div class="panel-head">
+    <span class="panel-title">Timer</span>
+    <span class="panel-hint">Space · R · F · H</span>
+    <button id="hideBtn" class="icon-btn" title="Hide controls (H)" aria-label="Hide controls">–</button>
+  </div>
+
+  <div class="presets" id="presets"></div>
+
+  <div class="section custom">
+    <label><input id="inH" type="number" min="0" max="23" inputmode="numeric" aria-label="Hours">h</label>
+    <label><input id="inM" type="number" min="0" inputmode="numeric" aria-label="Minutes">m</label>
+    <label><input id="inS" type="number" min="0" inputmode="numeric" aria-label="Seconds">s</label>
+    <button id="setBtn" title="Set this time (Enter)">Set</button>
+  </div>
+
+  <div class="section transport">
+    <button id="startBtn" class="primary">Start</button>
+    <button id="resetBtn" title="Reset (R)">Reset</button>
+    <button id="minusBtn" title="Remove a minute (−)">−1m</button>
+    <button id="plusBtn" title="Add a minute (+)">+1m</button>
+  </div>
+
+  <div class="section styles" id="styles"></div>
+
+  <details class="more">
+    <summary>Caption &amp; options</summary>
+    <div class="opts">
+      <input id="labelIn" class="label-in" maxlength="80" placeholder="Caption, e.g. “Discussion: Q2”">
+      <label class="chk"><input type="checkbox" id="optSound"> Chime at zero</label>
+      <label class="chk"><input type="checkbox" id="optWarn"> Turn amber, then red, near the end</label>
+      <label class="chk"><input type="checkbox" id="optOver"> Count overtime after zero</label>
+      <label class="chk"><input type="checkbox" id="optDigits"> Show numbers with graphic styles</label>
+      <div class="row"><span>Theme</span>
+        <button data-theme-set="dark">Dark</button>
+        <button data-theme-set="light">Light</button>
+      </div>
+      <div class="row"><button id="fsBtn">Full screen (F)</button></div>
+    </div>
+  </details>
+</aside>
+<button id="showBtn" class="show-panel" title="Show controls (H)" aria-label="Show controls" hidden>
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>
+</button>
+
+<script>
+(() => {
+'use strict';
+
+const $ = (s) => document.querySelector(s);
+const NS = 'http://www.w3.org/2000/svg';
+
+/* ---------- persistence (per-viewer conveniences only) ---------- */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('classTimer.' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('classTimer.' + k, JSON.stringify(v)); } catch (e) {} }
+};
+
+const PRESETS = [
+  ['30s', 30], ['1m', 60], ['2m', 120], ['3m', 180],
+  ['5m', 300], ['10m', 600], ['15m', 900], ['20m', 1200],
+  ['30m', 1800], ['50m', 3000], ['1h', 3600], ['1h20', 4800]
+];
+
+const STYLES = [
+  { id: 'digits', name: 'Numbers',
+    icon: '<text x="12" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="currentColor" font-family="system-ui">5:00</text>' },
+  { id: 'led', name: 'Digital',
+    icon: '<rect x="2" y="6" width="20" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/><text x="12" y="14.8" text-anchor="middle" font-size="6.5" font-weight="700" fill="currentColor" font-family="ui-monospace,monospace">88:88</text>' },
+  { id: 'analog', name: 'Alarm',
+    icon: '<circle cx="12" cy="13" r="7.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 9v4l2.5 1.5M4 6.5l3-3M20 6.5l-3-3M8 20.5l-1.5 2M16 20.5l1.5 2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>' },
+  { id: 'hourglass', name: 'Hourglass',
+    icon: '<path d="M6 3h12M6 21h12M7.5 3c0 5 4.5 6 4.5 9s-4.5 4-4.5 9M16.5 3c0 5-4.5 6-4.5 9s4.5 4 4.5 9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M9 19.5c1-1.6 2-2.2 3-2.2s2 .6 3 2.2z" fill="currentColor"/>' },
+  { id: 'ring', name: 'Ring',
+    icon: '<circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" opacity=".3" stroke-width="2.5"/><path d="M12 4a8 8 0 1 1-8 8" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>' }
+];
+
+const opts = {
+  style: store.get('style', 'digits'),
+  theme: store.get('theme', 'dark'),
+  sound: store.get('sound', true),
+  warnings: store.get('warnings', true),
+  overtime: store.get('overtime', false),
+  showDigits: store.get('showDigits', true),
+  label: store.get('label', '')
+};
+
+/* ---------- timer state ---------- */
+// base: the duration that was set; total: the current full span (grows with +1m);
+// remaining: ms left while paused; endAt: performance.now() deadline while running.
+const S = { base: 0, total: 0, remaining: 0, endAt: 0, running: false, done: false, doneAt: 0 };
+
+function parseDuration(str) {
+  if (!str) return null;
+  str = String(str).trim().toLowerCase();
+  if (/^\d+(\.\d+)?$/.test(str)) return Math.round(parseFloat(str) * 60);           // bare number = minutes
+  if (/^\d+(:\d{1,2}){1,2}$/.test(str)) {                                              // m:ss or h:mm:ss
+    return str.split(':').map(Number).reduce((acc, n) => acc * 60 + n, 0);
+  }
+  const m = str.match(/^(?:(\d+(?:\.\d+)?)h)?\s*(?:(\d+(?:\.\d+)?)m(?:in)?)?\s*(?:(\d+)s(?:ec)?)?$/);
+  if (m && (m[1] || m[2] || m[3])) return Math.round((+m[1] || 0) * 3600 + (+m[2] || 0) * 60 + (+m[3] || 0));
+  return null;
+}
+
+function fmtSec(sec, long) {
+  const h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60), s = sec % 60;
+  const ss = String(s).padStart(2, '0');
+  return long ? `${h}:${String(m).padStart(2, '0')}:${ss}` : `${m}:${ss}`;
+}
+
+function remainingNow(now) { return S.running ? Math.max(0, S.endAt - now) : S.remaining; }
+
+function statusFor(rem) {
+  if (S.done) return 'done';
+  if (!opts.warnings || S.total <= 0) return 'normal';
+  if (rem <= Math.min(0.1 * S.total, 60000)) return 'danger';
+  if (rem <= Math.min(0.2 * S.total, 300000)) return 'warn';
+  return 'normal';
+}
+
+function view() {
+  const now = performance.now();
+  const rem = remainingNow(now);
+  const long = S.total >= 3600000;
+  let text;
+  if (S.done && opts.overtime) {
+    const over = Math.floor((now - S.doneAt) / 1000);
+    text = '+' + fmtSec(over, long || over >= 3600);
+  } else {
+    text = fmtSec(Math.ceil(rem / 1000 - 1e-9), long);
+  }
+  return {
+    now, rem, total: S.total, text,
+    frac: S.total > 0 ? Math.min(1, rem / S.total) : 0,
+    status: statusFor(rem), running: S.running, done: S.done,
+    sinceDone: S.done ? now - S.doneAt : 0
+  };
+}
+
+/* ---------- renderers ---------- */
+const R = {};
+
+/* Big numbers with a thin progress bar */
+R.digits = {
+  mount(el) {
+    this.el = el;
+    el.innerHTML = '<div class="big"><div class="big-num pulse"></div><div class="big-bar readout"><div></div></div></div>';
+    this.num = el.querySelector('.big-num');
+    this.fill = el.querySelector('.big-bar > div');
+    this.text = null; this.len = -1;
+  },
+  update(v) {
+    if (v.text !== this.text) {
+      this.text = v.text;
+      this.num.textContent = v.text;
+      if (v.text.length !== this.len) { this.len = v.text.length; this.fit(); }
+    }
+    this.fill.style.transform = `scaleX(${v.frac})`;
+  },
+  fit() {
+    const w = this.el.clientWidth, h = this.el.clientHeight;
+    this.num.style.fontSize = '100px';
+    const nw = this.num.scrollWidth || 1;
+    this.num.style.fontSize = Math.max(16, Math.min(w * 0.94 * 100 / nw, h * 0.78)) + 'px';
+  }
+};
+
+/* Seven-segment nightstand clock */
+const SEG = (() => {
+  const w = 60, h = 110, t = 11, g = 1.6, ht = t / 2;
+  const H = (yc) => { const x0 = ht + g, x1 = w - ht - g; return [[x0, yc], [x0 + ht, yc - ht], [x1 - ht, yc - ht], [x1, yc], [x1 - ht, yc + ht], [x0 + ht, yc + ht]]; };
+  const V = (xc, y0, y1) => [[xc, y0], [xc + ht, y0 + ht], [xc + ht, y1 - ht], [xc, y1], [xc - ht, y1 - ht], [xc - ht, y0 + ht]];
+  return {
+    w, h,
+    polys: {
+      a: H(ht), b: V(w - ht, ht + g, h / 2 - g), c: V(w - ht, h / 2 + g, h - ht - g),
+      d: H(h - ht), e: V(ht, h / 2 + g, h - ht - g), f: V(ht, ht + g, h / 2 - g), g: H(h / 2)
+    },
+    map: { '0': 'abcdef', '1': 'bc', '2': 'abdeg', '3': 'abcdg', '4': 'bcfg', '5': 'acdfg', '6': 'acdefg', '7': 'abc', '8': 'abcdefg', '9': 'abcdfg', '-': 'g', ' ': '' }
+  };
+})();
+
+R.led = {
+  mount(el) {
+    this.el = el;
+    el.innerHTML =
+      '<div class="led-housing"><div class="led-screen">' +
+        '<div class="led-row"><span>TIMER</span><span class="led-ind" data-ind="run"><i></i>RUN</span></div>' +
+        '<svg class="led-svg pulse"></svg>' +
+        '<div class="led-row"><span class="led-set"></span><span class="led-ind" data-ind="alarm"><i></i>ALARM</span></div>' +
+      '</div></div>';
+    this.housing = el.querySelector('.led-housing');
+    this.svg = el.querySelector('.led-svg');
+    this.setEl = el.querySelector('.led-set');
+    this.runInd = el.querySelector('[data-ind="run"]');
+    this.alarmInd = el.querySelector('[data-ind="alarm"]');
+    this.shape = null; this.text = null;
+  },
+  build(text) {
+    const gap = 16, colW = 22, skew = Math.tan(7 * Math.PI / 180);
+    let x = SEG.h * skew + 4, out = '';
+    for (const ch of text) {
+      if (ch === ':') {
+        const cx = x + colW / 2;
+        out += `<g class="colon"><circle cx="${cx - SEG.h * .3 * skew}" cy="${SEG.h * .3}" r="6.5"/><circle cx="${cx - SEG.h * .7 * skew}" cy="${SEG.h * .7}" r="6.5"/></g>`;
+        x += colW + gap;
+      } else {
+        out += `<g class="digit" transform="translate(${x} 0) skewX(-7)">` +
+          Object.entries(SEG.polys).map(([k, p]) => `<polygon data-s="${k}" points="${p.map((q) => q.join(',')).join(' ')}"/>`).join('') + '</g>';
+        x += SEG.w + gap;
+      }
+    }
+    const vbW = x - gap + 4;
+    this.svg.setAttribute('viewBox', `0 -6 ${vbW} ${SEG.h + 12}`);
+    this.svg.innerHTML = out;
+    this.aspect = vbW / (SEG.h + 12);
+    this.digits = [...this.svg.querySelectorAll('.digit')].map((g) => {
+      const segs = {};
+      g.querySelectorAll('polygon').forEach((p) => { segs[p.dataset.s] = p; });
+      return segs;
+    });
+    this.colons = [...this.svg.querySelectorAll('.colon circle')];
+    this.fit();
+  },
+  update(v) {
+    const text = v.text.replace('+', '-');
+    const shape = text.replace(/[0-9 -]/g, '8');
+    if (shape !== this.shape) { this.shape = shape; this.text = null; this.build(text); }
+    if (text !== this.text) {
+      this.text = text;
+      let i = 0;
+      for (const ch of text) {
+        if (ch === ':') continue;
+        const lit = SEG.map[ch] || '';
+        const segs = this.digits[i++];
+        for (const k in segs) segs[k].classList.toggle('on', lit.includes(k));
+      }
+      this.setEl.textContent = 'SET ' + fmtSec(Math.round(S.base / 1000), S.base >= 3600000);
+    }
+    // The colon blinks once a second while running, like a real clock.
+    const colonOn = !v.running || (v.rem % 1000) > 500;
+    this.colons.forEach((c) => c.classList.toggle('on', colonOn));
+    this.runInd.classList.toggle('on', v.running);
+    this.alarmInd.classList.toggle('on', v.done);
+  },
+  fit() {
+    if (!this.aspect) return;
+    const w = this.el.clientWidth, h = this.el.clientHeight;
+    const pad = h * 0.12 + 40;   // housing + screen padding, plus the two label rows
+    const width = Math.min(w * 0.94, (h * 0.8 - pad) * this.aspect + h * 0.12);
+    this.housing.style.width = Math.max(200, width) + 'px';
+  }
+};
+
+/* Twin-bell analog alarm clock. The hand sweeps clockwise from 0 toward the
+   alarm pointer; the colored wedge is the time still left. */
+const scaleCache = new Map();
+function pickScale(totalMs) {
+  const sec = Math.max(1, Math.ceil(totalMs / 1000));
+  const fixed = [
+    { max: 60, major: 5, minor: 1, unit: 1, name: 'SECONDS' },
+    { max: 300, major: 60, minor: 15, unit: 60, name: 'MINUTES' },
+    { max: 600, major: 60, minor: 15, unit: 60, name: 'MINUTES' },
+    { max: 900, major: 60, minor: 15, unit: 60, name: 'MINUTES' },
+    { max: 1800, major: 300, minor: 60, unit: 60, name: 'MINUTES' },
+    { max: 3600, major: 300, minor: 60, unit: 60, name: 'MINUTES' },
+    { max: 7200, major: 600, minor: 120, unit: 60, name: 'MINUTES' },
+    { max: 10800, major: 900, minor: 180, unit: 60, name: 'MINUTES' }
+  ];
+  let sc = fixed.find((s) => sec <= s.max);
+  if (!sc) { const max = Math.ceil(sec / 3600) * 3600; sc = { max, major: max / 12, minor: max / 60, unit: 60, name: 'MINUTES' }; }
+  if (!scaleCache.has(sc.max)) scaleCache.set(sc.max, sc);
+  return scaleCache.get(sc.max);
+}
+
+function polar(cx, cy, r, deg) {
+  const a = deg * Math.PI / 180;
+  return [cx + r * Math.sin(a), cy - r * Math.cos(a)];
+}
+function wedgePath(cx, cy, r, a0, a1) {
+  const span = a1 - a0;
+  if (span <= 0.05) return '';
+  if (span >= 359.95) return `M${cx},${cy - r}A${r},${r} 0 1 1 ${cx},${cy + r}A${r},${r} 0 1 1 ${cx},${cy - r}Z`;
+  const [x0, y0] = polar(cx, cy, r, a0), [x1, y1] = polar(cx, cy, r, a1);
+  return `M${cx},${cy}L${x0.toFixed(2)},${y0.toFixed(2)}A${r},${r} 0 ${span > 180 ? 1 : 0} 1 ${x1.toFixed(2)},${y1.toFixed(2)}Z`;
+}
+
+R.analog = {
+  mount(el) {
+    this.el = el;
+    const sc = this.scale = pickScale(S.total);
+    const cx = 200, cy = 255;
+    let ticks = '', labels = '';
+    const n = sc.max / sc.minor;
+    const nLabels = sc.max / sc.major;
+    const fs = nLabels > 12 ? 19 : 23;
+    for (let i = 0; i < n; i++) {
+      const v = i * sc.minor, a = v / sc.max * 360, major = v % sc.major === 0;
+      const [x0, y0] = polar(cx, cy, 143, a), [x1, y1] = polar(cx, cy, major ? 128 : 136, a);
+      ticks += `<line x1="${x0.toFixed(1)}" y1="${y0.toFixed(1)}" x2="${x1.toFixed(1)}" y2="${y1.toFixed(1)}" stroke-width="${major ? 3.2 : 1.4}"/>`;
+      if (major) {
+        const [lx, ly] = polar(cx, cy, 113, a);
+        labels += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" dy=".35em">${v / sc.unit}</text>`;
+      }
+    }
+    const bell = (rot) =>
+      `<g transform="rotate(${rot} ${cx} ${cy})">` +
+        `<rect x="194" y="70" width="12" height="22" rx="3" fill="#5c6068"/>` +
+        `<path d="M144,82 A56,56 0 0 1 256,82 Z" fill="url(#metal)" stroke="#5c6068" stroke-width="2"/>` +
+        `<circle cx="200" cy="22" r="6" fill="#5c6068"/>` +
+      `</g>`;
+    const leg = (rot) => `<g transform="rotate(${rot} ${cx} ${cy})"><rect x="190" y="410" width="20" height="40" rx="7" fill="#5c6068"/></g>`;
+    el.innerHTML =
+      `<svg class="clock-svg" viewBox="0 0 400 470" aria-hidden="true">
+        <defs>
+          <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#f1f3f6"/><stop offset=".55" stop-color="#b9bfc8"/><stop offset="1" stop-color="#7c838e"/>
+          </linearGradient>
+          <radialGradient id="faceGrad" cx=".5" cy=".4" r=".7">
+            <stop offset="0" stop-color="#fffdf7"/><stop offset="1" stop-color="#ece6d8"/>
+          </radialGradient>
+        </defs>
+        ${leg(-36)}${leg(36)}
+        ${bell(-38)}${bell(38)}
+        <rect x="195" y="52" width="10" height="36" rx="3" fill="#5c6068"/>
+        <circle cx="200" cy="50" r="9" fill="#5c6068"/>
+        <circle cx="${cx}" cy="${cy}" r="170" fill="url(#metal)" stroke="#5c6068" stroke-width="2"/>
+        <circle cx="${cx}" cy="${cy}" r="153" fill="url(#faceGrad)" stroke="rgba(0,0,0,.25)" stroke-width="2"/>
+        <path class="wedge" d=""/>
+        <g stroke="#1d1d1f">${ticks}</g>
+        <g fill="#1d1d1f" font-size="${fs}" font-weight="600" text-anchor="middle">${labels}</g>
+        <text x="${cx}" y="${cy - 52}" text-anchor="middle" font-size="11" letter-spacing="3" fill="#6b6f78">${sc.name}</text>
+        <g class="readout">
+          <rect class="clock-plate" x="${cx - 60}" y="${cy + 50}" width="120" height="46" rx="12" fill="#fffdf7" fill-opacity=".94" stroke="rgba(0,0,0,.15)"/>
+          <text class="clock-readout pulse" x="${cx}" y="${cy + 73}" dy=".35em" text-anchor="middle" font-size="36" font-weight="700" fill="#1d1d1f"></text>
+        </g>
+        <g class="alarm-hand">
+          <line x1="${cx}" y1="${cy}" x2="${cx}" y2="${cy - 126}" stroke="#d99a00" stroke-width="3"/>
+          <path d="M${cx},${cy - 150} l-8,-11 h16 z" fill="#d99a00" stroke="#8a6200" stroke-width="1"/>
+        </g>
+        <path class="main-hand" d="M${cx},${cy + 24} L${cx - 6},${cy} L${cx},${cy - 128} L${cx + 6},${cy} Z" fill="#1d1d1f"/>
+        ${sc.max > 60 ? `<g class="sec-hand"><line x1="${cx}" y1="${cy + 26}" x2="${cx}" y2="${cy - 138}" stroke="#d33" stroke-width="1.8"/></g>` : ''}
+        <circle cx="${cx}" cy="${cy}" r="8" fill="#1d1d1f"/><circle cx="${cx}" cy="${cy}" r="3" fill="#d99a00"/>
+      </svg>`;
+    this.svg = el.querySelector('svg');
+    this.wedge = el.querySelector('.wedge');
+    this.hand = el.querySelector('.main-hand');
+    this.alarm = el.querySelector('.alarm-hand');
+    this.sec = el.querySelector('.sec-hand');
+    this.readout = el.querySelector('.clock-readout');
+    this.plate = el.querySelector('.clock-plate');
+    this.text = null;
+  },
+  update(v) {
+    if (pickScale(v.total) !== this.scale) this.mount(this.el);
+    const max = this.scale.max * 1000;
+    const elapsed = v.total - v.rem;
+    const aHand = Math.min(360, elapsed / max * 360);
+    const aAlarm = Math.min(360, v.total / max * 360);
+    this.wedge.setAttribute('d', wedgePath(200, 255, 100, aHand, aAlarm));
+    this.hand.setAttribute('transform', `rotate(${aHand.toFixed(3)} 200 255)`);
+    this.alarm.setAttribute('transform', `rotate(${aAlarm.toFixed(3)} 200 255)`);
+    if (this.sec) this.sec.setAttribute('transform', `rotate(${((elapsed / 1000) % 60 * 6).toFixed(2)} 200 255)`);
+    if (v.text !== this.text) {
+      this.text = v.text;
+      this.readout.textContent = v.text;
+      const w = v.text.length * 21 + 24;
+      this.plate.setAttribute('x', 200 - w / 2);
+      this.plate.setAttribute('width', w);
+    }
+    this.svg.classList.toggle('ringing', v.done && v.sinceDone < 4000);
+  }
+};
+
+/* Hourglass. Sand volume is mapped through the bulb's actual profile so
+   the level falls slowly at first and quickly near the neck. */
+const HG = (() => {
+  const cx = 150, neck = 240, H = 196, W = 92, n = 4.5;
+  const hw = (d) => n + (W - n) * (1 - Math.pow(1 - d / H, 2.4));
+  const N = 400, A = [0];
+  for (let i = 1; i <= N; i++) {
+    const d0 = (i - 1) / N * H, d1 = i / N * H;
+    A.push(A[i - 1] + (hw(d0) + hw(d1)) * (d1 - d0));
+  }
+  const dOf = (f) => {
+    const target = f * A[N];
+    let lo = 0, hi = N;
+    while (lo < hi) { const mid = (lo + hi) >> 1; if (A[mid] < target) lo = mid + 1; else hi = mid; }
+    if (lo === 0) return 0;
+    const t = (target - A[lo - 1]) / ((A[lo] - A[lo - 1]) || 1);
+    return ((lo - 1) + t) / N * H;
+  };
+  const side = [];
+  for (let i = 0; i <= 60; i++) side.push(i / 60 * H);
+  const pts = [];
+  side.slice().reverse().forEach((d) => pts.push([cx + hw(d), neck - d]));
+  side.forEach((d) => pts.push([cx + hw(d), neck + d]));
+  side.slice().reverse().forEach((d) => pts.push([cx - hw(d), neck + d]));
+  side.forEach((d) => pts.push([cx - hw(d), neck - d]));
+  const glass = 'M' + pts.map((p) => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join('L') + 'Z';
+  const shine = 'M' + side.filter((d) => d > H * .3 && d < H * .92).map((d) => (cx - hw(d) * .78).toFixed(1) + ',' + (neck - d).toFixed(1)).join('L');
+  return { cx, neck, H, glass, shine, dOf };
+})();
+
+R.hourglass = {
+  mount(el) {
+    this.el = el;
+    const { neck, H, glass, shine } = HG;
+    const top = neck - H, bot = neck + H;
+    el.innerHTML =
+      `<div class="hg">
+        <svg viewBox="0 0 300 480" aria-hidden="true">
+          <defs>
+            <clipPath id="hgClip"><path d="${glass}"/></clipPath>
+            <linearGradient id="woodGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="var(--wood)"/><stop offset="1" stop-color="var(--wood-dark)"/></linearGradient>
+            <linearGradient id="postGrad" x1="0" x2="1"><stop offset="0" stop-color="var(--wood-dark)"/><stop offset=".45" stop-color="var(--wood)"/><stop offset="1" stop-color="var(--wood-dark)"/></linearGradient>
+          </defs>
+          <rect x="38" y="${top}" width="14" height="${2 * H}" rx="5" fill="url(#postGrad)"/>
+          <rect x="248" y="${top}" width="14" height="${2 * H}" rx="5" fill="url(#postGrad)"/>
+          <path d="${glass}" fill="var(--glass)"/>
+          <g clip-path="url(#hgClip)">
+            <path class="sand-top" fill="var(--sand)"/>
+            <path class="sand-bot" fill="var(--sand)"/>
+          </g>
+          <line class="hg-stream" x1="150" y1="${neck - 2}" x2="150" y2="${neck}"/>
+          <path d="${glass}" fill="none" stroke="var(--glass-line)" stroke-width="2.5"/>
+          <path d="${shine}" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="4" stroke-linecap="round"/>
+          <rect x="26" y="${top - 26}" width="248" height="26" rx="8" fill="url(#woodGrad)"/>
+          <rect x="26" y="${bot}" width="248" height="26" rx="8" fill="url(#woodGrad)"/>
+        </svg>
+        <div class="hg-readout readout pulse"></div>
+      </div>`;
+    this.top = el.querySelector('.sand-top');
+    this.bot = el.querySelector('.sand-bot');
+    this.stream = el.querySelector('.hg-stream');
+    this.readout = el.querySelector('.hg-readout');
+    this.text = null;
+  },
+  update(v) {
+    const { neck, H } = HG;
+    const f = Math.max(0, Math.min(1, v.frac));
+    const d = HG.dOf(f);
+    if (f > 0.0005) {
+      const ys = neck - d, dip = Math.min(9, d * .3);
+      this.top.setAttribute('d', `M30,${ys.toFixed(2)}Q150,${(ys + 2 * dip).toFixed(2)} 270,${ys.toFixed(2)}L270,${neck}L30,${neck}Z`);
+    } else this.top.setAttribute('d', '');
+    const yb = neck + d, m = Math.min(16, (H - d) * .5);
+    if (f < 0.9995) {
+      this.bot.setAttribute('d', `M30,${(yb + .3 * m).toFixed(2)}Q150,${(yb - 2 * m).toFixed(2)} 270,${(yb + .3 * m).toFixed(2)}L270,${neck + H + 2}L30,${neck + H + 2}Z`);
+    } else this.bot.setAttribute('d', '');
+    const flowing = v.running && f > 0 && f < 1;
+    this.stream.style.display = flowing ? '' : 'none';
+    if (flowing) this.stream.setAttribute('y2', (yb - .85 * m).toFixed(2));
+    if (v.text !== this.text) { this.text = v.text; this.readout.textContent = v.text; }
+  }
+};
+
+/* Shrinking ring */
+R.ring = {
+  mount(el) {
+    this.el = el;
+    const r = 172, C = 2 * Math.PI * r;
+    this.C = C;
+    el.innerHTML =
+      `<svg class="ring-svg" viewBox="0 0 400 400" aria-hidden="true">
+        <circle cx="200" cy="200" r="${r}" fill="none" stroke="var(--track)" stroke-width="22"/>
+        <circle class="ring-prog" cx="200" cy="200" r="${r}" fill="none" stroke-width="22" stroke-linecap="round"
+          stroke-dasharray="${C}" transform="rotate(-90 200 200)"/>
+        <g class="readout">
+          <text class="ring-text pulse" x="200" y="200" dy=".35em" text-anchor="middle" font-weight="600" fill="var(--state-text)"></text>
+          <text class="ring-sub" x="200" y="282" text-anchor="middle" font-size="19" fill="var(--muted)"></text>
+        </g>
+      </svg>`;
+    this.prog = el.querySelector('.ring-prog');
+    this.txt = el.querySelector('.ring-text');
+    this.sub = el.querySelector('.ring-sub');
+    this.text = null;
+  },
+  update(v) {
+    this.prog.setAttribute('stroke-dashoffset', (this.C * (1 - v.frac)).toFixed(2));
+    this.prog.style.opacity = v.frac <= 0 ? 0 : 1;
+    if (v.text !== this.text) {
+      this.text = v.text;
+      this.txt.textContent = v.text;
+      this.txt.setAttribute('font-size', v.text.length >= 7 ? 76 : v.text.length >= 6 ? 88 : 104);
+      this.sub.textContent = 'of ' + fmtSec(Math.round(S.total / 1000), S.total >= 3600000);
+    }
+  }
+};
+
+/* ---------- wiring ---------- */
+const display = $('#display');
+let renderer = null;
+let lastStatus = null, lastTitle = null;
+
+function remount() {
+  renderer = R[opts.style] || R.digits;
+  renderer.mount(display);
+  renderer.update(view());
+}
+
+new ResizeObserver(() => { if (renderer && renderer.fit) renderer.fit(); }).observe(display);
+
+function tick() {
+  if (S.running && performance.now() >= S.endAt) finish();
+  const v = view();
+  if (v.status !== lastStatus) { document.body.dataset.status = v.status; lastStatus = v.status; }
+  renderer.update(v);
+  const title = (S.running || S.done || S.remaining < S.total) ? `${v.text} · Timer` : 'Class Timer';
+  if (title !== lastTitle) { document.title = title; lastTitle = title; }
+  requestAnimationFrame(tick);
+}
+// rAF stops in background tabs; this keeps the zero-chime on time.
+setInterval(() => { if (S.running && performance.now() >= S.endAt) finish(); }, 250);
+
+function setDuration(sec) {
+  sec = Math.max(1, Math.min(24 * 3600 - 1, Math.round(sec)));
+  S.base = S.total = S.remaining = sec * 1000;
+  S.running = false; S.done = false;
+  store.set('total', sec);
+  inputsDirty = false;
+  syncInputs();
+  keepAwake(false);
+  refreshUI();
+}
+
+function start() {
+  if (inputsDirty) applyInputs();
+  if (S.done) reset();
+  if (S.remaining <= 0) return;
+  ensureAudio();
+  S.endAt = performance.now() + S.remaining;
+  S.running = true;
+  keepAwake(true);
+  refreshUI();
+}
+function pause() {
+  if (!S.running) return;
+  S.remaining = Math.max(0, S.endAt - performance.now());
+  S.running = false;
+  refreshUI();
+}
+function toggle() { S.running ? pause() : start(); }
+function reset() {
+  S.running = false; S.done = false;
+  S.total = S.remaining = S.base;
+  keepAwake(false);
+  refreshUI();
+}
+function finish() {
+  if (S.done) return;
+  S.running = false; S.done = true; S.remaining = 0; S.doneAt = S.endAt;
+  refreshUI();
+  chime();
+}
+function adjust(sec) {
+  const d = sec * 1000;
+  const now = performance.now();
+  if (S.done) {
+    if (d <= 0) return;
+    S.done = false;
+    S.remaining = d;
+    S.total = Math.max(S.total, d);
+    start();
+    return;
+  }
+  const fresh = !S.running && S.remaining === S.total;
+  if (fresh) { setDuration(Math.max(1, (S.total + d) / 1000)); return; }
+  let rem = Math.max(0, remainingNow(now) + d);
+  S.total = Math.max(S.total, rem);
+  if (S.running) S.endAt = now + rem; else S.remaining = rem;
+  if (rem <= 0) { S.endAt = now; finish(); }
+  refreshUI();
+}
+
+/* ---------- control box ---------- */
+const startBtn = $('#startBtn');
+const panel = $('#panel'), showBtn = $('#showBtn');
+const inH = $('#inH'), inM = $('#inM'), inS = $('#inS');
+let inputsDirty = false;
+
+function syncInputs() {
+  const sec = Math.round(S.base / 1000);
+  inH.value = Math.floor(sec / 3600);
+  inM.value = Math.floor(sec % 3600 / 60);
+  inS.value = sec % 60;
+}
+function applyInputs() {
+  const sec = (+inH.value || 0) * 3600 + (+inM.value || 0) * 60 + (+inS.value || 0);
+  if (sec > 0) setDuration(sec); else { inputsDirty = false; syncInputs(); }
+}
+[inH, inM, inS].forEach((inp) => {
+  inp.addEventListener('input', () => { inputsDirty = true; });
+  inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') { applyInputs(); inp.blur(); } });
+});
+$('#setBtn').addEventListener('click', applyInputs);
+
+const presetsEl = $('#presets');
+PRESETS.forEach(([label, sec]) => {
+  const b = document.createElement('button');
+  b.textContent = label; b.dataset.sec = sec;
+  b.addEventListener('click', () => setDuration(sec));
+  presetsEl.appendChild(b);
+});
+
+const stylesEl = $('#styles');
+STYLES.forEach((s, i) => {
+  const b = document.createElement('button');
+  b.dataset.style = s.id;
+  b.title = `${s.name} (${i + 1})`;
+  b.setAttribute('aria-label', s.name);
+  b.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${s.icon}</svg>`;
+  b.addEventListener('click', () => setStyle(s.id));
+  stylesEl.appendChild(b);
+});
+function setStyle(id) {
+  if (!R[id]) return;
+  opts.style = id; store.set('style', id);
+  remount(); refreshUI();
+}
+
+startBtn.addEventListener('click', toggle);
+$('#resetBtn').addEventListener('click', reset);
+$('#plusBtn').addEventListener('click', () => adjust(60));
+$('#minusBtn').addEventListener('click', () => adjust(-60));
+
+const labelIn = $('#labelIn');
+labelIn.addEventListener('input', () => { opts.label = labelIn.value; store.set('label', opts.label); $('#caption').textContent = opts.label; });
+labelIn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === 'Escape') labelIn.blur(); });
+
+function bindCheck(id, key, after) {
+  const el = $(id);
+  el.checked = opts[key];
+  el.addEventListener('change', () => { opts[key] = el.checked; store.set(key, el.checked); if (after) after(); refreshUI(); });
+}
+bindCheck('#optSound', 'sound', () => { if (opts.sound) ensureAudio(); });
+bindCheck('#optWarn', 'warnings');
+bindCheck('#optOver', 'overtime');
+bindCheck('#optDigits', 'showDigits');
+
+document.querySelectorAll('[data-theme-set]').forEach((b) => b.addEventListener('click', () => {
+  opts.theme = b.dataset.themeSet; store.set('theme', opts.theme); refreshUI();
+}));
+
+function toggleFullscreen() {
+  try {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  } catch (e) {}
+}
+$('#fsBtn').addEventListener('click', toggleFullscreen);
+
+function setPanelHidden(hide) {
+  panel.hidden = hide; showBtn.hidden = !hide;
+  store.set('panelHidden', hide);
+}
+$('#hideBtn').addEventListener('click', () => setPanelHidden(true));
+showBtn.addEventListener('click', () => setPanelHidden(false));
+
+// Return focus to the page after a click so Space never double-fires a button.
+document.addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) b.blur(); });
+
+function refreshUI() {
+  document.documentElement.dataset.theme = opts.theme;
+  document.body.classList.toggle('running', S.running);
+  document.body.classList.toggle('done', S.done);
+  document.body.classList.toggle('paused', !S.running && !S.done && S.remaining < S.total);
+  document.body.classList.toggle('hide-digits', !opts.showDigits);
+  $('#statusLine').textContent = S.done ? 'Time’s up' : (!S.running && S.remaining < S.total ? 'Paused' : ' ');
+  startBtn.textContent = S.running ? 'Pause' : S.done ? 'Restart' : (S.remaining < S.total ? 'Resume' : 'Start');
+  presetsEl.querySelectorAll('button').forEach((b) => b.classList.toggle('on', +b.dataset.sec * 1000 === S.base));
+  stylesEl.querySelectorAll('button').forEach((b) => b.classList.toggle('on', b.dataset.style === opts.style));
+  document.querySelectorAll('[data-theme-set]').forEach((b) => b.classList.toggle('on', b.dataset.themeSet === opts.theme));
+  wakeActivity();
+}
+
+/* Fade the control box (and hide the cursor) while the clock runs and nobody touches anything. */
+let idleTimer = 0;
+function wakeActivity() {
+  panel.classList.remove('idle'); document.body.classList.remove('idle');
+  clearTimeout(idleTimer);
+  if (S.running) idleTimer = setTimeout(() => {
+    if (!S.running || panel.contains(document.activeElement)) return;
+    panel.classList.add('idle'); document.body.classList.add('idle');
+  }, 3500);
+}
+['mousemove', 'mousedown', 'touchstart', 'keydown'].forEach((t) => document.addEventListener(t, wakeActivity, { passive: true }));
+
+/* ---------- keyboard ---------- */
+document.addEventListener('keydown', (e) => {
+  const tag = e.target.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (tag === 'BUTTON' && (e.key === ' ' || e.key === 'Enter')) return;
+  const k = e.key.toLowerCase();
+  if (k === ' ') { e.preventDefault(); toggle(); }
+  else if (k === 'r') reset();
+  else if (k === 'f') toggleFullscreen();
+  else if (k === 'h') setPanelHidden(!panel.hidden);
+  else if (k === '+' || k === '=') adjust(60);
+  else if (k === '-' || k === '_') adjust(-60);
+  else if (/^[1-5]$/.test(k)) setStyle(STYLES[+k - 1].id);
+});
+
+/* ---------- chime ---------- */
+let actx = null;
+function ensureAudio() {
+  if (!opts.sound) return;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    if (actx.state === 'suspended') actx.resume();
+  } catch (e) { actx = null; }
+}
+function chime() {
+  if (!opts.sound || !actx) return;
+  try {
+    const t0 = actx.currentTime + 0.02;
+    [[0, 880], [0.32, 880], [0.64, 1174.7]].forEach(([dt, hz]) => {
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = 'sine'; o.frequency.value = hz;
+      g.gain.setValueAtTime(0.0001, t0 + dt);
+      g.gain.exponentialRampToValueAtTime(0.35, t0 + dt + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + dt + (dt > 0.5 ? 0.9 : 0.28));
+      o.connect(g).connect(actx.destination);
+      o.start(t0 + dt); o.stop(t0 + dt + 1);
+    });
+  } catch (e) {}
+}
+
+/* ---------- keep the screen awake during a test ---------- */
+let wakeLock = null;
+async function keepAwake(on) {
+  try {
+    if (on && !wakeLock && 'wakeLock' in navigator) {
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release', () => { wakeLock = null; });
+    } else if (!on && wakeLock) {
+      await wakeLock.release(); wakeLock = null;
+    }
+  } catch (e) { wakeLock = null; }
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && S.running) keepAwake(true); });
+
+/* ---------- boot ---------- */
+const params = new URLSearchParams(location.search);
+const urlSec = parseDuration(params.get('t') || params.get('time'));
+if (params.get('style') && R[params.get('style')]) opts.style = params.get('style');
+if (params.has('label')) opts.label = params.get('label');
+if (params.get('theme') === 'light' || params.get('theme') === 'dark') opts.theme = params.get('theme');
+
+labelIn.value = opts.label;
+$('#caption').textContent = opts.label;
+setDuration(urlSec || store.get('total', 300));
+if (store.get('panelHidden', false)) setPanelHidden(true);
+remount();
+refreshUI();
+if (urlSec && /^(1|true|yes)$/i.test(params.get('start') || '')) start();
+requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
