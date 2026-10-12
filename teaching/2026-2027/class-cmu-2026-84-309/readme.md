@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### DRAFT Updated: October 06, 2026
+#### DRAFT Updated: October 11, 2026
 
 > Professor **Jonathan Cervas**  
 > Office: Posner Hall 374  
@@ -429,9 +429,7 @@ that session’s page in Canvas.*
   United States](https://canvas.cmu.edu/courses/55941/files/14695408)
 - *Optional*: [Svolik 2019 — Polarization versus
   Democracy](https://www.journalofdemocracy.org/articles/polarization-versus-democracy/)
-  <!-- NOTE FOR NEXT YEAR: make Svolik 2019 required for this session and
-  use it to replace other readings here (short, free, and covers the same
-  ground as Graham & Svolik 2020 plus the Turkey/Venezuela comparison). -->
+  <!-- NOTE FOR NEXT YEAR: make Svolik 2019 required for this session and use it to replace other readings here (short, free, and covers the same ground as Graham & Svolik 2020 plus the Turkey/Venezuela comparison). -->
 
 #### Thu, Oct 8 — Who Pays for the News?
 
@@ -450,7 +448,25 @@ that session’s page in Canvas.*
 
 ### Week 9 — Student-led sessions open
 
-#### Tue, Oct 20 — Student-led 1: Social media
+#### Tue, Oct 20 — Student-led 1: Should Social Media Be Restricted or Banned for Minors?
+
+- [Montgomery 2026 — Meta Agrees to Major Changes to Facebook and
+  Instagram as It Settles US Trial over Teen Addiction for up to \$18bn
+  (*Guardian*)](https://www.theguardian.com/technology/2026/aug/26/meta-social-media-addiction-trial-settlement)
+- [Buckley 2026 — How and Why to Fight Back Against Social Media Bans
+  (EFF)](https://www.eff.org/deeplinks/2026/06/how-and-why-fight-back-against-social-media-bans)
+- [Whittaker 2026 — ID Verification Giant IDScan Confirms Data Breach
+  with More than 150 Million Driver’s Licenses Stolen
+  (*TechCrunch*)](https://techcrunch.com/2026/09/10/id-verification-giant-idscan-confirms-data-breach-with-more-than-150-million-drivers-licenses-stolen/)
+- [Courthouse News 2026 — Virginia Temporarily Blocked from Enforcing
+  Social Media Limit
+  Law](https://www.courthousenews.com/virginia-temporarily-blocked-from-enforcing-social-media-limit-law/)
+- [Bhatia 2024 — Age Verification Technology Would Create New Barriers
+  for Young Disabled People (*Teen
+  Vogue*)](https://www.teenvogue.com/story/age-verification-technology-disabled-people)
+- *Optional*: [vmfunc 2026 — The Watchers: How OpenAI, the US
+  Government, and Persona Built an Identity Surveillance
+  Machine](https://vmfunc.re/blog/persona)
 
 #### Thu, Oct 22 — Student-led 2: Congress and stock trading
 
