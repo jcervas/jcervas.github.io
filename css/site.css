@@ -342,6 +342,11 @@ img { max-width: 100%; height: auto; }
 .resource:last-child { border-bottom: 1px solid var(--line); }
 .resource__title { font-weight: 600; }
 .resource__ext { font-size: .8em; color: var(--muted); margin-left: .15rem; }
+.resource__draft {
+  display: inline-block; vertical-align: .1em; margin-left: .4rem;
+  font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--red); border: 1px solid var(--red); border-radius: 999px; padding: 0 .5rem;
+}
 .resource__note {
   display: block; color: var(--muted); font-size: .95rem; margin-top: .2rem;
 }

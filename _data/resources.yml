@@ -9,6 +9,7 @@
 #   note     (optional) one-line description shown after the title
 #   internal (optional) true for links to my own pages on this site; these
 #            open in the same tab. External links open in a new tab.
+#   draft    (optional) true to flag a work-in-progress page with a "Draft" badge.
 #
 # Order within a section is the order links appear here.
 
@@ -21,6 +22,7 @@ sections:
         url: "/maps/citizen-apportionment/"
         note: "If apportionment counted only citizens and green-card holders, three seats would move — and Texas would lose one."
         internal: true
+        draft: true
       - title: "Mid-decade congressional redistricting"
         url: "/maps/mid-decade-redistricting/"
         note: "Expected partisan seat shifts from the newly enacted 2026 maps."
