@@ -6,12 +6,13 @@ permalink: /maps/citizen-apportionment/
 breadcrumb: "Proposed census rule"
 wide: true
 order: 0
+draft: true
 ---
 
 <link rel="stylesheet" href="{{ '/maps/apportionment-2020-2030/cartogram.css' | relative_url }}?v=7263e8e0">
-<link rel="stylesheet" href="{{ '/maps/citizen-apportionment/doc.css' | relative_url }}?v=92d7fc23">
+<link rel="stylesheet" href="{{ '/maps/citizen-apportionment/doc.css' | relative_url }}?v=1390a61b">
 
-<p class="cgdraft" role="note"><span class="cgdraft__tag">Draft</span>
+<p class="cgdraft" role="note"><span class="draft-tag">Draft</span>
   This analysis is a work in progress. The figures and text may change before it is final.</p>
 
 <div class="cg" id="ap" data-src="{{ '/maps/citizen-apportionment/apportionment-proposed-rule-2030.geojson' | relative_url }}?v=e857eb01">

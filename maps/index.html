@@ -22,6 +22,7 @@ description: "Interactive maps and cartograms by Jonathan Cervas: congressional 
   A map page with a `thumb:` gets it above the title, the same frame the case
   cards use. Cards without one stay text-only, so the grid tops-aligns rather
   than stretching a text card to match a taller neighbour.
+  A page with `draft: true` gets a "Draft" pill after its title.
 {% endcomment %}
 <div class="case-grid case-grid--maps">
   {% for m in maps %}
@@ -32,7 +33,7 @@ description: "Interactive maps and cartograms by Jonathan Cervas: congressional 
     </a>
     {% endif %}
     <div class="case__body">
-      <h3><a href="{{ m.url | relative_url }}">{{ m.title }}</a></h3>
+      <h3><a href="{{ m.url | relative_url }}">{{ m.title }}</a>{% if m.draft %} <span class="draft-tag">Draft</span>{% endif %}</h3>
       {% comment %}
         `summary` is the card line, as on the case cards; `description` is the
         page's meta description. A page with only the one key uses it for both.

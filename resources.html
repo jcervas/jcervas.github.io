@@ -24,7 +24,7 @@ breadcrumb: "Resources"
       <a class="resource__title" href="{{ link.url }}" target="_blank" rel="noopener">{{ link.title }}
         <span class="resource__ext" aria-hidden="true">&#8599;</span></a>
       {% endif %}
-      {% if link.draft %}<span class="resource__draft">Draft</span>{% endif %}
+      {% if link.draft %}<span class="draft-tag">Draft</span>{% endif %}
       {% if link.note %}<span class="resource__note">{{ link.note }}</span>{% endif %}
     </li>
     {% endfor %}

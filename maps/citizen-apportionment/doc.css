@@ -31,18 +31,13 @@
 .cgdoc blockquote { margin: 1.25rem 0; padding-left: 1rem;
   border-left: 3px solid var(--cgd-rule); color: var(--cgd-muted); }
 
-/* Work-in-progress notice above the map. Takes the site's red, like the
-   "Draft" badge on the Resources page. */
+/* Work-in-progress notice above the map; the pill is site.css's .draft-tag. */
 .cgdraft {
   margin: 0 0 1.5rem; padding: .65rem .9rem; font-size: .95rem;
   border: 1px solid var(--line); border-left: 3px solid var(--red);
   border-radius: 4px; background: var(--bg-alt);
 }
-.cgdraft__tag {
-  display: inline-block; vertical-align: .1em; margin-right: .45rem;
-  font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
-  color: var(--red); border: 1px solid var(--red); border-radius: 999px; padding: 0 .5rem;
-}
+.cgdraft .draft-tag { margin: 0 .45rem 0 0; }
 
 /* The map sits under the page's own <h1>, so its heading is a figure heading.
    cartogram.css styles .cg-head h1; this page uses h2 for it instead, both so

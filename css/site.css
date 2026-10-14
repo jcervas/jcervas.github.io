@@ -342,7 +342,8 @@ img { max-width: 100%; height: auto; }
 .resource:last-child { border-bottom: 1px solid var(--line); }
 .resource__title { font-weight: 600; }
 .resource__ext { font-size: .8em; color: var(--muted); margin-left: .15rem; }
-.resource__draft {
+/* "Draft" pill for work-in-progress pages: Resources links, map cards, map pages. */
+.draft-tag {
   display: inline-block; vertical-align: .1em; margin-left: .4rem;
   font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
   color: var(--red); border: 1px solid var(--red); border-radius: 999px; padding: 0 .5rem;
