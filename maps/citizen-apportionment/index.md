@@ -204,9 +204,19 @@ through immigration, and a rule that stops counting part of that growth takes ba
 of what it gave.
 
 The seats do land in states Trump carried in 2024 — Michigan, Tennessee, and Wisconsin
-— so the net is two seats toward Trump-won states and two away from Harris-won ones.
-But a net of two, at the cost of a Texas seat, is a narrow return on a change this
-disruptive.
+— so on the 2024 map the net is two seats toward Trump-won states and two away from
+Harris-won ones. That overstates it. Michigan and Wisconsin are the closest states in
+presidential politics: Biden carried both in 2020 and Trump both in 2024, each time by
+less than three points, and both have Democratic governors. Only Tennessee's new seat
+lands in a reliably Republican state.
+
+Who draws the lines after 2030 cuts the same way. Republicans would draw one more
+district in Tennessee and one fewer in Texas, which nets to zero; Democrats in Illinois
+would draw one fewer. California's and Michigan's districts are drawn by independent
+citizens' commissions — California's temporary legislative map runs only through
+2030 — and Wisconsin's needs the governor's signature as well as the legislature's.
+Counting only districts one party draws alone, Democrats lose one and Republicans come
+out even. For Republicans, that is a thin return on a change this disruptive.
 
 ## State by state
 
@@ -912,7 +922,7 @@ moves representation.
   <text class="xs-tick" x="344" y="653" text-anchor="middle">25%+</text>
   <rect class="xs-b1" x="422" y="629" width="26" height="11"/>
   <rect x="422" y="629" width="26" height="11" fill="url(#xs-hatch)"/>
-  <text class="xs-cap" x="456" y="638">estimated from the state rate, not a county count</text>
+  <text class="xs-cap" x="456" y="638">no county count: assumes the state’s green-card share</text>
 </svg>
 </div>
 <!-- end exclusion surface -->
@@ -925,14 +935,19 @@ Chicago, Houston, Dallas and Yakima. Half of all tracts sit below 1.8%.
 Two things about how to read it. The surface stops where its subject does — where
 almost nobody lives, nothing is drawn, which is why the interior is full of holes.
 
-The hatching is not missing data: every tract has an estimate. It marks where that
-estimate is anchored to a *state* rate rather than to a county count, because DHS
-publishes green-card figures for the fifty largest metros and nowhere else. The
-distinction is worth marking. In the counties where both anchors are available,
-swapping the county count for the state rate moves a tract's value by about two
-percentage points on average — enough to shift **37% of tracts into a different
-band** on this scale. About a quarter of the non-citizen population lives in
-hatched country.
+The hatching marks where the map is less certain. Every tract's figure comes from the
+same calculation: its non-citizens, minus the share of them estimated to hold green
+cards. What differs is where that green-card share comes from. DHS counts green-card
+holders county by county only in the fifty largest metro areas, and there each
+county's tracts add up to the DHS count. Everywhere else, the hatched areas, there is
+no county count, so each county is assumed to have the same green-card share as its
+state as a whole, and only the split among its tracts is estimated.
+
+That assumption is not harmless. In the counties where both figures exist, using the
+state share instead of the county count changes a tract's value by about two
+percentage points on average — enough to move **37% of tracts into a different
+color band** on this scale. About a quarter of the non-citizen population lives in
+hatched areas.
 
 ## How solid is this
 
