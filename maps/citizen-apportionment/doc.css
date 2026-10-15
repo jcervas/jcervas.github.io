@@ -146,3 +146,6 @@
 .pt-loss { color: #D95F02; font-weight: 700; }
 .pt-delta { font-size: .85em; color: var(--cgd-muted); }
 .pt-note { margin: .6rem 0 1rem; font-size: .85rem; color: var(--cgd-muted); }
+.pt-mark { margin-left: .15em; color: var(--cgd-muted); }
+.pt-pad { visibility: hidden; }
+.pt-note + .pt-note { margin-top: -.4rem; }

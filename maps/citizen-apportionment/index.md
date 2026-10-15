@@ -10,7 +10,7 @@ draft: true
 ---
 
 <link rel="stylesheet" href="{{ '/maps/apportionment-2020-2030/cartogram.css' | relative_url }}?v=7263e8e0">
-<link rel="stylesheet" href="{{ '/maps/citizen-apportionment/doc.css' | relative_url }}?v=8371d46e">
+<link rel="stylesheet" href="{{ '/maps/citizen-apportionment/doc.css' | relative_url }}?v=7376887e">
 
 <p class="cgdraft" role="note"><span class="draft-tag">Draft</span>
   This analysis is a work in progress. The figures and text may change before it is final.</p>
@@ -259,12 +259,14 @@ line for. Its 10th is held by about 71,000 people.
 <div class="pt-scroll">
 <table class="pt-table">
   <thead>
-    <tr><th>State</th><th class="num">Projected population</th><th class="num">Not counted</th><th class="num">Share</th><th class="num">Counted</th><th class="num">Seats, current rules</th><th class="num">Seats, proposed rule</th></tr>
+    <tr><th>State</th><th class="num">Projected population</th><th class="num">Non-citizens</th><th class="num">Green-card holders, still counted</th><th class="num">Not counted</th><th class="num">% of population</th><th class="num">Counted</th><th class="num">Seats, current rules</th><th class="num">Seats, proposed rule</th></tr>
   </thead>
   <tbody>
     <tr>
       <td>Alabama</td>
       <td class="num">5,363,956</td>
+      <td class="num">135,774</td>
+      <td class="num">62,311<span class="pt-mark">†</span></td>
       <td class="num">73,463</td>
       <td class="num">1.4%</td>
       <td class="num">5,290,493</td>
@@ -274,6 +276,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Alaska</td>
       <td class="num">741,357</td>
+      <td class="num">19,654</td>
+      <td class="num">8,747<span class="pt-mark">†</span></td>
       <td class="num">10,907</td>
       <td class="num">1.5%</td>
       <td class="num">730,450</td>
@@ -283,6 +287,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Arizona</td>
       <td class="num">8,074,898</td>
+      <td class="num">463,193</td>
+      <td class="num">218,342<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
       <td class="num">244,851</td>
       <td class="num">3.0%</td>
       <td class="num">7,830,047</td>
@@ -292,6 +298,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Arkansas</td>
       <td class="num">3,220,344</td>
+      <td class="num">118,721</td>
+      <td class="num">56,669<span class="pt-mark">†</span></td>
       <td class="num">62,052</td>
       <td class="num">1.9%</td>
       <td class="num">3,158,292</td>
@@ -301,6 +309,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr class="pt-moved">
       <td>California</td>
       <td class="num">39,352,145</td>
+      <td class="num">4,414,797</td>
+      <td class="num">2,541,147<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
       <td class="num">1,873,650</td>
       <td class="num">4.8%</td>
       <td class="num">37,478,495</td>
@@ -310,6 +320,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Colorado</td>
       <td class="num">6,265,578</td>
+      <td class="num">291,644</td>
+      <td class="num">140,551<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
       <td class="num">151,093</td>
       <td class="num">2.4%</td>
       <td class="num">6,114,485</td>
@@ -319,6 +331,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Connecticut</td>
       <td class="num">3,800,122</td>
+      <td class="num">274,094</td>
+      <td class="num">143,751<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
       <td class="num">130,343</td>
       <td class="num">3.4%</td>
       <td class="num">3,669,779</td>
@@ -328,6 +342,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Delaware</td>
       <td class="num">1,131,327</td>
+      <td class="num">60,391</td>
+      <td class="num">29,621<span class="pt-mark">†</span></td>
       <td class="num">30,770</td>
       <td class="num">2.7%</td>
       <td class="num">1,100,557</td>
@@ -337,6 +353,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Florida</td>
       <td class="num">25,559,617</td>
+      <td class="num">2,436,686</td>
+      <td class="num">1,321,616<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
       <td class="num">1,115,070</td>
       <td class="num">4.4%</td>
       <td class="num">24,444,547</td>
@@ -346,6 +364,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Georgia</td>
       <td class="num">11,915,203</td>
+      <td class="num">670,154</td>
+      <td class="num">259,041<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
       <td class="num">411,113</td>
       <td class="num">3.5%</td>
       <td class="num">11,504,090</td>
@@ -355,6 +375,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Hawaii</td>
       <td class="num">1,413,800</td>
+      <td class="num">93,924</td>
+      <td class="num">42,859<span class="pt-mark">†</span></td>
       <td class="num">51,065</td>
       <td class="num">3.6%</td>
       <td class="num">1,362,735</td>
@@ -364,6 +386,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Idaho</td>
       <td class="num">2,204,111</td>
+      <td class="num">68,485</td>
+      <td class="num">31,097<span class="pt-mark">†</span></td>
       <td class="num">37,388</td>
       <td class="num">1.7%</td>
       <td class="num">2,166,723</td>
@@ -373,6 +397,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr class="pt-moved">
       <td>Illinois</td>
       <td class="num">12,665,578</td>
+      <td class="num">853,190</td>
+      <td class="num">451,188<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
       <td class="num">402,002</td>
       <td class="num">3.2%</td>
       <td class="num">12,263,576</td>
@@ -382,6 +408,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Indiana</td>
       <td class="num">7,161,869</td>
+      <td class="num">300,374</td>
+      <td class="num">144,809<span class="pt-mark">†</span></td>
       <td class="num">155,565</td>
       <td class="num">2.2%</td>
       <td class="num">7,006,304</td>
@@ -391,6 +419,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Iowa</td>
       <td class="num">3,288,265</td>
+      <td class="num">122,066</td>
+      <td class="num">61,134<span class="pt-mark">†</span></td>
       <td class="num">60,932</td>
       <td class="num">1.9%</td>
       <td class="num">3,227,333</td>
@@ -400,6 +430,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Kansas</td>
       <td class="num">3,017,365</td>
+      <td class="num">125,558</td>
+      <td class="num">56,329<span class="pt-mark">†</span></td>
       <td class="num">69,229</td>
       <td class="num">2.3%</td>
       <td class="num">2,948,136</td>
@@ -409,6 +441,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Kentucky</td>
       <td class="num">4,714,747</td>
+      <td class="num">145,279</td>
+      <td class="num">66,925<span class="pt-mark">†</span></td>
       <td class="num">78,354</td>
       <td class="num">1.7%</td>
       <td class="num">4,636,393</td>
@@ -418,6 +452,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Louisiana</td>
       <td class="num">4,585,953</td>
+      <td class="num">148,407</td>
+      <td class="num">73,587<span class="pt-mark">†</span></td>
       <td class="num">74,820</td>
       <td class="num">1.6%</td>
       <td class="num">4,511,133</td>
@@ -427,6 +463,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Maine</td>
       <td class="num">1,465,797</td>
+      <td class="num">32,596</td>
+      <td class="num">15,209<span class="pt-mark">†</span></td>
       <td class="num">17,387</td>
       <td class="num">1.2%</td>
       <td class="num">1,448,410</td>
@@ -436,6 +474,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Maryland</td>
       <td class="num">6,361,023</td>
+      <td class="num">491,891</td>
+      <td class="num">244,015<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
       <td class="num">247,876</td>
       <td class="num">3.9%</td>
       <td class="num">6,113,147</td>
@@ -445,6 +485,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Massachusetts</td>
       <td class="num">7,350,499</td>
+      <td class="num">659,378</td>
+      <td class="num">349,704<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
       <td class="num">309,674</td>
       <td class="num">4.2%</td>
       <td class="num">7,040,825</td>
@@ -454,6 +496,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr class="pt-moved">
       <td>Michigan</td>
       <td class="num">10,192,795</td>
+      <td class="num">324,674</td>
+      <td class="num">192,246<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
       <td class="num">132,428</td>
       <td class="num">1.3%</td>
       <td class="num">10,060,367</td>
@@ -463,6 +507,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Minnesota</td>
       <td class="num">5,953,980</td>
+      <td class="num">215,879</td>
+      <td class="num">102,740<span class="pt-mark">†</span></td>
       <td class="num">113,139</td>
       <td class="num">1.9%</td>
       <td class="num">5,840,841</td>
@@ -472,6 +518,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Mississippi</td>
       <td class="num">2,951,688</td>
+      <td class="num">47,861</td>
+      <td class="num">22,186<span class="pt-mark">†</span></td>
       <td class="num">25,675</td>
       <td class="num">0.9%</td>
       <td class="num">2,926,013</td>
@@ -481,6 +529,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Missouri</td>
       <td class="num">6,386,593</td>
+      <td class="num">146,943</td>
+      <td class="num">68,226<span class="pt-mark">†</span></td>
       <td class="num">78,717</td>
       <td class="num">1.2%</td>
       <td class="num">6,307,876</td>
@@ -490,6 +540,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Montana</td>
       <td class="num">1,201,147</td>
+      <td class="num">12,816</td>
+      <td class="num">6,773<span class="pt-mark">†</span></td>
       <td class="num">6,043</td>
       <td class="num">0.5%</td>
       <td class="num">1,195,104</td>
@@ -499,6 +551,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Nebraska</td>
       <td class="num">2,077,292</td>
+      <td class="num">104,878</td>
+      <td class="num">48,172<span class="pt-mark">†</span></td>
       <td class="num">56,706</td>
       <td class="num">2.7%</td>
       <td class="num">2,020,586</td>
@@ -508,6 +562,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Nevada</td>
       <td class="num">3,451,612</td>
+      <td class="num">279,752</td>
+      <td class="num">118,388<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
       <td class="num">161,364</td>
       <td class="num">4.7%</td>
       <td class="num">3,290,248</td>
@@ -517,6 +573,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>New Hampshire</td>
       <td class="num">1,450,892</td>
+      <td class="num">33,232</td>
+      <td class="num">16,769<span class="pt-mark">†</span></td>
       <td class="num">16,463</td>
       <td class="num">1.1%</td>
       <td class="num">1,434,429</td>
@@ -526,6 +584,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>New Jersey</td>
       <td class="num">9,874,218</td>
+      <td class="num">1,051,632</td>
+      <td class="num">581,463<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
       <td class="num">470,169</td>
       <td class="num">4.8%</td>
       <td class="num">9,404,049</td>
@@ -535,6 +595,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>New Mexico</td>
       <td class="num">2,136,857</td>
+      <td class="num">108,270</td>
+      <td class="num">45,223<span class="pt-mark">†</span></td>
       <td class="num">63,047</td>
       <td class="num">3.0%</td>
       <td class="num">2,073,810</td>
@@ -544,6 +606,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>New York</td>
       <td class="num">20,014,610</td>
+      <td class="num">1,703,306</td>
+      <td class="num">1,424,136<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
       <td class="num">279,170</td>
       <td class="num">1.4%</td>
       <td class="num">19,735,440</td>
@@ -553,6 +617,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>North Carolina</td>
       <td class="num">11,968,863</td>
+      <td class="num">634,338</td>
+      <td class="num">200,625<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
       <td class="num">433,713</td>
       <td class="num">3.6%</td>
       <td class="num">11,535,150</td>
@@ -562,6 +628,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>North Dakota</td>
       <td class="num">820,969</td>
+      <td class="num">26,861</td>
+      <td class="num">13,339<span class="pt-mark">†</span></td>
       <td class="num">13,522</td>
       <td class="num">1.6%</td>
       <td class="num">807,447</td>
@@ -571,6 +639,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Ohio</td>
       <td class="num">12,021,223</td>
+      <td class="num">332,533</td>
+      <td class="num">170,483<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
       <td class="num">162,050</td>
       <td class="num">1.4%</td>
       <td class="num">11,859,173</td>
@@ -580,6 +650,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Oklahoma</td>
       <td class="num">4,289,093</td>
+      <td class="num">159,998</td>
+      <td class="num">76,147<span class="pt-mark">†</span></td>
       <td class="num">83,851</td>
       <td class="num">1.9%</td>
       <td class="num">4,205,242</td>
@@ -589,6 +661,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Oregon</td>
       <td class="num">4,299,040</td>
+      <td class="num">187,871</td>
+      <td class="num">98,513<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
       <td class="num">89,358</td>
       <td class="num">2.1%</td>
       <td class="num">4,209,682</td>
@@ -598,6 +672,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Pennsylvania</td>
       <td class="num">13,120,932</td>
+      <td class="num">502,520</td>
+      <td class="num">284,711<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
       <td class="num">217,809</td>
       <td class="num">1.7%</td>
       <td class="num">12,903,123</td>
@@ -607,6 +683,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Rhode Island</td>
       <td class="num">1,133,386</td>
+      <td class="num">79,062</td>
+      <td class="num">36,575<span class="pt-mark">†</span></td>
       <td class="num">42,487</td>
       <td class="num">3.8%</td>
       <td class="num">1,090,899</td>
@@ -616,6 +694,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>South Carolina</td>
       <td class="num">6,029,812</td>
+      <td class="num">200,275</td>
+      <td class="num">95,519<span class="pt-mark">†</span></td>
       <td class="num">104,756</td>
       <td class="num">1.7%</td>
       <td class="num">5,925,056</td>
@@ -625,6 +705,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>South Dakota</td>
       <td class="num">983,787</td>
+      <td class="num">24,164</td>
+      <td class="num">11,747<span class="pt-mark">†</span></td>
       <td class="num">12,417</td>
       <td class="num">1.3%</td>
       <td class="num">971,370</td>
@@ -634,6 +716,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr class="pt-moved">
       <td>Tennessee</td>
       <td class="num">7,734,345</td>
+      <td class="num">307,030</td>
+      <td class="num">154,808<span class="pt-mark">†</span></td>
       <td class="num">152,222</td>
       <td class="num">2.0%</td>
       <td class="num">7,582,123</td>
@@ -643,6 +727,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr class="pt-moved">
       <td>Texas</td>
       <td class="num">34,360,163</td>
+      <td class="num">3,448,345</td>
+      <td class="num">1,409,809<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
       <td class="num">2,038,536</td>
       <td class="num">5.9%</td>
       <td class="num">32,321,627</td>
@@ -652,6 +738,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Utah</td>
       <td class="num">3,803,536</td>
+      <td class="num">200,072</td>
+      <td class="num">92,692<span class="pt-mark">†</span></td>
       <td class="num">107,380</td>
       <td class="num">2.8%</td>
       <td class="num">3,696,156</td>
@@ -661,6 +749,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Vermont</td>
       <td class="num">645,997</td>
+      <td class="num">9,291</td>
+      <td class="num">4,756<span class="pt-mark">†</span></td>
       <td class="num">4,535</td>
       <td class="num">0.7%</td>
       <td class="num">641,462</td>
@@ -670,6 +760,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Virginia</td>
       <td class="num">9,127,348</td>
+      <td class="num">513,567</td>
+      <td class="num">271,879<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
       <td class="num">241,688</td>
       <td class="num">2.6%</td>
       <td class="num">8,885,660</td>
@@ -679,6 +771,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Washington</td>
       <td class="num">8,279,575</td>
+      <td class="num">683,200</td>
+      <td class="num">319,662<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
       <td class="num">363,538</td>
       <td class="num">4.4%</td>
       <td class="num">7,916,037</td>
@@ -688,6 +782,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>West Virginia</td>
       <td class="num">1,738,290</td>
+      <td class="num">17,768</td>
+      <td class="num">8,263<span class="pt-mark">†</span></td>
       <td class="num">9,505</td>
       <td class="num">0.6%</td>
       <td class="num">1,728,785</td>
@@ -697,6 +793,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr class="pt-moved">
       <td>Wisconsin</td>
       <td class="num">6,065,320</td>
+      <td class="num">172,154</td>
+      <td class="num">80,959<span class="pt-mark">†</span></td>
       <td class="num">91,195</td>
       <td class="num">1.5%</td>
       <td class="num">5,974,125</td>
@@ -706,6 +804,8 @@ line for. Its 10th is held by about 71,000 people.
     <tr>
       <td>Wyoming</td>
       <td class="num">600,231</td>
+      <td class="num">11,242</td>
+      <td class="num">5,381<span class="pt-mark">†</span></td>
       <td class="num">5,861</td>
       <td class="num">1.0%</td>
       <td class="num">594,370</td>
@@ -714,13 +814,19 @@ line for. Its 10th is held by about 71,000 people.
     </tr>
   </tbody>
   <tfoot>
-    <tr><td>Total</td><td class="num">352,367,148</td><td class="num">11,184,948</td><td class="num">3.2%</td><td class="num">341,182,200</td><td class="num">435</td><td class="num">435</td></tr>
+    <tr><td>Total</td><td class="num">352,367,148</td><td class="num">23,465,790</td><td class="num">12,280,842</td><td class="num">11,184,948</td><td class="num">3.2%</td><td class="num">341,182,200</td><td class="num">435</td><td class="num">435</td></tr>
   </tfoot>
 </table>
 </div>
 <p class="pt-note">Projected to 2030 from Census Bureau vintage 2025 estimates.
 The District of Columbia is not apportioned and is left out. The share not counted
-is estimated from the ACS and DHS (see Method) and applied to each state's projected total.</p>
+is estimated from the ACS and DHS (see Method) and applied to each state's projected total.
+Non-citizens are the ACS count; green-card holders are the DHS estimate, carried forward
+to 2030 as a fixed share of each state's non-citizens; everyone else is not counted.</p>
+<p class="pt-note"><span class="pt-mark">†</span> DHS publishes green-card estimates for
+the twenty largest states only. For the rest, its pooled total is divided in proportion
+to each state's non-citizen population, so the split in these states is an assumption,
+not a state figure.</p>
 </details>
 <!-- end population table -->
 
