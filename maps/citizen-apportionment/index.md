@@ -11,6 +11,7 @@ draft: true
 
 <link rel="stylesheet" href="{{ '/maps/apportionment-2020-2030/cartogram.css' | relative_url }}?v=7263e8e0">
 <link rel="stylesheet" href="{{ '/maps/citizen-apportionment/doc.css' | relative_url }}?v=edade2ce">
+<link rel="stylesheet" href="{{ '/css/sidenotes.css' | relative_url }}?v=b7169c6d">
 
 <p class="cgdraft" role="note"><span class="draft-tag">Draft</span>
   This analysis is a work in progress. The figures and text may change before it is final.</p>
@@ -47,6 +48,7 @@ draft: true
 
 <script src="{{ '/maps/citizen-apportionment/cartogram.js' | relative_url }}?v=b931ddeb" defer></script>
 <script src="{{ '/maps/citizen-apportionment/poptable.js' | relative_url }}?v=f20a68eb" defer></script>
+<script src="{{ '/js/sidenotes.js' | relative_url }}?v=80eb069e" defer></script>
 
 <div class="cgdoc" markdown="1">
 
@@ -57,7 +59,8 @@ Everyone else — people on student and work visas, people awaiting asylum decis
 people here illegally — would be, in the rule's words, "[n]ot counted for
 apportionment."
 
-The comment period closes **October 13, 2026**.[^fr]
+The comment period, first set to close October 13, has been extended to
+**November 2, 2026**.[^fr]
 
 ## Who stops being counted
 
@@ -1091,8 +1094,11 @@ Code and data: [github.com/jcervas](https://github.com/jcervas).
 [^fr]: Bureau of the Census, *Decennial Census of the Population of Americans; Proposed
     Residence Criteria and Proposed Regulations for Demographic Questions*, 91 Fed. Reg.
     57524 (Sept. 10, 2026) (to be codified at 15 C.F.R. pts. 60, 70), RIN 0607-AA75,
-    docket USBC-2026-0628. Comments close October 13, 2026.
-    [federalregister.gov](https://www.federalregister.gov/documents/2026/09/10/2026-18481/decennial-census-of-the-population-of-americans-proposed-residence-criteria-and-proposed-regulations)
+    docket USBC-2026-0628.
+    [federalregister.gov](https://www.federalregister.gov/documents/2026/09/10/2026-18481/decennial-census-of-the-population-of-americans-proposed-residence-criteria-and-proposed-regulations).
+    The comment period was extended from October 13 to November 2, 2026, by 91 Fed. Reg.
+    63207 (Oct. 5, 2026).
+    [federalregister.gov](https://www.federalregister.gov/documents/2026/10/05/2026-20328/decennial-census-of-the-population-of-americans-proposed-residence-criteria-and-proposed-regulations)
 
 [^census]: U.S. Census Bureau, Vintage 2025 state population estimates, 2020–2025
     ([NST-EST2025-ALLDATA.csv](https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/state/totals/NST-EST2025-ALLDATA.csv);
