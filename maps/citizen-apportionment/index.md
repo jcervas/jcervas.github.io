@@ -10,7 +10,7 @@ draft: true
 ---
 
 <link rel="stylesheet" href="{{ '/maps/apportionment-2020-2030/cartogram.css' | relative_url }}?v=7263e8e0">
-<link rel="stylesheet" href="{{ '/maps/citizen-apportionment/doc.css' | relative_url }}?v=7376887e">
+<link rel="stylesheet" href="{{ '/maps/citizen-apportionment/doc.css' | relative_url }}?v=edade2ce">
 
 <p class="cgdraft" role="note"><span class="draft-tag">Draft</span>
   This analysis is a work in progress. The figures and text may change before it is final.</p>
@@ -46,6 +46,7 @@ draft: true
 </div>
 
 <script src="{{ '/maps/citizen-apportionment/cartogram.js' | relative_url }}?v=b931ddeb" defer></script>
+<script src="{{ '/maps/citizen-apportionment/poptable.js' | relative_url }}?v=f20a68eb" defer></script>
 
 <div class="cgdoc" markdown="1">
 
@@ -257,560 +258,560 @@ line for. Its 10th is held by about 71,000 people.
 <details class="pt-details">
 <summary>Population by state, 2030</summary>
 <div class="pt-scroll">
-<table class="pt-table">
+<table class="pt-table" id="pt-table">
   <thead>
-    <tr><th>State</th><th class="num">Projected population</th><th class="num">Non-citizens</th><th class="num">Green-card holders, still counted</th><th class="num">Not counted</th><th class="num">% of population</th><th class="num">Counted</th><th class="num">Seats, current rules</th><th class="num">Seats, proposed rule</th></tr>
+    <tr><th aria-sort="ascending">State</th><th class="num">Projected population</th><th class="num">Non-citizens</th><th class="num">Green-card holders, still counted</th><th class="num">Not counted</th><th class="num">% of population</th><th class="num">Counted</th><th class="num">Seats, current rules</th><th class="num">Seats, proposed rule</th></tr>
   </thead>
   <tbody>
     <tr>
       <td>Alabama</td>
-      <td class="num">5,363,956</td>
-      <td class="num">135,774</td>
-      <td class="num">62,311<span class="pt-mark">†</span></td>
-      <td class="num">73,463</td>
-      <td class="num">1.4%</td>
-      <td class="num">5,290,493</td>
-      <td class="num">7</td>
-      <td class="num">7</td>
+      <td class="num" data-v="5363956">5,363,956</td>
+      <td class="num" data-v="135774">135,774</td>
+      <td class="num" data-v="62311">62,311<span class="pt-mark">†</span></td>
+      <td class="num" data-v="73463">73,463</td>
+      <td class="num" data-v="1.37">1.4%</td>
+      <td class="num" data-v="5290493">5,290,493</td>
+      <td class="num" data-v="7">7</td>
+      <td class="num" data-v="7">7</td>
     </tr>
     <tr>
       <td>Alaska</td>
-      <td class="num">741,357</td>
-      <td class="num">19,654</td>
-      <td class="num">8,747<span class="pt-mark">†</span></td>
-      <td class="num">10,907</td>
-      <td class="num">1.5%</td>
-      <td class="num">730,450</td>
-      <td class="num">1</td>
-      <td class="num">1</td>
+      <td class="num" data-v="741357">741,357</td>
+      <td class="num" data-v="19654">19,654</td>
+      <td class="num" data-v="8747">8,747<span class="pt-mark">†</span></td>
+      <td class="num" data-v="10907">10,907</td>
+      <td class="num" data-v="1.47">1.5%</td>
+      <td class="num" data-v="730450">730,450</td>
+      <td class="num" data-v="1">1</td>
+      <td class="num" data-v="1">1</td>
     </tr>
     <tr>
       <td>Arizona</td>
-      <td class="num">8,074,898</td>
-      <td class="num">463,193</td>
-      <td class="num">218,342<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
-      <td class="num">244,851</td>
-      <td class="num">3.0%</td>
-      <td class="num">7,830,047</td>
-      <td class="num">10</td>
-      <td class="num">10</td>
+      <td class="num" data-v="8074898">8,074,898</td>
+      <td class="num" data-v="463193">463,193</td>
+      <td class="num" data-v="218342">218,342<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
+      <td class="num" data-v="244851">244,851</td>
+      <td class="num" data-v="3.03">3.0%</td>
+      <td class="num" data-v="7830047">7,830,047</td>
+      <td class="num" data-v="10">10</td>
+      <td class="num" data-v="10">10</td>
     </tr>
     <tr>
       <td>Arkansas</td>
-      <td class="num">3,220,344</td>
-      <td class="num">118,721</td>
-      <td class="num">56,669<span class="pt-mark">†</span></td>
-      <td class="num">62,052</td>
-      <td class="num">1.9%</td>
-      <td class="num">3,158,292</td>
-      <td class="num">4</td>
-      <td class="num">4</td>
+      <td class="num" data-v="3220344">3,220,344</td>
+      <td class="num" data-v="118721">118,721</td>
+      <td class="num" data-v="56669">56,669<span class="pt-mark">†</span></td>
+      <td class="num" data-v="62052">62,052</td>
+      <td class="num" data-v="1.93">1.9%</td>
+      <td class="num" data-v="3158292">3,158,292</td>
+      <td class="num" data-v="4">4</td>
+      <td class="num" data-v="4">4</td>
     </tr>
     <tr class="pt-moved">
       <td>California</td>
-      <td class="num">39,352,145</td>
-      <td class="num">4,414,797</td>
-      <td class="num">2,541,147<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
-      <td class="num">1,873,650</td>
-      <td class="num">4.8%</td>
-      <td class="num">37,478,495</td>
-      <td class="num">48</td>
-      <td class="num"><span class="pt-loss">47</span> <span class="pt-delta">(−1)</span></td>
+      <td class="num" data-v="39352145">39,352,145</td>
+      <td class="num" data-v="4414797">4,414,797</td>
+      <td class="num" data-v="2541147">2,541,147<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
+      <td class="num" data-v="1873650">1,873,650</td>
+      <td class="num" data-v="4.76">4.8%</td>
+      <td class="num" data-v="37478495">37,478,495</td>
+      <td class="num" data-v="48">48</td>
+      <td class="num" data-v="47"><span class="pt-loss">47</span> <span class="pt-delta">(−1)</span></td>
     </tr>
     <tr>
       <td>Colorado</td>
-      <td class="num">6,265,578</td>
-      <td class="num">291,644</td>
-      <td class="num">140,551<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
-      <td class="num">151,093</td>
-      <td class="num">2.4%</td>
-      <td class="num">6,114,485</td>
-      <td class="num">8</td>
-      <td class="num">8</td>
+      <td class="num" data-v="6265578">6,265,578</td>
+      <td class="num" data-v="291644">291,644</td>
+      <td class="num" data-v="140551">140,551<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
+      <td class="num" data-v="151093">151,093</td>
+      <td class="num" data-v="2.41">2.4%</td>
+      <td class="num" data-v="6114485">6,114,485</td>
+      <td class="num" data-v="8">8</td>
+      <td class="num" data-v="8">8</td>
     </tr>
     <tr>
       <td>Connecticut</td>
-      <td class="num">3,800,122</td>
-      <td class="num">274,094</td>
-      <td class="num">143,751<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
-      <td class="num">130,343</td>
-      <td class="num">3.4%</td>
-      <td class="num">3,669,779</td>
-      <td class="num">5</td>
-      <td class="num">5</td>
+      <td class="num" data-v="3800122">3,800,122</td>
+      <td class="num" data-v="274094">274,094</td>
+      <td class="num" data-v="143751">143,751<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
+      <td class="num" data-v="130343">130,343</td>
+      <td class="num" data-v="3.43">3.4%</td>
+      <td class="num" data-v="3669779">3,669,779</td>
+      <td class="num" data-v="5">5</td>
+      <td class="num" data-v="5">5</td>
     </tr>
     <tr>
       <td>Delaware</td>
-      <td class="num">1,131,327</td>
-      <td class="num">60,391</td>
-      <td class="num">29,621<span class="pt-mark">†</span></td>
-      <td class="num">30,770</td>
-      <td class="num">2.7%</td>
-      <td class="num">1,100,557</td>
-      <td class="num">1</td>
-      <td class="num">1</td>
+      <td class="num" data-v="1131327">1,131,327</td>
+      <td class="num" data-v="60391">60,391</td>
+      <td class="num" data-v="29621">29,621<span class="pt-mark">†</span></td>
+      <td class="num" data-v="30770">30,770</td>
+      <td class="num" data-v="2.72">2.7%</td>
+      <td class="num" data-v="1100557">1,100,557</td>
+      <td class="num" data-v="1">1</td>
+      <td class="num" data-v="1">1</td>
     </tr>
     <tr>
       <td>Florida</td>
-      <td class="num">25,559,617</td>
-      <td class="num">2,436,686</td>
-      <td class="num">1,321,616<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
-      <td class="num">1,115,070</td>
-      <td class="num">4.4%</td>
-      <td class="num">24,444,547</td>
-      <td class="num">31</td>
-      <td class="num">31</td>
+      <td class="num" data-v="25559617">25,559,617</td>
+      <td class="num" data-v="2436686">2,436,686</td>
+      <td class="num" data-v="1321616">1,321,616<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
+      <td class="num" data-v="1115070">1,115,070</td>
+      <td class="num" data-v="4.36">4.4%</td>
+      <td class="num" data-v="24444547">24,444,547</td>
+      <td class="num" data-v="31">31</td>
+      <td class="num" data-v="31">31</td>
     </tr>
     <tr>
       <td>Georgia</td>
-      <td class="num">11,915,203</td>
-      <td class="num">670,154</td>
-      <td class="num">259,041<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
-      <td class="num">411,113</td>
-      <td class="num">3.5%</td>
-      <td class="num">11,504,090</td>
-      <td class="num">15</td>
-      <td class="num">15</td>
+      <td class="num" data-v="11915203">11,915,203</td>
+      <td class="num" data-v="670154">670,154</td>
+      <td class="num" data-v="259041">259,041<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
+      <td class="num" data-v="411113">411,113</td>
+      <td class="num" data-v="3.45">3.5%</td>
+      <td class="num" data-v="11504090">11,504,090</td>
+      <td class="num" data-v="15">15</td>
+      <td class="num" data-v="15">15</td>
     </tr>
     <tr>
       <td>Hawaii</td>
-      <td class="num">1,413,800</td>
-      <td class="num">93,924</td>
-      <td class="num">42,859<span class="pt-mark">†</span></td>
-      <td class="num">51,065</td>
-      <td class="num">3.6%</td>
-      <td class="num">1,362,735</td>
-      <td class="num">2</td>
-      <td class="num">2</td>
+      <td class="num" data-v="1413800">1,413,800</td>
+      <td class="num" data-v="93924">93,924</td>
+      <td class="num" data-v="42859">42,859<span class="pt-mark">†</span></td>
+      <td class="num" data-v="51065">51,065</td>
+      <td class="num" data-v="3.61">3.6%</td>
+      <td class="num" data-v="1362735">1,362,735</td>
+      <td class="num" data-v="2">2</td>
+      <td class="num" data-v="2">2</td>
     </tr>
     <tr>
       <td>Idaho</td>
-      <td class="num">2,204,111</td>
-      <td class="num">68,485</td>
-      <td class="num">31,097<span class="pt-mark">†</span></td>
-      <td class="num">37,388</td>
-      <td class="num">1.7%</td>
-      <td class="num">2,166,723</td>
-      <td class="num">3</td>
-      <td class="num">3</td>
+      <td class="num" data-v="2204111">2,204,111</td>
+      <td class="num" data-v="68485">68,485</td>
+      <td class="num" data-v="31097">31,097<span class="pt-mark">†</span></td>
+      <td class="num" data-v="37388">37,388</td>
+      <td class="num" data-v="1.7">1.7%</td>
+      <td class="num" data-v="2166723">2,166,723</td>
+      <td class="num" data-v="3">3</td>
+      <td class="num" data-v="3">3</td>
     </tr>
     <tr class="pt-moved">
       <td>Illinois</td>
-      <td class="num">12,665,578</td>
-      <td class="num">853,190</td>
-      <td class="num">451,188<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
-      <td class="num">402,002</td>
-      <td class="num">3.2%</td>
-      <td class="num">12,263,576</td>
-      <td class="num">16</td>
-      <td class="num"><span class="pt-loss">15</span> <span class="pt-delta">(−1)</span></td>
+      <td class="num" data-v="12665578">12,665,578</td>
+      <td class="num" data-v="853190">853,190</td>
+      <td class="num" data-v="451188">451,188<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
+      <td class="num" data-v="402002">402,002</td>
+      <td class="num" data-v="3.17">3.2%</td>
+      <td class="num" data-v="12263576">12,263,576</td>
+      <td class="num" data-v="16">16</td>
+      <td class="num" data-v="15"><span class="pt-loss">15</span> <span class="pt-delta">(−1)</span></td>
     </tr>
     <tr>
       <td>Indiana</td>
-      <td class="num">7,161,869</td>
-      <td class="num">300,374</td>
-      <td class="num">144,809<span class="pt-mark">†</span></td>
-      <td class="num">155,565</td>
-      <td class="num">2.2%</td>
-      <td class="num">7,006,304</td>
-      <td class="num">9</td>
-      <td class="num">9</td>
+      <td class="num" data-v="7161869">7,161,869</td>
+      <td class="num" data-v="300374">300,374</td>
+      <td class="num" data-v="144809">144,809<span class="pt-mark">†</span></td>
+      <td class="num" data-v="155565">155,565</td>
+      <td class="num" data-v="2.17">2.2%</td>
+      <td class="num" data-v="7006304">7,006,304</td>
+      <td class="num" data-v="9">9</td>
+      <td class="num" data-v="9">9</td>
     </tr>
     <tr>
       <td>Iowa</td>
-      <td class="num">3,288,265</td>
-      <td class="num">122,066</td>
-      <td class="num">61,134<span class="pt-mark">†</span></td>
-      <td class="num">60,932</td>
-      <td class="num">1.9%</td>
-      <td class="num">3,227,333</td>
-      <td class="num">4</td>
-      <td class="num">4</td>
+      <td class="num" data-v="3288265">3,288,265</td>
+      <td class="num" data-v="122066">122,066</td>
+      <td class="num" data-v="61134">61,134<span class="pt-mark">†</span></td>
+      <td class="num" data-v="60932">60,932</td>
+      <td class="num" data-v="1.85">1.9%</td>
+      <td class="num" data-v="3227333">3,227,333</td>
+      <td class="num" data-v="4">4</td>
+      <td class="num" data-v="4">4</td>
     </tr>
     <tr>
       <td>Kansas</td>
-      <td class="num">3,017,365</td>
-      <td class="num">125,558</td>
-      <td class="num">56,329<span class="pt-mark">†</span></td>
-      <td class="num">69,229</td>
-      <td class="num">2.3%</td>
-      <td class="num">2,948,136</td>
-      <td class="num">4</td>
-      <td class="num">4</td>
+      <td class="num" data-v="3017365">3,017,365</td>
+      <td class="num" data-v="125558">125,558</td>
+      <td class="num" data-v="56329">56,329<span class="pt-mark">†</span></td>
+      <td class="num" data-v="69229">69,229</td>
+      <td class="num" data-v="2.29">2.3%</td>
+      <td class="num" data-v="2948136">2,948,136</td>
+      <td class="num" data-v="4">4</td>
+      <td class="num" data-v="4">4</td>
     </tr>
     <tr>
       <td>Kentucky</td>
-      <td class="num">4,714,747</td>
-      <td class="num">145,279</td>
-      <td class="num">66,925<span class="pt-mark">†</span></td>
-      <td class="num">78,354</td>
-      <td class="num">1.7%</td>
-      <td class="num">4,636,393</td>
-      <td class="num">6</td>
-      <td class="num">6</td>
+      <td class="num" data-v="4714747">4,714,747</td>
+      <td class="num" data-v="145279">145,279</td>
+      <td class="num" data-v="66925">66,925<span class="pt-mark">†</span></td>
+      <td class="num" data-v="78354">78,354</td>
+      <td class="num" data-v="1.66">1.7%</td>
+      <td class="num" data-v="4636393">4,636,393</td>
+      <td class="num" data-v="6">6</td>
+      <td class="num" data-v="6">6</td>
     </tr>
     <tr>
       <td>Louisiana</td>
-      <td class="num">4,585,953</td>
-      <td class="num">148,407</td>
-      <td class="num">73,587<span class="pt-mark">†</span></td>
-      <td class="num">74,820</td>
-      <td class="num">1.6%</td>
-      <td class="num">4,511,133</td>
-      <td class="num">6</td>
-      <td class="num">6</td>
+      <td class="num" data-v="4585953">4,585,953</td>
+      <td class="num" data-v="148407">148,407</td>
+      <td class="num" data-v="73587">73,587<span class="pt-mark">†</span></td>
+      <td class="num" data-v="74820">74,820</td>
+      <td class="num" data-v="1.63">1.6%</td>
+      <td class="num" data-v="4511133">4,511,133</td>
+      <td class="num" data-v="6">6</td>
+      <td class="num" data-v="6">6</td>
     </tr>
     <tr>
       <td>Maine</td>
-      <td class="num">1,465,797</td>
-      <td class="num">32,596</td>
-      <td class="num">15,209<span class="pt-mark">†</span></td>
-      <td class="num">17,387</td>
-      <td class="num">1.2%</td>
-      <td class="num">1,448,410</td>
-      <td class="num">2</td>
-      <td class="num">2</td>
+      <td class="num" data-v="1465797">1,465,797</td>
+      <td class="num" data-v="32596">32,596</td>
+      <td class="num" data-v="15209">15,209<span class="pt-mark">†</span></td>
+      <td class="num" data-v="17387">17,387</td>
+      <td class="num" data-v="1.19">1.2%</td>
+      <td class="num" data-v="1448410">1,448,410</td>
+      <td class="num" data-v="2">2</td>
+      <td class="num" data-v="2">2</td>
     </tr>
     <tr>
       <td>Maryland</td>
-      <td class="num">6,361,023</td>
-      <td class="num">491,891</td>
-      <td class="num">244,015<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
-      <td class="num">247,876</td>
-      <td class="num">3.9%</td>
-      <td class="num">6,113,147</td>
-      <td class="num">8</td>
-      <td class="num">8</td>
+      <td class="num" data-v="6361023">6,361,023</td>
+      <td class="num" data-v="491891">491,891</td>
+      <td class="num" data-v="244015">244,015<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
+      <td class="num" data-v="247876">247,876</td>
+      <td class="num" data-v="3.9">3.9%</td>
+      <td class="num" data-v="6113147">6,113,147</td>
+      <td class="num" data-v="8">8</td>
+      <td class="num" data-v="8">8</td>
     </tr>
     <tr>
       <td>Massachusetts</td>
-      <td class="num">7,350,499</td>
-      <td class="num">659,378</td>
-      <td class="num">349,704<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
-      <td class="num">309,674</td>
-      <td class="num">4.2%</td>
-      <td class="num">7,040,825</td>
-      <td class="num">9</td>
-      <td class="num">9</td>
+      <td class="num" data-v="7350499">7,350,499</td>
+      <td class="num" data-v="659378">659,378</td>
+      <td class="num" data-v="349704">349,704<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
+      <td class="num" data-v="309674">309,674</td>
+      <td class="num" data-v="4.21">4.2%</td>
+      <td class="num" data-v="7040825">7,040,825</td>
+      <td class="num" data-v="9">9</td>
+      <td class="num" data-v="9">9</td>
     </tr>
     <tr class="pt-moved">
       <td>Michigan</td>
-      <td class="num">10,192,795</td>
-      <td class="num">324,674</td>
-      <td class="num">192,246<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
-      <td class="num">132,428</td>
-      <td class="num">1.3%</td>
-      <td class="num">10,060,367</td>
-      <td class="num">12</td>
-      <td class="num"><span class="pt-gain">13</span> <span class="pt-delta">(+1)</span></td>
+      <td class="num" data-v="10192795">10,192,795</td>
+      <td class="num" data-v="324674">324,674</td>
+      <td class="num" data-v="192246">192,246<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
+      <td class="num" data-v="132428">132,428</td>
+      <td class="num" data-v="1.3">1.3%</td>
+      <td class="num" data-v="10060367">10,060,367</td>
+      <td class="num" data-v="12">12</td>
+      <td class="num" data-v="13"><span class="pt-gain">13</span> <span class="pt-delta">(+1)</span></td>
     </tr>
     <tr>
       <td>Minnesota</td>
-      <td class="num">5,953,980</td>
-      <td class="num">215,879</td>
-      <td class="num">102,740<span class="pt-mark">†</span></td>
-      <td class="num">113,139</td>
-      <td class="num">1.9%</td>
-      <td class="num">5,840,841</td>
-      <td class="num">7</td>
-      <td class="num">7</td>
+      <td class="num" data-v="5953980">5,953,980</td>
+      <td class="num" data-v="215879">215,879</td>
+      <td class="num" data-v="102740">102,740<span class="pt-mark">†</span></td>
+      <td class="num" data-v="113139">113,139</td>
+      <td class="num" data-v="1.9">1.9%</td>
+      <td class="num" data-v="5840841">5,840,841</td>
+      <td class="num" data-v="7">7</td>
+      <td class="num" data-v="7">7</td>
     </tr>
     <tr>
       <td>Mississippi</td>
-      <td class="num">2,951,688</td>
-      <td class="num">47,861</td>
-      <td class="num">22,186<span class="pt-mark">†</span></td>
-      <td class="num">25,675</td>
-      <td class="num">0.9%</td>
-      <td class="num">2,926,013</td>
-      <td class="num">4</td>
-      <td class="num">4</td>
+      <td class="num" data-v="2951688">2,951,688</td>
+      <td class="num" data-v="47861">47,861</td>
+      <td class="num" data-v="22186">22,186<span class="pt-mark">†</span></td>
+      <td class="num" data-v="25675">25,675</td>
+      <td class="num" data-v="0.87">0.9%</td>
+      <td class="num" data-v="2926013">2,926,013</td>
+      <td class="num" data-v="4">4</td>
+      <td class="num" data-v="4">4</td>
     </tr>
     <tr>
       <td>Missouri</td>
-      <td class="num">6,386,593</td>
-      <td class="num">146,943</td>
-      <td class="num">68,226<span class="pt-mark">†</span></td>
-      <td class="num">78,717</td>
-      <td class="num">1.2%</td>
-      <td class="num">6,307,876</td>
-      <td class="num">8</td>
-      <td class="num">8</td>
+      <td class="num" data-v="6386593">6,386,593</td>
+      <td class="num" data-v="146943">146,943</td>
+      <td class="num" data-v="68226">68,226<span class="pt-mark">†</span></td>
+      <td class="num" data-v="78717">78,717</td>
+      <td class="num" data-v="1.23">1.2%</td>
+      <td class="num" data-v="6307876">6,307,876</td>
+      <td class="num" data-v="8">8</td>
+      <td class="num" data-v="8">8</td>
     </tr>
     <tr>
       <td>Montana</td>
-      <td class="num">1,201,147</td>
-      <td class="num">12,816</td>
-      <td class="num">6,773<span class="pt-mark">†</span></td>
-      <td class="num">6,043</td>
-      <td class="num">0.5%</td>
-      <td class="num">1,195,104</td>
-      <td class="num">2</td>
-      <td class="num">2</td>
+      <td class="num" data-v="1201147">1,201,147</td>
+      <td class="num" data-v="12816">12,816</td>
+      <td class="num" data-v="6773">6,773<span class="pt-mark">†</span></td>
+      <td class="num" data-v="6043">6,043</td>
+      <td class="num" data-v="0.5">0.5%</td>
+      <td class="num" data-v="1195104">1,195,104</td>
+      <td class="num" data-v="2">2</td>
+      <td class="num" data-v="2">2</td>
     </tr>
     <tr>
       <td>Nebraska</td>
-      <td class="num">2,077,292</td>
-      <td class="num">104,878</td>
-      <td class="num">48,172<span class="pt-mark">†</span></td>
-      <td class="num">56,706</td>
-      <td class="num">2.7%</td>
-      <td class="num">2,020,586</td>
-      <td class="num">3</td>
-      <td class="num">3</td>
+      <td class="num" data-v="2077292">2,077,292</td>
+      <td class="num" data-v="104878">104,878</td>
+      <td class="num" data-v="48172">48,172<span class="pt-mark">†</span></td>
+      <td class="num" data-v="56706">56,706</td>
+      <td class="num" data-v="2.73">2.7%</td>
+      <td class="num" data-v="2020586">2,020,586</td>
+      <td class="num" data-v="3">3</td>
+      <td class="num" data-v="3">3</td>
     </tr>
     <tr>
       <td>Nevada</td>
-      <td class="num">3,451,612</td>
-      <td class="num">279,752</td>
-      <td class="num">118,388<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
-      <td class="num">161,364</td>
-      <td class="num">4.7%</td>
-      <td class="num">3,290,248</td>
-      <td class="num">4</td>
-      <td class="num">4</td>
+      <td class="num" data-v="3451612">3,451,612</td>
+      <td class="num" data-v="279752">279,752</td>
+      <td class="num" data-v="118388">118,388<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
+      <td class="num" data-v="161364">161,364</td>
+      <td class="num" data-v="4.68">4.7%</td>
+      <td class="num" data-v="3290248">3,290,248</td>
+      <td class="num" data-v="4">4</td>
+      <td class="num" data-v="4">4</td>
     </tr>
     <tr>
       <td>New Hampshire</td>
-      <td class="num">1,450,892</td>
-      <td class="num">33,232</td>
-      <td class="num">16,769<span class="pt-mark">†</span></td>
-      <td class="num">16,463</td>
-      <td class="num">1.1%</td>
-      <td class="num">1,434,429</td>
-      <td class="num">2</td>
-      <td class="num">2</td>
+      <td class="num" data-v="1450892">1,450,892</td>
+      <td class="num" data-v="33232">33,232</td>
+      <td class="num" data-v="16769">16,769<span class="pt-mark">†</span></td>
+      <td class="num" data-v="16463">16,463</td>
+      <td class="num" data-v="1.13">1.1%</td>
+      <td class="num" data-v="1434429">1,434,429</td>
+      <td class="num" data-v="2">2</td>
+      <td class="num" data-v="2">2</td>
     </tr>
     <tr>
       <td>New Jersey</td>
-      <td class="num">9,874,218</td>
-      <td class="num">1,051,632</td>
-      <td class="num">581,463<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
-      <td class="num">470,169</td>
-      <td class="num">4.8%</td>
-      <td class="num">9,404,049</td>
-      <td class="num">12</td>
-      <td class="num">12</td>
+      <td class="num" data-v="9874218">9,874,218</td>
+      <td class="num" data-v="1051632">1,051,632</td>
+      <td class="num" data-v="581463">581,463<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
+      <td class="num" data-v="470169">470,169</td>
+      <td class="num" data-v="4.76">4.8%</td>
+      <td class="num" data-v="9404049">9,404,049</td>
+      <td class="num" data-v="12">12</td>
+      <td class="num" data-v="12">12</td>
     </tr>
     <tr>
       <td>New Mexico</td>
-      <td class="num">2,136,857</td>
-      <td class="num">108,270</td>
-      <td class="num">45,223<span class="pt-mark">†</span></td>
-      <td class="num">63,047</td>
-      <td class="num">3.0%</td>
-      <td class="num">2,073,810</td>
-      <td class="num">3</td>
-      <td class="num">3</td>
+      <td class="num" data-v="2136857">2,136,857</td>
+      <td class="num" data-v="108270">108,270</td>
+      <td class="num" data-v="45223">45,223<span class="pt-mark">†</span></td>
+      <td class="num" data-v="63047">63,047</td>
+      <td class="num" data-v="2.95">3.0%</td>
+      <td class="num" data-v="2073810">2,073,810</td>
+      <td class="num" data-v="3">3</td>
+      <td class="num" data-v="3">3</td>
     </tr>
     <tr>
       <td>New York</td>
-      <td class="num">20,014,610</td>
-      <td class="num">1,703,306</td>
-      <td class="num">1,424,136<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
-      <td class="num">279,170</td>
-      <td class="num">1.4%</td>
-      <td class="num">19,735,440</td>
-      <td class="num">25</td>
-      <td class="num">25</td>
+      <td class="num" data-v="20014610">20,014,610</td>
+      <td class="num" data-v="1703306">1,703,306</td>
+      <td class="num" data-v="1424136">1,424,136<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
+      <td class="num" data-v="279170">279,170</td>
+      <td class="num" data-v="1.39">1.4%</td>
+      <td class="num" data-v="19735440">19,735,440</td>
+      <td class="num" data-v="25">25</td>
+      <td class="num" data-v="25">25</td>
     </tr>
     <tr>
       <td>North Carolina</td>
-      <td class="num">11,968,863</td>
-      <td class="num">634,338</td>
-      <td class="num">200,625<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
-      <td class="num">433,713</td>
-      <td class="num">3.6%</td>
-      <td class="num">11,535,150</td>
-      <td class="num">15</td>
-      <td class="num">15</td>
+      <td class="num" data-v="11968863">11,968,863</td>
+      <td class="num" data-v="634338">634,338</td>
+      <td class="num" data-v="200625">200,625<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
+      <td class="num" data-v="433713">433,713</td>
+      <td class="num" data-v="3.62">3.6%</td>
+      <td class="num" data-v="11535150">11,535,150</td>
+      <td class="num" data-v="15">15</td>
+      <td class="num" data-v="15">15</td>
     </tr>
     <tr>
       <td>North Dakota</td>
-      <td class="num">820,969</td>
-      <td class="num">26,861</td>
-      <td class="num">13,339<span class="pt-mark">†</span></td>
-      <td class="num">13,522</td>
-      <td class="num">1.6%</td>
-      <td class="num">807,447</td>
-      <td class="num">1</td>
-      <td class="num">1</td>
+      <td class="num" data-v="820969">820,969</td>
+      <td class="num" data-v="26861">26,861</td>
+      <td class="num" data-v="13339">13,339<span class="pt-mark">†</span></td>
+      <td class="num" data-v="13522">13,522</td>
+      <td class="num" data-v="1.65">1.6%</td>
+      <td class="num" data-v="807447">807,447</td>
+      <td class="num" data-v="1">1</td>
+      <td class="num" data-v="1">1</td>
     </tr>
     <tr>
       <td>Ohio</td>
-      <td class="num">12,021,223</td>
-      <td class="num">332,533</td>
-      <td class="num">170,483<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
-      <td class="num">162,050</td>
-      <td class="num">1.4%</td>
-      <td class="num">11,859,173</td>
-      <td class="num">15</td>
-      <td class="num">15</td>
+      <td class="num" data-v="12021223">12,021,223</td>
+      <td class="num" data-v="332533">332,533</td>
+      <td class="num" data-v="170483">170,483<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
+      <td class="num" data-v="162050">162,050</td>
+      <td class="num" data-v="1.35">1.4%</td>
+      <td class="num" data-v="11859173">11,859,173</td>
+      <td class="num" data-v="15">15</td>
+      <td class="num" data-v="15">15</td>
     </tr>
     <tr>
       <td>Oklahoma</td>
-      <td class="num">4,289,093</td>
-      <td class="num">159,998</td>
-      <td class="num">76,147<span class="pt-mark">†</span></td>
-      <td class="num">83,851</td>
-      <td class="num">1.9%</td>
-      <td class="num">4,205,242</td>
-      <td class="num">5</td>
-      <td class="num">5</td>
+      <td class="num" data-v="4289093">4,289,093</td>
+      <td class="num" data-v="159998">159,998</td>
+      <td class="num" data-v="76147">76,147<span class="pt-mark">†</span></td>
+      <td class="num" data-v="83851">83,851</td>
+      <td class="num" data-v="1.95">1.9%</td>
+      <td class="num" data-v="4205242">4,205,242</td>
+      <td class="num" data-v="5">5</td>
+      <td class="num" data-v="5">5</td>
     </tr>
     <tr>
       <td>Oregon</td>
-      <td class="num">4,299,040</td>
-      <td class="num">187,871</td>
-      <td class="num">98,513<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
-      <td class="num">89,358</td>
-      <td class="num">2.1%</td>
-      <td class="num">4,209,682</td>
-      <td class="num">5</td>
-      <td class="num">5</td>
+      <td class="num" data-v="4299040">4,299,040</td>
+      <td class="num" data-v="187871">187,871</td>
+      <td class="num" data-v="98513">98,513<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
+      <td class="num" data-v="89358">89,358</td>
+      <td class="num" data-v="2.08">2.1%</td>
+      <td class="num" data-v="4209682">4,209,682</td>
+      <td class="num" data-v="5">5</td>
+      <td class="num" data-v="5">5</td>
     </tr>
     <tr>
       <td>Pennsylvania</td>
-      <td class="num">13,120,932</td>
-      <td class="num">502,520</td>
-      <td class="num">284,711<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
-      <td class="num">217,809</td>
-      <td class="num">1.7%</td>
-      <td class="num">12,903,123</td>
-      <td class="num">16</td>
-      <td class="num">16</td>
+      <td class="num" data-v="13120932">13,120,932</td>
+      <td class="num" data-v="502520">502,520</td>
+      <td class="num" data-v="284711">284,711<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
+      <td class="num" data-v="217809">217,809</td>
+      <td class="num" data-v="1.66">1.7%</td>
+      <td class="num" data-v="12903123">12,903,123</td>
+      <td class="num" data-v="16">16</td>
+      <td class="num" data-v="16">16</td>
     </tr>
     <tr>
       <td>Rhode Island</td>
-      <td class="num">1,133,386</td>
-      <td class="num">79,062</td>
-      <td class="num">36,575<span class="pt-mark">†</span></td>
-      <td class="num">42,487</td>
-      <td class="num">3.8%</td>
-      <td class="num">1,090,899</td>
-      <td class="num">1</td>
-      <td class="num">1</td>
+      <td class="num" data-v="1133386">1,133,386</td>
+      <td class="num" data-v="79062">79,062</td>
+      <td class="num" data-v="36575">36,575<span class="pt-mark">†</span></td>
+      <td class="num" data-v="42487">42,487</td>
+      <td class="num" data-v="3.75">3.8%</td>
+      <td class="num" data-v="1090899">1,090,899</td>
+      <td class="num" data-v="1">1</td>
+      <td class="num" data-v="1">1</td>
     </tr>
     <tr>
       <td>South Carolina</td>
-      <td class="num">6,029,812</td>
-      <td class="num">200,275</td>
-      <td class="num">95,519<span class="pt-mark">†</span></td>
-      <td class="num">104,756</td>
-      <td class="num">1.7%</td>
-      <td class="num">5,925,056</td>
-      <td class="num">7</td>
-      <td class="num">7</td>
+      <td class="num" data-v="6029812">6,029,812</td>
+      <td class="num" data-v="200275">200,275</td>
+      <td class="num" data-v="95519">95,519<span class="pt-mark">†</span></td>
+      <td class="num" data-v="104756">104,756</td>
+      <td class="num" data-v="1.74">1.7%</td>
+      <td class="num" data-v="5925056">5,925,056</td>
+      <td class="num" data-v="7">7</td>
+      <td class="num" data-v="7">7</td>
     </tr>
     <tr>
       <td>South Dakota</td>
-      <td class="num">983,787</td>
-      <td class="num">24,164</td>
-      <td class="num">11,747<span class="pt-mark">†</span></td>
-      <td class="num">12,417</td>
-      <td class="num">1.3%</td>
-      <td class="num">971,370</td>
-      <td class="num">1</td>
-      <td class="num">1</td>
+      <td class="num" data-v="983787">983,787</td>
+      <td class="num" data-v="24164">24,164</td>
+      <td class="num" data-v="11747">11,747<span class="pt-mark">†</span></td>
+      <td class="num" data-v="12417">12,417</td>
+      <td class="num" data-v="1.26">1.3%</td>
+      <td class="num" data-v="971370">971,370</td>
+      <td class="num" data-v="1">1</td>
+      <td class="num" data-v="1">1</td>
     </tr>
     <tr class="pt-moved">
       <td>Tennessee</td>
-      <td class="num">7,734,345</td>
-      <td class="num">307,030</td>
-      <td class="num">154,808<span class="pt-mark">†</span></td>
-      <td class="num">152,222</td>
-      <td class="num">2.0%</td>
-      <td class="num">7,582,123</td>
-      <td class="num">9</td>
-      <td class="num"><span class="pt-gain">10</span> <span class="pt-delta">(+1)</span></td>
+      <td class="num" data-v="7734345">7,734,345</td>
+      <td class="num" data-v="307030">307,030</td>
+      <td class="num" data-v="154808">154,808<span class="pt-mark">†</span></td>
+      <td class="num" data-v="152222">152,222</td>
+      <td class="num" data-v="1.97">2.0%</td>
+      <td class="num" data-v="7582123">7,582,123</td>
+      <td class="num" data-v="9">9</td>
+      <td class="num" data-v="10"><span class="pt-gain">10</span> <span class="pt-delta">(+1)</span></td>
     </tr>
     <tr class="pt-moved">
       <td>Texas</td>
-      <td class="num">34,360,163</td>
-      <td class="num">3,448,345</td>
-      <td class="num">1,409,809<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
-      <td class="num">2,038,536</td>
-      <td class="num">5.9%</td>
-      <td class="num">32,321,627</td>
-      <td class="num">42</td>
-      <td class="num"><span class="pt-loss">41</span> <span class="pt-delta">(−1)</span></td>
+      <td class="num" data-v="34360163">34,360,163</td>
+      <td class="num" data-v="3448345">3,448,345</td>
+      <td class="num" data-v="1409809">1,409,809<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
+      <td class="num" data-v="2038536">2,038,536</td>
+      <td class="num" data-v="5.93">5.9%</td>
+      <td class="num" data-v="32321627">32,321,627</td>
+      <td class="num" data-v="42">42</td>
+      <td class="num" data-v="41"><span class="pt-loss">41</span> <span class="pt-delta">(−1)</span></td>
     </tr>
     <tr>
       <td>Utah</td>
-      <td class="num">3,803,536</td>
-      <td class="num">200,072</td>
-      <td class="num">92,692<span class="pt-mark">†</span></td>
-      <td class="num">107,380</td>
-      <td class="num">2.8%</td>
-      <td class="num">3,696,156</td>
-      <td class="num">5</td>
-      <td class="num">5</td>
+      <td class="num" data-v="3803536">3,803,536</td>
+      <td class="num" data-v="200072">200,072</td>
+      <td class="num" data-v="92692">92,692<span class="pt-mark">†</span></td>
+      <td class="num" data-v="107380">107,380</td>
+      <td class="num" data-v="2.82">2.8%</td>
+      <td class="num" data-v="3696156">3,696,156</td>
+      <td class="num" data-v="5">5</td>
+      <td class="num" data-v="5">5</td>
     </tr>
     <tr>
       <td>Vermont</td>
-      <td class="num">645,997</td>
-      <td class="num">9,291</td>
-      <td class="num">4,756<span class="pt-mark">†</span></td>
-      <td class="num">4,535</td>
-      <td class="num">0.7%</td>
-      <td class="num">641,462</td>
-      <td class="num">1</td>
-      <td class="num">1</td>
+      <td class="num" data-v="645997">645,997</td>
+      <td class="num" data-v="9291">9,291</td>
+      <td class="num" data-v="4756">4,756<span class="pt-mark">†</span></td>
+      <td class="num" data-v="4535">4,535</td>
+      <td class="num" data-v="0.7">0.7%</td>
+      <td class="num" data-v="641462">641,462</td>
+      <td class="num" data-v="1">1</td>
+      <td class="num" data-v="1">1</td>
     </tr>
     <tr>
       <td>Virginia</td>
-      <td class="num">9,127,348</td>
-      <td class="num">513,567</td>
-      <td class="num">271,879<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
-      <td class="num">241,688</td>
-      <td class="num">2.6%</td>
-      <td class="num">8,885,660</td>
-      <td class="num">11</td>
-      <td class="num">11</td>
+      <td class="num" data-v="9127348">9,127,348</td>
+      <td class="num" data-v="513567">513,567</td>
+      <td class="num" data-v="271879">271,879<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
+      <td class="num" data-v="241688">241,688</td>
+      <td class="num" data-v="2.65">2.6%</td>
+      <td class="num" data-v="8885660">8,885,660</td>
+      <td class="num" data-v="11">11</td>
+      <td class="num" data-v="11">11</td>
     </tr>
     <tr>
       <td>Washington</td>
-      <td class="num">8,279,575</td>
-      <td class="num">683,200</td>
-      <td class="num">319,662<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
-      <td class="num">363,538</td>
-      <td class="num">4.4%</td>
-      <td class="num">7,916,037</td>
-      <td class="num">10</td>
-      <td class="num">10</td>
+      <td class="num" data-v="8279575">8,279,575</td>
+      <td class="num" data-v="683200">683,200</td>
+      <td class="num" data-v="319662">319,662<span class="pt-mark pt-pad" aria-hidden="true">†</span></td>
+      <td class="num" data-v="363538">363,538</td>
+      <td class="num" data-v="4.39">4.4%</td>
+      <td class="num" data-v="7916037">7,916,037</td>
+      <td class="num" data-v="10">10</td>
+      <td class="num" data-v="10">10</td>
     </tr>
     <tr>
       <td>West Virginia</td>
-      <td class="num">1,738,290</td>
-      <td class="num">17,768</td>
-      <td class="num">8,263<span class="pt-mark">†</span></td>
-      <td class="num">9,505</td>
-      <td class="num">0.6%</td>
-      <td class="num">1,728,785</td>
-      <td class="num">2</td>
-      <td class="num">2</td>
+      <td class="num" data-v="1738290">1,738,290</td>
+      <td class="num" data-v="17768">17,768</td>
+      <td class="num" data-v="8263">8,263<span class="pt-mark">†</span></td>
+      <td class="num" data-v="9505">9,505</td>
+      <td class="num" data-v="0.55">0.6%</td>
+      <td class="num" data-v="1728785">1,728,785</td>
+      <td class="num" data-v="2">2</td>
+      <td class="num" data-v="2">2</td>
     </tr>
     <tr class="pt-moved">
       <td>Wisconsin</td>
-      <td class="num">6,065,320</td>
-      <td class="num">172,154</td>
-      <td class="num">80,959<span class="pt-mark">†</span></td>
-      <td class="num">91,195</td>
-      <td class="num">1.5%</td>
-      <td class="num">5,974,125</td>
-      <td class="num">7</td>
-      <td class="num"><span class="pt-gain">8</span> <span class="pt-delta">(+1)</span></td>
+      <td class="num" data-v="6065320">6,065,320</td>
+      <td class="num" data-v="172154">172,154</td>
+      <td class="num" data-v="80959">80,959<span class="pt-mark">†</span></td>
+      <td class="num" data-v="91195">91,195</td>
+      <td class="num" data-v="1.5">1.5%</td>
+      <td class="num" data-v="5974125">5,974,125</td>
+      <td class="num" data-v="7">7</td>
+      <td class="num" data-v="8"><span class="pt-gain">8</span> <span class="pt-delta">(+1)</span></td>
     </tr>
     <tr>
       <td>Wyoming</td>
-      <td class="num">600,231</td>
-      <td class="num">11,242</td>
-      <td class="num">5,381<span class="pt-mark">†</span></td>
-      <td class="num">5,861</td>
-      <td class="num">1.0%</td>
-      <td class="num">594,370</td>
-      <td class="num">1</td>
-      <td class="num">1</td>
+      <td class="num" data-v="600231">600,231</td>
+      <td class="num" data-v="11242">11,242</td>
+      <td class="num" data-v="5381">5,381<span class="pt-mark">†</span></td>
+      <td class="num" data-v="5861">5,861</td>
+      <td class="num" data-v="0.98">1.0%</td>
+      <td class="num" data-v="594370">594,370</td>
+      <td class="num" data-v="1">1</td>
+      <td class="num" data-v="1">1</td>
     </tr>
   </tbody>
   <tfoot>

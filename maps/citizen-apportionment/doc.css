@@ -149,3 +149,17 @@
 .pt-mark { margin-left: .15em; color: var(--cgd-muted); }
 .pt-pad { visibility: hidden; }
 .pt-note + .pt-note { margin-top: -.4rem; }
+
+/* Sortable headers (poptable.js). The button wears the header's own type; the
+ * arrow shows only on the sorted column, and a faint one on hover elsewhere. */
+.pt-sort { all: unset; cursor: pointer; display: inline-block; width: 100%;
+  text-align: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit;
+  color: inherit; }
+.pt-sort:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; border-radius: 2px; }
+.pt-sort::after { content: "↓"; display: inline-block; width: 1em; margin-left: .2em;
+  text-align: center; opacity: 0; }
+.pt-sort:hover::after { opacity: .35; }
+[aria-sort="ascending"] > .pt-sort::after { content: "↑"; opacity: 1; }
+[aria-sort="descending"] > .pt-sort::after { content: "↓"; opacity: 1; }
+.cgdoc .pt-table th[aria-sort="ascending"], .cgdoc .pt-table th[aria-sort="descending"] {
+  color: var(--ink); }
