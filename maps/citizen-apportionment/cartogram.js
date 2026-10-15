@@ -32,6 +32,10 @@
     var SW_CELL = W * 0.0006;
     var SW_STATE_OUTER = W * 0.0026;
     var SW_STATE_INNER = W * 0.0013;
+    // A state that gains or loses a seat is outlined in that colour, heavier,
+    // with a wider halo so the colour keeps its edge against the cells.
+    var SW_MOVED_OUTER = W * 0.0046;
+    var SW_MOVED_INNER = W * 0.0024;
     var FS_CELL = W * 0.0105;
     var FS_STATE = W * 0.0108;
     var ZOOM_PAD = 0.05;
@@ -92,8 +96,13 @@
       g.appendChild(gc);
 
       var outline = pathOf(s.outline);
+      rec.moved = s.change !== 0;
       rec.outer = el("path", { class: "cg-outer", d: outline });
       rec.inner = el("path", { class: "cg-inner", d: outline });
+      if (rec.moved) {
+        rec.inner.setAttribute("class", "cg-inner cg-inner--moved");
+        rec.inner.style.stroke = DATA.palette[s.change > 0 ? "gained" : "lost"];
+      }
       g.appendChild(rec.outer);
       g.appendChild(rec.inner);
 
@@ -109,6 +118,12 @@
       gStates.appendChild(g);
       states.push(rec);
     });
+
+    // Neighbours share borders, so a state drawn later paints over the edge of
+    // one drawn earlier. Raise the states that moved to the top, so their
+    // coloured outline is whole. Only the drawing order changes; states[] keeps
+    // its order, which the chips and zoom index into.
+    states.forEach(function (rec) { if (rec.moved) gStates.appendChild(rec.node); });
 
     var gLabels = el("g", { class: "cg-slabels" });
     var labelNodes = [];
@@ -159,8 +174,8 @@
       for (var i = 0; i < states.length; i++) {
         var s = states[i], f = zoomK / s.scale;
         s.cells.setAttribute("stroke-width", SW_CELL * f);
-        s.outer.setAttribute("stroke-width", SW_STATE_OUTER * f);
-        s.inner.setAttribute("stroke-width", SW_STATE_INNER * f);
+        s.outer.setAttribute("stroke-width", (s.moved ? SW_MOVED_OUTER : SW_STATE_OUTER) * f);
+        s.inner.setAttribute("stroke-width", (s.moved ? SW_MOVED_INNER : SW_STATE_INNER) * f);
         for (var j = 0; j < s.labels.length; j++) {
           s.labels[j].setAttribute("font-size", FS_CELL * f);
           s.labels[j].setAttribute("stroke-width", FS_CELL * f * 0.1);

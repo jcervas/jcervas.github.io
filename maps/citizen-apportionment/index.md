@@ -38,15 +38,16 @@ draft: true
   <div class="cg-foot">
     Both columns are projections to 2030 — one under the rules in force now, one
     under the rule as proposed. Neither is a result. Each state is carved into
-    equal-area cells, so every cell in the country is the same size. Click a state
-    to zoom. <strong>Which</strong> cell is marked is presentational: a seat is
+    equal-area cells, so every cell in the country is the same size. A state
+    outlined in purple gains a seat under the rule; one outlined in orange loses
+    one. Click a state to zoom. <strong>Which</strong> cell is marked is presentational: a seat is
     apportioned to a state, not to a place inside it.
   </div>
 
   <div class="cg-tip" id="ap-tip"></div>
 </div>
 
-<script src="{{ '/maps/citizen-apportionment/cartogram.js' | relative_url }}?v=b931ddeb" defer></script>
+<script src="{{ '/maps/citizen-apportionment/cartogram.js' | relative_url }}?v=54de2196" defer></script>
 <script src="{{ '/maps/citizen-apportionment/poptable.js' | relative_url }}?v=f20a68eb" defer></script>
 <script src="{{ '/js/sidenotes.js' | relative_url }}?v=80eb069e" defer></script>
 
