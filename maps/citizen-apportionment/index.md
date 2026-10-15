@@ -819,11 +819,12 @@ line for. Its 10th is held by about 71,000 people.
   </tfoot>
 </table>
 </div>
-<p class="pt-note">Projected to 2030 from Census Bureau vintage 2025 estimates.
-The District of Columbia is not apportioned and is left out. The share not counted
-is estimated from the ACS and DHS (see Method) and applied to each state's projected total.
-Non-citizens are the ACS count; green-card holders are the DHS estimate, carried forward
-to 2030 as a fixed share of each state's non-citizens; everyone else is not counted.</p>
+<p class="pt-note">Every figure is a 2030 projection, not a count. State totals are
+projected from Census Bureau vintage 2025 estimates. Non-citizens are projected from the
+ACS one-year estimates for 2005 through 2024, each state on its own weighted trend (see
+Method). Green-card holders are held at the same share of each state's non-citizens as in
+DHS's January 2024 estimate; the remaining non-citizens are not counted. The District of
+Columbia is not apportioned and is left out.</p>
 <p class="pt-note"><span class="pt-mark">†</span> DHS publishes green-card estimates for
 the twenty largest states only. For the rest, its pooled total is divided in proportion
 to each state's non-citizen population, so the split in these states is an assumption,
@@ -838,7 +839,7 @@ matters as much as where non-citizens live — and the two maps are not the same
 
 DHS publishes lawful-permanent-resident estimates by county for the fifty largest
 metro areas.[^dhs-county] Set those against the ACS non-citizen count for the same
-counties and the share still counted swings from 17% to 70%:
+counties[^acs-county] and the share still counted swings from 17% to 70%:
 
 | Metro area | Non-citizens | Still counted | Share |
 |---|---:|---:|---:|
@@ -866,7 +867,7 @@ inflates the share shown as still counted. The direction of that error is known;
 its size is not.
 
 Mapped, the difference is stark. This is not a shaded-county map: each tract
-contributes its own value and the space between is a distance-weighted blend,
+contributes its own value[^tracts] and the space between is a distance-weighted blend,
 contoured like a weather chart. It shows the share of **everyone** — not of
 non-citizens — who would stop being counted, because that is the quantity that
 moves representation.
@@ -961,6 +962,15 @@ table at all: South Carolina finishes some 16,000 people short of an eighth seat
 quarter of one percent of its population. Any of these could land the other way on a
 different set of assumptions, or on the actual count.
 
+South Carolina's is not a hypothetical. The largest assumption behind the rule's
+column is how the non-citizen population is carried forward to 2030. The ACS count
+rose from 21.2 million in 2021 to 24.3 million in 2024, and the trend used here treats
+most of that rise as temporary, projecting 23.4 million for 2030. Hold non-citizens at
+their 2024 level instead, or weight the last few years heavily enough that the rise
+keeps going, and a fourth seat moves: Georgia loses one and South Carolina gains its
+eighth. The other six states move exactly as above. Which is closer to right depends
+on whether the 2022–24 increase lasts, and no trend line can say.
+
 ## Inside the states
 
 Apportionment decides how many seats a state gets. Districting decides where the lines
@@ -1019,20 +1029,43 @@ Apportionment is calculated by the method of equal proportions (Huntington–Hil
 seats, one to each state first — the method in use since 1941.
 
 State population comes from Census Bureau vintage 2025 estimates, projected to
-2030.[^census] The composition of each state's population — citizen, non-citizen,
-lawful permanent resident — comes from the American Community Survey's one-year
-estimates for 2005 through 2024,[^acs] with LPR counts from the Department of Homeland
-Security[^dhs-state] and unauthorized estimates from the Pew Research Center.[^pew]
-Each source is used for what it measures well: the Bureau's estimates for how many
-people, the survey for who they are.
+2030.[^census] Who makes up that population is projected separately. Each state's
+total, citizen, and non-citizen counts come from the American Community Survey's
+one-year estimates for 2005 through 2024,[^acs] and each series is carried forward to
+2030 on its own trend, so the non-citizen population in these figures is a 2030
+projection, not a 2024 count. Lawful permanent residents come from the Department of
+Homeland Security[^dhs-state] for a single date, January 1, 2024. Each state's
+green-card holders are held at the same share of its non-citizens in 2030 as in 2024:
+their number rises or falls with the projected non-citizen population, but the mix
+does not change. The non-citizens left over are the people the rule stops counting,
+and their share of each state's projected ACS population is applied to the Bureau's
+2030 total. Unauthorized estimates from the Pew Research Center[^pew] are used only to
+bound the result. Each source is used for what it measures well: the Bureau's
+estimates for how many people, the survey for who they are.
 
-Projections weight recent years more heavily than older ones, because the 2020–21
-population base is distorted by the pandemic and tells us less about 2030 than 2023–24
-does. That choice matters, and it is why the middle column here moves twelve seats
+Every projection here is made the same way. It is not one year's change carried
+forward, or an average of recent changes: a straight line is fitted through every year
+of the series by weighted least squares and extended to 2030, with each year weighted
+by e<sup>−0.15 × (years before the latest)</sup>. For the ACS series that means 2024
+counts in full, 2023 at 86%, 2021 at 64%, 2019 at 47%, 2010 at 12%, and 2005 at 6%; the
+four years since the pandemic carry about half the total weight, and 2005 through 2014
+about a fifth. There is no 2020 one-year ACS file, so that year is simply absent. The
+Bureau's state totals are fitted the same way over 2020 through 2025.
+
+Recent years get more weight because the 2020–21 population base is distorted by the
+pandemic and tells us less about 2030 than 2023–24 does. That choice matters, and it
+is why the middle column here moves twelve seats
 where the [2020-to-2030 map]({{ '/maps/apportionment-2020-2030/' | relative_url }}) on
-this site moves thirteen: that map is fitted without the weighting. The *rate* of
-down-weighting changes nothing at all — every decay constant from 0.15 to 1.0 gives the
-same answer.
+this site moves thirteen: that map is fitted without the weighting. For that column the
+*rate* of down-weighting changes nothing at all — every decay constant from 0.15 to 1.0
+moves twelve seats.
+
+The rule's column is less settled, because the non-citizen series is not a straight
+line. Fitted across all nineteen years of data at the decay used here, 0.15, the jump
+of the last three years mostly washes out, and the projection for 2030 comes in below
+the 2024 count. Any decay constant up to 0.4 moves the same three seats. From 0.5 up, the recent
+years dominate, the projection climbs past 26 million, and a fourth seat moves, as set
+out under "How solid is this."
 
 The district figures are present-day, not projected: 2020 census population by block
 with citizenship from the ACS five-year estimates,[^dra] joined to the block assignment
@@ -1061,24 +1094,52 @@ Code and data: [github.com/jcervas](https://github.com/jcervas).
     docket USBC-2026-0628. Comments close October 13, 2026.
     [federalregister.gov](https://www.federalregister.gov/documents/2026/09/10/2026-18481/decennial-census-of-the-population-of-americans-proposed-residence-criteria-and-proposed-regulations)
 
-[^census]: U.S. Census Bureau, Vintage 2025 state population estimates, 2020–2025,
-    projected to 2030 by weighted linear extrapolation.
+[^census]: U.S. Census Bureau, Vintage 2025 state population estimates, 2020–2025
+    ([NST-EST2025-ALLDATA.csv](https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/state/totals/NST-EST2025-ALLDATA.csv);
+    [table page](https://www.census.gov/data/tables/time-series/demo/popest/2020s-state-total.html)),
+    projected to 2030 by weighted linear extrapolation. The 2020 seats are the
+    [2020 Census apportionment](https://www.census.gov/data/tables/2020/dec/2020-apportionment-data.html).
 
 [^acs]: U.S. Census Bureau, American Community Survey one-year estimates, table B05001
-    (citizenship status by nativity), 2005–2024. No 2020 one-year file was released.
+    (citizenship status by nativity), 2005–2024, by state; total population is
+    B05001_001E and non-citizens B05001_006E. No 2020 one-year file was released.
+    Each year is available from the Census API, for example
+    [2024](https://api.census.gov/data/2024/acs/acs1?get=NAME,B05001_001E,B05001_006E&for=state:*)
+    (change the year in the address for the others), or as
+    [table B05001 on data.census.gov](https://data.census.gov/table/ACSDT1Y2024.B05001).
+
+[^acs-county]: U.S. Census Bureau, American Community Survey 2023 one-year estimates,
+    table B05001, by county
+    ([Census API](https://api.census.gov/data/2023/acs/acs1?get=NAME,B05001_001E,B05001_006E&for=county:*)).
+    One-year figures are published only for counties of 65,000 or more.
+
+[^tracts]: Tract estimates combine the American Community Survey 2019–2023 five-year
+    estimates, tables B01003 (total population), B05005 (period of entry by
+    citizenship), and B06009 (place of birth by educational attainment), at tract and
+    county level, from the
+    [ACS summary file](https://www2.census.gov/programs-surveys/acs/summary_file/2023/table-based-SF/data/5YRData/),
+    with green-card holders scaled to the DHS county totals where they exist and to
+    the DHS state figures elsewhere (see the DHS notes). Boundaries are from
+    [us-atlas](https://github.com/topojson/us-atlas), built from the Census Bureau's
+    cartographic boundary files.
 
 [^dhs-state]: Office of Homeland Security Statistics, *Estimates of the Lawful Permanent
     Resident Population in the United States: 2024 and Revised 2023* (Nov. 2024), tbl. 3.
     Only the twenty largest states are named; the remainder are published as a single
     "Other" total and distributed here in proportion to ACS non-citizen population.
-    [ohss.dhs.gov](https://ohss.dhs.gov/topics/immigration/lawful-permanent-residents/population-estimates)
+    [Report (PDF)](https://ohss.dhs.gov/sites/default/files/2024-11/2024_1108_ohss_lawful_permenent_resident_population_estimate_2024_and_revised_2023.pdf).
+    Earlier editions, back to 2002, are listed on the
+    [historical estimates page](https://ohss.dhs.gov/topics/immigration/lawful-permanent-residents/population-estimates/historical);
+    a [2025 edition](https://ohss.dhs.gov/topics/immigration/lawful-permanent-residents/population-estimates/fy-25-lpr-pop-estimates)
+    has since been published.
 
 [^dhs-county]: Office of Homeland Security Statistics, *Estimated LPR Population and
     Number Eligible to Naturalize by County and CBSA, January 1, 2025*. Covers the fifty
     largest core-based statistical areas, 335 counties, about 7.4 million of an
     estimated 13 million LPRs. Residence is where LPR status was obtained for anyone
     admitted since 1980, not current residence.
-    [ohss.dhs.gov](https://ohss.dhs.gov/topics/immigration/lawful-permanent-residents/population-estimates/by-county-top-cbsas)
+    [Spreadsheet (XLSX)](https://ohss.dhs.gov/system/files/2026-07/2026_0604_ohss_lpr-and-eligible-to-naturalize-jan-01-2025%20v2.xlsx);
+    [all county files](https://ohss.dhs.gov/topics/immigration/lawful-permanent-residents/population-estimates/by-county-top-cbsas).
 
 [^pew]: Pew Research Center, *U.S. Unauthorized Immigrant Population Reached a Record 14
     Million in 2023* (Aug. 21, 2025), detailed tables by state, 1990–2023. Estimates are
@@ -1090,7 +1151,10 @@ Code and data: [github.com/jcervas](https://github.com/jcervas).
     2025): 2020 census population and voting-age population, citizen voting-age
     population from the ACS five-year estimates, and precinct results disaggregated to
     blocks. Fourteen states have no 2024 presidential file; those districts are labeled
-    from 2020. [davesredistricting.org](https://davesredistricting.org)
+    from 2020. The block files are published per state as
+    `Demographic_Data_Block_XX.v06.zip` (XX is the state abbreviation) at
+    `https://data.dra2020.net/file/dra-block-data/`; see
+    [davesredistricting.org](https://davesredistricting.org).
 
 [^plans]: Congressional plans as of the 2026 election, from Dave's Redistricting App's
     official maps: 2026 plans for Alabama, California, Florida, Louisiana, North
