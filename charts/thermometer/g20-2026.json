@@ -1,0 +1,10 @@
+{
+  "title": "How do Americans feel about other G20 countries?",
+  "subtitle": "Average rating on a feeling thermometer",
+  "data": "Australia, 67\nCanada, 67\nJapan, 65\nItaly, 64\nU.K., 60\nFrance, 57\nGermany, 57\nMexico, 55\nSouth Korea, 55\nBrazil, 54\nIndonesia, 48\nArgentina, 47\nSouth Africa, 47\nIndia, 46\nTurkey, 45\nChina, 37\nSaudi Arabia, 36\nRussia, 27",
+  "note": "Thermometer ratings are on a scale of 0–100, where zero is “as cold and negative as possible” and 100 is “as warm and positive as possible.”",
+  "source": "Pew Research Center survey of U.S. adults conducted Sept. 14–20, 2026.",
+  "byline": "Jonathan Cervas | Carnegie Mellon University",
+  "domain": [0, 100],
+  "groupBreak": 5
+}
