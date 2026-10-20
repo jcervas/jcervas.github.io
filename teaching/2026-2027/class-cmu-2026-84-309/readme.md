@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### DRAFT Updated: October 11, 2026
+#### DRAFT Updated: October 20, 2026
 
 > Professor **Jonathan Cervas**  
 > Office: Posner Hall 374  
@@ -469,6 +469,20 @@ that session’s page in Canvas.*
   Machine](https://vmfunc.re/blog/persona)
 
 #### Thu, Oct 22 — Student-led 2: Congress and stock trading
+
+- [Kornberg 2025 — Congressional Stock Trading, Explained (Brennan
+  Center)](https://www.brennancenter.org/our-work/research-reports/congressional-stock-trading-explained)
+- [Metzger 2025 — Here’s How Members of Congress Actually Get Rich
+  (*Business
+  Insider*)](https://www.businessinsider.com/members-congress-rich-personal-wealth-net-worth-2025-3)
+- [Klick 2017 — The Wealth of
+  Congress](https://canvas.cmu.edu/courses/55941/files/15028882)
+- [Payne 2021 — Are Members of Congress Hiding Their Income from Voters?
+  (Campaign Legal
+  Center)](https://campaignlegal.org/update/are-members-congress-hiding-their-income-voters)
+- [Schulp 2022 — Banning Lawmakers from Trading Stocks Won’t Fix
+  Congress (Cato
+  Institute)](https://www.cato.org/commentary/banning-lawmakers-trading-stocks-wont-fix-congress)
 
 ### Week 10 — Student-led · before the vote
 
