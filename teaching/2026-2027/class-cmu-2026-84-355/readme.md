@@ -469,7 +469,10 @@ Nothing is due.
 
 - [MIT Election Lab — why does anyone need precinct-level
   results?](https://electionlab.mit.edu/sites/default/files/2023-11/Precinct_primer.pdf)
-  — what county totals lose, and why the boundaries move
+  (the working paper) — what county totals lose, and why the boundaries
+  move. Short on time? [The Lab’s summary
+  page](https://electionlab.mit.edu/articles/why-does-anyone-need-precinct-level-election-results)
+  covers the main points in a few minutes.
 - **DUE Fri, Oct 23, 11:59 p.m.** — the **mid-term course feedback
   survey**.
 
