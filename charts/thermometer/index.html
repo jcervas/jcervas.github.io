@@ -15,6 +15,12 @@
   bracket group; prefix a label with * to set it in bold. Without group
   names, a new bracket starts wherever the next score is at least
   `groupBreak` points lower than the one above it.
+
+  Paired chart: set `series` to two names (e.g. ["Democrats", "Republicans"])
+  and give each row two scores, "label, score, score". Each series gets its
+  own thermometer, labeled on its outer side, and a line joins each row's two
+  scores. anes2024-partisans.json is the example. Tick marks and named
+  bracket groups apply to single charts only.
 -->
 <html lang="en">
 <head>
@@ -78,7 +84,9 @@ summary { cursor: pointer; font-size: .9rem; font-weight: 600; }
     <input id="f-title" data-key="title">
     <label for="f-subtitle">Subtitle</label>
     <input id="f-subtitle" data-key="subtitle">
-    <label for="f-data">Data <small>(one row per item: label, score, optional group; *label for bold; paste from a spreadsheet works)</small></label>
+    <label for="f-series">Paired chart <small>(two series names, e.g. Democrats, Republicans; leave blank for one thermometer)</small></label>
+    <input id="f-series">
+    <label for="f-data">Data <small>(one row per item: label, score, optional group &mdash; or label, score, score for a paired chart; *label for bold; paste from a spreadsheet works)</small></label>
     <textarea id="f-data" rows="12" spellcheck="false"></textarea>
     <label for="f-note">Note</label>
     <textarea id="f-note" data-key="note" rows="2"></textarea>
@@ -124,15 +132,17 @@ const DEFAULTS = {
   groupBreak: 5,     // a new bracket starts when the next score is this many points lower
   height: 480,       // length of the scale, in px at the 640px chart width
   ticks: [],         // scores to mark on the tube, e.g. [0, 50, 100]
+  series: [],        // two names make a paired chart; rows then carry values: [a, b]
+  width: null,       // null = 640 for one thermometer, 760 (or wider if labels need it) for two
   decimals: null,    // null = whole numbers unless a score has a fraction
   colors: {
     warm: "#eaa497", mid: "#e8d4d8", cool: "#c4d4ea",
-    mark: "#3f6f9b", ink: "#1a1a1a", muted: "#6b6b6b", rule: "#8c8c8c", note: "#7a7a7a"
+    mark: "#3f6f9b", link: "#a9bdd1", ink: "#1a1a1a", muted: "#6b6b6b", rule: "#8c8c8c", note: "#7a7a7a"
   }
 };
 
 const NS = "http://www.w3.org/2000/svg";
-const W = 640, PAD = 32, LINE = 22, GROUP_GAP = 14, TUBE_W = 22, BULB_R = 21, DOT_R = 7;
+const PAD = 32, LINE = 22, GROUP_GAP = 14, TUBE_W = 22, BULB_R = 21, DOT_R = 7, BRACKETS = 58;
 const SANS = '"Helvetica Neue", Helvetica, Arial, sans-serif';
 const HEAD = '"Libre Franklin", "Franklin Gothic Medium", "Franklin Gothic", "Helvetica Neue", Arial, sans-serif';
 const SERIF = 'Georgia, "Times New Roman", serif';
@@ -141,7 +151,7 @@ const svg = document.getElementById("chart");
 const params = new URLSearchParams(location.search);
 if (params.has("embed")) document.body.classList.add("embed");
 
-let state, original;
+let state, original, W = 640;
 
 function el(tag, attrs, parent) {
   const e = document.createElementNS(NS, tag);
@@ -150,30 +160,39 @@ function el(tag, attrs, parent) {
   return e;
 }
 
+// Two series names make a paired chart: two thermometers, each row scored
+// on both, with a line joining a row's two scores.
+const isPaired = cfg => Array.isArray(cfg.series) && cfg.series.filter(s => String(s).trim()).length === 2;
+
 function merge(base, over) {
   const out = { ...base, ...over, colors: { ...base.colors, ...(over.colors || {}) } };
-  out.data = parseData(out.data);
+  out.data = parseData(out.data, isPaired(out));
   return out;
 }
 
-// Rows are "label, score[, group]". The label may itself hold commas: the
-// score is the first field after it that is a number.
-function parseData(data) {
-  if (Array.isArray(data)) return data.map(d => ({ ...d, value: +d.value }));
+// Rows are "label, score[, group]", or "label, score, score" for a paired
+// chart. The label may itself hold commas: the scores are the first fields
+// after it that are numbers.
+function parseData(data, paired) {
+  if (Array.isArray(data)) return data.map(d => paired ? { ...d, values: (d.values || []).map(Number) } : { ...d, value: +d.value });
+  const num = "(-?\\d+(?:\\.\\d+)?)", sep = "\\s*[,\\t]\\s*";
+  const re = paired ? new RegExp(`^(.*?)${sep}${num}${sep}${num}\\s*$`)
+    : new RegExp(`^(.*?)${sep}${num}\\s*(?:[,\\t]\\s*(.*))?$`);
   return String(data || "").split(/\r?\n/).map(line => {
-    const m = line.trim().match(/^(.*?)\s*[,\t]\s*(-?\d+(?:\.\d+)?)\s*(?:[,\t]\s*(.*))?$/);
+    const m = line.trim().match(re);
     if (!m) return null;
     let label = m[1].replace(/^"|"$/g, ""), highlight = false;
     if (label.startsWith("*")) { label = label.slice(1).trim(); highlight = true; }
-    const d = { label, value: +m[2] };
-    if (m[3]) d.group = m[3].trim();
+    const d = paired ? { label, values: [+m[2], +m[3]] } : { label, value: +m[2] };
+    if (!paired && m[3]) d.group = m[3].trim();
     if (highlight) d.highlight = true;
     return d;
   }).filter(Boolean);
 }
 
-function dataToText(data) {
-  return data.map(d => (d.highlight ? "*" : "") + d.label + ", " + d.value + (d.group != null && d.group !== "" ? ", " + d.group : "")).join("\n");
+function dataToText(data, paired) {
+  return data.map(d => (d.highlight ? "*" : "") + d.label + ", " +
+    (paired ? (d.values || []).join(", ") : d.value + (d.group != null && d.group !== "" ? ", " + d.group : ""))).join("\n");
 }
 
 // ---- text helpers -------------------------------------------------------
@@ -250,13 +269,14 @@ function placeBlocks(blocks, minY, maxY) {
 function fmt(v, dec) { return v.toFixed(dec); }
 
 function render() {
-  const cfg = state, C = cfg.colors;
+  const cfg = state, C = cfg.colors, paired = isPaired(cfg);
   svg.textContent = "";
   meter = el("text", { x: -9999, y: -9999 });
 
   const S = {
     title: `font-family:${HEAD};font-weight:700;font-size:23px;fill:${C.ink}`,
     sub: `font-family:${SERIF};font-style:italic;font-size:18px;fill:#555`,
+    head: `font-family:${SANS};font-weight:700;font-size:15px;fill:${C.ink}`,
     val: `font-family:${SANS};font-size:15px;fill:${C.ink};font-variant-numeric:tabular-nums`,
     lab: `font-family:${SANS};font-size:15px;fill:${C.ink}`,
     ann: `font-family:${SANS};font-size:11.5px;letter-spacing:.06em;fill:${C.muted}`,
@@ -266,41 +286,54 @@ function render() {
   };
   const bold = s => s + ";font-weight:700";
 
-  const items = cfg.data.filter(d => d.label && isFinite(d.value))
-    .map((d, i) => ({ ...d, i })).sort((a, b) => b.value - a.value || a.i - b.i);
+  // one list of rows per thermometer; a paired row appears on both, linked by `row`
+  const rowsIn = cfg.data.filter(d => d.label && (paired ? d.values.length === 2 && d.values.every(isFinite) : isFinite(d.value)));
+  const nSides = paired ? 2 : 1;
+  const sides = [...Array(nSides)].map((_, k) => rowsIn
+    .map((d, i) => ({ ...d, value: paired ? d.values[k] : d.value, i, row: d }))
+    .sort((a, b) => b.value - a.value || a.i - b.i));
+  const all = sides.flat();
   const dec = cfg.decimals != null && cfg.decimals !== "" ? +cfg.decimals
-    : (items.some(d => d.value % 1) ? 1 : 0);
-  const ticks = (cfg.ticks || []).map(Number).filter(isFinite);
-  const vals = items.map(d => d.value).concat(ticks);
+    : (all.some(d => d.value % 1) ? 1 : 0);
+  const ticks = paired ? [] : (cfg.ticks || []).map(Number).filter(isFinite);
+  const vals = all.map(d => d.value).concat(ticks);
   const d0 = Math.min(+cfg.domain[0], ...vals), d1 = Math.max(+cfg.domain[1], ...vals);
+
+  // horizontal composition. Single: annotations | tube | brackets | labels.
+  // Paired: labels | brackets | tube | joining lines | tube | brackets | labels,
+  // and the chart widens if the labels need the room.
+  const annStyle = S.ann;
+  const warm = wrap(String(cfg.warm || "").toUpperCase(), 92, annStyle);
+  const cold = wrap(String(cfg.cold || "").toUpperCase(), 92, annStyle);
+  const annW = Math.max(0, ...warm.concat(cold).map(s => measure(s, annStyle)));
+  const valW = sides.map(list => Math.max(0, ...list.map(d => measure(fmt(d.value, dec), bold(S.val)))));
+  const labW = Math.max(0, ...all.map(d => measure(d.label, bold(S.lab))));
+  const reach = k => TUBE_W / 2 + BRACKETS + 17 + valW[k] + labW;   // tube center to far edge of labels
+  let txs, annCx;
+  if (paired) {
+    const MID = Math.max(150, annW + 40);
+    W = Math.max(+cfg.width || 760, Math.ceil(2 * PAD + reach(0) + reach(1) + MID));
+    const gap = W - 2 * PAD - reach(0) - reach(1);
+    txs = [PAD + reach(0), PAD + reach(0) + gap];
+    annCx = (txs[0] + txs[1]) / 2;
+  } else {
+    W = +cfg.width || 640;
+    const tickGap = ticks.length ? 30 : 0;
+    const x0 = Math.max(PAD, (W - (annW + 24 + tickGap + reach(0) + TUBE_W / 2)) / 2);
+    annCx = x0 + annW / 2;
+    txs = [x0 + annW + 24 + tickGap + TUBE_W / 2];
+  }
 
   // header
   let y = PAD + 22;
   y = textBlock(wrap(cfg.title, W - 2 * PAD, S.title), PAD, y, 28, S.title);
   if (cfg.subtitle) y = textBlock(wrap(cfg.subtitle, W - 2 * PAD, S.sub), PAD, y + 32, 23, S.sub);
 
-  // horizontal composition: annotations | tube | brackets | labels, centered
-  const annStyle = S.ann;
-  const warm = wrap(String(cfg.warm || "").toUpperCase(), 92, annStyle);
-  const cold = wrap(String(cfg.cold || "").toUpperCase(), 92, annStyle);
-  const annW = Math.max(0, ...warm.concat(cold).map(s => measure(s, annStyle)));
-  const valW = Math.max(0, ...items.map(d => measure(fmt(d.value, dec), bold(S.val))));
-  const labW = Math.max(0, ...items.map(d => measure(d.label, bold(S.lab))));
-  const tickGap = ticks.length ? 30 : 0;
-  const BRACKETS = 58;
-  const total = annW + 24 + tickGap + TUBE_W + BRACKETS + 10 + valW + 7 + labW;
-  const x0 = Math.max(PAD, (W - total) / 2);
-  const annCx = x0 + annW / 2;
-  const tx = x0 + annW + 24 + tickGap + TUBE_W / 2;
-  const cbx = tx + TUBE_W / 2 + 7;          // bracket beside the circles
-  const lbx = cbx + BRACKETS - 7;           // bracket beside the labels
-  const valX = lbx + 10 + valW;             // right edge of the score column
-  const labX = valX + 7;
-
   // vertical scale
-  const groups = groupItems(items, cfg);
-  const needed = Math.max(0, items.length - 1) * LINE + Math.max(0, groups.length - 1) * GROUP_GAP;
-  const plotTop = y + 34;
+  const groupsBySide = sides.map(list => groupItems(list, cfg));
+  const needed = Math.max(...sides.map((list, k) =>
+    Math.max(0, list.length - 1) * LINE + Math.max(0, groupsBySide[k].length - 1) * GROUP_GAP));
+  const plotTop = y + 34 + (paired ? 34 : 0);
   const sTop = plotTop + 14;
   const len = Math.max(+cfg.height || 480, needed - 20, 150);
   const sBot = sTop + len;
@@ -308,7 +341,7 @@ function render() {
   const bulbCy = sBot + BULB_R + 2;
   const plotBot = bulbCy + BULB_R;
 
-  // tube
+  // tubes
   const defs = el("defs", {});
   const grad = el("linearGradient", { id: "therm-grad", x1: 0, y1: plotTop, x2: 0, y2: plotBot, gradientUnits: "userSpaceOnUse" }, defs);
   el("stop", { offset: 0, "stop-color": C.warm }, grad);
@@ -316,16 +349,20 @@ function render() {
   el("stop", { offset: .82, "stop-color": C.cool }, grad);
   el("stop", { offset: 1, "stop-color": C.cool }, grad);
   const r = TUBE_W / 2, a = Math.asin(r / BULB_R), bx = BULB_R * Math.cos(a);
-  el("path", {
-    d: `M${tx - r},${plotTop + r} A${r},${r} 0 0 1 ${tx + r},${plotTop + r} V${bulbCy - bx} ` +
-       `A${BULB_R},${BULB_R} 0 1 1 ${tx - r},${bulbCy - bx} Z`,
-    fill: "url(#therm-grad)"
+  txs.forEach((tx, k) => {
+    el("path", {
+      d: `M${tx - r},${plotTop + r} A${r},${r} 0 0 1 ${tx + r},${plotTop + r} V${bulbCy - bx} ` +
+         `A${BULB_R},${BULB_R} 0 1 1 ${tx - r},${bulbCy - bx} Z`,
+      fill: "url(#therm-grad)"
+    });
+    if (paired) el("text", { x: tx, y: plotTop - 14, "text-anchor": "middle", style: S.head }).textContent = cfg.series[k];
   });
 
+  const tx0 = txs[0];
   ticks.forEach(t => {
     const ty = ys(t);
-    el("line", { x1: tx - r - 6, x2: tx - r - 1, y1: ty, y2: ty, stroke: C.rule, "stroke-width": 1 });
-    el("text", { x: tx - r - 9, y: ty + 3.5, "text-anchor": "end", style: S.tick }).textContent = fmt(t, t % 1 ? dec : 0);
+    el("line", { x1: tx0 - r - 6, x2: tx0 - r - 1, y1: ty, y2: ty, stroke: C.rule, "stroke-width": 1 });
+    el("text", { x: tx0 - r - 9, y: ty + 3.5, "text-anchor": "end", style: S.tick }).textContent = fmt(t, t % 1 ? dec : 0);
   });
 
   // annotations, with arrows pointing off the ends of the scale
@@ -346,76 +383,101 @@ function render() {
     arrow(annCx, bot - 28, bot + 2);
   }
 
-  // label blocks
-  const blocks = groups.map(g => {
-    const cTop = ys(g[0].value), cBot = ys(g[g.length - 1].value), h = (g.length - 1) * LINE;
-    return { g, n: g.length, cTop, cBot, cMid: (cTop + cBot) / 2, h, want: (cTop + cBot) / 2 - h / 2 };
-  });
-  placeBlocks(blocks, plotTop + 6, plotBot - 4);
-
-  // connectors: each runs from the circles' bracket to the labels' bracket,
-  // jogging vertically where the two don't line up. Jogs are staggered so
-  // two of them never share a vertical run.
-  blocks.forEach(b => {
-    b.yc = Math.min(Math.max(b.cMid, b.top - (b.n > 1 ? 7 : 0)), b.top + b.h + (b.n > 1 ? 7 : 0));
-    b.jog = Math.abs(b.yc - b.cMid) > .5 ? Math.sign(b.yc - b.cMid) : 0;
-  });
-  const downs = blocks.filter(b => b.jog > 0), ups = blocks.filter(b => b.jog < 0).reverse();
-  const right = lbx - 10, left = cbx + 8;
-  [downs, ups].forEach(list => {
-    const step = Math.min(7, (right - left) / Math.max(1, list.length));
-    list.forEach((b, k) => { b.mx = right - k * step; });
+  // lines joining a row's two scores, under the circles
+  const links = new Map();
+  if (paired) rowsIn.forEach(d => {
+    const ln = el("line", { x1: txs[0] + DOT_R, y1: ys(d.values[0]), x2: txs[1] - DOT_R, y2: ys(d.values[1]),
+      stroke: C.link, "stroke-width": 1.5, "stroke-linecap": "round" });
+    links.set(d, ln);
   });
 
-  const line = { fill: "none", stroke: C.rule, "stroke-width": 1, "stroke-linecap": "square" };
-  blocks.forEach(b => {
-    const single = b.cBot - b.cTop < 1;
-    const startX = single ? tx + DOT_R + 3 : cbx;
-    if (!single) el("path", { d: `M${cbx - 4},${b.cTop} H${cbx} V${b.cBot} H${cbx - 4}`, ...line });
-    const endX = b.n > 1 ? lbx : lbx + 4;
-    if (b.n > 1) el("path", { d: `M${lbx + 5},${b.top - 7} H${lbx} V${b.top + b.h + 7} H${lbx + 5}`, ...line });
-    el("path", { d: b.jog ? `M${startX},${b.cMid} H${b.mx} V${b.yc} H${endX}` : `M${startX},${b.cMid} H${endX}`, ...line });
-  });
-
-  // circles, one per distinct score
-  const dots = new Map();
-  items.forEach(d => {
-    const k = fmt(d.value, dec);
-    if (!dots.has(k)) dots.set(k, { y: ys(d.value), items: [] });
-    dots.get(k).items.push(d);
-  });
-  const rows = new Map();
+  // hover lights up a row everywhere it is drawn
+  const marks = new Map();   // source row -> [{val, lab, dot}]
   const setOn = (list, on) => list.forEach(d => {
-    const row = rows.get(d);
-    row.val.setAttribute("style", on || d.highlight ? bold(S.val) : S.val);
-    row.lab.setAttribute("style", on || d.highlight ? bold(S.lab) : S.lab);
-    row.dot.setAttribute("fill", on ? C.mark : "none");
-  });
-  dots.forEach((dot, k) => {
-    dot.el = el("circle", { cx: tx, cy: dot.y, r: DOT_R, fill: "none", stroke: C.mark, "stroke-width": 1.5 });
-    const hit = el("circle", { cx: tx, cy: dot.y, r: DOT_R + 3, fill: "transparent", style: "cursor:default" });
-    el("title", {}, hit).textContent = dot.items.map(d => `${d.label}: ${k}`).join("\n");
-    hit.addEventListener("mouseenter", () => setOn(dot.items, true));
-    hit.addEventListener("mouseleave", () => setOn(dot.items, false));
+    (marks.get(d.row) || []).forEach(m => {
+      m.val.setAttribute("style", on || d.highlight ? bold(S.val) : S.val);
+      m.lab.setAttribute("style", on || d.highlight ? bold(S.lab) : S.lab);
+      m.dot.setAttribute("fill", on ? C.mark : "none");
+    });
+    const ln = links.get(d.row);
+    if (ln) { ln.setAttribute("stroke", on ? C.mark : C.link); ln.setAttribute("stroke-width", on ? 2.5 : 1.5); }
   });
 
-  // labels
-  blocks.forEach(b => b.g.forEach((d, k) => {
-    const cy = b.top + k * LINE;
-    const v = el("text", { x: valX, y: cy + 5, "text-anchor": "end", style: d.highlight ? bold(S.val) : S.val });
-    v.textContent = fmt(d.value, dec);
-    const t = el("text", { x: labX, y: cy + 5, style: d.highlight ? bold(S.lab) : S.lab });
-    t.textContent = d.label;
-    const hit = el("rect", { x: lbx + 6, y: cy - LINE / 2, width: labX + labW - lbx - 4, height: LINE, fill: "transparent" });
-    el("title", {}, hit).textContent = `${d.label}: ${fmt(d.value, dec)}`;
-    rows.set(d, { val: v, lab: t, dot: dots.get(fmt(d.value, dec)).el });
-    hit.addEventListener("mouseenter", () => setOn([d], true));
-    hit.addEventListener("mouseleave", () => setOn([d], false));
-  }));
+  // one side of a thermometer: circles, brackets, leader lines and labels.
+  // dir is +1 for labels to the right of the tube, -1 for labels to the left.
+  const lineStyle = { fill: "none", stroke: C.rule, "stroke-width": 1, "stroke-linecap": "square" };
+  function drawSide(items, groups, tx, dir, vW) {
+    const cbx = tx + dir * (TUBE_W / 2 + 7);         // bracket beside the circles
+    const lbx = cbx + dir * (BRACKETS - 7);          // bracket beside the labels
+    const valX = dir > 0 ? lbx + 10 + vW : lbx - 10;  // right edge of the score column
+    const labX = dir > 0 ? valX + 7 : lbx - 10 - vW - 7;
+
+    const blocks = groups.map(g => {
+      const cTop = ys(g[0].value), cBot = ys(g[g.length - 1].value), h = (g.length - 1) * LINE;
+      return { g, n: g.length, cTop, cBot, cMid: (cTop + cBot) / 2, h, want: (cTop + cBot) / 2 - h / 2 };
+    });
+    placeBlocks(blocks, plotTop + 6, plotBot - 4);
+
+    // connectors run from the circles' bracket to the labels' bracket,
+    // jogging vertically where the two don't line up. Jogs are staggered so
+    // two of them never share a vertical run.
+    blocks.forEach(b => {
+      b.yc = Math.min(Math.max(b.cMid, b.top - (b.n > 1 ? 7 : 0)), b.top + b.h + (b.n > 1 ? 7 : 0));
+      b.jog = Math.abs(b.yc - b.cMid) > .5 ? Math.sign(b.yc - b.cMid) : 0;
+    });
+    const downs = blocks.filter(b => b.jog > 0), ups = blocks.filter(b => b.jog < 0).reverse();
+    const far = lbx - dir * 10, near = cbx + dir * 8;
+    [downs, ups].forEach(list => {
+      const step = Math.min(7, Math.abs(far - near) / Math.max(1, list.length));
+      list.forEach((b, k) => { b.mx = far - dir * k * step; });
+    });
+    blocks.forEach(b => {
+      const single = b.cBot - b.cTop < 1;
+      const startX = single ? tx + dir * (DOT_R + 3) : cbx;
+      if (!single) el("path", { d: `M${cbx - dir * 4},${b.cTop} H${cbx} V${b.cBot} H${cbx - dir * 4}`, ...lineStyle });
+      const endX = b.n > 1 ? lbx : lbx + dir * 4;
+      if (b.n > 1) el("path", { d: `M${lbx + dir * 5},${b.top - 7} H${lbx} V${b.top + b.h + 7} H${lbx + dir * 5}`, ...lineStyle });
+      el("path", { d: b.jog ? `M${startX},${b.cMid} H${b.mx} V${b.yc} H${endX}` : `M${startX},${b.cMid} H${endX}`, ...lineStyle });
+    });
+
+    // circles, one per distinct score
+    const dots = new Map();
+    items.forEach(d => {
+      const k = fmt(d.value, dec);
+      if (!dots.has(k)) dots.set(k, { y: ys(d.value), items: [] });
+      dots.get(k).items.push(d);
+    });
+    dots.forEach((dot, k) => {
+      dot.el = el("circle", { cx: tx, cy: dot.y, r: DOT_R, fill: "none", stroke: C.mark, "stroke-width": 1.5 });
+      const hit = el("circle", { cx: tx, cy: dot.y, r: DOT_R + 3, fill: "transparent", style: "cursor:default" });
+      el("title", {}, hit).textContent = dot.items.map(d => `${d.label}: ${k}`).join("\n");
+      hit.addEventListener("mouseenter", () => setOn(dot.items, true));
+      hit.addEventListener("mouseleave", () => setOn(dot.items, false));
+    });
+
+    // labels
+    const anchor = dir > 0 ? "start" : "end";
+    blocks.forEach(b => b.g.forEach((d, k) => {
+      const cy = b.top + k * LINE;
+      const v = el("text", { x: valX, y: cy + 5, "text-anchor": "end", style: d.highlight ? bold(S.val) : S.val });
+      v.textContent = fmt(d.value, dec);
+      const t = el("text", { x: labX, y: cy + 5, "text-anchor": anchor, style: d.highlight ? bold(S.lab) : S.lab });
+      t.textContent = d.label;
+      const x0 = dir > 0 ? lbx + 6 : labX - labW - 2, x1 = dir > 0 ? labX + labW + 2 : lbx - 6;
+      const hit = el("rect", { x: x0, y: cy - LINE / 2, width: x1 - x0, height: LINE, fill: "transparent" });
+      el("title", {}, hit).textContent = `${d.label}: ${fmt(d.value, dec)}`;
+      if (!marks.has(d.row)) marks.set(d.row, []);
+      marks.get(d.row).push({ val: v, lab: t, dot: dots.get(fmt(d.value, dec)).el });
+      hit.addEventListener("mouseenter", () => setOn([d], true));
+      hit.addEventListener("mouseleave", () => setOn([d], false));
+    }));
+    return Math.max(plotBot, ...blocks.map(b => b.top + b.h + 8));
+  }
+  const bottoms = sides.map((list, k) => drawSide(list, groupsBySide[k], txs[k], paired && k === 0 ? -1 : 1, valW[k]));
 
   // footer: note across the full width, then source on the left with the
   // byline set against its last line on the right
-  y = Math.max(plotBot, ...blocks.map(b => b.top + b.h + 8)) + 36;
+  y = Math.max(...bottoms) + 36;
   if (cfg.note) y = textBlock(wrap("Note: " + cfg.note, W - 2 * PAD, S.note), PAD, y, 15.5, S.note) + 15.5;
   const byW = cfg.byline ? measure(cfg.byline, S.by) : 0;
   if (cfg.source) y = textBlock(wrap("Source: " + cfg.source, W - 2 * PAD - (byW ? byW + 28 : 0), S.note), PAD, y, 15.5, S.note);
@@ -425,7 +487,8 @@ function render() {
   const H = Math.ceil(y + PAD - 6);
   svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
   svg.setAttribute("aria-label", [cfg.title, cfg.subtitle].filter(Boolean).join(". ") + ". " +
-    items.map(d => `${d.label} ${fmt(d.value, dec)}`).join(", "));
+    rowsIn.map(d => paired ? `${d.label}: ${cfg.series[0]} ${fmt(d.values[0], dec)}, ${cfg.series[1]} ${fmt(d.values[1], dec)}`
+      : `${d.label} ${fmt(d.value, dec)}`).join("; "));
 }
 
 // ---- export -------------------------------------------------------------
@@ -478,7 +541,8 @@ function fillForm() {
     const [k, idx] = i.dataset.num.split(".");
     i.value = idx != null ? state[k][idx] : state[k];
   });
-  $("f-data").value = dataToText(state.data);
+  $("f-data").value = dataToText(state.data, isPaired(state));
+  $("f-series").value = (state.series || []).join(", ");
   $("f-ticks").value = (state.ticks || []).join(", ");
   $("f-dec").value = state.decimals ?? "";
 }
@@ -489,7 +553,12 @@ document.querySelectorAll("[data-num]").forEach(i => i.addEventListener("input",
   if (idx != null) { state[k] = [...state[k]]; state[k][idx] = +i.value; } else state[k] = +i.value;
   render();
 }));
-$("f-data").addEventListener("input", e => { state.data = parseData(e.target.value); render(); });
+$("f-data").addEventListener("input", e => { state.data = parseData(e.target.value, isPaired(state)); render(); });
+$("f-series").addEventListener("input", e => {
+  state.series = e.target.value.split(",").map(s => s.trim()).filter(Boolean);
+  state.data = parseData($("f-data").value, isPaired(state));
+  render();
+});
 $("f-ticks").addEventListener("input", e => { state.ticks = e.target.value.split(/[\s,]+/).filter(s => s !== "" && isFinite(s)).map(Number); render(); });
 $("f-dec").addEventListener("input", e => { state.decimals = e.target.value === "" ? null : +e.target.value; render(); });
 $("reset").onclick = () => { state = structuredClone(original); fillForm(); render(); };

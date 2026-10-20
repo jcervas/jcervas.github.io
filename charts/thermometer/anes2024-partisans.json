@@ -1,0 +1,76 @@
+{
+  "title": "How do Democrats and Republicans feel about groups in American politics?",
+  "subtitle": "Average rating on a feeling thermometer, 2024",
+  "series": [
+    "Democrats",
+    "Republicans"
+  ],
+  "data": [
+    {
+      "label": "Black people",
+      "values": [
+        75,
+        66
+      ]
+    },
+    {
+      "label": "Hispanics",
+      "values": [
+        73,
+        66
+      ]
+    },
+    {
+      "label": "Gay men and lesbians",
+      "values": [
+        71,
+        48
+      ]
+    },
+    {
+      "label": "Democratic Party",
+      "values": [
+        70,
+        20
+      ]
+    },
+    {
+      "label": "Labor unions",
+      "values": [
+        69,
+        52
+      ]
+    },
+    {
+      "label": "Conservatives",
+      "values": [
+        38,
+        67
+      ]
+    },
+    {
+      "label": "Christian fundamentalists",
+      "values": [
+        32,
+        58
+      ]
+    },
+    {
+      "label": "Republican Party",
+      "values": [
+        21,
+        70
+      ]
+    }
+  ],
+  "note": "Democrats and Republicans include independents who lean toward each party. Ratings run from 0 (cold, unfavorable) to 100 (warm, favorable); 50 is neither. Weighted means.",
+  "source": "American National Election Studies, 2024 Time Series Study (cumulative data file).",
+  "byline": "Jonathan Cervas | Carnegie Mellon University",
+  "warm": "Warmer",
+  "cold": "Colder",
+  "domain": [
+    0,
+    100
+  ],
+  "groupBreak": 5
+}

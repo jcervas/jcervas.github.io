@@ -1,5 +1,5 @@
-"""Build anes2024-democrats.json and anes2024-republicans.json for the
-thermometer template.
+"""Build anes2024-partisans.json for the thermometer template: one paired
+chart, Democrats on the left thermometer and Republicans on the right.
 
 Input is the ANES Time Series Cumulative Data File (CSV), or any slice of it
 that keeps VCF0004 (year), VCF0009z (weight) and VCF0301 (7-point party ID).
@@ -60,20 +60,22 @@ def means(paths):
     return sums
 
 
-def config(party, scores):
-    name = PARTIES[party][0]
+def config(sums):
+    dem, rep = sums["democrats"], sums["republicans"]
+    rows = sorted((v for v in dem if v in rep), key=lambda v: -dem[v])
     return {
-        "title": f"How do {name} feel about groups in American politics?",
-        "subtitle": f"Average rating on a feeling thermometer among {name}",
-        "data": [{"label": GROUPS[v], "value": round(s)} for v, s in
-                 sorted(scores.items(), key=lambda kv: -kv[1])],
-        "note": f"{name} include independents who lean toward the party. Ratings run from 0 "
-                "(cold, unfavorable) to 100 (warm, favorable); 50 is neither. Weighted means.",
+        "title": "How do Democrats and Republicans feel about groups in American politics?",
+        "subtitle": "Average rating on a feeling thermometer, 2024",
+        "series": [PARTIES["democrats"][0], PARTIES["republicans"][0]],
+        "data": [{"label": GROUPS[v], "values": [round(dem[v]), round(rep[v])]} for v in rows],
+        "note": "Democrats and Republicans include independents who lean toward each party. "
+                "Ratings run from 0 (cold, unfavorable) to 100 (warm, favorable); 50 is "
+                "neither. Weighted means.",
         "source": "American National Election Studies, 2024 Time Series Study "
                   "(cumulative data file).",
         "byline": "Jonathan Cervas | Carnegie Mellon University",
-        "warm": "Warmer, more favorable",
-        "cold": "Colder, less favorable",
+        "warm": "Warmer",
+        "cold": "Colder",
         "domain": [0, 100],
         "groupBreak": 5,
     }
@@ -82,11 +84,11 @@ def config(party, scores):
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         sys.exit(__doc__)
-    for party, scores in means(sys.argv[1:]).items():
-        path = os.path.join(OUT, f"anes2024-{party}.json")
-        with open(path, "w") as f:
-            json.dump(config(party, scores), f, indent=2, ensure_ascii=False)
-            f.write("\n")
-        print(path)
-        for v, s in sorted(scores.items(), key=lambda kv: -kv[1]):
-            print(f"  {s:5.1f}  {GROUPS[v]}")
+    sums = means(sys.argv[1:])
+    path = os.path.join(OUT, "anes2024-partisans.json")
+    with open(path, "w") as f:
+        json.dump(config(sums), f, indent=2, ensure_ascii=False)
+        f.write("\n")
+    print(path)
+    for v in sorted(sums["democrats"], key=lambda v: -sums["democrats"][v]):
+        print(f"  {sums['democrats'][v]:5.1f}  {sums['republicans'].get(v, float('nan')):5.1f}  {GROUPS[v]}")
