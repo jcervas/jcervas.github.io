@@ -61,10 +61,7 @@
       --rule: #333333; --accent: #e7e7e7; --accent-soft: #242424;
       --link: #4a9de2;
       --dem: #5784c5; --rep: #d35f4f; --water: #141414; --nodata: #4a4a4a;
-    --zoom-glyph: #a0a0a0;
-    --basefill: #1e1e1e; --baseline: #333333; --baseedge: #4d4d4d;
       --zoom-glyph: #a0a0a0;
-    --basefill: #1e1e1e; --baseline: #333333; --baseedge: #4d4d4d;
       --basefill: #1e1e1e; --baseline: #333333; --baseedge: #4d4d4d;
       --ramp0: #be2c25; --ramp1: #a8453d; --ramp2: #6b3a37; --ramp3: #1f1f1f;
       --ramp4: #2f4c70; --ramp5: #5784c5; --ramp6: #8fbcea;
@@ -454,15 +451,13 @@
     NC: "North Carolina", OH: "Ohio", TN: "Tennessee", TX: "Texas", UT: "Utah"
   };
 
-  // Only variables the demographics methodology rates usable at precinct level.
-  // pct_unemployed, pct_noncitizen and pct_limited_english are deliberately not
-  // offered: their margins of error make a single-precinct reading meaningless,
-  // and a choropleth is precisely the thing that would invite one.
   // Only variables the demographics work rates usable, and the verdicts differ
   // by geography: pct_cvap_nh_black and pct_cvap_nh_asian are sound for a
   // district and not for a precinct, so they are marked districtOnly rather
   // than offered everywhere. pct_unemployed, pct_noncitizen and
-  // pct_limited_english are still absent at both levels.
+  // pct_limited_english are absent at both levels: their margins of error make
+  // a single-precinct reading meaningless, and a choropleth is precisely the
+  // thing that would invite one.
   //
   // There is deliberately no "share of adults who are citizens": that column
   // divides a 2020-2024 ACS numerator by an April 2020 decennial denominator
@@ -505,7 +500,7 @@
 
   var state = {
     year: "2024",        // which map
-    color: "election",   // election | pop
+    color: "election",   // election | demo | cook
     precincts: false,
     density: false,
     focus: null,         // state abbreviation when zoomed in
@@ -630,12 +625,6 @@
     };
     return THEME;
   }
-  function inkAlpha(a) {
-    var c = d3.color(theme().ink);
-    if (!c) return "rgba(17,17,17," + a + ")";
-    c.opacity = a;
-    return c + "";
-  }
   function waterAlpha(a) {
     var c = d3.color(theme().water);
     if (!c) return "rgba(255,255,255," + a + ")";
@@ -734,12 +723,10 @@
     return demoScale ? demoScale(x) : null;
   }
 
-  // Cook's categories are ordinal and run Democratic to Republican, so they
-  // borrow the same diverging ramp the vote uses rather than a palette of
-  // their own: the two modes then agree about which end of the map is which.
-  // The toss-ups take the pale stops and the ramp's neutral middle is skipped,
-  // because Cook splits toss-ups by who holds the seat and there is no
-  // genuinely even category to put there.
+  // Cook's six categories in order, Democratic to Republican. Used to decide
+  // which way a rating leans when the readout colours it; the fills come from
+  // theme().cook, which is the Post's Cook palette rather than the election
+  // ramp.
   var COOK_ORDER = ["Likely Democrat", "Lean Democrat", "Democratic Toss Up",
                     "Republican Toss Up", "Lean Republican", "Likely Republican"];
   // The two toss-up categories differ only in who holds the seat, and the Post
