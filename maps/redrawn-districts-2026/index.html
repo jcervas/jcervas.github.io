@@ -609,12 +609,11 @@
       nodata: g("--nodata") || "#dcdcdc",
       chicfill: g("--chicfill") || "#e8e8e4",
       cook: {
-        "Likely Democrat":    g("--cook-likelyD") || "#5784c5",
-        "Lean Democrat":      g("--cook-leanD")   || "#a9c6e8",
-        "Democratic Toss Up": g("--cook-toss")    || "#e0a63a",
-        "Republican Toss Up": g("--cook-toss")    || "#e0a63a",
-        "Lean Republican":    g("--cook-leanR")   || "#eb9c92",
-        "Likely Republican":  g("--cook-likelyR") || "#d35f4f"
+        "Likely Democrat":   g("--cook-likelyD") || "#5784c5",
+        "Lean Democrat":     g("--cook-leanD")   || "#a9c6e8",
+        "Toss Up":           g("--cook-toss")    || "#e0a63a",
+        "Lean Republican":   g("--cook-leanR")   || "#eb9c92",
+        "Likely Republican": g("--cook-likelyR") || "#d35f4f"
       },
       ink: g("--ink") || "#111111",
       paper: g("--paper") || "#ffffff",
@@ -723,21 +722,18 @@
     return demoScale ? demoScale(x) : null;
   }
 
-  // Cook's six categories in order, Democratic to Republican. Used to decide
-  // which way a rating leans when the readout colours it; the fills come from
-  // theme().cook, which is the Post's Cook palette rather than the election
+  // Cook's five competitive categories, Democratic to Republican. Cook has a
+  // single Toss Up; splitting it into "Democratic Toss Up" and "Republican
+  // Toss Up" is a presentational device for showing who holds the seat, not a
+  // Cook rating, so the seat's party lives in its own field instead. Fills
+  // come from theme().cook, the Post's Cook palette rather than the election
   // ramp.
-  var COOK_ORDER = ["Likely Democrat", "Lean Democrat", "Democratic Toss Up",
-                    "Republican Toss Up", "Lean Republican", "Likely Republican"];
-  // The two toss-up categories differ only in who holds the seat, and the Post
-  // draws them as a single gold band. The map follows; the readout still names
-  // the category exactly.
   var COOK_BANDS = [
-    { label: "Likely D", cats: ["Likely Democrat"] },
-    { label: "Lean D",   cats: ["Lean Democrat"] },
-    { label: "Toss-up",  cats: ["Democratic Toss Up", "Republican Toss Up"] },
-    { label: "Lean R",   cats: ["Lean Republican"] },
-    { label: "Likely R", cats: ["Likely Republican"] }
+    { label: "Likely D", cat: "Likely Democrat" },
+    { label: "Lean D",   cat: "Lean Democrat" },
+    { label: "Toss-up",  cat: "Toss Up" },
+    { label: "Lean R",   cat: "Lean Republican" },
+    { label: "Likely R", cat: "Likely Republican" }
   ];
 
   function cookRating(f) {
@@ -1382,11 +1378,14 @@
     // they carry almost no information here.
     var ck = cookRating(f);
     if (ck) {
-      var ci = COOK_ORDER.indexOf(ck.rating);
-      var ccls = ci < 0 ? "" : ci < 3 ? "d" : "r";
+      var ccls = /Democrat$/.test(ck.rating) ? "d"
+               : /Republican$/.test(ck.rating) ? "r" : "";
+      var aside = [];
+      if (ck.open) aside.push(ck.note ? "open \u2014 " + ck.note : "open seat");
+      else if (ck.note) aside.push(ck.note);
       rows.push(["Cook rating",
         '<span class="' + ccls + '">' + ck.rating + "</span>" +
-        (ck.note ? ' <span class="muted">(' + ck.note + ")</span>" : "")]);
+        (aside.length ? ' <span class="muted">(' + aside.join("; ") + ")</span>" : "")]);
     }
     rows.push(["Citizen voting-age pop.", fmt(cvapOf(f))]);
     var s = demShare(p);
@@ -1545,12 +1544,8 @@
     flag.hidden = true;
     var rows = [["Districts (" + state.year + " map)", String(r.n)]];
     if (state.color === "cook" && state.year === "2026" && state.cook) {
-      var watch = COOK_BANDS.reduce(function (acc, b) {
-        return acc + (state.districts["2026"] || []).reduce(function (a, f) {
-          if (f.properties.state !== st) return a;
-          var ck = cookRating(f);
-          return a + (ck && b.cats.indexOf(ck.rating) >= 0 ? 1 : 0);
-        }, 0);
+      var watch = (state.districts["2026"] || []).reduce(function (a, f) {
+        return a + (f.properties.state === st && cookRating(f) ? 1 : 0);
       }, 0);
       rows.push(["Races to watch", watch ? String(watch) : "none listed"]);
     }
@@ -2178,7 +2173,7 @@
     var counts = COOK_BANDS.map(function (b) {
       return ds.reduce(function (acc, f) {
         var r = cookRating(f);
-        return acc + (r && b.cats.indexOf(r.rating) >= 0 ? 1 : 0);
+        return acc + (r && r.rating === b.cat ? 1 : 0);
       }, 0);
     });
     var rated = counts.reduce(function (a, b) { return a + b; }, 0);
@@ -2194,7 +2189,7 @@
 
     track.innerHTML = COOK_BANDS.map(function (b, i) {
       if (!counts[i]) return "";
-      var col = theme().cook[b.cats[0]];
+      var col = theme().cook[b.cat];
       // Dark ink on the pale bands, white on the saturated ones.
       var pale = b.label !== "Likely D" && b.label !== "Likely R";
       return '<div class="cb-seg" style="flex:' + counts[i] + ";background:" + col +
