@@ -372,8 +372,8 @@
   <div class="ctl">
     <label id="l-dens">Density fade</label>
     <div class="seg" role="group" aria-labelledby="l-dens">
-      <button id="dOff" aria-pressed="true">Off</button>
-      <button id="dOn" aria-pressed="false">On</button>
+      <button id="dOff" aria-pressed="true" disabled>Off</button>
+      <button id="dOn" aria-pressed="false" disabled>On</button>
     </div>
   </div>
 
@@ -1209,8 +1209,15 @@
   // choice daily-district landed on, after a d3 transition tween silently
   // failed to drive zoom.transform.
   function boundsTransform(features, margin, maxScale) {
+    return boundsTransformFor(path, features, margin, maxScale);
+  }
+
+  // The same, under a projection that has not been installed yet: entering a
+  // state straight onto one of its districts has to know where that district
+  // will land before the swap happens.
+  function boundsTransformFor(pathGen, features, margin, maxScale) {
     var fc = { type: "FeatureCollection", features: features };
-    var b = path.bounds(fc);
+    var b = pathGen.bounds(fc);
     var x0 = b[0][0], y0 = b[0][1], x1 = b[1][0], y1 = b[1][1];
     var bw = x1 - x0, bh = y1 - y0;
     if (!(bw > 0) || !(bh > 0)) return d3.zoomIdentity;
@@ -1478,10 +1485,16 @@
   });
 
   cv.addEventListener("click", function (ev) {
-    var f = hitAt(ev).f;
+    var hit = hitAt(ev);
+    var f = hit.f;
     if (!f) return;
     var p = f.properties;
-    if (!state.focus && p.state) { focusState(p.state); return; }
+    if (!state.focus && p.state) {
+      // A Cook square identifies a district; anywhere else on the national
+      // map identifies only a state.
+      focusState(p.state, hit.chiclet ? districtOf(p) : null);
+      return;
+    }
     // Inside a state, a click singles out a district -- including a click on a
     // precinct, which singles out the district that precinct is in. Reading one
     // precinct is what hovering is for.
@@ -1553,10 +1566,11 @@
     }).join("");
   }
 
-  function districtFeature(cd, year) {
+  function districtFeature(cd, year, st) {
+    var who = st || state.focus;
     var list = state.districts[year || state.year] || [];
     for (var i = 0; i < list.length; i++) {
-      if (list[i].properties.state === state.focus &&
+      if (list[i].properties.state === who &&
           list[i].properties.district === cd) return list[i];
     }
     return null;
@@ -1565,13 +1579,13 @@
   // Frame the district together with the counterpart drawn dashed over it:
   // the comparison is the reason both are on screen, so neither should be
   // cropped. Where there is no counterpart this is just the district.
-  function districtFrame(cd, year) {
+  function districtFrame(cd, year, st) {
     var yr = year || state.year;
-    var f = districtFeature(cd, yr);
+    var f = districtFeature(cd, yr, st);
     if (!f) return [];
     var other = yr === "2024" ? "2026" : "2024";
-    var cp = counterpartOf(cd, yr);
-    var cpf = cp ? districtFeature(cp, other) : null;
+    var cp = counterpartOf(cd, yr, st);
+    var cpf = cp ? districtFeature(cp, other, st) : null;
     return cpf ? [f, cpf] : [f];
   }
 
@@ -1599,8 +1613,8 @@
   // singled out it follows the crosswalk to that district's counterpart --
   // the district on the other map that shares the most people with it --
   // rather than jumping to whatever happens to carry the same number.
-  function counterpartOf(cd, fromYear) {
-    var f = districtFeature(cd, fromYear);
+  function counterpartOf(cd, fromYear, st) {
+    var f = districtFeature(cd, fromYear, st);
     if (!f) return null;
     var p = f.properties;
     return fromYear === "2024"
@@ -1856,27 +1870,46 @@
     return proj;
   }
 
-  function focusState(st) {
+  // `cd` enters the state already singled out on that district, in one
+  // motion rather than a flight to the state followed by a second flight to
+  // the district inside it. A Cook square is a particular race, so clicking
+  // one should arrive at that race; stopping at the state first is a step the
+  // click did not ask for.
+  //
+  // The projection is still fitted to the whole state, so the identity
+  // transform keeps meaning "this state" and clearing the district can tween
+  // back to it. Only the transform the morph ends on changes.
+  function focusState(st, cd) {
     var base = (state.districts[state.year] || []).filter(function (f) {
       return f.properties.state === st;
     });
     if (!base.length) return;
     var projB = fitProjection(stateProjection(st), base);
-    var plan = morphPlan(projection, transform, projB, d3.zoomIdentity,
+    var endT = d3.zoomIdentity;
+    if (cd) {
+      var frame = districtFrame(cd, state.year, st);
+      if (frame.length) {
+        endT = boundsTransformFor(d3.geoPath(projB), frame, 0.82, 60);
+      } else {
+        cd = null;
+      }
+    }
+    var plan = morphPlan(projection, transform, projB, endT,
                          morphList(st, false));
     runMorph(plan, 760, function () {
       settle(function () {
         state.focus = st;
-        state.district = null;
+        state.district = cd || null;
         state.hover = null; state.hoverState = null;
         setProjection(projB);
-        transform = d3.zoomIdentity;
-        d3.select(cv).call(zoom.transform, d3.zoomIdentity);
+        transform = endT;
+        d3.select(cv).call(zoom.transform, endT);
         document.getElementById("back").disabled = false;
         document.getElementById("pOff").disabled = false;
         document.getElementById("pOn").disabled = false;
+        syncDensityControl();
         refreshScales();
-        showReadout(null);
+        showReadout(cd ? districtFeature(cd) : null);
         updateHint();
       });
     });
@@ -1897,6 +1930,7 @@
         document.getElementById("pOff").disabled = true;
         document.getElementById("pOn").disabled = true;
         document.getElementById("back").disabled = true;
+        syncDensityControl();
         setProjection(projB);
         transform = d3.zoomIdentity;
         d3.select(cv).call(zoom.transform, d3.zoomIdentity);
@@ -2255,6 +2289,7 @@
     if (!state.focus || state.precincts === on) return;
     if (!on) {
       state.precincts = false; setPressed("pOff", "pOn", false);
+      syncDensityControl();
       rebuildVarOptions();
       if (state.color === "demo") {
         loadDemoDistricts().then(function () { refreshScales(); render(); });
@@ -2266,13 +2301,30 @@
       .then(function () { return ensureDemographics(state.focus); })
       .then(function () {
         state.precincts = true; setPressed("pOff", "pOn", true);
+        syncDensityControl();
         rebuildVarOptions(); refreshScales(); render(); updateHint();
       }).catch(function () {});
   }
 
   document.getElementById("dOff").addEventListener("click", function () { setDensity(false); });
   document.getElementById("dOn").addEventListener("click", function () { setDensity(true); });
+  // Only available over precincts. District populations are equalised by
+  // design, so district density is a statement about area and nothing else --
+  // fading by it says "this district is rural", which the map already shows.
+  // Over precincts, where population per unit area genuinely varies, it is
+  // the thing that stops empty country reading as a confident result.
+  function syncDensityControl() {
+    var avail = !!(state.focus && state.precincts);
+    document.getElementById("dOff").disabled = !avail;
+    document.getElementById("dOn").disabled = !avail;
+    if (!avail && state.density) {
+      state.density = false;
+      setPressed("dOff", "dOn", false);
+    }
+  }
+
   function setDensity(on) {
+    if (!state.focus || !state.precincts) return;
     if (state.density === on) return;
     state.density = on; setPressed("dOff", "dOn", on);
     refreshScales();     // the ramp is fitted to what is on screen
