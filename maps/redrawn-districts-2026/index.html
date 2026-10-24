@@ -311,6 +311,7 @@
       left: 10px; right: 10px; bottom: 52px;
       max-width: none; font-size: 11.5px; padding: 8px 10px;
     }
+    .stage.split .legend { bottom: 10px; }
     .legend.cook { max-width: none; }
     .swatches { grid-template-columns: repeat(2, 1fr); }
     .cb-foot span { font-size: 9px; }
@@ -781,11 +782,13 @@
     }
     for (var j = 0; j < chiclets.length; j++) {
       var c = chiclets[j];
-      var ctr = path.centroid(c.f);
-      if (!isFinite(ctr[0])) { c.dead = true; continue; }
+      var pn = panelOf(c.f);
+      var ctr = pn ? pn.path.centroid(c.f) : [NaN, NaN];
+      if (!pn || !isFinite(ctr[0])) { c.dead = true; continue; }
       c.dead = false;
-      c.ax = transform.applyX(ctr[0]);
-      c.ay = transform.applyY(ctr[1]);
+      c.pn = pn;
+      c.ax = pn.t.applyX(ctr[0]);
+      c.ay = pn.t.applyY(ctr[1]);
       if (!c.seeded) { c.x = c.ax; c.y = c.ay; c.seeded = true; }
     }
     var live = chiclets.filter(function (c) { return !c.dead; });
@@ -806,8 +809,17 @@
           p2.x += dx * push; p2.y += dy * push;
         }
       }
+      for (var q = 0; q < live.length; q++) clampTo(live[q], live[q].pn, CHIC / 2);
     }
     return live;
+  }
+
+  // Split panels are separate maps stacked on one canvas, so anything the
+  // relaxation pushes has to stay inside the panel it belongs to.
+  function clampTo(o, pn, pad) {
+    if (!pn) return;
+    o.x = Math.min(Math.max(o.x, pn.x + pad + 2), pn.x + pn.w - pad - 2);
+    o.y = Math.min(Math.max(o.y, pn.y + pad + 2), pn.y + pn.h - pad - 2);
   }
 
   function roundRect(c, x, y, w, h, r) {
@@ -842,12 +854,14 @@
     ctx.font = LABEL_FONT;
     var labels = [];
     Object.keys(byState).forEach(function (st) {
-      var c = path.centroid({ type: "FeatureCollection", features: byState[st] });
+      var pn = panelOf(byState[st][0]);
+      if (!pn) return;
+      var c = pn.path.centroid({ type: "FeatureCollection", features: byState[st] });
       if (!isFinite(c[0])) return;
       var text = STATE_ABBR[st] || st;
       labels.push({
-        st: st, text: text,
-        x: transform.applyX(c[0]), y: transform.applyY(c[1]),
+        st: st, text: text, pn: pn,
+        x: pn.t.applyX(c[0]), y: pn.t.applyY(c[1]),
         hw: ctx.measureText(text).width / 2 + 3, hh: 8
       });
     });
@@ -856,12 +870,16 @@
     for (var it = 0; it < 60; it++) {
       for (var a = 0; a < labels.length; a++) {
         var L = labels[a];
-        for (var b = 0; b < live.length; b++) separate(L, live[b], ch, ch, 1);
-        for (var d = 0; d < labels.length; d++) {
-          if (d !== a) separate(L, labels[d], labels[d].hw, labels[d].hh, 0.5);
+        for (var b = 0; b < live.length; b++) {
+          if (live[b].pn === L.pn) separate(L, live[b], ch, ch, 1);
         }
-        L.x = Math.min(Math.max(L.x, L.hw + 4), W - L.hw - 4);
-        L.y = Math.min(Math.max(L.y, L.hh + 4), H - L.hh - 4);
+        for (var d = 0; d < labels.length; d++) {
+          if (d !== a && labels[d].pn === L.pn) {
+            separate(L, labels[d], labels[d].hw, labels[d].hh, 0.5);
+          }
+        }
+        L.x = Math.min(Math.max(L.x, L.pn.x + L.hw + 4), L.pn.x + L.pn.w - L.hw - 4);
+        L.y = Math.min(Math.max(L.y, L.pn.y + L.hh + 4), L.pn.y + L.pn.h - L.hh - 4);
       }
     }
     return labels;
@@ -1061,14 +1079,105 @@
   var current = [];
   var pickDirty = true;
 
+  /* ------------------------------------------------------- split (phones) */
+  // The country is wide and short and a phone is narrow and tall, so fitting
+  // the whole of it leaves the map at a third of the available height with
+  // everything in it too small to aim at. Drawing the nine states as two
+  // stacked groups instead nearly doubles the scale -- measured 465 to 810 on
+  // a 375x812 screen -- because the empty middle, the northern tier and New
+  // England stop taking up room. Each group still draws its neighbours, so a
+  // panel reads as a map rather than as shapes on a blank page.
+  //
+  // What it costs is Alaska and Hawaii: they sit at the lower left of the
+  // AlbersUsa composite, outside both groups' fitted extents, so they are a
+  // desktop-only sight. Splitting the country down the middle instead would
+  // have kept them, but measured only 596 against 810.
+  var SPLIT_GROUPS = [["CA", "UT", "TX"], ["LA", "AL", "TN", "OH", "NC", "FL"]];
+  var SPLIT_MAX_W = 620;
+  var splitPanels = null;
+
+  function splitMode() {
+    return !state.focus && W <= SPLIT_MAX_W &&
+           (state.districts[state.year] || []).length > 0;
+  }
+
+  function buildPanels() {
+    splitPanels = null;
+    if (!splitMode()) return;
+    var ds = state.districts[state.year] || [];
+    // The legend is an overlay the full width of a phone, so the panels have
+    // to be fitted above it or the lower one draws underneath it. Measured
+    // rather than assumed: the Cook legend is more than twice the height of
+    // the election one.
+    var lg = document.getElementById("legend");
+    var reserve = (lg && !lg.hidden) ? lg.offsetHeight + 18 : 0;
+    var avail = Math.max(220, H - reserve);
+    var gap = 10, ph = Math.floor((avail - gap) / 2), out = [];
+    for (var i = 0; i < SPLIT_GROUPS.length; i++) {
+      var grp = SPLIT_GROUPS[i];
+      var feats = ds.filter(function (f) {
+        return grp.indexOf(f.properties.state) >= 0;
+      });
+      if (!feats.length) return;             // all or nothing
+      var y = i * (ph + gap);
+      var proj = d3.geoAlbersUsa().fitExtent(
+        [[8, y + 8], [W - 8, y + ph - 8]],
+        { type: "FeatureCollection", features: feats });
+      out.push({ x: 0, y: y, w: W, h: ph, states: grp, t: d3.zoomIdentity,
+                 proj: proj, path: d3.geoPath(proj, ctx),
+                 pick: d3.geoPath(proj, pctx) });
+    }
+    splitPanels = out;
+  }
+
+  // One panel covering the stage is the ordinary case; the split is the
+  // exception, so everything downstream can just loop over whatever this
+  // returns and never ask which mode it is in.
+  function panelsFor() {
+    if (splitPanels) return splitPanels;
+    return [{ x: 0, y: 0, w: W, h: H, states: null, t: transform,
+              proj: projection, path: path, pick: pickPath }];
+  }
+
+  function inPanel(pn, f) {
+    return !pn.states || pn.states.indexOf(f.properties.state) >= 0;
+  }
+
+  function panelOf(f) {
+    var ps = panelsFor();
+    if (ps.length === 1) return ps[0];
+    for (var i = 0; i < ps.length; i++) if (inPanel(ps[i], f)) return ps[i];
+    return null;
+  }
+
+  // The drawing code reads the module-level `path` and `transform`, so a panel
+  // installs its own for the duration rather than every call site growing an
+  // argument it does not need in the ordinary single-panel case.
+  function withPanel(pn, c, pathRef, draw) {
+    var sp = path, st = transform;
+    path = pathRef; transform = pn.t;
+    c.save();
+    c.beginPath(); c.rect(pn.x, pn.y, pn.w, pn.h); c.clip();
+    c.translate(pn.t.x, pn.t.y); c.scale(pn.t.k, pn.t.k);
+    draw(pn);
+    c.restore();
+    path = sp; transform = st;
+  }
+
   function render() {
     ctx.save();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
-    ctx.translate(transform.x, transform.y);
-    ctx.scale(transform.k, transform.k);
-
     current = visibleFeatures();
+    var ps = panelsFor();
+    for (var pi = 0; pi < ps.length; pi++) withPanel(ps[pi], ctx, ps[pi].path, drawLayers);
+    ctx.restore();
+    var squares = chicletMode() ? drawChiclets() : [];
+    if (!state.focus) drawStateLabels(squares);
+    pickDirty = true;
+  }
+
+  function drawLayers(pn) {
     var showingPrecincts = state.focus && state.precincts &&
       state.precinctCache[state.focus];
 
@@ -1096,6 +1205,7 @@
     var blank = chicletMode() ? theme().chicfill : theme().nodata;
     for (var i = 0; i < current.length; i++) {
       var f = current[i];
+      if (!inPanel(pn, f)) continue;
       var col = fillFor(f.properties, f);
       ctx.beginPath();
       path(f);
@@ -1115,6 +1225,7 @@
       ctx.lineWidth = 0.3 / transform.k;
       ctx.strokeStyle = waterAlpha(0.55);
       for (var j = 0; j < current.length; j++) {
+        if (!inPanel(pn, current[j])) continue;
         ctx.beginPath(); path(current[j]); ctx.stroke();
       }
     }
@@ -1124,6 +1235,7 @@
     ctx.lineWidth = (showingPrecincts ? 1.6 : 1.1) / transform.k;
     ctx.strokeStyle = theme().water;
     for (var k = 0; k < bd.length; k++) {
+      if (!inPanel(pn, bd[k])) continue;
       ctx.beginPath(); path(bd[k]); ctx.stroke();
     }
 
@@ -1174,29 +1286,31 @@
         ctx.beginPath(); path(so); ctx.stroke();
       }
     }
-    if (state.hover) {
+    if (state.hover && inPanel(pn, state.hover)) {
       ctx.lineWidth = 2 / transform.k;
       ctx.strokeStyle = theme().ink;
       ctx.beginPath(); path(state.hover); ctx.stroke();
     }
-    ctx.restore();
-    // Squares first, so the labels know what to keep clear of. Labels are for
-    // the national view only: inside a state the readout already says which
-    // one, and the name would just sit on the districts.
-    var squares = chicletMode() ? drawChiclets() : [];
-    if (!state.focus) drawStateLabels(squares);
-    pickDirty = true;
   }
 
   function renderPick() {
     pctx.save();
     pctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     pctx.clearRect(0, 0, W, H);
-    pctx.translate(transform.x, transform.y);
-    pctx.scale(transform.k, transform.k);
-    for (var i = 0; i < current.length; i++) {
-      pctx.fillStyle = idxToColor(i);
-      pctx.beginPath(); pickPath(current[i]); pctx.fill();
+    var ps = panelsFor();
+    for (var p = 0; p < ps.length; p++) {
+      var pn = ps[p], saved = pickPath;
+      pickPath = pn.pick;
+      pctx.save();
+      pctx.beginPath(); pctx.rect(pn.x, pn.y, pn.w, pn.h); pctx.clip();
+      pctx.translate(pn.t.x, pn.t.y); pctx.scale(pn.t.k, pn.t.k);
+      for (var i = 0; i < current.length; i++) {
+        if (!inPanel(pn, current[i])) continue;
+        pctx.fillStyle = idxToColor(i);
+        pctx.beginPath(); pickPath(current[i]); pctx.fill();
+      }
+      pctx.restore();
+      pickPath = saved;
     }
     pctx.restore();
     pickDirty = false;
@@ -1307,6 +1421,8 @@
       var fc = { type: "FeatureCollection", features: base };
       projection.fitExtent([[12, 12], [W - 12, H - 12]], fc);
     }
+    buildPanels();
+    syncZoomControls();
     render();
   }
 
@@ -1939,10 +2055,7 @@
         cd = null;
       }
     }
-    var plan = morphPlan(projection, transform, projB, endT,
-                         morphList(st, false));
-    runMorph(plan, 760, function () {
-      settle(function () {
+    var apply = function () {
         state.focus = st;
         state.district = cd || null;
         state.hover = null; state.hoverState = null;
@@ -1956,8 +2069,11 @@
         refreshScales();
         showReadout(cd ? districtFeature(cd) : null);
         updateHint();
-      });
-    });
+    };
+    if (splitPanels) { settle(apply); return; }   // two maps, nothing to tween
+    var plan = morphPlan(projection, transform, projB, endT,
+                         morphList(st, false));
+    runMorph(plan, 760, function () { settle(apply); });
   }
 
   function unfocus() {
@@ -1965,10 +2081,7 @@
     var all = state.districts[state.year] || [];
     if (!all.length) return;
     var projB = fitProjection(nationalProjection(), nationalExtent());
-    var plan = morphPlan(projection, transform, projB, d3.zoomIdentity,
-                         morphList(from, true));
-    runMorph(plan, 760, function () {
-      settle(function () {
+    var apply = function () {
         state.focus = null; state.district = null;
         state.precincts = false; state.hover = null; state.hoverState = null;
         setPressed("pOff", "pOn", false);
@@ -1981,11 +2094,25 @@
         d3.select(cv).call(zoom.transform, d3.zoomIdentity);
         rebuildVarOptions();
         if (state.color === "demo") loadDemoDistricts();
+        buildPanels();          // back to the split, if the screen is narrow
+        syncZoomControls();
         refreshScales();
         showReadout(null);
         updateHint();
-      });
-    });
+    };
+    // Going back to a split is the same problem in reverse: the destination is
+    // two maps, so there is no single framing to land on.
+    if (W <= SPLIT_MAX_W) { settle(apply); return; }
+    var plan = morphPlan(projection, transform, projB, d3.zoomIdentity,
+                         morphList(from, true));
+    runMorph(plan, 760, function () { settle(apply); });
+  }
+
+  // Pan and zoom drive one transform, which means nothing when the canvas is
+  // carrying two maps. The controls go away rather than sitting there inert.
+  function syncZoomControls() {
+    document.getElementById("zoomButtons").hidden = !!splitPanels;
+    document.getElementById("stage").classList.toggle("split", !!splitPanels);
   }
 
   function ensurePrecincts(st) {
@@ -2125,6 +2252,8 @@
     buildDensityScale(visibleFeatures());
     if (state.color === "demo") buildDemoScale(visibleFeatures());
     updateLegend();
+    buildPanels();     // fitted around the legend, so it must come after it
+    syncZoomControls();
   }
 
   function rampCss(interp, n) {
@@ -2296,6 +2425,7 @@
       }
       clearDistrict(); return;
     }
+    buildPanels();     // the split is fitted to the map on show
     refreshScales(); render(); showReadout(state.hover);
   }
 
