@@ -1098,11 +1098,12 @@
   // England stop taking up room. Each group still draws its neighbours, so a
   // panel reads as a map rather than as shapes on a blank page.
   //
-  // What it costs is Alaska and Hawaii: they sit at the lower left of the
-  // AlbersUsa composite, outside both groups' fitted extents, so they are a
-  // desktop-only sight. Splitting the country down the middle instead would
-  // have kept them, but measured only 596 against 810.
-  var SPLIT_GROUPS = [["CA", "UT", "TX"], ["LA", "AL", "TN", "OH", "NC", "FL"]];
+  // East above west, which is the order the Post uses: it is where most of
+  // the competitive seats are, so it is what a reader should meet first.
+  // Alaska and Hawaii ride along in the western group -- the AlbersUsa
+  // composite keeps its insets at the lower left however it is fitted, and
+  // they land in that panel's empty corner.
+  var SPLIT_GROUPS = [["LA", "AL", "TN", "OH", "NC", "FL"], ["CA", "UT", "TX"]];
   var SPLIT_MAX_W = 620;
   var splitPanels = null;
 
@@ -1148,8 +1149,8 @@
     //
     // Which means the height is worth dividing unevenly. The shared scale is
     // whichever group needs the smaller one, so giving that group the taller
-    // panel raises the scale for both until the two are equally tight. Here
-    // the western group is the binding one and gains about six per cent.
+    // panel raises the scale for both until the two are equally tight. The
+    // bisection finds that point without caring which group it is.
     var total = Math.max(160, avail - gap);
     var lo = 70, hi = total - 70;
     for (var it = 0; it < 20; it++) {
