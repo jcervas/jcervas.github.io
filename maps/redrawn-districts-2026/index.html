@@ -425,6 +425,7 @@
     </div>
     <div class="swatches" id="swatches" hidden></div>
     <div class="tier" id="tierNote" hidden></div>
+    <div class="tier" id="sameNote" hidden></div>
   </div>
   <div class="readout" id="readout">
     <div class="rt" id="rTitle">Hover the map</div>
@@ -966,6 +967,8 @@
   }
 
   function fillFor(p, f) {
+    var picked = state.district && districtOf(p) === state.district;
+    if (f && f.__same && !picked) return theme().basefill;   // not redrawn
     var col = baseFill(p, f);
     // Anything that is not the district in focus greys out, including the
     // 1,235 precincts carrying no district assignment at all -- mostly empty
@@ -1133,7 +1136,10 @@
       if (sel) {
         var other = state.year === "2024" ? "2026" : "2024";
         var cp = counterpartOf(state.district, state.year);
-        var cpf = cp ? districtFeature(cp, other) : null;
+        // An unchanged district's counterpart is the same line, so the dashes
+        // would land exactly on the solid outline and read as a rendering
+        // fault rather than as "nothing moved".
+        var cpf = (cp && !sel.__same) ? districtFeature(cp, other) : null;
         if (cpf) {
           // Cased, like a printed map. A bare dark dash is legible over the
           // grey field and invisible the moment it crosses the district it is
@@ -1364,6 +1370,9 @@
             (initial ? ' <span class="' + cls + '">(' + initial + ")</span>" : "")]);
         }
       }
+      if (f.__same) {
+        rows.push(["Lines", '<span class="muted">unchanged since 2024</span>']);
+      }
       if (p.old_district_best_match) {
         rows.push(["Most of old CD", p.old_district_best_match +
           " (" + pct(p.overlap_share_of_new) + ")"]);
@@ -1526,7 +1535,8 @@
       var c = cvapOf(ds[i]);
       if (c) cvap += c;
     }
-    return { n: ds.length, dem: dem, rep: rep, cvap: cvap, any: any,
+    return { n: ds.length, same: unchangedCount(ds),
+             dem: dem, rep: rep, cvap: cvap, any: any,
              share: any && (dem + rep) ? dem / (dem + rep) : null };
   }
 
@@ -1543,6 +1553,10 @@
     idle.hidden = true;
     flag.hidden = true;
     var rows = [["Districts (" + state.year + " map)", String(r.n)]];
+    if (r.same) {
+      rows.push(["Lines unchanged",
+        '<span class="muted">' + r.same + " of " + r.n + "</span>"]);
+    }
     if (state.color === "cook" && state.year === "2026" && state.cook) {
       var watch = (state.districts["2026"] || []).reduce(function (a, f) {
         return a + (f.properties.state === st && cookRating(f) ? 1 : 0);
@@ -1648,6 +1662,41 @@
     return features;
   }
 
+  // Not every district in these nine states was redrawn. North Carolina moved
+  // two of fourteen; 34 of the 173 came through with the same lines. Drawing
+  // those at full strength says the redraw touched them, which it did not, so
+  // they fall back to the basemap fill and read as context, like the other 41
+  // states.
+  //
+  // Unchanged means nobody moved: the district keeps its number, every person
+  // in the old one is in the new one, and every person in the new one came
+  // from the old one. The two districts that come closest without qualifying
+  // moved 145 people (TN-02) and 4,140 (CA-24) -- small, but not nothing, and
+  // a threshold that called them unchanged would be asserting something false.
+  function markUnchanged() {
+    var a = state.districts["2024"] || [], b = state.districts["2026"] || [];
+    var byNew = {};
+    for (var i = 0; i < b.length; i++) {
+      var q = b[i].properties;
+      byNew[q.state + "-" + q.district] = b[i];
+    }
+    for (var j = 0; j < a.length; j++) {
+      var f = a[j], p = f.properties;
+      var nf = byNew[p.state + "-" + p.new_district_best_successor];
+      var same = p.new_district_best_successor === p.district && nf &&
+                 +p.share_of_old_retained >= 1 &&
+                 +nf.properties.overlap_share_of_new >= 1;
+      f.__same = !!same;
+      if (nf) nf.__same = !!same;
+    }
+  }
+
+  function unchangedCount(features) {
+    var k = 0;
+    for (var i = 0; i < features.length; i++) if (features[i].__same) k++;
+    return k;
+  }
+
   // Who sits for each district now. These members were elected in November
   // 2024, so they belong to the 2024 map; the 2026 districts have no
   // representatives yet, and showing one there would assert an election that
@@ -1706,6 +1755,7 @@
         var yr = /2026/.test(k) ? "2026" : "2024";
         state.districts[yr] = measure(fc.features);
       });
+      markUnchanged();
       setStatus(null);
       resize();
       refreshScales();
@@ -2096,6 +2146,7 @@
     var note = document.getElementById("tierNote");
     var bar = document.getElementById("cookBar");
     sw.hidden = true; note.hidden = true; ramp.hidden = false; bar.hidden = true;
+    document.getElementById("sameNote").hidden = true;
     box.classList.toggle("cook", state.color === "cook");
     document.getElementById("lo").parentNode.hidden = false;
 
@@ -2158,6 +2209,21 @@
       lo.textContent = "+50 Trump"; hi.textContent = "+50 Harris";
       mid.textContent = "Even";
     }
+    noteUnchanged();
+  }
+
+  // The unshaded districts inside the nine states need accounting for, or they
+  // read as missing data rather than as districts the redraw did not touch.
+  // Its own line, so it never competes with the reliability note or the Cook
+  // source line for the same slot.
+  function noteUnchanged() {
+    var el = document.getElementById("sameNote");
+    var same = state.precincts ? 0 : unchangedCount(visibleFeatures());
+    if (!same) { el.hidden = true; return; }
+    el.hidden = false;
+    el.textContent = same === 1
+      ? "One district keeps the same lines on both maps and is drawn as context."
+      : same + " districts keep the same lines on both maps and are drawn as context.";
   }
 
   // Counts come from whatever is on screen, so the bar is the tally for the
