@@ -1,3 +1,8 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Redrawn Districts Explorer</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;600;700&display=swap">
@@ -63,8 +68,8 @@
       --basefill: #1e1e1e; --baseline: #333333; --baseedge: #4d4d4d;
       --ramp0: #be2c25; --ramp1: #a8453d; --ramp2: #6b3a37; --ramp3: #1f1f1f;
       --ramp4: #2f4c70; --ramp5: #5784c5; --ramp6: #8fbcea;
-      --cook-likelyD: #5784c5; --cook-leanD: #35537f; --cook-toss: #b5842a;
-      --cook-leanR: #7d403a;   --cook-likelyR: #a8453d;
+      --cook-likelyD: #2f6fc0; --cook-leanD: #7ea7d8; --cook-toss: #c08f2c;
+      --cook-leanR: #d4877c;   --cook-likelyR: #b93b32;
       --chicfill: #262626;
       color-scheme: dark;
     }
@@ -78,8 +83,8 @@
     --basefill: #1e1e1e; --baseline: #333333; --baseedge: #4d4d4d;
     --ramp0: #be2c25; --ramp1: #a8453d; --ramp2: #6b3a37; --ramp3: #1f1f1f;
     --ramp4: #2f4c70; --ramp5: #5784c5; --ramp6: #8fbcea;
-    --cook-likelyD: #5784c5; --cook-leanD: #35537f; --cook-toss: #b5842a;
-    --cook-leanR: #7d403a;   --cook-likelyR: #a8453d;
+    --cook-likelyD: #2f6fc0; --cook-leanD: #7ea7d8; --cook-toss: #c08f2c;
+    --cook-leanR: #d4877c;   --cook-likelyR: #b93b32;
     --chicfill: #262626;
     color-scheme: dark;
   }
@@ -110,9 +115,16 @@
   .sub { color: var(--ink-soft); font-size: 12.25px; line-height: 14.7px; margin: 0; }
 
   .controls {
-    border-bottom: 1px solid var(--rule); background: var(--panel);
-    padding-block: 0.7rem; flex: none;
+    background: var(--panel);
+    padding-block: 0.7rem 0; flex: none;
     display: flex; gap: 1.4rem 1.75rem; flex-wrap: wrap; align-items: flex-end;
+  }
+  /* The hint sits below the controls rather than inside them. As a flex item
+     it collapsed to nothing the moment the row stopped wrapping, and it is a
+     full-width line of prose in any case. */
+  .hintbar {
+    background: var(--panel); border-bottom: 1px solid var(--rule);
+    padding-block: 1rem 0.7rem; flex: none;
   }
   .ctl { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
   .ctl > label {
@@ -261,13 +273,66 @@
     border-top: 1px solid var(--rule); padding-block: 0.45rem;
     font-size: 12.25px; line-height: 14.7px; color: var(--ink-soft); flex: none;
   }
+  /* ------------------------------------------------------------- phones */
+  /* The desktop layout puts the readout top-right and the legend
+     bottom-left, each a fixed width, which works while there is map either
+     side of them. On a phone they are most of the screen and they cover the
+     only thing worth looking at. So on narrow screens both span the width
+     and move to opposite ends, leaving a clear band of map between them,
+     and the control rail scrolls sideways rather than stacking into five
+     rows and eating the map's height. */
   @media (max-width: 620px) {
-    .readout { position: static; margin: 0; max-width: none; border-radius: 0;
-               border-left: 0; border-right: 0; box-shadow: none; }
-    .stage { min-height: 50vh; }
-    h1 { white-space: normal; }
+    h1 { font-size: 16.5px; line-height: 20px; white-space: normal; }
+    .sub { font-size: 11.5px; line-height: 14px; }
+    header { padding-block: 0.6rem 0.5rem; }
+
+    .controls {
+      flex-wrap: nowrap; overflow-x: auto; gap: 1rem;
+      padding-block: 0.55rem 0; scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .hintbar { padding-block: 0.6rem 0.55rem; }
+    .hint { font-size: 11.5px; }
+    .controls::-webkit-scrollbar { display: none; }
+    .ctl { flex: none; }
+    .ctl > label { font-size: 9.5px; }
+    .seg button { font-size: 12.5px; padding: 0.3rem 0.5rem; }
+    .var { font-size: 12.5px; }
+
+    .readout {
+      left: 10px; right: 10px; top: 10px;
+      min-width: 0; max-width: none;
+      font-size: 12.5px; padding: 8px 10px;
+    }
+    .readout .rt { font-size: 13px; margin-bottom: 4px; }
+    .readout dl { gap: 2px 5px; }
+    .readout[data-idle] { display: none; }
+
+    /* The legend clears the zoom buttons, which stay in the corner they are
+       in on desktop rather than moving somewhere the thumb has to learn. */
+    .legend {
+      left: 10px; right: 10px; bottom: 52px;
+      max-width: none; font-size: 11.5px; padding: 8px 10px;
+    }
+    .legend.cook { max-width: none; }
+    .swatches { grid-template-columns: repeat(2, 1fr); }
+    .cb-foot span { font-size: 9px; }
+
+    /* The source line and the legend's provenance note are the two blocks
+       of small print competing with the map for a short screen. */
+    footer { font-size: 11px; line-height: 13.5px; padding-block: 0.4rem; }
+    .legend .tier { font-size: 10.5px; line-height: 13px; }
+
+    .zoom-buttons { right: 10px; bottom: 10px; flex-direction: row; }
+    .zb { width: 30px; height: 30px; }
+    .zb-pair { flex-direction: row; }
+    .zb-pair .zb:first-child {
+      border-bottom: 0; border-right: 1px solid var(--rule);
+    }
   }
 </style>
+</head>
+<body>
 
 <header class="gutter">
   <div class="hrow">
@@ -320,10 +385,10 @@
     <button class="back" id="back" disabled>All states</button>
   </div>
 
-  <div class="ctl" style="flex:1 1 12rem">
-    <label>&nbsp;</label>
-    <span class="hint" id="hint">Click a state to zoom in and enable precincts.</span>
-  </div>
+</div>
+
+<div class="hintbar gutter">
+  <span class="hint" id="hint">Click a state to zoom in and enable precincts.</span>
 </div>
 
 <div class="stage" id="stage">
@@ -1275,6 +1340,7 @@
     var list = document.getElementById("rList");
     var flag = document.getElementById("rFlag");
     if (!f) {
+      document.getElementById("readout").setAttribute("data-idle", "");
       rt.textContent = state.focus ? STATE_NAME[state.focus] : "Hover the map";
       idle.hidden = false;
       idle.textContent = state.color === "election"
@@ -1285,6 +1351,7 @@
       return;
     }
     var p = f.properties;
+    document.getElementById("readout").removeAttribute("data-idle");
     idle.hidden = true;
     var rows = [];
     if (p.precinct_id) {
@@ -1412,8 +1479,15 @@
     render();
     if (f) showReadout(f); else showStateReadout(st);
   });
+  // Leaving the map drops the hover, but not the selection. A tap on a touch
+  // screen ends with a mouseleave, so clearing the panel here wiped the
+  // district the tap had just singled out; on a desktop it threw away the
+  // selection's figures the moment the pointer moved to the controls.
   cv.addEventListener("mouseleave", function () {
-    state.hover = null; state.hoverState = null; render(); showReadout(null);
+    state.hover = null; state.hoverState = null;
+    render();
+    var sel = state.district ? districtFeature(state.district) : null;
+    showReadout(sel);
   });
 
   cv.addEventListener("click", function (ev) {
@@ -1466,6 +1540,7 @@
     var list = document.getElementById("rList");
     var flag = document.getElementById("rFlag");
     rt.textContent = STATE_NAME[st] || st;
+    document.getElementById("readout").removeAttribute("data-idle");
     idle.hidden = true;
     flag.hidden = true;
     var rows = [["Districts (" + state.year + " map)", String(r.n)]];
@@ -2269,3 +2344,5 @@
   });
 })();
 </script>
+</body>
+</html>
