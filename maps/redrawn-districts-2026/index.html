@@ -1940,7 +1940,11 @@
       markUnchanged();
       setStatus(null);
       resize();
+      // resize() fits the panels while the legend is still hidden, so the
+      // first pass reserves nothing for it; refreshScales shows the legend and
+      // refits around it, and that has to reach the canvas.
       refreshScales();
+      render();
       showReadout(null);
     });
   }
