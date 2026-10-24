@@ -1,0 +1,2271 @@
+<title>Redrawn Districts Explorer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;600;700&display=swap">
+<style>
+  /* Layout: fixed control rail above a flexible map canvas, legend overlaid bottom-left. */
+  :root {
+    /* Washington Post election palette, sampled from their 2024 results
+       pages: #1366b3 Democratic and #be2c25 Republican, with the Post's own
+       mid and light tints, over their neutrals. The diverging ramp is exposed
+       as --ramp0..--ramp6 so the canvas can read it and follow the theme
+       instead of hard-coding a scheme that only works in light mode. */
+    --paper: #ffffff;
+    --panel: #f7f7f7;
+    --ink: #2a2a2a;
+    --ink-soft: #595959;
+    --rule: #e9e9e9;
+    --accent: #2a2a2a;
+    --accent-soft: #f0f0f0;
+    --link: #0088cc;
+    --dem: #1366b3;
+    --rep: #be2c25;
+    --water: #ffffff;
+    /* path.region in the Post's own choropleth CSS: the fill for a shape with
+       no value. Darker and warmer than a default grey, and it matters here
+       because 7.8% of precincts have no reported result. */
+    --nodata: #bebcba;
+    --zoom-glyph: #6b6b6b;
+    --basefill: #f2f2f0;
+    --baseline: #dcdcd8;
+    --baseedge: #b9b9b4;
+    --ramp0: #be2c25; --ramp1: #d35f4f; --ramp2: #f9dddb; --ramp3: #f7f7f7;
+    --ramp4: #d3e7fa; --ramp5: #5784c5; --ramp6: #1366b3;
+    /* The Post's own Cook scale, which is not the election ramp: toss-ups get
+       a gold of their own rather than a pale red or blue, because a toss-up is
+       not a weak lean -- it is a different statement. Solid and likely sit on
+       the election blues and reds so the two modes still agree about which end
+       of the map is which. */
+    --cook-likelyD: #5784c5; --cook-leanD: #a9c6e8; --cook-toss: #e0a63a;
+    --cook-leanR: #eb9c92;   --cook-likelyR: #d35f4f;
+    /* Behind the squares the nine states stay nearly as light as the rest of
+       the country: the squares are the subject, and the district lines are
+       cue enough that these are the states in scope. */
+    --chicfill: #e8e8e4;
+    /* The Post sets its charts in ITC Franklin Std, which is licensed and
+       served from their own CDN, so it cannot be loaded here. Libre Franklin
+       is a Franklin Gothic revival and the closest face on Google Fonts, which
+       is the only font host this page may use. */
+    --display: "Libre Franklin", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --body: "Libre Franklin", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --mono: "Libre Franklin", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #141414; --panel: #1f1f1f; --ink: #e7e7e7; --ink-soft: #a0a0a0;
+      --rule: #333333; --accent: #e7e7e7; --accent-soft: #242424;
+      --link: #4a9de2;
+      --dem: #5784c5; --rep: #d35f4f; --water: #141414; --nodata: #4a4a4a;
+    --zoom-glyph: #a0a0a0;
+    --basefill: #1e1e1e; --baseline: #333333; --baseedge: #4d4d4d;
+      --zoom-glyph: #a0a0a0;
+    --basefill: #1e1e1e; --baseline: #333333; --baseedge: #4d4d4d;
+      --basefill: #1e1e1e; --baseline: #333333; --baseedge: #4d4d4d;
+      --ramp0: #be2c25; --ramp1: #a8453d; --ramp2: #6b3a37; --ramp3: #1f1f1f;
+      --ramp4: #2f4c70; --ramp5: #5784c5; --ramp6: #8fbcea;
+      --cook-likelyD: #5784c5; --cook-leanD: #35537f; --cook-toss: #b5842a;
+      --cook-leanR: #7d403a;   --cook-likelyR: #a8453d;
+      --chicfill: #262626;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #141414; --panel: #1f1f1f; --ink: #e7e7e7; --ink-soft: #a0a0a0;
+    --rule: #333333; --accent: #e7e7e7; --accent-soft: #242424;
+    --link: #4a9de2;
+    --dem: #5784c5; --rep: #d35f4f; --water: #141414; --nodata: #4a4a4a;
+    --zoom-glyph: #a0a0a0;
+    --basefill: #1e1e1e; --baseline: #333333; --baseedge: #4d4d4d;
+    --ramp0: #be2c25; --ramp1: #a8453d; --ramp2: #6b3a37; --ramp3: #1f1f1f;
+    --ramp4: #2f4c70; --ramp5: #5784c5; --ramp6: #8fbcea;
+    --cook-likelyD: #5784c5; --cook-leanD: #35537f; --cook-toss: #b5842a;
+    --cook-leanR: #7d403a;   --cook-likelyR: #a8453d;
+    --chicfill: #262626;
+    color-scheme: dark;
+  }
+
+  /* The artifact host's skeleton supplies this, a plain file does not, and
+     .ctl{display:flex} would otherwise beat the default [hidden] rule. Declaring
+     it here keeps the local page and the published one behaving identically. */
+  [hidden] { display: none !important; }
+  html, body { height: 100%; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: var(--body); font-size: 14px; line-height: 1.5;
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .gutter {
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+
+  header { border-bottom: 1px solid var(--rule); padding-block: 0.8rem 0.7rem; flex: none; }
+  .hrow { display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; }
+  /* The Post's chart type scale: title 19.25/23.1 bold, notes 12.25/14.7,
+     small labels 10.5 uppercase, 14px base. */
+  h1 {
+    font-family: var(--display); font-size: 19.25px; line-height: 23.1px;
+    font-weight: 700; margin: 0; white-space: nowrap;
+  }
+  .sub { color: var(--ink-soft); font-size: 12.25px; line-height: 14.7px; margin: 0; }
+
+  .controls {
+    border-bottom: 1px solid var(--rule); background: var(--panel);
+    padding-block: 0.7rem; flex: none;
+    display: flex; gap: 1.4rem 1.75rem; flex-wrap: wrap; align-items: flex-end;
+  }
+  .ctl { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
+  .ctl > label {
+    font-size: 10.5px; letter-spacing: 0.06em; font-weight: 600;
+    text-transform: uppercase; color: var(--ink-soft);
+  }
+  .seg { display: flex; border: 1px solid var(--rule); border-radius: 3px; overflow: hidden; background: var(--paper); }
+  .seg button {
+    font: inherit; font-size: 0.86rem; border: 0; background: transparent;
+    color: var(--ink); padding: 0.33rem 0.7rem; cursor: pointer;
+    border-right: 1px solid var(--rule); white-space: nowrap;
+  }
+  .seg button:last-child { border-right: 0; }
+  .seg button[aria-pressed="true"] { background: var(--accent); color: var(--paper); }
+  .seg button:disabled { color: var(--ink-soft); cursor: not-allowed; opacity: 0.5; }
+  /* A control can be both the current state and not yet changeable (precincts
+     before a state is picked). The normal active treatment puts muted text on
+     a full-strength background, which reads at about 2:1; mute the background
+     to match the text instead of leaving it unreadable. */
+  .seg button:disabled[aria-pressed="true"] {
+    background: var(--rule); color: var(--ink-soft); opacity: 1;
+  }
+  .seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .hint { font-size: 12.25px; color: var(--ink-soft); font-style: italic; }
+  select.var {
+    font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--paper);
+    border: 1px solid var(--rule); border-radius: 3px; padding: 0.3rem 0.4rem; max-width: 17rem;
+  }
+  select.var:disabled { opacity: 0.5; cursor: not-allowed; }
+  .swatches { display: grid; grid-template-columns: repeat(2, auto); gap: 0.15rem 0.6rem; }
+  .sw { display: flex; align-items: center; gap: 0.33rem; white-space: nowrap; }
+  .sw i { width: 11px; height: 11px; border-radius: 4px; flex: none; }
+
+  /* The Post's Cook bar: one band per rating, width by seat count, the count
+     printed inside. It is the legend and the tally at once, which is why it
+     replaces the ramp rather than sitting beside it. */
+  .legend.cook { max-width: 19.5rem; }
+  .cookbar { margin-bottom: 0.3rem; }
+  .cb-head {
+    display: flex; justify-content: space-between;
+    font-size: 11px; font-weight: 600; margin-bottom: 3px;
+  }
+  .cb-head .d { color: var(--dem); }
+  .cb-head .r { color: var(--rep); }
+  .cb-track { display: flex; height: 19px; }
+  .cb-seg {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums;
+    min-width: 15px; box-sizing: border-box;
+  }
+  .cb-seg + .cb-seg { border-left: 1px solid var(--paper); }
+  .cb-foot { display: flex; margin-top: 3px; }
+  .cb-foot span {
+    font-size: 9.75px; color: var(--ink-soft); text-align: center;
+    overflow: hidden; white-space: nowrap; min-width: 0;
+  }
+  .cb-sum {
+    margin-top: 4px; font-size: 11px; color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .tier {
+    margin-top: 0.4rem; padding-top: 0.35rem; border-top: 1px solid var(--rule);
+    font-size: 12.25px; color: var(--ink-soft); line-height: 14.7px;
+  }
+  .tier.warn { color: var(--rep); }
+  .back {
+    font: inherit; font-size: 0.86rem; background: var(--paper); color: var(--ink);
+    border: 1px solid var(--rule); border-radius: 3px; padding: 0.33rem 0.75rem; cursor: pointer;
+  }
+  .back:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  .stage {
+    position: relative; flex: 1 1 auto; min-height: 0; background: var(--water);
+    overflow: hidden;   /* belt and braces: the canvas must never paint over the footer */
+  }
+  canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+
+  /* After the Post's own map controls: bottom-right, white rounded chips with
+     a soft shadow and grey glyphs, the reset control set apart above the
+     zoom pair rather than welded into one strip. */
+  .zoom-buttons {
+    position: absolute; right: 14px; bottom: 14px;
+    display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
+    z-index: 2;
+  }
+  .zb {
+    appearance: none; border: 0; padding: 0; cursor: pointer;
+    width: 34px; height: 34px; display: grid; place-items: center;
+    background: var(--paper); color: var(--zoom-glyph);
+    box-shadow: 0 1px 3px #0000002e;
+  }
+  .zb svg { width: 16px; height: 16px; display: block; }
+  .zb.solo { border-radius: 6px; }
+  .zb-pair {
+    display: flex; flex-direction: column;
+    border-radius: 6px; overflow: hidden;
+    box-shadow: 0 1px 3px #0000002e;
+  }
+  .zb-pair .zb { box-shadow: none; }
+  .zb-pair .zb:first-child { border-bottom: 1px solid var(--rule); }
+  .zb:hover { color: var(--ink); }
+  .zb:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+
+  .legend {
+    position: absolute; left: 14px; bottom: 14px;
+    background: var(--paper); border: 1px solid var(--rule); border-radius: 3px;
+    padding: 10px 12px; font-size: 12.25px; line-height: 14.7px; max-width: 15rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .legend .lt {
+    font-size: 10.5px; letter-spacing: 0.06em; font-weight: 600;
+    text-transform: uppercase; color: var(--ink-soft); margin-bottom: 0.4rem;
+  }
+  .ramp { height: 9px; border-radius: 0; margin-bottom: 0.25rem; }
+  .ends { display: flex; justify-content: space-between; font-variant-numeric: tabular-nums; color: var(--ink-soft); }
+
+  .readout {
+    position: absolute; right: 14px; top: 14px;
+    background: var(--paper); border: 1px solid var(--rule); border-radius: 3px;
+    padding: 10px 12px; font-size: 14px; min-width: 12.5rem; max-width: 17rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .readout .rt { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .readout dl { display: grid; grid-template-columns: auto 1fr; gap: 3px 5px; margin: 0; font-variant-numeric: tabular-nums; }
+  .readout dt { color: var(--ink-soft); }
+  .readout dd { margin: 0; text-align: right; }
+  .readout .d { color: var(--dem); font-weight: 600; }
+  .readout .r { color: var(--rep); font-weight: 600; }
+  .readout .muted { color: var(--ink-soft); font-weight: 400; }
+  .readout .idle { color: var(--ink-soft); font-style: italic; }
+  .flag {
+    margin-top: 0.4rem; padding-top: 0.35rem; border-top: 1px solid var(--rule);
+    font-size: 0.76rem; color: var(--ink-soft);
+  }
+
+  /* Modelled on the Post's .keyboard-hint: a dark translucent chip that reads
+     over either a light or a dark map without needing a theme of its own. */
+  .status {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    font-size: 12px; color: #fff;
+    background: #4a4a4ae6; border: 1px solid #2e2e2e40;
+    border-radius: 0.375rem; padding: 7px 18px;
+    box-shadow: 0 2px 2px 0 #00000005, 0 2px 8px 0 #00000014;
+  }
+  footer {
+    border-top: 1px solid var(--rule); padding-block: 0.45rem;
+    font-size: 12.25px; line-height: 14.7px; color: var(--ink-soft); flex: none;
+  }
+  @media (max-width: 620px) {
+    .readout { position: static; margin: 0; max-width: none; border-radius: 0;
+               border-left: 0; border-right: 0; box-shadow: none; }
+    .stage { min-height: 50vh; }
+    h1 { white-space: normal; }
+  }
+</style>
+
+<header class="gutter">
+  <div class="hrow">
+    <h1>Redrawn Districts Explorer</h1>
+    <p class="sub">Nine states that changed congressional maps between 2024 and 2026</p>
+  </div>
+</header>
+
+<div class="controls gutter">
+  <div class="ctl">
+    <label id="l-map">Map</label>
+    <div class="seg" role="group" aria-labelledby="l-map">
+      <button id="m2024" aria-pressed="true">2024</button>
+      <button id="m2026" aria-pressed="false">2026</button>
+    </div>
+  </div>
+
+  <div class="ctl">
+    <label id="l-color">Color by</label>
+    <div class="seg" role="group" aria-labelledby="l-color">
+      <button id="cElection" aria-pressed="true">2024 result</button>
+      <button id="cDemo" aria-pressed="false">Demographics</button>
+      <button id="cCook" aria-pressed="false">Cook rating</button>
+    </div>
+  </div>
+
+  <div class="ctl" id="varWrap" hidden>
+    <label id="l-var">Variable</label>
+    <select class="var" id="demoVar" aria-labelledby="l-var"></select>
+  </div>
+
+  <div class="ctl">
+    <label id="l-prec">Precincts</label>
+    <div class="seg" role="group" aria-labelledby="l-prec">
+      <button id="pOff" aria-pressed="true" disabled>Off</button>
+      <button id="pOn" aria-pressed="false" disabled>On</button>
+    </div>
+  </div>
+
+  <div class="ctl">
+    <label id="l-dens">Density fade</label>
+    <div class="seg" role="group" aria-labelledby="l-dens">
+      <button id="dOff" aria-pressed="true">Off</button>
+      <button id="dOn" aria-pressed="false">On</button>
+    </div>
+  </div>
+
+  <div class="ctl">
+    <label>&nbsp;</label>
+    <button class="back" id="back" disabled>All states</button>
+  </div>
+
+  <div class="ctl" style="flex:1 1 12rem">
+    <label>&nbsp;</label>
+    <span class="hint" id="hint">Click a state to zoom in and enable precincts.</span>
+  </div>
+</div>
+
+<div class="stage" id="stage">
+  <canvas id="map"></canvas>
+  <div class="zoom-buttons" id="zoomButtons">
+    <button class="zb solo" id="zFit" aria-label="Reset zoom" title="Reset zoom">
+      <svg viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M6.2 2.4 3.6 2.4 3.6 5M9.8 2.4 12.4 2.4 12.4 5M6.2 13.6 3.6 13.6 3.6 11M9.8 13.6 12.4 13.6 12.4 11"
+              fill="none" stroke="currentColor" stroke-width="1.6"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="zb-pair">
+      <button class="zb" id="zIn" aria-label="Zoom in" title="Zoom in">
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M8 3.6V12.4M3.6 8H12.4" fill="none" stroke="currentColor"
+                stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <button class="zb" id="zOut" aria-label="Zoom out" title="Zoom out">
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M3.6 8H12.4" fill="none" stroke="currentColor"
+                stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="legend" id="legend" hidden>
+    <div class="lt" id="legendTitle"></div>
+    <div class="ramp" id="ramp"></div>
+    <div class="ends"><span id="lo"></span><span id="mid"></span><span id="hi"></span></div>
+    <div class="cookbar" id="cookBar" hidden>
+      <div class="cb-head"><span class="d">Democratic</span><span class="r">Republican</span></div>
+      <div class="cb-track" id="cbTrack"></div>
+      <div class="cb-foot" id="cbFoot"></div>
+      <div class="cb-sum" id="cbSum"></div>
+    </div>
+    <div class="swatches" id="swatches" hidden></div>
+    <div class="tier" id="tierNote" hidden></div>
+  </div>
+  <div class="readout" id="readout">
+    <div class="rt" id="rTitle">Hover the map</div>
+    <div class="idle" id="rIdle">Districts are shaded by the 2024 presidential vote.</div>
+    <dl id="rList"></dl>
+    <div class="flag" id="rFlag" hidden></div>
+  </div>
+  <div class="status" id="status">Loading districts&hellip;</div>
+</div>
+
+<footer class="gutter">
+  Census block equivalency files (119th and 120th Congress) &middot; 2024 presidential results via
+  Redistricting Data Hub &middot; geometry simplified for display
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var STATE_NAME = {
+    AL: "Alabama", CA: "California", FL: "Florida", LA: "Louisiana",
+    NC: "North Carolina", OH: "Ohio", TN: "Tennessee", TX: "Texas", UT: "Utah"
+  };
+
+  // Only variables the demographics methodology rates usable at precinct level.
+  // pct_unemployed, pct_noncitizen and pct_limited_english are deliberately not
+  // offered: their margins of error make a single-precinct reading meaningless,
+  // and a choropleth is precisely the thing that would invite one.
+  // Only variables the demographics work rates usable, and the verdicts differ
+  // by geography: pct_cvap_nh_black and pct_cvap_nh_asian are sound for a
+  // district and not for a precinct, so they are marked districtOnly rather
+  // than offered everywhere. pct_unemployed, pct_noncitizen and
+  // pct_limited_english are still absent at both levels.
+  //
+  // There is deliberately no "share of adults who are citizens": that column
+  // divides a 2020-2024 ACS numerator by an April 2020 decennial denominator
+  // and lands above 100% for a fifth to a half of precincts, with no
+  // coefficient of variation able to detect it. Use cvap_total as a count, and
+  // compare largest_race against largest_race_cvap to show the gap between who
+  // lives in a district and who can vote in it.
+  var DEMO_VARS = [
+    { k: "largest_race", label: "Largest group \u2014 population", kind: "cat", tier: "exact" },
+    { k: "largest_race_cvap", label: "Largest group \u2014 electorate (CVAP)", kind: "cat", tier: "safe" },
+    { k: "cvap_total", label: "Citizen voting-age population", kind: "num", tier: "safe" },
+    { k: "pct_hisp", label: "Hispanic (% of population)", kind: "pct", tier: "exact" },
+    { k: "pct_nh_white", label: "White, non-Hispanic (%)", kind: "pct", tier: "exact" },
+    { k: "pct_nh_black", label: "Black, non-Hispanic (%)", kind: "pct", tier: "exact" },
+    { k: "pop_density_sqmi", label: "Population density (per sq mi)", kind: "log", tier: "exact" },
+    { k: "pct_cvap_nh_white", label: "White, non-Hispanic (% of CVAP)", kind: "pct", tier: "safe" },
+    { k: "pct_cvap_hisp", label: "Hispanic (% of CVAP)", kind: "pct", tier: "limited" },
+    { k: "pct_cvap_nh_black", label: "Black, non-Hispanic (% of CVAP)", kind: "pct",
+      tier: "safe", districtOnly: true },
+    { k: "pct_cvap_nh_asian", label: "Asian, non-Hispanic (% of CVAP)", kind: "pct",
+      tier: "safe", districtOnly: true },
+    { k: "median_hh_income", label: "Median household income", kind: "money", tier: "safe" },
+    { k: "median_age", label: "Median age", kind: "num", tier: "safe" },
+    { k: "pct_owner_occupied", label: "Owner-occupied homes (%)", kind: "pct", tier: "safe" },
+    { k: "pct_ba_plus", label: "Bachelor's degree or higher (%)", kind: "pct", tier: "caution" },
+    { k: "pct_foreign_born", label: "Foreign-born (%)", kind: "pct", tier: "limited" }
+  ];
+  var TIER_NOTE = {
+    exact: "2020 census enumeration. No margin of error.",
+    safe: "ACS five-year estimate. Margin of error is modest at precinct level.",
+    caution: "ACS estimate. Sound for mapping and for comparing groups of precincts, "
+           + "not for a claim about one precinct.",
+    limited: "ACS estimate. Sound for districts; for precincts only in some "
+           + "states, and the note says so when it is not."
+  };
+  // Qualitative, chosen to stay distinguishable in both themes and to avoid
+  // red/blue, which on this map already mean something else.
+  var CAT_COLORS = ["#6a8fbf", "#b07aa1", "#e1a14c", "#4f9d8b",
+                    "#8d6e63", "#d38079", "#7a8b99", "#9c9c6b"];
+
+  var state = {
+    year: "2024",        // which map
+    color: "election",   // election | pop
+    precincts: false,
+    density: false,
+    focus: null,         // state abbreviation when zoomed in
+    district: null,      // district number when one is singled out
+    demoVar: "largest_race",
+    demoCache: {},       // ST -> { byId: Map, cats: [] }
+    incumbents: null,    // "ST-DD" -> sitting member of the 119th Congress
+    cook: null,          // "ST-DD" -> Cook Political Report rating, 2026 map
+    demoDistricts: null, // "ST-MAP-DD" -> district demographics
+    basemap: null,       // { states: [...], nation: [...] }
+    districts: { 2024: [], 2026: [] },
+    precinctCache: {},   // ST -> features
+    hover: null,         // a feature, when one is pointed at directly
+    hoverState: null     // at national zoom you point at states, not districts
+  };
+
+  // Promise cache so two toggles of the same layer share one request instead
+  // of racing each other.
+  var inflight = {};
+
+  var cv = document.getElementById("map");
+  var ctx = cv.getContext("2d");
+  // Offscreen twin: every shape is filled with a colour encoding its index, so a
+  // single getImageData at the cursor identifies the feature under it. Exact,
+  // and O(1) instead of testing 24,000 polygons per mouse move.
+  var pick = document.createElement("canvas");
+  var pctx = pick.getContext("2d", { willReadFrequently: true });
+
+  // Per-state projections. One national Albers across nine states from Utah to
+  // Florida shears every one of them; a State Plane zone is the cartographic
+  // answer, but d3 carries no EPSG database, so each state gets a projection
+  // built from the parameters of its own official statewide CRS. Conformal
+  // (Lambert) where the state's State Plane zones are conformal, equal-area
+  // (Albers) where the state's published statewide CRS is -- CA 3310, FL 3086
+  // and TX 3083 are all Albers. Either way the outline stops being sheared,
+  // which is the point.
+  var STATE_PROJ = {
+    AL: { type: "lcc",    lon0: -86.8,   lat0: 32.5,   parallels: [30.5, 34.5] },
+    CA: { type: "albers", lon0: -120.0,  lat0: 0.0,    parallels: [34.0, 40.5] },
+    FL: { type: "albers", lon0: -84.0,   lat0: 24.0,   parallels: [24.0, 31.5] },
+    LA: { type: "lcc",    lon0: -91.33,  lat0: 30.5,   parallels: [29.3, 31.2] },
+    NC: { type: "lcc",    lon0: -79.0,   lat0: 33.75,  parallels: [34.333, 36.167] },
+    OH: { type: "lcc",    lon0: -82.5,   lat0: 39.667, parallels: [38.733, 41.7] },
+    TN: { type: "lcc",    lon0: -86.0,   lat0: 34.333, parallels: [35.25, 36.417] },
+    TX: { type: "albers", lon0: -100.0,  lat0: 18.0,   parallels: [27.5, 35.0] },
+    UT: { type: "lcc",    lon0: -111.5,  lat0: 38.333, parallels: [38.0, 41.0] }
+  };
+
+  // geoAlbersUsa, not a plain geoAlbers: its composite insets Alaska and Hawaii
+  // at the lower left. With a single conic they project thousands of miles off
+  // canvas, which is why an earlier version simply dropped them -- a US map
+  // without them reads as broken. Note geoAlbersUsa takes no rotate, center or
+  // parallels; the composite fixes its own.
+  function nationalProjection() {
+    return d3.geoAlbersUsa();
+  }
+
+  // What the national view is fitted to. The whole country, so the insets land
+  // on canvas: fitting to the nine states alone crops a band off every edge,
+  // and the insets sit at the lower left of the composite's own frame, so they
+  // would be the first thing to go.
+  function nationalExtent() {
+    var bm = state.basemap && state.basemap.nation;
+    return (bm && bm.length) ? bm : (state.districts[state.year] || []);
+  }
+  function stateProjection(st) {
+    var c = STATE_PROJ[st];
+    if (!c) return nationalProjection();
+    var proj = c.type === "albers" ? d3.geoAlbers() : d3.geoConicConformal();
+    return proj.rotate([-c.lon0, 0]).center([0, c.lat0]).parallels(c.parallels);
+  }
+
+  var projection = nationalProjection();
+  var path = d3.geoPath(projection, ctx);
+  var pickPath = d3.geoPath(projection, pctx);
+  // Both path generators bind the projection object, so swapping projections
+  // means rebuilding them; mutating `projection` alone would leave the old one
+  // in use and the map would silently keep drawing in the previous CRS.
+  function setProjection(next) {
+    projection = next;
+    path = d3.geoPath(projection, ctx);
+    pickPath = d3.geoPath(projection, pctx);
+  }
+  var transform = d3.zoomIdentity;
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var W = 0, H = 0;
+
+  var EARTH_KM2 = 6371 * 6371;
+
+  /* ---------------------------------------------------------------- scales */
+
+  // Canvas cannot use CSS custom properties, so the palette is read off :root
+  // once and cached. Without this the map would need its own hard-coded colours
+  // and would stop matching the page the moment the theme changed -- which is
+  // how the district strokes ended up invisible in dark mode.
+  var THEME = null;
+  function theme() {
+    if (THEME) return THEME;
+    var cs = getComputedStyle(document.documentElement);
+    var g = function (n) { return (cs.getPropertyValue(n) || "").trim(); };
+    var stops = [];
+    for (var i = 0; i < 7; i++) stops.push(g("--ramp" + i) || "#888");
+    THEME = {
+      election: d3.interpolateRgbBasis(stops),
+      stops: stops,
+      nodata: g("--nodata") || "#dcdcdc",
+      chicfill: g("--chicfill") || "#e8e8e4",
+      cook: {
+        "Likely Democrat":    g("--cook-likelyD") || "#5784c5",
+        "Lean Democrat":      g("--cook-leanD")   || "#a9c6e8",
+        "Democratic Toss Up": g("--cook-toss")    || "#e0a63a",
+        "Republican Toss Up": g("--cook-toss")    || "#e0a63a",
+        "Lean Republican":    g("--cook-leanR")   || "#eb9c92",
+        "Likely Republican":  g("--cook-likelyR") || "#d35f4f"
+      },
+      ink: g("--ink") || "#111111",
+      paper: g("--paper") || "#ffffff",
+      water: g("--water") || "#ffffff",
+      basefill: g("--basefill") || "#f2f2f0",
+      baseline: g("--baseline") || "#d8d8d4",
+      baseedge: g("--baseedge") || "#b9b9b4"
+    };
+    return THEME;
+  }
+  function inkAlpha(a) {
+    var c = d3.color(theme().ink);
+    if (!c) return "rgba(17,17,17," + a + ")";
+    c.opacity = a;
+    return c + "";
+  }
+  function waterAlpha(a) {
+    var c = d3.color(theme().water);
+    if (!c) return "rgba(255,255,255," + a + ")";
+    c.opacity = a;
+    return c + "";
+  }
+  if (window.matchMedia) {
+    var mq = window.matchMedia("(prefers-color-scheme: dark)");
+    var onTheme = function () { THEME = null; updateLegend(); render(); };
+    if (mq.addEventListener) mq.addEventListener("change", onTheme);
+    else if (mq.addListener) mq.addListener(onTheme);
+  }
+
+  function demShare(p) {
+    var v = p.pres24_two_party_dem_share;
+    return (v === null || v === undefined) ? null : +v;
+  }
+
+  // The Post reports presidential results as a margin in points behind the
+  // leader's name -- "+10 Trump" -- rather than as a share, so the readout and
+  // the legend both speak in those terms. The underlying number is still the
+  // two-party Democratic share; margin is just 2s-1 expressed in points.
+  function marginPts(s) {
+    return (s === null || s === undefined) ? null : (2 * s - 1) * 100;
+  }
+  // Rounded to whole points, the way the Post prints it. Anything that rounds
+  // to zero is "Even": "+0 Harris" would claim a winner the rounding threw away.
+  function marginLabel(s) {
+    var m = marginPts(s);
+    if (m === null) return null;
+    var r = Math.round(Math.abs(m));
+    if (r === 0) return { text: "Even", cls: "" };
+    return m > 0
+      ? { text: "+" + r + " Harris", cls: "d" }
+      : { text: "+" + r + " Trump", cls: "r" };
+  }
+
+  // Diverging about 50%, red at 0 and blue at 1, so Democratic share maps the
+  // US convention directly. The stops are the Post's own election colours.
+  function electionColor(p) {
+    var s = demShare(p);
+    if (s === null) return null;
+    var t = Math.max(0, Math.min(1, (s - 0.25) / 0.5));
+    return theme().election(t);
+  }
+
+  var demoScale = null;
+  function currentVar() {
+    for (var i = 0; i < DEMO_VARS.length; i++) {
+      if (DEMO_VARS[i].k === state.demoVar) return DEMO_VARS[i];
+    }
+    return DEMO_VARS[0];
+  }
+
+  function demoValue(f) {
+    if (f.__demo) {
+      return f.__demo[state.demoVar] !== undefined ? f.__demo[state.demoVar] : null;
+    }
+    // Districts carry demographics too, aggregated from the same blocks, so
+    // the mode works in the nine-state view and not only inside a state.
+    var p = f.properties;
+    if (p && p.district && state.demoDistricts) {
+      var rec = state.demoDistricts[p.state + "-" + (p.map || state.year) + "-" + p.district];
+      if (rec && rec[state.demoVar] !== undefined) return rec[state.demoVar];
+    }
+    return null;
+  }
+
+  function buildDemoScale(features) {
+    var v = currentVar();
+    if (v.kind === "cat") { demoScale = null; return; }
+    var vals = features.map(demoValue)
+      .filter(function (x) { return x !== null && x !== undefined && isFinite(x); })
+      .sort(d3.ascending);
+    if (!vals.length) { demoScale = null; return; }
+    var lo = d3.quantileSorted(vals, 0.02);
+    var hi = d3.quantileSorted(vals, 0.98);
+    if (v.kind === "log") {
+      lo = Math.max(1, lo);
+      hi = Math.max(lo + 1, hi);
+      demoScale = d3.scaleSequentialLog(d3.interpolateYlGnBu).domain([lo, hi]).clamp(true);
+    } else {
+      if (hi === lo) hi = lo + 1;
+      demoScale = d3.scaleSequential(d3.interpolateYlGnBu).domain([lo, hi]).clamp(true);
+    }
+    demoScale.lo = lo; demoScale.hi = hi;
+  }
+
+  function demoColor(f) {
+    var v = currentVar();
+    var x = demoValue(f);
+    if (x === null || x === undefined) return null;
+    if (v.kind === "cat") {
+      return (x >= 0 && x < CAT_COLORS.length) ? CAT_COLORS[x] : null;
+    }
+    return demoScale ? demoScale(x) : null;
+  }
+
+  // Cook's categories are ordinal and run Democratic to Republican, so they
+  // borrow the same diverging ramp the vote uses rather than a palette of
+  // their own: the two modes then agree about which end of the map is which.
+  // The toss-ups take the pale stops and the ramp's neutral middle is skipped,
+  // because Cook splits toss-ups by who holds the seat and there is no
+  // genuinely even category to put there.
+  var COOK_ORDER = ["Likely Democrat", "Lean Democrat", "Democratic Toss Up",
+                    "Republican Toss Up", "Lean Republican", "Likely Republican"];
+  // The two toss-up categories differ only in who holds the seat, and the Post
+  // draws them as a single gold band. The map follows; the readout still names
+  // the category exactly.
+  var COOK_BANDS = [
+    { label: "Likely D", cats: ["Likely Democrat"] },
+    { label: "Lean D",   cats: ["Lean Democrat"] },
+    { label: "Toss-up",  cats: ["Democratic Toss Up", "Republican Toss Up"] },
+    { label: "Lean R",   cats: ["Lean Republican"] },
+    { label: "Likely R", cats: ["Likely Republican"] }
+  ];
+
+  function cookRating(f) {
+    if (!state.cook || state.year !== "2026") return null;
+    var p = f.properties;
+    // A precinct carries its new district's rating: the rating is a property
+    // of the seat, and the precinct is in it.
+    var cd = p.district || p.district_2026;
+    if (!cd || !p.state) return null;
+    return state.cook.byKey[p.state + "-" + cd] || null;
+  }
+
+  function cookColor(f) {
+    if (chicletMode()) return null;   // the squares carry the rating instead
+    var r = cookRating(f);
+    return r ? (theme().cook[r.rating] || null) : null;
+  }
+
+  // At national zoom a rated district is a few pixels across, so the fill has
+  // nowhere to land. The Post answers this with one square per race, sized for
+  // the eye rather than for the geography, over plain state outlines. Inside a
+  // state there is room for the real shapes, so the squares are national only.
+  function chicletMode() {
+    return state.color === "cook" && !state.focus && state.year === "2026";
+  }
+
+  var CHIC = 17, CHIC_R = 5, CHIC_GAP = 2.5;
+  var chiclets = null, chicletKey = "";
+
+  // Anchored on each district's projected centroid and then pushed apart until
+  // they stop overlapping. Warm-started from the previous frame, so a zoom
+  // separates them smoothly instead of re-solving into a different packing
+  // every frame.
+  function layoutChiclets() {
+    var ds = state.districts["2026"] || [];
+    var want = [];
+    for (var i = 0; i < ds.length; i++) {
+      if (cookRating(ds[i])) want.push(ds[i]);
+    }
+    var key = state.year + ":" + want.length;
+    if (!chiclets || chicletKey !== key) {
+      chiclets = want.map(function (f) { return { f: f, x: 0, y: 0, seeded: false }; });
+      chicletKey = key;
+    }
+    for (var j = 0; j < chiclets.length; j++) {
+      var c = chiclets[j];
+      var ctr = path.centroid(c.f);
+      if (!isFinite(ctr[0])) { c.dead = true; continue; }
+      c.dead = false;
+      c.ax = transform.applyX(ctr[0]);
+      c.ay = transform.applyY(ctr[1]);
+      if (!c.seeded) { c.x = c.ax; c.y = c.ay; c.seeded = true; }
+    }
+    var live = chiclets.filter(function (c) { return !c.dead; });
+    var sep = CHIC + CHIC_GAP;
+    for (var it = 0; it < 90; it++) {
+      for (var a = 0; a < live.length; a++) {
+        var p1 = live[a];
+        p1.x += (p1.ax - p1.x) * 0.06;   // keep pulling back to the district
+        p1.y += (p1.ay - p1.y) * 0.06;
+        for (var b = a + 1; b < live.length; b++) {
+          var p2 = live[b];
+          var dx = p2.x - p1.x, dy = p2.y - p1.y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist >= sep) continue;
+          if (dist < 0.01) { dx = (a % 2 ? 1 : -1) * 0.5; dy = 0.5; dist = 0.71; }
+          var push = (sep - dist) / dist / 2;
+          p1.x -= dx * push; p1.y -= dy * push;
+          p2.x += dx * push; p2.y += dy * push;
+        }
+      }
+    }
+    return live;
+  }
+
+  function roundRect(c, x, y, w, h, r) {
+    if (c.roundRect) { c.beginPath(); c.roundRect(x, y, w, h, r); return; }
+    c.beginPath();
+    c.moveTo(x + r, y);
+    c.arcTo(x + w, y, x + w, y + h, r);
+    c.arcTo(x + w, y + h, x, y + h, r);
+    c.arcTo(x, y + h, x, y, r);
+    c.arcTo(x, y, x + w, y, r);
+    c.closePath();
+  }
+
+  // AP style: Ohio, Texas and Utah are never abbreviated, the rest are.
+  var STATE_ABBR = {
+    AL: "Ala.", CA: "Calif.", FL: "Fla.", LA: "La.", NC: "N.C.",
+    OH: "Ohio", TN: "Tenn.", TX: "Texas", UT: "Utah"
+  };
+  var LABEL_FONT = '600 12.5px "Libre Franklin","Helvetica Neue",Helvetica,Arial,sans-serif';
+
+  // Anchored on each state's centroid, then pushed clear of the squares and of
+  // each other along whichever axis they are least overlapped on, so a label
+  // moves as little as it has to. Boxes rather than circles: a label is much
+  // wider than it is tall and a circular test would shove it far too far.
+  function layoutStateLabels(live) {
+    var ds = state.districts["2026"] || [];
+    var byState = {};
+    for (var i = 0; i < ds.length; i++) {
+      var st = ds[i].properties.state;
+      (byState[st] = byState[st] || []).push(ds[i]);
+    }
+    ctx.font = LABEL_FONT;
+    var labels = [];
+    Object.keys(byState).forEach(function (st) {
+      var c = path.centroid({ type: "FeatureCollection", features: byState[st] });
+      if (!isFinite(c[0])) return;
+      var text = STATE_ABBR[st] || st;
+      labels.push({
+        st: st, text: text,
+        x: transform.applyX(c[0]), y: transform.applyY(c[1]),
+        hw: ctx.measureText(text).width / 2 + 3, hh: 8
+      });
+    });
+
+    var ch = CHIC / 2 + 3;
+    for (var it = 0; it < 60; it++) {
+      for (var a = 0; a < labels.length; a++) {
+        var L = labels[a];
+        for (var b = 0; b < live.length; b++) separate(L, live[b], ch, ch, 1);
+        for (var d = 0; d < labels.length; d++) {
+          if (d !== a) separate(L, labels[d], labels[d].hw, labels[d].hh, 0.5);
+        }
+        L.x = Math.min(Math.max(L.x, L.hw + 4), W - L.hw - 4);
+        L.y = Math.min(Math.max(L.y, L.hh + 4), H - L.hh - 4);
+      }
+    }
+    return labels;
+  }
+
+  function separate(L, o, ohw, ohh, share) {
+    var dx = L.x - o.x, dy = L.y - o.y;
+    var ox = (L.hw + ohw) - Math.abs(dx);
+    var oy = (L.hh + ohh) - Math.abs(dy);
+    if (ox <= 0 || oy <= 0) return;           // not overlapping
+    if (ox / (L.hw + ohw) < oy / (L.hh + ohh)) {
+      L.x += (dx >= 0 ? ox : -ox) * share;    // least penetration: sideways
+    } else {
+      L.y += (dy >= 0 ? oy : -oy) * share;    // least penetration: vertically
+    }
+  }
+
+  function drawStateLabels(live) {
+    var labels = layoutStateLabels(live), T = theme();
+    ctx.save();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.font = LABEL_FONT;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.lineJoin = "round";
+    for (var i = 0; i < labels.length; i++) {
+      var L = labels[i];
+      ctx.lineWidth = 3.5;                 // halo, so the type survives any fill
+      ctx.strokeStyle = T.paper;
+      ctx.strokeText(L.text, L.x, L.y);
+      ctx.fillStyle = T.ink;
+      ctx.fillText(L.text, L.x, L.y);
+    }
+    ctx.restore();
+  }
+
+  function drawChiclets() {
+    var live = layoutChiclets();
+    var T = theme(), h = CHIC / 2;
+    ctx.save();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    // A connector where a square has been pushed clear of its own district,
+    // so the square is never read as sitting somewhere it does not.
+    ctx.strokeStyle = T.baseedge;
+    ctx.lineWidth = 1;
+    for (var k = 0; k < live.length; k++) {
+      var c = live[k];
+      if (Math.hypot(c.x - c.ax, c.y - c.ay) < CHIC * 0.8) continue;
+      ctx.beginPath(); ctx.moveTo(c.ax, c.ay); ctx.lineTo(c.x, c.y); ctx.stroke();
+    }
+    for (var m = 0; m < live.length; m++) {
+      var d = live[m], rt = cookRating(d.f);
+      roundRect(ctx, d.x - h, d.y - h, CHIC, CHIC, CHIC_R);
+      ctx.fillStyle = T.cook[rt.rating] || T.nodata;
+      ctx.fill();
+      var on = state.hover === d.f;
+      ctx.strokeStyle = on ? T.ink : T.baseedge;
+      ctx.lineWidth = on ? 2 : 1;
+      ctx.stroke();
+    }
+    ctx.restore();
+    return live;
+  }
+
+  // Squares sit above the map, so they are hit-tested before it.
+  function chicletAt(px, py) {
+    if (!chicletMode() || !chiclets) return null;
+    var h = CHIC / 2;
+    for (var i = chiclets.length - 1; i >= 0; i--) {
+      var c = chiclets[i];
+      if (c.dead || !c.seeded) continue;
+      if (px >= c.x - h && px <= c.x + h && py >= c.y - h && py <= c.y + h) return c.f;
+    }
+    return null;
+  }
+
+  function baseFill(p, f) {
+    if (state.color === "election") return electionColor(p);
+    if (state.color === "cook") return cookColor(f);
+    return demoColor(f);
+  }
+
+  // With one district singled out, the rest drop to grey at their own
+  // lightness rather than a flat slab, so the surrounding pattern is still
+  // legible without competing with the district in focus.
+  function desaturate(col) {
+    var c = d3.color(col);
+    if (!c) return theme().nodata;
+    var r = c.rgb();
+    var l = 0.299 * r.r + 0.587 * r.g + 0.114 * r.b;
+    var m = Math.round(l * 0.35 + 190 * 0.65);
+    return "rgb(" + m + "," + m + "," + m + ")";
+  }
+
+  // Districts are the subject of this map and precincts are a way of seeing
+  // inside them, so a precinct answers the same question a district does:
+  // which district am I in, on the map currently shown. That makes the
+  // single-district view work the same either way.
+  function districtOf(p) {
+    if (!p) return null;
+    if (p.district) return p.district;
+    return state.year === "2026" ? p.district_2026 : p.district_2024;
+  }
+
+  function fillFor(p, f) {
+    var col = baseFill(p, f);
+    // Anything that is not the district in focus greys out, including the
+    // 1,235 precincts carrying no district assignment at all -- mostly empty
+    // geography. Letting those stay lit would make them the brightest thing
+    // on a single-district view.
+    if (state.district && districtOf(p) !== state.district) {
+      return col ? desaturate(col) : theme().nodata;
+    }
+    return col;
+  }
+
+  // Density fade: alpha from people per square kilometre, on a cube-root ramp
+  // because density spans orders of magnitude between rural precincts and dense
+  // urban ones. Two things about how far it ramps, both of which the first
+  // version got wrong.
+  //
+  // The ramp is fitted to what is on screen rather than to a fixed 8,000/km2
+  // ceiling. Against that ceiling the densest district in a state might only
+  // reach 2,000, and so still draw a third transparent: nothing on the map was
+  // ever solid. Now the 95th percentile of the visible features maps to full
+  // opacity, so the densest thing you are looking at is the thing that is
+  // solid.
+  //
+  // And the depth of the fade follows the spread. Fading is a claim that the
+  // values differ, and where they barely do -- districts are equalised by
+  // population, so a compact state's can sit within a factor of two -- the
+  // floor rises to meet the top and the fade goes away, instead of
+  // manufacturing contrast out of noise.
+  function densityOf(f) {
+    var p = f.properties;
+    if (!p || !p.pop20 || !f.__km2) return 0;
+    return p.pop20 / f.__km2;
+  }
+
+  var densityScale = null;
+  function buildDensityScale(features) {
+    densityScale = null;
+    if (!state.density) return;
+    var vals = [];
+    for (var i = 0; i < features.length; i++) {
+      var d = densityOf(features[i]);
+      if (d > 0) vals.push(d);
+    }
+    if (vals.length < 2) return;
+    vals.sort(d3.ascending);
+    // Percentiles, not the extremes: one empty precinct or one courthouse
+    // block should not set the range everything else is judged against.
+    var lo = d3.quantileSorted(vals, 0.05);
+    var hi = d3.quantileSorted(vals, 0.95);
+    if (!(lo > 0) || !(hi > lo)) return;          // no spread, no fade
+    var span = Math.log10(hi / lo);               // orders of magnitude
+    densityScale = {
+      lo: Math.cbrt(lo), hi: Math.cbrt(hi),
+      floor: Math.max(0.12, Math.min(1, 1 - 0.35 * span))
+    };
+  }
+
+  function alphaFor(f) {
+    if (!state.density || !densityScale) return 1;
+    var d = densityOf(f);
+    if (!d) return densityScale.floor;     // no people, or no area to divide by
+    var t = (Math.cbrt(d) - densityScale.lo) / (densityScale.hi - densityScale.lo);
+    return densityScale.floor +
+           (1 - densityScale.floor) * Math.max(0, Math.min(1, t));
+  }
+
+  /* ----------------------------------------------------------------- draw */
+
+  function visibleFeatures() {
+    if (state.focus && state.precincts && state.precinctCache[state.focus]) {
+      return state.precinctCache[state.focus];
+    }
+    var ds = state.districts[state.year] || [];
+    return state.focus ? ds.filter(function (f) { return f.properties.state === state.focus; }) : ds;
+  }
+
+  function backdrop() {
+    // District outlines always draw, so a precinct view still reads as a map.
+    return (state.districts[state.year] || []).filter(function (f) {
+      return !state.focus || f.properties.state === state.focus;
+    });
+  }
+
+  function idxToColor(i) {
+    var n = i + 1;
+    return "rgb(" + (n & 255) + "," + ((n >> 8) & 255) + "," + ((n >> 16) & 255) + ")";
+  }
+  function colorToIdx(r, g, b) { return (r | (g << 8) | (b << 16)) - 1; }
+
+  var current = [];
+  var pickDirty = true;
+
+  function render() {
+    ctx.save();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.translate(transform.x, transform.y);
+    ctx.scale(transform.k, transform.k);
+
+    current = visibleFeatures();
+    var showingPrecincts = state.focus && state.precincts &&
+      state.precinctCache[state.focus];
+
+    // Country and state outlines behind the data, so the nine states read as
+    // part of a map rather than shapes on a blank page. Drawn first and never
+    // hit-tested -- the picker canvas only ever holds the data layer.
+    if (state.basemap) {
+      ctx.fillStyle = theme().basefill;
+      for (var b = 0; b < state.basemap.nation.length; b++) {
+        ctx.beginPath(); path(state.basemap.nation[b]); ctx.fill();
+      }
+      ctx.lineWidth = 0.6 / transform.k;
+      ctx.strokeStyle = theme().baseline;
+      for (var t = 0; t < state.basemap.states.length; t++) {
+        ctx.beginPath(); path(state.basemap.states[t]); ctx.stroke();
+      }
+      ctx.lineWidth = 1 / transform.k;
+      ctx.strokeStyle = theme().baseedge;
+      for (var u = 0; u < state.basemap.nation.length; u++) {
+        ctx.beginPath(); path(state.basemap.nation[u]); ctx.stroke();
+      }
+    }
+
+    // Fills
+    var blank = chicletMode() ? theme().chicfill : theme().nodata;
+    for (var i = 0; i < current.length; i++) {
+      var f = current[i];
+      var col = fillFor(f.properties, f);
+      ctx.beginPath();
+      path(f);
+      if (col) {
+        ctx.globalAlpha = alphaFor(f);
+        ctx.fillStyle = col;
+      } else {
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = blank;  // no data: visibly absent, not zero
+      }
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    // Hairlines between precincts only once zoomed enough to tell them apart
+    if (showingPrecincts && transform.k > 3) {
+      ctx.lineWidth = 0.3 / transform.k;
+      ctx.strokeStyle = waterAlpha(0.55);
+      for (var j = 0; j < current.length; j++) {
+        ctx.beginPath(); path(current[j]); ctx.stroke();
+      }
+    }
+
+    // District borders on top
+    var bd = backdrop();
+    ctx.lineWidth = (showingPrecincts ? 1.6 : 1.1) / transform.k;
+    ctx.strokeStyle = theme().water;
+    for (var k = 0; k < bd.length; k++) {
+      ctx.beginPath(); path(bd[k]); ctx.stroke();
+    }
+
+    // The district in focus keeps a hard outline so it stays separate from
+    // the greyed field around it, and its counterpart on the other map is
+    // drawn dashed over the top. Seeing both lines at once is the whole point
+    // of the comparison: the gap between them is what the redraw did.
+    if (state.district) {
+      var sel = districtFeature(state.district);
+      if (sel) {
+        var other = state.year === "2024" ? "2026" : "2024";
+        var cp = counterpartOf(state.district, state.year);
+        var cpf = cp ? districtFeature(cp, other) : null;
+        if (cpf) {
+          // Cased, like a printed map. A bare dark dash is legible over the
+          // grey field and invisible the moment it crosses the district it is
+          // being compared against -- which is most of its length, and the
+          // part that matters. The paper-coloured casing under it means the
+          // line reads over any fill, and inverts correctly in dark mode.
+          ctx.save();
+          ctx.lineJoin = "round";
+          ctx.lineWidth = 4.5 / transform.k;
+          ctx.strokeStyle = theme().paper;
+          ctx.beginPath(); path(cpf); ctx.stroke();
+          ctx.lineWidth = 1.9 / transform.k;
+          ctx.strokeStyle = theme().ink;
+          ctx.setLineDash([7 / transform.k, 5 / transform.k]);
+          ctx.beginPath(); path(cpf); ctx.stroke();
+          ctx.restore();
+        }
+        ctx.lineWidth = 2 / transform.k;
+        ctx.strokeStyle = theme().ink;
+        ctx.beginPath(); path(sel); ctx.stroke();
+      }
+    }
+
+    // Hover emphasis. The state outline comes from the dissolved basemap
+    // feature, not from stroking every district in it, so only the border
+    // thickens and the districts inside stay as they were.
+    if (state.hoverState && state.basemap) {
+      var so = stateOutline(state.hoverState);
+      if (so) {
+        ctx.lineWidth = 2 / transform.k;
+        ctx.strokeStyle = theme().ink;
+        ctx.beginPath(); path(so); ctx.stroke();
+      }
+    }
+    if (state.hover) {
+      ctx.lineWidth = 2 / transform.k;
+      ctx.strokeStyle = theme().ink;
+      ctx.beginPath(); path(state.hover); ctx.stroke();
+    }
+    ctx.restore();
+    // Squares first, so the labels know what to keep clear of. Labels are for
+    // the national view only: inside a state the readout already says which
+    // one, and the name would just sit on the districts.
+    var squares = chicletMode() ? drawChiclets() : [];
+    if (!state.focus) drawStateLabels(squares);
+    pickDirty = true;
+  }
+
+  function renderPick() {
+    pctx.save();
+    pctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    pctx.clearRect(0, 0, W, H);
+    pctx.translate(transform.x, transform.y);
+    pctx.scale(transform.k, transform.k);
+    for (var i = 0; i < current.length; i++) {
+      pctx.fillStyle = idxToColor(i);
+      pctx.beginPath(); pickPath(current[i]); pctx.fill();
+    }
+    pctx.restore();
+    pickDirty = false;
+  }
+
+  /* --------------------------------------------------------------- layout */
+
+  // Zoom handling follows daily-district: compute a target transform from the
+  // feature's bounds in *projected* space and tween the transform, instead of
+  // re-fitting the projection, which can only ever jump. Note the tween is a
+  // plain requestAnimationFrame loop rather than a d3 transition -- the same
+  // choice daily-district landed on, after a d3 transition tween silently
+  // failed to drive zoom.transform.
+  function boundsTransform(features, margin, maxScale) {
+    var fc = { type: "FeatureCollection", features: features };
+    var b = path.bounds(fc);
+    var x0 = b[0][0], y0 = b[0][1], x1 = b[1][0], y1 = b[1][1];
+    var bw = x1 - x0, bh = y1 - y0;
+    if (!(bw > 0) || !(bh > 0)) return d3.zoomIdentity;
+    var k = Math.min(maxScale || 60,
+                     (margin || 0.85) / Math.max(bw / W, bh / H));
+    return d3.zoomIdentity
+      .translate(W / 2, H / 2)
+      .scale(k)
+      .translate(-(x0 + x1) / 2, -(y0 + y1) / 2);
+  }
+
+  // Entering or leaving a state swaps the projection, and two projections have
+  // nothing to interpolate between -- a zoom tween cannot cover it. So hold the
+  // last frame as an image and fade it out over the newly projected scene.
+  var fadeCanvas = document.createElement("canvas");
+  var fadeAnim = null;
+  function snapshot() {
+    fadeCanvas.width = cv.width;
+    fadeCanvas.height = cv.height;
+    fadeCanvas.getContext("2d").drawImage(cv, 0, 0);
+  }
+  function crossFade(dur, done) {
+    dur = dur || 340;
+    if (fadeAnim) { cancelAnimationFrame(fadeAnim); fadeAnim = null; }
+    var ease = d3.easeCubicInOut;
+    var start = performance.now();
+    (function frame() {
+      var e = performance.now() - start;
+      var t = Math.min(e / dur, 1);
+      render();
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.globalAlpha = 1 - ease(t);
+      ctx.drawImage(fadeCanvas, 0, 0);
+      ctx.restore();
+      if (t < 1) { fadeAnim = requestAnimationFrame(frame); }
+      else { fadeAnim = null; if (done) done(); }
+    })();
+  }
+
+  var zoomAnim = null;
+  function animateZoomTo(target, dur, done) {
+    if (!target) { if (done) done(); return; }
+    dur = dur || 650;
+    if (zoomAnim) { cancelAnimationFrame(zoomAnim); zoomAnim = null; }
+    var sel = d3.select(cv);
+    var k0 = transform.k, x0 = transform.x, y0 = transform.y;
+    var k1 = target.k, x1 = target.x, y1 = target.y;
+    if (Math.abs(k1 - k0) < 1e-6 && Math.abs(x1 - x0) < 0.5 && Math.abs(y1 - y0) < 0.5) {
+      if (done) done();
+      return;
+    }
+    var ease = d3.easeCubicInOut;
+    var start = performance.now();
+    (function frame() {
+      var e = performance.now() - start;
+      var t = ease(Math.min(e / dur, 1));
+      zoom.transform(sel, d3.zoomIdentity
+        .translate(x0 + (x1 - x0) * t, y0 + (y1 - y0) * t)
+        .scale(k0 + (k1 - k0) * t));
+      if (e < dur) { zoomAnim = requestAnimationFrame(frame); }
+      else { zoomAnim = null; if (done) done(); }
+    })();
+  }
+
+  function fitTo(features) {
+    var fc = { type: "FeatureCollection", features: features };
+    projection.fitExtent([[12, 12], [W - 12, H - 12]], fc);
+    transform = d3.zoomIdentity;
+    d3.select(cv).call(zoom.transform, d3.zoomIdentity);
+  }
+
+  function resize() {
+    var r = document.getElementById("stage").getBoundingClientRect();
+    W = Math.max(320, Math.floor(r.width));
+    H = Math.max(260, Math.floor(r.height));
+    [cv, pick].forEach(function (c) {
+      c.width = Math.floor(W * dpr); c.height = Math.floor(H * dpr);
+      c.style.width = W + "px"; c.style.height = H + "px";
+    });
+    var base = state.focus
+      ? (state.districts[state.year] || []).filter(function (f) { return f.properties.state === state.focus; })
+      : nationalExtent();
+    if (base.length) {
+      var fc = { type: "FeatureCollection", features: base };
+      projection.fitExtent([[12, 12], [W - 12, H - 12]], fc);
+    }
+    render();
+  }
+
+  var zoom = d3.zoom().scaleExtent([1, 220]).on("zoom", function (ev) {
+    transform = ev.transform;
+    render();
+  });
+
+  /* ------------------------------------------------------------ interaction */
+
+  function fmt(n) { return n === null || n === undefined ? "\u2014" : d3.format(",")(Math.round(n)); }
+  function pct(v) { return v === null || v === undefined ? "\u2014" : d3.format(".1%")(v); }
+
+  function cvapOf(f) {
+    if (f.__demo && f.__demo.cvap_total !== undefined) return f.__demo.cvap_total;
+    var p = f.properties;
+    if (p && p.district && state.demoDistricts) {
+      var rec = state.demoDistricts[p.state + "-" + (p.map || state.year) + "-" + p.district];
+      if (rec && rec.cvap_total !== undefined) return rec.cvap_total;
+    }
+    return null;
+  }
+
+  function showReadout(f) {
+    var rt = document.getElementById("rTitle");
+    var idle = document.getElementById("rIdle");
+    var list = document.getElementById("rList");
+    var flag = document.getElementById("rFlag");
+    if (!f) {
+      rt.textContent = state.focus ? STATE_NAME[state.focus] : "Hover the map";
+      idle.hidden = false;
+      idle.textContent = state.color === "election"
+        ? "Shaded by the 2024 presidential vote."
+        : state.color === "cook" ? "Shaded by the Cook Political Report rating."
+        : "Shaded by " + currentVar().label.toLowerCase() + ".";
+      list.innerHTML = ""; flag.hidden = true;
+      return;
+    }
+    var p = f.properties;
+    idle.hidden = true;
+    var rows = [];
+    if (p.precinct_id) {
+      rt.textContent = p.precinct_id;
+      rows.push(["State", STATE_NAME[p.state] || p.state]);
+      if (p.county_name) rows.push(["County", p.county_name]);
+      rows.push(["District 2024", p.district_2024 || "\u2014"]);
+      rows.push(["District 2026", p.district_2026 || "\u2014"]);
+    } else {
+      rt.textContent = (STATE_NAME[p.state] || p.state) + " \u2014 District " + p.district;
+      rows.push(["Map", p.map]);
+      if (p.map === "2024" && state.incumbents) {
+        var inc = state.incumbents[p.state + "-" + p.district];
+        if (inc && inc.vacant) {
+          rows.push(["Represented by", "<em>vacant</em>"]);
+        } else if (inc && inc.name) {
+          var cls = inc.party === "Democrat" ? "d" : inc.party === "Republican" ? "r" : "";
+          var initial = inc.party ? inc.party.charAt(0) : "";
+          rows.push(["Represented by", inc.name +
+            (initial ? ' <span class="' + cls + '">(' + initial + ")</span>" : "")]);
+        }
+      }
+      if (p.old_district_best_match) {
+        rows.push(["Most of old CD", p.old_district_best_match +
+          " (" + pct(p.overlap_share_of_new) + ")"]);
+      }
+      if (p.new_district_best_successor) {
+        rows.push(["Mostly becomes CD", p.new_district_best_successor +
+          " (" + pct(p.share_of_old_retained) + ")"]);
+      }
+    }
+    // CVAP rather than total population: it is the denominator that matters
+    // for an electorate, and district populations are equalised by design so
+    // they carry almost no information here.
+    var ck = cookRating(f);
+    if (ck) {
+      var ci = COOK_ORDER.indexOf(ck.rating);
+      var ccls = ci < 0 ? "" : ci < 3 ? "d" : "r";
+      rows.push(["Cook rating",
+        '<span class="' + ccls + '">' + ck.rating + "</span>" +
+        (ck.note ? ' <span class="muted">(' + ck.note + ")</span>" : "")]);
+    }
+    rows.push(["Citizen voting-age pop.", fmt(cvapOf(f))]);
+    var s = demShare(p);
+    if (s !== null) {
+      rows.push(["Harris", '<span class="d">' + fmt(p.pres24_dem) + "</span>"]);
+      rows.push(["Trump", '<span class="r">' + fmt(p.pres24_rep) + "</span>"]);
+      var mg = marginLabel(s);
+      rows.push(["2024 margin",
+        '<span class="' + mg.cls + '">' + mg.text + "</span>"]);
+    } else {
+      rows.push(["2024 vote", "no data"]);
+    }
+    if (state.color === "demo") {
+      var dv = currentVar();
+      var x = demoValue(f);
+      var txt;
+      if (x === null || x === undefined) {
+        txt = "no data";
+      } else if (dv.kind === "cat") {
+        var cats = ((state.demoCache[state.focus] || {}).cats)
+                   || state.demoCats || [];
+        txt = cats[x] || "\u2014";
+      } else if (dv.kind === "money") {
+        txt = d3.format("$,.0f")(x);
+      } else if (dv.kind === "pct") {
+        txt = d3.format(".1f")(x) + "%";
+      } else {
+        txt = d3.format(",.1f")(x);
+      }
+      rows.push([dv.label, txt]);
+    }
+    list.innerHTML = rows.map(function (r) {
+      return "<dt>" + r[0] + "</dt><dd>" + r[1] + "</dd>";
+    }).join("");
+
+    var notes = [];
+    if (p.district_changed === "Y") notes.push("District number changed between maps.");
+    if (p.renumbered === "Y") notes.push("Renumbered: its predecessor carries a different number.");
+    if (p.mutual_best_match === "N") notes.push("One-way match \u2014 see methodology.");
+    if (s === null && p.precinct_id) notes.push("No results reported for this precinct.");
+    if (state.color === "demo" && f.__demo && f.__demo.one_tract &&
+        currentVar().tier !== "exact") {
+      notes.push("Every ACS value here comes from a single tract, so this is a "
+               + "tract measurement under a precinct's name.");
+    }
+    flag.hidden = notes.length === 0;
+    flag.textContent = notes.join(" ");
+  }
+
+  function featureAt(ev) {
+    if (!current.length) return null;
+    if (pickDirty) renderPick();
+    var r = cv.getBoundingClientRect();
+    var x = Math.floor((ev.clientX - r.left) * dpr);
+    var y = Math.floor((ev.clientY - r.top) * dpr);
+    if (x < 0 || y < 0 || x >= pick.width || y >= pick.height) return null;
+    var d = pctx.getImageData(x, y, 1, 1).data;
+    if (!d[3]) return null;
+    var i = colorToIdx(d[0], d[1], d[2]);
+    return (i >= 0 && i < current.length) ? current[i] : null;
+  }
+
+  // At national zoom the unit you are pointing at is a state: a district there
+  // is a few pixels wide and picking one is an accident, not a choice. The
+  // squares are the exception, because each one *is* a district and was put
+  // there to be aimed at.
+  function hitAt(ev) {
+    var r = cv.getBoundingClientRect();
+    var c = chicletAt(ev.clientX - r.left, ev.clientY - r.top);
+    if (c) return { f: c, chiclet: true };
+    return { f: featureAt(ev), chiclet: false };
+  }
+
+  var moveTimer = null;
+  cv.addEventListener("mousemove", function (ev) {
+    if (moveTimer) return;
+    moveTimer = setTimeout(function () { moveTimer = null; }, 24);
+    var h = hitAt(ev);
+    var asState = !state.focus && !h.chiclet;
+    var f = asState ? null : h.f;
+    var st = asState ? (h.f ? h.f.properties.state : null) : null;
+    if (f === state.hover && st === state.hoverState) return;
+    state.hover = f; state.hoverState = st;
+    render();
+    if (f) showReadout(f); else showStateReadout(st);
+  });
+  cv.addEventListener("mouseleave", function () {
+    state.hover = null; state.hoverState = null; render(); showReadout(null);
+  });
+
+  cv.addEventListener("click", function (ev) {
+    var f = hitAt(ev).f;
+    if (!f) return;
+    var p = f.properties;
+    if (!state.focus && p.state) { focusState(p.state); return; }
+    // Inside a state, a click singles out a district -- including a click on a
+    // precinct, which singles out the district that precinct is in. Reading one
+    // precinct is what hovering is for.
+    if (state.focus) {
+      var cd = districtOf(p);
+      if (cd && cd !== state.district) focusDistrict(cd);
+    }
+  });
+
+  function stateOutline(st) {
+    var list = (state.basemap && state.basemap.states) || [];
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].properties && list[i].properties.state === st) return list[i];
+    }
+    return null;
+  }
+
+  // Statewide totals, summed over the districts on the map in view. The 2026
+  // map and the 2024 map cover the same ground, so the presidential figures
+  // agree either way; the district count does not, which is the point.
+  function stateReadout(st) {
+    var ds = (state.districts[state.year] || []).filter(function (f) {
+      return f.properties.state === st;
+    });
+    if (!ds.length) return null;
+    var dem = 0, rep = 0, cvap = 0, any = false;
+    for (var i = 0; i < ds.length; i++) {
+      var p = ds[i].properties;
+      if (p.pres24_dem != null) { dem += p.pres24_dem; rep += p.pres24_rep; any = true; }
+      var c = cvapOf(ds[i]);
+      if (c) cvap += c;
+    }
+    return { n: ds.length, dem: dem, rep: rep, cvap: cvap, any: any,
+             share: any && (dem + rep) ? dem / (dem + rep) : null };
+  }
+
+  function showStateReadout(st) {
+    if (!st) { showReadout(null); return; }
+    var r = stateReadout(st);
+    if (!r) { showReadout(null); return; }
+    var rt = document.getElementById("rTitle");
+    var idle = document.getElementById("rIdle");
+    var list = document.getElementById("rList");
+    var flag = document.getElementById("rFlag");
+    rt.textContent = STATE_NAME[st] || st;
+    idle.hidden = true;
+    flag.hidden = true;
+    var rows = [["Districts (" + state.year + " map)", String(r.n)]];
+    if (state.color === "cook" && state.year === "2026" && state.cook) {
+      var watch = COOK_BANDS.reduce(function (acc, b) {
+        return acc + (state.districts["2026"] || []).reduce(function (a, f) {
+          if (f.properties.state !== st) return a;
+          var ck = cookRating(f);
+          return a + (ck && b.cats.indexOf(ck.rating) >= 0 ? 1 : 0);
+        }, 0);
+      }, 0);
+      rows.push(["Races to watch", watch ? String(watch) : "none listed"]);
+    }
+    if (r.cvap) rows.push(["Citizen voting-age pop.", fmt(r.cvap)]);
+    if (r.any) {
+      rows.push(["Harris", '<span class="d">' + fmt(r.dem) + "</span>"]);
+      rows.push(["Trump", '<span class="r">' + fmt(r.rep) + "</span>"]);
+      var mg = marginLabel(r.share);
+      rows.push(["2024 margin", '<span class="' + mg.cls + '">' + mg.text + "</span>"]);
+    }
+    list.innerHTML = rows.map(function (kv) {
+      return "<dt>" + kv[0] + "</dt><dd>" + kv[1] + "</dd>";
+    }).join("");
+  }
+
+  function districtFeature(cd, year) {
+    var list = state.districts[year || state.year] || [];
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].properties.state === state.focus &&
+          list[i].properties.district === cd) return list[i];
+    }
+    return null;
+  }
+
+  // Frame the district together with the counterpart drawn dashed over it:
+  // the comparison is the reason both are on screen, so neither should be
+  // cropped. Where there is no counterpart this is just the district.
+  function districtFrame(cd, year) {
+    var yr = year || state.year;
+    var f = districtFeature(cd, yr);
+    if (!f) return [];
+    var other = yr === "2024" ? "2026" : "2024";
+    var cp = counterpartOf(cd, yr);
+    var cpf = cp ? districtFeature(cp, other) : null;
+    return cpf ? [f, cpf] : [f];
+  }
+
+  function focusDistrict(cd) {
+    var f = districtFeature(cd);
+    if (!f) return;
+    state.district = cd;
+    document.getElementById("back").disabled = false;
+    refreshScales();
+    render();
+    animateZoomTo(boundsTransform(districtFrame(cd), 0.82, 60));
+    showReadout(f);
+    updateHint();
+  }
+
+  function clearDistrict() {
+    state.district = null;
+    refreshScales(); render(); showReadout(null); updateHint();
+    // The projection is still fitted to the state, so the state view is just
+    // the identity transform -- tween back to it rather than refitting.
+    animateZoomTo(d3.zoomIdentity);
+  }
+
+  // What the Map toggle means depends on what is in focus. With a district
+  // singled out it follows the crosswalk to that district's counterpart --
+  // the district on the other map that shares the most people with it --
+  // rather than jumping to whatever happens to carry the same number.
+  function counterpartOf(cd, fromYear) {
+    var f = districtFeature(cd, fromYear);
+    if (!f) return null;
+    var p = f.properties;
+    return fromYear === "2024"
+      ? (p.new_district_best_successor || null)
+      : (p.old_district_best_match || null);
+  }
+
+  function updateHint() {
+    var h = document.getElementById("hint");
+    if (state.district) {
+      var other = state.year === "2024" ? "2026" : "2024";
+      h.textContent = STATE_NAME[state.focus] + " district " + state.district +
+        " \u2014 the dashed outline is the " + other +
+        " district it most overlaps. Switch the map to follow it across" +
+        (state.precincts ? " and watch which precincts come with it" : "") +
+        "; back clears it.";
+    } else if (state.focus) {
+      h.textContent = STATE_NAME[state.focus] + " \u2014 click a " +
+        (state.precincts ? "precinct to single out the district it is in."
+                         : "district to single it out, or turn precincts on.");
+    } else {
+      h.textContent = "Click a state to zoom in and enable precincts.";
+    }
+  }
+
+  /* ------------------------------------------------------------- data load */
+
+  function setStatus(msg) {
+    var el = document.getElementById("status");
+    if (!msg) { el.hidden = true; return; }
+    el.hidden = false; el.textContent = msg;
+  }
+
+  function measure(features) {
+    features.forEach(function (f) { f.__km2 = d3.geoArea(f) * EARTH_KM2; });
+    return features;
+  }
+
+  // Who sits for each district now. These members were elected in November
+  // 2024, so they belong to the 2024 map; the 2026 districts have no
+  // representatives yet, and showing one there would assert an election that
+  // has not happened.
+  function loadIncumbents() {
+    return fetch("data/incumbents.json")
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) { state.incumbents = j; })
+      .catch(function () { state.incumbents = null; });
+  }
+
+  function loadCook() {
+    return fetch("data/cook.json")
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) { state.cook = j; })
+      .catch(function () { state.cook = null; });
+  }
+
+  function loadDemoDistricts() {
+    if (state.demoDistricts) return Promise.resolve(state.demoDistricts);
+    return fetch("data/demo_districts.json")
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) {
+        state.demoDistricts = j ? j.byKey : null;
+        if (j && j.cats) state.demoCats = j.cats;
+        return state.demoDistricts;
+      });
+  }
+
+  function loadBasemap() {
+    return fetch("data/basemap.json")
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (topo) {
+        if (!topo) return;
+        state.basemap = {
+          states: topojson.feature(topo, topo.objects.states).features,
+          nation: topojson.feature(topo, topo.objects.nation).features
+        };
+        // Re-fit, not just redraw: the national view is framed on the country,
+        // so until this file lands there is nothing to frame it on. Whichever
+        // of the two payloads finished last used to win the fit, which is why
+        // the Alaska and Hawaii insets came and went between loads.
+        resize();
+      })
+      .catch(function () { state.basemap = null; });
+  }
+
+  function loadDistricts() {
+    return fetch("data/districts.json").then(function (r) {
+      if (!r.ok) throw new Error("districts " + r.status);
+      return r.json();
+    }).then(function (topo) {
+      var keys = Object.keys(topo.objects);
+      keys.forEach(function (k) {
+        var fc = topojson.feature(topo, topo.objects[k]);
+        var yr = /2026/.test(k) ? "2026" : "2024";
+        state.districts[yr] = measure(fc.features);
+      });
+      setStatus(null);
+      resize();
+      refreshScales();
+      showReadout(null);
+    });
+  }
+
+  // Going in and out of a state changes the projection. A zoom transform
+  // cannot cross that -- the two CRSs share no scale or rotation -- but the
+  // picture still can, because the change is continuous in the only place that
+  // matters: every vertex has a screen position under the old projection and
+  // one under the new, and the straight line between them is a perfectly good
+  // path. So project each ring twice, in pixels, and walk from one to the
+  // other. The map bends into the new projection while it zooms, and nothing
+  // has to be hidden behind a fade.
+  //
+  // This is the idea behind d3's path-tween, applied to the easy case: both
+  // ends come from the same geometry, so the vertices already correspond and
+  // there is nothing to resample.
+  function ringsOf(geom) {
+    var out = [];
+    if (!geom) return out;
+    var c = geom.coordinates;
+    if (geom.type === "Polygon") {
+      for (var i = 0; i < c.length; i++) out.push(c[i]);
+    } else if (geom.type === "MultiPolygon") {
+      for (var j = 0; j < c.length; j++) {
+        for (var k = 0; k < c[j].length; k++) out.push(c[j][k]);
+      }
+    }
+    return out;
+  }
+
+  // The draw list for a transition, always built as the national view: the
+  // other states have to be on screen at the start of the way in and at the
+  // end of the way out. `keep` is the state being entered or left, whose
+  // districts stay at full strength throughout; the rest fade, out on the way
+  // in and in on the way out, because the focused view does not draw them.
+  function morphList(keep, fadeIn) {
+    var T = theme(), out = [], i;
+    if (state.basemap) {
+      for (i = 0; i < state.basemap.nation.length; i++) {
+        out.push({ f: state.basemap.nation[i], fill: T.basefill, a0: 1, a1: 1 });
+      }
+      for (i = 0; i < state.basemap.states.length; i++) {
+        out.push({ f: state.basemap.states[i], stroke: T.baseline, lw: 0.6, a0: 1, a1: 1 });
+      }
+      for (i = 0; i < state.basemap.nation.length; i++) {
+        out.push({ f: state.basemap.nation[i], stroke: T.baseedge, lw: 1, a0: 1, a1: 1 });
+      }
+    }
+    var ds = state.districts[state.year] || [];
+    for (i = 0; i < ds.length; i++) {
+      var f = ds[i], mine = f.properties.state === keep, a = alphaFor(f);
+      out.push({ f: f, fill: fillFor(f.properties, f) || T.nodata,
+                 a0: mine ? a : (fadeIn ? 0 : a),
+                 a1: mine ? a : (fadeIn ? a : 0) });
+    }
+    for (i = 0; i < ds.length; i++) {
+      var g = ds[i], his = g.properties.state === keep;
+      out.push({ f: g, stroke: T.water, lw: 1.1,
+                 a0: his ? 1 : (fadeIn ? 0 : 1),
+                 a1: his ? 1 : (fadeIn ? 1 : 0) });
+    }
+    return out;
+  }
+
+  // Both endpoints in screen pixels: projection, then the zoom transform that
+  // will be in force at that end. Rings a projection rejects are dropped --
+  // geoAlbers returns null nowhere in the lower 48, but a state projection
+  // asked about a far-away point can.
+  function morphPlan(projA, tA, projB, tB, items) {
+    var plan = [];
+    for (var m = 0; m < items.length; m++) {
+      var it = items[m], rings = ringsOf(it.f.geometry), keep = [];
+      for (var r = 0; r < rings.length; r++) {
+        var ring = rings[r], n = ring.length, ok = true;
+        var ax = new Float64Array(n), ay = new Float64Array(n);
+        var bx = new Float64Array(n), by = new Float64Array(n);
+        // A point a state projection is not meant for still projects, just
+        // enormously far away -- Alaska through a Texas conic is thousands of
+        // canvases off. Those rings are dropped rather than swept across the
+        // screen; they are off canvas at both ends anyway.
+        var BOUND = 50 * Math.max(W, H);
+        for (var i = 0; i < n; i++) {
+          var pa = projA(ring[i]), pb = projB(ring[i]);
+          if (!pa || !pb || !isFinite(pa[0]) || !isFinite(pb[0])) { ok = false; break; }
+          if (Math.abs(pb[0]) > BOUND || Math.abs(pb[1]) > BOUND) { ok = false; break; }
+          ax[i] = tA.applyX(pa[0]); ay[i] = tA.applyY(pa[1]);
+          bx[i] = tB.applyX(pb[0]); by[i] = tB.applyY(pb[1]);
+        }
+        if (ok) keep.push({ n: n, ax: ax, ay: ay, bx: bx, by: by });
+      }
+      if (keep.length) {
+        plan.push({ rings: keep, fill: it.fill, stroke: it.stroke,
+                    lw: it.lw, a0: it.a0, a1: it.a1 });
+      }
+    }
+    return plan;
+  }
+
+  // Drawn straight in screen pixels, so line widths are the on-screen widths
+  // render() arrives at after dividing by the zoom scale.
+  function drawPlan(plan, u) {
+    ctx.save();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);   // transparent, exactly as render() leaves it
+    for (var p = 0; p < plan.length; p++) {
+      var o = plan[p], a = o.a0 + (o.a1 - o.a0) * u;
+      if (a <= 0.002) continue;
+      ctx.beginPath();
+      for (var r = 0; r < o.rings.length; r++) {
+        var g = o.rings[r];
+        for (var i = 0; i < g.n; i++) {
+          var x = g.ax[i] + (g.bx[i] - g.ax[i]) * u;
+          var y = g.ay[i] + (g.by[i] - g.ay[i]) * u;
+          if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+      }
+      ctx.globalAlpha = a;
+      if (o.fill) { ctx.fillStyle = o.fill; ctx.fill(); }
+      if (o.stroke) { ctx.strokeStyle = o.stroke; ctx.lineWidth = o.lw; ctx.stroke(); }
+    }
+    ctx.globalAlpha = 1;
+    ctx.restore();
+  }
+
+  var morphAnim = null;
+  function runMorph(plan, dur, done) {
+    if (morphAnim) { cancelAnimationFrame(morphAnim); morphAnim = null; }
+    if (zoomAnim) { cancelAnimationFrame(zoomAnim); zoomAnim = null; }
+    if (fadeAnim) { cancelAnimationFrame(fadeAnim); fadeAnim = null; }
+    var ease = d3.easeCubicInOut, start = performance.now();
+    (function frame() {
+      var e = performance.now() - start;
+      var u = ease(Math.min(e / dur, 1));
+      drawPlan(plan, u);
+      if (e < dur) { morphAnim = requestAnimationFrame(frame); }
+      else { morphAnim = null; done(); }
+    })();
+  }
+
+  // The morph ends on geometry identical to the first real frame after it, so
+  // the hand-back is a cross-fade over a still picture: it carries only the
+  // colour change from rescaling to the new set of features, never a jump.
+  function settle(apply) {
+    snapshot();
+    apply();
+    render();
+    crossFade(200);
+  }
+
+  function fitProjection(proj, features) {
+    proj.fitExtent([[12, 12], [W - 12, H - 12]],
+                   { type: "FeatureCollection", features: features });
+    return proj;
+  }
+
+  function focusState(st) {
+    var base = (state.districts[state.year] || []).filter(function (f) {
+      return f.properties.state === st;
+    });
+    if (!base.length) return;
+    var projB = fitProjection(stateProjection(st), base);
+    var plan = morphPlan(projection, transform, projB, d3.zoomIdentity,
+                         morphList(st, false));
+    runMorph(plan, 760, function () {
+      settle(function () {
+        state.focus = st;
+        state.district = null;
+        state.hover = null; state.hoverState = null;
+        setProjection(projB);
+        transform = d3.zoomIdentity;
+        d3.select(cv).call(zoom.transform, d3.zoomIdentity);
+        document.getElementById("back").disabled = false;
+        document.getElementById("pOff").disabled = false;
+        document.getElementById("pOn").disabled = false;
+        refreshScales();
+        showReadout(null);
+        updateHint();
+      });
+    });
+  }
+
+  function unfocus() {
+    var from = state.focus;
+    var all = state.districts[state.year] || [];
+    if (!all.length) return;
+    var projB = fitProjection(nationalProjection(), nationalExtent());
+    var plan = morphPlan(projection, transform, projB, d3.zoomIdentity,
+                         morphList(from, true));
+    runMorph(plan, 760, function () {
+      settle(function () {
+        state.focus = null; state.district = null;
+        state.precincts = false; state.hover = null; state.hoverState = null;
+        setPressed("pOff", "pOn", false);
+        document.getElementById("pOff").disabled = true;
+        document.getElementById("pOn").disabled = true;
+        document.getElementById("back").disabled = true;
+        setProjection(projB);
+        transform = d3.zoomIdentity;
+        d3.select(cv).call(zoom.transform, d3.zoomIdentity);
+        rebuildVarOptions();
+        if (state.color === "demo") loadDemoDistricts();
+        refreshScales();
+        showReadout(null);
+        updateHint();
+      });
+    });
+  }
+
+  function ensurePrecincts(st) {
+    if (state.precinctCache[st]) return Promise.resolve(state.precinctCache[st]);
+    if (inflight["p" + st]) return inflight["p" + st];
+    setStatus("Loading " + STATE_NAME[st] + " precincts\u2026");
+    inflight["p" + st] = fetch("data/precincts_" + st + ".json").then(function (r) {
+      if (!r.ok) throw new Error("precincts " + r.status);
+      return r.json();
+    }).then(function (topo) {
+      var k = Object.keys(topo.objects)[0];
+      var fc = topojson.feature(topo, topo.objects[k]);
+      // The web tier drops fields the map can rebuild, to keep California's
+      // download down: state is constant per file, and these two are derived.
+      // Precincts RDH draws but reports no blocks for get no county from the
+      // join. Their ids still carry one: "CACHE-:-LEW00:I" names its county,
+      // and California's "06001200100" is state+county+srprec. Recover the
+      // proper spelling from precincts in the same county that did join,
+      // rather than showing a bare uppercase prefix.
+      var byPrefix = {}, byFips = {};
+      fc.features.forEach(function (f) {
+        var q = f.properties;
+        if (!q.county_name) return;
+        var id = q.precinct_id || "";
+        var cut = id.indexOf("-:-");
+        if (cut > 0) byPrefix[id.slice(0, cut).toUpperCase()] = q.county_name;
+        if (/^\d{5}/.test(id)) byFips[id.slice(0, 5)] = q.county_name;
+      });
+      fc.features.forEach(function (f) {
+        var q = f.properties;
+        q.state = st;
+        if (!q.county_name) {
+          var id = q.precinct_id || "";
+          var cut = id.indexOf("-:-");
+          if (cut > 0) q.county_name = byPrefix[id.slice(0, cut).toUpperCase()] || null;
+          else if (/^\d{5}/.test(id)) q.county_name = byFips[id.slice(0, 5)] || null;
+        }
+        q.district_changed =
+          (q.district_2024 && q.district_2026 && q.district_2024 !== q.district_2026)
+            ? "Y" : "N";
+        var tp = (q.pres24_dem || 0) + (q.pres24_rep || 0);
+        q.pres24_two_party_dem_share = tp > 0 ? q.pres24_dem / tp : null;
+      });
+      state.precinctCache[st] = measure(fc.features);
+      attachDemographics(st);
+      setStatus(null);
+      inflight["p" + st] = null;
+      return state.precinctCache[st];
+    }).catch(function (e) {
+      inflight["p" + st] = null;
+      setStatus("Could not load precincts for " + st);
+      setTimeout(function () { setStatus(null); }, 2600);
+      throw e;
+    });
+    return inflight["p" + st];
+  }
+
+  function ensureDemographics(st) {
+    if (state.demoCache[st]) return Promise.resolve(state.demoCache[st]);
+    setStatus("Loading " + STATE_NAME[st] + " demographics\u2026");
+    return fetch("data/demo_" + st + ".json").then(function (r) {
+      if (!r.ok) throw new Error("demographics " + r.status);
+      return r.json();
+    }).then(function (j) {
+      var byId = {};
+      for (var i = 0; i < j.ids.length; i++) {
+        var rec = { largest_race: j.cat[i], one_tract: j.one_tract[i] };
+        if (j.cat_cvap) rec.largest_race_cvap = j.cat_cvap[i];
+        for (var k in j.values) { rec[k] = j.values[k][i]; }
+        byId[j.ids[i]] = rec;
+      }
+      // `limited` names the fields that are NOT sound in this state, and the
+      // states where they are. Driving the warning off this rather than a
+      // hard-coded list means the data decides.
+      state.demoCache[st] = { byId: byId, cats: j.cats, limited: j.limited || {} };
+      attachDemographics(st);
+      setStatus(null);
+      return state.demoCache[st];
+    }).catch(function (e) {
+      setStatus("Could not load demographics for " + st);
+      setTimeout(function () { setStatus(null); }, 2600);
+      throw e;
+    });
+  }
+
+  // Demographics arrive keyed by precinct id, not as feature properties, so the
+  // join happens once here rather than on every frame.
+  function attachDemographics(st) {
+    var cache = state.demoCache[st], feats = state.precinctCache[st];
+    if (!cache || !feats) return;
+    var hit = 0;
+    for (var i = 0; i < feats.length; i++) {
+      var d = cache.byId[feats[i].properties.precinct_id];
+      if (d) { feats[i].__demo = d; hit++; }
+    }
+    cache.matched = hit;
+    cache.total = feats.length;
+  }
+
+  /* ------------------------------------------------------------- legend/UI */
+
+  // Which states a variable IS sound in, when it is not sound in this one.
+  // Comes from the payload, not from a list in this file, so the data decides.
+  // Districts are large enough that nothing is flagged there.
+  function limitedStates(key) {
+    if (state.focus && state.precincts) {
+      var c = state.demoCache[state.focus];
+      if (c && c.limited && c.limited[key]) return c.limited[key];
+    }
+    return null;
+  }
+
+  function atPrecinctLevel() {
+    return !!(state.focus && state.precincts);
+  }
+
+  // Some CVAP race shares hold up for a district and not for a precinct, so
+  // the menu changes with the level rather than offering a variable that
+  // cannot support the view it would be drawn in.
+  function rebuildVarOptions() {
+    var sel = document.getElementById("demoVar");
+    var prec = atPrecinctLevel();
+    var avail = DEMO_VARS.filter(function (v) { return !(v.districtOnly && prec); });
+    sel.innerHTML = "";
+    avail.forEach(function (v) {
+      var o = document.createElement("option");
+      o.value = v.k; o.textContent = v.label;
+      sel.appendChild(o);
+    });
+    if (!avail.some(function (v) { return v.k === state.demoVar; })) {
+      state.demoVar = avail[0].k;
+    }
+    sel.value = state.demoVar;
+  }
+
+  function refreshScales() {
+    buildDensityScale(visibleFeatures());
+    if (state.color === "demo") buildDemoScale(visibleFeatures());
+    updateLegend();
+  }
+
+  function rampCss(interp, n) {
+    var stops = [];
+    for (var i = 0; i <= n; i++) stops.push(interp(i / n));
+    return "linear-gradient(to right," + stops.join(",") + ")";
+  }
+
+  function updateLegend() {
+    var box = document.getElementById("legend");
+    var title = document.getElementById("legendTitle");
+    var ramp = document.getElementById("ramp");
+    var lo = document.getElementById("lo");
+    var hi = document.getElementById("hi");
+    var mid = document.getElementById("mid");
+    mid.textContent = "";
+    box.hidden = false;
+    var sw = document.getElementById("swatches");
+    var note = document.getElementById("tierNote");
+    var bar = document.getElementById("cookBar");
+    sw.hidden = true; note.hidden = true; ramp.hidden = false; bar.hidden = true;
+    box.classList.toggle("cook", state.color === "cook");
+    document.getElementById("lo").parentNode.hidden = false;
+
+    if (state.color === "demo") {
+      var v = currentVar();
+      title.textContent = v.label;
+      note.hidden = false;
+      note.className = "tier";
+      var txt = TIER_NOTE[v.tier];
+      var lim = limitedStates(v.k);
+      if (lim) {
+        note.className = "tier warn";
+        txt = "Not reliable for precincts in " + STATE_NAME[state.focus] +
+              ". Sound only in " + lim.map(function (x) {
+                return STATE_NAME[x] || x;
+              }).join(", ") + ".";
+      }
+      note.textContent = txt;
+      if (v.kind === "cat") {
+        ramp.hidden = true;
+        document.getElementById("lo").parentNode.hidden = true;
+        var cats = (state.focus && state.precincts && state.demoCache[state.focus])
+          ? state.demoCache[state.focus].cats
+          : (state.demoCats || []);
+        sw.hidden = false;
+        sw.innerHTML = cats.map(function (c, i) {
+          return '<span class="sw"><i style="background:' + CAT_COLORS[i] + '"></i>' + c + "</span>";
+        }).join("");
+      } else {
+        ramp.style.background = rampCss(d3.interpolateYlGnBu, 24);
+        if (demoScale) {
+          var f = v.kind === "money" ? d3.format("$,.0f")
+                : v.kind === "pct" ? d3.format(".0f")
+                : d3.format(",.0f");
+          lo.textContent = f(demoScale.lo) + (v.kind === "pct" ? "%" : "");
+          hi.textContent = f(demoScale.hi) + (v.kind === "pct" ? "%" : "");
+        } else { lo.textContent = ""; hi.textContent = ""; }
+      }
+    } else if (state.color === "cook") {
+      title.textContent = "Cook Political Report rating";
+      ramp.hidden = true;
+      document.getElementById("lo").parentNode.hidden = true;
+      note.hidden = false;
+      note.className = "tier";
+      if (state.year !== "2026") {
+        note.className = "tier warn";
+        note.textContent = "Cook rates the seats as they will be contested, "
+          + "so these apply to the 2026 map. Switch the map to 2026.";
+      } else {
+        drawCookBar();
+        bar.hidden = false;
+        note.textContent = (state.cook ? state.cook.source : "Cook Political Report")
+          + ", October 23, 2026. Seats it does not list as competitive are "
+          + "unshaded: the table names the races in play, not which party is "
+          + "safe in the rest.";
+      }
+    } else if (state.color === "election") {
+      title.textContent = "2024 presidential margin";
+      ramp.style.background = "linear-gradient(to right," + theme().stops.join(",") + ")";
+      lo.textContent = "+50 Trump"; hi.textContent = "+50 Harris";
+      mid.textContent = "Even";
+    }
+  }
+
+  // Counts come from whatever is on screen, so the bar is the tally for the
+  // nine states nationally and for one state once you are inside it. The foot
+  // labels carry the same flex ratios as the bands, so each sits under its own.
+  function drawCookBar() {
+    var track = document.getElementById("cbTrack");
+    var foot = document.getElementById("cbFoot");
+    var sum = document.getElementById("cbSum");
+    var ds = (state.districts["2026"] || []).filter(function (f) {
+      return !state.focus || f.properties.state === state.focus;
+    });
+    var counts = COOK_BANDS.map(function (b) {
+      return ds.reduce(function (acc, f) {
+        var r = cookRating(f);
+        return acc + (r && b.cats.indexOf(r.rating) >= 0 ? 1 : 0);
+      }, 0);
+    });
+    var rated = counts.reduce(function (a, b) { return a + b; }, 0);
+    var unrated = ds.length - rated;
+
+    if (!rated) {
+      track.innerHTML = '<div class="cb-seg" style="flex:1;background:' +
+        theme().nodata + ';color:var(--ink-soft)">\u2014</div>';
+      foot.innerHTML = "";
+      sum.textContent = ds.length + " districts, none listed as competitive";
+      return;
+    }
+
+    track.innerHTML = COOK_BANDS.map(function (b, i) {
+      if (!counts[i]) return "";
+      var col = theme().cook[b.cats[0]];
+      // Dark ink on the pale bands, white on the saturated ones.
+      var pale = b.label !== "Likely D" && b.label !== "Likely R";
+      return '<div class="cb-seg" style="flex:' + counts[i] + ";background:" + col +
+             ";color:" + (pale ? "#222222" : "#ffffff") + '">' + counts[i] + "</div>";
+    }).join("");
+
+    foot.innerHTML = COOK_BANDS.map(function (b, i) {
+      return counts[i] ? '<span style="flex:' + counts[i] + '">' + b.label + "</span>" : "";
+    }).join("");
+
+    sum.textContent = rated + " race" + (rated === 1 ? "" : "s") + " to watch" +
+      (unrated ? "  \u00b7  " + unrated + " not listed" : "");
+  }
+
+  function setPressed(offId, onId, on) {
+    document.getElementById(offId).setAttribute("aria-pressed", String(!on));
+    document.getElementById(onId).setAttribute("aria-pressed", String(on));
+  }
+
+  document.getElementById("m2024").addEventListener("click", function () { setYear("2024"); });
+  document.getElementById("m2026").addEventListener("click", function () { setYear("2026"); });
+  function setYear(y) {
+    if (state.year === y) return;
+    var carry = state.district ? counterpartOf(state.district, state.year) : null;
+    state.year = y;
+    document.getElementById("m2024").setAttribute("aria-pressed", String(y === "2024"));
+    document.getElementById("m2026").setAttribute("aria-pressed", String(y === "2026"));
+    if (state.district) {
+      // Follow the district across, not the number: the counterpart is the
+      // district on this map that shares the most population with the one
+      // that was in focus.
+      state.district = carry;
+      var f = state.district ? districtFeature(state.district) : null;
+      if (f) {
+        refreshScales(); render();
+        animateZoomTo(boundsTransform(districtFrame(state.district), 0.82, 60));
+        showReadout(f); updateHint(); return;
+      }
+      clearDistrict(); return;
+    }
+    refreshScales(); render(); showReadout(state.hover);
+  }
+
+  var sel = document.getElementById("demoVar");
+  rebuildVarOptions();
+  sel.addEventListener("change", function () {
+    state.demoVar = sel.value;
+    refreshScales(); render(); showReadout(state.hover);
+  });
+
+  document.getElementById("cElection").addEventListener("click", function () { setColor("election"); });
+  document.getElementById("cDemo").addEventListener("click", function () { setColor("demo"); });
+  document.getElementById("cCook").addEventListener("click", function () { setColor("cook"); });
+
+  function setColor(c) {
+    if (state.color === c) return;
+    if (c === "demo") {
+      // Works at both levels now: precinct demographics when precincts are
+      // drawn, district demographics otherwise, both aggregated from the same
+      // blocks by the same method.
+      var need = (state.focus && state.precincts)
+        ? ensureDemographics(state.focus)
+        : loadDemoDistricts();
+      need.then(function () { applyColor("demo"); }).catch(function () {});
+      return;
+    }
+    if (c === "cook") {
+      // The ratings are for the seats as they will be contested, so they only
+      // describe the 2026 map. Switching to it is what the click means.
+      loadCook().then(function () {
+        if (state.year !== "2026") setYear("2026");
+        applyColor("cook");
+      }).catch(function () {});
+      return;
+    }
+    applyColor(c);
+  }
+
+  function applyColor(c) {
+    state.color = c;
+    ["election", "demo", "cook"].forEach(function (m) {
+      var id = m === "election" ? "cElection" : m === "cook" ? "cCook" : "cDemo";
+      document.getElementById(id).setAttribute("aria-pressed", String(c === m));
+    });
+    document.getElementById("varWrap").hidden = (c !== "demo");
+    refreshScales(); render(); showReadout(state.hover);
+  }
+
+  document.getElementById("pOff").addEventListener("click", function () { setPrecincts(false); });
+  document.getElementById("pOn").addEventListener("click", function () { setPrecincts(true); });
+  function setPrecincts(on) {
+    if (!state.focus || state.precincts === on) return;
+    if (!on) {
+      state.precincts = false; setPressed("pOff", "pOn", false);
+      rebuildVarOptions();
+      if (state.color === "demo") {
+        loadDemoDistricts().then(function () { refreshScales(); render(); });
+        return;
+      }
+      refreshScales(); render(); updateHint(); return;
+    }
+    ensurePrecincts(state.focus)
+      .then(function () { return ensureDemographics(state.focus); })
+      .then(function () {
+        state.precincts = true; setPressed("pOff", "pOn", true);
+        rebuildVarOptions(); refreshScales(); render(); updateHint();
+      }).catch(function () {});
+  }
+
+  document.getElementById("dOff").addEventListener("click", function () { setDensity(false); });
+  document.getElementById("dOn").addEventListener("click", function () { setDensity(true); });
+  function setDensity(on) {
+    if (state.density === on) return;
+    state.density = on; setPressed("dOff", "dOn", on);
+    refreshScales();     // the ramp is fitted to what is on screen
+    render();
+  }
+
+  document.getElementById("back").addEventListener("click", function () {
+    if (state.district) { clearDistrict(); return; }
+    unfocus();
+  });
+
+  // Reset means the whole map. Zoomed into a state, this leaves that state
+  // rather than re-fitting it -- "zoom out fully" should end at all nine.
+  function fitCurrent() {
+    if (state.district) { clearDistrict(); return; }
+    if (state.focus) { unfocus(); return; }
+    var base = state.districts[state.year] || [];
+    if (base.length) fitTo(base);
+  }
+  // Same tween as the district zoom, about the canvas centre.
+  function zoomBy(f) {
+    var cx = W / 2, cy = H / 2;
+    var k1 = Math.max(1, Math.min(220, transform.k * f));
+    var target = d3.zoomIdentity
+      .translate(cx - (cx - transform.x) * (k1 / transform.k),
+                 cy - (cy - transform.y) * (k1 / transform.k))
+      .scale(k1);
+    animateZoomTo(target, 300);
+  }
+  document.getElementById("zIn").addEventListener("click", function () { zoomBy(1.6); });
+  document.getElementById("zOut").addEventListener("click", function () { zoomBy(1 / 1.6); });
+  document.getElementById("zFit").addEventListener("click", function () { fitCurrent(); });
+
+  d3.select(cv).call(zoom);
+  window.addEventListener("resize", function () { resize(); });
+
+  // The webfont arrives after first paint. When it does, the control labels
+  // reflow, the control bar changes height, and the canvas -- sized once from
+  // the old stage height -- ends up taller than its box and paints over the
+  // footer. Re-fit when the font settles, and watch the stage for any other
+  // reflow (the controls wrap at narrow widths too).
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { resize(); });
+  }
+  if (window.ResizeObserver) {
+    var ro = new ResizeObserver(function () { resize(); });
+    ro.observe(document.getElementById("stage"));
+  }
+
+  loadIncumbents();
+  loadCook();
+  loadDemoDistricts();
+  loadBasemap();
+  loadDistricts().catch(function (e) {
+    setStatus("Could not load district data: " + e.message);
+  });
+})();
+</script>
