@@ -30,7 +30,10 @@
        because 7.8% of precincts have no reported result. */
     --nodata: #bebcba;
     --zoom-glyph: #6b6b6b;
-    --basefill: #f2f2f0;
+    /* The page colour. States carry no fill of their own: their outlines do
+       the work, the way the Post's do, and the only fill on the map is a
+       value somebody is meant to read. */
+    --basefill: #ffffff;
     --baseline: #dcdcd8;
     --baseedge: #b9b9b4;
     --ramp0: #be2c25; --ramp1: #d35f4f; --ramp2: #f9dddb; --ramp3: #f7f7f7;
@@ -62,7 +65,7 @@
       --link: #4a9de2;
       --dem: #5784c5; --rep: #d35f4f; --water: #141414; --nodata: #4a4a4a;
       --zoom-glyph: #a0a0a0;
-      --basefill: #1e1e1e; --baseline: #333333; --baseedge: #4d4d4d;
+      --basefill: #141414; --baseline: #333333; --baseedge: #4d4d4d;
       --ramp0: #be2c25; --ramp1: #a8453d; --ramp2: #6b3a37; --ramp3: #1f1f1f;
       --ramp4: #2f4c70; --ramp5: #5784c5; --ramp6: #8fbcea;
       --cook-likelyD: #2f6fc0; --cook-leanD: #7ea7d8; --cook-toss: #c08f2c;
@@ -77,7 +80,7 @@
     --link: #4a9de2;
     --dem: #5784c5; --rep: #d35f4f; --water: #141414; --nodata: #4a4a4a;
     --zoom-glyph: #a0a0a0;
-    --basefill: #1e1e1e; --baseline: #333333; --baseedge: #4d4d4d;
+    --basefill: #141414; --baseline: #333333; --baseedge: #4d4d4d;
     --ramp0: #be2c25; --ramp1: #a8453d; --ramp2: #6b3a37; --ramp3: #1f1f1f;
     --ramp4: #2f4c70; --ramp5: #5784c5; --ramp6: #8fbcea;
     --cook-likelyD: #2f6fc0; --cook-leanD: #7ea7d8; --cook-toss: #c08f2c;
@@ -1309,11 +1312,16 @@
     }
 
     // District borders on top
+    // District lines are drawn in the water colour, which reads as a parting
+    // between two filled districts. A district left unfilled -- one the redraw
+    // did not touch -- needs the opposite: a line that shows against the page,
+    // the same grey the state borders use.
     var bd = backdrop();
     ctx.lineWidth = (showingPrecincts ? 1.6 : 1.1) / transform.k;
-    ctx.strokeStyle = theme().water;
     for (var k = 0; k < bd.length; k++) {
       if (!inPanel(pn, bd[k])) continue;
+      ctx.strokeStyle = (bd[k].__same && !state.district)
+        ? theme().baseline : theme().water;
       ctx.beginPath(); path(bd[k]); ctx.stroke();
     }
 
