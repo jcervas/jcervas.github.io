@@ -1105,6 +1105,16 @@
   // they land in that panel's empty corner.
   var SPLIT_GROUPS = [["LA", "AL", "TN", "OH", "NC", "FL"], ["CA", "UT", "TX"]];
   var SPLIT_MAX_W = 620;
+  // The panel rect is also the clip, so this is what keeps the surrounding
+  // states from running flat into the edge of the screen.
+  var SPLIT_PAD = 13;
+  // And the same for the single-panel view, where the country was fitted
+  // twelve pixels from its own canvas edge and read as cropped rather than
+  // placed.
+  var MAP_PAD = 22;
+  function mapExtent() {
+    return [[MAP_PAD, MAP_PAD], [W - MAP_PAD, H - MAP_PAD]];
+  }
   var splitPanels = null;
 
   function splitMode() {
@@ -1128,7 +1138,7 @@
     var lg = document.getElementById("legend");
     var reserve = (lg && !lg.hidden) ? lg.offsetHeight + 18 : 0;
     var avail = Math.max(220, H - reserve);
-    var gap = 10, out = [], groups = [];
+    var gap = 14, out = [], groups = [];
     for (var i = 0; i < SPLIT_GROUPS.length; i++) {
       var grp = SPLIT_GROUPS[i];
       var feats = ds.filter(function (f) {
@@ -1151,7 +1161,7 @@
     // whichever group needs the smaller one, so giving that group the taller
     // panel raises the scale for both until the two are equally tight. The
     // bisection finds that point without caring which group it is.
-    var total = Math.max(160, avail - gap);
+    var total = Math.max(160, avail - gap - 2 * SPLIT_PAD);
     var lo = 70, hi = total - 70;
     for (var it = 0; it < 20; it++) {
       var mid = (lo + hi) / 2;
@@ -1164,12 +1174,12 @@
     var h0 = Math.round(lo), h1 = total - h0;
     var k = Math.min(fitScale(groups[0].feats, h0), fitScale(groups[1].feats, h1));
 
-    var hs = [h0, h1], y = 0;
+    var hs = [h0, h1], y = SPLIT_PAD, pw = W - 2 * SPLIT_PAD;
     for (var j = 0; j < groups.length; j++) {
       var q = groups[j], ph = hs[j];
-      out.push({ x: 0, y: y, w: W, h: ph, states: q.grp, t: d3.zoomIdentity,
-                 proj: null, path: null, pick: null });
-      var proj = centreOn(q.feats, k, 0, y, W, ph);
+      out.push({ x: SPLIT_PAD, y: y, w: pw, h: ph, states: q.grp,
+                 t: d3.zoomIdentity, proj: null, path: null, pick: null });
+      var proj = centreOn(q.feats, k, SPLIT_PAD, y, pw, ph);
       out[j].proj = proj;
       out[j].path = d3.geoPath(proj, ctx);
       out[j].pick = d3.geoPath(proj, pctx);
@@ -1180,8 +1190,9 @@
 
   // The scale these features need to fit a panel this tall at the full width.
   function fitScale(feats, h) {
+    var pw = W - 2 * SPLIT_PAD;
     return d3.geoAlbersUsa().fitExtent(
-      [[8, 8], [W - 8, Math.max(20, h) - 8]],
+      [[6, 6], [pw - 6, Math.max(20, h) - 6]],
       { type: "FeatureCollection", features: feats }).scale();
   }
 
@@ -1468,7 +1479,7 @@
 
   function fitTo(features) {
     var fc = { type: "FeatureCollection", features: features };
-    projection.fitExtent([[12, 12], [W - 12, H - 12]], fc);
+    projection.fitExtent(mapExtent(), fc);
     transform = d3.zoomIdentity;
     d3.select(cv).call(zoom.transform, d3.zoomIdentity);
   }
@@ -1486,7 +1497,7 @@
       : nationalExtent();
     if (base.length) {
       var fc = { type: "FeatureCollection", features: base };
-      projection.fitExtent([[12, 12], [W - 12, H - 12]], fc);
+      projection.fitExtent(mapExtent(), fc);
     }
     buildPanels();
     syncZoomControls();
@@ -2097,7 +2108,7 @@
   }
 
   function fitProjection(proj, features) {
-    proj.fitExtent([[12, 12], [W - 12, H - 12]],
+    proj.fitExtent(mapExtent(),
                    { type: "FeatureCollection", features: features });
     return proj;
   }
