@@ -311,7 +311,17 @@
       left: 10px; right: 10px; bottom: 52px;
       max-width: none; font-size: 11.5px; padding: 8px 10px;
     }
-    .stage.split .legend { bottom: 10px; }
+    /* Split, the legend is not an overlay on spare map but a claim on the
+       panels' height: every pixel it takes comes straight off the scale. */
+    .stage.split .legend {
+      bottom: 8px; padding: 6px 9px; font-size: 11px; line-height: 13px;
+    }
+    .stage.split .legend .lt { margin-bottom: 0.25rem; }
+    .stage.split .ramp { height: 7px; }
+    .stage.split .legend .tier {
+      margin-top: 0.28rem; padding-top: 0.24rem; font-size: 10px; line-height: 12px;
+    }
+    .stage.split .cb-sum { margin-top: 2px; font-size: 10px; }
     .legend.cook { max-width: none; }
     .swatches { grid-template-columns: repeat(2, 1fr); }
     .cb-foot span { font-size: 9px; }
@@ -1103,7 +1113,12 @@
 
   function buildPanels() {
     splitPanels = null;
-    if (!splitMode()) return;
+    // The class goes on before the legend is measured, not after: split styling
+    // shrinks the legend, and measuring it at its desktop height would hand
+    // back space the panels then never use.
+    var want = splitMode(), stage = document.getElementById("stage");
+    stage.classList.toggle("split", want);
+    if (!want) return;
     var ds = state.districts[state.year] || [];
     // The legend is an overlay the full width of a phone, so the panels have
     // to be fitted above it or the lower one draws underneath it. Measured
@@ -1112,22 +1127,73 @@
     var lg = document.getElementById("legend");
     var reserve = (lg && !lg.hidden) ? lg.offsetHeight + 18 : 0;
     var avail = Math.max(220, H - reserve);
-    var gap = 10, ph = Math.floor((avail - gap) / 2), out = [];
+    var gap = 10, out = [], groups = [];
     for (var i = 0; i < SPLIT_GROUPS.length; i++) {
       var grp = SPLIT_GROUPS[i];
       var feats = ds.filter(function (f) {
         return grp.indexOf(f.properties.state) >= 0;
       });
-      if (!feats.length) return;             // all or nothing
-      var y = i * (ph + gap);
-      var proj = d3.geoAlbersUsa().fitExtent(
-        [[8, y + 8], [W - 8, y + ph - 8]],
-        { type: "FeatureCollection", features: feats });
-      out.push({ x: 0, y: y, w: W, h: ph, states: grp, t: d3.zoomIdentity,
-                 proj: proj, path: d3.geoPath(proj, ctx),
-                 pick: d3.geoPath(proj, pctx) });
+      if (!feats.length) {                   // all or nothing
+        stage.classList.remove("split");
+        return;
+      }
+      groups.push({ grp: grp, feats: feats });
+    }
+
+    // Both panels draw at one scale. Fitting each group to its own panel
+    // independently is the obvious thing and it is wrong: the groups are not
+    // the same shape, so they come out at different scales and a district in
+    // one panel draws larger than the same-sized district in the other. One
+    // scale is what makes the two read as a single map folded in half.
+    //
+    // Which means the height is worth dividing unevenly. The shared scale is
+    // whichever group needs the smaller one, so giving that group the taller
+    // panel raises the scale for both until the two are equally tight. Here
+    // the western group is the binding one and gains about six per cent.
+    var total = Math.max(160, avail - gap);
+    var lo = 70, hi = total - 70;
+    for (var it = 0; it < 20; it++) {
+      var mid = (lo + hi) / 2;
+      if (fitScale(groups[0].feats, mid) < fitScale(groups[1].feats, total - mid)) {
+        lo = mid;                            // the first group wants more room
+      } else {
+        hi = mid;
+      }
+    }
+    var h0 = Math.round(lo), h1 = total - h0;
+    var k = Math.min(fitScale(groups[0].feats, h0), fitScale(groups[1].feats, h1));
+
+    var hs = [h0, h1], y = 0;
+    for (var j = 0; j < groups.length; j++) {
+      var q = groups[j], ph = hs[j];
+      out.push({ x: 0, y: y, w: W, h: ph, states: q.grp, t: d3.zoomIdentity,
+                 proj: null, path: null, pick: null });
+      var proj = centreOn(q.feats, k, 0, y, W, ph);
+      out[j].proj = proj;
+      out[j].path = d3.geoPath(proj, ctx);
+      out[j].pick = d3.geoPath(proj, pctx);
+      y += ph + gap;
     }
     splitPanels = out;
+  }
+
+  // The scale these features need to fit a panel this tall at the full width.
+  function fitScale(feats, h) {
+    return d3.geoAlbersUsa().fitExtent(
+      [[8, 8], [W - 8, Math.max(20, h) - 8]],
+      { type: "FeatureCollection", features: feats }).scale();
+  }
+
+  // A projection at a given scale, shifted so the features sit in the middle
+  // of the rectangle. Translate moves the whole composite, so measuring the
+  // bounds at the origin and offsetting by the difference is exact.
+  function centreOn(feats, k, x, y, w, h) {
+    var proj = d3.geoAlbersUsa().scale(k).translate([0, 0]);
+    var b = d3.geoPath(proj).bounds({ type: "FeatureCollection", features: feats });
+    return proj.translate([
+      x + w / 2 - (b[0][0] + b[1][0]) / 2,
+      y + h / 2 - (b[0][1] + b[1][1]) / 2
+    ]);
   }
 
   // One panel covering the stage is the ordinary case; the split is the
@@ -2112,7 +2178,6 @@
   // carrying two maps. The controls go away rather than sitting there inert.
   function syncZoomControls() {
     document.getElementById("zoomButtons").hidden = !!splitPanels;
-    document.getElementById("stage").classList.toggle("split", !!splitPanels);
   }
 
   function ensurePrecincts(st) {
