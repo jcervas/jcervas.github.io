@@ -789,8 +789,106 @@
   // nowhere to land. The Post answers this with one square per race, sized for
   // the eye rather than for the geography, over plain state outlines. Inside a
   // state there is room for the real shapes, so the squares are national only.
+  // Squares at every zoom, not just the national view. A district is never
+  // filled with its rating: the fill says whether the redraw touched it, the
+  // square says what Cook makes of the race. Keeping them separate means a
+  // seat that is competitive but was not redrawn -- FL-07, NC-11, NC-13 --
+  // still shows its rating while still reading as context.
   function chicletMode() {
-    return state.color === "cook" && !state.focus && state.year === "2026";
+    return state.color === "cook" && state.year === "2026";
+  }
+
+  /* --------------------------------------------- a point inside the shape */
+  // The centroid of a district drawn to be awkward is regularly outside it,
+  // and a marker sitting outside the thing it marks is worse than none. This
+  // is the pole of inaccessibility: the interior point furthest from any
+  // edge, found by sampling a grid over the largest ring and tightening
+  // around the best sample. Computed once per district, in lon/lat, so it
+  // survives every projection and zoom the page puts it through.
+  function ringsOfPoly(geom) {
+    var c = geom && geom.coordinates;
+    if (!c) return [];
+    if (geom.type === "Polygon") return [c];
+    if (geom.type === "MultiPolygon") return c;
+    return [];
+  }
+
+  function ringArea(r) {
+    var a = 0;
+    for (var i = 0, m = r.length - 1; i < m; i++) {
+      a += r[i][0] * r[i + 1][1] - r[i + 1][0] * r[i][1];
+    }
+    return Math.abs(a / 2);
+  }
+
+  function inRing(x, y, r) {
+    var inside = false;
+    for (var i = 0, j = r.length - 1; i < r.length; j = i++) {
+      var xi = r[i][0], yi = r[i][1], xj = r[j][0], yj = r[j][1];
+      if ((yi > y) !== (yj > y) &&
+          x < (xj - xi) * (y - yi) / (yj - yi) + xi) inside = !inside;
+    }
+    return inside;
+  }
+
+  function edgeDist(x, y, r) {
+    var best = Infinity;
+    for (var i = 0, j = r.length - 1; i < r.length; j = i++) {
+      var ax = r[j][0], ay = r[j][1], dx = r[i][0] - ax, dy = r[i][1] - ay;
+      var t = (dx || dy) ? ((x - ax) * dx + (y - ay) * dy) / (dx * dx + dy * dy) : 0;
+      t = t < 0 ? 0 : t > 1 ? 1 : t;
+      var px = ax + t * dx - x, py = ay + t * dy - y;
+      var d = px * px + py * py;
+      if (d < best) best = d;
+    }
+    return Math.sqrt(best);
+  }
+
+  function innerPoint(f) {
+    if (f.__pole !== undefined) return f.__pole;
+    var polys = ringsOfPoly(f.geometry), big = null, bigA = -1;
+    for (var i = 0; i < polys.length; i++) {
+      var a = ringArea(polys[i][0]);
+      if (a > bigA) { bigA = a; big = polys[i]; }
+    }
+    if (!big) return (f.__pole = null);
+    var outer = big[0], holes = big.slice(1);
+    var x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    for (var p = 0; p < outer.length; p++) {
+      var q = outer[p];
+      if (q[0] < x0) x0 = q[0];
+      if (q[0] > x1) x1 = q[0];
+      if (q[1] < y0) y0 = q[1];
+      if (q[1] > y1) y1 = q[1];
+    }
+    function score(x, y) {
+      if (!inRing(x, y, outer)) return -1;
+      for (var h = 0; h < holes.length; h++) if (inRing(x, y, holes[h])) return -1;
+      var d = edgeDist(x, y, outer);
+      for (var g = 0; g < holes.length; g++) {
+        var dh = edgeDist(x, y, holes[g]);
+        if (dh < d) d = dh;
+      }
+      return d;
+    }
+    var bx = (x0 + x1) / 2, by = (y0 + y1) / 2, bs = score(bx, by);
+    var spanX = (x1 - x0) / 2, spanY = (y1 - y0) / 2;
+    for (var round = 0; round < 4; round++) {
+      var n = round ? 4 : 12, cx = bx, cy = by, found = false, fx = 0, fy = 0;
+      for (var ix = -n; ix <= n; ix++) {
+        for (var iy = -n; iy <= n; iy++) {
+          var x = cx + spanX * ix / n, y = cy + spanY * iy / n;
+          var sc = score(x, y);
+          if (sc > bs) { bs = sc; fx = x; fy = y; found = true; }
+        }
+      }
+      if (found) { bx = fx; by = fy; }
+      spanX /= 3; spanY /= 3;
+    }
+    // A district too thin for any sample to land inside falls back to the
+    // spherical centroid, which is at least deterministic.
+    f.__pole = bs > 0 ? [bx, by] : d3.geoCentroid(f);
+    return f.__pole;
   }
 
   var CHIC = 17, CHIC_R = 5, CHIC_GAP = 2.5;
@@ -804,9 +902,12 @@
     var ds = state.districts["2026"] || [];
     var want = [];
     for (var i = 0; i < ds.length; i++) {
+      // Inside a state, only that state's: the others project somewhere
+      // arbitrary under its CRS and would be squares pointing at nothing.
+      if (state.focus && ds[i].properties.state !== state.focus) continue;
       if (cookCompetitive(ds[i])) want.push(ds[i]);
     }
-    var key = state.year + ":" + want.length;
+    var key = state.year + ":" + (state.focus || "-") + ":" + want.length;
     if (!chiclets || chicletKey !== key) {
       chiclets = want.map(function (f) { return { f: f, x: 0, y: 0, seeded: false }; });
       chicletKey = key;
@@ -814,8 +915,9 @@
     for (var j = 0; j < chiclets.length; j++) {
       var c = chiclets[j];
       var pn = panelOf(c.f);
-      var ctr = pn ? pn.path.centroid(c.f) : [NaN, NaN];
-      if (!pn || !isFinite(ctr[0])) { c.dead = true; continue; }
+      var ll = innerPoint(c.f);
+      var ctr = (pn && ll) ? pn.proj(ll) : null;
+      if (!pn || !ctr || !isFinite(ctr[0])) { c.dead = true; continue; }
       c.dead = false;
       c.pn = pn;
       c.ax = pn.t.applyX(ctr[0]);
