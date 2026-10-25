@@ -374,6 +374,7 @@
       <button id="cElection" aria-pressed="true">2024 result</button>
       <button id="cDemo" aria-pressed="false">Demographics</button>
       <button id="cCook" aria-pressed="false">Cook rating</button>
+      <button id="cFlip" aria-pressed="false">Seats in play</button>
     </div>
   </div>
 
@@ -803,8 +804,100 @@
   // square says what Cook makes of the race. Keeping them separate means a
   // seat that is competitive but was not redrawn -- FL-07, NC-11, NC-13 --
   // still shows its rating while still reading as context.
+  // Which seats the redraw puts in play. Cook rates each 2026 seat and names
+  // the party sitting for it now, so the pair of fields is already the
+  // comparison this mode wants: a rating for the party that does not hold the
+  // seat is a flip, and a Toss Up is a seat Cook will not call either way.
+  // Incumbency enters twice -- the held party is the member's, and an open
+  // seat is one with no incumbent on the ballot, which is why a Likely rating
+  // counts as in play where the same rating with a member running does not.
+  //
+  // A seat whose holder Cook does not record cannot be judged against the
+  // rating at all, so it is left out rather than counted as safe.
+  var FLIP_BANDS = [
+    { cat: "flipD", label: "Likely flip \u2192 D", tone: "Solid Democrat" },
+    { cat: "leanD", label: "Lean flip \u2192 D",   tone: "Likely Democrat" },
+    { cat: "toss",  label: "Toss-up",               tone: "Toss Up" },
+    { cat: "leanR", label: "Lean flip \u2192 R",   tone: "Likely Republican" },
+    { cat: "flipR", label: "Likely flip \u2192 R", tone: "Solid Republican" },
+    { cat: "risk",  label: "Hold at risk",          tone: null }
+  ];
+
+  var FLIP_PHRASE = {
+    flipD: "Likely to flip to the Democrats",
+    leanD: "Leaning to a Democratic flip",
+    toss: "Toss-up",
+    leanR: "Leaning to a Republican flip",
+    flipR: "Likely to flip to the Republicans",
+    risk: "Hold, at risk",
+    safe: "Safe hold",
+    unknown: "Not judged"
+  };
+
+  function flipInfo(f) {
+    var r = cookRating(f);
+    if (!r || !r.rating) return null;
+    var held = r.party === "D" || r.party === "R" ? r.party : null;
+    var want = /Democrat$/.test(r.rating) ? "D"
+             : /Republican$/.test(r.rating) ? "R" : null;
+    var lean = r.rating.indexOf("Lean") === 0;
+    var likely = r.rating.indexOf("Likely") === 0;
+    var cat;
+    if (!want) cat = "toss";                       // Cook calls it for nobody
+    else if (!held) cat = "unknown";
+    else if (want !== held) cat = lean ? (want === "D" ? "leanD" : "leanR")
+                                       : (want === "D" ? "flipD" : "flipR");
+    else if (lean || (likely && r.open)) cat = "risk";
+    else cat = "safe";
+    return { cat: cat, rating: r.rating, held: held, open: !!r.open,
+             label: FLIP_PHRASE[cat] };
+  }
+
+  function flipInPlay(f) {
+    var i = flipInfo(f);
+    return !!i && i.cat !== "safe" && i.cat !== "unknown";
+  }
+
+  // Hue is the party expected to win the seat, lightness how much of a change
+  // that would be -- the Cook palette's own grammar, read off a different
+  // question. A hold at risk takes its holder's palest tone, so the map still
+  // says who is defending it.
+  function flipFill(cat, held) {
+    var T = theme();
+    if (cat === "risk") {
+      return T.cook[held === "D" ? "Lean Democrat" : "Lean Republican"];
+    }
+    for (var i = 0; i < FLIP_BANDS.length; i++) {
+      if (FLIP_BANDS[i].cat === cat) return T.cook[FLIP_BANDS[i].tone];
+    }
+    return T.nodata;
+  }
+
+  function flipColor(f) {
+    if (chicletMode()) return null;   // the squares carry it instead
+    var i = flipInfo(f);
+    return i && i.cat !== "safe" && i.cat !== "unknown"
+      ? flipFill(i.cat, i.held) : null;
+  }
+
   function chicletMode() {
-    return state.color === "cook" && state.year === "2026";
+    return (state.color === "cook" || state.color === "flip") &&
+      state.year === "2026";
+  }
+
+  // Both rating modes put squares on the map; they differ in which seats earn
+  // one and what colour it takes.
+  function wantsSquare(f) {
+    return state.color === "flip" ? flipInPlay(f) : cookCompetitive(f);
+  }
+
+  function squareFill(f) {
+    if (state.color === "flip") {
+      var i = flipInfo(f);
+      return i ? flipFill(i.cat, i.held) : theme().nodata;
+    }
+    var r = cookRating(f);
+    return (r && theme().cook[r.rating]) || theme().nodata;
   }
 
   /* --------------------------------------------- a point inside the shape */
@@ -914,9 +1007,10 @@
       // Inside a state, only that state's: the others project somewhere
       // arbitrary under its CRS and would be squares pointing at nothing.
       if (state.focus && ds[i].properties.state !== state.focus) continue;
-      if (cookCompetitive(ds[i])) want.push(ds[i]);
+      if (wantsSquare(ds[i])) want.push(ds[i]);
     }
-    var key = state.year + ":" + (state.focus || "-") + ":" + want.length;
+    var key = state.color + ":" + state.year + ":" +
+      (state.focus || "-") + ":" + want.length;
     if (!chiclets || chicletKey !== key) {
       chiclets = want.map(function (f) { return { f: f, x: 0, y: 0, seeded: false }; });
       chicletKey = key;
@@ -1073,13 +1167,17 @@
       ctx.beginPath(); ctx.moveTo(c.ax, c.ay); ctx.lineTo(c.x, c.y); ctx.stroke();
     }
     for (var m = 0; m < live.length; m++) {
-      var d = live[m], rt = cookRating(d.f);
+      var d = live[m];
+      // In the flip mode a seat the redraw did not touch is in play on its
+      // own account, not because of the redraw, so its square is hollow: the
+      // rating still shows, the claim about the redraw does not.
+      var hollow = state.color === "flip" && d.f.__same;
       roundRect(ctx, d.x - h, d.y - h, CHIC, CHIC, CHIC_R);
-      ctx.fillStyle = T.cook[rt.rating] || T.nodata;
+      ctx.fillStyle = hollow ? T.paper : squareFill(d.f);
       ctx.fill();
       var on = state.hover === d.f;
-      ctx.strokeStyle = on ? T.ink : T.baseedge;
-      ctx.lineWidth = on ? 2 : 1;
+      ctx.strokeStyle = on ? T.ink : hollow ? squareFill(d.f) : T.baseedge;
+      ctx.lineWidth = (on || hollow) ? 2 : 1;
       ctx.stroke();
     }
     ctx.restore();
@@ -1101,6 +1199,7 @@
   function baseFill(p, f) {
     if (state.color === "election") return electionColor(p);
     if (state.color === "cook") return cookColor(f);
+    if (state.color === "flip") return flipColor(f);
     return demoColor(f);
   }
 
@@ -1696,6 +1795,8 @@
       idle.textContent = state.color === "election"
         ? "Shaded by the 2024 presidential vote."
         : state.color === "cook" ? "Shaded by the Cook Political Report rating."
+        : state.color === "flip"
+          ? "Squares mark the seats that could change hands."
         : "Shaded by " + currentVar().label.toLowerCase() + ".";
       list.innerHTML = ""; flag.hidden = true;
       return;
@@ -1749,6 +1850,20 @@
       rows.push(["Cook rating",
         '<span class="' + ccls + '">' + ck.rating + "</span>" +
         (aside.length ? ' <span class="muted">(' + aside.join("; ") + ")</span>" : "")]);
+    }
+    if (state.color === "flip") {
+      var fi = flipInfo(f);
+      if (fi) {
+        var fcls = /D$/.test(fi.cat) ? "d" : /R$/.test(fi.cat) ? "r" : "";
+        var held = fi.held ? (fi.held === "D" ? "D-held" : "R-held") : null;
+        var side = [];
+        if (held) side.push(held);
+        if (fi.open) side.push("open");
+        if (!fi.held) side.push("no sitting party recorded");
+        rows.push(["If the rating holds",
+          '<span class="' + fcls + '">' + fi.label + "</span>" +
+          (side.length ? ' <span class="muted">(' + side.join(", ") + ")</span>" : "")]);
+      }
     }
     rows.push(["Citizen voting-age pop.", fmt(cvapOf(f))]);
     var s = demShare(p);
@@ -1916,6 +2031,12 @@
         return a + (f.properties.state === st && cookRating(f) ? 1 : 0);
       }, 0);
       rows.push(["Races to watch", watch ? String(watch) : "none listed"]);
+    }
+    if (state.color === "flip" && state.year === "2026" && state.cook) {
+      var inplay = (state.districts["2026"] || []).reduce(function (a, f) {
+        return a + (f.properties.state === st && flipInPlay(f) ? 1 : 0);
+      }, 0);
+      rows.push(["Seats in play", inplay ? String(inplay) : "none"]);
     }
     if (r.cvap) rows.push(["Citizen voting-age pop.", fmt(r.cvap)]);
     if (r.any) {
@@ -2517,7 +2638,7 @@
     var bar = document.getElementById("cookBar");
     sw.hidden = true; note.hidden = true; ramp.hidden = false; bar.hidden = true;
     document.getElementById("sameNote").hidden = true;
-    box.classList.toggle("cook", state.color === "cook");
+    box.classList.toggle("cook", state.color === "cook" || state.color === "flip");
     document.getElementById("lo").parentNode.hidden = false;
 
     if (state.color === "demo") {
@@ -2573,6 +2694,36 @@
           + " districts in these states are rated; the squares mark the ones "
           + "Cook does not call solid.";
       }
+    } else if (state.color === "flip") {
+      title.textContent = "Seats in play";
+      ramp.hidden = true;
+      document.getElementById("lo").parentNode.hidden = true;
+      note.hidden = false;
+      note.className = "tier";
+      if (state.year !== "2026") {
+        note.className = "tier warn";
+        note.textContent = "The ratings describe the seats as they will be "
+          + "contested, so this reads the 2026 map. Switch the map to 2026.";
+      } else {
+        var tally = flipTally();
+        sw.hidden = false;
+        sw.innerHTML = FLIP_BANDS.map(function (b) {
+          var chip = b.cat === "risk"
+            ? "linear-gradient(90deg," + flipFill("risk", "D") + " 50%,"
+              + flipFill("risk", "R") + " 50%)"
+            : flipFill(b.cat);
+          return '<span class="sw"><i style="background:' + chip + '"></i>' +
+            b.label + ' <span class="muted">' + (tally[b.cat] || 0) + "</span></span>";
+        }).join("");
+        note.textContent = "A square marks a seat Cook rates for the party "
+          + "that does not hold it, calls a toss-up, or rates no better than "
+          + "Lean for the party defending it \u2014 an open seat counts a tier "
+          + "weaker, having no incumbent on the ballot. A hollow square is a "
+          + "seat in play that the redraw did not touch. The other "
+          + tally.safe + " rated seats are safe holds"
+          + (tally.unknown ? ", and " + tally.unknown
+             + " has no sitting party recorded." : ".");
+      }
     } else if (state.color === "election") {
       title.textContent = "2024 presidential margin";
       ramp.style.background = "linear-gradient(to right," + theme().stops.join(",") + ")";
@@ -2580,6 +2731,19 @@
       mid.textContent = "Even";
     }
     noteUnchanged();
+  }
+
+  // Counted over the same set the squares are laid out from, so the legend
+  // tallies what is on screen: nine states nationally, one state inside it.
+  function flipTally() {
+    var out = { safe: 0, unknown: 0 };
+    var ds = state.districts["2026"] || [];
+    for (var i = 0; i < ds.length; i++) {
+      if (state.focus && ds[i].properties.state !== state.focus) continue;
+      var fi = flipInfo(ds[i]);
+      if (fi) out[fi.cat] = (out[fi.cat] || 0) + 1;
+    }
+    return out;
   }
 
   // The unshaded districts inside the nine states need accounting for, or they
@@ -2707,6 +2871,7 @@
   document.getElementById("cElection").addEventListener("click", function () { setColor("election"); });
   document.getElementById("cDemo").addEventListener("click", function () { setColor("demo"); });
   document.getElementById("cCook").addEventListener("click", function () { setColor("cook"); });
+  document.getElementById("cFlip").addEventListener("click", function () { setColor("flip"); });
 
   function setColor(c) {
     if (state.color === c) return;
@@ -2720,12 +2885,12 @@
       need.then(function () { applyColor("demo"); }).catch(function () {});
       return;
     }
-    if (c === "cook") {
+    if (c === "cook" || c === "flip") {
       // The ratings are for the seats as they will be contested, so they only
       // describe the 2026 map. Switching to it is what the click means.
       loadCook().then(function () {
         if (state.year !== "2026") setYear("2026");
-        applyColor("cook");
+        applyColor(c);
       }).catch(function () {});
       return;
     }
@@ -2734,8 +2899,9 @@
 
   function applyColor(c) {
     state.color = c;
-    ["election", "demo", "cook"].forEach(function (m) {
-      var id = m === "election" ? "cElection" : m === "cook" ? "cCook" : "cDemo";
+    ["election", "demo", "cook", "flip"].forEach(function (m) {
+      var id = m === "election" ? "cElection" : m === "cook" ? "cCook"
+             : m === "flip" ? "cFlip" : "cDemo";
       document.getElementById(id).setAttribute("aria-pressed", String(c === m));
     });
     document.getElementById("varWrap").hidden = (c !== "demo");
