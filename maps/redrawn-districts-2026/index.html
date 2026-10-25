@@ -399,6 +399,14 @@
   </div>
 
   <div class="ctl">
+    <label id="l-lines">District lines</label>
+    <div class="seg" role="group" aria-labelledby="l-lines">
+      <button id="lRedrawn" aria-pressed="true">Redrawn</button>
+      <button id="lAll" aria-pressed="false">All</button>
+    </div>
+  </div>
+
+  <div class="ctl">
     <label>&nbsp;</label>
     <button class="back" id="back" disabled>All states</button>
   </div>
@@ -526,6 +534,7 @@
     color: "election",   // election | demo | cook
     precincts: false,
     density: false,
+    allLines: false,     // draw the lines of districts the redraw did not touch
     focus: null,         // state abbreviation when zoomed in
     district: null,      // district number when one is singled out
     demoVar: "largest_race",
@@ -1134,6 +1143,18 @@
     return col;
   }
 
+  // A hovered district outlines itself in a deeper shade of its own fill, not
+  // in ink: pointing at it should read as that district lifting off the map
+  // rather than a black line laid across it. Dark fills brighten instead,
+  // since darker has nowhere left to go against them.
+  function hoverStroke(f) {
+    var c = f && d3.color(fillFor(f.properties, f) || "");
+    if (!c) return theme().ink;
+    var r = c.rgb();
+    var l = (0.299 * r.r + 0.587 * r.g + 0.114 * r.b) / 255;
+    return String(l < 0.35 ? c.brighter(0.9) : c.darker(1.1));
+  }
+
   // Density fade: alpha from people per square kilometre, on a cube-root ramp
   // because density spans orders of magnitude between rural precincts and dense
   // urban ones. Two things about how far it ramps, both of which the first
@@ -1439,10 +1460,18 @@
     // between two filled districts. A district left unfilled -- one the redraw
     // did not touch -- needs the opposite: a line that shows against the page,
     // the same grey the state borders use.
+    //
+    // Those unfilled districts hold their line back by default: the map is
+    // about the redraw, and an outline around a district the redraw skipped
+    // puts it back into the comparison it is meant to sit outside of. The
+    // lines control draws the full set when you want the whole map. Over
+    // precincts they stay, since there the district line is the only thing
+    // saying where one district ends.
     var bd = backdrop();
     ctx.lineWidth = (showingPrecincts ? 1.6 : 1.1) / transform.k;
     for (var k = 0; k < bd.length; k++) {
       if (!inPanel(pn, bd[k])) continue;
+      if (bd[k].__same && !state.allLines && !showingPrecincts) continue;
       ctx.strokeStyle = (bd[k].__same && !state.district)
         ? theme().baseline : theme().water;
       ctx.beginPath(); path(bd[k]); ctx.stroke();
@@ -1496,8 +1525,8 @@
       }
     }
     if (state.hover && inPanel(pn, state.hover)) {
-      ctx.lineWidth = 2 / transform.k;
-      ctx.strokeStyle = theme().ink;
+      ctx.lineWidth = 1.1 / transform.k;
+      ctx.strokeStyle = hoverStroke(state.hover);
       ctx.beginPath(); path(state.hover); ctx.stroke();
     }
   }
@@ -2278,7 +2307,7 @@
         document.getElementById("back").disabled = false;
         document.getElementById("pOff").disabled = false;
         document.getElementById("pOn").disabled = false;
-        syncDensityControl();
+        syncLayerControls();
         refreshScales();
         showReadout(cd ? districtFeature(cd) : null);
         updateHint();
@@ -2301,7 +2330,7 @@
         document.getElementById("pOff").disabled = true;
         document.getElementById("pOn").disabled = true;
         document.getElementById("back").disabled = true;
-        syncDensityControl();
+        syncLayerControls();
         setProjection(projB);
         transform = d3.zoomIdentity;
         d3.select(cv).call(zoom.transform, d3.zoomIdentity);
@@ -2562,9 +2591,12 @@
     var same = state.precincts ? 0 : unchangedCount(visibleFeatures());
     if (!same) { el.hidden = true; return; }
     el.hidden = false;
-    el.textContent = same === 1
-      ? "One district keeps the same lines on both maps and is drawn as context."
-      : same + " districts keep the same lines on both maps and are drawn as context.";
+    var one = same === 1;
+    el.textContent = (one ? "One district keeps" : same + " districts keep") +
+      " the same lines on both maps and " + (one ? "is" : "are") +
+      " drawn as context" + (state.allLines ? "."
+        : one ? ", without a district line of its own."
+              : ", without district lines of their own.");
   }
 
   // Counts come from whatever is on screen, so the bar is the tally for the
@@ -2716,7 +2748,7 @@
     if (!state.focus || state.precincts === on) return;
     if (!on) {
       state.precincts = false; setPressed("pOff", "pOn", false);
-      syncDensityControl();
+      syncLayerControls();
       rebuildVarOptions();
       if (state.color === "demo") {
         loadDemoDistricts().then(function () { refreshScales(); render(); });
@@ -2728,7 +2760,7 @@
       .then(function () { return ensureDemographics(state.focus); })
       .then(function () {
         state.precincts = true; setPressed("pOff", "pOn", true);
-        syncDensityControl();
+        syncLayerControls();
         rebuildVarOptions(); refreshScales(); render(); updateHint();
       }).catch(function () {});
   }
@@ -2740,7 +2772,13 @@
   // fading by it says "this district is rural", which the map already shows.
   // Over precincts, where population per unit area genuinely varies, it is
   // the thing that stops empty country reading as a confident result.
-  function syncDensityControl() {
+  function syncLayerControls() {
+    // The lines control has nothing to say over precincts, where every
+    // district keeps its outline either way.
+    var lines = !state.precincts;
+    document.getElementById("lRedrawn").disabled = !lines;
+    document.getElementById("lAll").disabled = !lines;
+
     var avail = !!(state.focus && state.precincts);
     document.getElementById("dOff").disabled = !avail;
     document.getElementById("dOn").disabled = !avail;
@@ -2748,6 +2786,16 @@
       state.density = false;
       setPressed("dOff", "dOn", false);
     }
+  }
+
+  document.getElementById("lRedrawn").addEventListener("click", function () { setAllLines(false); });
+  document.getElementById("lAll").addEventListener("click", function () { setAllLines(true); });
+
+  function setAllLines(on) {
+    if (state.allLines === on) return;
+    state.allLines = on; setPressed("lRedrawn", "lAll", on);
+    noteUnchanged();
+    render();
   }
 
   function setDensity(on) {
