@@ -43,8 +43,9 @@
        not a weak lean -- it is a different statement. Solid and likely sit on
        the election blues and reds so the two modes still agree about which end
        of the map is which. */
-    --cook-likelyD: #5784c5; --cook-leanD: #a9c6e8; --cook-toss: #e0a63a;
-    --cook-leanR: #eb9c92;   --cook-likelyR: #d35f4f;
+    --cook-solidD:  #1366b3; --cook-likelyD: #5784c5; --cook-leanD: #a9c6e8;
+    --cook-toss:    #e0a63a;
+    --cook-leanR:   #eb9c92; --cook-likelyR: #d35f4f; --cook-solidR: #be2c25;
     /* Behind the squares the nine states stay nearly as light as the rest of
        the country: the squares are the subject, and the district lines are
        cue enough that these are the states in scope. */
@@ -68,8 +69,9 @@
       --basefill: #141414; --baseline: #333333; --baseedge: #4d4d4d;
       --ramp0: #be2c25; --ramp1: #a8453d; --ramp2: #6b3a37; --ramp3: #1f1f1f;
       --ramp4: #2f4c70; --ramp5: #5784c5; --ramp6: #8fbcea;
-      --cook-likelyD: #2f6fc0; --cook-leanD: #7ea7d8; --cook-toss: #c08f2c;
-      --cook-leanR: #d4877c;   --cook-likelyR: #b93b32;
+      --cook-solidD:  #1f5fa8; --cook-likelyD: #2f6fc0; --cook-leanD: #7ea7d8;
+      --cook-toss:    #c08f2c;
+      --cook-leanR:   #d4877c; --cook-likelyR: #b93b32; --cook-solidR: #9e2a24;
       --chicfill: #262626;
       color-scheme: dark;
     }
@@ -83,8 +85,9 @@
     --basefill: #141414; --baseline: #333333; --baseedge: #4d4d4d;
     --ramp0: #be2c25; --ramp1: #a8453d; --ramp2: #6b3a37; --ramp3: #1f1f1f;
     --ramp4: #2f4c70; --ramp5: #5784c5; --ramp6: #8fbcea;
-    --cook-likelyD: #2f6fc0; --cook-leanD: #7ea7d8; --cook-toss: #c08f2c;
-    --cook-leanR: #d4877c;   --cook-likelyR: #b93b32;
+    --cook-solidD:  #1f5fa8; --cook-likelyD: #2f6fc0; --cook-leanD: #7ea7d8;
+    --cook-toss:    #c08f2c;
+    --cook-leanR:   #d4877c; --cook-likelyR: #b93b32; --cook-solidR: #9e2a24;
     --chicfill: #262626;
     color-scheme: dark;
   }
@@ -169,6 +172,10 @@
   }
   .cb-head .d { color: var(--dem); }
   .cb-head .r { color: var(--rep); }
+  /* Every district, in proportion. Thin, because it is the shape of the
+     field rather than something to read values off. */
+  .cb-all { display: flex; height: 9px; margin-bottom: 5px; }
+  .cb-all .cb-seg { min-width: 2px; }
   .cb-track { display: flex; height: 19px; }
   .cb-seg {
     display: flex; align-items: center; justify-content: center;
@@ -433,6 +440,7 @@
     <div class="ends"><span id="lo"></span><span id="mid"></span><span id="hi"></span></div>
     <div class="cookbar" id="cookBar" hidden>
       <div class="cb-head"><span class="d">Democratic</span><span class="r">Republican</span></div>
+      <div class="cb-all" id="cbAll"></div>
       <div class="cb-track" id="cbTrack"></div>
       <div class="cb-foot" id="cbFoot"></div>
       <div class="cb-sum" id="cbSum"></div>
@@ -624,11 +632,13 @@
       nodata: g("--nodata") || "#dcdcdc",
       chicfill: g("--chicfill") || "#e8e8e4",
       cook: {
+        "Solid Democrat":    g("--cook-solidD")  || "#1366b3",
         "Likely Democrat":   g("--cook-likelyD") || "#5784c5",
         "Lean Democrat":     g("--cook-leanD")   || "#a9c6e8",
         "Toss Up":           g("--cook-toss")    || "#e0a63a",
         "Lean Republican":   g("--cook-leanR")   || "#eb9c92",
-        "Likely Republican": g("--cook-likelyR") || "#d35f4f"
+        "Likely Republican": g("--cook-likelyR") || "#d35f4f",
+        "Solid Republican":  g("--cook-solidR")  || "#be2c25"
       },
       ink: g("--ink") || "#111111",
       paper: g("--paper") || "#ffffff",
@@ -737,19 +747,27 @@
     return demoScale ? demoScale(x) : null;
   }
 
-  // Cook's five competitive categories, Democratic to Republican. Cook has a
-  // single Toss Up; splitting it into "Democratic Toss Up" and "Republican
-  // Toss Up" is a presentational device for showing who holds the seat, not a
-  // Cook rating, so the seat's party lives in its own field instead. Fills
-  // come from theme().cook, the Post's Cook palette rather than the election
-  // ramp.
+  // Cook's seven categories, Democratic to Republican. Cook has a single Toss
+  // Up; splitting it into "Democratic Toss Up" and "Republican Toss Up" is a
+  // presentational device for showing who holds the seat, not a Cook rating,
+  // so the seat's party lives in its own field instead. Fills come from
+  // theme().cook, the Post's Cook palette rather than the election ramp.
   var COOK_BANDS = [
+    { label: "Solid D",  cat: "Solid Democrat" },
     { label: "Likely D", cat: "Likely Democrat" },
     { label: "Lean D",   cat: "Lean Democrat" },
     { label: "Toss-up",  cat: "Toss Up" },
     { label: "Lean R",   cat: "Lean Republican" },
-    { label: "Likely R", cat: "Likely Republican" }
+    { label: "Likely R", cat: "Likely Republican" },
+    { label: "Solid R",  cat: "Solid Republican" }
   ];
+  // Solid is the one tier Cook calls not competitive, and it is the line the
+  // squares are drawn on: a square marks a race worth watching, so 144 safe
+  // seats must not get one.
+  function cookCompetitive(f) {
+    var r = cookRating(f);
+    return !!r && r.rating.indexOf("Solid") !== 0;
+  }
 
   function cookRating(f) {
     if (!state.cook || state.year !== "2026") return null;
@@ -786,7 +804,7 @@
     var ds = state.districts["2026"] || [];
     var want = [];
     for (var i = 0; i < ds.length; i++) {
-      if (cookRating(ds[i])) want.push(ds[i]);
+      if (cookCompetitive(ds[i])) want.push(ds[i]);
     }
     var key = state.year + ":" + want.length;
     if (!chiclets || chicletKey !== key) {
@@ -999,7 +1017,13 @@
 
   function fillFor(p, f) {
     var picked = state.district && districtOf(p) === state.district;
-    if (f && f.__same && !picked) return theme().basefill;   // not redrawn
+    // Unredrawn districts fall back to context -- except under the Cook
+    // ratings, whose subject is the rating of every seat, not the redraw.
+    // Fading them there hid 34 ratings, twelve of North Carolina's fourteen,
+    // while the legend said all 173 districts were rated.
+    if (f && f.__same && !picked && state.color !== "cook") {
+      return theme().basefill;                               // not redrawn
+    }
     var col = baseFill(p, f);
     // Anything that is not the district in focus greys out, including the
     // 1,235 precincts carrying no district assignment at all -- mostly empty
@@ -1320,7 +1344,7 @@
     ctx.lineWidth = (showingPrecincts ? 1.6 : 1.1) / transform.k;
     for (var k = 0; k < bd.length; k++) {
       if (!inPanel(pn, bd[k])) continue;
-      ctx.strokeStyle = (bd[k].__same && !state.district)
+      ctx.strokeStyle = (bd[k].__same && !state.district && state.color !== "cook")
         ? theme().baseline : theme().water;
       ctx.beginPath(); path(bd[k]); ctx.stroke();
     }
@@ -2417,9 +2441,9 @@
         drawCookBar();
         bar.hidden = false;
         note.textContent = (state.cook ? state.cook.source : "Cook Political Report")
-          + ", October 23, 2026. Seats it does not list as competitive are "
-          + "unshaded: the table names the races in play, not which party is "
-          + "safe in the rest.";
+          + ", October 23, 2026. All " + Object.keys(state.cook ? state.cook.byKey : {}).length
+          + " districts in these states are rated; the squares mark the ones "
+          + "Cook does not call solid.";
       }
     } else if (state.color === "election") {
       title.textContent = "2024 presidential margin";
@@ -2436,7 +2460,10 @@
   // source line for the same slot.
   function noteUnchanged() {
     var el = document.getElementById("sameNote");
-    var same = state.precincts ? 0 : unchangedCount(visibleFeatures());
+    // Not said under the Cook ratings, where unredrawn districts are coloured
+    // like the rest and nothing is being drawn as context.
+    var same = (state.precincts || state.color === "cook")
+      ? 0 : unchangedCount(visibleFeatures());
     if (!same) { el.hidden = true; return; }
     el.hidden = false;
     el.textContent = same === 1
@@ -2447,10 +2474,17 @@
   // Counts come from whatever is on screen, so the bar is the tally for the
   // nine states nationally and for one state once you are inside it. The foot
   // labels carry the same flex ratios as the bands, so each sits under its own.
+  // The Post's two-tier bar. The top one is every district, so the solid
+  // blocks dominate it and the competitive middle is a sliver -- which is the
+  // point, and why they draw a second bar underneath showing only that
+  // middle, at a width where the counts can be read. We could not build the
+  // top tier until Cook's solid ratings were in hand.
   function drawCookBar() {
+    var all = document.getElementById("cbAll");
     var track = document.getElementById("cbTrack");
     var foot = document.getElementById("cbFoot");
     var sum = document.getElementById("cbSum");
+    var T = theme();
     var ds = (state.districts["2026"] || []).filter(function (f) {
       return !state.focus || f.properties.state === state.focus;
     });
@@ -2461,31 +2495,48 @@
       }, 0);
     });
     var rated = counts.reduce(function (a, b) { return a + b; }, 0);
-    var unrated = ds.length - rated;
 
     if (!rated) {
-      track.innerHTML = '<div class="cb-seg" style="flex:1;background:' +
-        theme().nodata + ';color:var(--ink-soft)">\u2014</div>';
+      all.innerHTML = track.innerHTML = '<div class="cb-seg" style="flex:1;background:' +
+        T.nodata + ';color:var(--ink-soft)">\u2014</div>';
       foot.innerHTML = "";
-      sum.textContent = ds.length + " districts, none listed as competitive";
+      sum.textContent = ds.length + " districts, none rated";
       return;
     }
 
-    track.innerHTML = COOK_BANDS.map(function (b, i) {
-      if (!counts[i]) return "";
-      var col = theme().cook[b.cat];
-      // Dark ink on the pale bands, white on the saturated ones.
+    // Top tier: all of them, in proportion, no numbers -- the solid blocks
+    // would be the only ones with room and labelling just those would read as
+    // if the rest were nothing.
+    all.innerHTML = COOK_BANDS.map(function (b, i) {
+      return counts[i] ? '<div class="cb-seg" style="flex:' + counts[i] +
+             ";background:" + T.cook[b.cat] + '"></div>' : "";
+    }).join("");
+
+    // Bottom tier: the competitive middle only, which is what the bracket on
+    // the Post's version points at.
+    var mid = COOK_BANDS.filter(function (b) { return b.cat.indexOf("Solid") !== 0; });
+    var midCounts = mid.map(function (b) {
+      return counts[COOK_BANDS.indexOf(b)];
+    });
+    var watch = midCounts.reduce(function (a, b) { return a + b; }, 0);
+    var solid = rated - watch;
+
+    track.innerHTML = mid.map(function (b, i) {
+      if (!midCounts[i]) return "";
       var pale = b.label !== "Likely D" && b.label !== "Likely R";
-      return '<div class="cb-seg" style="flex:' + counts[i] + ";background:" + col +
-             ";color:" + (pale ? "#222222" : "#ffffff") + '">' + counts[i] + "</div>";
+      return '<div class="cb-seg" style="flex:' + midCounts[i] + ";background:" +
+             T.cook[b.cat] + ";color:" + (pale ? "#222222" : "#ffffff") + '">' +
+             midCounts[i] + "</div>";
     }).join("");
 
-    foot.innerHTML = COOK_BANDS.map(function (b, i) {
-      return counts[i] ? '<span style="flex:' + counts[i] + '">' + b.label + "</span>" : "";
+    foot.innerHTML = mid.map(function (b, i) {
+      return midCounts[i] ? '<span style="flex:' + midCounts[i] + '">' + b.label + "</span>" : "";
     }).join("");
 
-    sum.textContent = rated + " race" + (rated === 1 ? "" : "s") + " to watch" +
-      (unrated ? "  \u00b7  " + unrated + " not listed" : "");
+    sum.textContent = watch
+      ? watch + " race" + (watch === 1 ? "" : "s") + " to watch  \u00b7  " +
+        solid + " solid"
+      : rated + " districts, all solid";
   }
 
   function setPressed(offId, onId, on) {
