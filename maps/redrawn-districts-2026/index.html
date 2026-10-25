@@ -1017,13 +1017,10 @@
 
   function fillFor(p, f) {
     var picked = state.district && districtOf(p) === state.district;
-    // Unredrawn districts fall back to context -- except under the Cook
-    // ratings, whose subject is the rating of every seat, not the redraw.
-    // Fading them there hid 34 ratings, twelve of North Carolina's fourteen,
-    // while the legend said all 173 districts were rated.
-    if (f && f.__same && !picked && state.color !== "cook") {
-      return theme().basefill;                               // not redrawn
-    }
+    // Unredrawn districts fall back to context in every colour mode. The map
+    // is about the mid-decade redraw throughout, so a district the redraw did
+    // not touch is context whatever is being shaded -- its rating included.
+    if (f && f.__same && !picked) return theme().basefill;
     var col = baseFill(p, f);
     // Anything that is not the district in focus greys out, including the
     // 1,235 precincts carrying no district assignment at all -- mostly empty
@@ -1344,7 +1341,7 @@
     ctx.lineWidth = (showingPrecincts ? 1.6 : 1.1) / transform.k;
     for (var k = 0; k < bd.length; k++) {
       if (!inPanel(pn, bd[k])) continue;
-      ctx.strokeStyle = (bd[k].__same && !state.district && state.color !== "cook")
+      ctx.strokeStyle = (bd[k].__same && !state.district)
         ? theme().baseline : theme().water;
       ctx.beginPath(); path(bd[k]); ctx.stroke();
     }
@@ -2460,10 +2457,7 @@
   // source line for the same slot.
   function noteUnchanged() {
     var el = document.getElementById("sameNote");
-    // Not said under the Cook ratings, where unredrawn districts are coloured
-    // like the rest and nothing is being drawn as context.
-    var same = (state.precincts || state.color === "cook")
-      ? 0 : unchangedCount(visibleFeatures());
+    var same = state.precincts ? 0 : unchangedCount(visibleFeatures());
     if (!same) { el.hidden = true; return; }
     el.hidden = false;
     el.textContent = same === 1
