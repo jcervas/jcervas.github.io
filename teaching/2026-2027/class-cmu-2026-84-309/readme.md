@@ -510,6 +510,19 @@ that session’s page in Canvas.*
 
 #### Thu, Oct 29 — Student-led 3: Death penalty
 
+- [Death Penalty Information Center — History of the Death
+  Penalty](https://deathpenaltyinfo.org/resources/high-school/about-the-death-penalty/history-of-the-death-penalty)
+- [Stimson 2019 — The Death Penalty Is Appropriate (Heritage
+  Foundation)](https://www.heritage.org/crime-and-justice/commentary/the-death-penalty-appropriate)
+- [*Frontline* — Supreme Court / Death Penalty
+  (PBS)](https://www.pbs.org/wgbh/pages/frontline/angel/procon/deathissue.html)
+- [Andre & Velasquez 1988 — Capital Punishment: Our Duty or Our Doom?
+  (Markkula Center for Applied
+  Ethics)](https://www.scu.edu/ethics/focus-areas/more-focus-areas/resources/capital-punishment-our-duty-or-our-doom/)
+- [Silva 2026 — An Argument Against the System of Capital Punishment
+  (*Columbia Black Pre-Law
+  Journal*)](https://blackprelaw.studentgroups.columbia.edu/news/argument-against-system-capital-punishment)
+
 ### Week 11 — election week
 
 #### Tue, Nov 3 — **NO CLASS.** Democracy Day; the midterm elections. No classes before 5 p.m. [Register to vote](https://www.cmu.edu/student-affairs/slice/civic-engagement/advocacy/voter/index.html).
