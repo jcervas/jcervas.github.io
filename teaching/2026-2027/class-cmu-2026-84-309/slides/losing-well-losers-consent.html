@@ -1,0 +1,1792 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Losing Well — Loser’s Consent</title>
+<style>
+
+:root{
+  color-scheme: light;
+  --paper:#F2F4F7; --card:#FFFFFF; --tint:#E9ECF1;
+  --ink:#0F1720; --ink-2:#3E4A57; --ink-3:#6B7683;
+  --rule:#B9C1CA; --rule-2:#DDE2E7;
+  --accent:#C41230; --accent-soft:#F7DDE1;
+  --blue:#1F4E79;
+  --match:#17706B; --match-soft:#D3E7E5; --cross:#E09B2D;--cross-ink:#8A5D10;--match-soft:#E3F1EF;--cross-soft:#FBEFDA;
+  --ghost:#D3D9E0;
+  --display:'Iowan Old Style',Georgia,'Times New Roman',serif;
+  --body:'IBM Plex Sans','Helvetica Neue',Arial,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+:root[data-theme="dark"]{
+  --paper:#0F1720; --card:#161F29; --tint:#1B242E;
+  --ink:#EEF2F6; --ink-2:#B7C2CD; --ink-3:#8A96A3;
+  --rule:#39434E; --rule-2:#26303A; --accent:#FF6B7F; --accent-soft:#3A1C24;
+  --blue:#7FB2E5; --match:#4FC4B8; --match-soft:#12312F; --cross:#F0B860;--cross-ink:#F0B860;--match-soft:#12332F;--cross-soft:#33291A;
+  --ghost:#28323C;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);
+  -webkit-font-smoothing:antialiased;overflow:hidden}
+.deck{position:relative;width:100%;height:100%}
+.slide{position:absolute;inset:0;padding:clamp(32px,4vh,58px) clamp(32px,5vw,78px)
+  clamp(30px,4.5vh,54px);display:none;flex-direction:column;overflow:auto}
+.slide.on{display:flex}
+.slide.dark{background:var(--ink);color:#F4F7FA}
+.slide.dark .foot{color:#8E9AA6}
+.slide.dark p.lede{color:#B9C4CF}
+.slide.wash{background:var(--accent-soft)}
+.kicker{font-size:clamp(12px,1.02vw,18px);font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+h1{font-family:var(--display);font-size:clamp(32px,4.5vw,94px);line-height:1.04;
+  margin:0 0 8px;font-weight:600;letter-spacing:-.01em}
+h2{font-family:var(--display);font-size:clamp(26px,3.1vw,62px);line-height:1.07;
+  margin:0 0 4px;font-weight:600;letter-spacing:-.006em}
+p.lede{font-size:clamp(15px,1.48vw,34px);line-height:1.45;color:var(--ink-2);
+  max-width:62ch;margin:8px 0 0}
+.punch{font-family:var(--display);font-size:clamp(17px,1.85vw,44px);font-weight:600;
+  margin-top:18px;line-height:1.22}
+.big{font-family:var(--display);font-size:clamp(40px,6.4vw,168px);font-weight:600;line-height:1}
+.foot{margin-top:auto;padding-top:clamp(6px,1vh,14px);
+  padding-right:clamp(86px,11vw,168px);font-size:clamp(11px,.92vw,16px);
+  color:var(--ink-3);line-height:1.4}
+.nums{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.discuss{margin-top:auto;padding:clamp(10px,1.5vh,20px) clamp(14px,1.5vw,24px);
+  padding-right:clamp(86px,11vw,168px);border-left:4px solid var(--accent);
+  background:var(--accent-soft);border-radius:0 8px 8px 0}
+.discuss .dtag{display:block;font-family:var(--mono);font-size:clamp(9px,.72vw,12px);
+  letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.discuss p{margin:0;font-size:clamp(15px,1.58vw,34px);line-height:1.42;color:var(--ink)}
+.smap{display:grid;grid-template-columns:auto auto 1fr;gap:5px clamp(12px,1.3vw,24px);
+  align-items:center;font-size:clamp(12.5px,1.15vw,20px);margin-top:6px}
+.smap .hd{font-size:clamp(9.5px,.82vw,14px);font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3)}
+.smap b{width:1.85em;height:1.85em;border-radius:999px;display:grid;place-items:center;
+  color:#fff;font-size:.84em;font-weight:700}
+svg{overflow:visible}
+.ctl{display:flex;align-items:center;gap:clamp(8px,.9vw,15px);margin-top:12px;flex-wrap:wrap}
+input[type=range]{width:clamp(230px,23vw,460px);accent-color:var(--accent)}
+button{font-family:var(--body);font-size:clamp(12px,1.05vw,18px);font-weight:600;
+  padding:clamp(5px,.55vw,11px) clamp(12px,1.15vw,22px);cursor:pointer;
+  border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:999px}
+button:hover{border-color:var(--accent);color:var(--accent)}
+button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
+.yr{font-family:var(--display);font-size:clamp(34px,3.6vw,66px);font-weight:600;line-height:1}
+.legend{display:flex;flex-direction:column;gap:8px;font-size:clamp(12px,1.1vw,19px);
+  color:var(--ink-2);margin-top:10px}
+.legend i{width:1em;height:1em;display:inline-block;border-radius:2px;margin-right:9px;
+  vertical-align:-.08em}
+.statrow{display:flex;gap:clamp(20px,3.2vw,58px);flex-wrap:wrap;margin-top:14px;
+  align-items:flex-end}
+.stat b{display:block;font-family:var(--display);font-size:clamp(32px,3.8vw,92px);
+  font-weight:600;line-height:1.04}
+.stat span{font-size:clamp(11.5px,1.02vw,22px);color:var(--ink-3)}
+/* One-number slides: the number IS the slide, so it gets its own scale. */
+.statrow.hero{gap:clamp(26px,4vw,90px)}
+.statrow.hero .stat b{font-size:clamp(64px,11.5vw,270px);line-height:.98}
+.statrow.hero .stat span{font-size:clamp(13px,1.4vw,30px)}
+.statrow.hero .big{font-size:clamp(48px,7.5vw,190px)}
+/* Statement slides carry little ink, so center the block instead of pinning the
+   last line to the bottom — margin-top:auto opened a void of up to 64% of the
+   slide on a 1920-wide display. */
+.slide.center{justify-content:center}
+.slide.center .foot{position:absolute;left:clamp(32px,5vw,78px);
+  right:clamp(118px,13vw,210px);bottom:clamp(16px,2.4vh,28px);
+  margin-top:0;padding-top:0;padding-right:0}
+/* Do NOT pin the heading on a centered slide. Taking it out of flow leaves the
+   body floating in the middle with a hole above it — that made the gaps worse
+   (31% where centering alone gives 7%). The whole column centers together. */
+.pill{display:inline-block;padding:3px 12px;border-radius:999px;
+  font-size:clamp(11.5px,1.05vw,18px);font-weight:600;background:var(--match-soft);
+  color:var(--match)}
+.pill.warn{background:var(--accent-soft);color:var(--accent)}
+table.t{border-collapse:collapse;width:100%;margin-top:16px;
+  font-size:clamp(14px,1.5vw,36px)}
+table.t td{padding:clamp(9px,1.05vw,22px) 10px;border-bottom:1px solid var(--rule-2)}
+table.t tr:last-child td{border-bottom:0}
+table.t .num{font-family:var(--display);font-size:clamp(24px,2.7vw,68px);font-weight:600;
+  text-align:right;white-space:nowrap}
+table.t .lab{color:var(--ink-3);font-size:clamp(11.5px,1.05vw,22px)}
+.rowlist{margin-top:10px}
+.rowlist .r{display:grid;grid-template-columns:clamp(88px,9.5vw,164px) 1fr;
+  gap:clamp(10px,1.5vw,28px);padding:clamp(8px,.95vw,16px) 0;
+  border-bottom:1px solid var(--rule-2)}
+.rowlist .r:last-child{border-bottom:0}
+.rowlist .who{font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  font-size:clamp(10.5px,1vw,21px)}
+.rowlist .say{font-size:clamp(13px,1.35vw,32px);line-height:1.34}
+.progress{position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--rule-2)}
+.progress i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.hint{position:absolute;right:clamp(32px,5vw,78px);bottom:clamp(16px,2.4vh,28px);
+  text-align:right;color:var(--ink-3);cursor:pointer;user-select:none;
+  font-size:clamp(10.5px,.88vw,15px)}
+.hint:hover{color:var(--accent)}
+.hint b{color:var(--ink-2)}
+#tip{position:fixed;z-index:12;pointer-events:none;background:var(--ink);color:#F4F7FA;
+  padding:7px 11px;border-radius:7px;font-size:clamp(12px,1.05vw,18px);line-height:1.35;
+  box-shadow:0 6px 22px rgba(0,0,0,.28);transform:translate(-50%,-118%);white-space:nowrap}
+#tip[hidden]{display:none}
+#tip b{font-family:var(--display);font-size:1.25em}
+:root[data-theme="dark"] #tip{background:#2A3541}
+.hit{cursor:crosshair}
+/* A line chart holds still until it is clicked: the shape sits there as a gray
+   ghost with one dot on the first year, and the colored line draws itself only
+   when you ask. Lets the sentence come first and the picture second, which is
+   the order it gets talked about in. */
+.chart{display:inline-block}
+/* Reveals are deck fragments now, driven by the arrow keys like any other step,
+   so a chart carries no button of its own. Progress shows as dots in the corner. */
+.dots{display:inline-flex;gap:5px;margin-left:9px;vertical-align:.5px}
+.dots i{width:7px;height:7px;border-radius:999px;background:var(--rule);
+  transition:background .25s}
+.dots i.on{background:var(--accent)}
+/* Lines draw themselves in; squares grow from nothing. Both are pure CSS
+   transitions kicked off one frame after the node lands in the DOM. */
+/* --len has a fallback so the dash pattern is VALID on the very first paint.
+   Without it `stroke-dasharray:var(--len)` is invalid, the line renders solid,
+   and setting --len afterwards animates it AWAY — the line visibly undrew
+   before it drew. Transition is off until .anim is added a frame later, so
+   arming never animates either. */
+.stage{visibility:hidden}
+.stage.on{visibility:visible}
+#notes{position:absolute;right:0;top:0;bottom:0;width:min(560px,44vw);z-index:8;
+  background:var(--card);border-left:1px solid var(--rule);padding:24px 28px;
+  overflow:auto;font-size:15px;line-height:1.62;white-space:pre-wrap;color:var(--ink-2);
+  box-shadow:-14px 0 40px rgba(0,0,0,.10)}
+#notes[hidden]{display:none}
+#notes h4{margin:0 0 12px;font-family:var(--body);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent)}
+#help{position:absolute;inset:0;background:rgba(15,23,32,.88);color:#fff;display:grid;
+  place-items:center;font-size:clamp(14px,1.25vw,21px);z-index:9;cursor:pointer}
+#help[hidden]{display:none}
+#help div{max-width:54ch;line-height:1.75;cursor:auto}
+#help .close{margin-top:20px;font-size:.84em;color:#cfd6dd}
+kbd{font-family:var(--mono);background:rgba(255,255,255,.17);padding:1px 7px;border-radius:4px}
+@media (max-width:900px){.cols,.quad,.cols2,.two{grid-template-columns:1fr}
+  #notes{width:100%} .foot{right:clamp(88px,22vw,150px)}}
+
+/* deck additions for this session: comparison tables and the number pairs */
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px,1.6vh,26px)
+  clamp(20px,3vw,54px);margin:clamp(10px,2vh,26px) 0}
+.big{font-family:var(--display);font-size:clamp(30px,4.2vw,72px);line-height:1}
+.big .lbl{display:block;font-family:var(--body);font-size:clamp(11px,.95vw,17px);
+  font-weight:600;color:var(--ink-3);margin-top:4px;letter-spacing:.02em}
+table.matrix{width:100%;border-collapse:separate;border-spacing:clamp(5px,.7vw,11px);
+  margin:clamp(8px,1.6vh,24px) 0;table-layout:fixed}
+table.matrix th{font:600 clamp(10.5px,.95vw,17px)/1.25 var(--body);color:var(--ink-3);
+  text-align:center;vertical-align:bottom;padding:0 0 3px}
+table.matrix th.rh{text-align:right;vertical-align:middle;padding:0 clamp(8px,1vw,16px) 0 0;
+  width:26%}
+table.matrix th.rh b{display:block;font-family:var(--display);font-weight:700;
+  font-size:clamp(13px,1.25vw,23px);color:var(--ink)}
+table.matrix td{font-family:var(--display);font-size:clamp(24px,3.2vw,55px);line-height:1;
+  text-align:center;border-radius:8px;padding:clamp(9px,1.6vh,20px) 4px}
+td.inp{background:var(--match-soft);color:var(--match)}
+td.outp{background:var(--cross-soft);color:var(--cross-ink)}
+tr.marg td{background:transparent;color:var(--ink);border-radius:0;
+  font-size:clamp(18px,2.2vw,38px);border-top:2px solid var(--rule-2)}
+tr.marg th.rh b{font-weight:400;color:var(--ink-3)}
+table.gap4 td.plain{background:var(--tint);color:var(--ink)}
+table.gap4 td.gapc{background:transparent;color:var(--ink-3);
+  font-size:clamp(20px,2.5vw,42px)}
+table.gap4 td.gapc.hot{color:var(--accent)}
+/* cells fill in one at a time; the empty box holds its place so the table
+   geometry never shifts under the reveal */
+table.matrix td.cell{transition:background .28s ease,color .28s ease}
+table.matrix td.cell.pend{background:transparent!important;color:transparent!important;
+  box-shadow:inset 0 0 0 1.5px var(--rule-2)}
+tr.marg.pend td,tr.marg.pend th{opacity:0;transition:opacity .3s ease}
+tr.marg td,tr.marg th{transition:opacity .3s ease}
+.beat{min-height:2.9em}
+/* Staged reveal for blocks rather than table cells. The matrix has its own rule
+   further up, because a cell has to keep its box while it waits its turn; a
+   panel just gets out of the way. Separate class name on purpose — a generic
+   .pend would also null the opacity of those cells and take their borders. */
+.hold{opacity:0}
+/* The question that announces the next line. Exactly one is visible at a time,
+   parked where that line is about to arrive, and all of them go dark once the
+   chart is fully drawn. Big and bold on purpose: it is the thing being said
+   out loud, and the line is the answer to it. */
+.ask{opacity:0;transition:opacity .34s ease}
+.ask.on{opacity:1}
+/* The readout under a staged chart answers the question the chart is still
+   asking, so hold it back until every line is down. Captions with no id belong
+   to slides that do not stage and are never hidden. */
+#deck[data-drawn="0"] .punch[id]{opacity:0}
+.punch[id]{transition:opacity .3s ease}
+.tbox,.band,.step{transition:opacity .32s ease}
+/* Lines draw themselves in, dots grow, bars rise from their baseline.
+   The dash values are set INLINE from JS rather than through a CSS custom
+   property. The custom-property version is what the sorting deck uses, and it
+   half-works here: stroke-dasharray resolves var(--len) but stroke-dashoffset
+   silently falls back to the placeholder, so the line sits invisible for most
+   of the duration and then snaps. Driving both from play() removes the guess.
+   The transition still stays off until .anim is added a frame later, so arming
+   a chart never animates it. */
+.draw.anim{transition:stroke-dashoffset var(--dur,.9s) linear}
+.ghost-line{opacity:.5}
+/* A staged series is present but invisible until its turn. visibility rather
+   than display, so the dash lengths can be measured while it waits. */
+.stage{visibility:hidden}
+.stage.on{visibility:visible}
+/* A .lead stage is the point of the chart and the .recede stages are what it
+   was computed from: once the answer is drawn, the inputs step back rather
+   than disappear, so you can still see where it came from. */
+.stage.recede{transition:opacity .5s ease}
+svg:has(.stage.lead.on) .stage.recede{opacity:.18}
+.pop{transform-box:fill-box;transform-origin:center;transform:scale(0);opacity:0;
+  transition:transform .34s cubic-bezier(.28,1.15,.45,1),opacity .24s}
+.pop.go{transform:scale(1);opacity:1}
+.growy{transform-box:fill-box;transform-origin:bottom;transform:scaleY(0);
+  transition:transform .5s cubic-bezier(.28,1.1,.45,1)}
+.growy.go{transform:scaleY(1)}
+.growx{transform-box:fill-box;transform-origin:left;transform:scaleX(0);
+  transition:transform .55s cubic-bezier(.28,1.1,.45,1)}
+.growx.go{transform:scaleX(1)}
+@media (prefers-reduced-motion:reduce){
+  .draw{stroke-dasharray:none;stroke-dashoffset:0}
+  .pop,.growy,.growx{transform:none;opacity:1;transition:none}
+}
+.mlegend{display:flex;gap:clamp(14px,2vw,30px);margin-left:26%;font-size:clamp(10.5px,.9vw,16px);
+  color:var(--ink-3);margin-top:-6px}
+.mlegend i{display:inline-block;width:12px;height:12px;border-radius:3px;
+  margin-right:6px;vertical-align:-1px}
+table.cmp{width:100%;border-collapse:collapse;margin:clamp(8px,1.6vh,22px) 0;
+  font-size:clamp(14px,1.35vw,24px)}
+table.cmp th{text-align:right;font-size:clamp(10px,.86vw,15px);font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);
+  padding:0 0 8px 18px;border-bottom:1px solid var(--rule-2)}
+table.cmp th:first-child{text-align:left}
+table.cmp td{padding:clamp(6px,1.1vh,14px) 0 clamp(6px,1.1vh,14px) 18px;
+  text-align:right;font-family:var(--display);border-bottom:1px solid var(--rule-2)}
+table.cmp td:first-child{text-align:left;font-family:var(--body);
+  font-size:clamp(12px,1.1vw,20px)}
+table.cmp tr.hi td{background:var(--tint);font-weight:700}
+.close{margin-top:14px;color:var(--ink-3);font-size:.88em}
+.rows,.steps{margin:clamp(8px,1.6vh,20px) 0;flex:1;display:flex;flex-direction:column;
+  justify-content:center}
+.two,.map{flex:0 0 auto}
+.row{display:grid;grid-template-columns:minmax(150px,2.1fr) 4.4fr minmax(80px,1.2fr);
+  gap:clamp(12px,2vw,34px);align-items:start;padding:clamp(9px,1.5vh,19px) 0;
+  border-bottom:1px solid var(--rule-2)}
+.row:last-child{border-bottom:0}
+.tag{display:block;font-size:clamp(10px,.86vw,16px);font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;margin-bottom:5px}
+.rbig{font-family:var(--display);font-size:clamp(19px,2.15vw,39px);line-height:1.08;
+  display:block;color:var(--ink)}
+.rt{font-size:clamp(14px,1.34vw,25px);line-height:1.45;color:var(--ink)}
+.rs{font-size:clamp(10px,.84vw,15px);font-style:italic;color:var(--ink-3);line-height:1.3}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.4vw,40px);
+  margin:clamp(10px,2vh,26px) 0}
+.tbox{background:var(--tint);border-radius:8px;padding:clamp(12px,2vh,24px) clamp(14px,1.8vw,28px)}
+.tbox b{font-family:var(--display);font-size:clamp(19px,2.1vw,38px);display:block;
+  line-height:1.1;margin-bottom:8px}
+.tbox p{margin:0;font-size:clamp(13.5px,1.26vw,23px);line-height:1.4;color:var(--ink)}
+.band{background:var(--accent-soft);border-radius:8px;
+  padding:clamp(12px,2vh,24px) clamp(14px,1.8vw,28px);margin:clamp(10px,2vh,24px) 0}
+.band .tag{color:var(--accent)}
+.band p{margin:0;font-family:var(--display);font-size:clamp(16px,1.8vw,32px);line-height:1.22}
+.step{display:grid;grid-template-columns:auto 1fr;gap:clamp(12px,1.6vw,26px);
+  align-items:start;padding:clamp(8px,1.4vh,18px) 0;border-bottom:1px solid var(--rule-2)}
+.step:last-child{border-bottom:0}
+.stepn{width:clamp(26px,2.4vw,42px);height:clamp(26px,2.4vw,42px);border-radius:50%;
+  display:grid;place-items:center;color:#fff;font-weight:700;
+  font-size:clamp(13px,1.1vw,20px)}
+.step b{font-family:var(--display);font-size:clamp(18px,2vw,36px);display:block;
+  line-height:1.1;margin-bottom:5px}
+.step p{margin:0;font-size:clamp(13.5px,1.26vw,23px);line-height:1.42;color:var(--ink)}
+.map{margin:clamp(8px,1.6vh,20px) 0;flex:1;display:flex;flex-direction:column;
+  justify-content:center}
+.maprow{display:grid;grid-template-columns:minmax(140px,1.6fr) auto 5fr;
+  gap:clamp(10px,1.8vw,30px);align-items:baseline;padding:clamp(7px,1.2vh,16px) 0;
+  border-bottom:1px solid var(--rule-2)}
+.maprow:last-child{border-bottom:0}
+.maprow .p{font-size:clamp(10px,.85vw,15px);color:var(--ink-3);font-family:var(--mono)}
+.maprow .d{font-size:clamp(14px,1.32vw,24px);line-height:1.4}
+.quote{font-family:var(--display);font-size:clamp(22px,2.8vw,52px);line-height:1.18;
+  margin:clamp(10px,2vh,28px) 0 clamp(6px,1vh,14px)}
+
+/* Polarization V additions (shared with VI) ----------------------------------------------- */
+/* The closing "Next" slide, sized like the PowerPoint: big rows, not a list. */
+.kicker.nxk{margin-top:clamp(20px,9vh,120px)}
+.nxl{margin-top:clamp(10px,3vh,40px);display:flex;flex-direction:column;gap:clamp(14px,4.5vh,60px)}
+.nxr{display:grid;grid-template-columns:clamp(120px,17vw,320px) 1fr;align-items:baseline}
+.nxw{color:var(--accent);font-weight:700;font-size:clamp(14px,1.55vw,30px)}
+.nxt{font-family:var(--display);font-weight:700;font-size:clamp(20px,2.3vw,46px);line-height:1.2;color:#F4F7FA}
+.nxd{color:#8E9AA6;font-size:clamp(13px,1.35vw,26px);margin-top:.35em}
+.nxf{margin-top:clamp(16px,5vh,64px);color:#D5DDE5;font-size:clamp(14px,1.5vw,28px)}
+.chart svg text{font-family:var(--body)}
+h2 .badge{display:inline-grid;place-items:center;width:1.25em;height:1.25em;border-radius:50%;
+  background:var(--accent);color:#fff;font-family:var(--body);font-size:.62em;font-weight:700;
+  margin-right:.45em;vertical-align:.18em}
+.reported{display:inline-block;font-family:var(--body);font-size:clamp(9px,.7vw,13px);font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);border:1px solid var(--rule);
+  border-radius:4px;padding:3px 9px;vertical-align:.4em;margin-left:.6em}
+.look{font-style:italic;color:var(--ink-3);font-size:clamp(13px,1.15vw,21px);margin:2px 0 10px}
+.hold{opacity:.06}
+.bigstate{font-family:var(--display);font-weight:700;font-size:clamp(26px,3.3vw,64px);line-height:1.18;
+  text-align:center;max-width:22ch;margin:clamp(20px,8vh,110px) auto 0}
+.bigstate.huge{font-size:clamp(48px,7vw,140px)}
+.lede.center{text-align:center;max-width:52ch;margin:18px auto 0}
+.cards{display:grid;gap:clamp(10px,1.2vw,22px);margin-top:clamp(14px,5vh,60px);align-items:stretch}
+.cards.n2{grid-template-columns:repeat(2,1fr)} .cards.n3{grid-template-columns:repeat(3,1fr)}
+.cards.n4{grid-template-columns:repeat(4,1fr)} .cards.n5{grid-template-columns:repeat(5,1fr)}
+.cards.arrows.n3{grid-template-columns:1fr auto 1fr auto 1fr}
+.cards.arrows.n4{grid-template-columns:1fr auto 1fr auto 1fr auto 1fr}
+.cards .arr{align-self:center;font-size:2em;color:var(--ink-3);transition:opacity .3s}
+.card{background:var(--card);border:1px solid var(--rule-2);border-top:6px solid;padding:clamp(12px,1.3vw,26px);
+  min-height:clamp(150px,30vh,340px);display:flex;flex-direction:column;transition:opacity .32s}
+.card b{font-family:var(--display);font-size:clamp(18px,2vw,40px);line-height:1.12;display:block;min-height:2.3em}
+.cards.n4 .card b,.cards.n5 .card b{font-size:clamp(15px,1.5vw,30px)}
+.card p{font-size:clamp(14px,1.45vw,28px);line-height:1.3;color:var(--ink);margin-top:.4em;flex:1}
+.cards.n4 .card p,.cards.n5 .card p{font-size:clamp(12px,1.15vw,22px)}
+.card .tag{margin-top:10px}
+.card.hi{background:var(--ink);border-color:var(--ink)} .card.hi p{color:#C6D0DA}
+.stats{display:grid;margin-top:clamp(40px,15vh,170px)} .stats.n1{grid-template-columns:1fr}
+.stats.n2{grid-template-columns:1fr 1fr} .stats.n3{grid-template-columns:1fr 1fr 1fr}
+.st{text-align:center;padding:0 12px;border-left:1px solid var(--rule-2);transition:opacity .32s}
+.st:first-child{border-left:0}
+.st .tag{display:block;color:var(--ink-3);margin-bottom:14px}
+.st b{font-family:var(--display);font-size:clamp(40px,5.6vw,110px);line-height:1}
+.stats.n3 .st b{font-size:clamp(32px,4.2vw,84px)}
+.st .stsub{font-size:clamp(14px,1.3vw,24px);color:var(--ink-2);max-width:24ch;margin:12px auto 0;line-height:1.3}
+blockquote.mq{font-family:var(--display);font-style:italic;font-size:clamp(18px,2.1vw,40px);line-height:1.3;
+  background:var(--tint);border-left:6px solid var(--accent);padding:clamp(14px,1.6vw,30px);margin:14px 0 clamp(18px,4vh,44px)}
+.pc{display:grid;grid-template-columns:14em 1fr;align-items:baseline;gap:16px;margin:clamp(8px,2vh,24px) 0;transition:opacity .32s}
+.pc b{font-family:var(--display);font-size:clamp(20px,2.3vw,44px)}
+.qlist{display:flex;flex-direction:column;gap:clamp(6px,1vh,14px);margin-top:10px}
+.qrow{display:grid;grid-template-columns:1fr 12em;gap:14px;align-items:center;background:var(--card);
+  padding:clamp(8px,1vw,16px) 14px;border-radius:6px;transition:opacity .32s}
+.qrow.try{grid-template-columns:1.2fr auto 9em}
+.qrow .q{font-family:var(--display);font-style:italic;font-size:clamp(14px,1.3vw,25px);line-height:1.28}
+.qrow.try .q{font-size:clamp(12px,1.02vw,19px)}
+.qrow .q.plain{font-style:normal;font-family:var(--body)}
+.disc{margin-top:clamp(20px,6vh,70px);display:flex;flex-direction:column;gap:clamp(20px,5vh,60px)}
+.dq{display:grid;grid-template-columns:1.6em 1fr;gap:14px;transition:opacity .32s}
+.dq span{font-family:var(--display);font-size:clamp(28px,3vw,56px);font-weight:700;color:var(--accent)}
+.dq p{font-family:var(--display);font-size:clamp(18px,2.1vw,40px);font-weight:700;line-height:1.22}
+.dref{margin-top:clamp(10px,2.5vh,30px);background:var(--card);padding:8px 16px}
+.dref div{display:grid;grid-template-columns:1fr 13em;gap:12px;align-items:center;padding:5px 0;border-top:1px solid var(--rule-2)}
+.dref div:first-child{border-top:0}
+.dref p{font-family:var(--display);font-style:italic;font-size:clamp(12px,1.05vw,20px);line-height:1.25}
+.dref p.plain{font-style:normal;font-weight:700;font-family:var(--body)}
+.dref span{font-size:clamp(10px,.8vw,15px);font-weight:700;color:var(--accent);text-align:right;text-transform:uppercase;letter-spacing:.04em}
+.slide:has(.dref) .disc{gap:clamp(8px,2vh,24px);margin-top:clamp(10px,3vh,34px)}
+.slide:has(.dref) .dq p{font-size:clamp(16px,1.7vw,32px)}
+.report{margin-top:clamp(18px,4vh,50px);background:var(--card);padding:12px 18px;font-size:clamp(14px,1.4vw,26px)}
+.report b{color:var(--accent);text-transform:uppercase;letter-spacing:.08em;font-size:.8em;margin-right:.4em}
+.qrow .key{font-size:clamp(11px,.9vw,16px);color:var(--accent);font-weight:700;text-align:right}
+.ans{display:flex;gap:4px;flex-wrap:wrap}
+.ans button{font-size:clamp(10px,.78vw,14px);padding:4px 9px}
+.segs{display:inline-flex;gap:4px;padding:3px;background:transparent}
+.segs button{font-size:clamp(11px,.9vw,16px)}
+.tl{display:grid;gap:18px;margin-top:clamp(20px,6vh,70px)} .tl.n4{grid-template-columns:repeat(4,1fr)}
+.tl .ev{border-top:4px solid var(--accent);padding-top:12px;transition:opacity .32s}
+.tl .ev .yr{font-family:var(--display);font-size:clamp(28px,3vw,58px);color:var(--accent);font-weight:700;display:block}
+.tl .ev b{font-family:var(--display);font-size:clamp(18px,1.8vw,34px);display:block;margin:6px 0}
+.tl .ev p{font-size:clamp(14px,1.3vw,25px);line-height:1.3}
+.mb{transition:x .45s ease,width .45s ease}
+/* Staged bars. The engine re-renders a slide on every step and lands earlier
+   stages instantly through .pop, but replays every .growx/.growy bar, so bars
+   that were already on screen used to grow in again. Bars therefore ride on
+   .pop too, with a directional grow instead of .pop's default scale. */
+.pop.popx{transform-origin:left;transform:scaleX(0);opacity:1;transition:transform .55s cubic-bezier(.28,1.1,.45,1)}
+.pop.popx.go{transform:scaleX(1)}
+.pop.popy{transform:scaleY(0);opacity:1;transition:transform .5s cubic-bezier(.28,1.1,.45,1)}
+.pop.popy.go{transform:scaleY(1)}
+@media (prefers-reduced-motion:reduce){ .pop.popx,.pop.popy{transform:none;transition:none} }
+.cap{font-family:var(--display);font-size:clamp(16px,1.6vw,32px);font-weight:600;line-height:1.25;min-height:2.6em;margin:6px 0 0}
+.cap .dim{color:var(--ink-3);font-weight:400;font-size:.8em}
+@media (prefers-reduced-motion:reduce){ .mb{transition:none} }
+.cards.n6{grid-template-columns:repeat(6,1fr)}
+.cards.n6 .card b{font-size:clamp(14px,1.3vw,26px)} .cards.n6 .card p{font-size:clamp(11px,1vw,19px)}
+.so{margin:clamp(28px,6vh,72px) auto 0;max-width:62ch;text-align:center;font-family:var(--display);font-weight:600;font-size:clamp(17px,1.7vw,30px);line-height:1.35;color:var(--ink);border-top:2px solid var(--accent);padding-top:clamp(12px,2vh,24px);transition:opacity .4s}
+.stats.n4{grid-template-columns:repeat(4,1fr)} .stats.n4 .st b{font-size:clamp(34px,4.6vw,92px)} .stats.n4 .st .stsub{font-size:clamp(13px,1.2vw,22px)}
+/* keep the source line clear of the slide counter in the bottom-right corner */
+.slide:not(.center) > .foot{padding-right:clamp(120px,15vw,240px);box-sizing:border-box}
+/* Polarization VI (the parts this deck uses) ------------------------------- */
+.tl.n2{grid-template-columns:repeat(2,1fr);gap:clamp(24px,4vw,80px)}
+.stats{margin-top:clamp(28px,10vh,120px)}
+.g2{display:grid;grid-template-columns:clamp(110px,13vw,240px) 1fr 1fr;gap:10px;margin-top:clamp(8px,2vh,24px)}
+.g2 .gh{font-size:clamp(11px,.95vw,17px);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);text-align:center}
+.g2 .gh.gl{text-align:right;align-self:end}
+.g2 .gc{text-align:center;font-weight:700;color:var(--ink-3);letter-spacing:.08em;align-self:end}
+.g2 .gr{align-self:center;text-align:right;font-weight:700;color:var(--ink-3);letter-spacing:.08em;padding-right:8px}
+.gcell{background:var(--card);border:1px solid var(--rule-2);padding:clamp(12px,1.4vw,26px);min-height:clamp(110px,22vh,240px);transition:opacity .32s}
+.gcell b{font-family:var(--display);font-size:clamp(16px,1.6vw,30px);line-height:1.2;display:block}
+.gcell p{color:var(--accent);font-weight:700;font-size:clamp(13px,1.15vw,21px);margin-top:.7em}
+.gcell.hi{background:var(--ink);border-color:var(--ink)} .gcell.hi b{color:#fff} .gcell.hi p{color:#F2B8C2}
+/* Losing Well -------------------------------------------------------------- */
+.tl.n5{grid-template-columns:repeat(5,1fr)}
+.qt{max-width:min(1100px,86vw);margin:0 auto;text-align:left}
+.qmark{display:block;font-family:var(--display);font-weight:700;color:var(--accent);font-size:clamp(80px,9vw,170px);line-height:.8}
+.qtext{font-family:var(--display);font-weight:700;color:#F4F7FA;font-size:clamp(28px,3.6vw,70px);line-height:1.22}
+.qtext.long{font-size:clamp(22px,2.7vw,52px)}
+.qrule{display:block;width:clamp(60px,9vw,160px);height:3px;background:var(--accent);margin:clamp(18px,4vh,44px) 0 14px}
+.qwho{color:#F4F7FA;font-weight:700;font-size:clamp(15px,1.5vw,28px)}
+.qwhen{color:#8E9AA6;font-size:clamp(13px,1.25vw,23px);margin-top:4px}
+.mvbig{font-family:var(--display);font-weight:700;font-size:clamp(28px,3.5vw,68px);line-height:1.2;max-width:28ch;margin:clamp(24px,9vh,120px) 0 0}
+.mvsub{font-style:italic;color:var(--ink-3);font-size:clamp(15px,1.4vw,26px);margin-top:clamp(12px,2.5vh,28px)}
+.mvband{position:absolute;left:clamp(24px,5vw,90px);right:clamp(24px,5vw,90px);bottom:clamp(40px,9vh,110px);
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:clamp(6px,.8vw,14px)}
+.mvband span{display:grid;place-items:center;padding:clamp(12px,2.4vh,28px) 0;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;font-size:clamp(15px,1.6vw,30px)}
+.mva{background:var(--ink);color:var(--card)} .mvu{background:#CFCFCF;color:#141414} .mvd{background:var(--accent);color:#fff}
+.cards.n4 .card .tag{font-size:clamp(9px,.75vw,14px)}
+</style>
+</head><body>
+<div class="deck" id="deck"></div>
+<div class="progress"><i id="bar"></i></div>
+<aside id="notes" hidden><h4>Speaker notes</h4><div id="notesbody"></div></aside>
+<div id="help" hidden><div>
+  <b>Losing Well &mdash; Before the Vote: Loser&rsquo;s Consent</b><br><br>
+  <kbd>&rarr;</kbd> / <kbd>space</kbd> next &nbsp; <kbd>&larr;</kbd> back &nbsp;
+  <kbd>&darr;</kbd> / <kbd>&uarr;</kbd> skip a whole slide &nbsp;
+  <kbd>N</kbd> speaker notes &nbsp; <kbd>F</kbd> fullscreen &nbsp;
+  <kbd>T</kbd> light/dark &nbsp; <kbd>?</kbd> this help<br><br>
+  Slide for slide the same as the PowerPoint, with the same numbers and the same
+  speaker notes: both are drawn from one file. Most slides build a piece at a time
+  on <kbd>&rarr;</kbd>.<br><br>
+  The winner&ndash;loser and 2024 legitimacy charts are rebuilt from the ANES, via
+  <span class="nums">losers-consent-anes.R</span>; slides marked
+  <i>reported from the article</i> or <i>reported from the source</i> show
+  someone else&rsquo;s numbers, cited at the foot of the slide.<br><br>
+  Jump to a slide by number &mdash; <kbd>&hellip;#13</kbd>, or a stage, <kbd>#13b</kbd>.
+  <div class="close">Press <kbd>Esc</kbd> or click anywhere to close.</div>
+</div></div>
+<div class="hint" id="hint"></div>
+<script>
+const D = {"rows":[{"item":"satdem","grp":"winner","cat":1996,"label":"satisfied with democracy","pct":85.8,"n":592},{"item":"satdem","grp":"winner","cat":2000,"label":"satisfied with democracy","pct":85.3,"n":488},{"item":"satdem","grp":"winner","cat":2004,"label":"satisfied with democracy","pct":95.9,"n":410},{"item":"satdem","grp":"winner","cat":2008,"label":"satisfied with democracy","pct":88.7,"n":1016},{"item":"satdem","grp":"winner","cat":2012,"label":"satisfied with democracy","pct":75.8,"n":2474},{"item":"satdem","grp":"winner","cat":2016,"label":"satisfied with democracy","pct":76.3,"n":1228},{"item":"satdem","grp":"winner","cat":2020,"label":"satisfied with democracy","pct":60.5,"n":3472},{"item":"satdem","grp":"winner","cat":2024,"label":"satisfied with democracy","pct":75.5,"n":1620},{"item":"satdem","grp":"loser","cat":1996,"label":"satisfied with democracy","pct":85.0,"n":433},{"item":"satdem","grp":"loser","cat":2000,"label":"satisfied with democracy","pct":85.5,"n":535},{"item":"satdem","grp":"loser","cat":2004,"label":"satisfied with democracy","pct":61.8,"n":397},{"item":"satdem","grp":"loser","cat":2008,"label":"satisfied with democracy","pct":80.0,"n":509},{"item":"satdem","grp":"loser","cat":2012,"label":"satisfied with democracy","pct":58.6,"n":1677},{"item":"satdem","grp":"loser","cat":2016,"label":"satisfied with democracy","pct":64.6,"n":1339},{"item":"satdem","grp":"loser","cat":2020,"label":"satisfied with democracy","pct":65.7,"n":2531},{"item":"satdem","grp":"loser","cat":2024,"label":"satisfied with democracy","pct":63.4,"n":2101},{"item":"satdem","grp":"dem","cat":1996,"label":"satisfied with democracy","pct":85.8,"n":592},{"item":"satdem","grp":"dem","cat":2000,"label":"satisfied with democracy","pct":85.5,"n":535},{"item":"satdem","grp":"dem","cat":2004,"label":"satisfied with democracy","pct":61.8,"n":397},{"item":"satdem","grp":"dem","cat":2008,"label":"satisfied with democracy","pct":88.7,"n":1016},{"item":"satdem","grp":"dem","cat":2012,"label":"satisfied with democracy","pct":75.8,"n":2474},{"item":"satdem","grp":"dem","cat":2016,"label":"satisfied with democracy","pct":64.6,"n":1339},{"item":"satdem","grp":"dem","cat":2020,"label":"satisfied with democracy","pct":60.5,"n":3472},{"item":"satdem","grp":"dem","cat":2024,"label":"satisfied with democracy","pct":63.4,"n":2101},{"item":"satdem","grp":"rep","cat":1996,"label":"satisfied with democracy","pct":85.0,"n":433},{"item":"satdem","grp":"rep","cat":2000,"label":"satisfied with democracy","pct":85.3,"n":488},{"item":"satdem","grp":"rep","cat":2004,"label":"satisfied with democracy","pct":95.9,"n":410},{"item":"satdem","grp":"rep","cat":2008,"label":"satisfied with democracy","pct":80.0,"n":509},{"item":"satdem","grp":"rep","cat":2012,"label":"satisfied with democracy","pct":58.6,"n":1677},{"item":"satdem","grp":"rep","cat":2016,"label":"satisfied with democracy","pct":76.3,"n":1228},{"item":"satdem","grp":"rep","cat":2020,"label":"satisfied with democracy","pct":65.7,"n":2531},{"item":"satdem","grp":"rep","cat":2024,"label":"satisfied with democracy","pct":75.5,"n":1620},{"item":"legit20","grp":"harris","cat":1,"label":"Biden legitimate winner of 2020","pct":96.9,"n":2093},{"item":"legit20","grp":"trump","cat":1,"label":"Biden legitimate winner of 2020","pct":38.6,"n":1584},{"item":"legit24","grp":"harris","cat":1,"label":"Trump legitimate winner of 2024","pct":87.4,"n":2080},{"item":"legit24","grp":"trump","cat":1,"label":"Trump legitimate winner of 2024","pct":98.6,"n":1613},{"item":"accurate","grp":"harris","cat":1,"label":"votes counted very or completely accurately (pre)","pct":81.3,"n":2199},{"item":"accurate","grp":"trump","cat":1,"label":"votes counted very or completely accurately (pre)","pct":21.1,"n":1737},{"item":"strongpres","grp":"harris","cat":1,"label":"helpful if presidents could ignore Congress and courts","pct":14.2,"n":2112},{"item":"strongpres","grp":"trump","cat":1,"label":"helpful if presidents could ignore Congress and courts","pct":19.0,"n":1648},{"item":"strongldr","grp":"harris","cat":1,"label":"strong leader good even if he bends rules","pct":15.2,"n":2107},{"item":"strongldr","grp":"trump","cat":1,"label":"strong leader good even if he bends rules","pct":52.6,"n":1629},{"item":"violence","grp":"harris","cat":1,"label":"violence for political goals at least a little justified","pct":12.2,"n":2113},{"item":"violence","grp":"trump","cat":1,"label":"violence for political goals at least a little justified","pct":13.5,"n":1635},{"item":"preferdem","grp":"harris","cat":1,"label":"democracy always preferable","pct":81.6,"n":2103},{"item":"preferdem","grp":"trump","cat":1,"label":"democracy always preferable","pct":73.5,"n":1624}]};
+const $ = s => document.querySelector(s);
+const SVGNS = "http://www.w3.org/2000/svg";
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const f1 = v => v.toFixed(1);
+const at = (s,y) => { const r = D.series[s].find(p=>p[0]===y); return r ? r[1] : null; };
+const lastAtOrBefore = (s,y) => { const d = D.series[s].filter(p=>p[0]<=y);
+  return d.length ? d[d.length-1] : null; };
+const mean = a => a.reduce((x,y)=>x+y,0)/a.length;
+
+function el(tag, attrs, text){
+  const n = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  if (text !== undefined) n.textContent = text;
+  return n;
+}
+function clear(svg){ while (svg.firstChild) svg.removeChild(svg.firstChild); }
+
+/* A small linear-axis chart. Written out rather than pulled from a library
+   because this page has to open with no network at all. */
+// Pen speed for the drawing lines, in px per ms. One constant for the deck so
+// every chart draws at the same rate; duration falls out of the path length.
+const DRAW_PX_PER_MS = 0.30;   // ~2.6s across a full-width series, as in the sorting deck
+const ASK_FS = 30;                       // big enough to be read from the back
+// SVG text does not wrap, so break the question into rows by hand. Words only:
+// a mid-word break in 30px bold is more distracting than a short line.
+function wrapAsk(str, max){
+  const out=[]; let cur='';
+  for (const w of String(str).split(/\s+/)){
+    if (cur && (cur+' '+w).length > max){ out.push(cur); cur=w; }
+    else cur = cur ? cur+' '+w : w;
+  }
+  if (cur) out.push(cur);
+  return out;
+}
+function chart(svg, cfg){
+  clear(svg);
+  const vb = svg.viewBox.baseVal, W = vb.width, H = vb.height;
+  const P = Object.assign({l:64, r:170, t:20, b:44}, cfg.pad||{});
+  const x0=P.l, x1=W-P.r, y0=P.t, y1=H-P.b;
+  const [xa,xb] = cfg.xdom, [ya,yb] = cfg.ydom;
+  const px = v => x0 + (v-xa)/(xb-xa)*(x1-x0);
+  const py = v => y1 - (v-ya)/(yb-ya)*(y1-y0);
+  const RULE=css('--rule-2'), MUT=css('--ink-3');
+
+  (cfg.bands||[]).forEach(b=>svg.appendChild(el('rect',
+    {x:px(b.from), y:y0, width:px(b.to)-px(b.from), height:y1-y0,
+     fill:css('--accent'), opacity:0.09})));
+  cfg.yticks.forEach(v=>{
+    svg.appendChild(el('line',{x1:x0,x2:x1,y1:py(v),y2:py(v),stroke:RULE,'stroke-width':1}));
+    svg.appendChild(el('text',{x:x0-11,y:py(v)+5,'text-anchor':'end','font-size':15,
+      fill:MUT},(cfg.yfmt?cfg.yfmt(v):v)));
+  });
+  cfg.xticks.forEach(v=>svg.appendChild(el('text',
+    {x:px(v),y:y1+26,'text-anchor':'middle','font-size':15,fill:MUT},v)));
+  // What the vertical axis actually is. Several of these charts plot a
+  // quantity -- the in-party minus out-party gap -- that is obvious to whoever
+  // built the slide and invisible to the room.
+  if (cfg.ylab) svg.appendChild(el('text',
+    {x:18,y:(y0+y1)/2,'text-anchor':'middle','font-size':15,'font-weight':700,
+     fill:MUT,transform:`rotate(-90 18 ${(y0+y1)/2})`}, cfg.ylab));
+  (cfg.rules||[]).forEach(r=>{
+    svg.appendChild(el('line',{x1:px(r.at),x2:px(r.at),y1:y0-6,y2:y1,
+      stroke:r.color||MUT,'stroke-width':1.4,'stroke-dasharray':'6 5'}));
+    if (r.label) svg.appendChild(el('text',{x:px(r.at)-10,y:y0+6,'text-anchor':'end',
+      'font-size':14,'font-weight':700,fill:r.color||MUT}, r.label));
+  });
+  let stageIx = 0;                       // which .stage this line will become
+  cfg.lines.forEach(L=>{
+    const d = L.data.filter(p=>p[0]>=xa && p[0]<=xb);
+    if (!d.length) return;
+    const XY = d.map(p=>[px(p[0]),py(p[1])]);
+    // Cumulative PATH length, which on a jagged series is a different number
+    // from x-position: a dot must pop at the moment the pen reaches it, not at
+    // its share of the width.
+    const cum=[0];
+    for(let k=1;k<XY.length;k++) cum.push(cum[k-1] +
+      Math.hypot(XY[k][0]-XY[k-1][0], XY[k][1]-XY[k-1][1]));
+    const tot = cum[cum.length-1] || 1;
+    // Constant pen speed across every line in the deck, so a short series does
+    // not crawl and a long one does not race.
+    const dur = Math.max(700, Math.min(3400, Math.round(tot / DRAW_PX_PER_MS)));
+
+    // The ghost: the whole shape, faint, so the reader sees that something goes
+    // here before it is drawn. Outside the stage — it is visible from the start.
+    if (!L.dash && L.ghost!==false)
+      svg.appendChild(el('polyline',{class:'ghost-line',fill:'none',
+        stroke:css('--ghost'),'stroke-width':1.6,
+        points:XY.map(q=>q.join(',')).join(' ')}));
+
+    // A DASHED line cannot also be a drawing line: .draw owns stroke-dasharray,
+    // so animating one would erase the dash pattern. Dashed series are context
+    // — the national reference, the neutral rule — and never stage.
+    const staged = !L.dash && L.ghost!==false;
+    const host = staged
+      ? el('g',{class:'stage'+(L.stageClass?' '+L.stageClass:''),style:`--dur:${dur}ms`})
+      : svg;
+    host.appendChild(el('polyline',Object.assign(
+      {points:XY.map(q=>q.join(',')).join(' '),
+       fill:'none', stroke:L.color, 'stroke-width':L.w||3,
+       'stroke-linejoin':'round','stroke-linecap':'round',
+       'stroke-dasharray':L.dash||'none', opacity:L.op||1,
+       style:`--dur:${dur}ms`},
+      staged ? {class:'draw'} : {})));
+    if (L.dots!==false) d.forEach((p,k)=>host.appendChild(el('circle',
+      {class:staged?'pop':'',cx:XY[k][0],cy:XY[k][1],r:(L.w||3)>2.5?4:3,fill:L.color,
+       opacity:L.op||1,
+       style:`transition-delay:${staged?Math.round(cum[k]/tot*dur):0}ms`})));
+    if (staged) svg.appendChild(host);
+    if (L.label){ const p=d[d.length-1];
+      (staged?host:svg).appendChild(el('text',{x:px(p[0])+12,y:py(p[1])+5,
+        'font-size':16,'font-weight':700,fill:L.color, opacity:L.op||1}, L.label)); }
+
+    // The question this line answers, parked at the point the line will reach,
+    // right-aligned so it grows leftward into empty plot rather than off the
+    // edge. Tagged with its own stage index; paintStages shows the one whose
+    // turn is next.
+    if (staged && L.ask){
+      const p = d[d.length-1], ax = px(p[0]) - 16;
+      const rows = wrapAsk(L.ask, Math.max(18, Math.floor((ax - x0) / (ASK_FS*0.5))));
+      let ay = py(p[1]) - 20 - (rows.length-1)*(ASK_FS+4);
+      if (ay < y0 + ASK_FS) ay = py(p[1]) + 34;          // no room above; go below
+      const gAsk = el('g',{class:'ask','data-stage':String(stageIx)});
+      rows.forEach((r,i)=>gAsk.appendChild(el('text',
+        {x:ax, y:ay + i*(ASK_FS+4), 'text-anchor':'end', 'font-size':ASK_FS,
+         'font-weight':700, fill:css('--ink')}, r)));
+      svg.appendChild(gAsk);
+    }
+    if (staged) stageIx++;
+  });
+  (cfg.marks||[]).forEach(m=>{
+    svg.appendChild(el('circle',{cx:px(m.x),cy:py(m.y),r:m.r||8,fill:m.color,
+      stroke:css('--card'),'stroke-width':2.5}));
+    if (m.label) svg.appendChild(el('text',{x:px(m.x)+14,y:py(m.y)+6,'font-size':17,
+      'font-weight':700,fill:m.color}, m.label));
+  });
+  return {px,py,x0,x1,y0,y1,svg};
+}
+/* A labeled dot on a chart, for calling out one point. */
+function svgMark(g,x,y,color,label){
+  g.svg.appendChild(el('circle',{cx:g.px(x),cy:g.py(y),r:8,fill:css('--paper')}));
+  g.svg.appendChild(el('circle',{cx:g.px(x),cy:g.py(y),r:5.5,fill:color}));
+  if(label!==undefined) g.svg.appendChild(el('text',{x:g.px(x),y:g.py(y)-16,
+    'text-anchor':'middle','font-size':15,'font-weight':700,fill:color},label));
+}
+// The svg scales to the column width, so its rendered height is width*H/1000 --
+// a fixed number the slide cannot negotiate with. 430 put eight chart slides
+// over the bottom of a 720p frame, which scrolls on a laptop and is simply
+// missing on a projector. Audited at 1280x720; see the note at the foot of
+// this file for how to re-run that check.
+const SVG = (id,h) => `<div class="chart"><svg id="${id}" viewBox="0 0 1000 ${h||384}"></svg></div>`;
+const pressed = id => $(id).getAttribute('aria-pressed')==='true';
+function bindToggles(ids, fn){
+  ids.forEach(id=>$(id).addEventListener('click',()=>{
+    $(id).setAttribute('aria-pressed', pressed(id)?'false':'true');
+    // a toggle rebuilds the chart: re-arm, then restore what was already shown
+    fn(); const deck=$("#deck"); arm(deck);
+    state.stages=deck.querySelectorAll('.stage').length;
+    const shown = Math.max(1, Math.min(state.sub||99, state.stages));
+    paintStages(deck, shown, false);
+    deck.dataset.drawn = (shown >= state.stages) ? "1" : "0";
+  }));
+}
+
+/* ─── layout helpers, mirroring the PowerPoint's own ─────────────────────
+   R3() is the web twin of findings() in the .pptx builder and carries the
+   same cap: at most three rows a slide. If a section grows a fourth it gets
+   another slide, not a smaller font. ──────────────────────────────────── */
+function R3(rows){
+  if(rows.length>3) throw new Error("R3(): "+rows.length+" rows — split the slide");
+  return `<div class="rows">`+rows.map(r=>`<div class="row">
+    <div class="rl"><span class="tag" style="color:${r.color||'var(--accent)'}">${r.tag}</span>
+      <span class="rbig">${r.big}</span></div>
+    <div class="rt">${r.text}</div>
+    <div class="rs">${r.src||''}</div></div>`).join('')+`</div>`;
+}
+const TWO=(a,b)=>`<div class="two"><div class="tbox">
+  <span class="tag" style="color:var(--blue)">${a.tag}</span><b>${a.head}</b><p>${a.text}</p></div>
+  <div class="tbox"><span class="tag" style="color:var(--accent)">${b.tag}</span>
+  <b>${b.head}</b><p>${b.text}</p></div></div>`;
+const BAND=(k,t)=>`<div class="band"><span class="tag">${k}</span><p>${t}</p></div>`;
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Losing Well — Before the Vote: Loser's Consent
+   THE SLIDES, DEFINED ONCE.
+
+   losers-consent.build.js draws the PowerPoint from this file.
+   Same rule as the polarization unit: one job per slide.
+     title   the takeaway, as a sentence. Readable in three seconds.
+     look    what you are looking at, in plain words.
+     body    ONE chart, ONE number, or at most four short cards.
+     notes   everything else, as SHOWS / SAY / ASK.
+
+   A TALK, NOT A SEMINAR. About 40 minutes, mostly me talking, built like a
+   TED talk: a story to open, one idea per slide, a turn in the middle, and a
+   question to close. Then book clubs. The spine is Layman, Lee & Wolbrecht
+   2023; the full spoken script is losers-consent-lecture.md.
+
+   Rebuilt numbers come from materials/losers-consent.csv
+   (materials/losers-consent-anes.R): the ANES winner-loser gap, 1996–2024, and
+   the 2024 ANES legitimacy and norms items. Everything else is typed here
+   and tagged REPORTED FROM THE ARTICLE.
+
+   TIMING (about 55 min as written): opening 4 · Part 1 why losers consent 7 ·
+   Part 2 the pressures 9 · Part 3 the keepers of the flame 10 · Part 4 the
+   test, 2020–2022 7 · take a side 12 · Part 5 the threats now 6 · close 2.
+   Then book clubs. To get to 50: skip fox, amateurs, ecra, and officials.
+   ─────────────────────────────────────────────────────────────────────────── */
+function buildSlides(ROWS){
+  const find = (it,g,c) => ROWS.find(r => r.item===it && r.grp===g && r.cat===c);
+  const P = (it,g,c=1) => { const r = find(it,g,c);
+    if (!r) throw new Error(`losers-consent.csv has no ${it}/${g}/${c}`); return r.pct; };
+  const N = (it,g,c=1) => { const r = find(it,g,c); if (!r) throw new Error(`no ${it}/${g}`); return r.n; };
+  const pct = v => Math.round(v)+'%';
+  // satisfaction with democracy over time: [[year, pct, null], ...]
+  const SAT = g => ROWS.filter(r => r.item==='satdem' && r.grp===g).sort((a,b)=>a.cat-b.cat).map(r => [r.cat, r.pct, null]);
+  const GAP = y => Math.round(P('satdem','winner',y) - P('satdem','loser',y));
+
+  const LLW = 'Layman, Lee & Wolbrecht 2023, “Political Parties and Loser’s Consent in American Politics,” The Annals 708.';
+  const ANES24 = 'ANES 2024 Time Series, weighted; major-party presidential voters (V242096x).';
+
+  const S = [];
+  const add = o => S.push(o);
+
+  /* ═══════════════════════════════ opening ═══════════════════════════════ */
+  add({type:'title', id:'title', kicker:'Before the vote: loser’s consent', title:'Losing Well',
+    sub:'The peaceful transfer of power, and who might refuse it',
+    foot:'84-309  American Political Divides and Great Debates',
+    notes:`THE ONE SENTENCE: Democracy depends less on how winners behave than on how losers behave, and in the United States the people we used to count on to lose well (party leaders and activists) are no longer the most reliable ones.
+
+HOW TODAY WORKS. A talk of about 45 minutes with a 12-minute take-a-side activity after Part 4 (students move around the room), then book clubs. One pair question in the middle. The script is in losers-consent-lecture.md.
+
+THE TIMING MATTERS. The midterms are one week from today. Somebody is going to lose. That is the frame for everything.
+
+IF YOU ARE SHORT ON TIME: skip the Fox and amateur-candidate slides in Part 2, the ECRA slide in Part 4, and the election-officials slide in Part 5 (about 5 minutes).`});
+
+  add({type:'timeline', id:'vps', title:'Five times, a vice president announced his own side’s defeat',
+    look:'Presiding over the count of electoral votes, each read out the result that ended his (or her) hopes',
+    events:[
+      {y:'1861', h:'Breckinridge', t:'Counts the votes that elect Lincoln, two months before war.'},
+      {y:'1961', h:'Nixon', t:'Declares Kennedy the winner of an election he nearly won.'},
+      {y:'2001', h:'Gore', t:'Gavels down his own party’s objections, after Bush v. Gore.'},
+      {y:'2021', h:'Pence', t:'Certifies his ticket’s loss, after a mob hunted him in the Capitol.'},
+      {y:'2025', h:'Harris', t:'Certifies Trump’s win, four years to the day after January 6.'}],
+    notes:`SHOWS: the cold open. Every four years, on January 6, the sitting vice president presides over the joint session of Congress that counts the electoral votes. Five times the person holding the gavel was announcing his or her own side's defeat.
+
+SAY (slowly, as a story): Picture February 1861. Seven Southern states have already declared they are leaving the Union because they will not accept the election of Abraham Lincoln. The vice president of the United States is John C. Breckinridge of Kentucky, who ran against Lincoln and lost. He stands in the House chamber and reads out the electoral votes that make Lincoln president. Within months he is a Confederate general. He did his duty, and the country still went to war, because millions of other losers would not do theirs.
+
+Jump forward a century. Richard Nixon loses one of the closest elections in American history, with fraud allegations in Illinois and Texas, and he reads out John Kennedy's victory himself. He tells the chamber that those who lose "accept the verdict, and support those who win." 
+
+In 2001, Al Gore, who won the national popular vote and lost Florida by 537 votes after the Supreme Court stopped the recount, gavels down members of his own party who tried to object. No senator would sign their objections, so the rules said they could not be heard. When Maxine Waters protested, Gore answered: "The chair would advise that the rules do care." 
+
+In 2021, Mike Pence certifies his ticket's defeat hours after rioters chanted that they wanted to hang him.
+
+And on January 6, 2025, Kamala Harris reads out Donald Trump's victory, including her own 226 electoral votes. Beforehand she called the count a "sacred obligation."
+(Breckinridge is often left out of this list; AP called Harris the third vice president to certify her own defeat. Pence is here because it was his ticket.)
+
+ASK (rhetorical): Why would anyone do that? Why does a person with a gavel and a grievance hand power to the other side?
+
+That question is today's class.`});
+
+  add({type:'quote', id:'przeworski',
+    q:'Democracy is a system in which parties lose elections.',
+    who:'Adam Przeworski', when:'Democracy and the Market (1991)',
+    notes:`SHOWS: the shortest definition of democracy in political science.
+SAY: Przeworski's point is that the defining feature of democracy is not that people vote. Dictatorships hold elections all the time. The defining feature is that the people in power can lose, and when they lose, they leave. In a later book he put it as a system in which incumbents lose elections and leave when they lose (Przeworski 2019, quoted by Layman et al., p. 165).
+So the hardest job in a democracy is not winning. It is losing. Winners have every reason to like the rules. Everything depends on the loser.`});
+
+  add({type:'cards', id:'define', title:'Loser’s consent has two parts', look:'The definition Layman, Lee & Wolbrecht use, from Anderson et al. (2005)',
+    cards:[
+      {h:'Accept the loss', t:'Concede. Do not try to overturn the count, in the courts, the legislature, or the streets.', tag:'TONIGHT'},
+      {h:'Keep your allegiance', t:'Stay in the game. Organize, persuade, and run again under the same rules.', tag:'THE NEXT FOUR YEARS'}],
+    source:LLW+' p. 165, quoting Anderson, Blais, Bowler, Donovan & Listhaug 2005, Losers’ Consent, p. 13.',
+    notes:`SHOWS: the concept of the day, in two parts.
+SAY: Anderson and his coauthors define losers' consent as the willingness of losers to "accept their loss" and to keep affirming their allegiance to the political system. Two separate things:
+1. ACCEPT THE LOSS. The concession speech, the phone call, not sending lawyers and mobs to change the count.
+2. KEEP YOUR ALLEGIANCE. The harder, slower part: losers have to keep believing the system is worth playing in, so they come back and compete next time instead of giving up on elections or reaching for something else.
+A loser can do the first and fail the second (conceding but telling supporters the system is rigged), or the reverse.
+ASK: Which part is harder for a party? Which is harder for a voter?`});
+
+  /* ═════════════════════════ Part 1: why concede? ═════════════════════════ */
+  add({type:'section', id:'s1', part:'Part 1', title:'Why would anyone accept losing?',
+    notes:`Seven minutes. Why losers consent, the evidence that losing hurts, and the American record.`});
+
+  add({type:'cards', id:'why', title:'Three reasons losers go along', look:'Why parties accept defeat: the standard answer',
+    cards:[
+      {h:'There is a next time', t:'Lose now, win later. Parties play a long game (Aldrich).', tag:'THE REPEATED GAME'},
+      {h:'The rules protect you too', t:'Winners cannot jail you, ban you, or take your property.', tag:'LOW STAKES'},
+      {h:'Fighting costs more', t:'Overturning a loss risks violence, prosecution, and the next election.', tag:'THE PRICE OF REFUSING'}],
+    source:LLW+' pp. 166–167.',
+    notes:`SHOWS: the theory, in three cards. Each card is also a condition that can fail.
+SAY: Parties exist to win; losing threatens their reason to exist (Downs). So why accept it? Layman et al. follow Aldrich: parties may sacrifice success in the short run in order to win more often in the long run. Adherence to the rules means both parties get a fair field and a chance to win another day.
+Read each card as a condition:
+1. A NEXT TIME only works if elections are close enough that you can win them. (Hold that thought: close elections cut both ways.)
+2. LOW STAKES: losing is bearable if the winners cannot destroy you. If the other side looks like an existential threat, waiting four years looks like surrender.
+3. FIGHTING COSTS MORE: the price of refusing has to be high, from the courts, from your own party, from voters.
+TRANSITION: Today's argument is that in the U.S., all three conditions have been weakening.`});
+
+  add({type:'line', id:'gap', title:'Losing hurts. In 2020, the loser’s voters did not feel it.',
+    look:`Satisfied with “the way democracy works in the United States,” voters for the winner and the loser, 1996–2024`,
+    xdom:[1994,2026], ydom:[50,100], xticks:[1996,2000,2004,2008,2012,2016,2020,2024], yticks:[50,60,70,80,90,100], yfmt:'pct',
+    direct:true,
+    series:[
+      {label:'Voted for the winner', color:'ink', data:SAT('winner'), lab:{x:2013.6, y:69.2}},
+      {label:'Voted for the loser', color:'accent', data:SAT('loser'), lab:{x:2006.2, y:P('satdem','loser',2004)-3.5}}],
+    callouts:[
+      {x:2004, y:(P('satdem','winner',2004)+P('satdem','loser',2004))/2, text:`${GAP(2004)} pts`, pos:'below', color:'accent'},
+      {x:2020, y:P('satdem','winner',2020), text:'reversed', pos:'below', color:'accent'}],
+    source:`Rebuilt from the ANES (cumulative file VCF9254/VCF9255; 2024 Time Series V242439), weighted. Share very or fairly satisfied among major-party presidential voters; n = ${N('satdem','winner',2024)+N('satdem','loser',2024)} in 2024.`,
+    notes:`SHOWS: the classic winner-loser gap, rebuilt for the United States. After every election since 2004, people who voted for the loser are less satisfied with "the way democracy works" than people who voted for the winner.
+SAY: This is the most replicated finding in the loser's-consent literature. Anderson et al. find it in democracies all over the world: losing an election makes people less happy with democracy itself. Not just with the result, with the system. The gap is the cost a democracy asks losers to absorb.
+READ THE CHART:
+• 1996 and 2000: no gap. In 2000 the post-election interviews ran during the Florida recount, so nobody knew yet who had lost.
+• 2004: the biggest gap, ${GAP(2004)} points. Kerry voters were miserable.
+• 2008 to 2016: the gap is ${GAP(2008)}, ${GAP(2012)}, then ${GAP(2016)} points. It switches parties every time the White House does.
+• 2020: the gap reverses. Trump voters (${pct(P('satdem','loser',2020))}) were more satisfied than Biden voters (${pct(P('satdem','winner',2020))}). One reading: the loser told his voters they had won, so they did not feel like losers. (That is an interpretation; the survey cannot prove it.)
+• 2024: back to normal. Harris voters ${pct(P('satdem','loser',2024))}, Trump voters ${pct(P('satdem','winner',2024))}.
+The point to remember: losing normally hurts. Democracy only asks that it not hurt so much that losers walk away.`});
+
+  add({type:'timeline', id:'record', title:'The American record: losers have almost always conceded',
+    look:'Two breakdowns, then more than a century of public concessions',
+    events:[
+      {y:'1860', h:'Secession', t:'Eleven states refuse to accept Lincoln’s election. War follows.'},
+      {y:'1876', h:'Hayes–Tilden', t:'Disputed returns, settled by a deal that ends Reconstruction.'},
+      {y:'1896', h:'Bryan', t:'The first public concession by a losing presidential candidate.'},
+      {y:'2000', h:'Gore', t:'Concedes the day after the Supreme Court ends the recount.'},
+      {y:'2020', h:'Trump', t:'The first losing candidate since 1896 who never conceded.'}],
+    source:'Vile 2002, Presidential Winners and Losers; Jenkins 2004, 2005, on contested House and Senate elections; cited in '+LLW+' p. 165.',
+    notes:`SHOWS: the history in five dates.
+SAY: The American record is remarkably good. Since the early 20th century, congressional parties have respected state electoral and judicial processes instead of settling disputed elections by party muscle (Jenkins). Every losing presidential candidate before Trump acknowledged defeat, and every one since 1896 did it publicly (Vile). William Jennings Bryan started the tradition with a telegram to William McKinley: "We have submitted the issue to the American people and their will is law." (Some took their time: Hughes in 1916, Dewey in 1944, Goldwater in 1964.)
+The two breakdowns tell you what failure looks like:
+• 1860: the most catastrophic failure of loser's consent in American history. Southern states did not lose an argument about Lincoln's policies; they refused to accept that he had won. About 620,000 people died.
+• 1876: Samuel Tilden won the popular vote; Florida, Louisiana, South Carolina, and one Oregon elector were disputed, with rival sets of returns. Congress invented an Electoral Commission, which voted 8–7 for Hayes on party lines; he was declared the winner at 4:11 a.m. on March 2, 1877, two days before the inauguration. Federal troops then left the South and Reconstruction ended. (Historians debate how explicit the "Compromise of 1877" bargain was.) Black Southerners paid the price of that settlement. Congress wrote the Electoral Count Act of 1887 so it would never happen again; it took until 2022 to fix that law's gaps.
+Then 2000: Gore concedes. And 2020: on the day of the Capitol attack, Trump tells the crowd you don't concede when there's theft involved (Layman et al., p. 165).
+Lincoln named the principle in his July 4, 1861 message to Congress: "ballots are the rightful and peaceful successors of bullets."
+ASK: Why might a norm that held for 124 years break all at once? (Part 2 is the answer.)`});
+
+  /* ═══════════════════════ Part 2: the pressures ═══════════════════════ */
+  add({type:'section', id:'s2', part:'Part 2', title:'Why is losing getting harder?',
+    notes:`Nine minutes. Layman, Lee & Wolbrecht's five forces, plus amateurs. Each weakens a condition from Part 1.`});
+
+  add({type:'quote', id:'schattschneider',
+    q:'Political parties created democracy, and modern democracy is unthinkable save in terms of the parties.',
+    who:'E. E. Schattschneider', when:'Party Government (1942), p. 1',
+    notes:`SHOWS: the traditional view of parties as the guardians of democracy.
+SAY: For most of the 20th century, political scientists saw parties as democracy's load-bearing walls: they organize voters, aggregate interests, recruit candidates, and above all, they screen out people who will not play by the rules. Levitsky and Ziblatt call this gatekeeping in How Democracies Die.
+And the most active partisans, the activists and party officials, were supposed to be the keepers of the democratic flame. In 1964 Herbert McClosky showed that "political influentials" were far more committed to civil liberties and the rules of the game than ordinary voters. We return to McClosky in Part 3.
+THE CLAIM TODAY: five forces have weakened the parties' commitment to losing well.`});
+
+  add({type:'line', id:'close', title:'Elections have gotten close, and stayed close',
+    look:'The winning presidential candidate’s share of the two-party popular vote, 1920–2024',
+    xdom:[1916,2028], ydom:[45,70], xticks:[1920,1936,1952,1968,1984,2000,2016,2024], yticks:[45,50,55,60,65,70], yfmt:'pct',
+    direct:true,
+    refs:[{y:50, label:'50%: below it, the winner lost the popular vote'}],
+    bands:[{from:1990, to:2026, label:'No winner above 55% since 1988'}],
+    series:[{label:'Winner’s two-party share', color:'ink',
+      data:[[1920,63.8],[1924,65.2],[1928,58.8],[1932,59.1],[1936,62.5],[1940,55.0],[1944,53.8],[1948,52.4],[1952,55.4],[1956,57.8],[1960,50.1],[1964,61.3],[1968,50.4],[1972,61.8],[1976,51.1],[1980,55.3],[1984,59.2],[1988,53.9],[1992,53.5],[1996,54.7],[2000,49.7],[2004,51.2],[2008,53.7],[2012,52.0],[2016,48.9],[2020,52.3],[2024,50.8]].map(r=>[r[0],r[1],null])}],
+    callouts:[{x:1936,y:62.5,text:'FDR',pos:'above',color:'ink'},{x:1972,y:61.8,text:'Nixon',pos:'above',color:'ink'},{x:1984,y:59.2,text:'Reagan',pos:'above',color:'ink'},
+              {x:2000,y:49.7,text:'2000',pos:'below',color:'accent'},{x:2016,y:48.9,text:'2016',pos:'below',color:'accent'}],
+    source:'Two-party shares computed from official returns (Dave Leip’s Atlas / Federal Election Commission). After Layman, Lee & Wolbrecht, Figure 1 (p. 168), extended to 2024.',
+    notes:`SHOWS: Layman et al.'s Figure 1, rebuilt and extended through 2024.
+SAY: From 1920 to 1988 the average winner took about 57 percent of the two-party vote and 425 electoral votes, and landslides were common: Harding, FDR, Eisenhower, Johnson, Nixon in 1972, Reagan in 1984. Since 1988, no winner has reached 55 percent of the two-party vote. Twice, in 2000 and 2016, the winner lost the popular vote. Trump in 2024 won 50.8 percent of the two-party vote and 312 electoral votes. It has now been 42 years since the last landslide (1984). Most of you have never seen one.
+WHY IT MATTERS: a landslide sends a message no one can argue with: the people have spoken. A 50.8–49.2 election leaves room for every story: fraud, error, voter suppression, gerrymandering, the Electoral College, the Comey letter, the weather. Close elections make losing feel like an accident, and accidents feel reversible.
+THE TWIST (save for Part 4): close elections also mean a small number of principled voters can decide outcomes.`});
+
+  add({type:'cards', id:'forces', title:'Four more forces work on the parties', look:'Each one weakens a reason to lose well',
+    cards:[
+      {h:'Polarization', t:'Losing means the other side remakes the country.', tag:'HIGHER STAKES'},
+      {h:'Primaries', t:'Primary voters, not party leaders, pick the nominees.', tag:'WEAKER GATEKEEPERS'},
+      {h:'Money', t:'Outside groups fund candidates the party would not choose.', tag:'INDEPENDENT MONEY'},
+      {h:'Media', t:'Partisan and social media set the story, and spread fraud claims.', tag:'NEW MEGAPHONES'}],
+    source:LLW+' pp. 167–170.',
+    notes:`SHOWS: the other four forces in the article, on one slide. The next three slides put a number on three of them.
+1. POLARIZATION (we spent a unit on it): the ideological distance between the parties has grown in Congress, in state legislatures, among activists, in party platforms, in presidential appointments, and in the judiciary. When the other side's victory means policies you find repugnant, conceding is harder. This is Part 1's "low stakes" condition failing.
+2. PRIMARIES: party leaders were supposed to steer nominations toward experienced candidates who play by the rules. Primary voters are moved by hot-button issues and may be more easily persuaded by populists and demagogues.
+3. MONEY: the 2002 McCain–Feingold law (BCRA) cut off party "soft money"; Citizens United (2010) let outside groups spend without limit.
+4. MEDIA: partisan media and social media weaken parties' ability to decide their own nominees, and make it cheap to organize around a false story.
+Plus a fifth, on its own slide: the rise of amateur candidates.`});
+
+  add({type:'stats', id:'primaries', title:'The party no longer decides', reported:true,
+    look:'Who chooses the nominees',
+    stats:[
+      {label:'States with Democratic presidential primaries, 1972', value:'22', color:'mut'},
+      {label:'States without one, 2020', value:'2', sub:'every other state held a primary', color:'ink'},
+      {label:'Consultants: issue groups more important in recruiting', value:'79%', sub:'2017 survey', color:'accent'}],
+    so:'Issue-driven activists may be less willing to concede and fight another day.',
+    source:LLW+' pp. 168–169, citing Rauch & La Raja 2017.',
+    notes:`SHOWS: the move from party leaders to primary voters and issue groups.
+SAY: After the McGovern–Fraser reforms following 1968, the number of states holding presidential primaries grew steadily. In 1972, 22 states held Democratic presidential primaries; by 2020, all but two picked their delegates by primary. Republicans followed. For other offices, primaries have been nearly universal since the early 20th century.
+Cohen et al. (The Party Decides) argued party elites kept control anyway by coordinating early. But now issue and ideological groups recruit and train candidates. In a 2017 survey of political consultants, 79 percent said these groups had become more important, while most said the parties' role had stayed the same or shrunk.
+WHY IT MATTERS: a party leader thinks about the next election. An issue activist thinks about the cause. Conceding is a long-game move; causes do not always play long games.`});
+
+  add({type:'vbars', id:'money', title:'Outside money grew a hundredfold in twenty years', reported:true,
+    look:'Independent spending by outside groups in midterm elections',
+    domain:[0,2100], fmt:'n0',
+    cats:['2002','2014','2022'],
+    series:[{label:'Independent expenditures', colors:['mut','ideo','accent'], values:[16.8,549.4,1900], labels:['$16.8M','$549M','$1.9B']}],
+    source:LLW+' p. 169, citing OpenSecrets 2023. 2002: the year McCain–Feingold (BCRA) passed; 2014: the first midterm after Citizens United (2010).',
+    notes:`SHOWS: the money, in three bars.
+SAY: In 2002, the year Congress cut off parties' soft money, outside groups spent $16.8 million independently in the midterms. In 2014, the first midterm after Citizens United, $549 million. In 2022, $1.9 billion. That is more than a hundredfold increase.
+WHY IT MATTERS FOR LOSER'S CONSENT: money used to be one of the parties' main levers over candidates. Now wealthy groups and individuals can back specific candidates, including those who seek antidemocratic ends, in a way that was previously impossible. A candidate who refuses to concede does not need the party's blessing if a billionaire or a small-donor list will fund him. Layman et al. note Republicans have benefited more from outside spending (Evers-Hillstrom 2022; Montanaro 2022).
+Also: "earned media." Trump in 2016 raised less than many primary rivals but got an estimated $2 billion in free coverage.
+THIS WEEK (if asked): Justice Elena Kagan, speaking at Catholic University on October 26, 2026, said Americans look at all the money chasing candidates and see a "nightmare," and that "they're right." She blamed the Court's own campaign-finance rulings. The other side of that debate is the Citizens United majority: spending on political speech is speech, and the First Amendment protects it whoever pays. (Bloomberg Law, Oct. 26, 2026.)`});
+
+  add({type:'statement', id:'fox', title:'Partisan media can sell a stolen-election story', reported:true,
+    big:'$787.5 million',
+    sub:'What Fox News paid Dominion Voting Systems in 2023 to settle its defamation suit over false 2020 fraud claims.',
+    source:LLW+' p. 170, citing Peters & Robertson 2023. Settlement amount: April 18, 2023.',
+    notes:`SHOWS: the clearest case of media undermining loser's consent.
+SAY: The Dominion lawsuit revealed that Fox's hosts and executives privately doubted the fraud claims they aired after 2020. Fox settled on the eve of trial for $787.5 million, one of the largest defamation settlements in American history. Layman et al.'s point: partisan media compete with parties to set the agenda and pick candidates, and the effect on loser's consent is "neither hypothetical nor symmetrical."
+Social media add a second channel: they make it cheap to organize, raise money for fraud claims, and spread false claims fast, including the "Stop the Steal" narratives that fueled January 6. Research finds conservatives more likely than moderates or liberals to share false information (Guess, Nagler & Tucker 2019; DeVerna et al. 2024).
+BALANCE: MSNBC is the left's partisan network, and Democrats have spread their own election myths (Russia "changing vote tallies" in 2016; we see the numbers in Part 3). The asymmetry Layman et al. stress is about 2020, where the false claims came from the losing candidate himself.`});
+
+  add({type:'stats', id:'amateurs', title:'More candidates who have never held office', reported:true,
+    look:'New members of Congress with previous elected experience',
+    stats:[
+      {label:'In past decades', value:'3 in 4', color:'mut'},
+      {label:'Since 2016', value:'1 in 2', sub:'in both parties', color:'accent'}],
+    so:'People who have never run under the rules may be less committed to them, including the rule that losers concede.',
+    source:LLW+' p. 170, citing Porter & Steelman 2022; Porter & Treul 2023.',
+    notes:`SHOWS: the amateur candidate.
+SAY: Experienced candidates used to dominate fundraising. Now amateurs often outraise them, and win. Three in four new members of Congress used to have held elected office before. Since 2016, it is about half, in both parties.
+WHY IT MATTERS: someone who has been a county commissioner and a state legislator has lost elections, or watched colleagues lose, and has seen the system continue. Layman et al. suggest people without that experience may be less committed to the rules of competition. (That is a hypothesis; the article does not test it.)
+TRANSITION: So the parties are under pressure. But surely the people who run the parties, the activists, are still the keepers of the flame? That was McClosky's claim in 1964. Let's test it.`});
+
+  /* ════════════════ Part 3: the keepers of the flame? ════════════════ */
+  add({type:'section', id:'s3', part:'Part 3', title:'Are party activists still democracy’s keepers?',
+    notes:`Eight minutes. The article's survey, then our own national numbers.`});
+
+  add({type:'items', id:'items', title:'Layman et al. asked activists and ordinary partisans', reported:true,
+    look:'Notre Dame Health of Democracy Survey, 2022 (seven-point scales)',
+    items:[
+      {text:'I don’t mind a politician’s methods if they manage to get the right things done.', tag:'McCLOSKY, 1964'},
+      {text:'The true American way of life is disappearing so fast that we may have to use force to save it.', tag:'McCLOSKY, 1964'},
+      {text:'If I lose this election, it is only because the system is rigged. I will never concede defeat to my opponent.', tag:'REFUSING TO CONCEDE'},
+      {text:'I don’t care if the courts say this election is legitimate. I will decide whether to accept the results or not.', tag:'REFUSING TO CONCEDE'},
+      {text:'I would personally be willing to use violence to ensure a [my party] candidate wins the 2024 presidential election.', tag:'VIOLENCE'}],
+    source:LLW+' pp. 171–172. Concession items: how a Senate candidate you would otherwise support saying this would change your vote.',
+    notes:`SHOWS: the measures, in the survey's own words.
+SAY: Layman et al. use the 2022 Notre Dame Health of Democracy Survey. They split each party into three groups:
+• ACTIVISTS: did two or more campaign things in the past year (persuaded someone, went to a rally, wore a button or put up a sign, worked for a campaign, gave money, posted about a candidate). About 19% of the sample.
+• CAUCUS AND CONVENTION ATTENDERS: the people who actually pick nominees in some states. About 13%.
+• NONACTIVISTS: everyone else who identifies with a party.
+Three measures:
+1. McCLOSKY'S ITEMS, replicated from 1964 (three items; two shown).
+(Bartels, PNAS 2020, asked Republicans the force item in January 2020: 51% agreed.)
+2. REFUSING TO CONCEDE: a Senate candidate in your state, whom you would otherwise support, says these things. Does it make you more or less likely to vote for them?
+3. VIOLENCE: support for violence, and personal willingness, to make sure your party wins in 2024.
+The test: if McClosky is still right, activists should score LOWER on all three.`});
+
+  add({type:'vbars', id:'concede', title:'Republican activists reward refusing to concede', reported:true,
+    look:'Refusal to concede index (1–7; higher means the statements make you more likely to vote for the candidate)',
+    domain:[1,4], fmt:'n1',
+    cats:['Dem. caucus','Dem. activists','Dem. others','Independents','Rep. others','Rep. activists','Rep. caucus'],
+    series:[{label:'mean', colors:['1F4E79','4F7CAC','93AECB','8A8A8A','E8909E','D9485F','C41230'], values:[1.9,1.65,1.8,2.3,2.95,3.25,3.25]}],
+    source:LLW+' Figure 2 (p. 174). Bars read from the figure, to about ±0.05; predicted values with controls.',
+    notes:`SHOWS: the article's central result, Figure 2's second panel, redrawn.
+SAY: Two things jump out.
+1. A PARTY GAP. Every group of Republicans is more willing than every group of Democrats, and than independents, to say a candidate who refuses to concede is more appealing. The scale's midpoint (4) would mean "no effect on my vote." Everyone is below it, so on average everyone dislikes the statements; Republicans dislike them much less.
+2. AN ACTIVISM GAP, IN THE WRONG DIRECTION. Among Republicans, activists and caucus/convention attenders score significantly HIGHER than ordinary Republicans. The most involved Republicans are the least committed to loser's consent. Among Democrats the differences are not statistically significant, though caucus attenders score above other activists.
+On McClosky's index (not shown): Democratic activists and caucus attenders ARE more democratic than ordinary Democrats, as McClosky found. Republican activists are not, and caucus attenders are less.
+WHY IT MATTERS: activists staff campaigns, pick nominees in caucuses and conventions, and vote in primaries. If they reward candidates who refuse to concede, candidates hear it.`});
+
+  add({type:'vbars', id:'violence', title:'Violence: the most active in both parties stand out', reported:true,
+    look:'“I support the use of violence to ensure a [my party] candidate wins the 2024 presidential election” (1–7)',
+    domain:[1,4], fmt:'n1',
+    cats:['Dem. caucus','Dem. activists','Dem. others','Independents','Rep. others','Rep. activists','Rep. caucus'],
+    series:[{label:'mean', colors:['1F4E79','4F7CAC','93AECB','8A8A8A','E8909E','D9485F','C41230'], values:[1.95,1.45,1.4,1.85,1.7,1.95,2.15]}],
+    source:LLW+' Figure 2 (p. 174). Bars read from the figure, to about ±0.05. The “personally willing” item looks the same.',
+    notes:`SHOWS: the third panel of Figure 2. This is the both-parties finding.
+SAY: Support for election violence is low everywhere: all the bars sit near 1 or 2, "strongly disagree" to "disagree." There is no overall party difference. But look at the ends:
+• Democratic caucus and convention attenders are significantly more supportive of violence than other Democrats, activists or not.
+• Republican activists and caucus attenders are significantly more supportive than ordinary Republicans.
+The authors call this "possibly our strongest evidence against the idea of political activists as bulwarks of democracy."
+(Independent nonactivists are surprisingly high too. The authors' explanation in their note 8: many are alienated from both parties and from the system itself.)
+CAUTION ON VIOLENCE ITEMS: Westwood, Grimmer, Tyler & Nall (PNAS 2022) show that survey questions about political violence overstate support: many respondents are disengaged or misread the question. The median earlier estimate of support for partisan violence was 18.5%; theirs was 2.9%. For a specific political murder, at most 2% of engaged respondents supported it.
+OTHER SERIES (if asked): PRRI's "true American patriots may have to resort to violence in order to save our country": Republicans 28% (March 2021), 33% (2023), 22% (Sept. 2025), 19% (Dec. 2025); Democrats 7%, 13%, 12%, 17%. The gap has closed since Trump returned to office. Kalmoe & Mason (2017 survey): if the other party won in 2020, 18% of Democrats and 13% of Republicans said violence would be at least a little justified. Read these as relative differences, not as how many Americans would actually commit violence.`});
+
+  add({type:'statement', id:'keepers', title:'The conventional wisdom no longer holds',
+    big:'If we could ever count on the parties’ most active members to protect democracy, we can’t anymore.',
+    sub:'Layman, Lee & Wolbrecht’s conclusion from their survey (p. 173), paraphrased.',
+    notes:`SHOWS: the turn of the talk.
+SAY: For sixty years, the comforting story was: ordinary voters are shaky on democratic principles, but the people who run politics know better and hold the line. Layman et al. find little evidence that today's party "influentials" are more committed to democratic norms than less active partisans, particularly in the Republican Party but in some ways among Democrats too.
+PAIR QUESTION (90 seconds): Turn to the person next to you. Why would the most engaged people be the least willing to lose? Come up with one reason.
+(Answers to listen for: they care most about the outcome, so losing costs them most; they live in partisan media; they are the most ideologically extreme; they are the ones who hate the other side most, which is affective polarization from earlier in the semester.)`});
+
+  add({type:'hbars', id:'legit', title:'In 2024, most losers accepted the result. Most 2020 losers still had not.',
+    look:'Who was the “legitimate winner”? Asked after the 2024 election, by 2024 vote',
+    domain:[0,100], fmt:'pct', big:true,
+    series:[{label:'Harris voters', color:'dem'},{label:'Trump voters', color:'rep'}],
+    rows:[
+      {label:'Biden was the legitimate winner of 2020', vals:[P('legit20','harris'),P('legit20','trump')]},
+      {label:'Trump was the legitimate winner of 2024', vals:[P('legit24','harris'),P('legit24','trump')]}],
+    source:ANES24+` Items V242567 and V242575 (“Which of these two statements do you think is most likely to be true?”). n = ${N('legit24','harris')} Harris and ${N('legit24','trump')} Trump voters.`,
+    notes:`SHOWS: our own numbers on loser's consent among voters, from the 2024 American National Election Study, interviewed after the 2024 election.
+SAY: Read the bottom row first. Asked who legitimately won 2024, ${pct(P('legit24','harris'))} of Harris voters say Trump. That is loser's consent in action, weeks after a painful loss. (And ${pct(100-P('legit24','harris'))} of Harris voters said Harris was the legitimate winner. Not zero: denial is not one party's monopoly.)
+Now the top row. Four years after 2020, only ${pct(P('legit20','trump'))} of Trump voters said Biden legitimately won 2020. About ${pct(100-P('legit20','trump'))} said Trump did.
+ASK: Why the difference? Part of the answer is the cue from the top: Harris conceded the next day and certified the result. Trump never conceded. Voters take their cue from the leaders they trust (Clayton, Davis & Nyhan 2021 show experimentally that Trump's fraud claims lowered his supporters' confidence in elections).
+CAUTION: Winners always have an easier time. A fair comparison would ask Harris voters in 2028, if she ever claims fraud.`});
+
+  add({type:'stats', id:'dem-myths', title:'Democrats have their own stolen-election stories', reported:'REPORTED FROM THE SOURCE',
+    look:'Losing is hard on both sides',
+    stats:[
+      {label:'Democrats: Russia “tampered with vote tallies” to elect Trump', value:'55%', sub:'Economist/YouGov, May 2017', color:'dem'},
+      {label:'Democrats: Bush “stole” the 2000 election', value:'~1 in 3', sub:'Gallup, pooled polls, 2000–2001', color:'dem'},
+      {label:'Harris voters: Harris was the legitimate 2024 winner', value:pct(100-P('legit24','harris')), sub:'ANES 2024', color:'dem'}],
+    so:'The difference in 2020 was not the voters. It was a losing candidate who said it himself.',
+    source:'Economist/YouGov topline, May 13–16, 2017 (definitely or probably true); Gallup, July 2001 (news.gallup.com/poll/4687); '+ANES24+' V242575.',
+    notes:`SHOWS: the Democratic side of mass-level denial, for balance.
+SAY: Russia did interfere in 2016, with hacking and social media campaigns. But there is no evidence any vote tallies were changed. In May 2017, 55% of Democrats said it was definitely or probably true that Russia "tampered with vote tallies" to elect Trump (YouGov said "two out of three" by 2018). After 2000, about a third of Democrats in Gallup's polls said Bush "stole" the election. After 2016, a third of Clinton supporters told the Post and ABC they did not accept the result. And in 2024, ${pct(100-P('legit24','harris'))} of Harris voters told the ANES Harris was the legitimate winner.
+So losers' voters in both parties reach for stories. The difference after 2020 was the source. Gore and Clinton conceded and told their voters to accept the result; Trump told his voters he had won. That is why Layman et al. focus on leaders and activists, not only voters.
+(If asked about 2004: Democratic objections to Ohio, on the "Both parties have objected" slide in Part 4. Pew, October 2024: only 32% of Trump supporters said it was very important that Trump concede if he lost; 61% of Harris supporters said so about Harris.)`});
+
+  add({type:'hbars', id:'norms', title:'Where the two sides differ, and where they don’t',
+    look:'2024 ANES, by presidential vote: share who agree',
+    domain:[0,100], fmt:'pct',
+    series:[{label:'Harris voters', color:'dem'},{label:'Trump voters', color:'rep'}],
+    rows:[
+      {label:'Votes will be counted accurately (before the election)', vals:[P('accurate','harris'),P('accurate','trump')]},
+      {label:'A strong leader is good even if he bends the rules', vals:[P('strongldr','harris'),P('strongldr','trump')]},
+      {label:'Presidents should be able to ignore Congress and courts', vals:[P('strongpres','harris'),P('strongpres','trump')]},
+      {label:'Violence for political goals is at least a little justified', vals:[P('violence','harris'),P('violence','trump')]},
+      {label:'Democracy is always preferable', vals:[P('preferdem','harris'),P('preferdem','trump')]}],
+    source:ANES24+' Items V241314 (very or completely accurately), V242411, V241328 (“helpful”), V241579 (more than “not at all”), V242409.',
+    notes:`SHOWS: five democratic attitudes in the 2024 ANES, by vote. Before you read the gaps, notice which way each item runs.
+SAY:
+• BEFORE the election, ${pct(P('accurate','harris'))} of Harris voters but only ${pct(P('accurate','trump'))} of Trump voters expected the votes to be counted very or completely accurately. That is a 60-point gap in faith in the count before anyone knew who won. (Gallup and others find Republican confidence rose after Trump won. Trust in elections follows winning, the same way trust in Washington did in our October 6 class.)
+• A strong leader who bends the rules: ${pct(P('strongldr','trump'))} of Trump voters agree, ${pct(P('strongldr','harris'))} of Harris voters.
+• But presidents ignoring Congress and the courts in general: low on both sides (${pct(P('strongpres','harris'))} and ${pct(P('strongpres','trump'))}).
+• Violence: about one in eight in both camps says it is at least a little justified (${pct(P('violence','harris'))}, ${pct(P('violence','trump'))}). No party gap. Same caution as before about violence questions.
+• Democracy always preferable: large majorities on both sides (${pct(P('preferdem','harris'))}, ${pct(P('preferdem','trump'))}).
+THE PATTERN: the mass public supports democracy in the abstract. The danger lies in specific moments: when "my side" loses, and when a leader says the loss was stolen.`});
+
+  add({type:'line', id:'gallup', title:'Faith in the count follows power, until 2020', reported:'REPORTED FROM THE SOURCE',
+    look:'Confident votes nationwide will be “accurately cast and counted” (Gallup, very or somewhat confident)',
+    xdom:[2002,2026], ydom:[20,100], xticks:[2004,2006,2008,2016,2018,2020,2022,2024], yticks:[20,40,60,80,100], yfmt:'pct',
+    direct:true,
+    bands:[{from:2017, to:2021, label:'Trump’s first term'}],
+    series:[
+      {label:'Republicans', color:'rep', data:[[2004,87],[2006,91],[2008,57],[2016,56],[2018,78],[2020,44],[2022,40],[2024,28]].map(r=>[r[0],r[1],null]), lab:{x:2005,y:97}},
+      {label:'Democrats', color:'dem', data:[[2004,59],[2006,62],[2008,57],[2016,83],[2018,66],[2020,74],[2022,85],[2024,84]].map(r=>[r[0],r[1],null]), lab:{x:2005,y:52}}],
+    callouts:[{x:2024,y:28,text:'28%',pos:'below',color:'rep'}],
+    source:'Gallup, asked before each election (2024: September). Not asked 2010–2014. Leaners count as partisans except in 2024; 2004 party figures from press reports of Gallup data.',
+    notes:`SHOWS: twenty years of Gallup's question, by party. The usual pattern is that the party holding the White House trusts the count more.
+READ IT:
+• 2004–2006 (Bush in office): Republicans ~90% confident, Democrats ~60%.
+• 2008 (open seat): tied at 57.
+• 2016 (Obama in office): Democrats 83, Republicans 56.
+• 2018 (Trump in office): Republicans 78, Democrats 66. The in-party effect, again.
+• 2020: the break. Trump is president, and Republicans' confidence falls to 44, because the president himself was telling them the count would be rigged. Clayton, Davis, Nyhan et al. (PNAS 2021) showed this experimentally in October 2020: seeing Trump's fraud tweets cut his approvers' trust in elections by about a quarter of a standard deviation.
+• 2022–2024: Republicans 40, then 28 in September 2024, the lowest reading on the chart.
+AFTER TRUMP WON: AP-NORC found Republicans' confidence the 2024 votes were counted correctly jumped from about 2 in 10 in October to about 6 in 10 in December. Winning restores faith. (Sinclair, Smith & Tucker found the same flip in 2016: Trump voters' confidence rose after he won; Clinton voters' fell.) Pew's July 2026 version of the question: Republicans 55%, Democrats 58%.
+THE POINT: confidence in elections is not a measure of how elections are run. It mostly measures who you expect to win, and what your leaders tell you.`});
+
+  /* ═════════════════════ Part 4: the test, 2020–2022 ═════════════════════ */
+  add({type:'section', id:'s4', part:'Part 4', title:'The test: how did the parties and the voters respond to 2020?',
+    notes:`Seven minutes. Leaders failed the test, in both parties. Primary voters punished the defenders. A slice of general-election voters saved the day.`});
+
+  add({type:'vbars', id:'objections', title:'Both parties have objected. One went much further.', reported:'REPORTED FROM THE SOURCE',
+    look:'Members of Congress voting to reject a state’s electoral votes at the joint session (2021: 8 senators, 139 House members)',
+    domain:[0,160], fmt:'n0',
+    cats:['2001','2005','2017','2021'],
+    series:[{label:'members', colors:['1F4E79','1F4E79','1F4E79','C41230'], values:[0,32,0,147],
+      labels:['no vote held','32','no vote held','147']}],
+    source:'2001 and 2017: House Democrats objected, but no senator signed, so no vote was held. 2005: Ohio (Boxer, Tubbs Jones), rejected 74–1 and 267–31. 2021: Republicans sustaining at least one objection (Arizona or Pennsylvania). Senate and House roll calls.',
+    notes:`SHOWS: every modern objection to a presidential electoral count, by the number of members who voted to throw out a state's votes.
+SAY: Objecting to the count is not new, and it is not only Republicans.
+• 2001: House Democrats, many from the Black Caucus, objected to Florida's electors. No senator would sign, so Gore ruled them out of order (the scene from the opening).
+• 2005: Senator Barbara Boxer and Rep. Stephanie Tubbs Jones objected to Ohio's electors, citing voting problems. One senator and 31 House members voted to reject Ohio's votes.
+• 2017: several House Democrats objected to Trump's electors. Again no senator signed; Vice President Biden, presiding, ruled: "It is over."
+• 2021: hours after the Capitol was cleared, 147 Republicans, 8 senators and 139 House members, voted to reject Arizona's or Pennsylvania's votes. In Pennsylvania's case, 138 of the House's Republicans voted to reject.
+THE POINT FOR BOTH SIDES: Democrats have used the objection as protest, and that is part of the story of a norm eroding. But the 2021 vote was different in kind and scale: it came from the losing president's party, on behalf of his effort to stay in office, after a violent attack.
+ASK: Is a symbolic objection by the losing side harmless protest, or the first step down a road?`});
+
+  add({type:'stats', id:'gop-silence', title:'Most Republicans in Congress said nothing', reported:'REPORTED FROM THE SOURCE',
+    look:'The Washington Post asked every Republican in Congress, December 15, 2020: who won?',
+    stats:[
+      {label:'Said Biden won', value:'37', color:'ideo'},
+      {label:'Said he did not', value:'2', color:'accent'},
+      {label:'Unclear or no answer', value:'208', color:'mut'}],
+    so:'Asked separately about Trump’s effort to claim victory: 129 supported it, 10 opposed it.',
+    source:'Washington Post Staff, “Where Republicans in Congress stand on Trump’s false claim of winning the election,” updated Dec. 15, 2020 (survey of all 249 GOP members); '+LLW+' pp. 174–175; Kahn et al. 2021 (Reuters).',
+    notes:`SHOWS: what most Republican leaders did after 2020: not lying, exactly, but staying quiet.
+SAY: The Post asked all 249 Republicans in Congress who won. On December 5, 2020, only 25 said Biden, 2 said Trump, and 222 would not say. By the December 15 update, the day after the electors voted, it was 37 Biden, 2 Trump, and 208 unclear or no answer (the figure Layman et al. cite). Several of the 37 (McConnell, Ron Johnson, Capito, Portman) switched only after the Electoral College met. The same survey asked whether they supported Trump's continuing efforts to claim victory: 129 supported, 10 opposed, 108 unclear. And asked whether they would accept Biden as legitimate if he won the Electoral College: 41 yes, 2 no (one, Paul Gosar: "No, never"), 204 unclear.
+Few Republicans in Congress endorsed the stolen-election claims, but few contradicted them. The safest answer was "no comment." Within a month of January 6, Reuters found 90% had settled into refusing to answer questions about Trump's claims. And 147 Republicans in Congress (8 senators, 139 House members) voted to sustain at least one objection to the electoral count on January 6.
+WHY SILENCE MATTERS: remember the Clayton, Davis & Nyhan finding. Voters follow their leaders' cues. A party that will not tell its own voters they lost cannot expect them to consent.`});
+
+  add({type:'statement', id:'dem-gamble', title:'Democrats boosted deniers in GOP primaries', reported:true,
+    big:'$19 million',
+    sub:'What Democrats spent in 2022 to boost election-denying Republicans in GOP primaries, betting they would be easier to beat in November.',
+    source:LLW+' p. 175, citing Linskey 2022 (Washington Post) and Wilkins 2022 (Bloomberg).',
+    notes:`SHOWS: the Democratic side of the story. Layman et al. are blunt: Republicans have borne the lion's share of the blame "deservedly so," but Democrats "are not blameless."
+SAY: In 2022, Democratic groups ran ads in Republican primaries attacking far-right candidates as "too conservative," which is to say, advertising them to Republican primary voters. Many of those candidates denied the 2020 result. Democrats spent nearly $19 million doing it. The bet mostly paid off: the boosted candidates mostly lost in November.
+But think about what it means. A party that says democracy is on the ballot paid to put election deniers on the ballot, because they thought it would help them win. Layman et al.: neither party prioritized defending democracy over winning elections.
+ASK: Was it a smart strategy or a dangerous one? What if more of them had won?`});
+
+  add({type:'hbars', id:'primaries-punish', title:'Primary voters punished Trump’s critics', reported:true,
+    look:'House Republicans running for renomination in 2022: share who won their primary, by their 2021 votes',
+    domain:[0,100], fmt:'pct',
+    series:[{label:'Won their primary', color:'rep'}],
+    legend:[{label:'Won their 2022 primary', color:'rep'}],
+    rows:[
+      {label:'Voted against impeaching Trump (182)', vals:[98], color:'ideo'},
+      {label:'Voted to impeach Trump (6)', vals:[33], color:'accent'},
+      {label:'Voted against a Jan. 6 commission (163)', vals:[99], color:'ideo'},
+      {label:'Voted for a Jan. 6 commission (25)', vals:[76], color:'accent'}],
+    source:LLW+' Figure 3 (p. 176): differences significant at p < .001. Only members who ran for reelection are counted.',
+    notes:`SHOWS: Figure 3. What happened to Republicans who defended the 2020 result.
+SAY: Ten House Republicans voted to impeach Trump for January 6; 35 voted for an independent commission to investigate the attack. Of the ten impeachers, four retired (Kinzinger, Gonzalez, Upton, Katko) and four lost their primaries (Cheney, Rice, Herrera Beutler, Meijer). Only two of the six who ran (33%) won: David Valadao of California and Dan Newhouse of Washington. Newhouse announced in December 2025 that he would not run in 2026, which leaves Valadao, on the ballot next week, as the last one. Almost everyone who stuck with Trump (98–99%) was renominated.
+WHY IT MATTERS: every Republican politician watched this. The lesson they learned: defending the count can end your career. That is Part 1's third condition ("fighting costs more") turned upside down: in the primary, consenting is what costs you.`});
+
+  add({type:'stats', id:'penalty', title:'In November, swing voters punished deniers', reported:true,
+    look:'2022 midterms: how Trump-endorsed candidates did against what their district’s partisanship predicted',
+    stats:[
+      {label:'Trump-endorsed House Republicans, competitive races', value:'−2.5 pts', sub:'below what district partisanship predicted', color:'accent'},
+      {label:'Statewide election deniers (governor, secretary of state, attorney general)', value:'−2.3 to −3.7', sub:'points; five to seven races lost', color:'accent'}],
+    so:'In safe seats, no effect. In close races, enough to decide control.',
+    source:LLW+' Table 1 and Figure 4 (pp. 177–178); States United Democracy Center 2023.',
+    notes:`SHOWS: the article's hopeful finding.
+SAY: Layman et al. use Trump's endorsement as a rough proxy for candidates who tolerated his violations of democratic norms (his endorsement criteria included a candidate's stance on 2020). In safe districts, the endorsement made no difference: district partisanship explains 95% of the vote. In competitive races, Trump-endorsed Republicans ran about 2.5 points behind what their district's partisanship predicted. States United found a similar penalty for election-denying statewide candidates, enough to cost five to seven races. A published study (Malzahn & Hall, APSR) puts the penalty for election-denying candidates at about 3 points.
+Every election denier running for secretary of state in a swing state lost: Finchem in Arizona (by 5), Marchant in Nevada (by 2), Karamo in Michigan (by 14). They ran behind their own party's other statewide candidates. But about 300 election deniers were nominated in 2022, and more than 170 won, mostly in safe seats; the penalty works only where races are close.
+2022 was supposed to be a red wave: an unpopular president, most Americans saying the country was on the wrong track. Republicans barely won the House and lost ground in the Senate. Postelection analyses blamed Trump-endorsed candidates for much of it.
+CONNECT: this is Graham & Svolik's "small slice" from our October 6 class. Only a few voters will cross party lines to punish antidemocratic behavior. But in close elections, a few is enough.`});
+
+  add({type:'statement', id:'twist', title:'The twist: close elections cut both ways',
+    big:'Close elections tempt losers to deny. They also make the few principled voters decisive.',
+    sub:'Democracy found strength in an unexpected place: not the parties, but a sliver of the electorate.',
+    notes:`SHOWS: the article's resolution, and the payoff of the "close elections" slide in Part 2.
+SAY: Here is the paradox. Close elections are one reason losing has gotten harder: no landslides, no clear mandate, every loss looks like an accident. But close elections are also why the 2022 penalty mattered. If elections were decided by 15 points, a 2.5-point penalty would change nothing. In a 50–50 country, the small share of voters willing to put democracy ahead of party can decide who governs.
+Nancy Pelosi, in her farewell speech after 2022: the people "stood in the breach and repelled the assault on democracy." Layman et al. say their analysis supports her.
+And then Congress did something rare: it passed a bipartisan law.`});
+
+  add({type:'cards', id:'ecra', title:'Congress patched the rules: the Electoral Count Reform Act', look:'Passed with bipartisan votes in December 2022',
+    cards:[
+      {h:'The vice president counts', t:'The VP’s role is “ministerial.” No power to reject electors.', tag:'NO PENCE PLAN'},
+      {h:'Objections need numbers', t:'One-fifth of each chamber must sign, up from one member each.', tag:'HIGHER BAR'},
+      {h:'One certificate per state', t:'From the governor (or an official named in advance), reviewable in court quickly.', tag:'NO FAKE ELECTORS'}],
+    source:LLW+' p. 179; Sunstein 2022, Boston University Law Review 103(4).',
+    notes:`SHOWS: the institutional repair after 2020.
+SAY: The reform passed inside the year-end spending bill (Senate 68–29, House 225–201) and was signed December 29, 2022. A standalone version had passed the House 229–203, with 9 Republicans.
+The Electoral Count Act of 1887, written after Hayes–Tilden, was so vague that Trump's lawyers argued the vice president could simply reject states' electors. The 2022 reform closed the gaps: the vice president's role is solely ministerial; it takes one-fifth of the House and one-fifth of the Senate to lodge an objection (it used to take one member of each); each state sends one certificate, from an official named in advance, with fast-track court review. Cass Sunstein called it a phenomenal achievement.
+WHY IT MATTERS: laws cannot make losers consent. But they can raise the price of refusing and remove the easy routes. Layman et al.: both parties had an interest in clear rules that limit partisan maneuvering.`});
+
+  /* ════════════════ Take a side: when should a loser concede? ════════════════ */
+  add({type:'move', id:'move-how', step:'HOW IT WORKS',
+    big:'Stand up. For each statement, move: agree to the left wall, disagree to the right, unsure in the middle.',
+    sub:'You can switch sides after you hear the other side. Switching is the point.',
+    notes:`ABOUT 12 MINUTES for the whole run. Six statements and a closer, about 90 seconds each. Each one tests where someone draws the line on losing well. None needs the reading.
+SET UP: "left" and "right" mean the walls as the STUDENTS see them facing the screen; point to each. Say up front: there are no right answers here, and nobody has to explain where they stand unless they volunteer.
+THE RHYTHM FOR EACH STATEMENT:
+1. Read it aloud. Five seconds of silence, then "move."
+2. Ask one person from each wall, then one from the middle: "Why there?"
+3. Ask: "Did anything you just heard move you?" Let people walk. Name who moved and ask why.
+IF EVERYONE PILES ON ONE SIDE: argue the other side yourself, or ask "What would someone over there say?" The statements are written to split a room, but the room will not always cooperate.
+KEEP IT ABOUT THE ARGUMENT, NOT THE PARTY: if someone says "only Republicans/Democrats do that," point to the flip test that closes the run.`});
+
+  add({type:'move', id:'move-1', step:'1 OF 6',
+    big:'A losing candidate should concede on election night, even if the race is very close.',
+    notes:`WARM-UP. Gets people moving; most will drift to the middle or right.
+AGREE: delay feeds doubt; every hour without a concession invites fraud stories; the count almost never changes much.
+DISAGREE: close races are not decided on election night; counting takes days (mail ballots); conceding too early can be a mistake (Gore retracted his first concession call in 2000 when Florida tightened).
+PUSH: so what is the right moment? When the count is done? Certified? When the courts finish?`});
+
+  add({type:'move', id:'move-2', step:'2 OF 6',
+    big:'Going to court to challenge a close result is part of losing well.',
+    notes:`WHY: separates contesting from refusing. Gore went to court for 36 days and then conceded; Trump's campaign filed more than 60 suits in 2020 and lost almost all of them.
+AGREE: courts are the rules. Using them is consent: you accept the referee's verdict. Better a lawsuit than a mob.
+DISAGREE: endless litigation keeps doubt alive and tells your voters something was wrong, even when you lose every case.
+PUSH: is there a difference between Gore's lawsuits and the 2020 lawsuits? Is it the evidence, the number of suits, or what the candidate said when he lost?`});
+
+  add({type:'move', id:'move-3', step:'3 OF 6',
+    big:'If a candidate sincerely believes the election was stolen, they have a duty not to concede.',
+    notes:`WHY: the hardest one. Sincerity versus evidence. Most people believe a truly stolen election should not be accepted, but almost every refuser sincerely believes theirs was stolen.
+AGREE: conceding a stolen election legitimizes theft. The 1876 settlement and Jim Crow-era elections were not fair, and accepting them had victims.
+DISAGREE: sincerity is not evidence. If belief is enough, every loser can refuse, and Przeworski's definition collapses. The duty is to make your case in court and then accept the verdict.
+PUSH: who should judge whether a belief is reasonable? (Sets up statement 4.)`});
+
+  add({type:'move', id:'move-4', step:'4 OF 6',
+    big:'Courts and election officials, not candidates or voters, should have the final word on who won.',
+    notes:`WHY: who decides? Every answer has a weakness.
+AGREE: someone neutral has to decide, and these are the referees we have. The Electoral Count Reform Act puts the final word with officials named in advance and the courts.
+DISAGREE: officials and judges have parties too (state election chiefs are often elected partisans; the Supreme Court decided Bush v. Gore 5–4). In a democracy, shouldn't voters, or their representatives in Congress, decide?
+PUSH: if not courts and officials, who? What happens when the referee is the thing you distrust?`});
+
+  add({type:'move', id:'move-5', step:'5 OF 6',
+    big:'It is fair game for a party to help the other side nominate its most extreme candidate, if that candidate is easier to beat.',
+    sub:'Democrats spent about $19 million doing this in 2022.',
+    notes:`WHY: strategy versus principle, and it puts the party that talks most about democracy on the spot.
+AGREE: primaries are public; ads are speech; the goal of a party is to win; it worked (most boosted candidates lost in November). The other side's voters still made the choice.
+DISAGREE: you are putting people you call threats to democracy one election away from power. Some of them won. You cannot say democracy is on the ballot and then pay to put election deniers on it.
+PUSH: would you feel the same if the other party did it to yours? (A preview of the closer.)`});
+
+  add({type:'move', id:'move-6', step:'6 OF 6',
+    big:'A member of Congress should vote to certify the result even if most of their own voters believe it was stolen.',
+    notes:`WHY: representation versus norms, the dilemma 147 members faced in 2021, and the one that ended careers (Part 4).
+AGREE: the job is to uphold the Constitution, not to follow voters off a cliff. Burke: a representative owes you his judgment. The 2022 primaries show the cost; that is what courage means.
+DISAGREE: representatives are supposed to represent. Who is a member of Congress to tell constituents what to believe? (Push back: Is it representation to act on a belief the courts rejected 60 times?)
+PUSH: what if it were a vote your voters were right about? How would the member know?`});
+
+  add({type:'move', id:'move-flip', step:'THE FLIP TEST',
+    big:'Every answer I just gave would be the same if the other party had lost.',
+    sub:'Move honestly. No one will ask you to explain this one.',
+    notes:`THE CLOSER, and the point of the whole run. Do NOT ask anyone to defend their spot. Just let the room see itself.
+SAY: Look around. Loser's consent is easy to demand of the other side. This is the question every party leader, activist, and voter has to answer, and the evidence in Part 3 says most of us answer it with our party ID. The people who can honestly stand on the left wall are the "small slice" that decided close races in 2022.
+Then: everyone sit down; on to Part 5.`});
+
+  /* ═════════════════════ Part 5: the threats now ═════════════════════ */
+  add({type:'section', id:'s5', part:'Part 5', title:'One week out: where are the threats now?',
+    notes:`Six minutes. 2024 passed the test. Then four places the transfer of power can still break, with numbers for the two that can be counted, and what Americans expect next week. Even-handed: every cell can be filled from either party; say so.`});
+
+  add({type:'statement', id:'2024', title:'2024: the system worked, and the loser consented',
+    big:'Harris conceded the next day, and certified her own defeat.',
+    sub:`Asked weeks later, ${pct(P('legit24','harris'))} of her voters said Trump was the legitimate winner.`,
+    source:ANES24+' Item V242575.',
+    notes:`SHOWS: the most recent test, which the system passed.
+SAY: On November 6, 2024, Kamala Harris conceded at Howard University: "we must accept the results of this election." On January 6, 2025, she presided over the count of her own defeat, the scene we opened with. No member objected to any state's electors. And ${pct(P('legit24','harris'))} of Harris voters accepted the result.
+Not everyone on the losing side: some on the left spread a "Starlink flipped the votes" theory that election officials debunked. And losing candidates of both parties have fought hard below the presidency: in 2022 Kari Lake never conceded the Arizona governorship; after 2024 a Republican candidate for the North Carolina Supreme Court contested a 734-vote loss for six months before conceding.
+THE POINT: the norm is not dead. It is enforced unevenly, and it depends heavily on what the losing candidate says.`});
+
+  add({type:'grid', id:'threats', title:'Four places the transfer of power can break',
+    look:'Who can refuse to accept a loss, and how',
+    colHead:'WHAT THEY DO', cols:['Words','Actions'],
+    rowHead:'WHO', rows:['Leaders','Citizens'],
+    cells:[
+      {h:'Refuse to concede; call it rigged in advance', t:'Erodes the second part of consent'},
+      {h:'Pressure officials; refuse to certify', t:'Breaks the first part'},
+      {h:'Believe it was stolen; reward those who say so', t:'The primary-voter problem', hi:true},
+      {h:'Threats and political violence', t:'Raises the price of serving'}],
+    notes:`SHOWS: a map for thinking about next week. Rows: who refuses (leaders and officials vs. ordinary citizens). Columns: words vs. actions.
+SAY (walk the four cells):
+• LEADERS, WORDS: pre-emptive fraud claims, refusing to say you will accept the result. This erodes the second part of consent, the allegiance to the system.
+• LEADERS, ACTIONS: refusing to certify, sending alternate electors, pressuring officials to "find" votes, replacing nonpartisan election officials with loyalists. This breaks the first part.
+• CITIZENS, WORDS: believing the loss was stolen, and rewarding candidates who say so in primaries. Highlighted because it is the article's key finding: the activists who pick nominees.
+• CITIZENS, ACTIONS: threats and violence against election workers and officeholders.
+BALANCE: every cell can be filled from either party. The research says the cells have not been filled evenly since 2020. Students will disagree about the present; ask them to argue from evidence.
+The next two slides count the bottom-right cell.`});
+
+  add({type:'vbars', id:'capitol-threats', title:'Threats against Congress nearly quadrupled', reported:'REPORTED FROM THE SOURCE',
+    look:'Threat-assessment cases opened by the U.S. Capitol Police, by year',
+    domain:[0,16000], fmt:'n0',
+    cats:['2017','2018','2019','2020','2021','2022','2023','2024','2025'],
+    series:[{label:'cases', colors:['8A8A8A','8A8A8A','8A8A8A','8A8A8A','8A8A8A','8A8A8A','8A8A8A','8A8A8A','C41230'],
+      values:[3939,5206,6955,8613,9625,7501,8008,9474,14938],
+      labels:['3,939','5,206','6,955','8,613','9,625','7,501','8,008','9,474','14,938']}],
+    source:'U.S. Capitol Police, threat assessment case releases of January 17, 2023 (2017–2022) and January 27, 2026 (2020–2025). Cases include concerning statements, not only prosecutable threats.',
+    notes:`SHOWS: one way to count the bottom-right cell: threats against members of Congress, Republicans and Democrats alike.
+SAY: In 2017 the Capitol Police opened about 3,900 threat cases. In 2025, a record 14,938, up 58% in a single year. These are cases the police investigated, including concerning statements, not convictions.
+And the violence is real, aimed at both parties: two attempts on Donald Trump's life in 2024 (Butler, Pennsylvania, where a spectator was killed, and West Palm Beach); arson at Pennsylvania Gov. Josh Shapiro's residence in April 2025; the murder of Minnesota House Speaker emerita Melissa Hortman and her husband in June 2025; the assassination of Charlie Kirk in September 2025; an armed man who breached the White House Correspondents' Dinner in April 2026.
+WHY IT BELONGS IN A TALK ABOUT LOSING: a democracy where officeholders fear for their lives is one where fewer people will run, and those who do will be more cautious about crossing their own side.`});
+
+  add({type:'stats', id:'officials', title:'The people who count the votes are under pressure', reported:'REPORTED FROM THE SOURCE',
+    look:'Local election officials, Brennan Center survey, early 2026 (n = 834)',
+    stats:[
+      {label:'Threatened, harassed, or abused', value:'1 in 3', sub:'32%; 14% threatened outright', color:'accent'},
+      {label:'Fear for colleagues’ safety', value:'52%', color:'accent'},
+      {label:'Fear political interference', value:'50%', sub:'45% fear politically motivated investigations', color:'ideo'}],
+    so:'In 11 Western states, about half of counties have lost their chief election official since 2020.',
+    source:'Brennan Center for Justice, Local Election Officials Survey, April 13, 2026 (fielded Jan. 27–Feb. 26). Western turnover: Issue One, via Votebeat, February 3, 2026.',
+    notes:`SHOWS: the referees of the count.
+SAY: Elections in the U.S. are run by thousands of local officials, most of them nonpartisan or elected in low-profile races. After 2020 they became targets. In the Brennan Center's 2026 survey, a third report threats, harassment, or abuse; half fear for their colleagues; half fear political interference in their work. Earlier waves: 1 in 6 reported threats in 2022, 38% in 2024 and 2025.
+Turnover follows. In the West, about half of counties have a different chief election official than in 2020. Experience walks out the door, and the people who replace them run the count for the first time.
+THIS MONTH: the FBI is investigating more than 100 suspicious letters, some with white powder, sent to election offices in at least six states (Votebeat, October 15, 2026).`});
+
+  add({type:'cards', id:'leaders-now', title:'What leaders have done since 2024', look:'Actions bearing on the next transfer of power, and how courts have responded',
+    cards:[
+      {h:'Pardons', t:'About 1,500 Jan. 6 defendants, on day one.', tag:'NO PRICE FOR 2021', color:'rep'},
+      {h:'Executive orders', t:'Citizenship proof; mail ballots. Courts blocked most.', tag:'COURTS PUSHED BACK', color:'ideo'},
+      {h:'Seized ballots', t:'FBI took Fulton County’s 2020 ballots.', tag:'RELITIGATING 2020', color:'rep'},
+      {h:'Map wars', t:'Texas: +5 GOP. California: +5 Democratic.', tag:'BOTH PARTIES', color:'blue'}],
+    source:'White House proclamation, Jan. 20, 2025; League of Women Voters v. Trump (D.D.C., Oct. 31, 2025); D. Mass., June 24, 2026; U.S. Supreme Court order, Sept. 14, 2026; CBS News, Jan. 28, 2026; California Prop. 50 (Nov. 4, 2025).',
+    notes:`SHOWS: the top-right cell (leaders' actions) since 2024, as facts with dates. Let students weigh them.
+1. PARDONS: on his first day back, Trump pardoned about 1,500 people convicted of January 6 offenses and commuted 14 sentences, including Oath Keepers founder Stewart Rhodes (seditious conspiracy). Loser's-consent lens: Part 1's third condition was that fighting a loss has to cost something. The pardons say it may not.
+2. EXECUTIVE ORDERS: a March 2025 order required documentary proof of citizenship to register; a March 2026 order told the Postal Service to restrict mail ballots. Courts blocked most of both: a federal judge in Boston (June 24, 2026) wrote that the Constitution "does not grant the President any specific powers over elections," and on September 14 the Supreme Court refused to let the mail-ballot rule take effect for November. (The Court did let expanded citizenship checks of voter rolls proceed, 6–3, in September.) The Justice Department also sued 30 states and D.C. for their voter rolls; it has lost 27 of those cases (NYT, Oct. 25), with the rest pending.
+3. 2020, AGAIN: in January 2026 the FBI executed a warrant seizing Fulton County, Georgia's 2020 ballots and records; a judge let the government keep them.
+4. MAP WARS (both parties): Texas redrew mid-decade to add about five Republican seats; California voters answered with Prop. 50 for about five Democratic seats; other states followed on both sides. Not a refusal to concede, but a fight over the rules that decide who wins, the "answer in kind" spiral McCoy & Somer warned about on October 6.
+   Justice Kagan blamed the Court's own rulings for this race to the bottom on October 26; next slide.
+WORDS (if asked): Trump said in January 2026 "we shouldn't even have an election" (the White House said he was joking), and in February urged Republicans to "nationalize the voting." Democratic leader Hakeem Jeffries accused Republicans of trying to "rig the midterm elections" through gerrymandering; a CBS host pushed back that such language undermines faith in elections.`});
+
+  add({type:'cards', id:'kagan', title:'A justice faults her Court’s election rulings', reported:'REPORTED FROM THE SOURCE',
+    look:'Justice Elena Kagan, speaking at Catholic University, October 26, 2026',
+    cards:[
+      {h:'Maps', t:'Rucho (2019): federal courts can’t police partisan maps.', tag:'“RACE TO THE BOTTOM”', color:'accent'},
+      {h:'Money', t:'Citizens United (2010) and after: unlimited outside spending.', tag:'“A NIGHTMARE”', color:'accent'},
+      {h:'Voting rights', t:'Callais (2026): Southern states redrew away Black districts.', tag:'RACIAL EQUALITY', color:'accent'},
+      {h:'The other side', t:'No neutral test for “too partisan.” Spending is speech.', tag:'THE MAJORITY’S VIEW', color:'ideo'}],
+    source:'Greg Stohr, “Supreme Court’s Kagan Says Election Rulings Creating ‘Nightmare’,” Bloomberg Law, October 26, 2026. Rucho v. Common Cause (2019); Citizens United v. FEC (2010); Louisiana v. Callais (2026).',
+    notes:`SHOWS: yesterday's remarks by a sitting justice about the rules that produce election results. Not a refusal to concede: an argument about whether the game is fair.
+WHAT SHE SAID (Bloomberg Law, Oct. 26): speaking with Professor Joel Alicea at Catholic University's law school, Kagan said the Court "has kind of blinded itself" to the harm its rulings do.
+• MAPS: after Rucho v. Common Cause (2019) held that federal courts cannot throw out maps for being too partisan, both parties have been in "a race to the bottom" on gerrymandering, which she called "very destructive of our democracy." Rucho laid the legal groundwork for this year's mid-decade redistricting war (Texas, California, and the rest; slide 47).
+• MONEY: Americans look at all the money chasing candidates and see a "nightmare," and "they're right." (Layman et al.'s money force, slide 14.)
+• VOTING RIGHTS: Louisiana v. Callais (April 29, 2026) limited use of the Voting Rights Act to justify majority-Black or majority-Hispanic districts. In the weeks after, she said, several Southern states redrew to eliminate Black districts.
+THE OTHER SIDE (say it as strongly as hers): Kagan is one of three Democratic appointees, and she dissented in Rucho. Chief Justice Roberts's majority answered that there is no neutral, judicially manageable standard for "too partisan"; asking unelected judges to decide how much partisanship is too much would drag courts into politics, and the fix belongs to voters, state courts and constitutions, and Congress. The Citizens United majority held that spending on political speech is speech, protected whoever pays. And the Callais majority held that drawing districts by race is itself constitutionally suspect.
+WHY IT BELONGS IN A TALK ABOUT LOSING: Anderson et al. find losers accept defeat more readily where they see the rules as fair. A loss under maps the other side drew to beat you is harder to accept than a loss under neutral rules. Each move in the map war makes the next loss easier to call rigged, the word Jeffries used (slide 47). Part 1's "the rules protect you too" condition only works if both sides believe the rules are fair.
+ASK: Is a gerrymandered loss a legitimate loss? (Most students will say yes, grudgingly. Then: so what is the difference between calling it unfair and calling it stolen?)`});
+
+  add({type:'cards', id:'alaska', title:'New this week: contesting a loss in advance', reported:'REPORTED FROM THE SOURCE',
+    look:'Alaska’s Senate race: Sen. Dan Sullivan (R) vs. Mary Peltola (D). Election Day is Nov. 3.',
+    cards:[
+      {h:'The ask', t:'The Justice Department asks a federal court to block certification if Sullivan loses narrowly.', tag:'BEFORE A VOTE IS COUNTED', color:'rep'},
+      {h:'The claim', t:'A second “Daniel Sullivan” on the ballot confused voters.', tag:'STATE COURT LET HIM RUN (JUNE)', color:'ideo'},
+      {h:'The point?', t:'Experts expect the suit to fail. It may still plant doubt about the result.', tag:'DOUBT NOW, CHALLENGE LATER', color:'accent'}],
+    source:'Zolan Kanno-Youngs, “Trump’s Election Attacks Enter New Pre-emptive Phase,” New York Times, October 25, 2026.',
+    notes:`SHOWS: a story from this weekend that puts today's whole argument in one case.
+THE FACTS (NYT, Oct. 25): Last week the Justice Department asked a federal court to block certification of Alaska's Senate election if the Republican incumbent, Dan Sullivan, loses by a slim margin. The argument: another candidate with a nearly identical name, Daniel J. Sullivan Jr., a retired elementary schoolteacher running without a party label, skewed the election toward Democrats. That question was already litigated: in June, the Alaska Supreme Court ruled he could stay on the ballot. Trump said the suit was his idea: "I recommended it to the D.O.J." (Saturday, to reporters).
+BOTH SIDES' CLAIMS: Republicans say the second Sullivan is a Democratic scheme to confuse voters. Democrats say they have no connection to him, and he says he is running a genuine campaign. Attorney General Todd Blanche, on CNN Sunday: the federal government is not going to decide who Alaska's senator is; it wants Alaska's courts and process to be able to correct a result produced by confusion.
+WHAT EXPERTS SAY: election-law specialists told the Times the suit lacks a legal basis and will likely fail. A former USAID elections adviser now at Issue One (Michael McNulty) argued the aim is not to win the case but to create doubt and use it to justify later intervention. Alaska's elections are overseen by the lieutenant governor, a Republican who had initially approved removing the second Sullivan from the ballot.
+CONNECT TO TODAY:
+• Part 1's definition: loser's consent is accepting a loss. This is a challenge filed before the loss exists, and before a vote is counted.
+• The grid: leaders' actions, using the federal government.
+• Statement 4 from the take-a-side run: who should have the final word, Alaska's courts, which already ruled, or a federal court?
+• Fair questions to put to the room: name confusion on a ballot is a real issue (ballot design matters). Is a lawsuit the right remedy, and is before the election the right time? Would you feel the same if a Democratic administration did this for a Democratic senator?
+ALSO NEW: the Times reports the administration has now lost 27 of its 31 voter-roll suits.`});
+
+  add({type:'stats', id:'expect', title:'Will the losers accept it? Americans aren’t sure.', reported:'REPORTED FROM THE SOURCE',
+    look:'ABC News / Washington Post / Ipsos poll, October 9–13, 2026 (n = 2,545)',
+    stats:[
+      {label:'Confident Trump would accept a Republican loss', value:'28%', sub:'63% of Republicans', color:'rep'},
+      {label:'Confident Democratic leaders would accept a loss', value:'61%', sub:'most Republicans are not', color:'dem'},
+      {label:'Confident the election will be fair and accurate', value:'~70%', sub:'70% of Democrats, 67% of Republicans', color:'ideo'}],
+    so:'Most Americans trust the count. Far fewer trust the losers.',
+    source:'ABC News / Washington Post / Ipsos, published October 20, 2026. Bright Line Watch (July 2026) puts experts’ odds that two or more losing Senate or governor candidates refuse to concede at about 14%.',
+    notes:`SHOWS: what the public expects next week, from a poll taken two weeks ago.
+SAY: Here is a striking pattern. Most Americans in both parties, about 7 in 10, are confident next week's election will be conducted fairly and accurately. The worry is not the count. It is the losers. Only 28% are confident President Trump would accept it if Republicans lose (63% of Republicans are). 61% are confident Democratic leaders would accept a loss, but most Republicans are not.
+Two other signs to mention: Reuters found just over half of candidates in key Senate races pledged to accept the results unconditionally; several hedged. And on the hopeful side, a Democrat (Josh Gottheimer) and a Republican (Don Bacon) launched a pledge this month for House members to seat whoever the states certify on January 3; Republicans Mike Lawler and Brian Fitzpatrick have signed.
+Experts in the Bright Line Watch survey (July 2026) rate U.S. democracy 60 out of 100, up from a low of 53 in April 2025 but below 67 in November 2024.`});
+
+  /* ═══════════════════════════════ close ═══════════════════════════════ */
+  add({type:'statement', id:'next-week', title:'Next Tuesday, somebody loses',
+    big:'Somebody will lose next Tuesday. The question is what they do on Wednesday.',
+    sub:'And what their voters, their activists, and their party leaders do after that.',
+    notes:`SHOWS: the frame for the midterms.
+SAY: There are 435 House races, 35 Senate seats, 36 governorships, and thousands of state and local offices on the ballot next week. Hundreds of candidates will lose. Most will concede without anyone noticing, which is exactly how it should work. Watch the close races, the ones decided by a point or two, and watch what the losers' parties say.`});
+
+  add({type:'discuss', id:'d-close', part:'Before you leave', minutes:1,
+    qs:['If your side loses next week, what would you need to see to accept the result? Write it down.',
+        'Bring it on Nov. 5. We will check it against what actually happened.'],
+    notes:`ONE MINUTE, alone, in writing. No report-out. The take-a-side run already did the "same standard for both sides" work; this just gets each student's own standard on paper for Nov. 5 ("After the Vote").
+Then: book clubs.`});
+
+  add({type:'quote', id:'closing',
+    q:'The peaceful transfer of power is not a law of nature. It is a choice losers make, over and over again.',
+    who:'Today’s argument', when:'After Layman, Lee & Wolbrecht 2023',
+    notes:`SHOWS: the closing line, a callback to the five vice presidents.
+SAY: Breckinridge, Nixon, Gore, Pence, Harris. None of them had to read out that result. Each of them did, and each time the republic continued. The parties used to make that choice easy. Today the pressures run the other way, and the people who make it easy may be ordinary voters in close races. Next week, some of those voters are you.`});
+
+  add({type:'next', id:'next', rows:[
+      ['Now','Book clubs','The first 30% of your book. Meet with your group for the rest of class.'],
+      ['Thu, Oct 29','Student-led 3: Death penalty','Read the five pieces on the schedule.'],
+      ['Tue, Nov 3','No class: Election Day','Vote, if you can. Watch who concedes.'],
+      ['Thu, Nov 5','After the Vote','Who lost, and how did they lose? Bring your answer to today’s first question.']],
+    foot:'We asked what losing well requires. On Nov. 5 we find out who had to do it.',
+    notes:`Close the talk; move to book clubs. Nov. 5 is the answer to today: we look at who lost, whether they conceded, and what their parties said.`});
+
+  /* Badges: every slide that is not a title, divider, or closer gets a number. */
+  let n = 0;
+  S.forEach(s => { if (!['title','section','questions','next','discuss','quote','move'].includes(s.type)) s.num = ++n; });
+  const ids = new Set(); S.forEach(s => { if (ids.has(s.id)) throw new Error('duplicate slide id '+s.id); ids.add(s.id); });
+  return S;
+}
+if (typeof module !== 'undefined') module.exports = buildSlides;
+
+/* ───────────────────────────────────────────────────────────────────────────
+   Losing Well (Before the Vote: Loser's Consent) — the WEB RENDERER.
+
+   Polarization VI's renderer, minus McCoy & Somer's scorecard. The slides are
+   defined once, in ../losers-consent.slides.js, which the PowerPoint also
+   renders. build-losers-consent-interactive.py pastes that file in ahead of
+   this one and supplies D.rows (losers-consent.csv).
+
+   Added here, to match the PowerPoint: `quote` (a dark full-screen
+   quotation), `move` (take a side: the room moves to a wall), reference lines
+   on `line` charts (`refs`), big bars on `hbars` (`big`), and a "reported"
+   badge that can name its source.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+const SPEC = buildSlides(D.rows);
+const C = { ideo:'#4A4A4A', dem:'#1F4E79', rep:'#C41230', mut:'#8A8A8A', light:'#CFCFCF', green:'#17706B', hisp:'#D08A1E', blk:'#17706B', core:'#3F007D', fringe:'#54278F', medium:'#6A51A3', small:'#807DBA', micro:'#9E9AC8', noncore:'#BCBDDC',
+            seg:'#4B2466', rural:'#D9A21B', town:'#A8893A', exurb:'#6F8F6A', suburb:'#3F7F8C', urban:'#3B2F5C' };
+const colr = c => c==='accent' ? css('--accent') : c==='blue' ? css('--blue') : c==='ink' ? css('--ink')
+  : (C[c] || (/^[0-9A-Fa-f]{6}$/.test(c||'') ? '#'+c : c) || css('--ink'));
+const f2 = v => v.toFixed(2).replace(/^(-?)0\./,'$1.');
+const FMT = {pts: v => `${Math.round(v)} pts`, r2: f2, pct: v => `${Math.round(v)}%`, pct1: v => `${v.toFixed(1)}%`, n0: v => `${Math.round(v)}`, deg: v => `${v>0.5?'+':v<-0.5?'−':''}${Math.abs(Math.round(v))}°`,
+  marg: v => v>0 ? `R+${Math.round(v)}` : v<0 ? `D+${Math.round(-v)}` : 'even', n1: v => v.toFixed(1), mil: v => `${v.toFixed(1)}M`};
+const fmtr = k => FMT[k] || (v => String(v));
+const HD = sp => `<h2>${sp.num?`<span class="badge">${sp.num}</span>`:''}${sp.title}${sp.reported?` <span class="reported">${typeof sp.reported==='string'?sp.reported.toLowerCase():'Reported from the article'}</span>`:''}</h2>`
+  + (sp.look ? `<p class="look">${sp.look}</p>` : '');
+const SRC = sp => sp.source ? `<div class="foot">${sp.source}</div>` : '';
+const hold = (k,i) => k<=i ? ' hold' : '';
+
+/* ── vertical bars, adapted from the Polarization I and IV decks ───────────── */
+function bars(svg, cfg){
+  clear(svg);
+  const vb = svg.viewBox.baseVal, W = vb.width, H = vb.height;
+  const P = Object.assign({l:56, r:20, t:30, b:64}, cfg.pad||{});
+  const x0=P.l, x1=W-P.r, y0=P.t, y1=H-P.b;
+  const cats = cfg.cats, n = cats.length, S = cfg.series;
+  const slot = (x1-x0)/n, gap = slot*(cfg.gap ?? 0.3), bw = (slot-gap) / S.length;
+  const lo = cfg.ymin ?? 0, hi = cfg.ymax, py = v => y1 - (v-lo)/(hi-lo)*(y1-y0);
+  const base = py(Math.max(lo, 0)), MUT = css('--ink-3');
+  cats.forEach((c,i)=>{ const cx = x0 + slot*i + slot/2, tr = /Trump/.test(c);
+    const lines = c.includes('\n') ? c.split('\n') : n>6 ? [c.replace(/ (\d{4})$/,''), (c.match(/(\d{4})$/)||[''])[0]] : [c];
+    lines.forEach((t,k)=>svg.appendChild(el('text',{x:cx,y:y1+26+k*18,'text-anchor':'middle','font-size':n>6?14:19,
+      'font-weight':(tr||n<=4)?700:400, fill:tr?css('--accent'):(n<=4?css('--ink'):MUT)}, t))); });
+  S.forEach((s,si)=>{
+    const host = el('g',{class:'stage'});
+    s.values.forEach((v,i)=>{
+      const bx = x0 + slot*i + gap/2 + bw*si, top = Math.min(py(v), base), h = Math.abs(py(v)-base);
+      const col = colr(s.colors ? s.colors[i] : s.color);
+      host.appendChild(el('rect',{x:bx,y:top,width:bw-3,height:Math.max(1.5,h),rx:3,fill:col,class:'pop popy',
+        style:`transform-origin:${v<0?'top':'bottom'};transition-delay:${i*55}ms`}));
+      if (!s.nolabels) host.appendChild(el('text',{x:bx+(bw-3)/2, y:(v<0?top+h+22:top-10),'text-anchor':'middle',
+        'font-size':cfg.vfs||(n>6?15:(S.length>=3?18:26)),'font-weight':700,fill:col,class:'pop',style:`transition-delay:${i*55+120}ms`},
+        s.labels ? s.labels[i] : fmtr(cfg.fmt)(v)));
+    });
+    svg.appendChild(host);
+  });
+  svg.appendChild(el('line',{x1:x0,x2:x1,y1:base,y2:base,stroke:lo<0?MUT:css('--rule'),'stroke-width':1.5}));
+  // Callouts with an arrow to one bar each (first series). Above-zero bars get
+  // the text up and to the left; below-zero bars get it to the right of the bar's end.
+  const ANN = cfg.annot ? [].concat(cfg.annot) : [];
+  if (ANN.length){
+    const defs = el('defs'); const mk = el('marker',{id:'arw',viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:7,markerHeight:7,orient:'auto-start-reverse'});
+    mk.appendChild(el('path',{d:'M0,0 L10,5 L0,10 z',fill:css('--ink')})); defs.appendChild(mk); svg.appendChild(defs);
+  }
+  ANN.forEach(a=>{
+    const i = a.i, v = S[0].values[i], bx = x0 + slot*i + gap/2, ty = py(v), neg = v<0;
+    const g = el('g',{class:'stage'});
+    const words = a.text.split(' '), rows=[]; let cur='', wrap = a.wrap || 34;
+    words.forEach(w=>{ if ((cur+' '+w).trim().length > wrap){ rows.push(cur); cur=w; } else cur=(cur+' '+w).trim(); }); rows.push(cur);
+    if (!neg){
+      rows.forEach((r,k)=>g.appendChild(el('text',{x:bx-60,y:ty-24-(rows.length-1-k)*20,'text-anchor':'end','font-size':17,
+        'font-style':'italic','font-weight':700,fill:css('--ink'),class:'pop'},r)));
+      g.appendChild(el('line',{x1:bx-54,y1:ty-22,x2:bx-6,y2:ty+6,stroke:css('--ink'),'stroke-width':2,'marker-end':'url(#arw)',class:'pop'}));
+    } else {
+      const rx = bx + bw + 58, yc = ty - 8;
+      rows.forEach((r,k)=>g.appendChild(el('text',{x:rx,y:yc+6-(rows.length-1)*10+k*20,'text-anchor':'start','font-size':17,
+        'font-style':'italic','font-weight':700,fill:css('--ink'),class:'pop'},r)));
+      g.appendChild(el('line',{x1:rx-8,y1:yc,x2:bx+bw+2,y2:ty-4,stroke:css('--ink'),'stroke-width':2,'marker-end':'url(#arw)',class:'pop'}));
+    }
+    svg.appendChild(g);
+  });
+  if (cfg.legend){ let lx = x1 - 190*S.length;
+    S.forEach((s,j)=>{ svg.appendChild(el('rect',{x:lx,y:4,width:14,height:14,rx:3,fill:s.color?colr(s.color):(j?C.light:C.mut)}));
+      svg.appendChild(el('text',{x:lx+20,y:16,'font-size':15,fill:MUT}, s.label)); lx += 190; }); }
+}
+
+/* ── horizontal grouped bars: groups compared across two years or samples ─── */
+function hbars(svg, sp){
+  clear(svg);
+  const H = svg.viewBox.baseVal.height, lx = 320, x1 = 930, [lo,hi] = sp.domain, big = !!sp.big;
+  const px = v => lx + (v-lo)/(hi-lo)*(x1-lx), n = sp.rows.length, rh = (H-40)/n;
+  const ns = sp.series.length, bh = Math.min(big ? 60 : 28, (rh-14)/ns), f = fmtr(sp.fmt);
+  let gx = lx; (sp.legend||sp.series).forEach(se=>{ svg.appendChild(el('rect',{x:gx,y:2,width:15,height:15,rx:3,fill:colr(se.color)}));
+    svg.appendChild(el('text',{x:gx+22,y:15,'font-size':16,'font-weight':700,fill:se.color==='light'?css('--ink-3'):colr(se.color)},se.label));
+    gx += 60 + se.label.length*9; });
+  const stages = sp.series.map(()=>el('g',{class:'stage'}));
+  sp.rows.forEach((r,i)=>{
+    const y = 34 + i*rh;
+    // long labels wrap onto two (or three) lines so they never run off the left edge
+    const fs = big ? 24 : n>4?18:20, maxc = Math.floor((lx-30)/(fs*0.5)), words = r.label.split(' '), lines = [];
+    let cur = ''; words.forEach(w => { if ((cur+' '+w).trim().length > maxc && cur) { lines.push(cur); cur = w; } else cur = (cur+' '+w).trim(); }); lines.push(cur);
+    const t = el('text',{x:lx-16,y:y+rh/2+6-(lines.length-1)*fs*0.55,'text-anchor':'end','font-size':fs,fill:css('--ink'),'font-style':n<=2?'italic':'normal','font-weight':big?700:400});
+    lines.forEach((ln,j) => { const ts = el('tspan',{x:lx-16, dy:j?fs*1.1:0}, ln); t.appendChild(ts); });
+    svg.appendChild(t);
+    r.vals.forEach((v,j)=>{ if (v==null) return;
+      const yy = y + (rh-ns*bh)/2 + j*bh, c = colr(r.color || sp.series[j].color);
+      stages[j].appendChild(el('rect',{x:lx,y:yy,width:Math.max(1,px(v)-lx),height:bh-4,rx:3,fill:c,class:'pop popx',
+        style:'transform-origin:left'}));
+      stages[j].appendChild(el('text',{x:px(v)+8,y:yy+bh/2+(big?8:3),'font-size':big?26:15,'font-weight':700,
+        fill:c,class:'pop'}, f(v)));
+    });
+  });
+  stages.forEach(g=>svg.appendChild(g));
+}
+
+// A comparison group picked on the toggle: its lines drawn dashed and unlabeled
+// UNDER the default ones, in the same colors, so the two can be read together.
+const lineOver = sp => (sp.views && sp.cur && sp.cur!=='none') ? sp.view(sp.cur) : null;
+function lineCap(sp,k){
+  const ov = lineOver(sp), base = sp.says ? (k>0 ? sp.says[Math.min(k,sp.says.length)-1] : '<span class="dim">Press → to draw each line.</span>')
+    : (k < sp.series.length ? '<span class="dim">Press → to draw each line.</span>' : '');
+  return ov ? `${base}<br><span class="dim">${ov.overlay}</span>` : base; }
+function drawLine(sp){
+      const ov = lineOver(sp);
+      const g = chart($('#ln'),{xdom:sp.xdom, ydom:sp.ydom, yticks:sp.yticks, yfmt:fmtr(sp.yfmt), xticks:sp.xticks,
+        bands:sp.bands, pad:{r:sp.direct ? 50 : 200},
+        lines:(ov ? ov.series.map(L=>({data:L.data.map(r=>[r[0],r[1]]), color:colr(L.color), w:2.6, dash:'8 6', op:.75, dots:false})) : []).concat(sp.series.map(L=>({data:L.data.map(r=>[r[0],r[1]]), color:colr(L.color), w:L.dash?2.4:3.4,
+          label:sp.direct ? undefined : L.label, op:L.dash?.85:1})))});
+      (sp.bands||[]).forEach(b=>g.svg.appendChild(el('text',{x:(g.px(b.from)+g.px(b.to))/2,y:g.y0+16,
+        'text-anchor':'middle','font-size':14,'font-weight':700,fill:css('--accent')}, b.label)));
+      (sp.refs||[]).forEach(r=>{ g.svg.insertBefore(el('line',{x1:g.x0,x2:g.x1,y1:g.py(r.y),y2:g.py(r.y),stroke:css('--ink-3'),
+          'stroke-width':1.5,'stroke-dasharray':'7 6'}), g.svg.firstChild);
+        g.svg.appendChild(el('text',{x:g.x0+8,y:g.py(r.y)+20,'font-size':14,'font-style':'italic',fill:css('--ink-3')}, r.label)); });
+      if (sp.zero) g.svg.insertBefore(el('line',{x1:g.x0,x2:g.x1,y1:g.py(0),y2:g.py(0),stroke:css('--ink-3'),'stroke-width':1.5}), g.svg.firstChild);
+      const stages = g.svg.querySelectorAll('.stage');
+      sp.series.forEach((L,j)=>{ if (!L.ci) return; const host = stages[j] || g.svg;
+        L.data.forEach(r=>{ if (r[2]==null) return;
+          host.appendChild(el('line',{x1:g.px(r[0]),x2:g.px(r[0]),y1:g.py(r[1]+1.96*r[2]),y2:g.py(r[1]-1.96*r[2]),
+            stroke:colr(L.color),'stroke-width':2,opacity:.7,class:'pop'})); }); });
+      const lastStage = stages[stages.length-1] || g.svg;
+      // direct labels: each line's name on the line, arriving with the line
+      if (sp.direct) sp.series.forEach((L,j)=>{ if (!L.lab) return; (stages[j] || g.svg).appendChild(el('text',{x:g.px(L.lab.x),y:g.py(L.lab.y),
+        'text-anchor':L.lab.anchor||'middle','font-size':18,'font-weight':700,fill:colr(L.color),class:'pop'}, L.label)); });
+      (sp.callouts||[]).forEach(c=>((c.s!=null && stages[c.s]) || lastStage).appendChild(el('text',{x:g.px(c.x)+(sp.views&&c.x===sp.xdom[0]?20:0),y:g.py(c.y)+(c.pos==='above'?-16:30),
+        'text-anchor':'middle','font-size':20,'font-weight':700,fill:colr(c.color),class:'pop'}, c.text)));
+}
+
+const rangeCap = (sp,k) => { const ov = lineOver(sp), base = sp.says ? (k>0 ? sp.says[Math.min(k,sp.says.length)-1] : '<span class="dim">Press → to add each row.</span>')
+    : (k < sp.rows.length ? '<span class="dim">Press → to add each row.</span>' : '');
+  return ov ? `${base}<br><span class="dim">${ov.overlay}</span>` : base; };
+function drawRange(sp){ const svg=$('#rg'); clear(svg); const ov = lineOver(sp), H = svg.viewBox.baseVal.height;
+      const [lo,hi]=sp.domain, f=fmtr(sp.fmt), gapTxt = v => (sp.fmt==='pct'||sp.fmt==='n0') ? Math.round(v)+' pts' : f(v);
+      const x0=300, x1=880, px=v=>x0+(v-lo)/(hi-lo)*(x1-x0), n=sp.rows.length, rh=(H-40)/n, MUT=css('--ink-3'), small=n>4;
+      (sp.ticks||[lo,hi]).forEach(t=>{ svg.appendChild(el('line',{x1:px(t),x2:px(t),y1:6,y2:H-34,stroke:css('--rule-2'),'stroke-width':1}));
+        svg.appendChild(el('text',{x:px(t),y:H-12,'text-anchor':'middle','font-size':14,fill:MUT},f(t))); });
+      sp.rows.forEach((r,i)=>{ const y=10+i*rh+rh*0.55, g=el('g',{class:'stage'});
+        if ((sp.breaks||[]).includes(i)) svg.appendChild(el('line',{x1:20,x2:980,y1:10+i*rh,y2:10+i*rh,stroke:css('--rule'),'stroke-width':1}));
+        svg.appendChild(el('text',{x:x0-20,y:y+6,'text-anchor':'end','font-size':small?16:18,fill:css('--ink'),'font-family':'var(--display)'},r.label));
+        g.appendChild(el('rect',{x:px(r.lo),y:y-6,width:Math.max(1,px(r.hi)-px(r.lo)),height:12,rx:6,fill:colr(r.bar),'fill-opacity':.35,class:'pop popx'}));
+        [[r.lo,r.loC,r.loLab,'end',-12],[r.hi,r.hiC,r.hiLab,'start',12]].forEach(([v,c,lab,anc,dx])=>{
+          g.appendChild(el('circle',{cx:px(v),cy:y,r:small?7:9,fill:colr(c),class:'pop'}));
+          g.appendChild(el('text',{x:px(v),y:y-(small?12:16),'text-anchor':'middle','font-size':small?14:16,'font-weight':700,fill:colr(c),class:'pop'},f(v)));
+          g.appendChild(el('text',{x:px(v)+dx,y:y+(small?20:26),'text-anchor':anc,'font-size':12,fill:colr(c),class:'pop'},lab)); });
+        const o = ov && ov.rows[i], gx = Math.max(px(r.hi), o?px(o.hi):0)+40;
+        if (o) { g.appendChild(el('line',{x1:px(o.lo),x2:px(o.hi),y1:y,y2:y,stroke:colr(r.bar),'stroke-width':2,'stroke-dasharray':'6 5',class:'pop'}));
+          [[o.lo,r.loC],[o.hi,r.hiC]].forEach(([v,c])=>g.appendChild(el('circle',{cx:px(v),cy:y,r:small?9:12,fill:'none',stroke:colr(c),'stroke-width':2.5,class:'pop'})));
+          g.appendChild(el('text',{x:gx,y:y-(small?14:18),'font-size':14,fill:colr(r.bar),class:'pop'},`${ov.name}: ${gapTxt(o.hi-o.lo)}`)); }
+        g.appendChild(el('text',{x:gx,y:y+6,'font-size':small?16:20,'font-weight':700,fill:colr(r.bar),class:'pop'},(r.gap!=null ? r.gap : gapTxt(r.hi-r.lo))));
+        svg.appendChild(g); });
+}
+
+/* A segmented control: one button pressed at a time. */
+const seg = (id, opts, on) => `<span class="pill segs" id="${id}">${opts.map(o=>
+  `<button data-v="${o[0]}" aria-pressed="${o[0]===on}">${o[1]}</button>`).join('')}</span>`;
+function bindSeg(id, fn){
+  const box = $(id);
+  box.querySelectorAll('button').forEach(b=>b.addEventListener('click',ev=>{ ev.stopPropagation();
+    box.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed', x===b?'true':'false'));
+    fn(b.dataset.v); }));
+}
+// After a control redraws a chart, show everything already revealed.
+function relight(){ const deck=$('#deck'); arm(deck); state.stages=deck.querySelectorAll('.stage').length;
+  paintStages(deck, Math.max(1, Math.min(state.sub||99, state.stages)), false); }
+
+
+
+/* ── one web renderer per slide type ──────────────────────────────────────── */
+const WEB = {
+  title: sp => ({k:'dark center', h:()=>`<p class="kicker">${sp.kicker}</p><h1>${sp.title}</h1>
+    <p class="lede">${sp.sub}</p><div class="foot">${sp.foot} · <b>?</b> for keys, <b>N</b> for notes</div>`}),
+
+  section: sp => ({k:'dark center', h:()=>`<p class="kicker">${sp.part}</p><h1 style="max-width:20ch">${sp.title}</h1>`}),
+
+  statement: sp => ({k:'wash', h:()=>`${HD(sp)}<p class="bigstate${sp.big.length<20?' huge':''}">${sp.big}</p>
+    ${sp.sub?`<p class="lede center">${sp.sub}</p>`:''}`}),
+
+  cards: sp => ({k:'light', subs:sp.cards.length, h:(k=0)=>`${HD(sp)}
+    <div class="cards n${sp.cards.length}${sp.arrows?' arrows':''}">${sp.cards.map((c,i)=>
+      `${sp.arrows&&i?`<span class="arr${hold(k,i)}">→</span>`:''}<div class="card${sp.highlight===i?' hi':''}${hold(k,i)}"
+        style="border-top-color:${colr(c.color||(sp.highlight===i?'accent':'ideo'))}">
+        <b style="color:${sp.highlight===i?'#fff':colr(c.color||'ideo')}">${c.h}</b><p>${c.t}</p>
+        ${c.tag?`<span class="tag" style="color:${sp.highlight===i?'var(--accent)':colr(c.color||'ideo')}">${c.tag}</span>`:''}</div>`).join('')}</div>${SRC(sp)}`}),
+
+  stats: sp => ({k:'light', subs:sp.stats.length+(sp.so?1:0), h:(k=0)=>`${HD(sp)}
+    <div class="stats n${sp.stats.length}">${sp.stats.map((st,i)=>`<div class="st${hold(k,i)}">
+      <span class="tag">${st.label}</span><b style="color:${colr(st.color)}">${st.value}</b>${st.sub?`<p class="stsub">${st.sub}</p>`:''}</div>`).join('')}</div>${sp.so?`<p class="so${hold(k,sp.stats.length)}">${sp.so}</p>`:''}${SRC(sp)}`}),
+
+  measure: sp => ({k:'light', subs:2, h:(k=0)=>`${HD(sp)}
+    <blockquote class="mq">${sp.ex}</blockquote>
+    <div class="pc${hold(k,0)}"><span class="tag" style="color:var(--match)">✓ Why it works</span><b>${sp.pro}</b></div>
+    <div class="pc${hold(k,1)}"><span class="tag" style="color:var(--accent)">✗ Why it fails</span><b>${sp.con}</b></div>`}),
+
+  items: sp => ({k:'light', subs:sp.items.length, h:(k=0)=>`${HD(sp)}
+    <div class="qlist">${sp.items.map((it,i)=>`<div class="qrow${hold(k,i)}"><p class="q${it.plain?' plain':''}">${it.plain?it.text:'“'+it.text+'”'}</p>
+      <span class="key">${it.tag.replace(/\n/g,'<br>')}</span></div>`).join('')}</div>${SRC(sp)}`}),
+
+  hbars: sp => ({k:'light', h:()=>`${HD(sp)}${SVG('hb', sp.big?340:sp.rows.length>4?400:sp.rows.length===3?340:250)}${SRC(sp)}`,
+    draw:()=>hbars($('#hb'), sp)}),
+
+  vbars: sp => ({k:'light', h:()=>`${HD(sp)}
+    ${sp.variants?`<div class="ctl">${seg('var', Object.entries(sp.variants).map(([k,v])=>[k,v.label]), 'cold')}</div>`:''}
+    ${SVG('vb', sp.variants?360:390)}${SRC(sp)}`,
+    draw:()=>{ const go_ = v => bars($('#vb'), {cats:v.cats, series:v.series, ymin:sp.domain[0], ymax:sp.domain[1],
+        fmt:sp.fmt, legend:sp.legend, gap:sp.cats.length>6?0.28:0.4, annot:v===sp?sp.annot:null, vfs:sp.vfs});
+      go_(sp); if (sp.variants) bindSeg('#var', v=>{ go_(sp.variants[v]); relight(); }); }}),
+
+  // No question overlays on the web charts: they sat on top of the lines. Each
+  // line instead brings a plain-words caption under the chart, from sp.says.
+  line: sp => ({k:'light', subs:sp.series.length, h:(k=0)=>`${HD(sp)}
+    ${sp.views?`<div class="ctl">${seg('view', sp.views, sp.cur||sp.views[0][0])}</div>`:''}${SVG('ln',sp.views?340:370)}
+    <p class="cap">${lineCap(sp,k)}</p>${SRC(sp)}`,
+    draw:()=>{
+      if (sp.views) bindSeg('#view', v=>{ sp.cur=v; drawLine(sp);
+        const cap=document.querySelector('#deck .cap'); if (cap) cap.innerHTML = lineCap(sp, state.sub||0);
+        relight(); });
+      drawLine(sp); }}),
+
+  range: sp => ({k:'light', subs:sp.rows.length, h:(k=0)=>`${HD(sp)}
+    ${sp.views?`<div class="ctl">${seg('view', sp.views, sp.cur||sp.views[0][0])}</div>`:''}${SVG('rg',sp.views?350:380)}
+    <p class="cap">${rangeCap(sp,k)}</p>${SRC(sp)}`,
+    draw:()=>{ if (sp.views) bindSeg('#view', v=>{ sp.cur=v; drawRange(sp);
+        const cap=document.querySelector('#deck .cap'); if (cap) cap.innerHTML = rangeCap(sp, state.sub||0);
+        relight(); });
+      drawRange(sp); }}),
+
+  timeline: sp => ({k:'light', subs:sp.events.length, h:(k=0)=>`${HD(sp)}
+    <div class="tl n${sp.events.length}">${sp.events.map((e,i)=>`<div class="ev${hold(k,i)}"><span class="yr">${e.y}</span>
+      <b>${e.h}</b><p>${e.t}</p></div>`).join('')}</div>${SRC(sp)}`}),
+
+
+  grid: sp => ({k:'light', subs:4, h:(k=0)=>`${HD(sp)}
+    <div class="g2"><span></span><span class="gh" style="grid-column:2/4">${sp.colHead}</span>
+      <span class="gh gl">${sp.rowHead}</span>${sp.cols.map(c=>`<span class="gc">${c}</span>`).join('')}
+      ${sp.cells.map((c,i)=>`${i%2===0?`<span class="gr">${sp.rows[i/2]}</span>`:''}<div class="gcell${c.hi?' hi':''}${hold(k,i)}"><b>${c.h}</b><p>${c.t}</p></div>`).join('')}
+    </div>${SRC(sp)}`}),
+
+  discuss: sp => ({k:'wash', subs:sp.qs.length, h:(k=0)=>`<p class="kicker">In your group · ${sp.part} · about ${sp.minutes} minutes</p>
+    <div class="disc">${sp.qs.map((q,i)=>`<div class="dq${i>0?hold(k,i):''}"><span>${i+1}</span><p>${q}</p></div>`).join('')}</div>
+    ${sp.ref?`<div class="dref">${sp.ref.map(r=>`<div><p${r.plain?' class="plain"':''}>${r.plain?r.text:'“'+r.text+'”'}</p><span>${r.tag.replace(/\n/g,'<br>')}</span></div>`).join('')}</div>`:''}
+    ${sp.report?`<p class="report"><b>Report back:</b> ${sp.report}</p>`:''}`}),
+
+  // A quotation, full screen and dark, its speaker underneath.
+  quote: sp => ({k:'dark center', h:()=>`<div class="qt"><span class="qmark">“</span>
+    <p class="qtext${sp.q.length>110?' long':''}">${sp.q}</p><span class="qrule"></span>
+    <p class="qwho">${sp.who}</p>${sp.when?`<p class="qwhen">${sp.when}</p>`:''}</div>`}),
+
+  // Take a side: one statement, and the room moves. The band along the bottom
+  // is the room: agree at the left wall, disagree at the right.
+  move: sp => ({k:'wash', h:()=>`<p class="kicker">Take a side · ${sp.step}</p>
+    <p class="mvbig">${sp.big}</p>${sp.sub?`<p class="mvsub">${sp.sub}</p>`:''}
+    <div class="mvband"><span class="mva">← Agree</span><span class="mvu">Unsure</span><span class="mvd">Disagree →</span></div>`}),
+
+  questions: sp => ({k:'dark center', h:()=>`<h1 style="max-width:22ch">${sp.big}</h1>
+    <div class="rowlist" style="margin-top:22px">${sp.qs.map((q,i)=>`<div class="r" style="border-color:${i<sp.qs.length-1?'#2A3541':'transparent'}">
+      <div class="say">${q.q}${q.tag?` <b style="color:var(--accent)">${q.tag}</b>`:''}</div></div>`).join('')}</div>`}),
+
+  next: sp => ({k:'dark', h:()=>`<p class="kicker nxk">Next</p><div class="nxl">
+    ${sp.rows.map(r=>`<div class="nxr"><div class="nxw">${r[0]}</div>
+      <div><div class="nxt">${r[1]}</div><div class="nxd">${r[2]}</div></div></div>`).join('')}</div>
+    <p class="nxf">${sp.foot}</p>`}),
+};
+
+const S = SPEC.map(sp => {
+  const r = WEB[sp.type];
+  if (!r) throw new Error(`web deck: no renderer for "${sp.type}" (${sp.id})`);
+  return Object.assign({slug: sp.id, notes: sp.notes || ''}, r(sp));
+});
+
+/* Sub-steps. A slide declares `subs: n` to mean it has n reveal stages after
+   its initial view; h() and draw() receive the current stage. Addressable the
+   way the sorting deck does it: #3 is the slide, #3a its first stage. Slides
+   without `subs` are unaffected — h() simply ignores the argument. */
+// declared steps for text reveals, chart stages for the charts, whichever is more
+const SUBS = i => (i===state.step)
+  ? Math.max(S[i].subs||0, state.stages||0)
+  : (S[i].subs||0);
+// Kick the CSS transitions one frame after insertion, so the browser has a
+// starting value to animate away from. getTotalLength() throws on a detached or
+// zero-length node, hence the try.
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)');
+
+/* Charts ARM rather than play. On arrival you get the ghost — the shape, faint —
+   and nothing else; each → sweeps one more series across. That is the sorting
+   deck's behavior, and the reason its charts read as an argument being walked
+   rather than a picture dropped on the screen.
+
+   arm()          hides every stage and measures its dash length with the
+                  transition off. Unstaged animatables (bars, table cells) are
+                  not part of the argument, so they just land.
+   paintStages()  shows the first n stages. Only the newly-reached one animates;
+                  the rest land instantly, so re-rendering a slide does not
+                  replay everything already on screen.                          */
+function setStage(g, on, animate){
+  const draws=[...g.querySelectorAll('.draw')], pops=[...g.querySelectorAll('.pop')];
+  const len = n => { try{ return n.getTotalLength(); }catch(_){ return 0; } };
+  if(!on){
+    draws.forEach(n=>{ const L=len(n); n.style.strokeDashoffset = L? L+'px':'0px'; });
+    pops.forEach(n=>n.classList.remove('go'));
+    return;
+  }
+  if(animate && !REDUCED.matches){
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      draws.forEach(n=>n.style.strokeDashoffset='0px');
+      pops.forEach(n=>n.classList.add('go'));
+    }));
+  } else {                                   // land it, no motion
+    [...draws,...pops].forEach(n=>n.style.transition='none');
+    draws.forEach(n=>n.style.strokeDashoffset='0px');
+    pops.forEach(n=>n.classList.add('go'));
+    void g.getBoundingClientRect();
+    [...draws,...pops].forEach(n=>n.style.transition='');
+  }
+}
+function arm(root){
+  root.querySelectorAll('.stage').forEach(g=>g.classList.remove('on'));
+  root.querySelectorAll('.draw').forEach(n=>{
+    n.classList.remove('anim');
+    n.style.transition='none';
+    let L=0; try{ L=n.getTotalLength(); }catch(_){}
+    n.style.strokeDasharray  = L? L+'px':'none';
+    n.style.strokeDashoffset = L? L+'px':'0px';
+  });
+  root.querySelectorAll('.stage .pop').forEach(n=>n.classList.remove('go'));
+  void root.getBoundingClientRect();          // flush, or removing the transition does nothing
+  root.querySelectorAll('.draw').forEach(n=>{ n.style.transition=''; n.classList.add('anim'); });
+  root.querySelectorAll('.growy,.growx').forEach(n=>n.classList.add('go'));
+  root.querySelectorAll('.pop').forEach(n=>{ if(!n.closest('.stage')) n.classList.add('go'); });
+}
+function paintStages(root, n, animateLast){
+  const gs=[...root.querySelectorAll('.stage')];
+  gs.forEach((g,i)=>{
+    const on = i < n;
+    g.classList.toggle('on', on);
+    setStage(g, on, on && animateLast && i === n-1);
+  });
+  // Stage i is painted once n > i, so the question tagged i is the one that has
+  // not been answered yet. When n reaches the stage count, none match and the
+  // chart is left to speak for itself.
+  root.querySelectorAll('.ask').forEach(a=>
+    a.classList.toggle('on', +a.dataset.stage === n));
+  return gs.length;
+}
+// Click a chart to replay it: back to the ghost, then sweep the revealed stages.
+function replay(svg){
+  const shown=[...svg.querySelectorAll('.stage')].filter(g=>g.classList.contains('on')).length || 1;
+  arm(svg);
+  paintStages(svg, 0, false);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    for(let i=1;i<shown;i++) paintStages(svg,i,false);   // earlier stages land
+    paintStages(svg, shown, true);                        // the last one sweeps
+  }));
+}
+function render(){
+  const s=S[state.step];
+  // h()/draw() see only the slide's DECLARED steps. Chart stages are counted
+  // after the draw and clamped separately — passing a raw 99 (which is how
+  // "land this slide fully revealed" is expressed) straight into h() is how
+  // captions came out as "undefined".
+  const kH = Math.min(state.sub, s.subs||0);
+  $("#deck").dataset.drawn = "0";
+  $("#deck").innerHTML=`<section class="slide ${s.k} on">${s.h(kH)}</section>`;
+  $("#bar").style.width=((state.step+1)/S.length*100)+"%";
+  $("#notesbody").textContent=s.notes||"No notes for this slide.";
+  if(s.draw) s.draw(kH);
+  const deck=$("#deck");
+  arm(deck);
+  // A slide's step count is the greater of what it declares and what its chart
+  // provides, so adding a series to a chart adds a step without touching nav.
+  state.stages = deck.querySelectorAll('.stage').length;
+  const maxSub = Math.max(s.subs||0, state.stages);
+  if(state.sub > maxSub) state.sub = maxSub;
+  // Animate only when we stepped FORWARD one notch within the same slide;
+  // arriving at a slide, or jumping, lands whatever is due without motion.
+  const stepped = (state.step===state.lastStep) && (state.sub===state.lastSub+1);
+  paintStages(deck, state.sub, stepped);
+  deck.dataset.drawn = (state.sub >= state.stages) ? "1" : "0";
+  state.lastStep=state.step; state.lastSub=state.sub;
+}
+const state={step:0,sub:0,stages:0,lastStep:-1,lastSub:-1};
+const subTag = n => n>0 ? String.fromCharCode(96+n) : "";
+function go(n,push=true,sub=0){
+  state.step=Math.max(0,Math.min(S.length-1,n));
+  // Only the lower bound can be clamped here: the upper bound is the chart's
+  // stage count, which is not known until the slide has rendered. Clamping
+  // against the OUTGOING slide's count is how stepping backwards onto a chart
+  // used to land it half-drawn.
+  state.sub=Math.max(0,sub);
+  render();                       // clamps state.sub, then paints
+  if(push) location.hash=String(state.step+1)+subTag(state.sub);
+  hint();
+}
+function hint(){
+  const tag=`#${state.step+1}${subTag(state.sub)}`;
+  // One dot per stage on this slide, filled as far as you have got. Without it
+  // a chart that arms looks finished on arrival and nobody presses again. The
+  // sorting deck has always shown these; this deck did not, and that was the
+  // only difference between the two corners.
+  const max=SUBS(state.step);
+  const dots = max
+    ? `<span class="dots">${Array.from({length:max},(_,i)=>
+        `<i class="${i<state.sub?"on":""}"></i>`).join("")}</span>`
+    : "";
+  $("#hint").innerHTML=`<b class="nums">${tag}</b><span style="opacity:.7">`
+    +` of ${S.length} · ${S[state.step].slug}</span>${dots}<br>? help · N notes`;
+}
+function next(){ if(state.sub<SUBS(state.step)) go(state.step,true,state.sub+1);
+                 else go(state.step+1,true,0); }
+function prev(){ if(state.sub>0) go(state.step,true,state.sub-1);
+                 else go(state.step-1,true,99); }   // land the previous slide fully drawn
+function fromHash(){
+  const h=decodeURIComponent(location.hash.replace(/^#/,""));
+  const m=h.match(/^(\d+)([a-z]?)$/);
+  if(m) return [Math.min(S.length,Math.max(1,+m[1]))-1,
+                m[2]?m[2].charCodeAt(0)-96:0];
+  const i=S.findIndex(x=>x.slug===h);
+  return i<0?null:[i,0];
+}
+addEventListener("hashchange",()=>{const h=fromHash();
+  if(h&&(h[0]!==state.step||h[1]!==state.sub)) go(h[0],false,h[1]);});
+function help(on){const h=$("#help");h.hidden=(on===undefined)?!h.hidden:!on;
+  $("#hint").style.visibility=h.hidden?"visible":"hidden";}
+function notes(on){const n=$("#notes");n.hidden=(on===undefined)?!n.hidden:!on;}
+$("#help").addEventListener("click",()=>help(false));
+$("#hint").addEventListener("click",()=>help(true));
+addEventListener("keydown",e=>{
+  const typing=/^(INPUT|TEXTAREA)$/.test(e.target.tagName);
+  if(typing&&!["Escape","ArrowRight","ArrowLeft"].includes(e.key))return;
+  switch(e.key){
+    case "ArrowRight":case " ":case "PageDown":next();e.preventDefault();break;
+    case "ArrowLeft":case "PageUp":prev();e.preventDefault();break;
+    case "ArrowDown":go(state.step+1);e.preventDefault();break;   // skip the stages
+    case "ArrowUp":go(state.step-1);e.preventDefault();break;
+    case "Home":go(0);break;
+    case "End":go(S.length-1);break;
+    case "n":case "N":notes();break;
+    case "f":case "F":document.fullscreenElement?document.exitFullscreen()
+      :document.documentElement.requestFullscreen?.();break;
+    case "t":case "T":{const r=document.documentElement;
+      r.dataset.theme=r.dataset.theme==="dark"?"light":"dark";render();break;}
+    case "?":help();break;
+    case "Escape":help(false);notes(false);break;}});
+// Click anywhere to advance, the way a remote would — controls exempt.
+$("#deck").addEventListener("click",e=>{
+  if(e.target.closest("input,button,label,select,textarea,a,.hit")) return;
+  const svg=e.target.closest("svg");
+  if(svg){ replay(svg); return; }            // clicking a chart replays it
+  next();});
+{const h=fromHash(); if(h){ state.step=h[0]; state.sub=h[1]; }}
+go(state.step,true,state.sub);
+let rz;addEventListener("resize",()=>{clearTimeout(rz);
+  rz=setTimeout(()=>go(state.step,false,state.sub),140);});
+</script>
+</body></html>
