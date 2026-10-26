@@ -470,12 +470,20 @@
 <footer class="gutter">
   Census block equivalency files (119th and 120th Congress) &middot; 2024 presidential results via
   Redistricting Data Hub &middot; geometry simplified for display
+  &middot; <span id="build" title="Build date. If this is older than you expect, you are on a cached copy.">build &mdash;</span>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
 <script>
 (function () {
+  // Phones cache this page hard, and a stale copy is indistinguishable from a
+  // bug -- a reader once saw 144 squares that this build does not draw. Two
+  // defences: every data file is requested with the build tag, so code and
+  // data can never come from different builds, and the build date is printed
+  // in the footer so "is this current?" is answerable at a glance.
+  var BUILD = "2026-10-26";
+  function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
   var STATE_NAME = {
@@ -2177,14 +2185,14 @@
   // representatives yet, and showing one there would assert an election that
   // has not happened.
   function loadIncumbents() {
-    return fetch("data/incumbents.json")
+    return fetch(dataUrl("incumbents.json"))
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (j) { state.incumbents = j; })
       .catch(function () { state.incumbents = null; });
   }
 
   function loadCook() {
-    return fetch("data/cook.json")
+    return fetch(dataUrl("cook.json"))
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (j) { state.cook = j; })
       .catch(function () { state.cook = null; });
@@ -2192,7 +2200,7 @@
 
   function loadDemoDistricts() {
     if (state.demoDistricts) return Promise.resolve(state.demoDistricts);
-    return fetch("data/demo_districts.json")
+    return fetch(dataUrl("demo_districts.json"))
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (j) {
         state.demoDistricts = j ? j.byKey : null;
@@ -2202,7 +2210,7 @@
   }
 
   function loadBasemap() {
-    return fetch("data/basemap.json")
+    return fetch(dataUrl("basemap.json"))
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (topo) {
         if (!topo) return;
@@ -2220,7 +2228,7 @@
   }
 
   function loadDistricts() {
-    return fetch("data/districts.json").then(function (r) {
+    return fetch(dataUrl("districts.json")).then(function (r) {
       if (!r.ok) throw new Error("districts " + r.status);
       return r.json();
     }).then(function (topo) {
@@ -2481,7 +2489,7 @@
     if (state.precinctCache[st]) return Promise.resolve(state.precinctCache[st]);
     if (inflight["p" + st]) return inflight["p" + st];
     setStatus("Loading " + STATE_NAME[st] + " precincts\u2026");
-    inflight["p" + st] = fetch("data/precincts_" + st + ".json").then(function (r) {
+    inflight["p" + st] = fetch(dataUrl("precincts_" + st + ".json")).then(function (r) {
       if (!r.ok) throw new Error("precincts " + r.status);
       return r.json();
     }).then(function (topo) {
@@ -2535,7 +2543,7 @@
   function ensureDemographics(st) {
     if (state.demoCache[st]) return Promise.resolve(state.demoCache[st]);
     setStatus("Loading " + STATE_NAME[st] + " demographics\u2026");
-    return fetch("data/demo_" + st + ".json").then(function (r) {
+    return fetch(dataUrl("demo_" + st + ".json")).then(function (r) {
       if (!r.ok) throw new Error("demographics " + r.status);
       return r.json();
     }).then(function (j) {
@@ -2870,6 +2878,9 @@
 
   document.getElementById("cElection").addEventListener("click", function () { setColor("election"); });
   document.getElementById("cDemo").addEventListener("click", function () { setColor("demo"); });
+  var buildEl = document.getElementById("build");
+  if (buildEl) buildEl.textContent = "build " + BUILD;
+
   document.getElementById("cCook").addEventListener("click", function () { setColor("cook"); });
   document.getElementById("cFlip").addEventListener("click", function () { setColor("flip"); });
 
