@@ -512,7 +512,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-27a";
+  var BUILD = "2026-10-27b";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -895,9 +895,13 @@
     // This mode is about what the redraw did, so a seat whose lines survived
     // intact is out of scope however competitive it is: it is in play on its
     // own account, not because of anything the new map changed.
-    var held = r.party === "D" || r.party === "R" ? r.party : null;
+    var pre = predecessor(f);
+    var held = pre && (pre.held === "D" || pre.held === "R") ? pre.held : null;
     var base = { rating: r.rating, held: held, open: !!r.open,
-                 heldNote: r.partyNote || null };
+                 heldNote: pre ? pre.note : null,
+                 from: pre ? pre.from : null,
+                 fromShare: pre ? pre.share : null,
+                 fromMember: pre ? pre.member : null };
     if (f.__same) {
       base.cat = base.fate = "unchanged";
       base.side = held;      // no square is drawn, but the readout still colors
@@ -1949,17 +1953,25 @@
     if (state.color === "flip") {
       var fi = flipInfo(f);
       if (fi) {
-        // Just whose seat it is going in. What the rating now says about it is
-        // one row up, under "Cook rating", and the square's own fill and ring
-        // already carry both; repeating the pairing here only crowded it.
+        // Whose seat it is going in, and the seat that makes it theirs. The
+        // rating is one row up and the square's fill and ring carry both, so
+        // the pairing is not repeated here. The predecessor is shown because
+        // it is what the verdict rests on, and for a renumbered seat it is
+        // the only thing that explains the answer.
         var fcls = fi.held === "D" ? "d" : fi.held === "R" ? "r" : "";
         var held = [];
+        if (fi.fromMember) held.push(fi.fromMember);
         if (fi.open) held.push("open seat");
         if (fi.heldNote) held.push(fi.heldNote);
         rows.push(["Incumbent party", fi.held
           ? '<span class="' + fcls + '">' + FLIP_PARTY[fi.held] + "</span>" +
             (held.length ? ' <span class="muted">(' + held.join("; ") + ")</span>" : "")
           : '<span class="muted">not recorded</span>']);
+        if (fi.from) {
+          rows.push(["Succeeds 2024 CD", fi.from +
+            ' <span class="muted">(' + pct(fi.fromShare) +
+            " of this seat's people)</span>"]);
+        }
       }
     }
     rows.push(["Citizen voting-age pop.", fmt(cvapOf(f))]);
@@ -2311,6 +2323,26 @@
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (j) { state.incumbents = j; })
       .catch(function () { state.incumbents = null; });
+  }
+
+  // Which 2024 seat each 2026 district succeeds, matched on shared 2020
+  // population, one old seat to one new. This is where "whose seat is this"
+  // comes from -- not the district number, which a redraw reassigns freely,
+  // and not the ratings file, which names the candidate running rather than
+  // the constituents inherited. scripts/build_predecessors.py has the why.
+  function loadPredecessors() {
+    return fetch(dataUrl("predecessors.json"))
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) { state.predecessors = j; })
+      .catch(function () { state.predecessors = null; });
+  }
+
+  function predecessor(f) {
+    if (!state.predecessors || state.year !== "2026") return null;
+    var p = f.properties;
+    var cd = p.district || p.district_2026;
+    if (!cd || !p.state) return null;
+    return state.predecessors[p.state + "-" + cd] || null;
   }
 
   function loadCook() {
@@ -2855,8 +2887,9 @@
           + (tally.loseR || 0) + " Republican-held \u2014 and " + open
           + " more are toss-ups, which Cook will not call either way. Each "
           + "square is shaded by its Cook rating, the same tones as that tab, "
-          + "and ringed in the color of the party holding it now; hatching "
-          + "marks the ones rated to change hands. Only redrawn districts "
+          + "and ringed in the color of the party that holds the 2024 seat "
+          + "it inherits the most people from; hatching marks the ones rated "
+          + "to change hands. Only redrawn districts "
           + "count: the other " + tally.safe + " are still rated for their "
           + "sitting party"
           + (tally.unknown ? ", " + tally.unknown
@@ -3163,6 +3196,7 @@
 
   loadIncumbents();
   loadCook();
+  loadPredecessors();
   loadDemoDistricts();
   loadBasemap();
   loadDistricts().catch(function (e) {
