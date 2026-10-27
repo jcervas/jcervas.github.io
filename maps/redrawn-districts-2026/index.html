@@ -100,7 +100,10 @@
   body {
     margin: 0; background: var(--paper); color: var(--ink);
     font-family: var(--body); font-size: 14px; line-height: 1.5;
-    display: flex; flex-direction: column; overflow: hidden;
+    display: flex; flex-direction: column;
+    /* Vertical scrolling is what makes .stage's min-height reachable when the
+       viewport is too short to hold chrome and map at once. */
+    overflow-x: hidden; overflow-y: auto;
   }
   .gutter {
     padding-left: max(16px, env(safe-area-inset-left, 0px));
@@ -129,6 +132,26 @@
     background: var(--panel); border-bottom: 1px solid var(--rule);
     padding-block: 1rem 0.7rem; flex: none;
   }
+  /* A phone held sideways has plenty of width and almost no height, and the
+     chrome above the map does not shrink on its own: at 320px tall it took
+     265px and left the map a sliver below the fold. Trim it so the map keeps
+     the majority of a short viewport. */
+  @media (max-height: 560px) and (min-width: 620px) {
+    header { padding-block: 0.5rem 0.4rem; }
+    header .sub { display: none; }
+    .controls { padding-block: 0.45rem 0; gap: 0.6rem 1.25rem; }
+    .hintbar { padding-block: 0.45rem 0.4rem; }
+    .ctl > label { font-size: 9.5px; }
+    .seg button { padding-block: 0.22rem; }
+    footer { padding-block: 0.3rem; font-size: 11px; }
+    /* The legend is an overlay, so on a short stage it simply covers the map
+       -- worst in "Seats in play", whose key runs to seven rows and a
+       paragraph. Drop the explanatory prose and let the rest scroll, so the
+       legend can never claim more than half the map. */
+    .stage .legend { max-height: 52%; overflow-y: auto; }
+    .stage .legend .tier { display: none; }
+  }
+
   .ctl { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
   .ctl > label {
     font-size: 10.5px; letter-spacing: 0.06em; font-weight: 600;
@@ -204,7 +227,13 @@
   .back:disabled { opacity: 0.45; cursor: not-allowed; }
 
   .stage {
-    position: relative; flex: 1 1 auto; min-height: 0; background: var(--water);
+    /* The map's minimum lives here, on the container, not on the canvas.
+       resize() used to floor the canvas at 260px while this box was free to
+       flex down to nothing: on a short landscape phone the stage computed to
+       10px, the 260px canvas was clipped by overflow:hidden, and the map
+       simply vanished. A minimum here pushes the page taller instead, and the
+       body scrolls. */
+    position: relative; flex: 1 1 auto; min-height: 260px; background: var(--water);
     overflow: hidden;   /* belt and braces: the canvas must never paint over the footer */
   }
   canvas { display: block; width: 100%; height: 100%; touch-action: none; }
@@ -482,7 +511,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-26";
+  var BUILD = "2026-10-26b";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -1753,8 +1782,11 @@
 
   function resize() {
     var r = document.getElementById("stage").getBoundingClientRect();
-    W = Math.max(320, Math.floor(r.width));
-    H = Math.max(260, Math.floor(r.height));
+    // Match the box we were given. The minimums are the stage's job (CSS), so
+    // these guards only need to keep the canvas from being zero-sized during
+    // layout transitions.
+    W = Math.max(1, Math.floor(r.width));
+    H = Math.max(1, Math.floor(r.height));
     [cv, pick].forEach(function (c) {
       c.width = Math.floor(W * dpr); c.height = Math.floor(H * dpr);
       c.style.width = W + "px"; c.style.height = H + "px";
