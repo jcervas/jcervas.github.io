@@ -499,7 +499,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-26c";
+  var BUILD = "2026-10-26d";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -839,70 +839,102 @@
   //
   // A seat whose holder Cook does not record cannot be judged against the
   // rating at all, so it is left out rather than counted as safe.
+  // Two questions, two channels. Colour is the party holding the seat now, so
+  // the map reads as whose ground is moving; hatching is the forecast, drawn
+  // on the seats that party is rated to lose. A solid square is the same
+  // party holding on in a race Cook will not call safe for them.
   var FLIP_BANDS = [
-    { cat: "flipD", label: "Likely flip \u2192 D", tone: "Solid Democrat" },
-    { cat: "leanD", label: "Lean flip \u2192 D",   tone: "Likely Democrat" },
-    { cat: "toss",  label: "Toss-up",               tone: "Toss Up" },
-    { cat: "leanR", label: "Lean flip \u2192 R",   tone: "Likely Republican" },
-    { cat: "flipR", label: "Likely flip \u2192 R", tone: "Solid Republican" },
-    { cat: "risk",  label: "Hold at risk",          tone: null }
+    { cat: "loseD", label: "D seat, rated to flip", held: "D", fate: "lose" },
+    { cat: "holdD", label: "D seat, close hold",    held: "D", fate: "hold" },
+    { cat: "loseR", label: "R seat, rated to flip", held: "R", fate: "lose" },
+    { cat: "holdR", label: "R seat, close hold",    held: "R", fate: "hold" }
   ];
 
+  var FLIP_TONE = { D: "Solid Democrat", R: "Solid Republican" };
+
   var FLIP_PHRASE = {
-    flipD: "Likely to flip to the Democrats",
-    leanD: "Leaning to a Democratic flip",
-    toss: "Toss-up",
-    leanR: "Leaning to a Republican flip",
-    flipR: "Likely to flip to the Republicans",
-    risk: "Hold, at risk",
+    loseD: "Democratic seat, rated to flip",
+    holdD: "Democratic seat, held narrowly",
+    loseR: "Republican seat, rated to flip",
+    holdR: "Republican seat, held narrowly",
     safe: "Safe hold",
+    unchanged: "Lines unchanged",
     unknown: "Not judged"
   };
 
   function flipInfo(f) {
     var r = cookRating(f);
     if (!r || !r.rating) return null;
+    // This mode is about what the redraw did, so a seat whose lines survived
+    // intact is out of scope however competitive it is: it is in play on its
+    // own account, not because of anything the new map changed.
     var held = r.party === "D" || r.party === "R" ? r.party : null;
+    var base = { rating: r.rating, held: held, open: !!r.open };
+    if (f.__same) {
+      base.cat = base.fate = "unchanged";
+      base.label = FLIP_PHRASE.unchanged;
+      return base;
+    }
     var want = /Democrat$/.test(r.rating) ? "D"
              : /Republican$/.test(r.rating) ? "R" : null;
     var lean = r.rating.indexOf("Lean") === 0;
     var likely = r.rating.indexOf("Likely") === 0;
-    var cat;
-    if (!want) cat = "toss";                       // Cook calls it for nobody
-    else if (!held) cat = "unknown";
-    else if (want !== held) cat = lean ? (want === "D" ? "leanD" : "leanR")
-                                       : (want === "D" ? "flipD" : "flipR");
-    else if (lean || (likely && r.open)) cat = "risk";
-    else cat = "safe";
-    return { cat: cat, rating: r.rating, held: held, open: !!r.open,
-             label: FLIP_PHRASE[cat] };
+    var fate;
+    if (!held) fate = "unknown";             // nothing to judge the rating against
+    else if (!want) fate = "hold";           // Toss Up: Cook will not call it safe
+    else if (want !== held) fate = "lose";
+    else if (lean || (likely && r.open)) fate = "hold";
+    else fate = "safe";
+    base.fate = fate;
+    base.cat = (fate === "lose" || fate === "hold") ? fate + held : fate;
+    base.label = FLIP_PHRASE[base.cat];
+    return base;
   }
 
   function flipInPlay(f) {
     var i = flipInfo(f);
-    return !!i && i.cat !== "safe" && i.cat !== "unknown";
+    return !!i && (i.fate === "lose" || i.fate === "hold");
   }
 
-  // Hue is the party expected to win the seat, lightness how much of a change
-  // that would be -- the Cook palette's own grammar, read off a different
-  // question. A hold at risk takes its holder's palest tone, so the map still
-  // says who is defending it.
-  function flipFill(cat, held) {
+  function flipFill(info) {
     var T = theme();
-    if (cat === "risk") {
-      return T.cook[held === "D" ? "Lean Democrat" : "Lean Republican"];
+    return (info && info.held && T.cook[FLIP_TONE[info.held]]) || T.nodata;
+  }
+
+  // Diagonal stripes in the holder's colour, cut by the page tone. Built at
+  // device resolution and mapped back down, or the stripes blur on a retina
+  // screen; keyed by colour and theme so a theme switch cannot serve stale
+  // tiles.
+  var hatchCache = {};
+  function hatchFor(color) {
+    var T = theme(), key = color + "|" + T.paper + "|" + dpr;
+    if (hatchCache[key]) return hatchCache[key];
+    var step = 6, tile = document.createElement("canvas");
+    tile.width = tile.height = Math.max(1, Math.round(step * dpr));
+    var t = tile.getContext("2d");
+    t.scale(dpr, dpr);
+    t.fillStyle = color;
+    t.fillRect(0, 0, step, step);
+    t.strokeStyle = T.paper;
+    t.lineWidth = 1.8;
+    t.beginPath();
+    // Drawn twice, offset by a tile, so the stripe meets itself across the
+    // seam instead of stopping at the edge.
+    t.moveTo(-step, step); t.lineTo(step, -step);
+    t.moveTo(0, step * 2); t.lineTo(step * 2, 0);
+    t.stroke();
+    var pat = ctx.createPattern(tile, "repeat");
+    if (pat && pat.setTransform && window.DOMMatrix) {
+      pat.setTransform(new DOMMatrix([1 / dpr, 0, 0, 1 / dpr, 0, 0]));
     }
-    for (var i = 0; i < FLIP_BANDS.length; i++) {
-      if (FLIP_BANDS[i].cat === cat) return T.cook[FLIP_BANDS[i].tone];
-    }
-    return T.nodata;
+    hatchCache[key] = pat;
+    return pat;
   }
 
   function flipColor(f) {
     if (chicletMode()) return null;   // the squares carry it instead
     var i = flipInfo(f);
-    return i && i.cat !== "safe" && i.cat !== "unknown"
-      ? flipFill(i.cat, i.held) : null;
+    return flipInPlay(f) ? flipFill(i) : null;
   }
 
   function chicletMode() {
@@ -917,10 +949,7 @@
   }
 
   function squareFill(f) {
-    if (state.color === "flip") {
-      var i = flipInfo(f);
-      return i ? flipFill(i.cat, i.held) : theme().nodata;
-    }
+    if (state.color === "flip") return flipFill(flipInfo(f));
     var r = cookRating(f);
     return (r && theme().cook[r.rating]) || theme().nodata;
   }
@@ -1193,16 +1222,17 @@
     }
     for (var m = 0; m < live.length; m++) {
       var d = live[m];
-      // In the flip mode a seat the redraw did not touch is in play on its
-      // own account, not because of the redraw, so its square is hollow: the
-      // rating still shows, the claim about the redraw does not.
-      var hollow = state.color === "flip" && d.f.__same;
+      var base = squareFill(d.f);
+      var fi = state.color === "flip" ? flipInfo(d.f) : null;
+      // Hatched where the holding party is rated to lose the seat, solid
+      // where they are rated to keep it but narrowly.
+      var paint = (fi && fi.fate === "lose" && hatchFor(base)) || base;
       roundRect(ctx, d.x - h, d.y - h, CHIC, CHIC, CHIC_R);
-      ctx.fillStyle = hollow ? T.paper : squareFill(d.f);
+      ctx.fillStyle = paint;
       ctx.fill();
       var on = state.hover === d.f;
-      ctx.strokeStyle = on ? T.ink : hollow ? squareFill(d.f) : T.baseedge;
-      ctx.lineWidth = (on || hollow) ? 2 : 1;
+      ctx.strokeStyle = on ? T.ink : T.baseedge;
+      ctx.lineWidth = on ? 2 : 1;
       ctx.stroke();
     }
     ctx.restore();
@@ -1882,13 +1912,14 @@
     if (state.color === "flip") {
       var fi = flipInfo(f);
       if (fi) {
-        var fcls = /D$/.test(fi.cat) ? "d" : /R$/.test(fi.cat) ? "r" : "";
-        var held = fi.held ? (fi.held === "D" ? "D-held" : "R-held") : null;
+        var fcls = fi.held === "D" ? "d" : fi.held === "R" ? "r" : "";
+        // The label already names the holding party, so the aside carries
+        // only what it does not: an open seat, or a seat with no sitting
+        // party on record.
         var side = [];
-        if (held) side.push(held);
-        if (fi.open) side.push("open");
+        if (fi.open) side.push("open seat");
         if (!fi.held) side.push("no sitting party recorded");
-        rows.push(["If the rating holds",
+        rows.push([fi.fate === "unchanged" ? "Seats in play" : "Seat in play",
           '<span class="' + fcls + '">' + fi.label + "</span>" +
           (side.length ? ' <span class="muted">(' + side.join(", ") + ")</span>" : "")]);
       }
@@ -2736,21 +2767,27 @@
         var tally = flipTally();
         sw.hidden = false;
         sw.innerHTML = FLIP_BANDS.map(function (b) {
-          var chip = b.cat === "risk"
-            ? "linear-gradient(90deg," + flipFill("risk", "D") + " 50%,"
-              + flipFill("risk", "R") + " 50%)"
-            : flipFill(b.cat);
+          var col = theme().cook[FLIP_TONE[b.held]];
+          var chip = b.fate === "lose"
+            ? "repeating-linear-gradient(135deg," + col + " 0 3px,"
+              + theme().paper + " 3px 4.6px)"
+            : col;
           return '<span class="sw"><i style="background:' + chip + '"></i>' +
             b.label + ' <span class="muted">' + (tally[b.cat] || 0) + "</span></span>";
         }).join("");
-        note.textContent = "A square marks a seat Cook rates for the party "
-          + "that does not hold it, calls a toss-up, or rates no better than "
-          + "Lean for the party defending it \u2014 an open seat counts a tier "
-          + "weaker, having no incumbent on the ballot. A hollow square is a "
-          + "seat in play that the redraw did not touch. The other "
-          + tally.safe + " rated seats are safe holds"
-          + (tally.unknown ? ", and " + tally.unknown
-             + " has no sitting party recorded." : ".");
+        note.textContent = "Only districts the redraw changed. A square marks "
+          + "one whose sitting party Cook now rates to lose it, calls a "
+          + "toss-up, or rates no better than Lean for them \u2014 an open seat "
+          + "counts a tier weaker, having no incumbent on the ballot. Colour "
+          + "is the party holding the seat now; hatching means they are rated "
+          + "to lose it, solid that they are favoured but narrowly. Of the "
+          + "other redrawn seats " + tally.safe
+          + (tally.safe === 1 ? " is a safe hold" : " are safe holds")
+          + (tally.unknown ? " and " + tally.unknown
+             + " has no sitting party recorded" : "")
+          + "; " + tally.unchanged
+          + (tally.unchanged === 1 ? " kept its lines and is out of scope."
+             : " kept their lines and are out of scope.");
       }
     } else if (state.color === "election") {
       title.textContent = "2024 presidential margin";
@@ -2764,7 +2801,7 @@
   // Counted over the same set the squares are laid out from, so the legend
   // tallies what is on screen: nine states nationally, one state inside it.
   function flipTally() {
-    var out = { safe: 0, unknown: 0 };
+    var out = { safe: 0, unknown: 0, unchanged: 0 };
     var ds = state.districts["2026"] || [];
     for (var i = 0; i < ds.length; i++) {
       if (state.focus && ds[i].properties.state !== state.focus) continue;
