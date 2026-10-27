@@ -31,7 +31,7 @@
        because 7.8% of precincts have no reported result. */
     --nodata: #bebcba;
     --zoom-glyph: #6b6b6b;
-    /* The page colour. States carry no fill of their own: their outlines do
+    /* The page color. States carry no fill of their own: their outlines do
        the work, the way the Post's do, and the only fill on the map is a
        value somebody is meant to read. */
     --basefill: #ffffff;
@@ -512,7 +512,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-26g";
+  var BUILD = "2026-10-27a";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -594,7 +594,7 @@
 
   var cv = document.getElementById("map");
   var ctx = cv.getContext("2d");
-  // Offscreen twin: every shape is filled with a colour encoding its index, so a
+  // Offscreen twin: every shape is filled with a color encoding its index, so a
   // single getImageData at the cursor identifies the feature under it. Exact,
   // and O(1) instead of testing 24,000 polygons per mouse move.
   var pick = document.createElement("canvas");
@@ -664,7 +664,7 @@
   /* ---------------------------------------------------------------- scales */
 
   // Canvas cannot use CSS custom properties, so the palette is read off :root
-  // once and cached. Without this the map would need its own hard-coded colours
+  // once and cached. Without this the map would need its own hard-coded colors
   // and would stop matching the page the moment the theme changed -- which is
   // how the district strokes ended up invisible in dark mode.
   var THEME = null;
@@ -735,7 +735,7 @@
   }
 
   // Diverging about 50%, red at 0 and blue at 1, so Democratic share maps the
-  // US convention directly. The stops are the Post's own election colours.
+  // US convention directly. The stops are the Post's own election colors.
   function electionColor(p) {
     var s = demShare(p);
     if (s === null) return null;
@@ -896,10 +896,11 @@
     // intact is out of scope however competitive it is: it is in play on its
     // own account, not because of anything the new map changed.
     var held = r.party === "D" || r.party === "R" ? r.party : null;
-    var base = { rating: r.rating, held: held, open: !!r.open };
+    var base = { rating: r.rating, held: held, open: !!r.open,
+                 heldNote: r.partyNote || null };
     if (f.__same) {
       base.cat = base.fate = "unchanged";
-      base.side = held;      // no square is drawn, but the readout still colours
+      base.side = held;      // no square is drawn, but the readout still colors
       base.label = FLIP_PHRASE.unchanged;
       return base;
     }
@@ -922,7 +923,7 @@
     return !!i && (i.fate === "lose" || i.fate === "toss");
   }
 
-  // The rating's own colour, exactly as the Cook tab paints it.
+  // The rating's own color, exactly as the Cook tab paints it.
   function flipFill(info) {
     var T = theme();
     return (info && info.rating && T.cook[info.rating]) || T.nodata;
@@ -934,9 +935,9 @@
     return (info && info.held && T.cook[FLIP_TONE[info.held]]) || T.baseedge;
   }
 
-  // Diagonal stripes in the holder's colour, cut by the page tone. Built at
+  // Diagonal stripes in the holder's color, cut by the page tone. Built at
   // device resolution and mapped back down, or the stripes blur on a retina
-  // screen; keyed by colour and theme so a theme switch cannot serve stale
+  // screen; keyed by color and theme so a theme switch cannot serve stale
   // tiles.
   var hatchCache = {};
   function hatchFor(color, dir) {
@@ -982,7 +983,7 @@
   }
 
   // Both rating modes put squares on the map; they differ in which seats earn
-  // one and what colour it takes.
+  // one and what color it takes.
   function wantsSquare(f) {
     return state.color === "flip" ? flipInPlay(f) : cookCompetitive(f);
   }
@@ -1271,7 +1272,7 @@
       ctx.fill();
       var on = state.hover === d.f;
       // In the flip mode the border carries the holding party, so it is drawn
-      // heavier and in that party's colour rather than as a hairline.
+      // heavier and in that party's color rather than as a hairline.
       ctx.strokeStyle = on ? T.ink : fi ? flipRing(fi) : T.baseedge;
       ctx.lineWidth = (on || fi) ? 2 : 1;
       ctx.stroke();
@@ -1323,7 +1324,7 @@
 
   function fillFor(p, f) {
     var picked = state.district && districtOf(p) === state.district;
-    // Unredrawn districts fall back to context in every colour mode. The map
+    // Unredrawn districts fall back to context in every color mode. The map
     // is about the mid-decade redraw throughout, so a district the redraw did
     // not touch is context whatever is being shaded -- its rating included.
     if (f && f.__same && !picked) return theme().basefill;
@@ -1645,7 +1646,7 @@
     }
 
     // District borders on top
-    // District lines are drawn in the water colour, which reads as a parting
+    // District lines are drawn in the water color, which reads as a parting
     // between two filled districts. A district left unfilled -- one the redraw
     // did not touch -- needs the opposite: a line that shows against the page,
     // the same grey the state borders use.
@@ -1683,7 +1684,7 @@
           // Cased, like a printed map. A bare dark dash is legible over the
           // grey field and invisible the moment it crosses the district it is
           // being compared against -- which is most of its length, and the
-          // part that matters. The paper-coloured casing under it means the
+          // part that matters. The paper-colored casing under it means the
           // line reads over any fill, and inverts correctly in dark mode.
           ctx.save();
           ctx.lineJoin = "round";
@@ -1952,9 +1953,12 @@
         // one row up, under "Cook rating", and the square's own fill and ring
         // already carry both; repeating the pairing here only crowded it.
         var fcls = fi.held === "D" ? "d" : fi.held === "R" ? "r" : "";
+        var held = [];
+        if (fi.open) held.push("open seat");
+        if (fi.heldNote) held.push(fi.heldNote);
         rows.push(["Incumbent party", fi.held
           ? '<span class="' + fcls + '">' + FLIP_PARTY[fi.held] + "</span>" +
-            (fi.open ? ' <span class="muted">(open seat)</span>' : "")
+            (held.length ? ' <span class="muted">(' + held.join("; ") + ")</span>" : "")
           : '<span class="muted">not recorded</span>']);
       }
     }
@@ -2503,7 +2507,7 @@
 
   // The morph ends on geometry identical to the first real frame after it, so
   // the hand-back is a cross-fade over a still picture: it carries only the
-  // colour change from rescaling to the new set of features, never a jump.
+  // color change from rescaling to the new set of features, never a jump.
   function settle(apply) {
     snapshot();
     apply();
@@ -2846,19 +2850,22 @@
         }).join("");
         var moving = (tally.loseD || 0) + (tally.loseR || 0);
         var open = (tally.tossD || 0) + (tally.tossR || 0);
-        note.textContent = "Only districts the redraw changed, and only where "
-          + "Cook no longer rates the seat for the party holding it: "
-          + moving + " rated for the other party outright, " + open
-          + " called a toss-up. Each square is shaded by its Cook rating, the "
-          + "same tones as that tab, and ringed in the colour of the party "
-          + "holding it now; hatching marks the ones rated to change hands. "
-          + "The other " + tally.safe + " redrawn seats are still rated for "
-          + "their sitting party"
-          + (tally.unknown ? ", and " + tally.unknown
+        note.textContent = moving + " redrawn seats are rated to change "
+          + "hands \u2014 " + (tally.loseD || 0) + " Democratic-held, "
+          + (tally.loseR || 0) + " Republican-held \u2014 and " + open
+          + " more are toss-ups, which Cook will not call either way. Each "
+          + "square is shaded by its Cook rating, the same tones as that tab, "
+          + "and ringed in the color of the party holding it now; hatching "
+          + "marks the ones rated to change hands. Only redrawn districts "
+          + "count: the other " + tally.safe + " are still rated for their "
+          + "sitting party"
+          + (tally.unknown ? ", " + tally.unknown
              + " has no sitting party recorded" : "")
-          + "; " + tally.unchanged
-          + (tally.unchanged === 1 ? " kept its lines and is out of scope."
-             : " kept their lines and are out of scope.");
+          + ", and " + tally.unchanged
+          + (tally.unchanged === 1 ? " kept its lines, so it is in play on its "
+             + "own account rather than the new map's."
+             : " kept their lines, so they are in play on their own account "
+             + "rather than the new map's.");
       }
     } else if (state.color === "election") {
       title.textContent = "2024 presidential margin";
