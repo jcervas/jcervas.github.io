@@ -297,6 +297,20 @@
     border-top: 1px solid var(--rule); padding-block: 0.45rem;
     font-size: 12.25px; line-height: 14.7px; color: var(--ink-soft); flex: none;
   }
+  /* --------------------------------------------------------- landscape */
+  /* Held sideways there is no height to spare, and the chrome would push the
+     map below the fold. Rather than shrink the chrome, reorder: the map comes
+     first and the controls follow it, so the thing worth looking at leads and
+     the page scrolls to the rest. Source order is unchanged, so the controls
+     still come first for a keyboard or a screen reader. */
+  @media (orientation: landscape) and (max-height: 560px) {
+    header { order: 0; }
+    .stage { order: 1; }
+    .controls { order: 2; border-top: 1px solid var(--rule); padding-top: 0.7rem; }
+    .hintbar { order: 3; }
+    footer { order: 4; }
+  }
+
   /* ------------------------------------------------------------- phones */
   /* The desktop layout puts the readout top-right and the legend
      bottom-left, each a fixed width, which works while there is map either
@@ -499,7 +513,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-26d";
+  var BUILD = "2026-10-26e";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
