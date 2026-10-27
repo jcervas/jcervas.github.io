@@ -512,7 +512,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-26f";
+  var BUILD = "2026-10-26g";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -876,6 +876,8 @@
   var FLIP_HATCH = { lose: 1 };
 
   var FLIP_TONE = { D: "Solid Democrat", R: "Solid Republican" };
+
+  var FLIP_PARTY = { D: "Democratic", R: "Republican" };
 
   var FLIP_PHRASE = {
     loseD: "Democratic seat, now rated Republican",
@@ -1946,16 +1948,14 @@
     if (state.color === "flip") {
       var fi = flipInfo(f);
       if (fi) {
-        var fcls = fi.side === "D" ? "d" : fi.side === "R" ? "r" : "";
-        // The label already names the holding party, so the aside carries
-        // only what it does not: an open seat, or a seat with no sitting
-        // party on record.
-        var side = [];
-        if (fi.open) side.push("open seat");
-        if (!fi.held) side.push("no sitting party recorded");
-        rows.push(["Changing hands",
-          '<span class="' + fcls + '">' + fi.label + "</span>" +
-          (side.length ? ' <span class="muted">(' + side.join(", ") + ")</span>" : "")]);
+        // Just whose seat it is going in. What the rating now says about it is
+        // one row up, under "Cook rating", and the square's own fill and ring
+        // already carry both; repeating the pairing here only crowded it.
+        var fcls = fi.held === "D" ? "d" : fi.held === "R" ? "r" : "";
+        rows.push(["Incumbent party", fi.held
+          ? '<span class="' + fcls + '">' + FLIP_PARTY[fi.held] + "</span>" +
+            (fi.open ? ' <span class="muted">(open seat)</span>' : "")
+          : '<span class="muted">not recorded</span>']);
       }
     }
     rows.push(["Citizen voting-age pop.", fmt(cvapOf(f))]);
