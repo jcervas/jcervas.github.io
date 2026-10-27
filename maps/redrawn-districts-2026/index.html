@@ -132,26 +132,6 @@
     background: var(--panel); border-bottom: 1px solid var(--rule);
     padding-block: 1rem 0.7rem; flex: none;
   }
-  /* A phone held sideways has plenty of width and almost no height, and the
-     chrome above the map does not shrink on its own: at 320px tall it took
-     265px and left the map a sliver below the fold. Trim it so the map keeps
-     the majority of a short viewport. */
-  @media (max-height: 560px) and (min-width: 620px) {
-    header { padding-block: 0.5rem 0.4rem; }
-    header .sub { display: none; }
-    .controls { padding-block: 0.45rem 0; gap: 0.6rem 1.25rem; }
-    .hintbar { padding-block: 0.45rem 0.4rem; }
-    .ctl > label { font-size: 9.5px; }
-    .seg button { padding-block: 0.22rem; }
-    footer { padding-block: 0.3rem; font-size: 11px; }
-    /* The legend is an overlay, so on a short stage it simply covers the map
-       -- worst in "Seats in play", whose key runs to seven rows and a
-       paragraph. Drop the explanatory prose and let the rest scroll, so the
-       legend can never claim more than half the map. */
-    .stage .legend { max-height: 52%; overflow-y: auto; }
-    .stage .legend .tier { display: none; }
-  }
-
   .ctl { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
   .ctl > label {
     font-size: 10.5px; letter-spacing: 0.06em; font-weight: 600;
@@ -231,9 +211,12 @@
        resize() used to floor the canvas at 260px while this box was free to
        flex down to nothing: on a short landscape phone the stage computed to
        10px, the 260px canvas was clipped by overflow:hidden, and the map
-       simply vanished. A minimum here pushes the page taller instead, and the
-       body scrolls. */
-    position: relative; flex: 1 1 auto; min-height: 260px; background: var(--water);
+       simply vanished.
+
+       The minimum is a readable map rather than the smallest one that fits.
+       Where the viewport cannot hold that and the chrome at once, the page
+       grows and scrolls; nothing is compressed to avoid a scrollbar. */
+    position: relative; flex: 1 1 auto; min-height: 420px; background: var(--water);
     overflow: hidden;   /* belt and braces: the canvas must never paint over the footer */
   }
   canvas { display: block; width: 100%; height: 100%; touch-action: none; }
@@ -270,6 +253,11 @@
     padding: 10px 12px; font-size: 12.25px; line-height: 14.7px; max-width: 15rem;
     box-shadow: 0 1px 4px rgba(0,0,0,0.08);
   }
+  /* An overlay that is taller than the stage hides what it describes, which
+     the seven-row "Seats in play" key manages on a short screen. Cap it and
+     let it scroll: nothing is dropped, it just cannot cover the map. */
+  .legend { max-height: calc(100% - 28px); overflow-y: auto; }
+
   .legend .lt {
     font-size: 10.5px; letter-spacing: 0.06em; font-weight: 600;
     text-transform: uppercase; color: var(--ink-soft); margin-bottom: 0.4rem;
@@ -511,7 +499,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-26b";
+  var BUILD = "2026-10-26c";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
