@@ -7,7 +7,8 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;600;700&display=swap">
 <style>
-  /* Layout: fixed control rail above a flexible map canvas, legend overlaid bottom-left. */
+  /* Layout: a control rail, a flexible map canvas, and the legend as a band
+     beneath it. The page scrolls where that does not fit. */
   :root {
     /* Washington Post election palette, sampled from their 2024 results
        pages: #1366b3 Democratic and #be2c25 Republican, with the Post's own
@@ -163,11 +164,17 @@
   .swatches { display: grid; grid-template-columns: repeat(2, auto); gap: 0.15rem 0.6rem; }
   .sw { display: flex; align-items: center; gap: 0.33rem; white-space: nowrap; }
   .sw i { width: 11px; height: 11px; border-radius: 4px; flex: none; }
+  /* The flip legend's chips carry a hatch angle, and an 11px chip is barely
+     two stripes wide -- too few to read a direction from. */
+  .legend.flip .sw i {
+    width: 16px; height: 16px; border-radius: 5px;
+    box-sizing: border-box; border: 2px solid transparent;
+  }
 
   /* The Post's Cook bar: one band per rating, width by seat count, the count
      printed inside. It is the legend and the tally at once, which is why it
      replaces the ramp rather than sitting beside it. */
-  .legend.cook { max-width: 19.5rem; }
+  .legend.cook { max-width: 30rem; }
   .cookbar { margin-bottom: 0.3rem; }
   .cb-head {
     display: flex; justify-content: space-between;
@@ -247,16 +254,16 @@
   .zb:hover { color: var(--ink); }
   .zb:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
 
+  /* The legend sits under the map rather than on it. As an overlay it hid a
+     piece of the thing it was explaining for as long as anyone read it, and
+     the "Changing hands" key -- four rows and a paragraph -- covered most of
+     a small screen. Below the map it costs the page height instead, which the
+     page can afford because it is allowed to scroll. */
   .legend {
-    position: absolute; left: 14px; bottom: 14px;
-    background: var(--paper); border: 1px solid var(--rule); border-radius: 3px;
-    padding: 10px 12px; font-size: 12.25px; line-height: 14.7px; max-width: 15rem;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    background: var(--paper); border-top: 1px solid var(--rule);
+    padding-block: 10px 12px; font-size: 12.25px; line-height: 14.7px;
+    max-width: 52rem; flex: none;
   }
-  /* An overlay that is taller than the stage hides what it describes, which
-     the seven-row "Seats in play" key manages on a short screen. Cap it and
-     let it scroll: nothing is dropped, it just cannot cover the map. */
-  .legend { max-height: calc(100% - 28px); overflow-y: auto; }
 
   .legend .lt {
     font-size: 10.5px; letter-spacing: 0.06em; font-weight: 600;
@@ -271,6 +278,13 @@
     padding: 10px 12px; font-size: 14px; min-width: 12.5rem; max-width: 17rem;
     box-shadow: 0 1px 4px rgba(0,0,0,0.08);
   }
+  /* Anchored in the corner the panel sits on one fixed piece of the map and
+     hides it for as long as you read. Following the cursor it covers only
+     what you have just moved past, and never the thing you are reaching for.
+     It must not take the pointer, or the canvas under it stops seeing the
+     mouse and the hover dies the moment the panel catches up. */
+  .readout.at-cursor { right: auto; top: auto; pointer-events: none; }
+
   .readout .rt { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
   .readout dl { display: grid; grid-template-columns: auto 1fr; gap: 3px 5px; margin: 0; font-variant-numeric: tabular-nums; }
   .readout dt { color: var(--ink-soft); }
@@ -306,9 +320,10 @@
   @media (orientation: landscape) and (max-height: 560px) {
     header { order: 0; }
     .stage { order: 1; }
-    .controls { order: 2; border-top: 1px solid var(--rule); padding-top: 0.7rem; }
-    .hintbar { order: 3; }
-    footer { order: 4; }
+    .legend { order: 2; }
+    .controls { order: 3; border-top: 1px solid var(--rule); padding-top: 0.7rem; }
+    .hintbar { order: 4; }
+    footer { order: 5; }
   }
 
   /* ------------------------------------------------------------- phones */
@@ -346,23 +361,7 @@
     .readout dl { gap: 2px 5px; }
     .readout[data-idle] { display: none; }
 
-    /* The legend clears the zoom buttons, which stay in the corner they are
-       in on desktop rather than moving somewhere the thumb has to learn. */
-    .legend {
-      left: 10px; right: 10px; bottom: 52px;
-      max-width: none; font-size: 11.5px; padding: 8px 10px;
-    }
-    /* Split, the legend is not an overlay on spare map but a claim on the
-       panels' height: every pixel it takes comes straight off the scale. */
-    .stage.split .legend {
-      bottom: 8px; padding: 6px 9px; font-size: 11px; line-height: 13px;
-    }
-    .stage.split .legend .lt { margin-bottom: 0.25rem; }
-    .stage.split .ramp { height: 7px; }
-    .stage.split .legend .tier {
-      margin-top: 0.28rem; padding-top: 0.24rem; font-size: 10px; line-height: 12px;
-    }
-    .stage.split .cb-sum { margin-top: 2px; font-size: 10px; }
+    .legend { font-size: 11.5px; max-width: none; }
     .legend.cook { max-width: none; }
     .swatches { grid-template-columns: repeat(2, 1fr); }
     .cb-foot span { font-size: 9px; }
@@ -405,7 +404,7 @@
       <button id="cElection" aria-pressed="true">2024 result</button>
       <button id="cDemo" aria-pressed="false">Demographics</button>
       <button id="cCook" aria-pressed="false">Cook rating</button>
-      <button id="cFlip" aria-pressed="false">Seats in play</button>
+      <button id="cFlip" aria-pressed="false">Changing hands</button>
     </div>
   </div>
 
@@ -474,7 +473,15 @@
       </button>
     </div>
   </div>
-  <div class="legend" id="legend" hidden>
+  <div class="readout" id="readout">
+    <div class="rt" id="rTitle">Hover the map</div>
+    <div class="idle" id="rIdle">Districts are shaded by the 2024 presidential vote.</div>
+    <dl id="rList"></dl>
+    <div class="flag" id="rFlag" hidden></div>
+  </div>
+  <div class="status" id="status">Loading districts&hellip;</div>
+</div>
+  <div class="legend gutter" id="legend" hidden>
     <div class="lt" id="legendTitle"></div>
     <div class="ramp" id="ramp"></div>
     <div class="ends"><span id="lo"></span><span id="mid"></span><span id="hi"></span></div>
@@ -489,14 +496,6 @@
     <div class="tier" id="tierNote" hidden></div>
     <div class="tier" id="sameNote" hidden></div>
   </div>
-  <div class="readout" id="readout">
-    <div class="rt" id="rTitle">Hover the map</div>
-    <div class="idle" id="rIdle">Districts are shaded by the 2024 presidential vote.</div>
-    <dl id="rList"></dl>
-    <div class="flag" id="rFlag" hidden></div>
-  </div>
-  <div class="status" id="status">Loading districts&hellip;</div>
-</div>
 
 <footer class="gutter">
   Census block equivalency files (119th and 120th Congress) &middot; 2024 presidential results via
@@ -513,7 +512,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-26e";
+  var BUILD = "2026-10-26f";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -853,25 +852,37 @@
   //
   // A seat whose holder Cook does not record cannot be judged against the
   // rating at all, so it is left out rather than counted as safe.
-  // Two questions, two channels. Colour is the party holding the seat now, so
-  // the map reads as whose ground is moving; hatching is the forecast, drawn
-  // on the seats that party is rated to lose. A solid square is the same
-  // party holding on in a race Cook will not call safe for them.
+  // Redrawn districts whose seat is no longer Cook's to give the party that
+  // holds it: rated for the other party, or called a toss-up. A seat the
+  // sitting party is still favoured to keep is not here however thin the
+  // margin -- "held narrowly" was a hedge that blurred what the map is for.
+  //
+  // Three channels. The fill is the Cook rating itself, the same tone the
+  // Cook tab gives that district, so a Democratic seat rated Solid Republican
+  // is simply that red and a toss-up is Cook's gold. The ring is the party
+  // holding the seat now, which the fill can no longer say once it follows
+  // the rating. Hatching marks the seats rated to change hands, leaving the
+  // gold toss-ups plain.
   var FLIP_BANDS = [
-    { cat: "loseD", label: "D seat, rated to flip", held: "D", fate: "lose" },
-    { cat: "holdD", label: "D seat, close hold",    held: "D", fate: "hold" },
-    { cat: "loseR", label: "R seat, rated to flip", held: "R", fate: "lose" },
-    { cat: "holdR", label: "R seat, close hold",    held: "R", fate: "hold" }
+    { cat: "loseD", label: "D seat \u2192 R",    held: "D", side: "R", fate: "lose" },
+    { cat: "loseR", label: "R seat \u2192 D",    held: "R", side: "D", fate: "lose" },
+    { cat: "tossD", label: "D seat, toss-up", held: "D", side: "D", fate: "toss" },
+    { cat: "tossR", label: "R seat, toss-up", held: "R", side: "R", fate: "toss" }
   ];
+
+  // Only the seats that change hands are hatched. A toss-up needs no stripes
+  // of its own now: Cook's gold already sets it apart from every other
+  // rating, and the ring still says whose seat is being fought over.
+  var FLIP_HATCH = { lose: 1 };
 
   var FLIP_TONE = { D: "Solid Democrat", R: "Solid Republican" };
 
   var FLIP_PHRASE = {
-    loseD: "Democratic seat, rated to flip",
-    holdD: "Democratic seat, held narrowly",
-    loseR: "Republican seat, rated to flip",
-    holdR: "Republican seat, held narrowly",
-    safe: "Safe hold",
+    loseD: "Democratic seat, now rated Republican",
+    loseR: "Republican seat, now rated Democratic",
+    tossD: "Democratic seat, now a toss-up",
+    tossR: "Republican seat, now a toss-up",
+    safe: "Still rated for the party that holds it",
     unchanged: "Lines unchanged",
     unknown: "Not judged"
   };
@@ -886,33 +897,39 @@
     var base = { rating: r.rating, held: held, open: !!r.open };
     if (f.__same) {
       base.cat = base.fate = "unchanged";
+      base.side = held;      // no square is drawn, but the readout still colours
       base.label = FLIP_PHRASE.unchanged;
       return base;
     }
     var want = /Democrat$/.test(r.rating) ? "D"
              : /Republican$/.test(r.rating) ? "R" : null;
-    var lean = r.rating.indexOf("Lean") === 0;
-    var likely = r.rating.indexOf("Likely") === 0;
     var fate;
     if (!held) fate = "unknown";             // nothing to judge the rating against
-    else if (!want) fate = "hold";           // Toss Up: Cook will not call it safe
+    else if (!want) fate = "toss";           // Cook will not call it either way
     else if (want !== held) fate = "lose";
-    else if (lean || (likely && r.open)) fate = "hold";
     else fate = "safe";
     base.fate = fate;
-    base.cat = (fate === "lose" || fate === "hold") ? fate + held : fate;
+    base.cat = (fate === "safe" || fate === "unknown") ? fate : fate + held;
+    base.side = want || held;
     base.label = FLIP_PHRASE[base.cat];
     return base;
   }
 
   function flipInPlay(f) {
     var i = flipInfo(f);
-    return !!i && (i.fate === "lose" || i.fate === "hold");
+    return !!i && (i.fate === "lose" || i.fate === "toss");
   }
 
+  // The rating's own colour, exactly as the Cook tab paints it.
   function flipFill(info) {
     var T = theme();
-    return (info && info.held && T.cook[FLIP_TONE[info.held]]) || T.nodata;
+    return (info && info.rating && T.cook[info.rating]) || T.nodata;
+  }
+
+  // The ring: who holds the seat going in.
+  function flipRing(info) {
+    var T = theme();
+    return (info && info.held && T.cook[FLIP_TONE[info.held]]) || T.baseedge;
   }
 
   // Diagonal stripes in the holder's colour, cut by the page tone. Built at
@@ -920,8 +937,8 @@
   // screen; keyed by colour and theme so a theme switch cannot serve stale
   // tiles.
   var hatchCache = {};
-  function hatchFor(color) {
-    var T = theme(), key = color + "|" + T.paper + "|" + dpr;
+  function hatchFor(color, dir) {
+    var T = theme(), key = color + "|" + T.paper + "|" + dpr + "|" + dir;
     if (hatchCache[key]) return hatchCache[key];
     var step = 6, tile = document.createElement("canvas");
     tile.width = tile.height = Math.max(1, Math.round(step * dpr));
@@ -932,10 +949,16 @@
     t.strokeStyle = T.paper;
     t.lineWidth = 1.8;
     t.beginPath();
-    // Drawn twice, offset by a tile, so the stripe meets itself across the
-    // seam instead of stopping at the edge.
-    t.moveTo(-step, step); t.lineTo(step, -step);
-    t.moveTo(0, step * 2); t.lineTo(step * 2, 0);
+    // Lines spaced one tile apart along their intercept, which is what makes
+    // a square tile repeat seamlessly at 45 degrees; drawn well past the
+    // edges so each stripe meets its neighbour across the seam.
+    for (var c = -step; c <= step * 2; c += step) {
+      if (dir > 0) {                                  // "/"
+        t.moveTo(-step, c + step); t.lineTo(step * 2, c - step * 2);
+      } else {                                        // "\\"
+        t.moveTo(-step, c - step); t.lineTo(step * 2, c + step * 2);
+      }
+    }
     t.stroke();
     var pat = ctx.createPattern(tile, "repeat");
     if (pat && pat.setTransform && window.DOMMatrix) {
@@ -1238,15 +1261,17 @@
       var d = live[m];
       var base = squareFill(d.f);
       var fi = state.color === "flip" ? flipInfo(d.f) : null;
-      // Hatched where the holding party is rated to lose the seat, solid
-      // where they are rated to keep it but narrowly.
-      var paint = (fi && fi.fate === "lose" && hatchFor(base)) || base;
+      // Hatched where the seat changes hands.
+      var dir = fi && FLIP_HATCH[fi.fate];
+      var paint = (dir && hatchFor(base, dir)) || base;
       roundRect(ctx, d.x - h, d.y - h, CHIC, CHIC, CHIC_R);
       ctx.fillStyle = paint;
       ctx.fill();
       var on = state.hover === d.f;
-      ctx.strokeStyle = on ? T.ink : T.baseedge;
-      ctx.lineWidth = on ? 2 : 1;
+      // In the flip mode the border carries the holding party, so it is drawn
+      // heavier and in that party's colour rather than as a hairline.
+      ctx.strokeStyle = on ? T.ink : fi ? flipRing(fi) : T.baseedge;
+      ctx.lineWidth = (on || fi) ? 2 : 1;
       ctx.stroke();
     }
     ctx.restore();
@@ -1439,20 +1464,14 @@
 
   function buildPanels() {
     splitPanels = null;
-    // The class goes on before the legend is measured, not after: split styling
-    // shrinks the legend, and measuring it at its desktop height would hand
-    // back space the panels then never use.
     var want = splitMode(), stage = document.getElementById("stage");
     stage.classList.toggle("split", want);
     if (!want) return;
     var ds = state.districts[state.year] || [];
-    // The legend is an overlay the full width of a phone, so the panels have
-    // to be fitted above it or the lower one draws underneath it. Measured
-    // rather than assumed: the Cook legend is more than twice the height of
-    // the election one.
-    var lg = document.getElementById("legend");
-    var reserve = (lg && !lg.hidden) ? lg.offsetHeight + 18 : 0;
-    var avail = Math.max(220, H - reserve);
+    // The legend used to overlay the map, so the panels had to be fitted
+    // above it and its height measured every time it changed. It sits under
+    // the map now, so the panels get the whole stage.
+    var avail = H;
     var gap = 14, out = [], groups = [];
     for (var i = 0; i < SPLIT_GROUPS.length; i++) {
       var grp = SPLIT_GROUPS[i];
@@ -1868,7 +1887,8 @@
         ? "Shaded by the 2024 presidential vote."
         : state.color === "cook" ? "Shaded by the Cook Political Report rating."
         : state.color === "flip"
-          ? "Squares mark the seats that could change hands."
+          ? "Squares mark redrawn seats Cook no longer rates for the party "
+            + "that holds them."
         : "Shaded by " + currentVar().label.toLowerCase() + ".";
       list.innerHTML = ""; flag.hidden = true;
       return;
@@ -1926,14 +1946,14 @@
     if (state.color === "flip") {
       var fi = flipInfo(f);
       if (fi) {
-        var fcls = fi.held === "D" ? "d" : fi.held === "R" ? "r" : "";
+        var fcls = fi.side === "D" ? "d" : fi.side === "R" ? "r" : "";
         // The label already names the holding party, so the aside carries
         // only what it does not: an open seat, or a seat with no sitting
         // party on record.
         var side = [];
         if (fi.open) side.push("open seat");
         if (!fi.held) side.push("no sitting party recorded");
-        rows.push([fi.fate === "unchanged" ? "Seats in play" : "Seat in play",
+        rows.push(["Changing hands",
           '<span class="' + fcls + '">' + fi.label + "</span>" +
           (side.length ? ' <span class="muted">(' + side.join(", ") + ")</span>" : "")]);
       }
@@ -2010,6 +2030,33 @@
     return { f: featureAt(ev), chiclet: false };
   }
 
+  // Only where there is a real pointer: on a touch screen the panel is the
+  // record of what was tapped, and parking it under the finger would put it
+  // exactly where it cannot be read.
+  var canHover = !window.matchMedia ||
+    window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  function placeReadout(ev) {
+    var el = document.getElementById("readout");
+    // Idle, or nothing to point at: back to the corner, where the hint reads
+    // as part of the furniture rather than as a label for whatever is under
+    // the cursor.
+    if (!canHover || !ev || el.hasAttribute("data-idle")) {
+      el.classList.remove("at-cursor");
+      el.style.left = el.style.top = "";
+      return;
+    }
+    el.classList.add("at-cursor");
+    var box = document.getElementById("stage").getBoundingClientRect();
+    var x = ev.clientX - box.left, y = ev.clientY - box.top;
+    var w = el.offsetWidth, h = el.offsetHeight, pad = 12, gap = 18;
+    var lx = x + gap, ty = y + gap;
+    if (lx + w > box.width - pad) lx = x - gap - w;     // flip to the left
+    if (ty + h > box.height - pad) ty = y - gap - h;    // and above
+    el.style.left = Math.max(pad, Math.min(lx, box.width - w - pad)) + "px";
+    el.style.top = Math.max(pad, Math.min(ty, box.height - h - pad)) + "px";
+  }
+
   var moveTimer = null;
   cv.addEventListener("mousemove", function (ev) {
     if (moveTimer) return;
@@ -2018,10 +2065,15 @@
     var asState = !state.focus && !h.chiclet;
     var f = asState ? null : h.f;
     var st = asState ? (h.f ? h.f.properties.state : null) : null;
-    if (f === state.hover && st === state.hoverState) return;
-    state.hover = f; state.hoverState = st;
-    render();
-    if (f) showReadout(f); else showStateReadout(st);
+    // The contents only change when the thing under the cursor does, but the
+    // panel has to keep up with the cursor either way, so placement sits
+    // outside that test rather than behind an early return.
+    if (f !== state.hover || st !== state.hoverState) {
+      state.hover = f; state.hoverState = st;
+      render();
+      if (f) showReadout(f); else showStateReadout(st);
+    }
+    placeReadout(ev);
   });
   // Leaving the map drops the hover, but not the selection. A tap on a touch
   // screen ends with a mouseleave, so clearing the panel here wiped the
@@ -2032,6 +2084,7 @@
     render();
     var sel = state.district ? districtFeature(state.district) : null;
     showReadout(sel);
+    placeReadout(null);          // the selection goes back to the corner
   });
 
   cv.addEventListener("click", function (ev) {
@@ -2109,7 +2162,7 @@
       var inplay = (state.districts["2026"] || []).reduce(function (a, f) {
         return a + (f.properties.state === st && flipInPlay(f) ? 1 : 0);
       }, 0);
-      rows.push(["Seats in play", inplay ? String(inplay) : "none"]);
+      rows.push(["Changing hands", inplay ? String(inplay) : "none"]);
     }
     if (r.cvap) rows.push(["Citizen voting-age pop.", fmt(r.cvap)]);
     if (r.any) {
@@ -2306,9 +2359,6 @@
       markUnchanged();
       setStatus(null);
       resize();
-      // resize() fits the panels while the legend is still hidden, so the
-      // first pass reserves nothing for it; refreshScales shows the legend and
-      // refits around it, and that has to reach the canvas.
       refreshScales();
       render();
       showReadout(null);
@@ -2687,7 +2737,7 @@
     buildDensityScale(visibleFeatures());
     if (state.color === "demo") buildDemoScale(visibleFeatures());
     updateLegend();
-    buildPanels();     // fitted around the legend, so it must come after it
+    buildPanels();
     syncZoomControls();
   }
 
@@ -2712,6 +2762,7 @@
     sw.hidden = true; note.hidden = true; ramp.hidden = false; bar.hidden = true;
     document.getElementById("sameNote").hidden = true;
     box.classList.toggle("cook", state.color === "cook" || state.color === "flip");
+    box.classList.toggle("flip", state.color === "flip");
     document.getElementById("lo").parentNode.hidden = false;
 
     if (state.color === "demo") {
@@ -2768,7 +2819,7 @@
           + "Cook does not call solid.";
       }
     } else if (state.color === "flip") {
-      title.textContent = "Seats in play";
+      title.textContent = "Changing hands";
       ramp.hidden = true;
       document.getElementById("lo").parentNode.hidden = true;
       note.hidden = false;
@@ -2781,23 +2832,29 @@
         var tally = flipTally();
         sw.hidden = false;
         sw.innerHTML = FLIP_BANDS.map(function (b) {
-          var col = theme().cook[FLIP_TONE[b.held]];
-          var chip = b.fate === "lose"
+          // A category spans several Cook tiers, so the chip shows that side's
+          // strongest tone; the squares themselves carry the exact rating.
+          var T = theme();
+          var col = b.fate === "toss" ? T.cook["Toss Up"] : T.cook[FLIP_TONE[b.side]];
+          var chip = FLIP_HATCH[b.fate]
             ? "repeating-linear-gradient(135deg," + col + " 0 3px,"
-              + theme().paper + " 3px 4.6px)"
+              + T.paper + " 3px 4.6px)"
             : col;
-          return '<span class="sw"><i style="background:' + chip + '"></i>' +
+          return '<span class="sw"><i style="background:' + chip +
+            ";border-color:" + T.cook[FLIP_TONE[b.held]] + '"></i>' +
             b.label + ' <span class="muted">' + (tally[b.cat] || 0) + "</span></span>";
         }).join("");
-        note.textContent = "Only districts the redraw changed. A square marks "
-          + "one whose sitting party Cook now rates to lose it, calls a "
-          + "toss-up, or rates no better than Lean for them \u2014 an open seat "
-          + "counts a tier weaker, having no incumbent on the ballot. Colour "
-          + "is the party holding the seat now; hatching means they are rated "
-          + "to lose it, solid that they are favoured but narrowly. Of the "
-          + "other redrawn seats " + tally.safe
-          + (tally.safe === 1 ? " is a safe hold" : " are safe holds")
-          + (tally.unknown ? " and " + tally.unknown
+        var moving = (tally.loseD || 0) + (tally.loseR || 0);
+        var open = (tally.tossD || 0) + (tally.tossR || 0);
+        note.textContent = "Only districts the redraw changed, and only where "
+          + "Cook no longer rates the seat for the party holding it: "
+          + moving + " rated for the other party outright, " + open
+          + " called a toss-up. Each square is shaded by its Cook rating, the "
+          + "same tones as that tab, and ringed in the colour of the party "
+          + "holding it now; hatching marks the ones rated to change hands. "
+          + "The other " + tally.safe + " redrawn seats are still rated for "
+          + "their sitting party"
+          + (tally.unknown ? ", and " + tally.unknown
              + " has no sitting party recorded" : "")
           + "; " + tally.unchanged
           + (tally.unchanged === 1 ? " kept its lines and is out of scope."
