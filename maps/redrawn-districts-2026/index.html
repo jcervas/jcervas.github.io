@@ -537,13 +537,27 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-28d";
+  var BUILD = "2026-10-28e";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
+  // All fifty, since the map draws all 435 districts. Which nine the story is
+  // about is a fact about the data, not a list kept here -- redrawnStates()
+  // reads it off the districts themselves.
   var STATE_NAME = {
-    AL: "Alabama", CA: "California", FL: "Florida", LA: "Louisiana",
-    NC: "North Carolina", OH: "Ohio", TN: "Tennessee", TX: "Texas", UT: "Utah"
+    AK: "Alaska", AL: "Alabama", AR: "Arkansas", AZ: "Arizona",
+    CA: "California", CO: "Colorado", CT: "Connecticut", DE: "Delaware",
+    FL: "Florida", GA: "Georgia", HI: "Hawaii", IA: "Iowa", ID: "Idaho",
+    IL: "Illinois", IN: "Indiana", KS: "Kansas", KY: "Kentucky",
+    LA: "Louisiana", MA: "Massachusetts", MD: "Maryland", ME: "Maine",
+    MI: "Michigan", MN: "Minnesota", MO: "Missouri", MS: "Mississippi",
+    MT: "Montana", NC: "North Carolina", ND: "North Dakota",
+    NE: "Nebraska", NH: "New Hampshire", NJ: "New Jersey", NM: "New Mexico",
+    NV: "Nevada", NY: "New York", OH: "Ohio", OK: "Oklahoma", OR: "Oregon",
+    PA: "Pennsylvania", RI: "Rhode Island", SC: "South Carolina",
+    SD: "South Dakota", TN: "Tennessee", TX: "Texas", UT: "Utah",
+    VA: "Virginia", VT: "Vermont", WA: "Washington", WI: "Wisconsin",
+    WV: "West Virginia", WY: "Wyoming"
   };
 
   // Only variables the demographics work rates usable, and the verdicts differ
@@ -1196,9 +1210,28 @@
   }
 
   // AP style: Ohio, Texas and Utah are never abbreviated, the rest are.
+  // The Post's state abbreviations. Only the redrawn states are labelled on
+  // the national view, but a focused state reads its own name from here too.
+  // Precinct geography and 2024 precinct results were collected for the nine
+  // states whose map changed; nowhere else has a file to load, so the control
+  // stays off there rather than offering a fetch that can only 404. Spelled
+  // out rather than derived from the districts: this is about which data was
+  // gathered, which is not the same question as which lines moved.
+  var PRECINCT_STATES = {
+    AL: 1, CA: 1, FL: 1, LA: 1, NC: 1, OH: 1, TN: 1, TX: 1, UT: 1
+  };
+
   var STATE_ABBR = {
-    AL: "Ala.", CA: "Calif.", FL: "Fla.", LA: "La.", NC: "N.C.",
-    OH: "Ohio", TN: "Tenn.", TX: "Texas", UT: "Utah"
+    AK: "Alaska", AL: "Ala.", AR: "Ark.", AZ: "Ariz.", CA: "Calif.",
+    CO: "Colo.", CT: "Conn.", DE: "Del.", FL: "Fla.", GA: "Ga.",
+    HI: "Hawaii", IA: "Iowa", ID: "Idaho", IL: "Ill.", IN: "Ind.",
+    KS: "Kan.", KY: "Ky.", LA: "La.", MA: "Mass.", MD: "Md.", ME: "Maine",
+    MI: "Mich.", MN: "Minn.", MO: "Mo.", MS: "Miss.", MT: "Mont.",
+    NC: "N.C.", ND: "N.D.", NE: "Neb.", NH: "N.H.", NJ: "N.J.",
+    NM: "N.M.", NV: "Nev.", NY: "N.Y.", OH: "Ohio", OK: "Okla.",
+    OR: "Ore.", PA: "Pa.", RI: "R.I.", SC: "S.C.", SD: "S.D.",
+    TN: "Tenn.", TX: "Texas", UT: "Utah", VA: "Va.", VT: "Vt.",
+    WA: "Wash.", WI: "Wis.", WV: "W.Va.", WY: "Wyo."
   };
   var LABEL_FONT = '600 12.5px "Libre Franklin","Helvetica Neue",Helvetica,Arial,sans-serif';
 
@@ -1206,11 +1239,26 @@
   // each other along whichever axis they are least overlapped on, so a label
   // moves as little as it has to. Boxes rather than circles: a label is much
   // wider than it is tall and a circular test would shove it far too far.
+  // The nine the redraw touched, read off the districts rather than listed:
+  // a state is in if any of its districts did not keep its lines.
+  function redrawnStates() {
+    var ds = state.districts["2026"] || [], out = {};
+    for (var i = 0; i < ds.length; i++) {
+      if (!ds[i].__same) out[ds[i].properties.state] = true;
+    }
+    return out;
+  }
+
   function layoutStateLabels(live) {
     var ds = state.districts["2026"] || [];
+    // Only the redrawn states are named. The map draws all 435 districts so
+    // that the nine can be read against the House they sit in, but fifty
+    // abbreviations scattered over the country buries the nine it is about.
+    var want = redrawnStates();
     var byState = {};
     for (var i = 0; i < ds.length; i++) {
       var st = ds[i].properties.state;
+      if (!want[st]) continue;
       (byState[st] = byState[st] || []).push(ds[i]);
     }
     ctx.font = LABEL_FONT;
@@ -1657,23 +1705,16 @@
     var showingPrecincts = state.focus && state.precincts &&
       state.precinctCache[state.focus];
 
-    // Country and state outlines behind the data, so the nine states read as
-    // part of a map rather than shapes on a blank page. Drawn first and never
-    // hit-tested -- the picker canvas only ever holds the data layer.
+    // The country's fill goes behind the data; its borders go over it. They
+    // used to go behind as well, which worked only while the nine states
+    // were the only districts drawn -- everywhere else the basemap showed
+    // through and kept its state lines. Now that all 435 are drawn, a
+    // district fill covers every border it touches, and a country with no
+    // state lines in it is not a map.
     if (state.basemap) {
       ctx.fillStyle = theme().basefill;
       for (var b = 0; b < state.basemap.nation.length; b++) {
         ctx.beginPath(); path(state.basemap.nation[b]); ctx.fill();
-      }
-      ctx.lineWidth = 0.6 / transform.k;
-      ctx.strokeStyle = theme().baseline;
-      for (var t = 0; t < state.basemap.states.length; t++) {
-        ctx.beginPath(); path(state.basemap.states[t]); ctx.stroke();
-      }
-      ctx.lineWidth = 1 / transform.k;
-      ctx.strokeStyle = theme().baseedge;
-      for (var u = 0; u < state.basemap.nation.length; u++) {
-        ctx.beginPath(); path(state.basemap.nation[u]); ctx.stroke();
       }
     }
 
@@ -1695,6 +1736,21 @@
       ctx.fill();
     }
     ctx.globalAlpha = 1;
+
+    // State and national borders, over the fills. Never hit-tested -- the
+    // picker canvas only ever holds the data layer.
+    if (state.basemap) {
+      ctx.lineWidth = 0.6 / transform.k;
+      ctx.strokeStyle = theme().baseline;
+      for (var t = 0; t < state.basemap.states.length; t++) {
+        ctx.beginPath(); path(state.basemap.states[t]); ctx.stroke();
+      }
+      ctx.lineWidth = 1 / transform.k;
+      ctx.strokeStyle = theme().baseedge;
+      for (var u = 0; u < state.basemap.nation.length; u++) {
+        ctx.beginPath(); path(state.basemap.nation[u]); ctx.stroke();
+      }
+    }
 
     // Hairlines between precincts only once zoomed enough to tell them apart
     if (showingPrecincts && transform.k > 3) {
@@ -2258,7 +2314,9 @@
     } else if (state.focus) {
       h.textContent = STATE_NAME[state.focus] + " \u2014 click a " +
         (state.precincts ? "precinct to single out the district it is in."
-                         : "district to single it out, or turn precincts on.");
+         : PRECINCT_STATES[state.focus]
+           ? "district to single it out, or turn precincts on."
+           : "district to single it out.");
     } else {
       h.textContent = "Pick a state, or click one on the map, to zoom in " +
         "and enable precincts.";
@@ -2584,8 +2642,9 @@
         transform = endT;
         d3.select(cv).call(zoom.transform, endT);
         syncStateSelect();
-        document.getElementById("pOff").disabled = false;
-        document.getElementById("pOn").disabled = false;
+        var hasPrec = !!PRECINCT_STATES[st];
+        document.getElementById("pOff").disabled = !hasPrec;
+        document.getElementById("pOn").disabled = !hasPrec;
         syncLayerControls();
         // The mirror of unfocus(): leaving the split needs the panels torn
         // down before anything is drawn. Without this the canvas kept
