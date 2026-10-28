@@ -513,7 +513,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-27c";
+  var BUILD = "2026-10-27d";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -1329,10 +1329,13 @@
 
   function fillFor(p, f) {
     var picked = state.district && districtOf(p) === state.district;
-    // Unredrawn districts fall back to context in every color mode. The map
-    // is about the mid-decade redraw throughout, so a district the redraw did
-    // not touch is context whatever is being shaded -- its rating included.
-    if (f && f.__same && !picked) return theme().basefill;
+    // Unredrawn districts fall back to context in every color mode, because
+    // the map is about the mid-decade redraw throughout and a district the
+    // redraw did not touch is context whatever is being shaded. The lines
+    // control is the way out: "All" asks for the whole map of that year, and
+    // a district drawn in outline but left grey is not on the map in any
+    // sense a reader would recognise -- so it takes its own color there too.
+    if (f && f.__same && !picked && !state.allLines) return theme().basefill;
     var col = baseFill(p, f);
     // Anything that is not the district in focus greys out, including the
     // 1,235 precincts carrying no district assignment at all -- mostly empty
@@ -2897,23 +2900,48 @@
         }).join("");
         var moving = (tally.loseD || 0) + (tally.loseR || 0);
         var open = (tally.tossD || 0) + (tally.tossR || 0);
-        note.textContent = moving + " redrawn seats are rated to change "
-          + "hands \u2014 " + (tally.loseD || 0) + " Democratic-held, "
-          + (tally.loseR || 0) + " Republican-held \u2014 and " + open
-          + " more are toss-ups, which Cook will not call either way. Each "
+        // Inside a single state these counts are regularly 0 or 1, so the
+        // sentence has to survive both. It read "0 redrawn seats ... and 1
+        // more are toss-ups" in North Carolina, and Utah listed a side that
+        // has no seats in it.
+        var parts = [];
+        if (tally.loseD) parts.push(tally.loseD + " Democratic-held");
+        if (tally.loseR) parts.push(tally.loseR + " Republican-held");
+        // With both sides losing seats the split is the news and earns the
+        // aside; with one side it only repeats the total, so it moves into
+        // the subject instead.
+        var side = tally.loseD ? "Democratic" : "Republican";
+        var moved = moving === 0
+          ? "No redrawn seat here is rated to change hands"
+          : parts.length < 2
+            ? (moving === 1 ? "One " : moving + " ") + side
+              + "-held redrawn seat" + (moving === 1 ? " is" : "s are")
+              + " rated to change hands"
+            : moving + " redrawn seats are rated to change hands \u2014 "
+              + parts.join(", ") + " \u2014";
+        var toss = open === 0 ? "none is a toss-up"
+          : open === 1 ? (moving ? "one more is" : "one is") + " a toss-up"
+          : (moving ? open + " more are" : open + " are") + " toss-ups";
+        var safe = tally.safe === 1
+          ? "the other is still rated for its sitting party"
+          : "the other " + tally.safe
+            + " are still rated for their sitting party";
+        var kept = tally.unchanged === 0 ? ""
+          : tally.unchanged === 1
+            ? ", and one kept its lines, which leaves it outside the comparison"
+            : ", and " + tally.unchanged
+              + " kept their lines, which leaves them outside it";
+        note.textContent = moved
+          // A comma stacked on the closing em dash of the breakdown.
+          + (/\u2014$/.test(moved) ? " and " : ", and ") + toss
+          + ", which Cook will not call either way. Each "
           + "square is shaded by its Cook rating, the same tones as that tab, "
           + "and ringed in the color of the party that holds the 2024 seat "
           + "it inherits the most people from; hatching marks the ones rated "
-          + "to change hands. Only redrawn districts "
-          + "count: the other " + tally.safe + " are still rated for their "
-          + "sitting party"
+          + "to change hands. Only redrawn districts count: " + safe
           + (tally.unknown ? ", " + tally.unknown
              + " has no sitting party recorded" : "")
-          + ", and " + tally.unchanged
-          + (tally.unchanged === 1 ? " kept its lines, so it is in play on its "
-             + "own account rather than the new map's."
-             : " kept their lines, so they are in play on their own account "
-             + "rather than the new map's.");
+          + kept + ".";
       }
     } else if (state.color === "election") {
       title.textContent = "2024 presidential margin";
@@ -2949,9 +2977,11 @@
     var one = same === 1;
     el.textContent = (one ? "One district keeps" : same + " districts keep") +
       " the same lines on both maps and " + (one ? "is" : "are") +
-      " drawn as context" + (state.allLines ? "."
-        : one ? ", without a district line of its own."
-              : ", without district lines of their own.");
+      (state.allLines
+        ? " shaded like the rest."
+        : " drawn as context" +
+          (one ? ", without a district line of its own."
+               : ", without district lines of their own."));
   }
 
   // Counts come from whatever is on screen, so the bar is the tally for the
