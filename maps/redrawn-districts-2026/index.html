@@ -207,11 +207,6 @@
     font-size: 12.25px; color: var(--ink-soft); line-height: 14.7px;
   }
   .tier.warn { color: var(--rep); }
-  .back {
-    font: inherit; font-size: 0.86rem; background: var(--paper); color: var(--ink);
-    border: 1px solid var(--rule); border-radius: 3px; padding: 0.33rem 0.75rem; cursor: pointer;
-  }
-  .back:disabled { opacity: 0.45; cursor: not-allowed; }
 
   .stage {
     /* The map's minimum lives here, on the container, not on the canvas.
@@ -371,6 +366,12 @@
     footer { font-size: 11px; line-height: 13.5px; padding-block: 0.4rem; }
     .legend .tier { font-size: 10.5px; line-height: 13px; }
 
+    /* A phone shows the overview as two stacked panels, so the stage is
+       carrying two maps in the space a desktop gives one. 420px split in
+       half is not a map, it is a diagram of one. The page scrolls, so take
+       the height from the screen rather than from what fits above the fold. */
+    .stage { min-height: max(420px, min(66vh, 600px)); }
+
     .zoom-buttons { right: 10px; bottom: 10px; flex-direction: row; }
     .zb { width: 30px; height: 30px; }
     .zb-pair { flex-direction: row; }
@@ -438,14 +439,14 @@
   </div>
 
   <div class="ctl">
-    <label>&nbsp;</label>
-    <button class="back" id="back" disabled>All states</button>
+    <label id="l-state">State</label>
+    <select class="var" id="stateSel" aria-labelledby="l-state"></select>
   </div>
 
 </div>
 
 <div class="hintbar gutter">
-  <span class="hint" id="hint">Click a state to zoom in and enable precincts.</span>
+  <span class="hint" id="hint">Pick a state, or click one on the map, to zoom in and enable precincts.</span>
 </div>
 
 <div class="stage" id="stage">
@@ -512,7 +513,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-27b";
+  var BUILD = "2026-10-27c";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -1459,8 +1460,13 @@
   // twelve pixels from its own canvas edge and read as cropped rather than
   // placed.
   var MAP_PAD = 22;
+  // A margin that reads as generous at 1200px wastes an eighth of the width
+  // at 375, where the width is the only thing setting a wide state's scale.
+  function mapPad() { return W <= SPLIT_MAX_W ? 11 : MAP_PAD; }
+
   function mapExtent() {
-    return [[MAP_PAD, MAP_PAD], [W - MAP_PAD, H - MAP_PAD]];
+    var q = mapPad();
+    return [[q, q], [W - q, H - q]];
   }
   var splitPanels = null;
 
@@ -2219,7 +2225,7 @@
     var f = districtFeature(cd);
     if (!f) return;
     state.district = cd;
-    document.getElementById("back").disabled = false;
+    syncStateSelect();
     refreshScales();
     render();
     animateZoomTo(boundsTransform(districtFrame(cd), 0.82, 60));
@@ -2262,7 +2268,8 @@
         (state.precincts ? "precinct to single out the district it is in."
                          : "district to single it out, or turn precincts on.");
     } else {
-      h.textContent = "Click a state to zoom in and enable precincts.";
+      h.textContent = "Pick a state, or click one on the map, to zoom in " +
+        "and enable precincts.";
     }
   }
 
@@ -2584,10 +2591,18 @@
         setProjection(projB);
         transform = endT;
         d3.select(cv).call(zoom.transform, endT);
-        document.getElementById("back").disabled = false;
+        syncStateSelect();
         document.getElementById("pOff").disabled = false;
         document.getElementById("pOn").disabled = false;
         syncLayerControls();
+        // The mirror of unfocus(): leaving the split needs the panels torn
+        // down before anything is drawn. Without this the canvas kept
+        // rendering through the two stale panels while the projection under
+        // them had already become one state's -- a phone showed the old
+        // nine-state view with the focused state smeared across it, and the
+        // zoom never appeared to happen at all.
+        buildPanels();
+        syncZoomControls();
         refreshScales();
         showReadout(cd ? districtFeature(cd) : null);
         updateHint();
@@ -2609,7 +2624,7 @@
         setPressed("pOff", "pOn", false);
         document.getElementById("pOff").disabled = true;
         document.getElementById("pOn").disabled = true;
-        document.getElementById("back").disabled = true;
+        syncStateSelect();
         syncLayerControls();
         setProjection(projB);
         transform = d3.zoomIdentity;
@@ -3151,9 +3166,35 @@
     render();
   }
 
-  document.getElementById("back").addEventListener("click", function () {
-    if (state.district) { clearDistrict(); return; }
-    unfocus();
+  // The only way into a state used to be a tap on the state itself. That is
+  // a fair target on a desktop and a cruel one on a phone, where North
+  // Carolina is a twenty-pixel ribbon and the overview -- two stacked panels
+  // -- offers neither zoom nor pan to help you hit it. A list costs one
+  // control and is the same list the map is drawn from.
+  function buildStateSelect() {
+    var sel = document.getElementById("stateSel");
+    var html = ['<option value="">All states</option>'];
+    Object.keys(STATE_NAME).sort(function (a, b) {
+      return STATE_NAME[a].localeCompare(STATE_NAME[b]);
+    }).forEach(function (st) {
+      html.push('<option value="' + st + '">' + STATE_NAME[st] + "</option>");
+    });
+    sel.innerHTML = html.join("");
+  }
+
+  function syncStateSelect() {
+    var sel = document.getElementById("stateSel");
+    if (sel) sel.value = state.focus || "";
+  }
+
+  buildStateSelect();
+  document.getElementById("stateSel").addEventListener("change", function () {
+    var v = this.value;
+    if (!v) { if (state.focus) unfocus(); return; }
+    // Re-picking the state you are already in steps back out of a single
+    // district, which is the one move the list would otherwise not offer.
+    if (v === state.focus) { if (state.district) clearDistrict(); return; }
+    focusState(v);
   });
 
   // Reset means the whole map. Zoomed into a state, this leaves that state
