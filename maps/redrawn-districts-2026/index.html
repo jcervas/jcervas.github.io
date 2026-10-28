@@ -371,6 +371,10 @@
        half is not a map, it is a diagram of one. The page scrolls, so take
        the height from the screen rather than from what fits above the fold. */
     .stage { min-height: max(420px, min(66vh, 600px)); }
+    /* Split in two, the stage carries two maps and needs the room for both.
+       buildPanels() measures what they actually come to and sets a floor
+       inline; this is what holds until it has. */
+    .stage.split { min-height: 70vh; }
 
     .zoom-buttons { right: 10px; bottom: 10px; flex-direction: row; }
     .zb { width: 30px; height: 30px; }
@@ -513,7 +517,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-27e";
+  var BUILD = "2026-10-28a";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -1333,6 +1337,13 @@
 
   function fillFor(p, f) {
     var picked = state.district && districtOf(p) === state.district;
+    // In the rating modes the squares carry the color and the districts below
+    // them are left blank, so pointing at a district means reading a square
+    // that sits somewhere beside it. Under the cursor the district takes its
+    // own square's color, which makes the two one thing for as long as you
+    // are looking at it -- and hoverStroke() derives from this, so the
+    // outline deepens from the same color rather than from the blank.
+    if (f && f === state.hover && chicletMode()) return squareFill(f);
     // Unredrawn districts fall back to context in every color mode, because
     // the map is about the mid-decade redraw throughout and a district the
     // redraw did not touch is context whatever is being shaded. The lines
@@ -1461,8 +1472,12 @@
   var SPLIT_GROUPS = [["LA", "AL", "TN", "OH", "NC", "FL"], ["CA", "UT", "TX"]];
   var SPLIT_MAX_W = 620;
   // The panel rect is also the clip, so this is what keeps the surrounding
-  // states from running flat into the edge of the screen.
-  var SPLIT_PAD = 13;
+  // states from running flat into the edge of the screen. The sides get more
+  // than the top and bottom: a panel is the full width of a phone, and with
+  // only a hairline of gutter the map reads as a crop of a map rather than a
+  // map. Between the two panels the gap does that job already.
+  var SPLIT_PAD_X = 20;
+  var SPLIT_PAD_Y = 13;
   // And the same for the single-panel view, where the country was fitted
   // twelve pixels from its own canvas edge and read as cropped rather than
   // placed.
@@ -1486,12 +1501,8 @@
     splitPanels = null;
     var want = splitMode(), stage = document.getElementById("stage");
     stage.classList.toggle("split", want);
-    if (!want) return;
+    if (!want) { stage.style.removeProperty("min-height"); return; }
     var ds = state.districts[state.year] || [];
-    // The legend used to overlay the map, so the panels had to be fitted
-    // above it and its height measured every time it changed. It sits under
-    // the map now, so the panels get the whole stage.
-    var avail = H;
     var gap = 14, out = [], groups = [];
     for (var i = 0; i < SPLIT_GROUPS.length; i++) {
       var grp = SPLIT_GROUPS[i];
@@ -1500,54 +1511,68 @@
       });
       if (!feats.length) {                   // all or nothing
         stage.classList.remove("split");
+        stage.style.removeProperty("min-height");
         return;
       }
       groups.push({ grp: grp, feats: feats });
     }
 
-    // Both panels draw at one scale. Fitting each group to its own panel
-    // independently is the obvious thing and it is wrong: the groups are not
-    // the same shape, so they come out at different scales and a district in
-    // one panel draws larger than the same-sized district in the other. One
-    // scale is what makes the two read as a single map folded in half.
+    // Each group is fitted to the full panel width, and each gets the scale
+    // that takes. They used to share one -- the smaller of the two -- so that
+    // a district in one panel drew the same size as a district in the other.
+    // That is the right instinct on a wide screen and the wrong trade on a
+    // phone: the western group is much the wider of the two, so it set the
+    // scale for both, and the eastern panel drew its map at 206px inside a
+    // 335px box. Two thirds of the size, to protect a comparison between
+    // panels that nothing on the page asks a reader to make -- the squares
+    // and the readout carry every cross-state comparison there is. Fitted
+    // apart, each group fills the width it is given, which at phone widths
+    // is the only thing that sets how big the map can be.
     //
-    // Which means the height is worth dividing unevenly. The shared scale is
-    // whichever group needs the smaller one, so giving that group the taller
-    // panel raises the scale for both until the two are equally tight. The
-    // bisection finds that point without caring which group it is.
-    var total = Math.max(160, avail - gap - 2 * SPLIT_PAD);
-    var lo = 70, hi = total - 70;
-    for (var it = 0; it < 20; it++) {
-      var mid = (lo + hi) / 2;
-      if (fitScale(groups[0].feats, mid) < fitScale(groups[1].feats, total - mid)) {
-        lo = mid;                            // the first group wants more room
-      } else {
-        hi = mid;
-      }
+    // Height then follows the content rather than the screen. Width sets the
+    // scale, so a panel taller than its map is dead space underneath it, and
+    // two of those is why this needed doing.
+    var pw = W - 2 * SPLIT_PAD_X;
+    for (var g = 0; g < groups.length; g++) {
+      var q = groups[g];
+      var fc = { type: "FeatureCollection", features: q.feats };
+      var fit = d3.geoAlbersUsa().fitWidth(pw, fc);
+      var b = d3.geoPath(fit).bounds(fc);
+      q.k = fit.scale();
+      q.h = Math.max(80, Math.ceil(b[1][1] - b[0][1]));
     }
-    var h0 = Math.round(lo), h1 = total - h0;
-    var k = Math.min(fitScale(groups[0].feats, h0), fitScale(groups[1].feats, h1));
 
-    var hs = [h0, h1], y = SPLIT_PAD, pw = W - 2 * SPLIT_PAD;
+    var needed = groups[0].h + groups[1].h + gap + 2 * SPLIT_PAD_Y;
+    // The stage is a flex item, so this is a floor and not a height: the CSS
+    // minimum still wins where it is larger. Written as an inline style
+    // because it is a measurement, not a rule -- it depends on the width and
+    // on which states are drawn, neither of which CSS can see.
+    var px = needed + "px";
+    if (stage.style.minHeight !== px) {
+      stage.style.minHeight = px;
+      var r = stage.getBoundingClientRect();     // may have just grown
+      if (Math.abs(Math.floor(r.height) - H) > 1) { resize(); return; }
+    }
+
+    // Any height the stage has beyond what the two maps need is shared out
+    // between them, so the gap between the panels stays in proportion rather
+    // than collecting at the bottom.
+    var slack = Math.max(0, H - needed);
+    var hs = [groups[0].h + Math.round(slack / 2),
+              groups[1].h + (slack - Math.round(slack / 2))];
+
+    var y = SPLIT_PAD_Y;
     for (var j = 0; j < groups.length; j++) {
-      var q = groups[j], ph = hs[j];
-      out.push({ x: SPLIT_PAD, y: y, w: pw, h: ph, states: q.grp,
+      var p = groups[j], ph = hs[j];
+      out.push({ x: SPLIT_PAD_X, y: y, w: pw, h: ph, states: p.grp,
                  t: d3.zoomIdentity, proj: null, path: null, pick: null });
-      var proj = centreOn(q.feats, k, SPLIT_PAD, y, pw, ph);
+      var proj = centreOn(p.feats, p.k, SPLIT_PAD_X, y, pw, ph);
       out[j].proj = proj;
       out[j].path = d3.geoPath(proj, ctx);
       out[j].pick = d3.geoPath(proj, pctx);
       y += ph + gap;
     }
     splitPanels = out;
-  }
-
-  // The scale these features need to fit a panel this tall at the full width.
-  function fitScale(feats, h) {
-    var pw = W - 2 * SPLIT_PAD;
-    return d3.geoAlbersUsa().fitExtent(
-      [[6, 6], [pw - 6, Math.max(20, h) - 6]],
-      { type: "FeatureCollection", features: feats }).scale();
   }
 
   // A projection at a given scale, shifted so the features sit in the middle
