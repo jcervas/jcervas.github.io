@@ -209,6 +209,15 @@
     margin-top: 4px; font-size: 11px; color: var(--ink-soft);
     font-variant-numeric: tabular-nums;
   }
+  /* The seat totals the ratings add up to: the line the bar is really for,
+     so it takes the page's own colours and sits above the race counts. */
+  .cb-seats {
+    display: block; font-size: 12.25px; color: var(--ink);
+    margin-bottom: 1px;
+  }
+  .cb-seats .d { color: var(--dem); font-weight: 600; }
+  .cb-seats .r { color: var(--rep); font-weight: 600; }
+  .cb-seats .muted { color: var(--ink-soft); font-weight: 400; }
   .tier {
     margin-top: 0.4rem; padding-top: 0.35rem; border-top: 1px solid var(--rule);
     font-size: 12.25px; color: var(--ink-soft); line-height: 14.7px;
@@ -537,7 +546,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-28k";
+  var BUILD = "2026-10-28l";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -3087,10 +3096,25 @@
       return midCounts[i] ? '<span style="flex:' + midCounts[i] + '">' + b.label + "</span>" : "";
     }).join("");
 
-    sum.textContent = watch
-      ? watch + " race" + (watch === 1 ? "" : "s") + " to watch  \u00b7  " +
-        solid + " solid"
-      : rated + " districts, all solid";
+    // What the ratings come to if each one holds: the three solid-to-lean
+    // bands a side, with the toss-ups left out of both because that is what
+    // Cook is saying about them. Nationally the majority line is worth
+    // printing beside it -- 218 of 435 -- and inside a state it is not.
+    var dem = counts[0] + counts[1] + counts[2];
+    var rep = counts[4] + counts[5] + counts[6];
+    var toss = counts[3];
+    var seats = '<span class="d">' + dem + " Democratic</span> \u00b7 " +
+                '<span class="r">' + rep + " Republican</span>" +
+                (toss ? ' \u00b7 <span class="muted">' + toss + " toss-up" +
+                        (toss === 1 ? "" : "s") + "</span>" : "");
+    if (!state.focus && rated === 435) {
+      seats += ' <span class="muted">(218 for a majority)</span>';
+    }
+    sum.innerHTML = '<span class="cb-seats">' + seats + "</span>" +
+      (watch
+        ? watch + " race" + (watch === 1 ? "" : "s") + " to watch  \u00b7  " +
+          solid + " solid"
+        : rated + " districts, all solid");
   }
 
   function setPressed(offId, onId, on) {
