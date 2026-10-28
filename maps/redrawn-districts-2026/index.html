@@ -410,7 +410,7 @@
 <header class="gutter">
   <div class="hrow">
     <h1>Redrawn Districts Explorer</h1>
-    <p class="sub">Nine states that changed congressional maps between 2024 and 2026</p>
+    <p class="sub">All 435 districts, and the nine states that redrew their maps between 2024 and 2026</p>
   </div>
 </header>
 
@@ -537,7 +537,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-28g";
+  var BUILD = "2026-10-28h";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -1417,7 +1417,13 @@
     // control is the way out: "All" asks for the whole map of that year, and
     // a district drawn in outline but left grey is not on the map in any
     // sense a reader would recognise -- so it takes its own color there too.
-    if (f && f.__same && !picked && !state.allLines) return theme().basefill;
+    // Not in the rating modes: there the squares carry the data and the
+    // districts are a backdrop, so shading the unredrawn ones differently
+    // tinted the nine redrawn states and left the other forty-one pale --
+    // a distinction the Cook tab does not draw and does not mean.
+    if (f && f.__same && !picked && !state.allLines && !chicletMode()) {
+      return theme().basefill;
+    }
     var col = baseFill(p, f);
     // Anything that is not the district in focus greys out, including the
     // 1,235 precincts carrying no district assignment at all -- mostly empty
@@ -2080,8 +2086,14 @@
     rows.push(["Citizen voting-age pop.", fmt(cvapOf(f))]);
     var s = demShare(p);
     if (s !== null) {
-      rows.push(["Harris", '<span class="d">' + fmt(p.pres24_dem) + "</span>"]);
-      rows.push(["Trump", '<span class="r">' + fmt(p.pres24_rep) + "</span>"]);
+      // Counts for the nine states, which are built from blocks; elsewhere
+      // the published district figure is a share and there are no totals to
+      // print. Two empty rows read as a data fault rather than as a source
+      // that reports a different thing, so they are left out.
+      if (p.pres24_dem != null && p.pres24_rep != null) {
+        rows.push(["Harris", '<span class="d">' + fmt(p.pres24_dem) + "</span>"]);
+        rows.push(["Trump", '<span class="r">' + fmt(p.pres24_rep) + "</span>"]);
+      }
       var mg = marginLabel(s);
       rows.push(["2024 margin",
         '<span class="' + mg.cls + '">' + mg.text + "</span>"]);
@@ -2917,8 +2929,8 @@
         bar.hidden = false;
         note.textContent = (state.cook ? state.cook.source : "Cook Political Report")
           + ", October 23, 2026. All " + Object.keys(state.cook ? state.cook.byKey : {}).length
-          + " districts in these states are rated; the squares mark the ones "
-          + "Cook does not call solid.";
+          + " districts are rated; the squares mark the ones Cook does not "
+          + "call solid.";
       }
     } else if (state.color === "flip") {
       title.textContent = "Changing hands";
