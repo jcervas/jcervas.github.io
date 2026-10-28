@@ -537,7 +537,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-28j";
+  var BUILD = "2026-10-28k";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -2961,54 +2961,28 @@
         var moving = (tally.loseD || 0) + (tally.loseR || 0);
         var open = (tally.tossD || 0) + (tally.tossR || 0);
         // Inside a single state these counts are regularly 0 or 1, so the
-        // sentence has to survive both. It read "0 redrawn seats ... and 1
-        // more are toss-ups" in North Carolina, and Utah listed a side that
-        // has no seats in it.
-        var parts = [];
-        if (tally.loseD) parts.push(tally.loseD + " Democratic-held");
-        if (tally.loseR) parts.push(tally.loseR + " Republican-held");
-        // With both sides losing seats the split is the news and earns the
-        // aside; with one side it only repeats the total, so it moves into
-        // the subject instead.
-        var side = tally.loseD ? "Democratic" : "Republican";
-        // "Redrawn" is the scope, so it goes when the lines control lifts it.
+        // sentence has to survive both: it once read "0 redrawn seats ... and
+        // 1 more are toss-ups" in North Carolina.
+        //
+        // What it does not do is restate the swatches above it. They already
+        // carry the split by side, and the line under the legend already
+        // accounts for the districts that kept their lines, so this says the
+        // totals, the leftover, and what the three marks mean.
         var seat = state.allLines ? " seat" : " redrawn seat";
         var moved = moving === 0
           ? "No" + seat + " here is rated to change hands"
-          : parts.length < 2
-            ? (moving === 1 ? "One " : moving + " ") + side + "-held"
-              + seat + (moving === 1 ? " is" : "s are")
-              + " rated to change hands"
-            : moving + seat + "s are rated to change hands \u2014 "
-              + parts.join(", ") + " \u2014";
+          : moving === 1 ? "One" + seat + " is rated to change hands"
+          : moving + seat + "s are rated to change hands";
         var toss = open === 0 ? "none is a toss-up"
           : open === 1 ? (moving ? "one more is" : "one is") + " a toss-up"
           : (moving ? open + " more are" : open + " are") + " toss-ups";
-        var safe = tally.safe === 1
-          ? "the other is still rated for its sitting party"
-          : "the other " + tally.safe
-            + " are still rated for their sitting party";
-        var kept = tally.unchanged === 0 ? ""
-          : tally.unchanged === 1
-            ? ", and one kept its lines, which leaves it outside the comparison"
-            : ", and " + tally.unchanged
-              + " kept their lines, which leaves them outside it";
-        // "Only redrawn districts count" is the scope, and it is exactly what
-        // the lines control lifts.
-        var scope = state.allLines
-          ? "Every district in the 2026 map is judged the same way: "
-          : "Only redrawn districts count: ";
-        note.textContent = moved
-          // A comma stacked on the closing em dash of the breakdown.
-          + (/\u2014$/.test(moved) ? " and " : ", and ") + toss
-          + ", which Cook will not call either way. Each "
-          + "square is shaded by its Cook rating, the same tones as that tab, "
-          + "and ringed in the color of the party that holds the 2024 seat "
-          + "it inherits the most people from; hatching marks the ones rated "
-          + "to change hands. " + scope + safe
-          + (tally.unknown ? ", " + tally.unknown
-             + " has no sitting party recorded" : "")
-          + kept + ".";
+        var safe = tally.safe === 0 ? ""
+          : tally.safe === 1
+            ? "; the other stays with its sitting party"
+            : "; the other " + tally.safe + " stay with their sitting party";
+        note.textContent = moved + ", " + toss + safe
+          + ". Fill is the Cook rating, the ring is who holds the seat now, "
+          + "and hatching marks the ones changing hands.";
       }
     } else if (state.color === "election") {
       title.textContent = "2024 presidential margin";
