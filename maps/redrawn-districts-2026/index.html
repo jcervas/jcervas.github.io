@@ -537,7 +537,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-28h";
+  var BUILD = "2026-10-28i";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -1404,13 +1404,6 @@
 
   function fillFor(p, f) {
     var picked = state.district && districtOf(p) === state.district;
-    // In the rating modes the squares carry the color and the districts below
-    // them are left blank, so pointing at a district means reading a square
-    // that sits somewhere beside it. Under the cursor the district takes its
-    // own square's color, which makes the two one thing for as long as you
-    // are looking at it -- and hoverStroke() derives from this, so the
-    // outline deepens from the same color rather than from the blank.
-    if (f && f === state.hover && chicletMode()) return squareFill(f);
     // Unredrawn districts fall back to context in every color mode, because
     // the map is about the mid-decade redraw throughout and a district the
     // redraw did not touch is context whatever is being shaded. The lines
@@ -1439,7 +1432,13 @@
   // in ink: pointing at it should read as that district lifting off the map
   // rather than a black line laid across it. Dark fills brighten instead,
   // since darker has nowhere left to go against them.
+  //
+  // In the rating modes there is no fill to deepen from -- the district is a
+  // backdrop and the square has the color -- so the outline takes the
+  // square's own color and is drawn heavier, which ties the shape to its
+  // square without painting over the map underneath it.
   function hoverStroke(f) {
+    if (chicletMode()) return squareFill(f);
     var c = f && d3.color(fillFor(f.properties, f) || "");
     if (!c) return theme().ink;
     var r = c.rgb();
@@ -1828,7 +1827,7 @@
 
     // Hover emphasis.
     if (state.hover && inPanel(pn, state.hover)) {
-      ctx.lineWidth = 1.1 / transform.k;
+      ctx.lineWidth = (chicletMode() ? 2.6 : 1.1) / transform.k;
       ctx.strokeStyle = hoverStroke(state.hover);
       ctx.beginPath(); path(state.hover); ctx.stroke();
     }
