@@ -513,7 +513,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-27d";
+  var BUILD = "2026-10-27e";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -903,7 +903,11 @@
                  from: pre ? pre.from : null,
                  fromShare: pre ? pre.share : null,
                  fromMember: pre ? pre.member : null };
-    if (f.__same) {
+    // Scoped to the redraw, a district whose lines survived is out of the
+    // comparison: it is in play on its own account, not because of anything
+    // the new map did. "All district lines" asks for the whole year instead,
+    // and then it is judged like every other seat.
+    if (f.__same && !state.allLines) {
       base.cat = base.fate = "unchanged";
       base.side = held;      // no square is drawn, but the readout still colors
       base.label = FLIP_PHRASE.unchanged;
@@ -1903,8 +1907,8 @@
         ? "Shaded by the 2024 presidential vote."
         : state.color === "cook" ? "Shaded by the Cook Political Report rating."
         : state.color === "flip"
-          ? "Squares mark redrawn seats Cook no longer rates for the party "
-            + "that holds them."
+          ? "Squares mark " + (state.allLines ? "" : "redrawn ")
+            + "seats Cook no longer rates for the party that holds them."
         : "Shaded by " + currentVar().label.toLowerCase() + ".";
       list.innerHTML = ""; flag.hidden = true;
       return;
@@ -2911,13 +2915,15 @@
         // aside; with one side it only repeats the total, so it moves into
         // the subject instead.
         var side = tally.loseD ? "Democratic" : "Republican";
+        // "Redrawn" is the scope, so it goes when the lines control lifts it.
+        var seat = state.allLines ? " seat" : " redrawn seat";
         var moved = moving === 0
-          ? "No redrawn seat here is rated to change hands"
+          ? "No" + seat + " here is rated to change hands"
           : parts.length < 2
-            ? (moving === 1 ? "One " : moving + " ") + side
-              + "-held redrawn seat" + (moving === 1 ? " is" : "s are")
+            ? (moving === 1 ? "One " : moving + " ") + side + "-held"
+              + seat + (moving === 1 ? " is" : "s are")
               + " rated to change hands"
-            : moving + " redrawn seats are rated to change hands \u2014 "
+            : moving + seat + "s are rated to change hands \u2014 "
               + parts.join(", ") + " \u2014";
         var toss = open === 0 ? "none is a toss-up"
           : open === 1 ? (moving ? "one more is" : "one is") + " a toss-up"
@@ -2931,6 +2937,11 @@
             ? ", and one kept its lines, which leaves it outside the comparison"
             : ", and " + tally.unchanged
               + " kept their lines, which leaves them outside it";
+        // "Only redrawn districts count" is the scope, and it is exactly what
+        // the lines control lifts.
+        var scope = state.allLines
+          ? "Every district in the 2026 map is judged the same way: "
+          : "Only redrawn districts count: ";
         note.textContent = moved
           // A comma stacked on the closing em dash of the breakdown.
           + (/\u2014$/.test(moved) ? " and " : ", and ") + toss
@@ -2938,7 +2949,7 @@
           + "square is shaded by its Cook rating, the same tones as that tab, "
           + "and ringed in the color of the party that holds the 2024 seat "
           + "it inherits the most people from; hatching marks the ones rated "
-          + "to change hands. Only redrawn districts count: " + safe
+          + "to change hands. " + scope + safe
           + (tally.unknown ? ", " + tally.unknown
              + " has no sitting party recorded" : "")
           + kept + ".";
@@ -3185,6 +3196,11 @@
     if (state.allLines === on) return;
     state.allLines = on; setPressed("lRedrawn", "lAll", on);
     noteUnchanged();
+    // The control now sets which districts the rating modes judge, not just
+    // which ones are outlined, so the legend's counts and the idle blurb move
+    // with it.
+    updateLegend();
+    if (!state.hover) showReadout(null);
     render();
   }
 
