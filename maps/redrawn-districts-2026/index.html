@@ -537,7 +537,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-28i";
+  var BUILD = "2026-10-28j";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -1435,8 +1435,9 @@
   //
   // In the rating modes there is no fill to deepen from -- the district is a
   // backdrop and the square has the color -- so the outline takes the
-  // square's own color and is drawn heavier, which ties the shape to its
-  // square without painting over the map underneath it.
+  // square's own color and is drawn a little heavier than the hairline the
+  // choropleth modes use, which ties the shape to its square without
+  // painting over the map underneath it.
   function hoverStroke(f) {
     if (chicletMode()) return squareFill(f);
     var c = f && d3.color(fillFor(f.properties, f) || "");
@@ -1827,7 +1828,7 @@
 
     // Hover emphasis.
     if (state.hover && inPanel(pn, state.hover)) {
-      ctx.lineWidth = (chicletMode() ? 2.6 : 1.1) / transform.k;
+      ctx.lineWidth = (chicletMode() ? 1.5 : 1.1) / transform.k;
       ctx.strokeStyle = hoverStroke(state.hover);
       ctx.beginPath(); path(state.hover); ctx.stroke();
     }
