@@ -97,14 +97,21 @@
      .ctl{display:flex} would otherwise beat the default [hidden] rule. Declaring
      it here keeps the local page and the published one behaving identically. */
   [hidden] { display: none !important; }
-  html, body { height: 100%; }
+  /* The page is a page, not an app pinned to the viewport. html keeps a
+     height so body's percentage minimum has something to resolve against;
+     body takes a minimum rather than a height, so a short screen scrolls
+     instead of squeezing everything into one. */
+  html { height: 100%; }
   body {
+    min-height: 100%;
     margin: 0; background: var(--paper); color: var(--ink);
     font-family: var(--body); font-size: 14px; line-height: 1.5;
     display: flex; flex-direction: column;
-    /* Vertical scrolling is what makes .stage's min-height reachable when the
-       viewport is too short to hold chrome and map at once. */
-    overflow-x: hidden; overflow-y: auto;
+    /* The document scrolls, not the body: body was its own scroll container
+       back when it had a fixed height, and leaving that in place would hide
+       the page's overflow inside an element the browser does not treat as
+       the page. */
+    overflow-x: hidden;
   }
   .gutter {
     padding-left: max(16px, env(safe-area-inset-left, 0px));
@@ -218,10 +225,23 @@
        The minimum is a readable map rather than the smallest one that fits.
        Where the viewport cannot hold that and the chrome at once, the page
        grows and scrolls; nothing is compressed to avoid a scrollbar. */
-    position: relative; flex: 1 1 auto; min-height: 420px; background: var(--water);
+    /* Grows into a tall screen so nothing is left hanging under the footer,
+       but never shrinks below its minimum: where the chrome and a readable
+       map will not both fit, the page gets longer rather than the map
+       smaller. */
+    position: relative; flex: 1 0 auto;
+    min-height: max(420px, 70vh); background: var(--water);
     overflow: hidden;   /* belt and braces: the canvas must never paint over the footer */
   }
-  canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+  /* Out of flow, or it sizes the stage instead of the other way round:
+     resize() gives the canvas an explicit pixel height taken from the stage,
+     and since the stage no longer shrinks that height became content it
+     could not get back under -- so every resize ratcheted it taller and it
+     never came down. */
+  canvas {
+    position: absolute; inset: 0;
+    display: block; width: 100%; height: 100%; touch-action: none;
+  }
 
   /* After the Post's own map controls: bottom-right, white rounded chips with
      a soft shadow and grey glyphs, the reset control set apart above the
@@ -517,7 +537,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-28c";
+  var BUILD = "2026-10-28d";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
