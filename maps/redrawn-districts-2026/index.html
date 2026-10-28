@@ -517,7 +517,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-28b";
+  var BUILD = "2026-10-28c";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -2066,6 +2066,24 @@
   // is a few pixels wide and picking one is an accident, not a choice. The
   // squares are the exception, because each one *is* a district and was put
   // there to be aimed at.
+  // In the rating modes the squares are the content and a district without
+  // one is context: the Cook tab draws a square only where Cook does not say
+  // "Solid", and Changing hands only where a seat is leaving the party that
+  // holds it. Lighting up the rest offered a reader a panel of figures about
+  // a seat the view has nothing to say about -- and over a canvas that is
+  // wall-to-wall districts, that is most of the map.
+  //
+  // Precincts are exempt. Inside a state they are a way of looking within a
+  // district rather than a set of seats to rate, so reading one is still the
+  // point of pointing at it.
+  function hoverable(f) {
+    if (!f || !chicletMode()) return f || null;
+    if (state.focus && state.precincts && state.precinctCache[state.focus]) {
+      return f;
+    }
+    return wantsSquare(f) ? f : null;
+  }
+
   function hitAt(ev) {
     var r = cv.getBoundingClientRect();
     var c = chicletAt(ev.clientX - r.left, ev.clientY - r.top);
@@ -2109,7 +2127,7 @@
     // with the district -- so the same gesture told you different kinds of
     // thing depending on where it landed, and the figures a reader came for
     // were behind a click.
-    var f = hitAt(ev).f;
+    var f = hoverable(hitAt(ev).f);
     // The contents only change when the thing under the cursor does, but the
     // panel has to keep up with the cursor either way, so placement sits
     // outside that test rather than behind an early return.
