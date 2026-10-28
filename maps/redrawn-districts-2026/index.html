@@ -528,7 +528,6 @@
     </div>
     <div class="swatches" id="swatches" hidden></div>
     <div class="tier" id="tierNote" hidden></div>
-    <div class="tier" id="sameNote" hidden></div>
   </div>
 
 <footer class="gutter">
@@ -546,7 +545,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-28l";
+  var BUILD = "2026-10-28m";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -862,6 +861,17 @@
   function cookCompetitive(f) {
     var r = cookRating(f);
     return !!r && r.rating.indexOf("Solid") !== 0;
+  }
+
+  // Cook's own "as of", formatted. It was typed into the sentence, which
+  // meant a refresh moved the ratings and left the date behind.
+  var MONTHS = ["January", "February", "March", "April", "May", "June", "July",
+                "August", "September", "October", "November", "December"];
+  function cookAsOf() {
+    var d = state.cook && state.cook.as_of;
+    var m = d && /^(\d{4})-(\d{2})-(\d{2})$/.exec(d);
+    if (!m) return d || "current ratings";
+    return MONTHS[+m[2] - 1] + " " + (+m[3]) + ", " + m[1];
   }
 
   function cookRating(f) {
@@ -2386,11 +2396,6 @@
     }
   }
 
-  function unchangedCount(features) {
-    var k = 0;
-    for (var i = 0; i < features.length; i++) if (features[i].__same) k++;
-    return k;
-  }
 
   // Who sits for each district now. These members were elected in November
   // 2024, so they belong to the 2024 map; the 2026 districts have no
@@ -2883,7 +2888,6 @@
     var note = document.getElementById("tierNote");
     var bar = document.getElementById("cookBar");
     sw.hidden = true; note.hidden = true; ramp.hidden = false; bar.hidden = true;
-    document.getElementById("sameNote").hidden = true;
     box.classList.toggle("cook", state.color === "cook" || state.color === "flip");
     box.classList.toggle("flip", state.color === "flip");
     document.getElementById("lo").parentNode.hidden = false;
@@ -2936,10 +2940,11 @@
       } else {
         drawCookBar();
         bar.hidden = false;
+        // The source line and nothing else. How many are rated and which get
+        // a square is on the bar and on the map; saying it here as well was
+        // a third telling.
         note.textContent = (state.cook ? state.cook.source : "Cook Political Report")
-          + ", October 23, 2026. All " + Object.keys(state.cook ? state.cook.byKey : {}).length
-          + " districts are rated; the squares mark the ones Cook does not "
-          + "call solid.";
+          + ", " + cookAsOf() + ".";
       }
     } else if (state.color === "flip") {
       title.textContent = "Changing hands";
@@ -2999,7 +3004,6 @@
       lo.textContent = "+50 Trump"; hi.textContent = "+50 Harris";
       mid.textContent = "Even";
     }
-    noteUnchanged();
   }
 
   // Counted over the same set the squares are laid out from, so the legend
@@ -3013,25 +3017,6 @@
       if (fi) out[fi.cat] = (out[fi.cat] || 0) + 1;
     }
     return out;
-  }
-
-  // The unshaded districts inside the nine states need accounting for, or they
-  // read as missing data rather than as districts the redraw did not touch.
-  // Its own line, so it never competes with the reliability note or the Cook
-  // source line for the same slot.
-  function noteUnchanged() {
-    var el = document.getElementById("sameNote");
-    var same = state.precincts ? 0 : unchangedCount(visibleFeatures());
-    if (!same) { el.hidden = true; return; }
-    el.hidden = false;
-    var one = same === 1;
-    el.textContent = (one ? "One district keeps" : same + " districts keep") +
-      " the same lines on both maps and " + (one ? "is" : "are") +
-      (state.allLines
-        ? " shaded like the rest."
-        : " drawn as context" +
-          (one ? ", without a district line of its own."
-               : ", without district lines of their own."));
   }
 
   // Counts come from whatever is on screen, so the bar is the tally for the
@@ -3249,7 +3234,6 @@
   function setAllLines(on) {
     if (state.allLines === on) return;
     state.allLines = on; setPressed("lRedrawn", "lAll", on);
-    noteUnchanged();
     // The control now sets which districts the rating modes judge, not just
     // which ones are outlined, so the legend's counts and the idle blurb move
     // with it.
