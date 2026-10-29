@@ -583,7 +583,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-28r";
+  var BUILD = "2026-10-29a";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -667,9 +667,11 @@
     cook: null,          // "ST-DD" -> Cook Political Report rating, 2026 map
     demoDistricts: null, // "ST-MAP-DD" -> district demographics
     basemap: null,       // { states: [...], nation: [...] }
+    outlines: null,      // ST -> the state's border, dissolved from its districts
     districts: { 2024: [], 2026: [] },
     precinctCache: {},   // ST -> features
     hover: null,         // a feature, when one is pointed at directly
+    hoverState: null,    // at national zoom, the state a click would open
   };
 
   // Promise cache so two toggles of the same layer share one request instead
@@ -1924,7 +1926,20 @@
       }
     }
 
-    // Hover emphasis.
+    // Hover emphasis. At national zoom a click opens the state, whatever the
+    // cursor is actually over, so the state outlines itself to show what the
+    // click would do -- in every colour mode, squares included. The readout
+    // still answers with the district: the outline is the affordance, not a
+    // second kind of answer. It comes from the dissolved basemap feature, so
+    // only the border thickens and the districts inside stay as they were.
+    if (state.hoverState) {
+      var so = stateOutline(state.hoverState);
+      if (so && inPanel(pn, so)) {
+        ctx.lineWidth = 2 / transform.k;
+        ctx.strokeStyle = theme().ink;
+        ctx.beginPath(); path(so); ctx.stroke();
+      }
+    }
     if (state.hover && inPanel(pn, state.hover)) {
       ctx.lineWidth = (chicletMode() ? 1.5 : 1.1) / transform.k;
       ctx.strokeStyle = hoverStroke(state.hover);
@@ -2283,6 +2298,10 @@
     return wantsSquare(f) ? f : null;
   }
 
+  function stateOutline(st) {
+    return (state.outlines && state.outlines[st]) || null;
+  }
+
   function hitAt(ev) {
     var r = cv.getBoundingClientRect();
     var c = chicletAt(ev.clientX - r.left, ev.clientY - r.top);
@@ -2326,12 +2345,25 @@
     // with the district -- so the same gesture told you different kinds of
     // thing depending on where it landed, and the figures a reader came for
     // were behind a click.
-    var f = hoverable(hitAt(ev));
+    var hit = hitAt(ev);
+    var f = hoverable(hit);
+    // The state a click would open follows the raw hit, not the hoverable
+    // one. Up here most districts answer a hover with nothing -- all of them
+    // in the rating modes -- and every one of them is still a way into its
+    // state, so the outline would go missing on the tabs that need it most.
+    var st = (!state.focus && hit.f) ? hit.f.properties.state : null;
     // The contents only change when the thing under the cursor does, but the
     // panel has to keep up with the cursor either way, so placement sits
     // outside that test rather than behind an early return.
-    if (f !== state.hover) {
-      state.hover = f;
+    if (f !== state.hover || st !== state.hoverState) {
+      state.hover = f; state.hoverState = st;
+      // The cursor says the same thing as the outline, in the one place a
+      // reader is already looking: there is somewhere to go from here. Inside
+      // a state the district already in focus is the exception -- clicking it
+      // again does nothing.
+      cv.style.cursor = (!state.focus ? !!hit.f
+        : !!(f && districtOf(f.properties) !== state.district))
+        ? "pointer" : "";
       render();
       showReadout(f);
     }
@@ -2342,7 +2374,8 @@
   // district the tap had just singled out; on a desktop it threw away the
   // selection's figures the moment the pointer moved to the controls.
   cv.addEventListener("mouseleave", function () {
-    state.hover = null;
+    state.hover = null; state.hoverState = null;
+    cv.style.cursor = "";
     render();
     var sel = state.district ? districtFeature(state.district) : null;
     showReadout(sel);
@@ -2556,6 +2589,28 @@
       .catch(function () { state.basemap = null; });
   }
 
+  // The border a hovered state lights up with, dissolved from the districts
+  // the map actually draws -- the same construction the basemap uses for the
+  // nine, so the line lands exactly on them. Done here because topojson.merge
+  // works on the topology, which is gone a moment later, and done for all
+  // fifty because the basemap carries an identity only for the nine while a
+  // click opens any of them. Fifty merges cost about 6ms.
+  function buildStateOutlines(topo) {
+    var keys = Object.keys(topo.objects);
+    var k = keys.filter(function (n) { return /2024/.test(n); })[0] || keys[0];
+    var geoms = (topo.objects[k] || {}).geometries || [], by = {};
+    for (var i = 0; i < geoms.length; i++) {
+      var st = geoms[i].properties && geoms[i].properties.state;
+      if (st) (by[st] = by[st] || []).push(geoms[i]);
+    }
+    var out = {};
+    Object.keys(by).forEach(function (st) {
+      out[st] = { type: "Feature", properties: { state: st },
+                  geometry: topojson.merge(topo, by[st]) };
+    });
+    state.outlines = out;
+  }
+
   function loadDistricts() {
     return fetch(dataUrl("districts.json")).then(function (r) {
       if (!r.ok) throw new Error("districts " + r.status);
@@ -2567,6 +2622,7 @@
         var yr = /2026/.test(k) ? "2026" : "2024";
         state.districts[yr] = measure(fc.features);
       });
+      buildStateOutlines(topo);
       markUnchanged();
       setStatus(null);
       resize();
@@ -2755,7 +2811,7 @@
     var apply = function () {
         state.focus = st;
         state.district = cd || null;
-        state.hover = null;
+        state.hover = null; state.hoverState = null;
         setProjection(projB);
         transform = endT;
         d3.select(cv).call(zoom.transform, endT);
@@ -2789,7 +2845,7 @@
     var projB = fitProjection(nationalProjection(), nationalExtent());
     var apply = function () {
         state.focus = null; state.district = null;
-        state.precincts = false; state.hover = null;
+        state.precincts = false; state.hover = null; state.hoverState = null;
         setPressed("pOff", "pOn", false);
         document.getElementById("pOff").disabled = true;
         document.getElementById("pOn").disabled = true;
