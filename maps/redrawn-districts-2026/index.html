@@ -591,7 +591,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-29g";
+  var BUILD = "2026-10-29h";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -933,8 +933,19 @@
     return state.cook.byKey[p.state + "-" + cd] || null;
   }
 
+  // Squares carry the rating because a district is a few pixels across and the
+  // shape cannot hold a color. Zoomed into one district that stops being true:
+  // there is a single shape on the screen, as large as the map, and the square
+  // over it marks the only thing it could be marking. So the district in focus
+  // takes its own rating as its fill, and the backdrop rule applies to
+  // everything else. Read off the feature's district rather than a flag, so a
+  // precinct inside the district is filled with it too.
+  function singledOut(f) {
+    return !!state.district && districtOf(f.properties) === state.district;
+  }
+
   function cookColor(f) {
-    if (chicletMode()) return null;   // the squares carry the rating instead
+    if (chicletMode() && !singledOut(f)) return null;   // the square carries it
     var r = cookRating(f);
     return r ? (theme().cook[r.rating] || null) : null;
   }
@@ -1085,8 +1096,11 @@
     return pat;
   }
 
+  // Same exception as the Cook tab, and the same limit as Fill mode: this tab
+  // colors the seats in play and nothing else, so a safe district stays a
+  // backdrop however far it is zoomed in.
   function flipColor(f) {
-    if (chicletMode()) return null;   // the squares carry it instead
+    if (chicletMode() && !singledOut(f)) return null;   // the square carries it
     var i = flipInfo(f);
     return flipInPlay(f) ? flipFill(i) : null;
   }
