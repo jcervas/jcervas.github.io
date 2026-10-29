@@ -517,7 +517,7 @@
 </div>
 
 <div class="hintbar gutter">
-  <span class="hint" id="hint">Pick a state, or click one on the map, to zoom in and enable precincts.</span>
+  <span class="hint" id="hint">Pick a state, or click one on the map, to zoom in, or turn precincts on for the whole country.</span>
 </div>
 
 <div class="stage" id="stage">
@@ -583,7 +583,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-29a";
+  var BUILD = "2026-10-29d";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -1515,6 +1515,14 @@
   // square's own color and is drawn a little heavier than the hairline the
   // choropleth modes use, which ties the shape to its square without
   // painting over the map underneath it.
+  // How far the rating line fades when nothing is pointing at it, and how far
+  // it deepens when something is.
+  var RATED_ALPHA = 0.45;
+  function deepen(col) {
+    var c = d3.color(col);
+    return c ? String(c.darker(0.8)) : col;
+  }
+
   function hoverStroke(f) {
     if (chicletMode()) return squareFill(f);
     var c = f && d3.color(fillFor(f.properties, f) || "");
@@ -1577,6 +1585,86 @@
     var t = (Math.cbrt(d) - densityScale.lo) / (densityScale.hi - densityScale.lo);
     return densityScale.floor +
            (1 - densityScale.floor) * Math.max(0, Math.min(1, t));
+  }
+
+  /* --------------------------------------------- national precinct layer */
+
+  // At national zoom the precinct layer is an image rather than geometry. The
+  // renderer draws California's 24,197 precincts in 397ms, which extrapolates
+  // to 2.9 seconds a frame and 78MB of geometry for the whole country -- and
+  // buys nothing at that scale, where a precinct is smaller than a pixel and
+  // carries no tooltip. scripts/raster_build.html pre-draws them once.
+  //
+  // Placing the image is exact, not approximate: geoAlbersUsa at a given scale
+  // and translate is affine in screen space, so an image drawn at one
+  // canonical fit lands at any other under a plain drawImage. Measured across
+  // the lower 48, the Aleutians and Hawaii, the two agree to 6e-13 of a pixel.
+  var RASTER = { manifest: null, pending: null, imgs: {} };
+
+  // The one variable baked into the image is the 2024 margin, so this is the
+  // election layer and nothing else. Demographics exist for nine states, and
+  // the density fade needs each precinct's area and population -- neither of
+  // which survives being drawn into a picture.
+  function rasterMode() {
+    return !state.focus && state.precincts && state.color === "election";
+  }
+
+  function themeKey() {
+    var set = document.documentElement.getAttribute("data-theme");
+    if (set === "dark" || set === "light") return set;
+    return (window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ? "dark" : "light";
+  }
+
+  function ensureRaster() {
+    if (RASTER.manifest) return Promise.resolve(RASTER.manifest);
+    if (RASTER.pending) return RASTER.pending;
+    RASTER.pending = fetch(dataUrl("precinct_raster.json")).then(function (r) {
+      if (!r.ok) throw new Error("raster manifest " + r.status);
+      return r.json();
+    }).then(function (m) {
+      RASTER.manifest = m; RASTER.pending = null; return m;
+    }).catch(function (e) {
+      RASTER.pending = null; throw e;
+    });
+    return RASTER.pending;
+  }
+
+  // Hands back the image only once it has decoded. Until then the caller falls
+  // back to the district choropleth, so the map is never blank, and the load
+  // handler redraws when the pixels arrive. The theme picks which of the two
+  // versions is wanted, so switching to dark fetches the dark one on demand.
+  function rasterImage(group) {
+    var m = RASTER.manifest;
+    if (!m) return null;
+    var key = group + "_" + themeKey(), meta = m.images[key];
+    if (!meta) return null;
+    var img = RASTER.imgs[key];
+    if (!img) {
+      img = RASTER.imgs[key] = new Image();
+      img.onload = function () { render(); };
+      img.onerror = function () { setStatus("Could not load the precinct layer"); };
+      img.src = dataUrl(meta.file);
+    }
+    return (img.complete && img.naturalWidth) ? { img: img, meta: meta } : null;
+  }
+
+  // Each panel draws its own group's image. On a phone the two halves are
+  // separate images rather than one clipped twice: the eastern panel's
+  // projection is centred on eastern states, so a national image placed in it
+  // would hang western states into the frame with nothing to mask them.
+  function drawRaster(pn) {
+    var got = rasterImage(pn.group || "national");
+    if (!got) return false;
+    var m = RASTER.manifest, k = pn.proj.scale() / m.scale, t = pn.proj.translate();
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(got.img,
+                  t[0] + k * (got.meta.x - m.translate[0]),
+                  t[1] + k * (got.meta.y - m.translate[1]),
+                  got.meta.w * k, got.meta.h * k);
+    return true;
   }
 
   /* ----------------------------------------------------------------- draw */
@@ -1738,6 +1826,7 @@
     for (var j = 0; j < groups.length; j++) {
       var p = groups[j], ph = hs[j];
       out.push({ x: SPLIT_PAD_X, y: y, w: pw, h: ph, states: p.grp,
+                 group: j === 0 ? "east" : "west",
                  t: d3.zoomIdentity, proj: null, path: null, pick: null });
       var proj = centreOn(p.feats, p.k, SPLIT_PAD_X, y, pw, ph);
       out[j].proj = proj;
@@ -1765,8 +1854,8 @@
   // returns and never ask which mode it is in.
   function panelsFor() {
     if (splitPanels) return splitPanels;
-    return [{ x: 0, y: 0, w: W, h: H, states: null, t: transform,
-              proj: projection, path: path, pick: pickPath }];
+    return [{ x: 0, y: 0, w: W, h: H, states: null, group: "national",
+              t: transform, proj: projection, path: path, pick: pickPath }];
   }
 
   function inPanel(pn, f) {
@@ -1808,8 +1897,11 @@
   }
 
   function drawLayers(pn) {
-    var showingPrecincts = state.focus && state.precincts &&
-      state.precinctCache[state.focus];
+    // True for either precinct layer, geometry or image: both want every
+    // district outlined, because over precincts the district line is the only
+    // thing saying where one district ends.
+    var showingPrecincts = (state.focus && state.precincts &&
+      state.precinctCache[state.focus]) || rasterMode();
 
     // The country's fill goes behind the data; its borders go over it. They
     // used to go behind as well, which worked only while the nine states
@@ -1824,24 +1916,29 @@
       }
     }
 
-    // Fills
-    var blank = chicletMode() ? theme().chicfill : theme().nodata;
-    for (var i = 0; i < current.length; i++) {
-      var f = current[i];
-      if (!inPanel(pn, f)) continue;
-      var col = fillFor(f.properties, f);
-      ctx.beginPath();
-      path(f);
-      if (col) {
-        ctx.globalAlpha = alphaFor(f);
-        ctx.fillStyle = col;
-      } else {
-        ctx.globalAlpha = 1;
-        ctx.fillStyle = blank;  // no data: visibly absent, not zero
+    // Fills. At national zoom with precincts on, the image is the fill layer
+    // and the districts underneath it are not drawn; until it has decoded,
+    // the districts are, so turning precincts on never shows a blank country.
+    var raster = rasterMode() && drawRaster(pn);
+    if (!raster) {
+      var blank = chicletMode() ? theme().chicfill : theme().nodata;
+      for (var i = 0; i < current.length; i++) {
+        var f = current[i];
+        if (!inPanel(pn, f)) continue;
+        var col = fillFor(f.properties, f);
+        ctx.beginPath();
+        path(f);
+        if (col) {
+          ctx.globalAlpha = alphaFor(f);
+          ctx.fillStyle = col;
+        } else {
+          ctx.globalAlpha = 1;
+          ctx.fillStyle = blank;  // no data: visibly absent, not zero
+        }
+        ctx.fill();
       }
-      ctx.fill();
+      ctx.globalAlpha = 1;
     }
-    ctx.globalAlpha = 1;
 
     // State and national borders, over the fills. Never hit-tested -- the
     // picker canvas only ever holds the data layer.
@@ -1858,8 +1955,10 @@
       }
     }
 
-    // Hairlines between precincts only once zoomed enough to tell them apart
-    if (showingPrecincts && transform.k > 3) {
+    // Hairlines between precincts only once zoomed enough to tell them apart.
+    // Not over the image, where `current` is districts and these would outline
+    // the wrong thing -- and where the hairlines are already drawn in.
+    if (showingPrecincts && !raster && transform.k > 3) {
       ctx.lineWidth = 0.3 / transform.k;
       ctx.strokeStyle = waterAlpha(0.55);
       for (var j = 0; j < current.length; j++) {
@@ -1888,6 +1987,37 @@
       ctx.strokeStyle = (bd[k].__same && !state.district)
         ? theme().baseline : theme().water;
       ctx.beginPath(); path(bd[k]); ctx.stroke();
+    }
+
+    // In the rating modes a district that earns a square takes that square's
+    // color as its own outline, so the shape on the map and the marker over
+    // it make one statement instead of two.
+    //
+    // The line is inset -- the path clipped to itself, then stroked at twice
+    // the width so only the inside half survives -- because a centered stroke
+    // is half outside the district. Where two rated districts share a border
+    // their lines would overlap, the later one painting over the earlier, and
+    // a border between a Lean R seat and a Solid D one can only be one of
+    // those two colors. Inset, each district keeps its own.
+    //
+    // The line is held back to a whisper so the squares stay the first thing
+    // read, and the district under the cursor brings its own up to full
+    // strength and a shade deeper. That is the hover emphasis in these modes:
+    // the line that answers is the line that was already there.
+    if (chicletMode()) {
+      var ratedLw = (showingPrecincts ? 2.2 : 1.8) / transform.k;
+      for (var q = 0; q < bd.length; q++) {
+        if (!inPanel(pn, bd[q]) || !wantsSquare(bd[q])) continue;
+        var onq = state.hover === bd[q], col = squareFill(bd[q]);
+        ctx.save();
+        ctx.beginPath(); path(bd[q]);
+        ctx.clip();                       // clip keeps the path for the stroke
+        ctx.lineWidth = ratedLw * 2;
+        ctx.strokeStyle = onq ? deepen(col) : col;
+        ctx.globalAlpha = onq ? 1 : RATED_ALPHA;
+        ctx.stroke();
+        ctx.restore();
+      }
     }
 
     // The district in focus keeps a hard outline so it stays separate from
@@ -1930,8 +2060,8 @@
     // cursor is actually over, so the state outlines itself to show what the
     // click would do -- in every colour mode, squares included. The readout
     // still answers with the district: the outline is the affordance, not a
-    // second kind of answer. It comes from the dissolved basemap feature, so
-    // only the border thickens and the districts inside stay as they were.
+    // second kind of answer. It is the state dissolved from its own districts,
+    // so only the border thickens and the districts inside stay as they were.
     if (state.hoverState) {
       var so = stateOutline(state.hoverState);
       if (so && inPanel(pn, so)) {
@@ -1940,7 +2070,10 @@
         ctx.beginPath(); path(so); ctx.stroke();
       }
     }
-    if (state.hover && inPanel(pn, state.hover)) {
+    // A rated district has already answered with its own line, deepened
+    // above; a second outline over the top would only blur it.
+    if (state.hover && inPanel(pn, state.hover) &&
+        !(chicletMode() && wantsSquare(state.hover))) {
       ctx.lineWidth = (chicletMode() ? 1.5 : 1.1) / transform.k;
       ctx.strokeStyle = hoverStroke(state.hover);
       ctx.beginPath(); path(state.hover); ctx.stroke();
@@ -2473,9 +2606,15 @@
          : PRECINCT_STATES[state.focus]
            ? "district to single it out, or turn precincts on."
            : "district to single it out.");
+    } else if (state.precincts) {
+      // Precincts are on but nothing is hoverable up here, so the hint says
+      // what the next move is rather than inviting a click that does nothing.
+      h.textContent = "Every precinct in the country, shaded by the 2024 " +
+        "vote. Pick a state to read them one by one.";
     } else {
-      h.textContent = "Pick a state, or click one on the map, to zoom in " +
-        "and enable precincts.";
+      h.textContent = "Pick a state, or click one on the map, to zoom in" +
+        (precinctsAvailable() ? ", or turn precincts on for the whole country."
+         : ".");
     }
   }
 
@@ -2816,9 +2955,24 @@
         transform = endT;
         d3.select(cv).call(zoom.transform, endT);
         syncStateSelect();
-        var hasPrec = !!PRECINCT_STATES[st];
-        document.getElementById("pOff").disabled = !hasPrec;
-        document.getElementById("pOn").disabled = !hasPrec;
+        // Precincts carry across the zoom rather than switching themselves
+        // off: a reader who turned them on at national zoom asked to see
+        // precincts, and clicking a state is asking to see them closer. The
+        // layer changes underneath -- image to geometry -- but the answer to
+        // "are precincts on" should not.
+        var keep = state.precincts && !!PRECINCT_STATES[st];
+        syncPrecinctControls();
+        if (keep) {
+          ensurePrecincts(st).then(function () {
+            return ensureDemographics(st);
+          }).then(function () {
+            rebuildVarOptions(); refreshScales(); render();
+          }).catch(function () {
+            state.precincts = false;
+            setPressed("pOff", "pOn", false);
+            syncLayerControls(); render();
+          });
+        }
         syncLayerControls();
         // The mirror of unfocus(): leaving the split needs the panels torn
         // down before anything is drawn. Without this the canvas kept
@@ -2845,10 +2999,21 @@
     var projB = fitProjection(nationalProjection(), nationalExtent());
     var apply = function () {
         state.focus = null; state.district = null;
-        state.precincts = false; state.hover = null; state.hoverState = null;
-        setPressed("pOff", "pOn", false);
-        document.getElementById("pOff").disabled = true;
-        document.getElementById("pOn").disabled = true;
+        state.hover = null; state.hoverState = null;
+        // Same bargain in the other direction: zooming back out keeps
+        // precincts on, now as the national image. syncPrecinctControls turns
+        // them off if the current color mode has no image to show.
+        var keep = state.precincts;
+        syncPrecinctControls();
+        if (state.precincts) {
+          ensureRaster().then(render).catch(function () {
+            state.precincts = false;
+            setPressed("pOff", "pOn", false);
+            syncLayerControls(); render();
+          });
+        } else if (keep) {
+          setPressed("pOff", "pOn", false);
+        }
         syncStateSelect();
         syncLayerControls();
         setProjection(projB);
@@ -3327,13 +3492,37 @@
       document.getElementById(id).setAttribute("aria-pressed", String(c === m));
     });
     document.getElementById("varWrap").hidden = (c !== "demo");
-    refreshScales(); render(); showReadout(state.hover);
+    // Leaving the election mode at national zoom takes the image away with it,
+    // since the margin is the only thing drawn into it.
+    syncPrecinctControls();
+    syncLayerControls();
+    refreshScales(); render(); updateHint(); showReadout(state.hover);
   }
 
   document.getElementById("pOff").addEventListener("click", function () { setPrecincts(false); });
   document.getElementById("pOn").addEventListener("click", function () { setPrecincts(true); });
+  // Precincts are available in two different ways and the control has to say
+  // which: inside a state, for the nine with precinct files, as geometry you
+  // can hover; and at national zoom, for the whole country, as the image --
+  // which is the 2024 margin and only that, so it is offered in the election
+  // mode and not in the others.
+  function precinctsAvailable() {
+    if (state.focus) return !!PRECINCT_STATES[state.focus];
+    return state.color === "election";
+  }
+
+  function syncPrecinctControls() {
+    var ok = precinctsAvailable();
+    document.getElementById("pOff").disabled = !ok;
+    document.getElementById("pOn").disabled = !ok;
+    if (!ok && state.precincts) {
+      state.precincts = false;
+      setPressed("pOff", "pOn", false);
+    }
+  }
+
   function setPrecincts(on) {
-    if (!state.focus || state.precincts === on) return;
+    if (state.precincts === on || !precinctsAvailable()) return;
     if (!on) {
       state.precincts = false; setPressed("pOff", "pOn", false);
       syncLayerControls();
@@ -3344,13 +3533,23 @@
       }
       refreshScales(); render(); updateHint(); return;
     }
-    ensurePrecincts(state.focus)
-      .then(function () { return ensureDemographics(state.focus); })
-      .then(function () {
-        state.precincts = true; setPressed("pOff", "pOn", true);
-        syncLayerControls();
-        rebuildVarOptions(); refreshScales(); render(); updateHint();
-      }).catch(function () {});
+    var ready = state.focus
+      ? ensurePrecincts(state.focus).then(function () {
+          return ensureDemographics(state.focus);
+        })
+      : ensureRaster();
+    if (!state.focus) setStatus("Loading precincts…");
+    ready.then(function () {
+      state.precincts = true; setPressed("pOff", "pOn", true);
+      if (!state.focus) setStatus(null);
+      syncLayerControls();
+      rebuildVarOptions(); refreshScales(); render(); updateHint();
+    }).catch(function () {
+      if (!state.focus) {
+        setStatus("Could not load the national precinct layer");
+        setTimeout(function () { setStatus(null); }, 2600);
+      }
+    });
   }
 
   document.getElementById("dOff").addEventListener("click", function () { setDensity(false); });
@@ -3471,6 +3670,8 @@
   loadCook();
   loadPredecessors();
   loadDemoDistricts();
+  syncPrecinctControls();
+  updateHint();
   loadBasemap();
   loadDistricts().catch(function (e) {
     setStatus("Could not load district data: " + e.message);
