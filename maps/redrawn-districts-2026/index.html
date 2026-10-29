@@ -583,7 +583,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-28p";
+  var BUILD = "2026-10-28q";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -1598,11 +1598,18 @@
   // panel, and inPanel() then quietly refused to draw it. "All district
   // lines" on a phone showed the nine states and nothing else.
   //
-  // The cut is the Mississippi, near enough -- the western half runs from the
-  // Plains to the Pacific, the eastern from the river to the Atlantic, which
-  // divides the seats 275 to 160 rather than evenly. Even halves would be the
-  // wrong aim: what matters is that each half is about as wide as the other,
-  // since width is what sets the scale on a phone.
+  // The cut follows state lines, not the river: the western half ends at the
+  // western borders of Minnesota, Iowa, Missouri, Arkansas and Louisiana,
+  // which divides the seats 279 to 156. Even halves would be the wrong aim --
+  // width is what sets the scale on a phone, so what matters is that the
+  // halves are about equally wide.
+  //
+  // Following the river itself is what it did first, and it left a hole:
+  // Arkansas is west of the Mississippi while Missouri and Louisiana, on
+  // either side of it, are east of it only by this list. Arkansas came out of
+  // the eastern map as a state-shaped gap and reappeared stranded on the edge
+  // of the western one. A half has to be a contiguous piece of country, which
+  // is a stronger constraint than any one line on a map.
   //
   // East above west, which is the order the Post uses: it is where most of
   // the competitive seats are, so it is what a reader should meet first.
@@ -1610,10 +1617,10 @@
   // composite keeps its insets at the lower left however it is fitted, and
   // they land in that panel's empty corner.
   var SPLIT_GROUPS = [
-    ["AL", "CT", "DE", "FL", "GA", "IA", "IL", "IN", "KY", "LA", "MA", "MD",
-     "ME", "MI", "MN", "MO", "MS", "NC", "NH", "NJ", "NY", "OH", "PA", "RI",
-     "SC", "TN", "VA", "VT", "WI", "WV"],
-    ["AK", "AR", "AZ", "CA", "CO", "HI", "ID", "KS", "MT", "ND", "NE", "NM",
+    ["AL", "AR", "CT", "DE", "FL", "GA", "IA", "IL", "IN", "KY", "LA", "MA",
+     "MD", "ME", "MI", "MN", "MO", "MS", "NC", "NH", "NJ", "NY", "OH", "PA",
+     "RI", "SC", "TN", "VA", "VT", "WI", "WV"],
+    ["AK", "AZ", "CA", "CO", "HI", "ID", "KS", "MT", "ND", "NE", "NM",
      "NV", "OK", "OR", "SD", "TX", "UT", "WA", "WY"]
   ];
   var SPLIT_MAX_W = 620;
