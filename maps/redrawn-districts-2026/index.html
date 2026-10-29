@@ -583,7 +583,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-29d";
+  var BUILD = "2026-10-29e";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -1089,8 +1089,17 @@
 
   // Both rating modes put squares on the map; they differ in which seats earn
   // one and what color it takes.
+  //
+  // "Redrawn" is a claim about the new map in every mode, so a seat whose
+  // lines came through untouched does not take a square under it: its rating
+  // is Cook's news rather than the redraw's, and the Cook tab was answering
+  // the control by ignoring it -- every competitive seat in the country got
+  // one either way. Changing hands already reads the control, inside
+  // flipInfo. Inside a state the redraw never touched there is nothing to
+  // tell apart, so the squares stay: the same exception the greying makes.
   function wantsSquare(f) {
-    return state.color === "flip" ? flipInPlay(f) : cookCompetitive(f);
+    if (state.color === "flip") return flipInPlay(f);
+    return cookCompetitive(f) && (!f.__same || !greyUnredrawn());
   }
 
   function squareFill(f) {
@@ -1208,7 +1217,10 @@
       if (state.focus && ds[i].properties.state !== state.focus) continue;
       if (wantsSquare(ds[i])) want.push(ds[i]);
     }
-    var key = state.color + ":" + state.year + ":" +
+    // The lines control changes which seats are wanted, and two different
+    // sets can be the same size, so it is part of the key rather than left
+    // to the count to notice.
+    var key = state.color + ":" + state.year + ":" + state.allLines + ":" +
       (state.focus || "-") + ":" + want.length;
     if (!chiclets || chicletKey !== key) {
       chiclets = want.map(function (f) { return { f: f, x: 0, y: 0, seeded: false }; });
