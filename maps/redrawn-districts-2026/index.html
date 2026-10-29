@@ -583,7 +583,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-28o";
+  var BUILD = "2026-10-28p";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -1588,18 +1588,34 @@
   /* ------------------------------------------------------- split (phones) */
   // The country is wide and short and a phone is narrow and tall, so fitting
   // the whole of it leaves the map at a third of the available height with
-  // everything in it too small to aim at. Drawing the nine states as two
-  // stacked groups instead nearly doubles the scale -- measured 465 to 810 on
-  // a 375x812 screen -- because the empty middle, the northern tier and New
-  // England stop taking up room. Each group still draws its neighbours, so a
-  // panel reads as a map rather than as shapes on a blank page.
+  // everything in it too small to aim at. Cutting it in two and stacking the
+  // halves roughly doubles the scale, because the width each half has to
+  // cover is halved.
+  //
+  // Every state is in one of the two. It used to be only the nine, which was
+  // right while they were the only districts drawn and wrong the moment the
+  // map went national: a district in a state on neither list belongs to no
+  // panel, and inPanel() then quietly refused to draw it. "All district
+  // lines" on a phone showed the nine states and nothing else.
+  //
+  // The cut is the Mississippi, near enough -- the western half runs from the
+  // Plains to the Pacific, the eastern from the river to the Atlantic, which
+  // divides the seats 275 to 160 rather than evenly. Even halves would be the
+  // wrong aim: what matters is that each half is about as wide as the other,
+  // since width is what sets the scale on a phone.
   //
   // East above west, which is the order the Post uses: it is where most of
   // the competitive seats are, so it is what a reader should meet first.
   // Alaska and Hawaii ride along in the western group -- the AlbersUsa
   // composite keeps its insets at the lower left however it is fitted, and
   // they land in that panel's empty corner.
-  var SPLIT_GROUPS = [["LA", "AL", "TN", "OH", "NC", "FL"], ["CA", "UT", "TX"]];
+  var SPLIT_GROUPS = [
+    ["AL", "CT", "DE", "FL", "GA", "IA", "IL", "IN", "KY", "LA", "MA", "MD",
+     "ME", "MI", "MN", "MO", "MS", "NC", "NH", "NJ", "NY", "OH", "PA", "RI",
+     "SC", "TN", "VA", "VT", "WI", "WV"],
+    ["AK", "AR", "AZ", "CA", "CO", "HI", "ID", "KS", "MT", "ND", "NE", "NM",
+     "NV", "OK", "OR", "SD", "TX", "UT", "WA", "WY"]
+  ];
   var SPLIT_MAX_W = 620;
   // The panel rect is also the clip, so this is what keeps the surrounding
   // states from running flat into the edge of the screen. The sides get more
