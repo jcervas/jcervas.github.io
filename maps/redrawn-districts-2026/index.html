@@ -480,6 +480,14 @@
     </div>
   </div>
 
+  <div class="ctl" id="markWrap" hidden>
+    <label id="l-mark">Show as</label>
+    <div class="seg" role="group" aria-labelledby="l-mark">
+      <button id="kSquares" aria-pressed="true">Squares</button>
+      <button id="kFill" aria-pressed="false">Fill</button>
+    </div>
+  </div>
+
   <div class="ctl" id="varWrap" hidden>
     <label id="l-var">Variable</label>
     <select class="var" id="demoVar" aria-labelledby="l-var"></select>
@@ -583,7 +591,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-29f";
+  var BUILD = "2026-10-29g";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -658,6 +666,7 @@
     color: "election",   // election | demo | cook
     precincts: false,
     density: false,
+    squares: true,       // rating modes: squares over a plain map, or filled districts
     allLines: false,     // draw the lines of districts the redraw did not touch
     focus: null,         // state abbreviation when zoomed in
     district: null,      // district number when one is singled out
@@ -1082,9 +1091,21 @@
     return flipInPlay(f) ? flipFill(i) : null;
   }
 
-  function chicletMode() {
+  // The two rating tabs, which the ratings only describe on the 2026 map.
+  function ratingMode() {
     return (state.color === "cook" || state.color === "flip") &&
       state.year === "2026";
+  }
+
+  // Squares are the Post's answer to a rated district being a few pixels
+  // across, and they cost the district its own color: the shape is a backdrop
+  // and the marker carries the reading. Filling the districts instead trades
+  // that back -- the geography is the data again, legible at state zoom and a
+  // scatter of specks at national. Which of the two is wanted is the reader's
+  // call, so it is a control rather than a rule, and every path that asks
+  // "squares or not" already asked chicletMode().
+  function chicletMode() {
+    return ratingMode() && state.squares;
   }
 
   // Both rating modes put squares on the map; they differ in which seats earn
@@ -1933,7 +1954,9 @@
     // the districts are, so turning precincts on never shows a blank country.
     var raster = rasterMode() && drawRaster(pn);
     if (!raster) {
-      var blank = chicletMode() ? theme().chicfill : theme().nodata;
+      // The backdrop tone belongs to the tab, not to the marker: it must not
+      // jump a shade when the squares are swapped for fills.
+      var blank = ratingMode() ? theme().chicfill : theme().nodata;
       for (var i = 0; i < current.length; i++) {
         var f = current[i];
         if (!inPanel(pn, f)) continue;
@@ -2269,7 +2292,8 @@
         ? "Shaded by the 2024 presidential vote."
         : state.color === "cook" ? "Shaded by the Cook Political Report rating."
         : state.color === "flip"
-          ? "Squares mark " + (state.allLines ? "" : "redrawn ")
+          ? (state.squares ? "Squares mark " : "Shading marks ")
+            + (state.allLines ? "" : "redrawn ")
             + "seats Cook no longer rates for the party that holds them."
         : "Shaded by " + currentVar().label.toLowerCase() + ".";
       list.innerHTML = ""; flag.hidden = true;
@@ -3187,6 +3211,9 @@
   }
 
   function refreshScales() {
+    // Squares or fills is a question only the rating tabs ask, and only of
+    // the map the ratings describe, so the control goes with them.
+    document.getElementById("markWrap").hidden = !ratingMode();
     buildDensityScale(visibleFeatures());
     if (state.color === "demo") buildDemoScale(visibleFeatures());
     updateLegend();
@@ -3320,8 +3347,11 @@
             ? "; the other stays with its sitting party"
             : "; the other " + tally.safe + " stay with their sitting party";
         note.textContent = moved + ", " + toss + safe
-          + ". Fill is the Cook rating, the ring is who holds the seat now, "
-          + "and hatching marks the ones changing hands.";
+          + (state.squares
+             ? ". Fill is the Cook rating, the ring is who holds the seat "
+               + "now, and hatching marks the ones changing hands."
+             : ". Shading is the Cook rating; who holds each seat and which "
+               + "are changing hands are on the squares.");
       }
     } else if (state.color === "election") {
       title.textContent = "2024 presidential margin";
@@ -3509,6 +3539,16 @@
     syncPrecinctControls();
     syncLayerControls();
     refreshScales(); render(); updateHint(); showReadout(state.hover);
+  }
+
+  document.getElementById("kSquares").addEventListener("click", function () { setSquares(true); });
+  document.getElementById("kFill").addEventListener("click", function () { setSquares(false); });
+
+  function setSquares(on) {
+    if (state.squares === on) return;
+    state.squares = on;
+    setPressed("kFill", "kSquares", on);
+    refreshScales(); render(); showReadout(state.hover);
   }
 
   document.getElementById("pOff").addEventListener("click", function () { setPrecincts(false); });
