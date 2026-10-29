@@ -583,7 +583,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-28q";
+  var BUILD = "2026-10-28r";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -1459,6 +1459,24 @@
     return state.year === "2026" ? p.district_2026 : p.district_2024;
   }
 
+  // "Redrawn" greys the districts the new map did not touch. Inside a state
+  // the redraw did not touch at all -- forty-one of them -- that greys the
+  // whole state, and clicking into Pennsylvania landed on an empty canvas.
+  // There is nothing for the control to tell apart there, so it does not try.
+  var greyCache = null;
+  function greyUnredrawn() {
+    if (state.allLines) return false;
+    if (!state.focus) return true;
+    var key = state.focus + "|" + state.year;
+    if (greyCache && greyCache.k === key) return greyCache.v;
+    var ds = state.districts[state.year] || [], v = false;
+    for (var i = 0; i < ds.length; i++) {
+      if (ds[i].properties.state === state.focus && !ds[i].__same) { v = true; break; }
+    }
+    greyCache = { k: key, v: v };
+    return v;
+  }
+
   function fillFor(p, f) {
     var picked = state.district && districtOf(p) === state.district;
     // Unredrawn districts fall back to context in every color mode, because
@@ -1471,7 +1489,7 @@
     // districts are a backdrop, so shading the unredrawn ones differently
     // tinted the nine redrawn states and left the other forty-one pale --
     // a distinction the Cook tab does not draw and does not mean.
-    if (f && f.__same && !picked && !state.allLines && !chicletMode()) {
+    if (f && f.__same && !picked && greyUnredrawn() && !chicletMode()) {
       return theme().basefill;
     }
     var col = baseFill(p, f);
@@ -1864,7 +1882,7 @@
     ctx.lineWidth = (showingPrecincts ? 1.6 : 1.1) / transform.k;
     for (var k = 0; k < bd.length; k++) {
       if (!inPanel(pn, bd[k])) continue;
-      if (bd[k].__same && !state.allLines && !showingPrecincts) continue;
+      if (bd[k].__same && greyUnredrawn() && !showingPrecincts) continue;
       ctx.strokeStyle = (bd[k].__same && !state.district)
         ? theme().baseline : theme().water;
       ctx.beginPath(); path(bd[k]); ctx.stroke();
@@ -2252,11 +2270,16 @@
   // Precincts are exempt. Inside a state they are a way of looking within a
   // district rather than a set of seats to rate, so reading one is still the
   // point of pointing at it.
-  function hoverable(f) {
-    if (!f || !chicletMode()) return f || null;
-    if (state.focus && state.precincts && state.precinctCache[state.focus]) {
-      return f;
-    }
+  function hoverable(h) {
+    var f = h && h.f;
+    if (!f) return null;
+    // At national zoom a district is not the thing a reader is pointing at --
+    // it is one of 435 shapes a few pixels across, and the panel would chase
+    // the cursor across all of them. Only a square answers up there. Inside a
+    // state, where a district is the subject, any of them does.
+    if (!state.focus) return h.chiclet ? f : null;
+    if (!chicletMode()) return f;
+    if (state.precincts && state.precinctCache[state.focus]) return f;
     return wantsSquare(f) ? f : null;
   }
 
@@ -2303,7 +2326,7 @@
     // with the district -- so the same gesture told you different kinds of
     // thing depending on where it landed, and the figures a reader came for
     // were behind a click.
-    var f = hoverable(hitAt(ev).f);
+    var f = hoverable(hitAt(ev));
     // The contents only change when the thing under the cursor does, but the
     // panel has to keep up with the cursor either way, so placement sits
     // outside that test rather than behind an early return.
