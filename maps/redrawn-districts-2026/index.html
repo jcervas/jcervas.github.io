@@ -502,14 +502,6 @@
   </div>
 
   <div class="ctl">
-    <label id="l-dens">Density fade</label>
-    <div class="seg" role="group" aria-labelledby="l-dens">
-      <button id="dOff" aria-pressed="true" disabled>Off</button>
-      <button id="dOn" aria-pressed="false" disabled>On</button>
-    </div>
-  </div>
-
-  <div class="ctl">
     <label id="l-lines">District lines</label>
     <div class="seg" role="group" aria-labelledby="l-lines">
       <button id="lRedrawn" aria-pressed="true">Redrawn</button>
@@ -591,7 +583,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-30a";
+  var BUILD = "2026-10-30b";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -669,7 +661,6 @@
     year: "2026",        // which map
     color: "flip",       // election | demo | cook | flip
     precincts: false,
-    density: false,
     squares: true,       // rating modes: squares over a plain map, or filled districts
     allLines: false,     // draw the lines of districts the redraw did not touch
     focus: null,         // state abbreviation when zoomed in
@@ -757,8 +748,6 @@
   var transform = d3.zoomIdentity;
   var dpr = Math.min(window.devicePixelRatio || 1, 2);
   var W = 0, H = 0;
-
-  var EARTH_KM2 = 6371 * 6371;
 
   /* ---------------------------------------------------------------- scales */
 
@@ -1583,61 +1572,6 @@
     return String(l < 0.35 ? c.brighter(0.9) : c.darker(1.1));
   }
 
-  // Density fade: alpha from people per square kilometre, on a cube-root ramp
-  // because density spans orders of magnitude between rural precincts and dense
-  // urban ones. Two things about how far it ramps, both of which the first
-  // version got wrong.
-  //
-  // The ramp is fitted to what is on screen rather than to a fixed 8,000/km2
-  // ceiling. Against that ceiling the densest district in a state might only
-  // reach 2,000, and so still draw a third transparent: nothing on the map was
-  // ever solid. Now the 95th percentile of the visible features maps to full
-  // opacity, so the densest thing you are looking at is the thing that is
-  // solid.
-  //
-  // And the depth of the fade follows the spread. Fading is a claim that the
-  // values differ, and where they barely do -- districts are equalised by
-  // population, so a compact state's can sit within a factor of two -- the
-  // floor rises to meet the top and the fade goes away, instead of
-  // manufacturing contrast out of noise.
-  function densityOf(f) {
-    var p = f.properties;
-    if (!p || !p.pop20 || !f.__km2) return 0;
-    return p.pop20 / f.__km2;
-  }
-
-  var densityScale = null;
-  function buildDensityScale(features) {
-    densityScale = null;
-    if (!state.density) return;
-    var vals = [];
-    for (var i = 0; i < features.length; i++) {
-      var d = densityOf(features[i]);
-      if (d > 0) vals.push(d);
-    }
-    if (vals.length < 2) return;
-    vals.sort(d3.ascending);
-    // Percentiles, not the extremes: one empty precinct or one courthouse
-    // block should not set the range everything else is judged against.
-    var lo = d3.quantileSorted(vals, 0.05);
-    var hi = d3.quantileSorted(vals, 0.95);
-    if (!(lo > 0) || !(hi > lo)) return;          // no spread, no fade
-    var span = Math.log10(hi / lo);               // orders of magnitude
-    densityScale = {
-      lo: Math.cbrt(lo), hi: Math.cbrt(hi),
-      floor: Math.max(0.12, Math.min(1, 1 - 0.35 * span))
-    };
-  }
-
-  function alphaFor(f) {
-    if (!state.density || !densityScale) return 1;
-    var d = densityOf(f);
-    if (!d) return densityScale.floor;     // no people, or no area to divide by
-    var t = (Math.cbrt(d) - densityScale.lo) / (densityScale.hi - densityScale.lo);
-    return densityScale.floor +
-           (1 - densityScale.floor) * Math.max(0, Math.min(1, t));
-  }
-
   /* --------------------------------------------- national precinct layer */
 
   // At national zoom the precinct layer is an image rather than geometry. The
@@ -1653,9 +1587,8 @@
   var RASTER = { manifest: null, pending: null, imgs: {} };
 
   // The one variable baked into the image is the 2024 margin, so this is the
-  // election layer and nothing else. Demographics exist for nine states, and
-  // the density fade needs each precinct's area and population -- neither of
-  // which survives being drawn into a picture.
+  // election layer and nothing else. Demographics exist for nine states and
+  // do not survive being drawn into a picture.
   function rasterMode() {
     return !state.focus && state.precincts && state.color === "election";
   }
@@ -1982,7 +1915,7 @@
         ctx.beginPath();
         path(f);
         if (col) {
-          ctx.globalAlpha = alphaFor(f);
+          ctx.globalAlpha = 1;
           ctx.fillStyle = col;
         } else {
           ctx.globalAlpha = 1;
@@ -2680,11 +2613,6 @@
     el.hidden = false; el.textContent = msg;
   }
 
-  function measure(features) {
-    features.forEach(function (f) { f.__km2 = d3.geoArea(f) * EARTH_KM2; });
-    return features;
-  }
-
   // Not every district in these nine states was redrawn. North Carolina moved
   // two of fourteen; 34 of the 173 came through with the same lines. Drawing
   // those at full strength says the redraw touched them, which it did not, so
@@ -2813,7 +2741,7 @@
       keys.forEach(function (k) {
         var fc = topojson.feature(topo, topo.objects[k]);
         var yr = /2026/.test(k) ? "2026" : "2024";
-        state.districts[yr] = measure(fc.features);
+        state.districts[yr] = fc.features;
       });
       buildStateOutlines(topo);
       markUnchanged();
@@ -2871,7 +2799,7 @@
     }
     var ds = state.districts[state.year] || [];
     for (i = 0; i < ds.length; i++) {
-      var f = ds[i], mine = f.properties.state === keep, a = alphaFor(f);
+      var f = ds[i], mine = f.properties.state === keep, a = 1;
       out.push({ f: f, fill: fillFor(f.properties, f) || T.nodata,
                  a0: mine ? a : (fadeIn ? 0 : a),
                  a1: mine ? a : (fadeIn ? a : 0) });
@@ -3136,7 +3064,7 @@
         var tp = (q.pres24_dem || 0) + (q.pres24_rep || 0);
         q.pres24_two_party_dem_share = tp > 0 ? q.pres24_dem / tp : null;
       });
-      state.precinctCache[st] = measure(fc.features);
+      state.precinctCache[st] = fc.features;
       attachDemographics(st);
       setStatus(null);
       inflight["p" + st] = null;
@@ -3232,7 +3160,6 @@
     // Squares or fills is a question only the rating tabs ask, and only of
     // the map the ratings describe, so the control goes with them.
     document.getElementById("markWrap").hidden = !ratingMode();
-    buildDensityScale(visibleFeatures());
     if (state.color === "demo") buildDemoScale(visibleFeatures());
     updateLegend();
     buildPanels();
@@ -3622,27 +3549,12 @@
     });
   }
 
-  document.getElementById("dOff").addEventListener("click", function () { setDensity(false); });
-  document.getElementById("dOn").addEventListener("click", function () { setDensity(true); });
-  // Only available over precincts. District populations are equalised by
-  // design, so district density is a statement about area and nothing else --
-  // fading by it says "this district is rural", which the map already shows.
-  // Over precincts, where population per unit area genuinely varies, it is
-  // the thing that stops empty country reading as a confident result.
   function syncLayerControls() {
     // The lines control has nothing to say over precincts, where every
     // district keeps its outline either way.
     var lines = !state.precincts;
     document.getElementById("lRedrawn").disabled = !lines;
     document.getElementById("lAll").disabled = !lines;
-
-    var avail = !!(state.focus && state.precincts);
-    document.getElementById("dOff").disabled = !avail;
-    document.getElementById("dOn").disabled = !avail;
-    if (!avail && state.density) {
-      state.density = false;
-      setPressed("dOff", "dOn", false);
-    }
   }
 
   document.getElementById("lRedrawn").addEventListener("click", function () { setAllLines(false); });
@@ -3656,14 +3568,6 @@
     // with it.
     updateLegend();
     if (!state.hover) showReadout(null);
-    render();
-  }
-
-  function setDensity(on) {
-    if (!state.focus || !state.precincts) return;
-    if (state.density === on) return;
-    state.density = on; setPressed("dOff", "dOn", on);
-    refreshScales();     // the ramp is fitted to what is on screen
     render();
   }
 
