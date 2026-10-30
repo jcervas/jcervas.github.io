@@ -1,12 +1,12 @@
 {
  "build": "2026-10-29",
  "canon_w": 4096,
- "scale": 5247.751456344136,
+ "scale": 5247.7498487518615,
  "translate": [
-  2200.5823728185405,
-  1173.1826404667665
+  2200.5638778717084,
+  1173.2378162875762
  ],
- "precincts": 61927,
+ "precincts": 61922,
  "states": [
   "AL",
   "CA",
@@ -23,33 +23,33 @@
    "file": "precincts_national_light.webp",
    "x": 305,
    "y": 585,
-   "w": 3452,
-   "h": 1821,
-   "bytes": 654396
+   "w": 3447,
+   "h": 1807,
+   "bytes": 654968
   },
   "national_dark": {
    "file": "precincts_national_dark.webp",
    "x": 305,
    "y": 585,
-   "w": 3452,
-   "h": 1821,
-   "bytes": 609138
+   "w": 3447,
+   "h": 1807,
+   "bytes": 611108
   },
   "east_light": {
    "file": "precincts_east_light.webp",
    "x": 2390,
    "y": 783,
-   "w": 1367,
-   "h": 1623,
-   "bytes": 378570
+   "w": 1362,
+   "h": 1609,
+   "bytes": 378412
   },
   "east_dark": {
    "file": "precincts_east_dark.webp",
    "x": 2390,
    "y": 783,
-   "w": 1367,
-   "h": 1623,
-   "bytes": 351150
+   "w": 1362,
+   "h": 1609,
+   "bytes": 351676
   },
   "west_light": {
    "file": "precincts_west_light.webp",
@@ -57,7 +57,7 @@
    "y": 585,
    "w": 2135,
    "h": 1772,
-   "bytes": 336344
+   "bytes": 337130
   },
   "west_dark": {
    "file": "precincts_west_dark.webp",
@@ -65,7 +65,7 @@
    "y": 585,
    "w": 2135,
    "h": 1772,
-   "bytes": 315902
+   "bytes": 317204
   }
  }
 }
