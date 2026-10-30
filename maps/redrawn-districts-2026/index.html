@@ -583,7 +583,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-30b";
+  var BUILD = "2026-10-30c";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -1068,7 +1068,10 @@
     t.fillStyle = color;
     t.fillRect(0, 0, step, step);
     t.strokeStyle = T.paper;
-    t.lineWidth = 1.8;
+    // Thin enough that the rating color carries the square and the stripes
+    // read as texture on it. At 1.8 of a 6px step the square was a third
+    // paper and the color it was supposed to show got lost at chiclet size.
+    t.lineWidth = 1.1;
     t.beginPath();
     // Lines spaced one tile apart along their intercept, which is what makes
     // a square tile repeat seamlessly at 45 degrees; drawn well past the
@@ -1453,7 +1456,7 @@
       // In the flip mode the border carries the holding party, so it is drawn
       // heavier and in that party's color rather than as a hairline.
       ctx.strokeStyle = on ? T.ink : fi ? flipRing(fi) : T.baseedge;
-      ctx.lineWidth = (on || fi) ? 2 : 1;
+      ctx.lineWidth = (on || fi) ? 2.6 : 1;
       ctx.stroke();
     }
     ctx.restore();
@@ -2800,7 +2803,13 @@
     var ds = state.districts[state.year] || [];
     for (i = 0; i < ds.length; i++) {
       var f = ds[i], mine = f.properties.state === keep, a = 1;
-      out.push({ f: f, fill: fillFor(f.properties, f) || T.nodata,
+      // Same backdrop tone the steady-state renderer uses. It used to fall
+      // back to nodata here regardless, so every district in a rating tab --
+      // where fillFor returns null because the square carries the color --
+      // darkened to #4a4a4a for the length of the zoom and settled back
+      // afterwards. The tone belongs to the tab, not to the frame.
+      var blankTone = ratingMode() ? T.chicfill : T.nodata;
+      out.push({ f: f, fill: fillFor(f.properties, f) || blankTone,
                  a0: mine ? a : (fadeIn ? 0 : a),
                  a1: mine ? a : (fadeIn ? a : 0) });
     }
