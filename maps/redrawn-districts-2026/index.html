@@ -162,6 +162,18 @@
     background: var(--rule); color: var(--ink-soft); opacity: 1;
   }
   .seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  /* The Chamber switch is a pair of links, not buttons: House and Senate are
+     separate pages, so moving between them is navigation and should behave
+     like it -- back button, open in a new tab, a URL you can send. Styled to
+     sit in a .seg beside the real buttons without looking different. */
+  .seg a {
+    font: inherit; font-size: 0.86rem; color: var(--ink); text-decoration: none;
+    padding: 0.33rem 0.7rem; border-right: 1px solid var(--rule);
+    white-space: nowrap; display: inline-flex; align-items: center;
+  }
+  .seg a:last-child { border-right: 0; }
+  .seg a[aria-current="page"] { background: var(--accent); color: var(--paper); }
+  .seg a:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
   .hint { font-size: 12.25px; color: var(--ink-soft); font-style: italic; }
   select.var {
     font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--paper);
@@ -411,7 +423,7 @@
       border-bottom: 0;
     }
     .ctl > label { font-size: 9.5px; }
-    .seg button { font-size: 12.5px; padding: 0.3rem 0.5rem; }
+    .seg button, .seg a { font-size: 12.5px; padding: 0.3rem 0.5rem; }
     .var { font-size: 12.5px; }
 
     .readout {
@@ -462,6 +474,14 @@
 </header>
 
 <div class="controls gutter">
+  <div class="ctl">
+    <label id="l-ch">Chamber</label>
+    <div class="seg" role="group" aria-labelledby="l-ch">
+      <a href="./" aria-current="page">House</a>
+      <a href="senate.html">Senate</a>
+    </div>
+  </div>
+
   <div class="ctl">
     <label id="l-map">Map</label>
     <div class="seg" role="group" aria-labelledby="l-map">
@@ -583,7 +603,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-30c";
+  var BUILD = "2026-10-30d";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
