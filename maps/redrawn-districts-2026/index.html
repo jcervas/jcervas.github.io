@@ -465,18 +465,18 @@
   <div class="ctl">
     <label id="l-map">Map</label>
     <div class="seg" role="group" aria-labelledby="l-map">
-      <button id="m2024" aria-pressed="true">2024</button>
-      <button id="m2026" aria-pressed="false">2026</button>
+      <button id="m2024" aria-pressed="false">2024</button>
+      <button id="m2026" aria-pressed="true">2026</button>
     </div>
   </div>
 
   <div class="ctl">
     <label id="l-color">Color by</label>
     <div class="seg" role="group" aria-labelledby="l-color">
-      <button id="cElection" aria-pressed="true">2024 result</button>
+      <button id="cElection" aria-pressed="false">2024 result</button>
       <button id="cDemo" aria-pressed="false">Demographics</button>
       <button id="cCook" aria-pressed="false">Cook rating</button>
-      <button id="cFlip" aria-pressed="false">Changing hands</button>
+      <button id="cFlip" aria-pressed="true">Changing hands</button>
     </div>
   </div>
 
@@ -591,7 +591,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-29h";
+  var BUILD = "2026-10-29i";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -661,9 +661,13 @@
   var CAT_COLORS = ["#6a8fbf", "#b07aa1", "#e1a14c", "#4f9d8b",
                     "#8d6e63", "#d38079", "#7a8b99", "#9c9c6b"];
 
+  // The map opens on the question it was built to answer: which of the
+  // redrawn seats changes hands. The ratings describe the 2026 map only, so
+  // that tab carries the year with it -- opening on the 2024 map with a 2026
+  // tab selected would be a contradiction the controls could not explain.
   var state = {
-    year: "2024",        // which map
-    color: "election",   // election | demo | cook
+    year: "2026",        // which map
+    color: "flip",       // election | demo | cook | flip
     precincts: false,
     density: false,
     squares: true,       // rating modes: squares over a plain map, or filled districts
@@ -3732,9 +3736,17 @@
     ro.observe(document.getElementById("stage"));
   }
 
-  loadIncumbents();
-  loadCook();
-  loadPredecessors();
+  // The rating tabs are drawn from three files that load alongside the
+  // districts rather than before them, so whichever lands last has to ask for
+  // the repaint. A tab the reader picked is safe -- setColor waits on the
+  // ratings -- but the tab the page opens on is chosen before any of this is
+  // in, and without the repaint it would open on an empty map.
+  Promise.all([loadIncumbents(), loadCook(), loadPredecessors()])
+    .then(function () {
+      if (ratingMode() && (state.districts[state.year] || []).length) {
+        refreshScales(); render(); showReadout(state.hover);
+      }
+    });
   loadDemoDistricts();
   syncPrecinctControls();
   updateHint();
