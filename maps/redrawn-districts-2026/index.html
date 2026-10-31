@@ -603,7 +603,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-30d";
+  var BUILD = "2026-10-30e";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -710,24 +710,71 @@
   var pick = document.createElement("canvas");
   var pctx = pick.getContext("2d", { willReadFrequently: true });
 
-  // Per-state projections. One national Albers across nine states from Utah to
-  // Florida shears every one of them; a State Plane zone is the cartographic
-  // answer, but d3 carries no EPSG database, so each state gets a projection
-  // built from the parameters of its own official statewide CRS. Conformal
-  // (Lambert) where the state's State Plane zones are conformal, equal-area
-  // (Albers) where the state's published statewide CRS is -- CA 3310, FL 3086
-  // and TX 3083 are all Albers. Either way the outline stops being sheared,
-  // which is the point.
+  // Per-state projections. One national Albers shears every state it is not
+  // centered on, and that shear is what a reader sees as a state leaning the
+  // wrong way. A State Plane zone is the cartographic answer, so each state is
+  // projected into its own official CRS -- the same EPSG code the R pipeline
+  // next door picks for its state outline SVGs (daily-district data/config.R,
+  // EPSG_STATE), so a state's shape here and its shape there are one shape.
+  //
+  // d3 carries no EPSG database, so each entry holds the parameters read off
+  // that code's own PROJ definition: transverse Mercator, Lambert conformal
+  // conic or Albers equal-area, with the central meridian and, for the conics,
+  // the standard parallels. Every remaining PROJ parameter -- latitude of
+  // origin, scale factor, false easting and northing -- shifts or uniformly
+  // scales the result and changes no shape, so fitExtent absorbs all of them;
+  // lat0 is carried only to record what the code says.
   var STATE_PROJ = {
-    AL: { type: "lcc",    lon0: -86.8,   lat0: 32.5,   parallels: [30.5, 34.5] },
-    CA: { type: "albers", lon0: -120.0,  lat0: 0.0,    parallels: [34.0, 40.5] },
-    FL: { type: "albers", lon0: -84.0,   lat0: 24.0,   parallels: [24.0, 31.5] },
-    LA: { type: "lcc",    lon0: -91.33,  lat0: 30.5,   parallels: [29.3, 31.2] },
-    NC: { type: "lcc",    lon0: -79.0,   lat0: 33.75,  parallels: [34.333, 36.167] },
-    OH: { type: "lcc",    lon0: -82.5,   lat0: 39.667, parallels: [38.733, 41.7] },
-    TN: { type: "lcc",    lon0: -86.0,   lat0: 34.333, parallels: [35.25, 36.417] },
-    TX: { type: "albers", lon0: -100.0,  lat0: 18.0,   parallels: [27.5, 35.0] },
-    UT: { type: "lcc",    lon0: -111.5,  lat0: 38.333, parallels: [38.0, 41.0] }
+    AL: { epsg: 2759, type: "tmerc", lon0: -85.833333, lat0: 30.5 },
+    AK: { epsg: 3338, type: "aea", lon0: -154, lat0: 50, parallels: [55, 65] },
+    AZ: { epsg: 2762, type: "tmerc", lon0: -111.916667, lat0: 31 },
+    AR: { epsg: 2764, type: "lcc", lon0: -92, lat0: 34.333333, parallels: [36.233333, 34.933333] },
+    CA: { epsg: 3311, type: "aea", lon0: -120, lat0: 0, parallels: [34, 40.5] },
+    CO: { epsg: 2773, type: "lcc", lon0: -105.5, lat0: 37.833333, parallels: [39.75, 38.45] },
+    CT: { epsg: 2775, type: "lcc", lon0: -72.75, lat0: 40.833333, parallels: [41.866667, 41.2] },
+    DE: { epsg: 2776, type: "tmerc", lon0: -75.416667, lat0: 38 },
+    FL: { epsg: 2777, type: "tmerc", lon0: -81, lat0: 24.333333 },
+    GA: { epsg: 2780, type: "tmerc", lon0: -82.166667, lat0: 30 },
+    HI: { epsg: 2784, type: "tmerc", lon0: -158, lat0: 21.166667 },
+    ID: { epsg: 2788, type: "tmerc", lon0: -114, lat0: 41.666667 },
+    IL: { epsg: 2790, type: "tmerc", lon0: -88.333333, lat0: 36.666667 },
+    IN: { epsg: 2792, type: "tmerc", lon0: -85.666667, lat0: 37.5 },
+    IA: { epsg: 2794, type: "lcc", lon0: -93.5, lat0: 41.5, parallels: [43.266667, 42.066667] },
+    KS: { epsg: 2796, type: "lcc", lon0: -98, lat0: 38.333333, parallels: [39.783333, 38.716667] },
+    KY: { epsg: 2798, type: "lcc", lon0: -84.25, lat0: 37.5, parallels: [37.966667, 38.966667] },
+    LA: { epsg: 2800, type: "lcc", lon0: -92.5, lat0: 30.5, parallels: [32.666667, 31.166667] },
+    ME: { epsg: 2802, type: "tmerc", lon0: -68.5, lat0: 43.666667 },
+    MD: { epsg: 2804, type: "lcc", lon0: -77, lat0: 37.666667, parallels: [39.45, 38.3] },
+    MA: { epsg: 2805, type: "lcc", lon0: -71.5, lat0: 41, parallels: [42.683333, 41.716667] },
+    MI: { epsg: 2808, type: "lcc", lon0: -84.366667, lat0: 43.316667, parallels: [45.7, 44.183333] },
+    MN: { epsg: 2811, type: "lcc", lon0: -94.25, lat0: 45, parallels: [47.05, 45.616667] },
+    MS: { epsg: 2813, type: "tmerc", lon0: -88.833333, lat0: 29.5 },
+    MO: { epsg: 2816, type: "tmerc", lon0: -92.5, lat0: 35.833333 },
+    MT: { epsg: 2818, type: "lcc", lon0: -109.5, lat0: 44.25, parallels: [49, 45] },
+    NE: { epsg: 2819, type: "lcc", lon0: -100, lat0: 39.833333, parallels: [43, 40] },
+    NV: { epsg: 2821, type: "tmerc", lon0: -116.666667, lat0: 34.75 },
+    NH: { epsg: 2823, type: "tmerc", lon0: -71.666667, lat0: 42.5 },
+    NJ: { epsg: 2824, type: "tmerc", lon0: -74.5, lat0: 38.833333 },
+    NM: { epsg: 2826, type: "tmerc", lon0: -106.25, lat0: 31 },
+    NY: { epsg: 2829, type: "tmerc", lon0: -76.583333, lat0: 40 },
+    NC: { epsg: 3358, type: "lcc", lon0: -79, lat0: 33.75, parallels: [36.166667, 34.333333] },
+    ND: { epsg: 2832, type: "lcc", lon0: -100.5, lat0: 47, parallels: [48.733333, 47.433333] },
+    OH: { epsg: 2834, type: "lcc", lon0: -82.5, lat0: 39.666667, parallels: [41.7, 40.433333] },
+    OK: { epsg: 2836, type: "lcc", lon0: -98, lat0: 35, parallels: [36.766667, 35.566667] },
+    OR: { epsg: 2838, type: "lcc", lon0: -120.5, lat0: 43.666667, parallels: [46, 44.333333] },
+    PA: { epsg: 3362, type: "lcc", lon0: -77.75, lat0: 40.166667, parallels: [41.95, 40.883333] },
+    RI: { epsg: 2840, type: "tmerc", lon0: -71.5, lat0: 41.083333 },
+    SC: { epsg: 3360, type: "lcc", lon0: -81, lat0: 31.833333, parallels: [34.833333, 32.5] },
+    SD: { epsg: 2841, type: "lcc", lon0: -100, lat0: 43.833333, parallels: [45.683333, 44.416667] },
+    TN: { epsg: 2843, type: "lcc", lon0: -86, lat0: 34.333333, parallels: [36.416667, 35.25] },
+    TX: { epsg: 2845, type: "lcc", lon0: -98.5, lat0: 31.666667, parallels: [33.966667, 32.133333] },
+    UT: { epsg: 2850, type: "lcc", lon0: -111.5, lat0: 38.333333, parallels: [40.65, 39.016667] },
+    VT: { epsg: 2852, type: "tmerc", lon0: -72.5, lat0: 42.5 },
+    VA: { epsg: 2853, type: "lcc", lon0: -78.5, lat0: 37.666667, parallels: [39.2, 38.033333] },
+    WA: { epsg: 2855, type: "lcc", lon0: -120.833333, lat0: 47, parallels: [48.733333, 47.5] },
+    WV: { epsg: 2857, type: "lcc", lon0: -79.5, lat0: 38.5, parallels: [40.25, 39] },
+    WI: { epsg: 2860, type: "lcc", lon0: -90, lat0: 43.833333, parallels: [45.5, 44.25] },
+    WY: { epsg: 2863, type: "tmerc", lon0: -107.333333, lat0: 40.5 }
   };
 
   // geoAlbersUsa, not a plain geoAlbers: its composite insets Alaska and Hawaii
@@ -747,11 +794,18 @@
     var bm = state.basemap && state.basemap.nation;
     return (bm && bm.length) ? bm : (state.districts[state.year] || []);
   }
+  // Three families, because every state's official CRS is one of three: Albers
+  // for the two whose statewide CRS is equal-area (AK 3338, CA 3311), and the
+  // zone's own family -- transverse Mercator or Lambert -- for the rest.
   function stateProjection(st) {
     var c = STATE_PROJ[st];
     if (!c) return nationalProjection();
-    var proj = c.type === "albers" ? d3.geoAlbers() : d3.geoConicConformal();
-    return proj.rotate([-c.lon0, 0]).center([0, c.lat0]).parallels(c.parallels);
+    var proj = c.type === "tmerc" ? d3.geoTransverseMercator()
+             : c.type === "aea"   ? d3.geoAlbers()
+                                  : d3.geoConicConformal();
+    proj.rotate([-c.lon0, 0]).center([0, c.lat0]);
+    if (c.parallels) proj.parallels(c.parallels);
+    return proj;
   }
 
   var projection = nationalProjection();
