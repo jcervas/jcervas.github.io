@@ -569,7 +569,7 @@
 <script>
 (function () {
   "use strict";
-  var BUILD = "2026-11-02a";
+  var BUILD = "2026-11-02b";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   document.getElementById("build").textContent = "build " + BUILD;
 
@@ -617,7 +617,10 @@
     hold: "Still rated for the party that holds it"
   };
 
-  var state = { color: "flip", squares: true, data: null, states: [], nation: null, hover: null };
+  var state = { color: "flip", squares: true, data: null, states: [], nation: null,
+                hover: null, rating: null };
+  // The page's own hint, kept so the filter can borrow the line and give it back.
+  var HINT = document.getElementById("hint").textContent;
 
   var cv = document.getElementById("map"), ctx = cv.getContext("2d");
   var dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
@@ -694,6 +697,26 @@
     return state.color === "flip" ? inPlay(r) : competitive(r);
   }
 
+  // One tier of the Cook scale, picked out of the legend, exactly as the
+  // House view does it: nothing leaves the map, the seats outside the tier
+  // grey, and the tally underneath still counts all 35.
+  function ratingFiltered(f) {
+    if (!state.rating || state.color !== "cook") return false;
+    var r = raceOf(f);
+    return !r || r.rating !== state.rating;
+  }
+
+  // The House view's grey, so a state greyed here and a district greyed there
+  // are the same tone: lightness kept, color taken away.
+  function desaturate(col) {
+    var c = d3.color(col);
+    if (!c) return theme().nodata;
+    var r = c.rgb();
+    var l = 0.299 * r.r + 0.587 * r.g + 0.114 * r.b;
+    var m = Math.round(l * 0.35 + 190 * 0.65);
+    return "rgb(" + m + "," + m + "," + m + ")";
+  }
+
   function fillFor(f) {
     var T = theme(), r = raceOf(f);
     if (state.color === "election") {
@@ -701,8 +724,9 @@
       return electionColor(info ? info.pres24_dem_share_two_party : null);
     }
     if (chicletMode()) return T.chicfill;            // the square carries it
-    if (state.color === "cook") return r ? T.cook[r.rating] : T.chicfill;
-    return inPlay(r) ? T.cook[r.rating] : T.chicfill;
+    var col = state.color === "cook" ? (r ? T.cook[r.rating] : T.chicfill)
+            : (inPlay(r) ? T.cook[r.rating] : T.chicfill);
+    return ratingFiltered(f) ? desaturate(col) : col;
   }
 
   // Diagonal stripes in the rating's color, cut by the page tone -- the
@@ -845,15 +869,19 @@
     });
     squares.forEach(function (s) {
       var r = raceOf(s.f), base = T.cook[r.rating], flip = state.color === "flip";
+      var dim = ratingFiltered(s.f);
       roundRect(ctx, s.x - h, s.y - h, CHIC, CHIC, CHIC_R);
       // Hatched where the seat changes hands -- only on that tab, as in the
       // House view, where hatching is the one mark that means "flips".
-      ctx.fillStyle = (flip && r.fate === "change") ? hatchFor(base) : base;
+      // Outside the picked rating the square greys instead: where a tier sits
+      // is part of reading it, so it stays on the map rather than leaving.
+      ctx.fillStyle = dim ? desaturate(base)
+                    : (flip && r.fate === "change") ? hatchFor(base) : base;
       ctx.fill();
       var on = state.hover === s.f;
       // On Changing hands the ring is the party holding the seat now.
-      ctx.strokeStyle = on ? T.ink : flip ? T.cook[FLIP_TONE[r.held]] : T.baseedge;
-      ctx.lineWidth = (on || flip) ? 2.6 : 1;
+      ctx.strokeStyle = on ? T.ink : (flip && !dim) ? T.cook[FLIP_TONE[r.held]] : T.baseedge;
+      ctx.lineWidth = (on || (flip && !dim)) ? 2.6 : 1;
       ctx.stroke();
     });
   }
@@ -1007,8 +1035,19 @@
     var T = theme(), c = counts();
     var cs = COOK_BANDS.map(function (b) { return c[b.cat]; });
     var rated = cs.reduce(function (a, b) { return a + b; }, 0);
+    // Every band is a button: clicking one holds the map to that rating.
+    // Title and aria carry the name and the count the block has no room for.
+    function seg(b, n, bg, fg, text) {
+      var on = state.rating === b.cat;
+      var what = b.label + ", " + n + " seat" + (n === 1 ? "" : "s");
+      return '<button type="button" class="cb-seg' + (on ? " on" : "") +
+        '" data-cat="' + b.cat + '" aria-pressed="' + on +
+        '" title="' + what + '" aria-label="' + what +
+        '" style="flex:' + n + ";background:" + bg +
+        (fg ? ";color:" + fg : "") + '">' + (text || "") + "</button>";
+    }
     document.getElementById("cbAll").innerHTML = COOK_BANDS.map(function (b, i) {
-      return cs[i] ? '<div class="cb-seg" style="flex:' + cs[i] + ";background:" + T.cook[b.cat] + '"></div>' : "";
+      return cs[i] ? seg(b, cs[i], T.cook[b.cat], "", "") : "";
     }).join("");
     var mid = COOK_BANDS.filter(function (b) { return b.cat.indexOf("Solid") !== 0; });
     var midC = mid.map(function (b) { return c[b.cat]; });
@@ -1016,11 +1055,14 @@
     document.getElementById("cbTrack").innerHTML = mid.map(function (b, i) {
       if (!midC[i]) return "";
       var pale = b.label !== "Likely D" && b.label !== "Likely R";
-      return '<div class="cb-seg" style="flex:' + midC[i] + ";background:" + T.cook[b.cat] +
-        ";color:" + (pale ? "#222222" : "#ffffff") + '">' + midC[i] + "</div>";
+      return seg(b, midC[i], T.cook[b.cat], pale ? "#222222" : "#ffffff", String(midC[i]));
     }).join("");
     document.getElementById("cbFoot").innerHTML = mid.map(function (b, i) {
-      return midC[i] ? '<span style="flex:' + midC[i] + '">' + b.label + "</span>" : "";
+      if (!midC[i]) return "";
+      var on = state.rating === b.cat;
+      return '<button type="button" class="cb-lab' + (on ? " on" : "") +
+        '" data-cat="' + b.cat + '" aria-pressed="' + on +
+        '" style="flex:' + midC[i] + '">' + b.label + "</button>";
     }).join("");
     var dem = cs[0] + cs[1] + cs[2], rep = cs[4] + cs[5] + cs[6], toss = cs[3];
     document.getElementById("cbSum").innerHTML = '<span class="cb-seats"><span class="d">' + dem +
@@ -1109,9 +1151,32 @@
   function setPressed(ids, on) { ids.forEach(function (id) { document.getElementById(id).setAttribute("aria-pressed", String(id === on)); }); }
   var COLOR_IDS = { election: "cElection", cook: "cCook", flip: "cFlip" };
   function setColor(c) {
-    state.color = c; setPressed(["cElection", "cCook", "cFlip"], COLOR_IDS[c]);
+    state.color = c;
+    // The bands belong to the Cook scale, so a pick does not survive the tab.
+    state.rating = null; updateHint();
+    setPressed(["cElection", "cCook", "cFlip"], COLOR_IDS[c]);
     updateLegend(); if (!state.hover) showReadout(null); render();
   }
+
+  function updateHint() {
+    var h = document.getElementById("hint");
+    if (!state.rating) { h.textContent = HINT; return; }
+    var band = COOK_BANDS.filter(function (b) { return b.cat === state.rating; })[0];
+    h.textContent = (band ? band.label : state.rating) + " only \u2014 the rest of "
+      + "the field is still there, in grey. Click the band again to bring it back.";
+  }
+
+  function setRating(cat) {
+    state.rating = state.rating === cat ? null : cat;
+    updateHint(); updateLegend(); if (!state.hover) showReadout(null); render();
+  }
+
+  // Delegated, because drawCookBar rewrites these buttons whenever the
+  // tally is redrawn; clicking the band a second time lets go.
+  document.getElementById("cookBar").addEventListener("click", function (e) {
+    var el = e.target.closest("[data-cat]");
+    if (el) setRating(el.getAttribute("data-cat"));
+  });
   function setSquares(on) {
     state.squares = on; setPressed(["kSquares", "kFill"], on ? "kSquares" : "kFill");
     updateLegend(); if (!state.hover) showReadout(null); render();

@@ -619,7 +619,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-11-02a";
+  var BUILD = "2026-11-02b";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -1650,7 +1650,12 @@
     if (state.district && districtOf(p) !== state.district) {
       return col ? desaturate(col) : theme().nodata;
     }
-    if (f && ratingFiltered(f)) return col ? desaturate(col) : theme().nodata;
+    // Only where there is a color to take away. With squares on, the fill is
+    // a backdrop and the square carries the rating, so baseFill is null for
+    // every district: falling through to nodata there repainted the 417 that
+    // were filtered a lighter grey than the 18 that were not, which inverted
+    // the map -- the picked tier came out as the dark patches.
+    if (f && col && ratingFiltered(f)) return desaturate(col);
     return col;
   }
 
