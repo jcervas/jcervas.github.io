@@ -51,10 +51,6 @@
        the country: the squares are the subject, and the district lines are
        cue enough that these are the states in scope. */
     --chicfill: #e8e8e4;
-    /* A singled-out district's counterpart on the other map. Violet because
-       the data never uses it: red would vanish into every Republican fill,
-       blue into every Democratic one, gold into the toss-ups. */
-    --counterpart: #7b3fb5;
     /* The Post sets its charts in ITC Franklin Std, which is licensed and
        served from their own CDN, so it cannot be loaded here. Libre Franklin
        is a Franklin Gothic revival and the closest face on Google Fonts, which
@@ -78,7 +74,6 @@
       --cook-toss:    #c08f2c;
       --cook-leanR:   #d4877c; --cook-likelyR: #b93b32; --cook-solidR: #9e2a24;
       --chicfill: #262626;
-      --counterpart: #b48ee6;
       color-scheme: dark;
     }
   }
@@ -95,7 +90,6 @@
     --cook-toss:    #c08f2c;
     --cook-leanR:   #d4877c; --cook-likelyR: #b93b32; --cook-solidR: #9e2a24;
     --chicfill: #262626;
-    --counterpart: #b48ee6;
     color-scheme: dark;
   }
 
@@ -625,7 +619,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-11-03a";
+  var BUILD = "2026-11-03b";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -864,7 +858,6 @@
       stops: stops,
       nodata: g("--nodata") || "#dcdcdc",
       chicfill: g("--chicfill") || "#e8e8e4",
-      counterpart: g("--counterpart") || "#7b3fb5",
       cook: {
         "Solid Democrat":    g("--cook-solidD")  || "#1366b3",
         "Likely Democrat":   g("--cook-likelyD") || "#5784c5",
@@ -1679,6 +1672,9 @@
   // How far the rating line fades when nothing is pointing at it, and how far
   // it deepens when something is.
   var RATED_ALPHA = 0.45;
+  // The district in focus is filled in its own color but see-through, so the
+  // other year's outline crossing it stays legible over it.
+  var SEL_ALPHA = 0.55;
   function deepen(col) {
     var c = d3.color(col);
     return c ? String(c.darker(0.8)) : col;
@@ -2036,7 +2032,7 @@
         ctx.beginPath();
         path(f);
         if (col) {
-          ctx.globalAlpha = 1;
+          ctx.globalAlpha = singledOut(f) ? SEL_ALPHA : 1;
           ctx.fillStyle = col;
         } else {
           ctx.globalAlpha = 1;
@@ -2127,42 +2123,37 @@
       }
     }
 
-    // The district in focus keeps a hard outline so it stays separate from
-    // the greyed field around it, and its counterpart on the other map lies
-    // over it as a translucent shape. Seeing both at once is the whole point
-    // of the comparison: where they overlap is what carried across, and what
-    // sticks out of either is what the redraw moved.
+    // The district in focus is a see-through fill in its own color (above),
+    // edged in a deeper shade of that color; its counterpart on the other map
+    // is a bare line in ink. Seeing both at once is the whole point of the
+    // comparison: where they overlap is what carried across, and what sticks
+    // out of either is what the redraw moved.
     //
-    // It used to be a cased dashed line. A line says where the boundary runs
-    // but not which side is inside, and with two irregular districts crossing
-    // each other the reader had to trace the dashes to work out what area
-    // was meant. A fill answers that at a glance; the outline in the same hue
-    // keeps the edge crisp where the fill is faint.
+    // Two districts need two different marks, and the earlier ones were both
+    // lines or both fills. A dashed counterpart said where the boundary ran
+    // but not which side was inside; a translucent counterpart laid a second
+    // color over the rating and muddied it. Fill for the district you picked,
+    // line for the one it came from or went to: the rating stays the rating.
     if (state.district) {
       var sel = districtFeature(state.district);
       if (sel) {
         var other = state.year === "2024" ? "2026" : "2024";
         var cp = counterpartOf(state.district, state.year);
-        // An unchanged district's counterpart is the same shape, so it would
-        // tint the district itself and read as a highlight rather than as
-        // "nothing moved".
+        // An unchanged district's counterpart is the same shape, so its line
+        // would just retrace the district's own edge.
         var cpf = (cp && !sel.__same) ? districtFeature(cp, other) : null;
-        if (cpf) {
-          var T = theme();
-          ctx.save();
-          ctx.globalAlpha = 0.36;
-          ctx.fillStyle = T.counterpart;
-          ctx.beginPath(); path(cpf); ctx.fill();
-          ctx.globalAlpha = 1;
-          ctx.lineJoin = "round";
-          ctx.lineWidth = 1.6 / transform.k;
-          ctx.strokeStyle = T.counterpart;
-          ctx.beginPath(); path(cpf); ctx.stroke();
-          ctx.restore();
-        }
-        ctx.lineWidth = 2 / transform.k;
-        ctx.strokeStyle = theme().ink;
+        var selCol = fillFor(sel.properties, sel);
+        ctx.save();
+        ctx.lineJoin = "round";
+        ctx.lineWidth = 1.6 / transform.k;
+        ctx.strokeStyle = selCol ? deepen(selCol) : theme().ink;
         ctx.beginPath(); path(sel); ctx.stroke();
+        if (cpf) {
+          ctx.lineWidth = 2.2 / transform.k;
+          ctx.strokeStyle = theme().ink;
+          ctx.beginPath(); path(cpf); ctx.stroke();
+        }
+        ctx.restore();
       }
     }
 
@@ -2656,7 +2647,7 @@
     return null;
   }
 
-  // Frame the district together with the counterpart shaded over it:
+  // Frame the district together with the counterpart outlined over it:
   // the comparison is the reason both are on screen, so neither should be
   // cropped. Where there is no counterpart this is just the district.
   function districtFrame(cd, year, st) {
@@ -2712,7 +2703,7 @@
     } else if (state.district) {
       var other = state.year === "2024" ? "2026" : "2024";
       h.textContent = STATE_NAME[state.focus] + " district " + state.district +
-        " \u2014 the shaded shape is the " + other +
+        " \u2014 the heavy outline is the " + other +
         " district it most overlaps. Switch the map to follow it across" +
         (state.precincts ? " and watch which precincts come with it" : "") +
         "; back clears it.";
@@ -2928,7 +2919,7 @@
     }
     var ds = state.districts[state.year] || [];
     for (i = 0; i < ds.length; i++) {
-      var f = ds[i], mine = f.properties.state === keep, a = 1;
+      var f = ds[i], mine = f.properties.state === keep, a = singledOut(f) ? SEL_ALPHA : 1;
       // Same backdrop tone the steady-state renderer uses. It used to fall
       // back to nodata here regardless, so every district in a rating tab --
       // where fillFor returns null because the square carries the color --
