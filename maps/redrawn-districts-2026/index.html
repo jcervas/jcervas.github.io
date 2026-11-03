@@ -212,10 +212,26 @@
     min-width: 15px; box-sizing: border-box;
   }
   .cb-seg + .cb-seg { border-left: 1px solid var(--paper); }
+  /* The bands are buttons, so the legend is also the filter. Reset to the
+     block they used to be -- a band that looks like a button would read as a
+     control bar, and this is still the tally. */
+  button.cb-seg, button.cb-lab {
+    appearance: none; -webkit-appearance: none;
+    border: 0; padding: 0; margin: 0; font: inherit; cursor: pointer;
+  }
+  button.cb-seg + button.cb-seg { border-left: 1px solid var(--paper); }
+  /* The pick, marked on the band itself: an inset rule, which survives on a
+     9px block where a glow or a shadow would not. */
+  .cb-seg.on { box-shadow: inset 0 0 0 2px var(--ink); }
+  .cb-lab.on { color: var(--ink); font-weight: 700; }
+  .cb-seg:focus-visible, .cb-lab:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: -2px;
+  }
   .cb-foot { display: flex; margin-top: 3px; }
-  .cb-foot span {
+  .cb-foot span, .cb-foot button {
     font-size: 9.75px; color: var(--ink-soft); text-align: center;
     overflow: hidden; white-space: nowrap; min-width: 0;
+    background: none;
   }
   .cb-sum {
     margin-top: 4px; font-size: 11px; color: var(--ink-soft);
@@ -438,7 +454,7 @@
     .legend { font-size: 11.5px; max-width: none; }
     .legend.cook { max-width: none; }
     .swatches { grid-template-columns: repeat(2, 1fr); }
-    .cb-foot span { font-size: 9px; }
+    .cb-foot span, .cb-foot button { font-size: 9px; }
 
     /* The source line and the legend's provenance note are the two blocks
        of small print competing with the map for a short screen. */
@@ -603,7 +619,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-10-30e";
+  var BUILD = "2026-11-02a";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -685,6 +701,7 @@
     allLines: false,     // draw the lines of districts the redraw did not touch
     focus: null,         // state abbreviation when zoomed in
     district: null,      // district number when one is singled out
+    rating: null,        // Cook rating picked out of the legend, or null
     demoVar: "largest_race",
     demoCache: {},       // ST -> { byId: Map, cats: [] }
     incumbents: null,    // "ST-DD" -> sitting member of the 119th Congress
@@ -1522,7 +1539,10 @@
       var fi = state.color === "flip" ? flipInfo(d.f) : null;
       // Hatched where the seat changes hands.
       var dir = fi && FLIP_HATCH[fi.fate];
-      var paint = (dir && hatchFor(base, dir)) || base;
+      // Outside the picked rating the square greys with everything else,
+      // rather than leaving the map: where a tier sits is part of reading it.
+      var paint = ratingFiltered(d.f) ? desaturate(base)
+                : (dir && hatchFor(base, dir)) || base;
       roundRect(ctx, d.x - h, d.y - h, CHIC, CHIC, CHIC_R);
       ctx.fillStyle = paint;
       ctx.fill();
@@ -1596,21 +1616,32 @@
     return v;
   }
 
+  // One tier of the Cook scale, picked out of the legend. Nothing is removed
+  // from the map: the seats outside the tier grey out the way they do when a
+  // single district is in focus, so the filter is a reading of the same field
+  // rather than a different map, and the tally underneath still counts all of
+  // it. Only the Cook tab has these bands to click, and the pick is dropped
+  // whenever the tab or the year changes.
+  function ratingFiltered(f) {
+    if (!state.rating || state.color !== "cook") return false;
+    var r = cookRating(f);
+    return !r || r.rating !== state.rating;
+  }
+
+  // The fill carries the data and nothing else. It used to carry the redraw
+  // as well: a district the redraw had not touched fell back to the page tone
+  // under "Redrawn", which greyed 426 of them at national zoom. But the rule
+  // had to let go inside a state the redraw never touched, or clicking into
+  // Pennsylvania landed on an empty canvas -- so the same district was blank
+  // on the national map and full red on the state one, and zooming in looked
+  // like the colors had been changed underneath the reader.
+  //
+  // So the control governs the lines its label promises, and only those. The
+  // nine redrawn states still read as the subject at national zoom, because
+  // they are the nine with their district lines drawn in: fill says how the
+  // seat votes, the presence of a line inside a state says the redraw reached
+  // it. Two questions, two channels, neither of them moving with the zoom.
   function fillFor(p, f) {
-    var picked = state.district && districtOf(p) === state.district;
-    // Unredrawn districts fall back to context in every color mode, because
-    // the map is about the mid-decade redraw throughout and a district the
-    // redraw did not touch is context whatever is being shaded. The lines
-    // control is the way out: "All" asks for the whole map of that year, and
-    // a district drawn in outline but left grey is not on the map in any
-    // sense a reader would recognise -- so it takes its own color there too.
-    // Not in the rating modes: there the squares carry the data and the
-    // districts are a backdrop, so shading the unredrawn ones differently
-    // tinted the nine redrawn states and left the other forty-one pale --
-    // a distinction the Cook tab does not draw and does not mean.
-    if (f && f.__same && !picked && greyUnredrawn() && !chicletMode()) {
-      return theme().basefill;
-    }
     var col = baseFill(p, f);
     // Anything that is not the district in focus greys out, including the
     // 1,235 precincts carrying no district assignment at all -- mostly empty
@@ -1619,6 +1650,7 @@
     if (state.district && districtOf(p) !== state.district) {
       return col ? desaturate(col) : theme().nodata;
     }
+    if (f && ratingFiltered(f)) return col ? desaturate(col) : theme().nodata;
     return col;
   }
 
@@ -2657,7 +2689,12 @@
 
   function updateHint() {
     var h = document.getElementById("hint");
-    if (state.district) {
+    if (state.rating && state.color === "cook") {
+      var band = COOK_BANDS.filter(function (b) { return b.cat === state.rating; })[0];
+      h.textContent = (band ? band.label : state.rating) + " only \u2014 the rest "
+        + "of the field is still there, in grey. Click the band again to "
+        + "bring it back.";
+    } else if (state.district) {
       var other = state.year === "2024" ? "2026" : "2024";
       h.textContent = STATE_NAME[state.focus] + " district " + state.district +
         " \u2014 the dashed outline is the " + other +
@@ -3435,12 +3472,24 @@
       return;
     }
 
+    // Every band is a button: clicking one holds the map to that rating.
+    // Title and aria carry the name and the count, which the block itself has
+    // no room for, so the filter is reachable without the pointer too.
+    function seg(b, n, bg, fg, text) {
+      var on = state.rating === b.cat;
+      var what = b.label + ", " + n + " district" + (n === 1 ? "" : "s");
+      return '<button type="button" class="cb-seg' + (on ? " on" : "") +
+        '" data-cat="' + b.cat + '" aria-pressed="' + on +
+        '" title="' + what + '" aria-label="' + what +
+        '" style="flex:' + n + ";background:" + bg +
+        (fg ? ";color:" + fg : "") + '">' + (text || "") + "</button>";
+    }
+
     // Top tier: all of them, in proportion, no numbers -- the solid blocks
     // would be the only ones with room and labelling just those would read as
     // if the rest were nothing.
     all.innerHTML = COOK_BANDS.map(function (b, i) {
-      return counts[i] ? '<div class="cb-seg" style="flex:' + counts[i] +
-             ";background:" + T.cook[b.cat] + '"></div>' : "";
+      return counts[i] ? seg(b, counts[i], T.cook[b.cat], "", "") : "";
     }).join("");
 
     // Bottom tier: the competitive middle only, which is what the bracket on
@@ -3455,13 +3504,16 @@
     track.innerHTML = mid.map(function (b, i) {
       if (!midCounts[i]) return "";
       var pale = b.label !== "Likely D" && b.label !== "Likely R";
-      return '<div class="cb-seg" style="flex:' + midCounts[i] + ";background:" +
-             T.cook[b.cat] + ";color:" + (pale ? "#222222" : "#ffffff") + '">' +
-             midCounts[i] + "</div>";
+      return seg(b, midCounts[i], T.cook[b.cat], pale ? "#222222" : "#ffffff",
+                 String(midCounts[i]));
     }).join("");
 
     foot.innerHTML = mid.map(function (b, i) {
-      return midCounts[i] ? '<span style="flex:' + midCounts[i] + '">' + b.label + "</span>" : "";
+      if (!midCounts[i]) return "";
+      var on = state.rating === b.cat;
+      return '<button type="button" class="cb-lab' + (on ? " on" : "") +
+        '" data-cat="' + b.cat + '" aria-pressed="' + on +
+        '" style="flex:' + midCounts[i] + '">' + b.label + "</button>";
     }).join("");
 
     // What the ratings come to if each one holds: the three solid-to-lean
@@ -3496,6 +3548,7 @@
     if (state.year === y) return;
     var carry = state.district ? counterpartOf(state.district, state.year) : null;
     state.year = y;
+    state.rating = null;   // the ratings describe the 2026 map only
     document.getElementById("m2024").setAttribute("aria-pressed", String(y === "2024"));
     document.getElementById("m2026").setAttribute("aria-pressed", String(y === "2026"));
     if (state.district) {
@@ -3556,6 +3609,9 @@
 
   function applyColor(c) {
     state.color = c;
+    // The bands belong to the Cook scale; every other tab reads by something
+    // else, so a pick made here does not survive leaving it.
+    state.rating = null;
     ["election", "demo", "cook", "flip"].forEach(function (m) {
       var id = m === "election" ? "cElection" : m === "cook" ? "cCook"
              : m === "flip" ? "cFlip" : "cDemo";
@@ -3567,6 +3623,19 @@
     syncPrecinctControls();
     syncLayerControls();
     refreshScales(); render(); updateHint(); showReadout(state.hover);
+  }
+
+  // The legend is the filter. Delegated, because drawCookBar rewrites these
+  // buttons every time the tally changes, and clicking the band a second time
+  // lets go -- the only way out that does not need a separate control.
+  document.getElementById("cookBar").addEventListener("click", function (e) {
+    var el = e.target.closest("[data-cat]");
+    if (el) setRating(el.getAttribute("data-cat"));
+  });
+
+  function setRating(cat) {
+    state.rating = state.rating === cat ? null : cat;
+    render(); updateLegend(); updateHint(); showReadout(state.hover);
   }
 
   document.getElementById("kSquares").addEventListener("click", function () { setSquares(true); });
