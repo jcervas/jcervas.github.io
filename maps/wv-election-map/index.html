@@ -903,7 +903,7 @@ select.pick { font: inherit; font-weight: 550; font-size: 12.5px; padding: 6px 2
         ${['su24', 'su22'].map(id => { const x = byId.get(id), t = distTally(x, LIVE.district); return `<div class="totals" style="border:0;padding:0"><span><a href="#" data-id="${id}" class="elink">${esc(x.label)}</a>: ${esc(t.rows[0].c.name)} ${pct(t.rows[0].v / t.total)}</span><span>${mchip(t)}</span></div>`; }).join('')}
         <p class="note">Pick one of these in “Swing since” to map the change precinct by precinct.</p>
       </section>
-      <section class="sec"><p class="note">Results are unofficial and come from the county clerks through the WV Secretary of State’s election-night site, checked every minute. Precincts: 2024 map (RDH); Marion precinct 32 from the WV GIS Technical Center, since the 2024 map folds it into precinct 31. Votes not tied to a precinct (absentee and early votes in some counties) count in the totals but not on the map.${f.unplaced.length ? ` Not on the map: ${esc(f.unplaced.join(', '))}.` : ''}</p></section>`;
+      <section class="sec"><p class="note">Results are unofficial and come from the county clerks through the WV Secretary of State’s election-night site, checked every minute. Precincts: 2024 map (RDH), which matches the precincts Monongalia and Marion report tonight. Votes not tied to a precinct (absentee and early votes in some counties) count in the totals but not on the map.${f.unplaced.length ? ` Not on the map: ${esc(f.unplaced.join(', '))}.` : ''}</p></section>`;
       d3.selectAll('#leftInner .elink').on('click', function (ev) { ev.preventDefault(); S.cmp = this.dataset.id; renderAll(); });
       return;
     }
