@@ -51,6 +51,10 @@
        the country: the squares are the subject, and the district lines are
        cue enough that these are the states in scope. */
     --chicfill: #e8e8e4;
+    /* A singled-out district's counterpart on the other map. Violet because
+       the data never uses it: red would vanish into every Republican fill,
+       blue into every Democratic one, gold into the toss-ups. */
+    --counterpart: #7b3fb5;
     /* The Post sets its charts in ITC Franklin Std, which is licensed and
        served from their own CDN, so it cannot be loaded here. Libre Franklin
        is a Franklin Gothic revival and the closest face on Google Fonts, which
@@ -74,6 +78,7 @@
       --cook-toss:    #c08f2c;
       --cook-leanR:   #d4877c; --cook-likelyR: #b93b32; --cook-solidR: #9e2a24;
       --chicfill: #262626;
+      --counterpart: #b48ee6;
       color-scheme: dark;
     }
   }
@@ -90,6 +95,7 @@
     --cook-toss:    #c08f2c;
     --cook-leanR:   #d4877c; --cook-likelyR: #b93b32; --cook-solidR: #9e2a24;
     --chicfill: #262626;
+    --counterpart: #b48ee6;
     color-scheme: dark;
   }
 
@@ -619,7 +625,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-11-02b";
+  var BUILD = "2026-11-03a";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -858,6 +864,7 @@
       stops: stops,
       nodata: g("--nodata") || "#dcdcdc",
       chicfill: g("--chicfill") || "#e8e8e4",
+      counterpart: g("--counterpart") || "#7b3fb5",
       cook: {
         "Solid Democrat":    g("--cook-solidD")  || "#1366b3",
         "Likely Democrat":   g("--cook-likelyD") || "#5784c5",
@@ -2121,32 +2128,35 @@
     }
 
     // The district in focus keeps a hard outline so it stays separate from
-    // the greyed field around it, and its counterpart on the other map is
-    // drawn dashed over the top. Seeing both lines at once is the whole point
-    // of the comparison: the gap between them is what the redraw did.
+    // the greyed field around it, and its counterpart on the other map lies
+    // over it as a translucent shape. Seeing both at once is the whole point
+    // of the comparison: where they overlap is what carried across, and what
+    // sticks out of either is what the redraw moved.
+    //
+    // It used to be a cased dashed line. A line says where the boundary runs
+    // but not which side is inside, and with two irregular districts crossing
+    // each other the reader had to trace the dashes to work out what area
+    // was meant. A fill answers that at a glance; the outline in the same hue
+    // keeps the edge crisp where the fill is faint.
     if (state.district) {
       var sel = districtFeature(state.district);
       if (sel) {
         var other = state.year === "2024" ? "2026" : "2024";
         var cp = counterpartOf(state.district, state.year);
-        // An unchanged district's counterpart is the same line, so the dashes
-        // would land exactly on the solid outline and read as a rendering
-        // fault rather than as "nothing moved".
+        // An unchanged district's counterpart is the same shape, so it would
+        // tint the district itself and read as a highlight rather than as
+        // "nothing moved".
         var cpf = (cp && !sel.__same) ? districtFeature(cp, other) : null;
         if (cpf) {
-          // Cased, like a printed map. A bare dark dash is legible over the
-          // grey field and invisible the moment it crosses the district it is
-          // being compared against -- which is most of its length, and the
-          // part that matters. The paper-colored casing under it means the
-          // line reads over any fill, and inverts correctly in dark mode.
+          var T = theme();
           ctx.save();
+          ctx.globalAlpha = 0.36;
+          ctx.fillStyle = T.counterpart;
+          ctx.beginPath(); path(cpf); ctx.fill();
+          ctx.globalAlpha = 1;
           ctx.lineJoin = "round";
-          ctx.lineWidth = 4.5 / transform.k;
-          ctx.strokeStyle = theme().paper;
-          ctx.beginPath(); path(cpf); ctx.stroke();
-          ctx.lineWidth = 1.9 / transform.k;
-          ctx.strokeStyle = theme().ink;
-          ctx.setLineDash([7 / transform.k, 5 / transform.k]);
+          ctx.lineWidth = 1.6 / transform.k;
+          ctx.strokeStyle = T.counterpart;
           ctx.beginPath(); path(cpf); ctx.stroke();
           ctx.restore();
         }
@@ -2646,7 +2656,7 @@
     return null;
   }
 
-  // Frame the district together with the counterpart drawn dashed over it:
+  // Frame the district together with the counterpart shaded over it:
   // the comparison is the reason both are on screen, so neither should be
   // cropped. Where there is no counterpart this is just the district.
   function districtFrame(cd, year, st) {
@@ -2702,7 +2712,7 @@
     } else if (state.district) {
       var other = state.year === "2024" ? "2026" : "2024";
       h.textContent = STATE_NAME[state.focus] + " district " + state.district +
-        " \u2014 the dashed outline is the " + other +
+        " \u2014 the shaded shape is the " + other +
         " district it most overlaps. Switch the map to follow it across" +
         (state.precincts ? " and watch which precincts come with it" : "") +
         "; back clears it.";
