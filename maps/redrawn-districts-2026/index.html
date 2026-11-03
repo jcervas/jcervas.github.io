@@ -175,6 +175,18 @@
   .seg a[aria-current="page"] { background: var(--accent); color: var(--paper); }
   .seg a:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
   .hint { font-size: 12.25px; color: var(--ink-soft); font-style: italic; }
+  /* The other map's outline can be switched off from beside the hint, which
+     is where the hint explains it. It is there only while a district is
+     singled out, the one time the outline is drawn. */
+  .hintbar { display: flex; align-items: center; gap: 0.4rem 0.9rem; flex-wrap: wrap; }
+  .hintbar .hint { flex: 1 1 20rem; }
+  .cmp { display: flex; align-items: center; gap: 0.45rem; flex: none; }
+  .cmp[hidden] { display: none; }
+  .cmp > span {
+    font-size: 10.5px; letter-spacing: 0.06em; font-weight: 600;
+    text-transform: uppercase; color: var(--ink-soft);
+  }
+  .cmp .seg button { font-size: 0.78rem; padding: 0.18rem 0.55rem; }
   select.var {
     font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--paper);
     border: 1px solid var(--rule); border-radius: 3px; padding: 0.3rem 0.4rem; max-width: 17rem;
@@ -554,6 +566,13 @@
 
 <div class="hintbar gutter">
   <span class="hint" id="hint">Pick a state, or click one on the map, to zoom in, or turn precincts on for the whole country.</span>
+  <div class="cmp" id="cmpWrap" hidden>
+    <span id="l-cmp">2024 outline</span>
+    <div class="seg" role="group" aria-labelledby="l-cmp">
+      <button id="cOff" aria-pressed="false">Off</button>
+      <button id="cOn" aria-pressed="true">On</button>
+    </div>
+  </div>
 </div>
 
 <div class="stage" id="stage">
@@ -619,7 +638,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-11-03b";
+  var BUILD = "2026-11-03c";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -701,6 +720,7 @@
     allLines: false,     // draw the lines of districts the redraw did not touch
     focus: null,         // state abbreviation when zoomed in
     district: null,      // district number when one is singled out
+    compare: true,       // outline the singled-out district's counterpart
     rating: null,        // Cook rating picked out of the legend, or null
     demoVar: "largest_race",
     demoCache: {},       // ST -> { byId: Map, cats: [] }
@@ -2125,15 +2145,15 @@
 
     // The district in focus is a see-through fill in its own color (above),
     // edged in a deeper shade of that color; its counterpart on the other map
-    // is a bare line in ink. Seeing both at once is the whole point of the
+    // is a dashed line in ink. Seeing both at once is the whole point of the
     // comparison: where they overlap is what carried across, and what sticks
     // out of either is what the redraw moved.
     //
-    // Two districts need two different marks, and the earlier ones were both
-    // lines or both fills. A dashed counterpart said where the boundary ran
-    // but not which side was inside; a translucent counterpart laid a second
-    // color over the rating and muddied it. Fill for the district you picked,
-    // line for the one it came from or went to: the rating stays the rating.
+    // Two districts need two different marks. The fill says which district
+    // you picked and keeps its rating color; the dash says the other shape
+    // is a reference, not a second selection. A translucent counterpart was
+    // tried and laid a second color over the rating. The outline can be
+    // switched off beside the hint when the two shapes crowd each other.
     if (state.district) {
       var sel = districtFeature(state.district);
       if (sel) {
@@ -2141,7 +2161,8 @@
         var cp = counterpartOf(state.district, state.year);
         // An unchanged district's counterpart is the same shape, so its line
         // would just retrace the district's own edge.
-        var cpf = (cp && !sel.__same) ? districtFeature(cp, other) : null;
+        var cpf = (cp && !sel.__same && state.compare)
+          ? districtFeature(cp, other) : null;
         var selCol = fillFor(sel.properties, sel);
         ctx.save();
         ctx.lineJoin = "round";
@@ -2150,6 +2171,8 @@
         ctx.beginPath(); path(sel); ctx.stroke();
         if (cpf) {
           ctx.lineWidth = 2.2 / transform.k;
+          ctx.setLineDash([6 / transform.k, 4 / transform.k]);
+          ctx.lineCap = "butt";
           ctx.strokeStyle = theme().ink;
           ctx.beginPath(); path(cpf); ctx.stroke();
         }
@@ -2649,7 +2672,8 @@
 
   // Frame the district together with the counterpart outlined over it:
   // the comparison is the reason both are on screen, so neither should be
-  // cropped. Where there is no counterpart this is just the district.
+  // cropped. Where there is no counterpart, or its outline is switched off,
+  // this is just the district.
   function districtFrame(cd, year, st) {
     var yr = year || state.year;
     var f = districtFeature(cd, yr, st);
@@ -2657,7 +2681,7 @@
     var other = yr === "2024" ? "2026" : "2024";
     var cp = counterpartOf(cd, yr, st);
     var cpf = cp ? districtFeature(cp, other, st) : null;
-    return cpf ? [f, cpf] : [f];
+    return (cpf && state.compare) ? [f, cpf] : [f];
   }
 
   function focusDistrict(cd) {
@@ -2695,6 +2719,11 @@
 
   function updateHint() {
     var h = document.getElementById("hint");
+    var cw = document.getElementById("cmpWrap");
+    var otherYr = state.year === "2024" ? "2026" : "2024";
+    var selF = state.district ? districtFeature(state.district) : null;
+    cw.hidden = !(selF && !selF.__same && counterpartOf(state.district, state.year));
+    document.getElementById("l-cmp").textContent = otherYr + " outline";
     if (state.rating && state.color === "cook") {
       var band = COOK_BANDS.filter(function (b) { return b.cat === state.rating; })[0];
       h.textContent = (band ? band.label : state.rating) + " only \u2014 the rest "
@@ -2703,8 +2732,10 @@
     } else if (state.district) {
       var other = state.year === "2024" ? "2026" : "2024";
       h.textContent = STATE_NAME[state.focus] + " district " + state.district +
-        " \u2014 the heavy outline is the " + other +
-        " district it most overlaps. Switch the map to follow it across" +
+        " \u2014 " + (state.compare && !cw.hidden
+          ? "the dashed outline is the " + other + " district it most overlaps. Switch"
+          : "switch") +
+        " the map to follow it across" +
         (state.precincts ? " and watch which precincts come with it" : "") +
         "; back clears it.";
     } else if (state.focus) {
@@ -3653,6 +3684,15 @@
     setPressed("kFill", "kSquares", on);
     refreshScales(); render(); showReadout(state.hover);
   }
+
+  function setCompare(on) {
+    if (state.compare === on) return;
+    state.compare = on;
+    setPressed("cOff", "cOn", on);
+    render(); updateHint();
+  }
+  document.getElementById("cOff").addEventListener("click", function () { setCompare(false); });
+  document.getElementById("cOn").addEventListener("click", function () { setCompare(true); });
 
   document.getElementById("pOff").addEventListener("click", function () { setPrecincts(false); });
   document.getElementById("pOn").addEventListener("click", function () { setPrecincts(true); });
