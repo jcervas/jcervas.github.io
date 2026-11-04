@@ -199,6 +199,13 @@
   select.var:disabled { opacity: 0.5; cursor: not-allowed; }
   .swatches { display: grid; grid-template-columns: repeat(2, auto); gap: 0.15rem 0.6rem; }
   .sw { display: flex; align-items: center; gap: 0.33rem; white-space: nowrap; }
+  button.sw {
+    font: inherit; color: inherit; background: none; border: 0; padding: 1px 3px;
+    margin: 0 -3px; border-radius: 3px; cursor: pointer; text-align: left;
+  }
+  button.sw:hover { background: var(--rule); }
+  button.sw.on { font-weight: 700; box-shadow: inset 0 0 0 1px var(--ink); }
+  button.sw.off { opacity: 0.45; }
   .sw i { width: 11px; height: 11px; border-radius: 4px; flex: none; }
   /* The flip legend's chips carry a hatch angle, and an 11px chip is barely
      two stripes wide -- too few to read a direction from. */
@@ -651,7 +658,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-11-04b";
+  var BUILD = "2026-11-04c";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -1183,10 +1190,37 @@
   // device resolution and mapped back down, or the stripes blur on a retina
   // screen; keyed by color and theme so a theme switch cannot serve stale
   // tiles.
-  var hatchCache = {};
+  var hatchCache = {}, tileCache = {};
   function hatchFor(color, dir) {
     var T = theme(), key = color + "|" + T.paper + "|" + dpr + "|" + dir;
     if (hatchCache[key]) return hatchCache[key];
+    var pat = ctx.createPattern(hatchTile(color, dir), "repeat");
+    if (pat && pat.setTransform && window.DOMMatrix) {
+      pat.setTransform(new DOMMatrix([1 / dpr, 0, 0, 1 / dpr, 0, 0]));
+    }
+    hatchCache[key] = pat;
+    return pat;
+  }
+
+  // The same stripes for a district drawn under the zoom transform. The
+  // pattern sits in map space, so the stripes travel with the map when it
+  // pans, but is scaled back by the zoom so they stay the width the squares
+  // use at any scale. Its own object, since the transform is reset per fill
+  // and the squares' pattern must keep the one it was made with.
+  var mapHatchCache = {};
+  function mapHatch(color, dir) {
+    var T = theme(), key = color + "|" + T.paper + "|" + dpr + "|" + dir;
+    var pat = mapHatchCache[key];
+    if (!pat) pat = mapHatchCache[key] = ctx.createPattern(hatchTile(color, dir), "repeat");
+    if (!pat || !pat.setTransform || !window.DOMMatrix || !ctx.getTransform) return color;
+    var k = ctx.getTransform().a || 1;
+    pat.setTransform(new DOMMatrix([1 / k, 0, 0, 1 / k, 0, 0]));
+    return pat;
+  }
+
+  function hatchTile(color, dir) {
+    var T = theme(), key = color + "|" + T.paper + "|" + dpr + "|" + dir;
+    if (tileCache[key]) return tileCache[key];
     var step = 6, tile = document.createElement("canvas");
     tile.width = tile.height = Math.max(1, Math.round(step * dpr));
     var t = tile.getContext("2d");
@@ -1210,12 +1244,8 @@
       }
     }
     t.stroke();
-    var pat = ctx.createPattern(tile, "repeat");
-    if (pat && pat.setTransform && window.DOMMatrix) {
-      pat.setTransform(new DOMMatrix([1 / dpr, 0, 0, 1 / dpr, 0, 0]));
-    }
-    hatchCache[key] = pat;
-    return pat;
+    tileCache[key] = tile;
+    return tile;
   }
 
   // Same exception as the Cook tab, and the same limit as Fill mode: this tab
@@ -1271,10 +1301,11 @@
                  fromShare: pre ? pre.share : null,
                  fromMember: pre ? pre.member : null,
                  side: r.winner || null };
-    // Unlike Changing hands, the whole country is in scope whatever the lines
-    // control says. That tab asks what the redraw did, which a seat with its
-    // old lines cannot answer; this one asks who won, and most of the seats
-    // that flipped kept their lines. The legend says how many were redrawn.
+    // "Redrawn" scopes this tab the way it scopes Changing hands: a seat whose
+    // lines survived drops to the backdrop. Its verdict is still worked out,
+    // because the readout reports it; "out" is what keeps it off the map and
+    // out of the tally.
+    base.out = !!(f.__same && !state.allLines);
     if (!r.called) {
       base.cat = base.fate = "uncalled";
     } else if (!held) {
@@ -1290,7 +1321,7 @@
 
   function resultInPlay(f) {
     var i = resultInfo(f);
-    return !!i && (i.fate === "lose" || i.fate === "uncalled");
+    return !!i && !i.out && (i.fate === "lose" || i.fate === "uncalled");
   }
 
   function resultFill(info) {
@@ -1306,8 +1337,30 @@
   function resultColor(f) {
     if (chicletMode() && !singledOut(f)) return null;   // the square carries it
     var i = resultInfo(f);
-    if (!i || i.fate === "unknown") return null;
+    if (!i || i.out || i.fate === "unknown") return null;
     return resultFill(i);
+  }
+
+  // Flipped seats are striped in Fill as they are on the squares, so a flip
+  // reads the same either way. Not where the fill has been greyed for a
+  // single-district view or a rating filter: there it is context.
+  function stripedFill(f) {
+    if (state.color !== "result" || !f || ratingFiltered(f)) return 0;
+    if (state.district && districtOf(f.properties) !== state.district) return 0;
+    var i = resultInfo(f);
+    return (i && !i.out && FLIP_HATCH[i.fate]) || 0;
+  }
+
+  // An uncalled race's ring is the party ahead in the count, dashed because
+  // that lead is not a result.
+  function leaderOf(r) {
+    var c = (r && r.cands) || [], best = null;
+    for (var i = 0; i < c.length; i++) {
+      if (c[i].votes == null) continue;
+      if (!best || c[i].votes > best.votes) best = c[i];
+      else if (c[i].votes === best.votes) best = { party: null, votes: c[i].votes };
+    }
+    return best && best.votes > 0 ? best.party : null;
   }
 
   function resultAsOf() {
@@ -1669,7 +1722,11 @@
       var dir = fi && FLIP_HATCH[fi.fate];
       // Outside the picked rating the square greys with everything else,
       // rather than leaving the map: where a tier sits is part of reading it.
-      var paint = ratingFiltered(d.f) ? desaturate(base)
+      // On the Cook tab a greyed square keeps its lightness, since where a
+      // tier sits is part of reading it. The other two have no scale to keep,
+      // and a dark flip greyed out outweighed the squares picked.
+      var paint = ratingFiltered(d.f)
+                  ? (state.color === "cook" ? desaturate(base) : T.chicfill)
                 : (dir && hatchFor(base, dir)) || base;
       roundRect(ctx, d.x - h, d.y - h, CHIC, CHIC, CHIC_R);
       ctx.fillStyle = paint;
@@ -1677,9 +1734,17 @@
       var on = state.hover === d.f;
       // In the flip mode the border carries the holding party, so it is drawn
       // heavier and in that party's color rather than as a hairline.
-      ctx.strokeStyle = on ? T.ink : fi ? flipRing(fi) : T.baseedge;
+      var dim = ratingFiltered(d.f);
+      if (dim && !on) fi = null;
+      var ahead = !on && fi && fi.fate === "uncalled" ? leaderOf(fi.result) : null;
+      ctx.strokeStyle = on ? T.ink
+        : fi && fi.fate === "uncalled"
+          ? (ahead && T.cook[FLIP_TONE[ahead]]) || T.baseedge
+        : fi ? flipRing(fi) : T.baseedge;
       ctx.lineWidth = (on || fi) ? 2.6 : 1;
+      if (!on && fi && fi.fate === "uncalled") ctx.setLineDash([3, 2]);
       ctx.stroke();
+      ctx.setLineDash([]);
     }
     ctx.restore();
     return live;
@@ -1751,10 +1816,19 @@
   // rather than a different map, and the tally underneath still counts all of
   // it. Only the Cook tab has these bands to click, and the pick is dropped
   // whenever the tab or the year changes.
+  //
+  // Changing hands and 2026 result pick the same way from their swatches,
+  // by the category each square is drawn for.
   function ratingFiltered(f) {
-    if (!state.rating || state.color !== "cook") return false;
-    var r = cookRating(f);
-    return !r || r.rating !== state.rating;
+    if (!state.rating) return false;
+    if (state.color === "cook") {
+      var r = cookRating(f);
+      return !r || r.rating !== state.rating;
+    }
+    var i = state.color === "result" ? resultInfo(f)
+          : state.color === "flip" ? flipInfo(f) : null;
+    if (state.color !== "result" && state.color !== "flip") return false;
+    return !i || i.out || i.cat !== state.rating;
   }
 
   // The fill carries the data and nothing else. It used to carry the redraw
@@ -2162,7 +2236,8 @@
         path(f);
         if (col) {
           ctx.globalAlpha = singledOut(f) ? SEL_ALPHA : 1;
-          ctx.fillStyle = col;
+          var sd = stripedFill(f);
+          ctx.fillStyle = sd ? mapHatch(col, sd) : col;
         } else {
           ctx.globalAlpha = 1;
           ctx.fillStyle = blank;  // no data: visibly absent, not zero
@@ -2542,9 +2617,9 @@
             + "seats Cook no longer rates for the party that holds them."
         : state.color === "result"
           ? (state.squares
-             ? "Squares mark seats won by the other party, and races "
-               + "not yet called."
-             : "Shaded by the party that won; flipped seats in full color.")
+             ? "Squares mark " + (state.allLines ? "" : "redrawn ")
+               + "seats won by the other party, and races not yet called."
+             : "Shaded by the party that won; flipped seats are striped.")
         : "Shaded by " + currentVar().label.toLowerCase() + ".";
       list.innerHTML = ""; flag.hidden = true;
       return;
@@ -2891,10 +2966,14 @@
     var selF = state.district ? districtFeature(state.district) : null;
     cw.hidden = !(selF && !selF.__same && counterpartOf(state.district, state.year));
     document.getElementById("l-cmp").textContent = otherYr + " outline";
-    if (state.rating && state.color === "cook") {
-      var band = COOK_BANDS.filter(function (b) { return b.cat === state.rating; })[0];
+    if (state.rating && (state.color === "cook" || state.color === "flip"
+                         || state.color === "result")) {
+      var bands = state.color === "cook" ? COOK_BANDS
+                : state.color === "flip" ? FLIP_BANDS : RESULT_BANDS;
+      var band = bands.filter(function (b) { return b.cat === state.rating; })[0];
       h.textContent = (band ? band.label : state.rating) + " only \u2014 the rest "
-        + "of the field is still there, in grey. Click the band again to "
+        + "of the field is still there, in grey. Click "
+        + (state.color === "cook" ? "the band" : "it") + " again to "
         + "bring it back.";
     } else if (state.district) {
       var other = state.year === "2024" ? "2026" : "2024";
@@ -3135,7 +3214,8 @@
       // darkened to #4a4a4a for the length of the zoom and settled back
       // afterwards. The tone belongs to the tab, not to the frame.
       var blankTone = ratingMode() ? T.chicfill : T.nodata;
-      out.push({ f: f, fill: fillFor(f.properties, f) || blankTone,
+      var fc = fillFor(f.properties, f), sd = fc && stripedFill(f);
+      out.push({ f: f, fill: sd ? hatchFor(fc, sd) : (fc || blankTone),
                  a0: mine ? a : (fadeIn ? 0 : a),
                  a1: mine ? a : (fadeIn ? a : 0) });
     }
@@ -3601,9 +3681,9 @@
             ? "repeating-linear-gradient(135deg," + col + " 0 3px,"
               + T.paper + " 3px 4.6px)"
             : col;
-          return '<span class="sw"><i style="background:' + chip +
+          return swatchButton(b.cat, '<i style="background:' + chip +
             ";border-color:" + T.cook[FLIP_TONE[b.held]] + '"></i>' +
-            b.label + ' <span class="muted">' + (tally[b.cat] || 0) + "</span></span>";
+            b.label + ' <span class="muted">' + (tally[b.cat] || 0) + "</span>");
         }).join("");
         var moving = (tally.loseD || 0) + (tally.loseR || 0);
         var open = (tally.tossD || 0) + (tally.tossR || 0);
@@ -3656,10 +3736,11 @@
             ? "repeating-linear-gradient(135deg," + col + " 0 3px,"
               + T2.paper + " 3px 4.6px)"
             : col;
-          var ring = b.held ? T2.cook[FLIP_TONE[b.held]] : T2.baseedge;
-          return '<span class="sw"><i style="background:' + chip +
-            ";border-color:" + ring + '"></i>' + b.label +
-            ' <span class="muted">' + (rt[b.cat] || 0) + "</span></span>";
+          var ring = b.held ? T2.cook[FLIP_TONE[b.held]] : T2.ink;
+          var dash = b.fate === "uncalled" && chicletMode() ? ";border-style:dashed" : "";
+          return swatchButton(b.cat, '<i style="background:' + chip +
+            ";border-color:" + ring + dash + '"></i>' + b.label +
+            ' <span class="muted">' + (rt[b.cat] || 0) + "</span>");
         }).join("");
         var flipped = (rt.loseD || 0) + (rt.loseR || 0);
         var here = state.focus ? " here" : "";
@@ -3668,14 +3749,25 @@
           : flipped + " seats" + here + " flipped";
         // Inside a state the redraw never touched, the redrawn count is
         // always zero and says nothing.
-        var rd = rt.redrawnFlips;
-        var which = !flipped || (state.focus && !greyUnredrawn()) ? ""
+        var rd = rt.redrawnFlips, rest = rt.allFlips - flipped;
+        if (!state.allLines) {
+          lead = flipped === 0 ? "No redrawn seat" + here + " has flipped"
+            : flipped === 1 ? "One redrawn seat" + here + " flipped"
+            : flipped + " redrawn seats" + here + " flipped";
+        }
+        var which = !state.allLines
+          ? (rest > 0 ? " (" + rest + " more with unchanged lines; pick All to show them)" : "")
+          : !flipped || (state.focus && !greyUnredrawn()) ? ""
           : rd === flipped ? (flipped === 1 ? ", a redrawn seat" : ", all of them redrawn")
           : rd === 0 ? ", none of them redrawn"
           : ", " + rd + " of them redrawn";
-        var open2 = rt.uncalled === 0 ? "Every race is called."
-          : rt.uncalled === 1 ? "One race is not yet called."
-          : rt.uncalled + " races are not yet called.";
+        var rr = state.allLines ? "" : "redrawn ";
+        var open2 = rt.uncalled === 0 ? "Every " + rr + "race is called."
+          : rt.uncalled === 1 ? "One " + rr + "race is not yet called."
+          : rt.uncalled + " " + rr + "races are not yet called.";
+        if (rt.uncalled && chicletMode()) {
+          open2 = open2.replace(/\.$/, "; the dashed outline is the party ahead.");
+        }
         note.textContent = lead + which + ". " + open2 + " "
           + (state.results.source || "Unofficial results") + ", " + resultAsOf()
           + ". Flipped means a different party from the 2024 seat it succeeds.";
@@ -3688,13 +3780,22 @@
     }
   }
 
+  function swatchButton(cat, inner) {
+    var on = state.rating === cat;
+    return '<button type="button" class="sw' + (on ? " on" : "") +
+      (state.rating && !on ? " off" : "") + '" data-cat="' + cat +
+      '" aria-pressed="' + on + '">' + inner + "</button>";
+  }
+
   function resultTally() {
-    var out = { hold: 0, uncalled: 0, unknown: 0, redrawnFlips: 0 };
+    var out = { hold: 0, uncalled: 0, unknown: 0, redrawnFlips: 0, allFlips: 0 };
     var ds = state.districts["2026"] || [];
     for (var i = 0; i < ds.length; i++) {
       if (state.focus && ds[i].properties.state !== state.focus) continue;
       var ri = resultInfo(ds[i]);
       if (!ri) continue;
+      if (ri.fate === "lose") out.allFlips++;
+      if (ri.out) continue;
       out[ri.cat] = (out[ri.cat] || 0) + 1;
       if (ri.fate === "lose" && !ds[i].__same) out.redrawnFlips++;
     }
@@ -3905,6 +4006,10 @@
   // buttons every time the tally changes, and clicking the band a second time
   // lets go -- the only way out that does not need a separate control.
   document.getElementById("cookBar").addEventListener("click", function (e) {
+    var el = e.target.closest("[data-cat]");
+    if (el) setRating(el.getAttribute("data-cat"));
+  });
+  document.getElementById("swatches").addEventListener("click", function (e) {
     var el = e.target.closest("[data-cat]");
     if (el) setRating(el.getAttribute("data-cat"));
   });
