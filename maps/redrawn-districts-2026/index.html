@@ -370,6 +370,13 @@
   .readout .r { color: var(--rep); font-weight: 600; }
   .readout .muted { color: var(--ink-soft); font-weight: 400; }
   .readout .idle { color: var(--ink-soft); font-style: italic; }
+  /* The result panel: verdict across the top, a candidate per row with share
+     and votes in their own columns, and the 2024 baseline underneath. */
+  .readout dl.res { grid-template-columns: 1fr auto auto; gap: 3px 8px; }
+  .readout dl.res dt { color: var(--ink); }
+  .readout dl.res .wide { grid-column: 1 / -1; text-align: left; }
+  .readout dl.res .verdict { font-weight: 600; margin-bottom: 3px; }
+  .readout dl.res .base { margin-top: 4px; padding-top: 5px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--ink-soft); }
   .flag {
     margin-top: 0.4rem; padding-top: 0.35rem; border-top: 1px solid var(--rule);
     font-size: 0.76rem; color: var(--ink-soft);
@@ -644,7 +651,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-11-04a";
+  var BUILD = "2026-11-04b";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -2470,11 +2477,58 @@
     return null;
   }
 
+  // The result tab's panel: the verdict first, then the count behind it, then
+  // the party that held the seat after 2024, which is what "flipped" is
+  // measured against. The 2024 vote, rating and population are left out --
+  // with a result in hand they are background.
+  function resultReadout(f, ri, list, flag) {
+    var r = ri.result;
+    var cls = function (pt) { return pt === "D" ? "d" : pt === "R" ? "r" : ""; };
+    var party = { D: "Democrats", R: "Republicans" };
+    var who = function (pt) {
+      return '<span class="' + cls(pt) + '">' + (party[pt] || pt) + "</span>";
+    };
+    var verdict;
+    if (!r.called) {
+      verdict = '<span class="muted">Not yet called' +
+        (r.pct_in != null ? " \u00b7 " + Math.round(r.pct_in) + "% counted" : "") + "</span>";
+    } else if (ri.fate === "lose") {
+      verdict = "Flipped to " + who(r.winner);
+    } else if (ri.fate === "hold") {
+      verdict = who(r.winner) + " held";
+    } else {
+      verdict = "Won by " + who(r.winner);
+    }
+    var html = '<dd class="wide verdict">' + verdict + "</dd>";
+    (r.cands || []).slice(0, 2).forEach(function (c) {
+      var name = c.name + ' <span class="' + cls(c.party) + '">(' + (c.party || "?") + ")</span>";
+      if (c.winner && r.called) name = "<strong>" + name + "</strong> \u2713";
+      html += "<dt>" + name + "</dt><dd>" +
+        (c.pct != null ? c.pct.toFixed(1) + "%" : "\u2014") + '</dd><dd class="muted">' +
+        (c.votes != null ? fmt(c.votes) : "") + "</dd>";
+    });
+    var aside = [];
+    if (ri.fromMember) aside.push(ri.fromMember);
+    // The predecessor's number only when it differs: for a renumbered seat
+    // it is the one thing that explains the verdict.
+    if (ri.from && ri.from !== f.properties.district) aside.push("old CD " + ri.from);
+    if (ri.heldNote) aside.push(ri.heldNote);
+    html += '<dd class="wide base">Seat after 2024: ' + (ri.held
+      ? '<span class="' + cls(ri.held) + '">' + FLIP_PARTY[ri.held] + "</span>" +
+        (aside.length ? " (" + aside.join("; ") + ")" : "")
+      : "not recorded") + "</dd>";
+    list.className = "res";
+    list.innerHTML = html;
+    flag.hidden = true;
+    flag.textContent = "";
+  }
+
   function showReadout(f) {
     var rt = document.getElementById("rTitle");
     var idle = document.getElementById("rIdle");
     var list = document.getElementById("rList");
     var flag = document.getElementById("rFlag");
+    list.className = "";
     if (!f) {
       document.getElementById("readout").setAttribute("data-idle", "");
       rt.textContent = state.focus ? STATE_NAME[state.focus] : "Hover the map";
@@ -2507,6 +2561,8 @@
       rows.push(["District 2026", p.district_2026 || "\u2014"]);
     } else {
       rt.textContent = (STATE_NAME[p.state] || p.state) + " \u2014 District " + p.district;
+      var ri = state.color === "result" ? resultInfo(f) : null;
+      if (ri) { resultReadout(f, ri, list, flag); return; }
       rows.push(["Map", p.map]);
       if (p.map === "2024" && state.incumbents) {
         var inc = state.incumbents[p.state + "-" + p.district];
@@ -2545,25 +2601,8 @@
         '<span class="' + ccls + '">' + ck.rating + "</span>" +
         (aside.length ? ' <span class="muted">(' + aside.join("; ") + ")</span>" : "")]);
     }
-    var ri = state.color === "result" ? resultInfo(f) : null;
-    if (ri) {
-      var rr = ri.result, wcls = rr.winner === "D" ? "d" : rr.winner === "R" ? "r" : "";
-      rows.push(["2026 result", rr.called
-        ? '<span class="' + wcls + '">' + (rr.winner_name || rr.winner) +
-          " (" + rr.winner + ")</span>" +
-          (ri.fate === "lose" ? " <strong>flipped</strong>"
-           : ri.fate === "hold" ? ' <span class="muted">held</span>' : "")
-        : '<span class="muted">not yet called' +
-          (rr.pct_in != null ? ", " + rr.pct_in + "% counted" : "") + "</span>"]);
-      (rr.cands || []).slice(0, 2).forEach(function (c) {
-        var ccl = c.party === "D" ? "d" : c.party === "R" ? "r" : "";
-        rows.push([c.name + ' <span class="' + ccl + '">(' + (c.party || "?") + ")</span>",
-          (c.pct != null ? c.pct.toFixed(1) + "%" : "\u2014") +
-          (c.votes != null ? ' <span class="muted">' + fmt(c.votes) + "</span>" : "")]);
-      });
-    }
-    if (state.color === "flip" || ri) {
-      var fi = ri || flipInfo(f);
+    if (state.color === "flip") {
+      var fi = flipInfo(f);
       if (fi) {
         // Whose seat it is going in, and the seat that makes it theirs. The
         // rating is one row up and the square's fill and ring carry both, so
@@ -2575,7 +2614,7 @@
         if (fi.fromMember) held.push(fi.fromMember);
         if (fi.open) held.push("open seat");
         if (fi.heldNote) held.push(fi.heldNote);
-        rows.push([ri ? "Party in 2024" : "Incumbent party", fi.held
+        rows.push(["Incumbent party", fi.held
           ? '<span class="' + fcls + '">' + FLIP_PARTY[fi.held] + "</span>" +
             (held.length ? ' <span class="muted">(' + held.join("; ") + ")</span>" : "")
           : '<span class="muted">not recorded</span>']);
@@ -2586,9 +2625,12 @@
         }
       }
     }
-    rows.push(["Citizen voting-age pop.", fmt(cvapOf(f))]);
     var s = demShare(p);
-    if (s !== null) {
+    if (state.color === "result" && !p.precinct_id) {
+      // The tab is about 2026; on the 2024 map it only says who sat there
+      // and where the seat went.
+    } else if (s !== null) {
+      rows.push(["Citizen voting-age pop.", fmt(cvapOf(f))]);
       // Counts for the nine states, which are built from blocks; elsewhere
       // the published district figure is a share and there are no totals to
       // print. Two empty rows read as a data fault rather than as a source
@@ -2601,6 +2643,7 @@
       rows.push(["2024 margin",
         '<span class="' + mg.cls + '">' + mg.text + "</span>"]);
     } else {
+      rows.push(["Citizen voting-age pop.", fmt(cvapOf(f))]);
       rows.push(["2024 vote", "no data"]);
     }
     if (state.color === "demo") {
