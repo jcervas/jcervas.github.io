@@ -658,7 +658,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-11-04c";
+  var BUILD = "2026-11-04d";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -1268,14 +1268,25 @@
   var RESULT_BANDS = [
     { cat: "loseR", label: "R seat \u2192 D", held: "R", side: "D", fate: "lose" },
     { cat: "loseD", label: "D seat \u2192 R", held: "D", side: "R", fate: "lose" },
-    { cat: "uncalled", label: "Not yet called", fate: "uncalled" }
+    // Uncalled races, by whose seat it was and who is ahead: the first pair
+    // are the leads that would flip it, the second the leads that would hold.
+    { cat: "leadRD", label: "R seat, D ahead", held: "R", lead: "D", fate: "uncalled" },
+    { cat: "leadDR", label: "D seat, R ahead", held: "D", lead: "R", fate: "uncalled" },
+    { cat: "leadDD", label: "D seat, D ahead", held: "D", lead: "D", fate: "uncalled" },
+    { cat: "leadRR", label: "R seat, R ahead", held: "R", lead: "R", fate: "uncalled" },
+    // No count yet, or no 2024 party to judge it by. Listed only when present.
+    { cat: "pending", label: "Not yet called", fate: "uncalled" }
   ];
 
   var RESULT_PHRASE = {
     loseD: "Democratic seat, won by a Republican",
     loseR: "Republican seat, won by a Democrat",
     hold: "Held by the party that won it in 2024",
-    uncalled: "Not yet called",
+    leadRD: "Republican seat, Democrat ahead",
+    leadDR: "Democratic seat, Republican ahead",
+    leadDD: "Democratic seat, Democrat ahead",
+    leadRR: "Republican seat, Republican ahead",
+    pending: "Not yet called",
     unknown: "No 2024 party to judge against"
   };
 
@@ -1307,7 +1318,9 @@
     // out of the tally.
     base.out = !!(f.__same && !state.allLines);
     if (!r.called) {
-      base.cat = base.fate = "uncalled";
+      base.fate = "uncalled";
+      base.lead = leaderOf(r);
+      base.cat = held && base.lead ? "lead" + held + base.lead : "pending";
     } else if (!held) {
       base.cat = base.fate = "unknown";
     } else if (r.winner !== held) {
@@ -2567,6 +2580,11 @@
     if (!r.called) {
       verdict = '<span class="muted">Not yet called' +
         (r.pct_in != null ? " \u00b7 " + Math.round(r.pct_in) + "% counted" : "") + "</span>";
+      if (ri.lead) {
+        verdict += "<br>" + who(ri.lead) + " ahead" +
+          (ri.held && ri.lead !== ri.held ? ", <strong>would flip</strong>"
+           : ri.held ? ", would hold" : "");
+      }
     } else if (ri.fate === "lose") {
       verdict = "Flipped to " + who(r.winner);
     } else if (ri.fate === "hold") {
@@ -3730,14 +3748,20 @@
       } else {
         var rt = resultTally(), T2 = theme();
         sw.hidden = false;
-        sw.innerHTML = RESULT_BANDS.map(function (b) {
+        sw.innerHTML = RESULT_BANDS.filter(function (b) {
+          return b.cat !== "pending" || rt.pending;
+        }).map(function (b) {
           var col = b.fate === "uncalled" ? T2.uncalled : T2.cook[FLIP_TONE[b.side]];
           var chip = b.fate === "lose"
             ? "repeating-linear-gradient(135deg," + col + " 0 3px,"
               + T2.paper + " 3px 4.6px)"
             : col;
-          var ring = b.held ? T2.cook[FLIP_TONE[b.held]] : T2.ink;
-          var dash = b.fate === "uncalled" && chicletMode() ? ";border-style:dashed" : "";
+          // Same rings the squares carry: the loser's party for a flip, the
+          // leader's, dashed, for a race still being counted.
+          var ring = b.fate === "uncalled"
+            ? (b.lead ? T2.cook[FLIP_TONE[b.lead]] : T2.ink)
+            : T2.cook[FLIP_TONE[b.held]];
+          var dash = b.fate === "uncalled" ? ";border-style:dashed" : "";
           return swatchButton(b.cat, '<i style="background:' + chip +
             ";border-color:" + ring + dash + '"></i>' + b.label +
             ' <span class="muted">' + (rt[b.cat] || 0) + "</span>");
@@ -3765,8 +3789,17 @@
         var open2 = rt.uncalled === 0 ? "Every " + rr + "race is called."
           : rt.uncalled === 1 ? "One " + rr + "race is not yet called."
           : rt.uncalled + " " + rr + "races are not yet called.";
-        if (rt.uncalled && chicletMode()) {
-          open2 = open2.replace(/\.$/, "; the dashed outline is the party ahead.");
+        var dLead = (rt.leadRD || 0) + (rt.leadDD || 0);
+        var rLead = (rt.leadDR || 0) + (rt.leadRR || 0);
+        var could = (rt.leadRD || 0) + (rt.leadDR || 0);
+        if (rt.uncalled) {
+          open2 = open2.replace(/\.$/, ": Democrats lead " + dLead +
+            ", Republicans " + rLead + ". " +
+            (could === 0 ? "No lead would flip a seat."
+             : (could === 1 ? "One lead" : could + " leads") + " would flip the seat (" +
+               [rt.leadRD ? rt.leadRD + " to D" : "", rt.leadDR ? rt.leadDR + " to R" : ""]
+                 .filter(Boolean).join(", ") + ")."));
+          if (chicletMode()) open2 += " The dashed outline is the party ahead.";
         }
         note.textContent = lead + which + ". " + open2 + " "
           + (state.results.source || "Unofficial results") + ", " + resultAsOf()
@@ -3797,6 +3830,7 @@
       if (ri.fate === "lose") out.allFlips++;
       if (ri.out) continue;
       out[ri.cat] = (out[ri.cat] || 0) + 1;
+      if (ri.fate === "uncalled") out.uncalled++;
       if (ri.fate === "lose" && !ds[i].__same) out.redrawnFlips++;
     }
     return out;
