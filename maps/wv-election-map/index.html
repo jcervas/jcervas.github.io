@@ -395,7 +395,14 @@ select.pick { font: inherit; font-weight: 550; font-size: 12.5px; padding: 6px 2
   };
   const titleName = s => s.toLowerCase().replace(/\b([a-z])/g, m => m.toUpperCase()).replace(/\bMc([a-z])/g, (m, c) => 'Mc' + c.toUpperCase()).replace(/\b(Ii|Iii|Iv)\b/g, m => m.toUpperCase());
   const LPARTY = { REP: 'R', DEM: 'D', LBN: 'L', LIB: 'L', MTN: 'M', CST: 'C', IND: 'I', NPA: 'I' };
-  async function getJSON(u) { const r = await fetch(u); if (!r.ok) throw new Error(`${r.status} for ${u.replace(LIVE.base, 'ENR')}`); return r.json(); }
+  // Clarity drops some requests on a busy night, so each one gets three tries before it counts as failed
+  async function enr(u, opt) {
+    for (let k = 0; ; k++) {
+      try { const r = await fetch(u, opt); if (r.ok) return r; throw new Error(`${r.status} for ${u.replace(LIVE.base, 'ENR')}`); }
+      catch (err) { if (k >= 2) throw err; await new Promise(res => setTimeout(res, 1500 * (k + 1))); }
+    }
+  }
+  async function getJSON(u) { return (await enr(u)).json(); }
   // One county: its contests for the live races and each precinct's votes in them
   async function loadCounty(name, ceid, cver) {
     const cb = `${LIVE.base}/${name}/${ceid}/${cver}`;
@@ -463,7 +470,7 @@ select.pick { font: inherit; font-weight: 550; font-size: 12.5px; padding: 6px 2
     if (!liveOn || LF.busy || document.hidden) return;
     LF.busy = true;
     try {
-      const v = (await (await fetch(`${LIVE.base}/${LF.eid}/current_ver.txt?t=${Date.now()}`, { cache: 'no-store' })).text()).trim();
+      const v = (await (await enr(`${LIVE.base}/${LF.eid}/current_ver.txt?t=${Date.now()}`, { cache: 'no-store' })).text()).trim();
       if (!/^\d+$/.test(v)) throw new Error('the results feed is not up yet');
       const es = await getJSON(`${LIVE.base}/${LF.eid}/${v}/json/en/electionsettings.json`);
       const rows = (es.settings.electiondetails.participatingcounties || []).map(x => x.split('|'));
@@ -480,6 +487,7 @@ select.pick { font: inherit; font-weight: 550; font-size: 12.5px; padding: 6px 2
       LF.err = err.message; LF.at = new Date();
     }
     LF.busy = false;
+    if (LF.err) setTimeout(pollLive, 15000);           // after a failure, try again sooner than the next minute
     for (const k of [...distCache.keys()]) if (/^(uss26|hse26|su26|su26u|hod26):/.test(k)) distCache.delete(k);
     if (cur().live || (baseE() && baseE().live)) renderAll(); else renderControls();
   }
@@ -807,7 +815,7 @@ select.pick { font: inherit; font-weight: 550; font-size: 12.5px; padding: 6px 2
     if (e.live && !swingOn()) {
       const f = e.feed, t = f.at ? f.at.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : '', rp = e.rep.all;
       s = `<span class="livedot"></span><b>${f.test ? 'Test feed' : 'Live'} · unofficial</b> · ${esc(e.label)}`;
-      if (f.err) s += `<br><span style="color:var(--muted)">Results could not load (${esc(f.err)}). Trying again every minute${location.hostname.endsWith('claude.ai') || location.protocol === 'blob:' ? '; live results load on jonathancervas.com, not in this preview' : ''}.</span>`;
+      if (f.err) s += `<br><span style="color:var(--muted)">Results could not load (${esc(f.err)}). Trying again in a few seconds${location.hostname.endsWith('claude.ai') || location.protocol === 'blob:' ? '; live results load on jonathancervas.com, not in this preview' : ''}.</span>`;
       else if (rp) s += ` · ${fmt(rp.pr)} of ${fmt(rp.tp)} precincts reporting · checked ${t}${f.test ? `<br><span style="color:var(--muted)">Showing ${esc(f.label || f.name || 'a test feed')}.</span>` : ''}`;
       else s += ' · loading…';
       el.innerHTML = s; return;
