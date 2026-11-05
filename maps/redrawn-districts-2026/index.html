@@ -659,7 +659,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-11-04g";
+  var BUILD = "2026-11-04h";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -1275,8 +1275,10 @@
     { cat: "leadDR", label: "D seat, R ahead", held: "D", lead: "R", fate: "uncalled" },
     { cat: "leadDD", label: "D seat, D ahead", held: "D", lead: "D", fate: "uncalled" },
     { cat: "leadRR", label: "R seat, R ahead", held: "R", lead: "R", fate: "uncalled" },
-    // No count yet, or no 2024 party to judge it by. Listed only when present.
-    { cat: "pending", label: "Not yet called", fate: "uncalled" }
+    // No count yet, or no 2024 party to judge it by, and races sent to a
+    // runoff. Listed only when present.
+    { cat: "pending", label: "Not yet called", fate: "uncalled" },
+    { cat: "runoff", label: "Runoff", fate: "uncalled" }
   ];
 
   var RESULT_PHRASE = {
@@ -1288,6 +1290,7 @@
     leadDD: "Democratic seat, Democrat ahead",
     leadRR: "Republican seat, Republican ahead",
     pending: "Not yet called",
+    runoff: "Headed to a runoff",
     unknown: "No 2024 party to judge against"
   };
 
@@ -1320,8 +1323,11 @@
     base.out = !!(f.__same && !state.allLines);
     if (!r.called) {
       base.fate = "uncalled";
-      base.lead = leaderOf(r);
-      base.cat = held && base.lead ? "lead" + held + base.lead : "pending";
+      // A runoff's first-round leader, often on under a fifth of the vote,
+      // says little about who takes the seat, so it is not read as a lead.
+      base.lead = r.runoff ? null : leaderOf(r);
+      base.cat = r.runoff ? "runoff"
+               : held && base.lead ? "lead" + held + base.lead : "pending";
     } else if (!held) {
       base.cat = base.fate = "unknown";
     } else if (r.winner !== held) {
@@ -1775,7 +1781,7 @@
       // heavier and in that party's color rather than as a hairline.
       var dim = ratingFiltered(d.f);
       if (dim && !on) fi = null;
-      var ahead = fi && fi.fate === "uncalled" ? leaderOf(fi.result) : null;
+      var ahead = fi && fi.fate === "uncalled" ? fi.lead : null;
       ctx.strokeStyle = on && !(dim && fi) ? T.ink
         : fi && fi.fate === "uncalled"
           ? (ahead && T.cook[FLIP_TONE[ahead]]) || T.baseedge
@@ -2603,7 +2609,9 @@
       return '<span class="' + cls(pt) + '">' + (party[pt] || pt) + "</span>";
     };
     var verdict;
-    if (!r.called) {
+    if (r.runoff) {
+      verdict = '<span class="muted">Headed to a runoff</span>';
+    } else if (!r.called) {
       verdict = '<span class="muted">Not yet called' +
         (r.pct_in != null ? " \u00b7 " + Math.round(r.pct_in) + "% counted" : "") + "</span>";
       if (ri.lead) {
@@ -3775,7 +3783,7 @@
         var rt = resultTally(), T2 = theme();
         sw.hidden = false;
         sw.innerHTML = RESULT_BANDS.filter(function (b) {
-          return b.cat !== "pending" || rt.pending;
+          return (b.cat !== "pending" && b.cat !== "runoff") || rt[b.cat];
         }).map(function (b) {
           var col = b.fate === "uncalled" ? T2.uncalled : T2.cook[FLIP_TONE[b.side]];
           var chip = b.fate === "lose"
@@ -3825,6 +3833,9 @@
              : (could === 1 ? "One lead" : could + " leads") + " would flip the seat (" +
                [rt.leadRD ? rt.leadRD + " to D" : "", rt.leadDR ? rt.leadDR + " to R" : ""]
                  .filter(Boolean).join(", ") + ")."));
+          if (rt.runoff) {
+            open2 += " " + (rt.runoff === 1 ? "One goes to a runoff." : rt.runoff + " go to runoffs.");
+          }
           if (chicletMode()) open2 += " The dashed outline is the party ahead.";
         }
         note.textContent = lead + which + ". " + open2 + " "
