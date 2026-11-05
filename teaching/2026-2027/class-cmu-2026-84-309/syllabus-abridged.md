@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### Updated: October 25, 2026
+#### Updated: November 05, 2026
 
 > Professor **Jonathan Cervas**  
 > Office: Posner Hall 374  
@@ -59,8 +59,10 @@ The course grade will be a weighted average of the following components:
 | Op-ed peer review         | September 25                         |
 | Op-ed final draft         | September 28                         |
 | Book Review (slides)      | November 23                          |
+| Policy brief draft        | November 30                          |
 | Group Project             | December 1/3                         |
 | Group Project reflection  | December 4                           |
+| Policy brief final        | December 10                          |
 
 ## The Essentials
 

@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### DRAFT Updated: October 25, 2026
+#### DRAFT Updated: November 05, 2026
 
 > Professor **Jonathan Cervas**  
 > Office: Posner Hall 374  
@@ -45,7 +45,7 @@ The rest of the semester belongs to you. Working in teams of four or
 five, you will choose a topic, assign your classmates the readings, set
 the questions, and run the discussion yourselves. Alongside that you
 will write an op-ed for a general audience, review a book and present it
-to the class, and build a policy brief with a small team.
+to the class, and build a policy brief with a partner.
 
 Running through all of it is a question about justice: how political
 division creates and entrenches inequality — who gets heard, who gets
@@ -102,8 +102,10 @@ The course grade will be a weighted average of the following components:
 | Op-ed peer review         | September 25                         |
 | Op-ed final draft         | September 28                         |
 | Book Review (slides)      | November 23                          |
+| Policy brief draft        | November 30                          |
 | Group Project             | December 1/3                         |
 | Group Project reflection  | December 4                           |
+| Policy brief final        | December 10                          |
 
 ## Assignment Details
 
@@ -136,8 +138,10 @@ bites.](readme_files/figure-gfm/attendance-curve-1.png)
   whatever exists is what they get. The subject gets settled first, on
   the discussion board on **September 15 and 17**, where the class helps
   you narrow it before you write.
-- **Group Policy Brief** (17%). A written brief (10%), a presentation in
-  finals week (5%), and an individual reflection (2%).
+- **Group Policy Brief** (17%). In pairs: a written brief (10%) — draft
+  due **November 30**, final **December 10** — testimony before a mock
+  legislative committee on **December 1 and 3** (5%), and an individual
+  reflection (2%).
 
 ## Grading
 
@@ -568,7 +572,19 @@ that session’s page in Canvas.*
 
 #### Tue, Dec 1 — Group Policy Brief
 
+- **DUE Mon, Nov 30, 11:59 p.m.** — the **policy brief draft**,
+  complete, every section present.
+- Committee hearings, panels 1 and 2. Each pair testifies for five
+  minutes; the committee — everyone else — then questions the panel for
+  fifteen.
+
 #### Thu, Dec 3 — Group Policy Brief
+
+- Committee hearings, panels 3 and 4.
+- **DUE Fri, Dec 4, 11:59 p.m.** — your **policy brief reflection**,
+  submitted individually.
+- **DUE Thu, Dec 10, 11:59 p.m.** — the **policy brief final**, revised
+  after the hearing.
 
 ## Privacy and Respect Statement
 
