@@ -206,6 +206,7 @@
   button.sw:hover { background: var(--rule); }
   button.sw.on { font-weight: 700; box-shadow: inset 0 0 0 1px var(--ink); }
   button.sw.off { opacity: 0.45; }
+  button.sw.clear { grid-column: 1 / -1; justify-self: start; color: var(--ink-soft); text-decoration: underline; }
   .sw i { width: 11px; height: 11px; border-radius: 4px; flex: none; }
   /* The flip legend's chips carry a hatch angle, and an 11px chip is barely
      two stripes wide -- too few to read a direction from. */
@@ -658,7 +659,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-11-04f";
+  var BUILD = "2026-11-04g";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -1762,24 +1763,25 @@
       // On the Cook tab a greyed square keeps its lightness, since where a
       // tier sits is part of reading it. The other two have no scale to keep,
       // and a dark flip greyed out outweighed the squares picked.
-      var paint = ratingFiltered(d.f)
+      // Except the one being pointed at, which shows what the panel says.
+      var on = state.hover === d.f;
+      var paint = ratingFiltered(d.f) && !on
                   ? (state.color === "cook" ? desaturate(base) : T.chicfill)
                 : (dir && hatchFor(base, dir)) || base;
       roundRect(ctx, d.x - h, d.y - h, CHIC, CHIC, CHIC_R);
       ctx.fillStyle = paint;
       ctx.fill();
-      var on = state.hover === d.f;
       // In the flip mode the border carries the holding party, so it is drawn
       // heavier and in that party's color rather than as a hairline.
       var dim = ratingFiltered(d.f);
       if (dim && !on) fi = null;
-      var ahead = !on && fi && fi.fate === "uncalled" ? leaderOf(fi.result) : null;
-      ctx.strokeStyle = on ? T.ink
+      var ahead = fi && fi.fate === "uncalled" ? leaderOf(fi.result) : null;
+      ctx.strokeStyle = on && !(dim && fi) ? T.ink
         : fi && fi.fate === "uncalled"
           ? (ahead && T.cook[FLIP_TONE[ahead]]) || T.baseedge
         : fi ? flipRing(fi) : T.baseedge;
       ctx.lineWidth = (on || fi) ? 2.6 : 1;
-      if (!on && fi && fi.fate === "uncalled") ctx.setLineDash([3, 2]);
+      if (fi && fi.fate === "uncalled" && !(on && !dim)) ctx.setLineDash([3, 2]);
       ctx.stroke();
       ctx.setLineDash([]);
     }
@@ -3726,7 +3728,7 @@
           return swatchButton(b.cat, '<i style="background:' + chip +
             ";border-color:" + T.cook[FLIP_TONE[b.held]] + '"></i>' +
             b.label + ' <span class="muted">' + (tally[b.cat] || 0) + "</span>");
-        }).join("");
+        }).join("") + clearFilterButton();
         var moving = (tally.loseD || 0) + (tally.loseR || 0);
         var open = (tally.tossD || 0) + (tally.tossR || 0);
         // Inside a single state these counts are regularly 0 or 1, so the
@@ -3789,7 +3791,7 @@
           return swatchButton(b.cat, '<i style="background:' + chip +
             ";border-color:" + ring + dash + '"></i>' + b.label +
             ' <span class="muted">' + (rt[b.cat] || 0) + "</span>");
-        }).join("");
+        }).join("") + clearFilterButton();
         var flipped = (rt.loseD || 0) + (rt.loseR || 0);
         var here = state.focus ? " here" : "";
         var lead = flipped === 0 ? "No seat" + here + " has flipped"
@@ -3842,6 +3844,14 @@
     return '<button type="button" class="sw' + (on ? " on" : "") +
       (state.rating && !on ? " off" : "") + '" data-cat="' + cat +
       '" aria-pressed="' + on + '">' + inner + "</button>";
+  }
+
+  // A filter outlives a zoom into a state, where the picked band can have no
+  // seats at all and every square goes blank; this says a filter is why.
+  function clearFilterButton() {
+    if (!state.rating) return "";
+    return '<button type="button" class="sw clear" data-cat="' + state.rating +
+      '">\u00d7 Show all</button>';
   }
 
   function resultTally() {
