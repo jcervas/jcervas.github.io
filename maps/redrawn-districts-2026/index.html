@@ -659,7 +659,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-11-04h";
+  var BUILD = "2026-11-04i";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -1371,6 +1371,17 @@
     return (i && !i.out && FLIP_HATCH[i.fate]) || 0;
   }
 
+  // An uncalled race the party already holding the seat leads: nothing is
+  // expected to change there, so it is drawn faint and the races that could
+  // flip carry the view. Not when its own band is picked out of the legend.
+  var QUIET_ALPHA = 0.25;
+  function resultQuiet(f, info) {
+    if (state.color !== "result" || state.hover === f) return false;
+    var i = info || resultInfo(f);
+    return !!i && !i.out && i.fate === "uncalled" && !!i.lead &&
+      i.lead === i.held && state.rating !== i.cat;
+  }
+
   // An uncalled race's ring is the party ahead in the count, dashed because
   // that lead is not a result.
   function leaderOf(r) {
@@ -1774,6 +1785,7 @@
       var paint = ratingFiltered(d.f) && !on
                   ? (state.color === "cook" ? desaturate(base) : T.chicfill)
                 : (dir && hatchFor(base, dir)) || base;
+      ctx.globalAlpha = resultQuiet(d.f, fi) ? QUIET_ALPHA : 1;
       roundRect(ctx, d.x - h, d.y - h, CHIC, CHIC, CHIC_R);
       ctx.fillStyle = paint;
       ctx.fill();
@@ -1790,6 +1802,7 @@
       if (fi && fi.fate === "uncalled" && !(on && !dim)) ctx.setLineDash([3, 2]);
       ctx.stroke();
       ctx.setLineDash([]);
+      ctx.globalAlpha = 1;
     }
     ctx.restore();
     return live;
@@ -2280,7 +2293,8 @@
         ctx.beginPath();
         path(f);
         if (col) {
-          ctx.globalAlpha = singledOut(f) ? SEL_ALPHA : 1;
+          ctx.globalAlpha = singledOut(f) ? SEL_ALPHA
+                          : resultQuiet(f) && !ratingFiltered(f) ? QUIET_ALPHA : 1;
           var sd = stripedFill(f);
           ctx.fillStyle = sd ? mapHatch(col, sd) : col;
         } else {
@@ -3128,7 +3142,9 @@
   // carries its count but no winner.
   function loadResults() {
     if (state.results) return Promise.resolve();
-    return fetch(dataUrl("results.json"))
+    // Results are refreshed between builds, so they carry their own stamp:
+    // a new one every ten minutes, Pages' own cache lifetime.
+    return fetch(dataUrl("results.json") + "&t=" + Math.floor(Date.now() / 6e5))
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (j) { state.results = j; })
       .catch(function () { state.results = null; });
@@ -3796,6 +3812,7 @@
             ? (b.lead ? T2.cook[FLIP_TONE[b.lead]] : T2.ink)
             : T2.cook[FLIP_TONE[b.held]];
           var dash = b.fate === "uncalled" ? ";border-style:dashed" : "";
+          if (b.lead && b.lead === b.held && state.rating !== b.cat) dash += ";opacity:" + QUIET_ALPHA;
           return swatchButton(b.cat, '<i style="background:' + chip +
             ";border-color:" + ring + dash + '"></i>' + b.label +
             ' <span class="muted">' + (rt[b.cat] || 0) + "</span>");
