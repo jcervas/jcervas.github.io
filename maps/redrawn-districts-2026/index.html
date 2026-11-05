@@ -658,7 +658,7 @@
   // defences: every data file is requested with the build tag, so code and
   // data can never come from different builds, and the build date is printed
   // in the footer so "is this current?" is answerable at a glance.
-  var BUILD = "2026-11-04e";
+  var BUILD = "2026-11-04f";
   function dataUrl(name) { return "data/" + name + "?v=" + BUILD; }
   "use strict";
 
@@ -1621,10 +1621,13 @@
   };
   var LABEL_FONT = '600 12.5px "Libre Franklin","Helvetica Neue",Helvetica,Arial,sans-serif';
 
-  // Anchored on each state's centroid, then pushed clear of the squares and of
-  // each other along whichever axis they are least overlapped on, so a label
-  // moves as little as it has to. Boxes rather than circles: a label is much
-  // wider than it is tall and a circular test would shove it far too far.
+  // Anchored on each state's centroid, then moved to the nearest spot clear of
+  // the squares and of the labels already placed. A search over candidate
+  // spots rather than a relaxation: pushing a label out from between two
+  // squares sent it back and forth and left it wherever the last pass did,
+  // often on a square, and somewhere different on every redraw. The same
+  // squares now always give the same spot. Boxes rather than circles: a label
+  // is much wider than it is tall.
   // The nine the redraw touched, read off the districts rather than listed:
   // a state is in if any of its districts did not keep its lines.
   function redrawnStates() {
@@ -1662,35 +1665,56 @@
       });
     });
 
-    var ch = CHIC / 2 + 3;
-    for (var it = 0; it < 60; it++) {
-      for (var a = 0; a < labels.length; a++) {
-        var L = labels[a];
-        for (var b = 0; b < live.length; b++) {
-          if (live[b].pn === L.pn) separate(L, live[b], ch, ch, 1);
+    // Candidate offsets, nearest first, out to a radius that keeps a label
+    // inside or beside its own state at national zoom.
+    if (!LABEL_SPOTS) {
+      LABEL_SPOTS = [];
+      for (var gx = -16; gx <= 16; gx++) {
+        for (var gy = -10; gy <= 10; gy++) {
+          var ox = gx * 4, oy = gy * 4;
+          LABEL_SPOTS.push([ox, oy, ox * ox + oy * oy * 2.5]);
         }
-        for (var d = 0; d < labels.length; d++) {
-          if (d !== a && labels[d].pn === L.pn) {
-            separate(L, labels[d], labels[d].hw, labels[d].hh, 0.5);
-          }
-        }
-        L.x = Math.min(Math.max(L.x, L.pn.x + L.hw + 4), L.pn.x + L.pn.w - L.hw - 4);
-        L.y = Math.min(Math.max(L.y, L.pn.y + L.hh + 4), L.pn.y + L.pn.h - L.hh - 4);
       }
+      LABEL_SPOTS.sort(function (p, q) { return p[2] - q[2]; });
     }
+    var ch = CHIC / 2 + 2, placed = [];
+    labels.sort(function (p, q) { return p.st < q.st ? -1 : 1; });
+    labels.forEach(function (L) {
+      var best = null, bestHit = Infinity;
+      for (var k = 0; k < LABEL_SPOTS.length; k++) {
+        var x = L.x + LABEL_SPOTS[k][0], y = L.y + LABEL_SPOTS[k][1];
+        x = Math.min(Math.max(x, L.pn.x + L.hw + 4), L.pn.x + L.pn.w - L.hw - 4);
+        y = Math.min(Math.max(y, L.pn.y + L.hh + 4), L.pn.y + L.pn.h - L.hh - 4);
+        var hit = 0;
+        for (var b = 0; b < live.length; b++) {
+          if (samePanel(live[b].pn, L.pn)) hit += overlap(x, y, L.hw, L.hh, live[b].x, live[b].y, ch, ch);
+        }
+        for (var d = 0; d < placed.length; d++) {
+          var P = placed[d];
+          if (samePanel(P.pn, L.pn)) hit += overlap(x, y, L.hw, L.hh, P.x, P.y, P.hw, P.hh);
+        }
+        if (hit === 0) { best = [x, y]; break; }
+        if (hit < bestHit) { bestHit = hit; best = [x, y]; }
+      }
+      if (best) { L.x = best[0]; L.y = best[1]; }
+      placed.push(L);
+    });
     return labels;
   }
+  var LABEL_SPOTS = null;
 
-  function separate(L, o, ohw, ohh, share) {
-    var dx = L.x - o.x, dy = L.y - o.y;
-    var ox = (L.hw + ohw) - Math.abs(dx);
-    var oy = (L.hh + ohh) - Math.abs(dy);
-    if (ox <= 0 || oy <= 0) return;           // not overlapping
-    if (ox / (L.hw + ohw) < oy / (L.hh + ohh)) {
-      L.x += (dx >= 0 ? ox : -ox) * share;    // least penetration: sideways
-    } else {
-      L.y += (dy >= 0 ? oy : -oy) * share;    // least penetration: vertically
-    }
+  // By position, not identity: the national view's single panel is a fresh
+  // object on every panelsFor() call, so an identity test never matched there
+  // and the labels went down without looking at the squares at all.
+  function samePanel(a, b) {
+    return a === b || (!!a && !!b && a.x === b.x && a.y === b.y);
+  }
+
+  // Area two boxes share, given centers and half-sizes.
+  function overlap(ax, ay, ahw, ahh, bx, by, bhw, bhh) {
+    var ox = Math.min(ax + ahw, bx + bhw) - Math.max(ax - ahw, bx - bhw);
+    var oy = Math.min(ay + ahh, by + bhh) - Math.max(ay - ahh, by - bhh);
+    return ox > 0 && oy > 0 ? ox * oy : 0;
   }
 
   function drawStateLabels(live) {
