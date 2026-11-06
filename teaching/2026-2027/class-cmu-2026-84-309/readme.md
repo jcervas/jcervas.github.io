@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### DRAFT Updated: November 05, 2026
+#### DRAFT Updated: November 06, 2026
 
 > Professor **Jonathan Cervas**  
 > Office: Posner Hall 374  
@@ -542,6 +542,13 @@ that session’s page in Canvas.*
 ### Week 12 — Student-led
 
 #### Tue, Nov 10 — Student-led 4: Energy
+
+- [World Nuclear Association — Nuclear Energy and Sustainable
+  Development](https://world-nuclear.org/information-library/energy-and-the-environment/nuclear-energy-and-sustainable-development)
+- [Green America — 10 Cons of Nuclear
+  Energy](https://greenamerica.org/fight-dirty-energy/amazon-build-cleaner-cloud/10-reasons-oppose-nuclear-energy)
+- [Chater 2005 — A History of Nuclear
+  Power](https://courses.grainger.illinois.edu/npre470/sp2018/web/readings/James_Chater_History_nuclear.pdf)
 
 #### Thu, Nov 12 — Student-led 5: Unpaid internships
 
