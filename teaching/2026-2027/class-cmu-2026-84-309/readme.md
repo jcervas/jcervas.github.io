@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### DRAFT Updated: November 06, 2026
+#### DRAFT Updated: November 07, 2026
 
 > Professor **Jonathan Cervas**  
 > Office: Posner Hall 374  
@@ -549,6 +549,10 @@ that session’s page in Canvas.*
   Energy](https://greenamerica.org/fight-dirty-energy/amazon-build-cleaner-cloud/10-reasons-oppose-nuclear-energy)
 - [Chater 2005 — A History of Nuclear
   Power](https://courses.grainger.illinois.edu/npre470/sp2018/web/readings/James_Chater_History_nuclear.pdf)
+- [MIT Climate Portal — Fossil
+  Fuels](https://climate.mit.edu/explainers/fossil-fuels)
+- [U.S. Energy Information Administration — U.S. Energy Facts
+  Explained](https://www.eia.gov/energyexplained/us-energy-facts/)
 
 #### Thu, Nov 12 — Student-led 5: Unpaid internships
 
