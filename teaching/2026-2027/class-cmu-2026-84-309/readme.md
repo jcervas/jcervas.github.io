@@ -556,8 +556,9 @@ that session’s page in Canvas.*
 
 #### Thu, Nov 12 — Student-led 5: Unpaid internships
 
-- [*The New York Times* 2026 — Unpaid Internships in New York
-  City](https://www.nytimes.com/2026/06/26/nyregion/unpaid-internships-nyc.html)
+- [Closson 2026 — These Unpaid Interns Want \$32 an Hour. And Health
+  Insurance. (*The New York
+  Times*)](https://www.nytimes.com/2026/06/26/nyregion/unpaid-internships-nyc.html)
 - [Greenlining Institute 2020 — Unpaid Internships: Worse than Working
   for Free](https://greenlining.org/2020/unpaid-internships/)
 - [Rothschild & Rothschild 2020 — The Unpaid Internship: Benefits,
