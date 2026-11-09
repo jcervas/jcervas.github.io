@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### DRAFT Updated: November 07, 2026
+#### DRAFT Updated: November 09, 2026
 
 > Professor **Jonathan Cervas**  
 > Office: Posner Hall 374  
@@ -555,6 +555,19 @@ that session’s page in Canvas.*
   Explained](https://www.eia.gov/energyexplained/us-energy-facts/)
 
 #### Thu, Nov 12 — Student-led 5: Unpaid internships
+
+- [*The New York Times* 2026 — Unpaid Internships in New York
+  City](https://www.nytimes.com/2026/06/26/nyregion/unpaid-internships-nyc.html)
+- [Greenlining Institute 2020 — Unpaid Internships: Worse than Working
+  for Free](https://greenlining.org/2020/unpaid-internships/)
+- [Rothschild & Rothschild 2020 — The Unpaid Internship: Benefits,
+  Drawbacks, and Legal Issues (*Administrative Issues
+  Journal*)](https://dc.swosu.edu/cgi/viewcontent.cgi?params=/context/aij/article/1313/&path_info=19021_the_unpaid_internship_benefits_drawbacks_and_legal_issues.pdf)
+- [Okun — Unpaid Internship (*History of
+  Work*)](https://alinaokun.com/history-of-work/unpaid-internship/)
+- *Optional*: [U.S. Department of Labor — Fact Sheet \#71: Internship
+  Programs Under the Fair Labor Standards
+  Act](https://www.dol.gov/agencies/whd/fact-sheets/71-flsa-internships)
 
 ### Week 13 — Student-led
 
