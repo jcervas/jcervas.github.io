@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### Updated: October 20, 2026
+#### Updated: November 09, 2026
 
 > Professor Jonathan Cervas  
 > Office: Posner Hall 374  
@@ -58,7 +58,7 @@ The course grade will be a weighted average of the following components:
 | Week 14 board post (Thanksgiving)       | **Wed, Nov 25** — day after the Tue Nov 24 Zoom class; Thu Nov 26 is Thanksgiving, no class                     |
 | **Test 1** — Ch. 1–5                    | **Thu, Oct 8**, in class                                                                                        |
 | Data journalism: pitch                  | **Tue, Oct 20**, in class                                                                                       |
-| **Test 2** — Ch. 6–9                    | **Tue, Nov 10**, in class                                                                                       |
+| **Test 2** — Ch. 6–9                    | **Thu, Nov 12**, in class                                                                                       |
 | Data journalism: **draft**              | **Thu, Nov 19** — the term’s last data session                                                                  |
 | Data journalism: **peer reviews** (two) | **Tue, Dec 1**                                                                                                  |
 | **Test 3** — Ch. 10–13                  | **Thu, Dec 3**, in class                                                                                        |

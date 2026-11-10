@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### Updated: October 20, 2026
+#### Updated: November 09, 2026
 
 > Professor Jonathan Cervas  
 > Office: Posner Hall 374  
@@ -231,7 +231,7 @@ Assignments. What each one is, in the order of the table above:
   is the other 10%.
 - **Three Tests** — In class, on paper, and **on the textbook only**.
   Test 1 on **Thu, Oct 8** (Sides et al., Chapters 1–5), Test 2 on
-  **Tue, Nov 10** (Chapters 6–9), Test 3 on **Thu, Dec 3** (Chapters
+  **Thu, Nov 12** (Chapters 6–9), Test 3 on **Thu, Dec 3** (Chapters
   10–13). We read the book straight through in its own order, so each
   test is a block of consecutive chapters: each covers the chapters read
   since the last one, **none is cumulative**, and every chapter appears
@@ -255,7 +255,7 @@ Assignments. What each one is, in the order of the table above:
 | Week 14 board post (Thanksgiving)       | **Wed, Nov 25** — day after the Tue Nov 24 Zoom class; Thu Nov 26 is Thanksgiving, no class                     |
 | **Test 1** — Ch. 1–5                    | **Thu, Oct 8**, in class                                                                                        |
 | Data journalism: pitch                  | **Tue, Oct 20**, in class                                                                                       |
-| **Test 2** — Ch. 6–9                    | **Tue, Nov 10**, in class                                                                                       |
+| **Test 2** — Ch. 6–9                    | **Thu, Nov 12**, in class                                                                                       |
 | Data journalism: **draft**              | **Thu, Nov 19** — the term’s last data session                                                                  |
 | Data journalism: **peer reviews** (two) | **Tue, Dec 1**                                                                                                  |
 | **Test 3** — Ch. 10–13                  | **Thu, Dec 3**, in class                                                                                        |
@@ -510,9 +510,7 @@ Nothing is due.
 
 ### Week 12 — Part III · the machinery
 
-#### Tue, Nov 10 — **TEST 2.** In class, on paper — Ch. 6–9
-
-#### Thu, Nov 12 — Data Session 10 — Surnames and geolocation: guessing race from a name and an address
+#### Tue, Nov 10 — Data Session 10 — Surnames and geolocation: guessing race from a name and an address — then a 30-minute review for Test 2
 
 - [CFPB — *Using publicly available information to proxy for
   unidentified race and
@@ -535,6 +533,8 @@ Nothing is due.
   governments find it easier to get data about you from each other than
   to collect it themselves; election management is one of the markets
   she traces. Long; the Introduction is the part to read.
+
+#### Thu, Nov 12 — **TEST 2.** In class, on paper — Ch. 6–9 (moved from Tue, Nov 10)
 
 ### Week 13 — Part III
 
