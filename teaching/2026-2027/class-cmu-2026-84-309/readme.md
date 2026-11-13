@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### DRAFT Updated: November 09, 2026
+#### DRAFT Updated: November 13, 2026
 
 > Professor **Jonathan Cervas**  
 > Office: Posner Hall 374  
@@ -573,6 +573,15 @@ that session’s page in Canvas.*
 ### Week 13 — Student-led
 
 #### Tue, Nov 17 — Student-led 6: Wealth tax
+
+- [Tax Policy Center — What Is a Wealth Tax? (*Briefing
+  Book*)](https://taxpolicycenter.org/briefing-book/what-wealth-tax)
+- [Saez & Zucman 2026 — The Case for California’s Billionaire Wealth Tax
+  (*The New York
+  Times*)](https://www.nytimes.com/interactive/2026/05/26/opinion/wealth-tax-california-billionaire.html)
+- [Rauh & Jaros 2026 — It Failed in France. It Would Be a Disaster in
+  California. (*The New York
+  Times*)](https://www.nytimes.com/2026/07/05/opinion/billionaire-wealth-tax-california.html)
 
 #### Thu, Nov 19 — Student-led 7: Citizenship
 
