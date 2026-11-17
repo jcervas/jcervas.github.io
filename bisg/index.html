@@ -570,9 +570,9 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
     var my = ++runId;
     var sRaw = $("surname").value;
     if (!clean(sRaw)) {
-      $("result").innerHTML = '<p class="placeholder">Enter a last name to begin.</p>';
+      $("result").innerHTML = '<p class="placeholder">' + (state.geo ? "Address located. Now enter a last name to see the prediction." : "Enter a last name to begin.") + '</p>';
       $("steps").innerHTML = '<p class="placeholder">Steps will appear here once you enter a last name.</p>';
-      renderLevels({ level: "none" }); $("levels-wrap").classList.add("hidden");
+      $("levels-wrap").classList.add("hidden");
       return;
     }
     lookupSurname(sRaw).then(function (s) {
