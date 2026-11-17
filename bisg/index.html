@@ -1,0 +1,688 @@
+---
+layout: default
+title: "BISG: Predicting Race from a Name and an Address"
+breadcrumb: "BISG explorer"
+breadcrumb_width: 1080px
+description: "An interactive teaching tool for Bayesian Improved Surname Geocoding (BISG): type a surname, add a first or middle name, sex, and an address, and watch each piece of evidence update the predicted race and ethnicity probabilities."
+---
+
+<style>
+  .bisg { max-width: 1080px; margin: 0 auto; padding: 0 1.25rem 3rem; }
+  .bisg h1 { font-size: 2.1rem; margin: .5rem 0 .4rem; }
+  .bisg .lead { font-size: 1.12rem; color: var(--muted); max-width: 46rem; margin-top: 0; }
+  .bisg-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 1.5rem; margin-top: 1.5rem; align-items: start; }
+  @media (max-width: 860px) { .bisg-grid { grid-template-columns: 1fr; } }
+  .card { border: 1px solid var(--line); border-radius: 10px; padding: 1.1rem 1.25rem 1.25rem; background: var(--bg); }
+  .card h2 { font-size: 1.15rem; margin: 0 0 .75rem; }
+  .card--alt { background: var(--bg-alt); }
+
+  .field { margin-bottom: .85rem; }
+  .field label, .field .label { display: block; font-weight: 600; font-size: .95rem; margin-bottom: .2rem; }
+  .field .hint { display: block; font-size: .82rem; color: var(--muted); font-weight: 400; }
+  .field input[type=text], .field select {
+    width: 100%; font: inherit; font-size: 1rem; padding: .5rem .65rem; border: 1px solid var(--line);
+    border-radius: 6px; background: var(--bg); color: var(--ink);
+  }
+  .field input[type=text]:focus, .field select:focus { outline: 2px solid var(--red); outline-offset: 1px; border-color: transparent; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+  .addr-row { display: flex; gap: .5rem; }
+  .addr-row input { flex: 1; min-width: 0; }
+  .btn { font: inherit; font-size: .95rem; font-weight: 600; padding: .5rem .9rem; border-radius: 6px; cursor: pointer;
+         border: 1px solid var(--red); background: var(--red); color: #fff; white-space: nowrap; }
+  :root[data-theme="dark"] .btn { color: #14161a; }
+  .btn:hover { background: var(--red-dark); border-color: var(--red-dark); }
+  .btn--ghost { background: transparent; color: var(--red); }
+  :root[data-theme="dark"] .btn--ghost { color: var(--red); }
+  .btn--ghost:hover { background: var(--bg-alt); }
+  .btn:disabled { opacity: .55; cursor: wait; }
+  .geo-status { font-size: .88rem; margin-top: .35rem; color: var(--muted); min-height: 1.2em; }
+  .geo-status.err { color: var(--red); }
+  .levels { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .25rem; }
+  .levels label { font-size: .88rem; font-weight: 500; border: 1px solid var(--line); border-radius: 999px; padding: .2rem .7rem; cursor: pointer; display: inline-flex; align-items: center; gap: .3rem; }
+  .levels input { accent-color: var(--red); margin: 0; }
+  .levels label.disabled { opacity: .45; cursor: not-allowed; }
+  .examples { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .3rem; }
+  .chip { font: inherit; font-size: .85rem; border: 1px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 999px; padding: .2rem .7rem; cursor: pointer; }
+  .chip:hover { border-color: var(--red); color: var(--red); }
+  .privacy { font-size: .8rem; color: var(--muted); margin: .75rem 0 0; line-height: 1.45; }
+
+  /* Results */
+  .verdict { font-size: 1.05rem; margin: 0 0 .75rem; }
+  .verdict strong { font-size: 1.35rem; display: block; line-height: 1.25; }
+  .verdict .sub { color: var(--muted); font-size: .9rem; }
+  .bar { display: flex; height: 30px; border-radius: 5px; overflow: hidden; background: var(--line); }
+  .bar span { display: block; height: 100%; position: relative; transition: width .45s ease; color: #fff; font-size: .75rem; font-weight: 600; line-height: 30px; text-align: center; overflow: hidden; white-space: nowrap; }
+  .bar--sm { height: 18px; } .bar--sm span { line-height: 18px; font-size: .68rem; }
+  .legend { display: flex; flex-wrap: wrap; gap: .3rem .9rem; font-size: .82rem; margin: .5rem 0 .25rem; color: var(--muted); }
+  .legend i { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: .3rem; vertical-align: -1px; }
+  table.probs { width: 100%; border-collapse: collapse; font-size: .93rem; margin-top: .75rem; font-variant-numeric: tabular-nums; }
+  table.probs td, table.probs th { padding: .3rem .4rem; border-bottom: 1px solid var(--line); text-align: left; }
+  table.probs th { font-size: .8rem; color: var(--muted); font-weight: 600; }
+  table.probs td.num, table.probs th.num { text-align: right; }
+  table.probs .meter { width: 38%; }
+  table.probs .meter div { height: 9px; border-radius: 2px; min-width: 1px; }
+  table.probs tr.top td { font-weight: 700; }
+  .placeholder { color: var(--muted); font-size: .95rem; }
+
+  /* Steps */
+  .steps { margin-top: 2rem; }
+  .steps > h2, .bisg section > h2 { font-size: 1.45rem; margin: 2.2rem 0 .4rem; }
+  .section-lead { color: var(--muted); margin: 0 0 1rem; max-width: 50rem; }
+  .step { display: grid; grid-template-columns: 2.1rem minmax(0, 1fr); gap: .25rem .75rem; padding: .9rem 0; border-top: 1px solid var(--line); }
+  .step__num { width: 1.8rem; height: 1.8rem; border-radius: 50%; background: var(--red); color: #fff; font-weight: 700; display: grid; place-items: center; font-size: .9rem; }
+  :root[data-theme="dark"] .step__num { color: #14161a; }
+  .step.off .step__num, .step.skip .step__num { background: var(--muted); }
+  .step__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem .75rem; }
+  .step__title { font-weight: 700; font-size: 1.05rem; }
+  .step__toggle { font-size: .82rem; color: var(--muted); display: inline-flex; align-items: center; gap: .3rem; cursor: pointer; }
+  .step__toggle input { accent-color: var(--red); }
+  .step__detail { font-size: .9rem; color: var(--muted); margin: .15rem 0 .5rem; }
+  .step__detail b { color: var(--ink); font-weight: 600; }
+  .step.off .step__body, .step.skip .step__body { opacity: .5; }
+  .mults { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .3rem; margin: .5rem 0 .45rem; font-size: .8rem; font-variant-numeric: tabular-nums; }
+  .mults div { border: 1px solid var(--line); border-radius: 6px; padding: .25rem .35rem; line-height: 1.3; }
+  .mults small { display: block; color: var(--muted); font-size: .72rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mults .up { color: #1b7f4b; font-weight: 700; } .mults .down { color: var(--red); font-weight: 700; }
+  :root[data-theme="dark"] .mults .up { color: #5fd393; }
+  @media (max-width: 640px) { .mults { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .warn { font-size: .85rem; background: var(--bg-alt); border-left: 3px solid var(--red); padding: .4rem .65rem; margin: .4rem 0; border-radius: 0 4px 4px 0; }
+
+  /* Level comparison */
+  .scroll-x { overflow-x: auto; }
+  table.levels-tbl { width: 100%; border-collapse: collapse; font-size: .9rem; font-variant-numeric: tabular-nums; min-width: 620px; }
+  table.levels-tbl th, table.levels-tbl td { padding: .4rem .45rem; border-bottom: 1px solid var(--line); text-align: right; }
+  table.levels-tbl th:first-child, table.levels-tbl td:first-child { text-align: left; }
+  table.levels-tbl th { font-size: .78rem; color: var(--muted); }
+  table.levels-tbl td.max { font-weight: 700; color: var(--red); }
+  table.levels-tbl tr.cur td { background: var(--bg-alt); }
+  table.levels-tbl .bar { height: 14px; min-width: 120px; }
+
+  .explain p, .explain li { max-width: 50rem; }
+  .formula { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .92rem; background: var(--bg-alt); padding: .75rem 1rem; border-radius: 6px; overflow-x: auto; line-height: 1.7; }
+  .explain ol li, .explain ul li { margin-bottom: .45rem; }
+  .refs li { font-size: .92rem; }
+  .hidden { display: none !important; }
+</style>
+
+<div class="bisg">
+  <h1>Guessing race from a name and an address</h1>
+  <p class="lead">
+    <strong>Bayesian Improved Surname Geocoding (BISG)</strong> estimates the probability that a person belongs to each
+    racial and ethnic group using only their surname and where they live. Courts, regulators, and researchers rely on it
+    when records leave race out. Type a name below, add more information, and watch each piece of evidence change the
+    prediction.
+  </p>
+
+  <div class="bisg-grid">
+    <form class="card card--alt" id="bisg-form" autocomplete="off" onsubmit="return false">
+      <h2>Your inputs</h2>
+      <div class="field">
+        <label for="surname">Last name <span class="hint">Required. Matched against the 2010 Census surname list.</span></label>
+        <input type="text" id="surname" placeholder="e.g., Garcia" spellcheck="false">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="first">First name <span class="hint">Optional</span></label>
+          <input type="text" id="first" placeholder="e.g., Maria" spellcheck="false">
+        </div>
+        <div class="field">
+          <label for="middle">Middle name <span class="hint">Optional</span></label>
+          <input type="text" id="middle" placeholder="e.g., Elena" spellcheck="false">
+        </div>
+      </div>
+      <div class="field">
+        <label for="sex">Sex <span class="hint">Optional. The Census records only female and male.</span></label>
+        <select id="sex">
+          <option value="">Don&rsquo;t use</option>
+          <option value="F">Female</option>
+          <option value="M">Male</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="address">Address <span class="hint">Optional. A full street address with city and state works best.</span></label>
+        <div class="addr-row">
+          <input type="text" id="address" placeholder="e.g., 5000 Forbes Ave, Pittsburgh, PA" spellcheck="false">
+          <button type="button" class="btn" id="geocode-btn">Locate</button>
+        </div>
+        <div class="geo-status" id="geo-status" aria-live="polite"></div>
+      </div>
+      <div class="field">
+        <span class="label">Neighborhood size used <span class="hint">Smaller areas are more informative, but noisier.</span></span>
+        <div class="levels" id="levels">
+          <label><input type="radio" name="level" value="none" checked> None</label>
+          <label class="disabled"><input type="radio" name="level" value="state" disabled> State</label>
+          <label class="disabled"><input type="radio" name="level" value="county" disabled> County</label>
+          <label class="disabled"><input type="radio" name="level" value="tract" disabled> Tract</label>
+          <label class="disabled"><input type="radio" name="level" value="bg" disabled> Block group</label>
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <span class="label">Try an example</span>
+        <div class="examples" id="examples"></div>
+      </div>
+      <p class="privacy">
+        Everything runs in your browser. Names are never sent anywhere. If you click <em>Locate</em>, the address alone is
+        sent to the <a href="https://geocoding.geo.census.gov/geocoder/" target="_blank" rel="noopener">U.S. Census Bureau Geocoder</a>
+        to find its census block. Nothing is saved.
+      </p>
+    </form>
+
+    <div class="card" id="result-card" aria-live="polite">
+      <h2>Prediction</h2>
+      <div id="result"><p class="placeholder">Enter a last name to begin.</p></div>
+    </div>
+  </div>
+
+  <div class="steps" id="steps-wrap">
+    <h2>Step by step: how the evidence adds up</h2>
+    <p class="section-lead">
+      BISG is Bayes&rsquo; rule applied over and over. Each piece of evidence <em>multiplies</em> every group&rsquo;s current
+      probability by a factor: how much more (or less) common that evidence is among members of the group than among people
+      overall. The results are then rescaled to add up to 100%. Switch a step off to see what it contributes.
+    </p>
+    <div id="steps"><p class="placeholder">Steps will appear here once you enter a last name.</p></div>
+  </div>
+
+  <section id="levels-wrap" class="hidden">
+    <h2>How much does the neighborhood matter?</h2>
+    <p class="section-lead">
+      The same name, with every other input held fixed, but conditioned on smaller and smaller areas around the address.
+      The bolded number in each row is the group BISG would pick.
+    </p>
+    <div class="scroll-x"><table class="levels-tbl" id="levels-tbl"></table></div>
+    <div id="neighborhood"></div>
+  </section>
+
+  <section class="explain">
+    <h2>How BISG works</h2>
+    <p>
+      BISG (<a href="https://doi.org/10.1007/s10742-009-0047-1" target="_blank" rel="noopener">Elliott et al. 2009</a>)
+      combines two facts that are each only partly informative. Some surnames are held mostly by members of one group:
+      the Census reports that about 96% of people named Nguyen identify as Asian, for example. And neighborhoods in the
+      United States remain racially segregated, so where someone lives also carries information. Bayes&rsquo; rule
+      combines the two, assuming that, <em>within</em> a racial group, surname and location are unrelated.
+    </p>
+    <div class="formula">
+      P(race | surname, place) &prop; P(race | surname) &times; P(place | race)<br>
+      P(place | race) = (residents of the place in that race) &divide; (all U.S. residents of that race)
+    </div>
+    <p>
+      The <strong>BIFSG</strong> extension (<a href="https://doi.org/10.1515/spp-2016-0005" target="_blank" rel="noopener">Voicu 2018</a>)
+      multiplies in a first-name term the same way, P(first name | race). This tool also lets you add a middle name and sex,
+      following the fuller model in <a href="https://doi.org/10.1093/pan/mpw001" target="_blank" rel="noopener">Imai &amp; Khanna (2016)</a>.
+      With every input switched on, the full calculation is:
+    </p>
+    <div class="formula">
+      P(race | all evidence) &prop; P(race | surname)<br>
+      &nbsp;&nbsp;&times; P(first | race) &times; P(middle | race)<br>
+      &nbsp;&nbsp;&times; P(sex | race) &times; P(place | race, sex)
+    </div>
+    <p>
+      Each multiplier shown in the step-by-step panel is a group&rsquo;s new probability divided by its old one. A multiplier
+      of &times;3 means the new evidence is three times as common among that group as among people overall, given
+      everything learned so far.
+    </p>
+
+    <h2>Where the numbers come from</h2>
+    <ul>
+      <li><strong>Surnames:</strong> U.S. Census Bureau,
+        <a href="https://www.census.gov/topics/population/genealogy/data/2010_surnames.html" target="_blank" rel="noopener">Frequently Occurring Surnames from the 2010 Census</a>
+        (<a href="https://www2.census.gov/topics/genealogy/2010surnames/names.zip" target="_blank" rel="noopener">names.zip</a>).
+        It covers 162,253 surnames held by 100 or more people. Where the Bureau suppressed a small cell for privacy, marked
+        &ldquo;(S)&rdquo;, the leftover percentage is split evenly among the suppressed groups. Surnames not on the list
+        get the Bureau&rsquo;s &ldquo;All other names&rdquo; distribution.</li>
+      <li><strong>First and middle names:</strong> Tzioumis (2018),
+        &ldquo;<a href="https://doi.org/10.1038/sdata.2018.25" target="_blank" rel="noopener">Demographic aspects of first names</a>,&rdquo;
+        <em>Scientific Data</em>. It covers 4,250 first names from mortgage applications
+        (<a href="https://doi.org/10.7910/DVN/TYJKEZ" target="_blank" rel="noopener">Harvard Dataverse</a>; CC0 copy used here from
+        <a href="https://doi.org/10.7910/DVN/YL2OXB" target="_blank" rel="noopener">Rosenman, Olivella &amp; Imai 2023</a>). P(name | race) is computed by weighting
+        each name&rsquo;s race shares by its count. No public list exists for middle names alone, so middle names are scored
+        against the same first-name list. That is a simplification.</li>
+      <li><strong>Neighborhoods and sex:</strong> 2020 Census
+        <a href="https://www.census.gov/data/tables/2023/dec/2020-census-dhc.html" target="_blank" rel="noopener">Demographic and Housing Characteristics File</a>,
+        tables P12H&ndash;P12O (sex by race and Hispanic origin), retrieved from the
+        <a href="https://api.census.gov/data/2020/dec/dhc/variables.html" target="_blank" rel="noopener">Census API</a> for every state, county, tract,
+        and block group in the 50 states and D.C. Puerto Rico is not included.</li>
+      <li><strong>Address lookup:</strong> the <a href="https://geocoding.geo.census.gov/geocoder/" target="_blank" rel="noopener">Census Geocoder</a>,
+        using the current address benchmark and 2020 census geography.</li>
+    </ul>
+    <p>
+      The six groups match the Census surname file: non-Hispanic White, non-Hispanic Black, non-Hispanic Asian or Pacific
+      Islander, non-Hispanic American Indian or Alaska Native, non-Hispanic multiracial, and Hispanic of any race. People
+      who chose only &ldquo;Some other race&rdquo; (and are not Hispanic) are dropped, because the surname file has no
+      matching category. The starting point (step 0) is each group&rsquo;s share of the 2020 U.S. population on these
+      definitions.
+    </p>
+
+    <h2>Things to notice and cautions</h2>
+    <ul>
+      <li><strong>It predicts probabilities, not identities.</strong> A 70% White prediction means that among many people
+        with the same inputs, roughly 7 in 10 would identify as White. It does not tell you how any one of them identifies.
+        Applications either add up the probabilities across many people (the more defensible use) or assign each person to
+        the most likely group (simple, but it throws information away).</li>
+      <li><strong>It works best for groups that are segregated or have distinctive names.</strong> It is accurate for
+        Hispanic and Asian surnames and for Black residents of segregated neighborhoods. It is poor at identifying American
+        Indian and multiracial people, whose names and neighborhoods are rarely distinctive.</li>
+      <li><strong>Zeros are absolute.</strong> If a block group recorded no residents of a group, or a surname shows 0% for
+        a group, Bayes&rsquo; rule rules that group out entirely, however strong the other evidence is.</li>
+      <li><strong>Smaller areas are noisier.</strong> Starting in 2020 the Census Bureau adds deliberate statistical noise
+        (<a href="https://www.census.gov/programs-surveys/decennial-census/decade/2020/planning-management/process/disclosure-avoidance/differential-privacy.html" target="_blank" rel="noopener">differential privacy</a>)
+        to protect respondents, and that noise matters most for small areas.</li>
+      <li><strong>The data are from different years.</strong> Names come from 2010, neighborhoods from 2020, and people
+        move, marry, and change their names. Women who took a spouse&rsquo;s surname are a well-known source of error.</li>
+      <li><strong>The independence assumption is wrong at the margins.</strong> A Black Garcia and a Hispanic Garcia may
+        not live in the same kinds of places, but BISG assumes they do.</li>
+    </ul>
+
+    <h2>Questions for discussion</h2>
+    <ol>
+      <li>Enter your own name. Is the prediction right? If not, which input misled it, and why?</li>
+      <li>Try <em>Lee</em>, <em>Smith</em>, or <em>Jackson</em> with addresses in different cities. Which input moves the
+        answer more for these names, the surname or the neighborhood?</li>
+      <li>Find a case where switching from tract to block group changes the most likely group. Should we trust the smaller area more?</li>
+      <li>A regulator uses BISG to check whether a lender charges minority borrowers more. Should it add up probabilities or
+        assign each borrower to one group? What could go wrong with each?</li>
+      <li>Voting rights cases use BISG to estimate the racial makeup of a voter file. Whose votes are most likely to be
+        miscounted, and in which direction?</li>
+    </ol>
+
+    <h2>Further reading</h2>
+    <ul class="refs">
+      <li>Elliott, M. N., et al. (2009). Using the Census Bureau&rsquo;s surname list to improve estimates of race/ethnicity
+        and associated disparities. <em>Health Services and Outcomes Research Methodology</em> 9: 69&ndash;83.
+        <a href="https://doi.org/10.1007/s10742-009-0047-1" target="_blank" rel="noopener">doi</a></li>
+      <li>Consumer Financial Protection Bureau (2014). <a href="https://files.consumerfinance.gov/f/201409_cfpb_report_proxy-methodology.pdf" target="_blank" rel="noopener">Using publicly available information to proxy for unidentified race and ethnicity</a>.</li>
+      <li>Imai, K., &amp; Khanna, K. (2016). Improving ecological inference by predicting individual ethnicity from voter
+        registration records. <em>Political Analysis</em> 24(2): 263&ndash;272.
+        <a href="https://doi.org/10.1093/pan/mpw001" target="_blank" rel="noopener">doi</a>
+        (R package <a href="https://cran.r-project.org/package=wru" target="_blank" rel="noopener">wru</a>)</li>
+      <li>Voicu, I. (2018). Using first name information to improve race and ethnicity classification.
+        <em>Statistics and Public Policy</em> 5(1): 1&ndash;13.
+        <a href="https://doi.org/10.1080/2330443X.2018.1427012" target="_blank" rel="noopener">doi</a></li>
+      <li>Tzioumis, K. (2018). Demographic aspects of first names. <em>Scientific Data</em> 5: 180025.
+        <a href="https://doi.org/10.1038/sdata.2018.25" target="_blank" rel="noopener">doi</a></li>
+      <li>Kenny, C. T., et al. (2021). The use of differential privacy for census data and its impact on redistricting.
+        <em>Science Advances</em> 7(41). <a href="https://doi.org/10.1126/sciadv.abk3283" target="_blank" rel="noopener">doi</a></li>
+    </ul>
+  </section>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var DATA = "{{ '/bisg/data/' | relative_url }}";
+
+  // Internal order (matches Census surname file): white, black, api, aian, multi, hispanic
+  var GROUPS = [
+    { key: "white", label: "White",              long: "White (non-Hispanic)", color: "#0072B2" },
+    { key: "black", label: "Black",              long: "Black (non-Hispanic)", color: "#E69F00" },
+    { key: "api",   label: "Asian / Pac. Isl.",  long: "Asian or Pacific Islander (non-Hispanic)", color: "#009E73" },
+    { key: "aian",  label: "Am. Indian / AK Nat.", long: "American Indian or Alaska Native (non-Hispanic)", color: "#CC79A7" },
+    { key: "multi", label: "Multiracial",        long: "Two or more races (non-Hispanic)", color: "#56B4E9" },
+    { key: "hisp",  label: "Hispanic",           long: "Hispanic or Latino (any race)", color: "#D55E00" }
+  ];
+  // Display order
+  var ORDER = [0, 1, 5, 2, 3, 4];
+  var LEVELS = [
+    { key: "none",   label: "No neighborhood (national)" },
+    { key: "state",  label: "State" },
+    { key: "county", label: "County" },
+    { key: "tract",  label: "Census tract" },
+    { key: "bg",     label: "Block group" }
+  ];
+
+  var EXAMPLES = [
+    { label: "Nguyen", s: "Nguyen" },
+    { label: "Washington", s: "Washington" },
+    { label: "Garcia", s: "Garcia" },
+    { label: "Lee in San Francisco's Chinatown", s: "Lee", a: "827 Washington St, San Francisco, CA 94108" },
+    { label: "Lee in Jackson, MS", s: "Lee", a: "1400 J R Lynch St, Jackson, MS 39217" },
+    { label: "Smith in Pittsburgh's Hill District", s: "Smith", a: "2000 Wylie Ave, Pittsburgh, PA 15219" },
+    { label: "Smith at CMU", s: "Smith", a: "5000 Forbes Ave, Pittsburgh, PA 15213" },
+    { label: "Maria Smith", s: "Smith", f: "Maria" },
+    { label: "Jose Kim", s: "Kim", f: "Jose" }
+  ];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var cache = {};
+  function getJSON(path) {
+    if (!cache[path]) {
+      cache[path] = fetch(DATA + path).then(function (r) {
+        if (!r.ok) { if (r.status === 404) return null; throw new Error(r.status); }
+        return r.json();
+      });
+    }
+    return cache[path];
+  }
+
+  var state = { geo: null, off: {} };
+  var base = { states: null, first: null, firstTotals: null, meta: null };
+
+  function clean(s) {
+    return (s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toUpperCase().replace(/[^A-Z\- ']/g, "").trim();
+  }
+  function norm(v) {
+    var s = v.reduce(function (a, b) { return a + b; }, 0);
+    return s > 0 ? v.map(function (x) { return x / s; }) : null;
+  }
+  function pct(p) {
+    if (p == null || isNaN(p)) return "&mdash;";
+    if (p > 0 && p < 0.001) return "&lt;0.1%";
+    if (p < 1 && p > 0.999) return "&gt;99.9%";
+    return (p * 100).toFixed(1) + "%";
+  }
+  function fmtInt(n) { return n.toLocaleString("en-US"); }
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function title(s) { return s.toLowerCase().replace(/(^|[\s\-'])([a-z])/g, function (m, a, b) { return a + b.toUpperCase(); }); }
+
+  // geo array -> 6 race counts (optionally one sex)
+  function counts(arr, sex) {
+    var out = [];
+    for (var i = 0; i < 6; i++) {
+      var m = arr[2 * i], f = arr[2 * i + 1];
+      out.push(sex === "M" ? m : sex === "F" ? f : m + f);
+    }
+    return out;
+  }
+
+  // ---------- Data lookups ----------
+  function lookupSurname(raw) {
+    var c = clean(raw);
+    if (!c) return Promise.resolve(null);
+    var toks = c.replace(/'/g, "").split(/\s+/).filter(Boolean);
+    if (toks.length > 1 && /^(JR|SR|II|III|IV|V)$/.test(toks[toks.length - 1])) toks.pop();
+    var joined = toks.join("");
+    var cands = [joined.replace(/-/g, "")];
+    joined.split("-").forEach(function (p) { if (p && cands.indexOf(p) < 0) cands.push(p); });
+    if (toks.length > 1) toks.slice().reverse().forEach(function (t) { t = t.replace(/-/g, ""); if (cands.indexOf(t) < 0) cands.push(t); });
+    cands = cands.filter(Boolean);
+    var i = 0;
+    function next() {
+      if (i >= cands.length) return Promise.resolve({ input: c, found: false, pct: base.meta.surname_allother.pct });
+      var n = cands[i++];
+      var prefix = (n.slice(0, 2) + "_").slice(0, 2);
+      return getJSON("surnames/" + prefix + ".json").then(function (shard) {
+        var r = shard && shard[n];
+        if (r) return { input: c, name: n, found: true, rank: r[0], count: r[1], pct: r.slice(2, 8), suppressed: r.length > 8, alt: n !== cands[0] };
+        return next();
+      });
+    }
+    return next();
+  }
+  function lookupFirst(raw) {
+    var c = clean(raw).replace(/['\-\s]/g, "");
+    if (!c) return null;
+    var r = base.first[c];
+    if (!r) return { input: c, found: false };
+    var obs = r[0], p = r.slice(1, 7);
+    // P(name | race) = obs * share_r / total people of race r in the list
+    var like = p.map(function (x, k) { return obs * x / 100 / base.firstTotals[k]; });
+    return { input: c, found: true, obs: obs, pct: p, like: like };
+  }
+
+  // ---------- The model ----------
+  function compute(inp, levelOverride) {
+    var us = base.states.us;
+    var prior = norm(counts(us, null));
+    var steps = [{ key: "prior", n: 0, title: "Start: the U.S. population", post: prior, mult: null,
+      detail: "Before learning anything, each group&rsquo;s probability is its share of the 2020 U.S. population (excluding &ldquo;Some other race&rdquo; alone)." }];
+    var cur = prior;
+
+    function apply(key, ttl, detail, like, extra) {
+      var step = { key: key, title: ttl, detail: detail, warn: extra && extra.warn, toggle: true };
+      if (state.off[key]) { step.off = true; step.post = cur; steps.push(step); return; }
+      if (!like) { step.skip = true; step.post = cur; steps.push(step); return; }
+      var un = cur.map(function (p, k) { return p * like[k]; });
+      var nx = norm(un);
+      if (!nx) {
+        step.skip = true; step.post = cur;
+        step.warn = "Every group with a nonzero probability so far has zero probability under this evidence, so the step cannot be applied. Bayes&rsquo; rule would divide by zero. The tool skips it.";
+        steps.push(step); return;
+      }
+      step.mult = nx.map(function (p, k) { return cur[k] > 0 ? p / cur[k] : null; });
+      step.post = nx; cur = nx; steps.push(step);
+    }
+
+    // 1. Surname
+    var s = inp.surname, sd;
+    if (s.found) {
+      sd = "<b>" + esc(title(s.name)) + "</b>" + (s.alt ? " (matched from &ldquo;" + esc(s.input) + "&rdquo;)" : "") +
+           ": " + fmtInt(s.count) + " people in the 2010 Census, the #" + fmtInt(s.rank) + " most common surname." +
+           (s.suppressed ? " Some cells were suppressed for privacy; their share is split evenly." : "");
+    } else {
+      sd = "<b>" + esc(title(s.input)) + "</b> is not on the Census list (fewer than 100 people). BISG falls back on the race mix of everyone with an unlisted surname.";
+    }
+    apply("surname", "Last name", sd, s.pct.map(function (x, k) { return (x / 100) / prior[k]; }));
+
+    // 2-3. First, middle
+    [["first", "First name"], ["middle", "Middle name"]].forEach(function (fm) {
+      var f = inp[fm[0]];
+      if (!f) return;
+      var d = f.found
+        ? "<b>" + esc(title(f.input)) + "</b>: " + fmtInt(f.obs) + " mortgage applicants in the Tzioumis list" +
+          (fm[0] === "middle" ? " (scored as if it were a first name)." : ".")
+        : "<b>" + esc(title(f.input)) + "</b> is not among the 4,250 first names in the list, so it adds no information.";
+      apply(fm[0], fm[1], d, f.found ? f.like : null);
+    });
+
+    // 4. Sex
+    var sexOn = inp.sex && !state.off.sex;
+    if (inp.sex) {
+      var sexLike = counts(us, inp.sex).map(function (n, k) { return n / counts(us, null)[k]; });
+      apply("sex", "Sex", "<b>" + (inp.sex === "F" ? "Female" : "Male") + "</b>. Groups differ a little in their sex ratios (P(sex | race)), so this step barely moves the result. It matters more in the next step, where the neighborhood counts are split by sex.", sexLike);
+    }
+
+    // 5. Geography
+    var level = levelOverride || inp.level;
+    if (state.geo && level !== "none") {
+      var g = state.geo, sx = sexOn ? inp.sex : null, arr = g.arrays[level];
+      if (arr) {
+        var loc = counts(arr, sx), nat = counts(us, sx);
+        var tot = loc.reduce(function (a, b) { return a + b; }, 0);
+        var zeros = ORDER.filter(function (k) { return loc[k] === 0 && cur[k] > 0; }).map(function (k) { return GROUPS[k].label; });
+        var d = "<b>" + esc(g.names[level]) + "</b>: " + fmtInt(tot) + (sx ? (sx === "F" ? " female" : " male") : "") +
+                " residents in 2020. Multiplier is P(place | race" + (sx ? ", sex" : "") + "): the group&rsquo;s share of the U.S. that lives here, relative to everyone&rsquo;s.";
+        apply("geo", "Neighborhood", d, loc.map(function (n, k) { return nat[k] > 0 ? n / nat[k] : 0; }),
+          { warn: zeros.length ? "No " + zeros.join(", ") + " residents" + (sx ? " of this sex" : "") + " were recorded here, so BISG rules " + (zeros.length > 1 ? "those groups" : "that group") + " out completely." : null });
+      } else {
+        apply("geo", "Neighborhood", "No census data were found for this area at this level.", null);
+      }
+    }
+    steps.forEach(function (st, i) { st.n = i; });
+    return { steps: steps, post: cur };
+  }
+
+  // ---------- Rendering ----------
+  function stackBar(p, cls) {
+    return '<div class="bar ' + (cls || "") + '" role="img" aria-label="' +
+      ORDER.map(function (k) { return GROUPS[k].label + " " + (p[k] * 100).toFixed(1) + "%"; }).join(", ") + '">' +
+      ORDER.map(function (k) {
+        var w = p[k] * 100;
+        return '<span style="width:' + w.toFixed(3) + "%;background:" + GROUPS[k].color + '" title="' + GROUPS[k].label + ": " + w.toFixed(1) + '%">' + (w >= 9 ? Math.round(w) + "%" : "") + "</span>";
+      }).join("") + "</div>";
+  }
+  function legend() {
+    return '<div class="legend">' + ORDER.map(function (k) { return '<span><i style="background:' + GROUPS[k].color + '"></i>' + GROUPS[k].label + "</span>"; }).join("") + "</div>";
+  }
+  function argmax(p) { var b = 0; p.forEach(function (x, k) { if (x > p[b]) b = k; }); return b; }
+
+  function renderResult(res) {
+    var p = res.post, top = argmax(p), conf = p[top];
+    var word = conf >= 0.9 ? "very confident" : conf >= 0.7 ? "fairly confident" : conf >= 0.5 ? "leaning" : "uncertain";
+    var html = '<p class="verdict"><span class="sub">Most likely group</span><strong>' + GROUPS[top].long + "</strong>" +
+      '<span class="sub">' + pct(conf) + " probability. The model is " + word + ".</span></p>" + stackBar(p) + legend();
+    html += '<table class="probs"><thead><tr><th>Group</th><th class="meter"></th><th class="num">Probability</th></tr></thead><tbody>' +
+      ORDER.slice().sort(function (a, b) { return p[b] - p[a]; }).map(function (k) {
+        return '<tr class="' + (k === top ? "top" : "") + '"><td>' + GROUPS[k].long + '</td><td class="meter"><div style="width:' + (p[k] * 100).toFixed(2) + "%;background:" + GROUPS[k].color + '"></div></td><td class="num">' + pct(p[k]) + "</td></tr>";
+      }).join("") + "</tbody></table>";
+    $("result").innerHTML = html;
+  }
+
+  function renderSteps(res) {
+    $("steps").innerHTML = res.steps.map(function (st) {
+      var cls = "step" + (st.off ? " off" : "") + (st.skip ? " skip" : "");
+      var tog = st.toggle ? '<label class="step__toggle"><input type="checkbox" data-step="' + st.key + '"' + (st.off ? "" : " checked") + "> use this evidence</label>" : "";
+      var mult = "";
+      if (st.mult) {
+        mult = '<div class="mults">' + ORDER.map(function (k) {
+          var m = st.mult[k], txt, c = "";
+          if (m == null) txt = "&mdash;";
+          else if (m === 0) { txt = "&times;0"; c = "down"; }
+          else { txt = "&times;" + (m >= 100 ? Math.round(m) : m >= 10 ? m.toFixed(1) : m.toFixed(2)); c = m > 1.05 ? "up" : m < 0.95 ? "down" : ""; }
+          return '<div><small style="border-bottom:2px solid ' + GROUPS[k].color + '">' + GROUPS[k].label + '</small><span class="' + c + '">' + txt + "</span> &rarr; " + pct(st.post[k]) + "</div>";
+        }).join("") + "</div>";
+      }
+      var note = st.off ? '<div class="step__detail"><em>Switched off.</em> The probabilities pass through unchanged.</div>' : "";
+      return '<div class="' + cls + '"><div class="step__num">' + st.n + '</div><div><div class="step__head"><span class="step__title">' + st.title + "</span>" + tog + "</div>" +
+        '<div class="step__body"><div class="step__detail">' + st.detail + "</div>" + note +
+        (st.warn && !st.off ? '<div class="warn">' + st.warn + "</div>" : "") + mult + stackBar(st.post, "bar--sm") + "</div></div></div>";
+    }).join("");
+  }
+
+  function renderLevels(inp) {
+    if (!state.geo) { $("levels-wrap").classList.add("hidden"); return; }
+    $("levels-wrap").classList.remove("hidden");
+    var head = "<thead><tr><th>Neighborhood used</th>" + ORDER.map(function (k) { return "<th>" + GROUPS[k].label + "</th>"; }).join("") + "<th></th></tr></thead>";
+    var rows = LEVELS.map(function (L) {
+      var savedOff = state.off.geo; state.off.geo = false;
+      var r = compute(inp, L.key); state.off.geo = savedOff;
+      var top = argmax(r.post);
+      var name = L.key === "none" ? L.label : L.label + '<br><small style="color:var(--muted)">' + esc(state.geo.names[L.key]) + "</small>";
+      return '<tr class="' + (L.key === inp.level ? "cur" : "") + '"><td>' + name + "</td>" +
+        ORDER.map(function (k) { return '<td class="' + (k === top ? "max" : "") + '">' + pct(r.post[k]) + "</td>"; }).join("") +
+        "<td>" + stackBar(r.post, "bar--sm") + "</td></tr>";
+    }).join("");
+    $("levels-tbl").innerHTML = head + "<tbody>" + rows + "</tbody>";
+
+    // Neighborhood composition
+    var g = state.geo, lv = inp.level === "none" ? "bg" : inp.level, arr = g.arrays[lv];
+    if (arr) {
+      var c = counts(arr, null), comp = norm(c);
+      $("neighborhood").innerHTML = comp ? '<h3>Who lives in ' + esc(g.names[lv]) + "?</h3>" +
+        '<p class="section-lead" style="margin-bottom:.5rem">2020 residents by group: ' + fmtInt(c.reduce(function (a, b) { return a + b; }, 0)) + " people. Compare this with the U.S. as a whole (step 0) to see where the neighborhood multipliers come from.</p>" +
+        stackBar(comp) + legend() : "";
+    }
+  }
+
+  // ---------- Controller ----------
+  var runId = 0;
+  function run() {
+    var my = ++runId;
+    var sRaw = $("surname").value;
+    if (!clean(sRaw)) {
+      $("result").innerHTML = '<p class="placeholder">Enter a last name to begin.</p>';
+      $("steps").innerHTML = '<p class="placeholder">Steps will appear here once you enter a last name.</p>';
+      renderLevels({ level: "none" }); $("levels-wrap").classList.add("hidden");
+      return;
+    }
+    lookupSurname(sRaw).then(function (s) {
+      if (my !== runId || !s) return;
+      var inp = {
+        surname: s,
+        first: lookupFirst($("first").value),
+        middle: lookupFirst($("middle").value),
+        sex: $("sex").value,
+        level: (document.querySelector('input[name=level]:checked') || {}).value || "none"
+      };
+      var res = compute(inp);
+      renderResult(res); renderSteps(res); renderLevels(inp);
+    }).catch(function (e) {
+      $("result").innerHTML = '<p class="placeholder">Could not load the surname data (' + esc(e.message) + ").</p>";
+    });
+  }
+  var debounce;
+  function runSoon() { clearTimeout(debounce); debounce = setTimeout(run, 180); }
+
+  // ---------- Geocoding (Census Geocoder via JSONP; it does not send CORS headers) ----------
+  function geocode(address) {
+    return new Promise(function (resolve, reject) {
+      var cb = "bisgGeo" + Date.now(), sc = document.createElement("script"), done = false;
+      var timer = setTimeout(function () { finish(); reject(new Error("The Census Geocoder did not respond. Try again in a moment.")); }, 20000);
+      function finish() { done = true; clearTimeout(timer); try { delete window[cb]; } catch (e) { window[cb] = undefined; } sc.remove(); }
+      window[cb] = function (data) { if (done) return; finish(); resolve(data); };
+      sc.onerror = function () { if (done) return; finish(); reject(new Error("Could not reach the Census Geocoder.")); };
+      sc.src = "https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?address=" + encodeURIComponent(address) +
+        "&benchmark=Public_AR_Current&vintage=Census2020_Current&layers=10&format=jsonp&callback=" + cb;
+      document.head.appendChild(sc);
+    });
+  }
+  function tractName(t) { var n = parseInt(t, 10); return "Census Tract " + (n % 100 === 0 ? String(n / 100) : (n / 100).toFixed(2)); }
+
+  function setLevelsEnabled(on) {
+    document.querySelectorAll("#levels label").forEach(function (l) {
+      var i = l.querySelector("input");
+      if (i.value === "none") return;
+      i.disabled = !on; l.classList.toggle("disabled", !on);
+    });
+    if (!on) document.querySelector('input[name=level][value=none]').checked = true;
+  }
+
+  function doGeocode() {
+    var a = $("address").value.trim(), st = $("geo-status"), btn = $("geocode-btn");
+    st.classList.remove("err");
+    if (!a) { state.geo = null; setLevelsEnabled(false); st.textContent = ""; run(); return Promise.resolve(); }
+    btn.disabled = true; st.textContent = "Looking up the address with the Census Geocoder…";
+    return geocode(a).then(function (data) {
+      var m = data && data.result && data.result.addressMatches && data.result.addressMatches[0];
+      var blk = m && m.geographies && m.geographies["Census Blocks"] && m.geographies["Census Blocks"][0];
+      if (!blk) throw new Error("No match. Check the spelling and include a city and state, or a ZIP code.");
+      var gid = blk.GEOID, sf = gid.slice(0, 2), cty = gid.slice(2, 5), tr = gid.slice(5, 11), bg = gid.slice(11, 12);
+      return Promise.all([getJSON("geo/counties.json"), getJSON("geo/tract/" + sf + ".json"), getJSON("geo/bg/" + sf + ".json")]).then(function (r) {
+        var counties = r[0], tracts = r[1], bgs = r[2];
+        if (!base.states.data[sf]) throw new Error("That address is outside the 50 states and D.C., which this tool covers.");
+        var cName = counties.names[sf + cty] || "County " + cty, sName = base.states.names[sf];
+        state.geo = {
+          matched: m.matchedAddress, geoid: gid,
+          arrays: { state: base.states.data[sf], county: counties.data[sf + cty], tract: tracts && tracts[cty + tr], bg: bgs && bgs[cty + tr + bg] },
+          names: {
+            state: sName, county: cName + ", " + sName,
+            tract: tractName(tr) + ", " + cName + ", " + sName,
+            bg: "Block Group " + bg + ", " + tractName(tr) + ", " + cName + ", " + sName
+          }
+        };
+        st.innerHTML = "Matched <b>" + esc(m.matchedAddress) + "</b>, census block " + esc(gid) + ".";
+        setLevelsEnabled(true);
+        var cur = document.querySelector('input[name=level]:checked');
+        if (!cur || cur.value === "none") document.querySelector('input[name=level][value=bg]').checked = true;
+        run();
+      });
+    }).catch(function (e) {
+      state.geo = null; setLevelsEnabled(false);
+      st.classList.add("err"); st.textContent = e.message; run();
+    }).finally(function () { btn.disabled = false; });
+  }
+
+  // ---------- Wire up ----------
+  ["surname", "first", "middle"].forEach(function (id) { $(id).addEventListener("input", runSoon); });
+  $("sex").addEventListener("change", run);
+  $("levels").addEventListener("change", run);
+  $("geocode-btn").addEventListener("click", doGeocode);
+  $("address").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); doGeocode(); } });
+  $("address").addEventListener("input", function () {
+    if (state.geo) { state.geo = null; setLevelsEnabled(false); $("geo-status").textContent = "Address changed. Click Locate to look it up."; run(); }
+  });
+  $("steps").addEventListener("change", function (e) {
+    var k = e.target.getAttribute("data-step");
+    if (k) { state.off[k] = !e.target.checked; run(); }
+  });
+  $("examples").innerHTML = EXAMPLES.map(function (x, i) { return '<button type="button" class="chip" data-ex="' + i + '">' + esc(x.label) + "</button>"; }).join("");
+  $("examples").addEventListener("click", function (e) {
+    var i = e.target.getAttribute("data-ex"); if (i == null) return;
+    var x = EXAMPLES[+i];
+    $("surname").value = x.s; $("first").value = x.f || ""; $("middle").value = ""; $("sex").value = "";
+    $("address").value = x.a || ""; state.off = {};
+    doGeocode();
+  });
+
+  // ---------- Boot ----------
+  Promise.all([getJSON("geo/states.json"), getJSON("firstnames.json"), getJSON("meta.json")]).then(function (r) {
+    base.states = r[0]; base.first = r[1]; base.meta = r[2];
+    var T = [0, 0, 0, 0, 0, 0];
+    Object.keys(base.first).forEach(function (n) { var v = base.first[n]; for (var k = 0; k < 6; k++) T[k] += v[0] * v[k + 1] / 100; });
+    base.firstTotals = T;
+    run();
+  }).catch(function (e) {
+    $("result").innerHTML = '<p class="placeholder">Could not load the data files (' + esc(e.message) + ").</p>";
+  });
+})();
+</script>
