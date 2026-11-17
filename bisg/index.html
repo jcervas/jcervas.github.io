@@ -117,7 +117,7 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
     <form class="card card--alt" id="bisg-form" autocomplete="off" onsubmit="return false">
       <h2>Your inputs</h2>
       <div class="field">
-        <label for="surname">Last name <span class="hint">Required. Matched against the 2010 Census surname list.</span></label>
+        <label for="surname">Last name <span class="hint">Matched against the 2010 Census surname list. Every field is optional; fill in any combination.</span></label>
         <input type="text" id="surname" placeholder="e.g., Garcia" spellcheck="false">
       </div>
       <div class="row2">
@@ -169,7 +169,7 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
 
     <div class="card" id="result-card" aria-live="polite">
       <h2>Prediction</h2>
-      <div id="result"><p class="placeholder">Enter a last name to begin.</p></div>
+      <div id="result"><p class="placeholder">Fill in any field to begin.</p></div>
     </div>
   </div>
 
@@ -180,7 +180,7 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
       probability by a factor: how much more (or less) common that evidence is among members of the group than among people
       overall. The results are then rescaled to add up to 100%. Switch a step off to see what it contributes.
     </p>
-    <div id="steps"><p class="placeholder">Steps will appear here once you enter a last name.</p></div>
+    <div id="steps"><p class="placeholder">Steps will appear here once you fill in a field.</p></div>
   </div>
 
   <section id="levels-wrap" class="hidden">
@@ -445,14 +445,16 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
 
     // 1. Surname
     var s = inp.surname, sd;
-    if (s.found) {
+    if (!s) {
+      apply("surname", "Last name", "No last name entered, so this step is skipped. The probabilities pass through unchanged.", null);
+    } else if (s.found) {
       sd = "<b>" + esc(title(s.name)) + "</b>" + (s.alt ? " (matched from &ldquo;" + esc(s.input) + "&rdquo;)" : "") +
            ": " + fmtInt(s.count) + " people in the 2010 Census, the #" + fmtInt(s.rank) + " most common surname." +
            (s.suppressed ? " Some cells were suppressed for privacy; their share is split evenly." : "");
     } else {
       sd = "<b>" + esc(title(s.input)) + "</b> is not on the Census list (fewer than 100 people). BISG falls back on the race mix of everyone with an unlisted surname.";
     }
-    apply("surname", "Last name", sd, s.pct.map(function (x, k) { return (x / 100) / prior[k]; }));
+    if (s) apply("surname", "Last name", sd, s.pct.map(function (x, k) { return (x / 100) / prior[k]; }));
 
     // 2-3. First, middle
     [["first", "First name"], ["middle", "Middle name"]].forEach(function (fm) {
@@ -569,14 +571,15 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
   function run() {
     var my = ++runId;
     var sRaw = $("surname").value;
-    if (!clean(sRaw)) {
-      $("result").innerHTML = '<p class="placeholder">' + (state.geo ? "Address located. Now enter a last name to see the prediction." : "Enter a last name to begin.") + '</p>';
-      $("steps").innerHTML = '<p class="placeholder">Steps will appear here once you enter a last name.</p>';
+    var any = clean(sRaw) || clean($("first").value) || clean($("middle").value) || $("sex").value || state.geo;
+    if (!any) {
+      $("result").innerHTML = '<p class="placeholder">Fill in any field to begin.</p>';
+      $("steps").innerHTML = '<p class="placeholder">Steps will appear here once you fill in a field.</p>';
       $("levels-wrap").classList.add("hidden");
       return;
     }
     lookupSurname(sRaw).then(function (s) {
-      if (my !== runId || !s) return;
+      if (my !== runId) return;
       var inp = {
         surname: s,
         first: lookupFirst($("first").value),
