@@ -406,6 +406,8 @@ img { max-width: 100%; height: auto; }
 .mtable__table th.is-asc .mtable__arrow::after { content: "\2191"; }   /* ↑ */
 .mtable__table th.is-desc .mtable__arrow::after { content: "\2193"; }  /* ↓ */
 .mt-author { color: var(--muted); font-size: .9em; }
+.mt-also { color: var(--muted); font-size: .85em; margin-top: .15rem; }
+.mt-also a { color: inherit; text-decoration: underline; text-decoration-color: currentColor; }
 .mt-quotes { margin: .4rem 0 .1rem; }
 .mt-quotes blockquote {
   margin: .3rem 0; padding-left: .8rem; border-left: 2px solid var(--line);
