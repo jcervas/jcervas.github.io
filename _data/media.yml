@@ -29,19 +29,46 @@ featured:
   url: https://about.bgov.com/insights/news/new-yorks-redistricting-master-holds-key-to-congressional-power/
   image: /assets/photos/cervas-classroom-2022.jpg
 mentions:
+- display_date: November 4, 2026
+  outlet: Newsweek
+  title: Why Republican Redistricting Flopped
+  url: https://www.newsweek.com/why-republican-redistricting-flopped-12650873
+  author: Hugh Cameron
+  date: '2026-11-04'
+  topic: Mid-Decade Fights
+- display_date: October 31, 2026
+  outlet: Los Angeles Times
+  title: Republicans are about to find out whether their gerrymanders backfired
+  url: https://www.latimes.com/politics/story/2026-10-31/republicans-are-about-to-find-out-whether-their-gerrymanders-backfired
+  author: Gregory Korte (Bloomberg)
+  date: '2026-10-31'
+  topic: Mid-Decade Fights
+- display_date: October 27, 2026
+  outlet: Carnegie Mellon University
+  title: CMU Commemorates America250
+  url: https://www.cmu.edu/news/stories/archives/2026/october/cmu-commemorates-america250
+  date: '2026-10-27'
+  topic: Reform & Commentary
 - display_date: September 22, 2026
   outlet: The Economist
   title: In MAGA-land people are dying faster than they are being born
   url: https://www.economist.com/graphic-detail/2026/09/22/in-maga-land-people-are-dying-faster-than-they-are-being-born?utm_campaign=shared_article
-  author: 
+  author:
   date: '2026-09-22'
-  topic: Mid-Decade Fights  
+  topic: Mid-Decade Fights
 - display_date: August 19, 2026
   outlet: Los Angeles Times
   title: Trump-backed candidates struggle, and other takeaways from Florida, Wyoming, Alaska primaries
   url: https://www.latimes.com/politics/story/2026-08-19/trump-backed-candidates-struggle-other-takeaways-from-florida-wyoming-alaska-primaries
   author: Christopher Buchanan
   date: '2026-08-19'
+  topic: Reform & Commentary
+- display_date: June 29, 2026
+  outlet: CityLand NYC
+  title: NY Elections, Census, and Redistricting Update 06/29/26
+  url: https://www.citylandnyc.org/ny-elections-census-and-redistricting-update-06-29-26/
+  author: Jeff Wice, Esha Shah, Michelle Davis, and Jason Fierman
+  date: '2026-06-29'
   topic: Reform & Commentary
 - display_date: May 27, 2026
   outlet: Bloomberg Government
@@ -99,6 +126,13 @@ mentions:
   author: Mark Sherman
   date: '2026-04-30'
   topic: Voting Rights Act
+- display_date: January 30, 2026
+  outlet: ABC7 San Francisco
+  title: CA projected to lose congressional seats after 2030 due to slow population growth, data shows
+  url: https://abc7news.com/post/california-projected-lose-4-congressional-seats-2030-census-population-decline/18500791/
+  author: Frank Esposito and Pamela Parker
+  date: '2026-01-30'
+  topic: Census & 2030
 - display_date: January 30, 2026
   outlet: Harlem World
   title: 'Coastal Power Shift: New York, California Set To Lose Six Congressional Seats Post‑2030'
