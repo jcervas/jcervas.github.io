@@ -1,6 +1,6 @@
 #### Prof. Jonathan Cervas
 
-#### DRAFT Updated: November 13, 2026
+#### DRAFT Updated: November 17, 2026
 
 > Professor **Jonathan Cervas**  
 > Office: Posner Hall 374  
@@ -584,6 +584,27 @@ that session’s page in Canvas.*
   Times*)](https://www.nytimes.com/2026/07/05/opinion/billionaire-wealth-tax-california.html)
 
 #### Thu, Nov 19 — Student-led 7: Citizenship
+
+- [Kirk — Citizenship: A Convergence of Cultures and Identities
+  (TEDxSavannah, video)](https://www.youtube.com/watch?v=ZzidNQZD8Ow&t=172s)
+- [SCOTUSblog + Briefly — Birthright Citizenship: *Trump v. Barbara*,
+  Animated Explainer (video)](https://www.youtube.com/watch?v=fJ-Lr7iBe-4&t=7s)
+- [Fung & Richer 2026 — Terms of Engagement: Should Noncitizens Be
+  Allowed to Vote in the U.S.? (Ash Center, Harvard Kennedy
+  School)](https://ash.harvard.edu/resources/terms-of-engagement-should-noncitizens-be-allowed-to-vote-in-the-u-s/)
+  — at least the part of the transcript on the history of immigrant
+  voting.
+- [Ballotpedia — Arguments For and Against Laws Permitting Noncitizens
+  to Vote in the United
+  States](https://ballotpedia.org/Arguments_for_and_against_laws_permitting_noncitizens_to_vote_in_the_United_States)
+- [Welcome.US 2026 — 6 Policy Changes Impacting the Citizenship
+  Process](https://welcome.us/explainers/6-policy-changes-impacting-the-citizenship-process)
+- [American Immigration Council 2009 — Naturalization and Integration:
+  Repairing Our Broken Immigration
+  System](https://www.americanimmigrationcouncil.org/report/naturalization-and-integration-repairing-our-broken-immigration-system/)
+- [Turley 2026 — The 28th Amendment: Will *Trump v. Barbara* Be the Final
+  Word on Birthright
+  Citizenship?](https://jonathanturley.org/2026/07/01/the-28th-amendment-will-trump-v-barbara-be-the-final-word-on-birthright-citizenship/)
 
 ### Week 14 — Book review presentations
 
