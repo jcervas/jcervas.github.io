@@ -1,25 +1,32 @@
 """Build static data files for the BISG teaching tool (jonathancervas.com/bisg/).
 
-Usage:  python3 build_bisg.py <output dir, e.g. bisg/data>
-Inputs, placed under <scratch>/dl/ where <scratch> is the parent of this script's folder:
-  dl/surnames/Names_2010Census.csv  https://www2.census.gov/topics/genealogy/2010surnames/names.zip
-  dl/first/firstnames.tab           https://dataverse.harvard.edu/api/access/datafile/7084375 (Tzioumis 2018, CC0)
-Geography is fetched from the Census API using CENSUS_API_KEY in ~/.Renviron (never written to output).
+Usage:  python3 build_bisg.py <output dir, e.g. bisg/data> <download dir> [--names-only]
+
+Inputs in <download dir> (2020 Census name files; see
+https://www.census.gov/topics/population/genealogy/data/2020_names.html):
+  Names2020_LastNames_RaceHispanic.xlsx
+      https://www2.census.gov/topics/genealogy/2020surnames/Names2020_LastNames_RaceHispanic.xlsx
+  Names2020_FirstNames_RaceHispanic.xlsx
+      https://www2.census.gov/topics/genealogy/2020surnames/Names2020_FirstNames_RaceHispanic.xlsx
+Geography is fetched from the Census API (2020 DHC) using CENSUS_API_KEY in ~/.Renviron;
+the key is never written to the output. --names-only skips the geography step.
 
 Outputs (under OUT):
-  surnames/<prefix>.json  Census 2010 surnames, sharded by first two letters
-  firstnames.json         Tzioumis (2018) first-name race distributions
+  surnames/<prefix>.json    {NAME: [rank, count, w, b, api, aian, multi, hisp]}  (2020 counts)
+  firstnames/<prefix>.json  same layout, 2020 first names
+  meta.json                 "All other names" rows and national totals for each list
   geo/states.json, geo/counties.json, geo/tract/<st>.json, geo/bg/<st>.json
       2020 Census DHC race-by-sex counts (table P12 iterations H-O)
 
-Race order everywhere: white, black, api, aian, multi (2+), hispanic
+Race order everywhere: white, black, api, aian, multi (2+), hispanic (all but hispanic are non-Hispanic).
 Geo arrays: [w_m, w_f, b_m, b_f, api_m, api_f, aian_m, aian_f, multi_m, multi_f, hisp_m, hisp_f]
 """
-import csv, json, os, re, sys, time, urllib.request, urllib.parse
+import json, os, re, shutil, sys, time, urllib.request, urllib.parse
 from collections import defaultdict
+import openpyxl
 
-S = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT = sys.argv[1]
+OUT, DL = sys.argv[1], sys.argv[2]
+NAMES_ONLY = "--names-only" in sys.argv
 os.makedirs(OUT, exist_ok=True)
 
 def dump(path, obj):
@@ -28,45 +35,45 @@ def dump(path, obj):
     with open(p, "w") as f:
         json.dump(obj, f, separators=(",", ":"))
 
-# ---------- Surnames ----------
-def num(x):
-    return float(x)
+# ---------- 2020 Census name files ----------
+# Source column order: W, B, AIAN, API, 2+, Hispanic  ->  internal: W, B, API, AIAN, 2+, Hispanic
+REORDER = [0, 1, 3, 2, 4, 5]
 
-shards = defaultdict(dict)
-with open(os.path.join(S, "dl/surnames/Names_2010Census.csv"), newline="") as f:
-    r = csv.DictReader(f)
-    cols = ["pctwhite", "pctblack", "pctapi", "pctaian", "pct2prace", "pcthispanic"]
-    allother = None
-    nsupp = 0
-    for row in r:
-        vals = [row[c] for c in cols]
-        sup = [v == "(S)" for v in vals]
-        known = sum(num(v) for v, s in zip(vals, sup) if not s)
-        k = sum(sup)
-        fill = max(0.0, 100.0 - known) / k if k else 0
-        pct = [round(fill if s else num(v), 2) for v, s in zip(vals, sup)]
-        if k:
-            nsupp += 1
-        name = row["name"]
-        if name == "ALL OTHER NAMES":
-            allother = {"count": int(row["count"]), "pct": pct}
+def build_names(xlsx, outdir):
+    ws = openpyxl.load_workbook(os.path.join(DL, xlsx), read_only=True).worksheets[0]
+    rows = ws.iter_rows(values_only=True)
+    for row in rows:
+        if row and row[0] in ("LAST NAME", "FIRST NAME"):
+            break
+    shards, allother, n = defaultdict(dict), None, 0
+    totals = [0] * 6
+    for row in rows:
+        if not row or not row[0]:
             continue
-        rec = [int(row["rank"]), int(row["count"])] + pct + ([1] if k else [])
-        prefix = (name[:2] + "_")[:2]
-        shards[prefix][name] = rec
-for p, d in shards.items():
-    dump(f"surnames/{p}.json", d)
-print("surname shards:", len(shards), "names:", sum(len(d) for d in shards.values()), "with suppression:", nsupp)
+        name, rank, count = str(row[0]).strip().upper(), row[1], int(row[2])
+        grp = [int(row[5 + i]) for i in REORDER]
+        assert all(g >= 0 for g in grp) and sum(grp) == count, name
+        totals = [t + g for t, g in zip(totals, grp)]
+        if name == "ALL OTHER NAMES":
+            allother = {"count": count, "counts": grp}
+            continue
+        name = re.sub(r"[^A-Z]", "", name)
+        if not name:
+            continue
+        shards[(name[:2] + "_")[:2]][name] = [int(rank), count] + grp
+        n += 1
+    shutil.rmtree(os.path.join(OUT, outdir), ignore_errors=True)
+    for p, d in shards.items():
+        dump(f"{outdir}/{p}.json", d)
+    print(xlsx, "names:", n, "shards:", len(shards), "total people:", sum(totals))
+    return {"allother": allother, "totals": totals, "n": n}
 
-# ---------- First names ----------
-fn = {}
-with open(os.path.join(S, "dl/first/firstnames.tab"), encoding="utf-8-sig") as f:
-    r = csv.DictReader(f, delimiter="\t")
-    for row in r:
-        name = row["firstname"].strip('"').upper()
-        fn[name] = [int(row["obs"])] + [round(float(row[c]), 2) for c in
-                    ["pctwhite", "pctblack", "pctapi", "pctaian", "pct2prace", "pcthispanic"]]
-print("first names:", len(fn))
+sur = build_names("Names2020_LastNames_RaceHispanic.xlsx", "surnames")
+fst = build_names("Names2020_FirstNames_RaceHispanic.xlsx", "firstnames")
+dump("meta.json", {"surname": sur, "first": fst, "built": time.strftime("%Y-%m-%d")})
+
+if NAMES_ONLY:
+    sys.exit(0)
 
 # ---------- Geography (2020 DHC) ----------
 key = None
@@ -139,7 +146,4 @@ for st in STATES:
     ntr += len(tr); nbg += len(bg)
     print(st, len(tr), len(bg), flush=True)
 print("tracts:", ntr, "block groups:", nbg)
-
-dump("firstnames.json", fn)
-dump("meta.json", {"surname_allother": allother, "built": time.strftime("%Y-%m-%d")})
 print("done")

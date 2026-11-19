@@ -117,7 +117,7 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
     <form class="card card--alt" id="bisg-form" autocomplete="off" onsubmit="return false">
       <h2>Your inputs</h2>
       <div class="field">
-        <label for="surname">Last name <span class="hint">Matched against the 2010 Census surname list. Every field is optional; fill in any combination.</span></label>
+        <label for="surname">Last name <span class="hint">Matched against the 2020 Census last-name list. Every field is optional; fill in any combination.</span></label>
         <input type="text" id="surname" placeholder="e.g., Garcia" spellcheck="false">
       </div>
       <div class="row2">
@@ -198,7 +198,7 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
     <p>
       BISG (<a href="https://doi.org/10.1007/s10742-009-0047-1" target="_blank" rel="noopener">Elliott et al. 2009</a>)
       combines two facts that are each only partly informative. Some surnames are held mostly by members of one group:
-      the Census reports that about 96% of people named Nguyen identify as Asian, for example. And neighborhoods in the
+      the 2020 Census counted about 531,000 people named Nguyen, and 95% of them identified as Asian, for example. And neighborhoods in the
       United States remain racially segregated, so where someone lives also carries information. Bayes&rsquo; rule
       combines the two, assuming that, <em>within</em> a racial group, surname and location are unrelated.
     </p>
@@ -207,7 +207,7 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
       P(place | race) = (residents of the place in that race) &divide; (all U.S. residents of that race)
     </div>
     <p>
-      The <strong>BIFSG</strong> extension (<a href="https://doi.org/10.1515/spp-2016-0005" target="_blank" rel="noopener">Voicu 2018</a>)
+      The <strong>BIFSG</strong> extension (<a href="https://doi.org/10.1080/2330443X.2018.1427012" target="_blank" rel="noopener">Voicu 2018</a>)
       multiplies in a first-name term the same way, P(first name | race). This tool also lets you add a middle name and sex,
       following the fuller model in <a href="https://doi.org/10.1093/pan/mpw001" target="_blank" rel="noopener">Imai &amp; Khanna (2016)</a>.
       With every input switched on, the full calculation is:
@@ -225,19 +225,19 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
 
     <h2>Where the numbers come from</h2>
     <ul>
-      <li><strong>Surnames:</strong> U.S. Census Bureau,
-        <a href="https://www.census.gov/topics/population/genealogy/data/2010_surnames.html" target="_blank" rel="noopener">Frequently Occurring Surnames from the 2010 Census</a>
-        (<a href="https://www2.census.gov/topics/genealogy/2010surnames/names.zip" target="_blank" rel="noopener">names.zip</a>).
-        It covers 162,253 surnames held by 100 or more people. Where the Bureau suppressed a small cell for privacy, marked
-        &ldquo;(S)&rdquo;, the leftover percentage is split evenly among the suppressed groups. Surnames not on the list
-        get the Bureau&rsquo;s &ldquo;All other names&rdquo; distribution.</li>
-      <li><strong>First and middle names:</strong> Tzioumis (2018),
-        &ldquo;<a href="https://doi.org/10.1038/sdata.2018.25" target="_blank" rel="noopener">Demographic aspects of first names</a>,&rdquo;
-        <em>Scientific Data</em>. It covers 4,250 first names from mortgage applications
-        (<a href="https://doi.org/10.7910/DVN/TYJKEZ" target="_blank" rel="noopener">Harvard Dataverse</a>; CC0 copy used here from
-        <a href="https://doi.org/10.7910/DVN/YL2OXB" target="_blank" rel="noopener">Rosenman, Olivella &amp; Imai 2023</a>). P(name | race) is computed by weighting
-        each name&rsquo;s race shares by its count. No public list exists for middle names alone, so middle names are scored
-        against the same first-name list. That is a simplification.</li>
+      <li><strong>Last names:</strong> U.S. Census Bureau,
+        <a href="https://www2.census.gov/topics/genealogy/2020surnames/Names2020_LastNames_RaceHispanic.xlsx" target="_blank" rel="noopener">Frequently Occurring Last Names in the 2020 Census by Race and Hispanic Origin</a>.
+        It covers 156,621 last names held by 100 or more people, with a count of people in each group. P(race | last name)
+        is each group&rsquo;s share of the people with that name. Names not on the list get the Bureau&rsquo;s &ldquo;All other
+        names&rdquo; row. Methods: <a href="https://www2.census.gov/library/publications/decennial/2020/c2020br-14.pdf" target="_blank" rel="noopener">Census Brief C2020BR-14</a>.</li>
+      <li><strong>First and middle names:</strong> U.S. Census Bureau,
+        <a href="https://www2.census.gov/topics/genealogy/2020surnames/Names2020_FirstNames_RaceHispanic.xlsx" target="_blank" rel="noopener">Frequently Occurring First Names in the 2020 Census by Race and Hispanic Origin</a>,
+        covering 53,615 first names. P(first name | race) is the number of people in a group with that name divided by
+        everyone in that group. An unlisted name uses the &ldquo;All other names&rdquo; row, which is informative because
+        rare first names are more common in some groups than others. The Census publishes no middle-name list, so middle
+        names are scored against the first-name list. That is a simplification. Methods:
+        <a href="https://www2.census.gov/library/publications/decennial/2020/c2020br-13.pdf" target="_blank" rel="noopener">Census Brief C2020BR-13</a>.
+        Both name lists are on the Bureau&rsquo;s <a href="https://www.census.gov/topics/population/genealogy/data/2020_names.html" target="_blank" rel="noopener">2020 names page</a>.</li>
       <li><strong>Neighborhoods and sex:</strong> 2020 Census
         <a href="https://www.census.gov/data/tables/2023/dec/2020-census-dhc.html" target="_blank" rel="noopener">Demographic and Housing Characteristics File</a>,
         tables P12H&ndash;P12O (sex by race and Hispanic origin), retrieved from the
@@ -247,10 +247,10 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
         using the current address benchmark and 2020 census geography.</li>
     </ul>
     <p>
-      The six groups match the Census surname file: non-Hispanic White, non-Hispanic Black, non-Hispanic Asian or Pacific
-      Islander, non-Hispanic American Indian or Alaska Native, non-Hispanic multiracial, and Hispanic of any race. People
-      who chose only &ldquo;Some other race&rdquo; (and are not Hispanic) are dropped, because the surname file has no
-      matching category. The starting point (step 0) is each group&rsquo;s share of the 2020 U.S. population on these
+      Every input comes from the 2020 Census. The six groups match the Census name files: non-Hispanic White, non-Hispanic
+      Black, non-Hispanic Asian or Pacific Islander, non-Hispanic American Indian or Alaska Native, non-Hispanic
+      multiracial, and Hispanic of any race. People who chose only &ldquo;Some other race&rdquo; (and are not Hispanic) are
+      left out of the neighborhood counts too, because the name files have no matching category. The starting point (step 0) is each group&rsquo;s share of the 2020 U.S. population on these
       definitions.
     </p>
 
@@ -267,9 +267,9 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
         a group, Bayes&rsquo; rule rules that group out entirely, however strong the other evidence is.</li>
       <li><strong>Smaller areas are noisier.</strong> Starting in 2020 the Census Bureau adds deliberate statistical noise
         (<a href="https://www.census.gov/programs-surveys/decennial-census/decade/2020/planning-management/process/disclosure-avoidance/differential-privacy.html" target="_blank" rel="noopener">differential privacy</a>)
-        to protect respondents, and that noise matters most for small areas.</li>
-      <li><strong>The data are from different years.</strong> Names come from 2010, neighborhoods from 2020, and people
-        move, marry, and change their names. Women who took a spouse&rsquo;s surname are a well-known source of error.</li>
+        to protect respondents. The noise matters most for small areas and rare names.</li>
+      <li><strong>People move, marry, and change their names.</strong> The data describe the country on April 1, 2020.
+        Women who took a spouse&rsquo;s surname are a well-known source of error.</li>
       <li><strong>The independence assumption is wrong at the margins.</strong> A Black Garcia and a Hispanic Garcia may
         not live in the same kinds of places, but BISG assumes they do.</li>
     </ul>
@@ -299,8 +299,8 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
       <li>Voicu, I. (2018). Using first name information to improve race and ethnicity classification.
         <em>Statistics and Public Policy</em> 5(1): 1&ndash;13.
         <a href="https://doi.org/10.1080/2330443X.2018.1427012" target="_blank" rel="noopener">doi</a></li>
-      <li>Tzioumis, K. (2018). Demographic aspects of first names. <em>Scientific Data</em> 5: 180025.
-        <a href="https://doi.org/10.1038/sdata.2018.25" target="_blank" rel="noopener">doi</a></li>
+      <li>U.S. Census Bureau (2026). <a href="https://www2.census.gov/library/publications/decennial/2020/c2020br-14.pdf" target="_blank" rel="noopener">Frequently occurring last names in the 2020 Census</a>
+        and <a href="https://www2.census.gov/library/publications/decennial/2020/c2020br-13.pdf" target="_blank" rel="noopener">first names in the 2020 Census</a>. 2020 Census Briefs C2020BR-14 and C2020BR-13.</li>
       <li>Kenny, C. T., et al. (2021). The use of differential privacy for census data and its impact on redistricting.
         <em>Science Advances</em> 7(41). <a href="https://doi.org/10.1126/sciadv.abk3283" target="_blank" rel="noopener">doi</a></li>
     </ul>
@@ -356,7 +356,7 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
   }
 
   var state = { geo: null, off: {} };
-  var base = { states: null, first: null, firstTotals: null, meta: null };
+  var base = { states: null, meta: null };
 
   function clean(s) {
     return (s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toUpperCase().replace(/[^A-Z\- ']/g, "").trim();
@@ -397,27 +397,32 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
     if (toks.length > 1) toks.slice().reverse().forEach(function (t) { t = t.replace(/-/g, ""); if (cands.indexOf(t) < 0) cands.push(t); });
     cands = cands.filter(Boolean);
     var i = 0;
+    function shares(cnt) { var t = cnt.reduce(function (a, b) { return a + b; }, 0); return cnt.map(function (x) { return x / t; }); }
     function next() {
-      if (i >= cands.length) return Promise.resolve({ input: c, found: false, pct: base.meta.surname_allother.pct });
+      if (i >= cands.length) return Promise.resolve({ input: c, found: false, share: shares(base.meta.surname.allother.counts) });
       var n = cands[i++];
-      var prefix = (n.slice(0, 2) + "_").slice(0, 2);
-      return getJSON("surnames/" + prefix + ".json").then(function (shard) {
+      return getJSON("surnames/" + shardOf(n) + ".json").then(function (shard) {
         var r = shard && shard[n];
-        if (r) return { input: c, name: n, found: true, rank: r[0], count: r[1], pct: r.slice(2, 8), suppressed: r.length > 8, alt: n !== cands[0] };
+        // P(race | surname) = people with this surname in the group / all people with this surname
+        if (r) return { input: c, name: n, found: true, rank: r[0], count: r[1], share: shares(r.slice(2, 8)), alt: n !== cands[0] };
         return next();
       });
     }
     return next();
   }
+  function shardOf(n) { return (n.slice(0, 2) + "_").slice(0, 2); }
   function lookupFirst(raw) {
     var c = clean(raw).replace(/['\-\s]/g, "");
-    if (!c) return null;
-    var r = base.first[c];
-    if (!r) return { input: c, found: false };
-    var obs = r[0], p = r.slice(1, 7);
-    // P(name | race) = obs * share_r / total people of race r in the list
-    var like = p.map(function (x, k) { return obs * x / 100 / base.firstTotals[k]; });
-    return { input: c, found: true, obs: obs, pct: p, like: like };
+    if (!c) return Promise.resolve(null);
+    if (c.length < 2) return Promise.resolve({ input: c, initial: true });
+    var T = base.meta.first.totals;
+    return getJSON("firstnames/" + shardOf(c) + ".json").then(function (shard) {
+      var r = shard && shard[c];
+      // P(first name | race) = people in the group with this name / all people in the group
+      if (r) return { input: c, found: true, rank: r[0], count: r[1], like: r.slice(2, 8).map(function (x, k) { return x / T[k]; }) };
+      var o = base.meta.first.allother;
+      return { input: c, found: false, like: o.counts.map(function (x, k) { return x / T[k]; }) };
+    });
   }
 
   // ---------- The model ----------
@@ -449,22 +454,23 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
       apply("surname", "Last name", "No last name entered, so this step is skipped. The probabilities pass through unchanged.", null);
     } else if (s.found) {
       sd = "<b>" + esc(title(s.name)) + "</b>" + (s.alt ? " (matched from &ldquo;" + esc(s.input) + "&rdquo;)" : "") +
-           ": " + fmtInt(s.count) + " people in the 2010 Census, the #" + fmtInt(s.rank) + " most common surname." +
-           (s.suppressed ? " Some cells were suppressed for privacy; their share is split evenly." : "");
+           ": " + fmtInt(s.count) + " people in the 2020 Census, the #" + fmtInt(s.rank) + " most common last name.";
     } else {
-      sd = "<b>" + esc(title(s.input)) + "</b> is not on the Census list (fewer than 100 people). BISG falls back on the race mix of everyone with an unlisted surname.";
+      sd = "<b>" + esc(title(s.input)) + "</b> is not on the Census list (fewer than 100 people). BISG falls back on the race mix of everyone with an unlisted last name.";
     }
-    if (s) apply("surname", "Last name", sd, s.pct.map(function (x, k) { return (x / 100) / prior[k]; }));
+    if (s) apply("surname", "Last name", sd, s.share.map(function (x, k) { return x / prior[k]; }));
 
     // 2-3. First, middle
     [["first", "First name"], ["middle", "Middle name"]].forEach(function (fm) {
       var f = inp[fm[0]];
       if (!f) return;
-      var d = f.found
-        ? "<b>" + esc(title(f.input)) + "</b>: " + fmtInt(f.obs) + " mortgage applicants in the Tzioumis list" +
-          (fm[0] === "middle" ? " (scored as if it were a first name)." : ".")
-        : "<b>" + esc(title(f.input)) + "</b> is not among the 4,250 first names in the list, so it adds no information.";
-      apply(fm[0], fm[1], d, f.found ? f.like : null);
+      var mid = fm[0] === "middle" ? " Scored against the first-name list, since the Census publishes no middle-name list." : "";
+      var d = f.initial
+        ? "<b>" + esc(f.input) + "</b> is a single initial, which carries no information, so this step is skipped."
+        : f.found
+        ? "<b>" + esc(title(f.input)) + "</b>: " + fmtInt(f.count) + " people in the 2020 Census, the #" + fmtInt(f.rank) + " most common first name." + mid
+        : "<b>" + esc(title(f.input)) + "</b> is not on the Census list (fewer than 100 people). Rare names are not equally common in every group, so BISG uses the race mix of everyone with an unlisted first name." + mid;
+      apply(fm[0], fm[1], d, f.initial ? null : f.like);
     });
 
     // 4. Sex
@@ -578,19 +584,19 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
       $("levels-wrap").classList.add("hidden");
       return;
     }
-    lookupSurname(sRaw).then(function (s) {
+    Promise.all([lookupSurname(sRaw), lookupFirst($("first").value), lookupFirst($("middle").value)]).then(function (L) {
       if (my !== runId) return;
       var inp = {
-        surname: s,
-        first: lookupFirst($("first").value),
-        middle: lookupFirst($("middle").value),
+        surname: L[0],
+        first: L[1],
+        middle: L[2],
         sex: $("sex").value,
         level: (document.querySelector('input[name=level]:checked') || {}).value || "none"
       };
       var res = compute(inp);
       renderResult(res); renderSteps(res); renderLevels(inp);
     }).catch(function (e) {
-      $("result").innerHTML = '<p class="placeholder">Could not load the surname data (' + esc(e.message) + ").</p>";
+      $("result").innerHTML = '<p class="placeholder">Could not load the name data (' + esc(e.message) + ").</p>";
     });
   }
   var debounce;
@@ -678,11 +684,8 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
   });
 
   // ---------- Boot ----------
-  Promise.all([getJSON("geo/states.json"), getJSON("firstnames.json"), getJSON("meta.json")]).then(function (r) {
-    base.states = r[0]; base.first = r[1]; base.meta = r[2];
-    var T = [0, 0, 0, 0, 0, 0];
-    Object.keys(base.first).forEach(function (n) { var v = base.first[n]; for (var k = 0; k < 6; k++) T[k] += v[0] * v[k + 1] / 100; });
-    base.firstTotals = T;
+  Promise.all([getJSON("geo/states.json"), getJSON("meta.json")]).then(function (r) {
+    base.states = r[0]; base.meta = r[1];
     run();
   }).catch(function (e) {
     $("result").innerHTML = '<p class="placeholder">Could not load the data files (' + esc(e.message) + ").</p>";
