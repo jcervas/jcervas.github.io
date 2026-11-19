@@ -14,6 +14,9 @@
     var countEl = container.querySelector('.mtable__count');
     var active = {};
     var query = '';
+    // Controls that only work with JS can ship `hidden`; show them now.
+    var controls = container.querySelector('.mtable__controls');
+    if (controls) { controls.hidden = false; }
 
     function labelFor(f) { return f.charAt(0).toUpperCase() + f.slice(1); }
 
@@ -81,7 +84,10 @@
         facets.forEach(function (f) {
           if (active[f] && r.getAttribute('data-' + f) !== active[f]) { ok = false; }
         });
-        if (ok && query) { ok = r.textContent.toLowerCase().indexOf(query) !== -1; }
+        if (ok && query) {
+          var hay = r.getAttribute('data-search') || r.textContent;
+          ok = hay.toLowerCase().indexOf(query) !== -1;
+        }
         r.style.display = ok ? '' : 'none';
         if (ok) { shown++; }
       });
@@ -101,6 +107,8 @@
         var colIndex = Array.prototype.slice.call(th.parentNode.children).indexOf(th);
         rows.sort(function (a, b) {
           var av = cellVal(a, colIndex, key), bv = cellVal(b, colIndex, key);
+          // null = no value (data-num=""): last in either direction.
+          if (av === null || bv === null) { return (av === null) - (bv === null); }
           if (av < bv) { return -sortState.dir; }
           if (av > bv) { return sortState.dir; }
           return 0;
@@ -119,6 +127,10 @@
       var td = tr.children[colIndex];
       if (!td) { return ''; }
       if (key === 'date') { return td.getAttribute('data-date') || ''; }
+      if (td.hasAttribute('data-num')) {
+        var num = td.getAttribute('data-num');
+        return num === '' ? null : parseFloat(num);
+      }
       return (td.textContent || '').trim().toLowerCase();
     }
 

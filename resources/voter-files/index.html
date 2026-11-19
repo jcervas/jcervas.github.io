@@ -1,0 +1,79 @@
+---
+layout: page
+title: "How to Get Each State’s Voter File"
+permalink: /resources/voter-files/
+breadcrumb: "Voter files"
+description: "Who may have each state's voter registration list, what the statewide file costs, and where to request it, with links to every state's own election office page, form, or statute."
+---
+{%- comment -%}
+  Rows come from _data/voter_file_access.csv, a copy of six columns of
+  state_access.csv (state, who_may_have_it, statewide_usd, price_basis,
+  request_link, link_is). Values are used as given; "NA" in statewide_usd
+  means no statewide price, and price_basis is shown in its place.
+  The table is plain HTML, so it reads in full with JavaScript off;
+  js/media-table.js adds the state filter and click-to-sort headers.
+{%- endcomment -%}
+
+<p class="section-lead">
+  Every state keeps a list of its registered voters, but who may have it, how you ask for it,
+  and what it costs differ from state to state. Each link below goes to the state’s own
+  election office page, form, or statute.
+</p>
+
+<p class="vfile__note">
+  As of November 16, 2026. Rules change often; check the state’s page before relying on any row.<br>
+  “Cap” marks a per-record charge with a printed maximum that a statewide file always reaches,
+  so the amount shown is that maximum.
+</p>
+
+{%- assign vf_rows = site.data.voter_file_access | sort: "state" %}
+<div class="mtable vfile" data-facets="">
+  <div class="mtable__controls" hidden>
+    <input type="search" class="mtable__search" placeholder="Filter by state…" aria-label="Filter by state">
+    <span class="mtable__count" aria-live="polite"></span>
+  </div>
+  <div class="mtable__scroll">
+    <table class="mtable__table">
+      <thead>
+        <tr>
+          <th data-sort="state" scope="col">State<span class="mtable__arrow" aria-hidden="true"></span></th>
+          <th data-sort="who" scope="col">Who may have it<span class="mtable__arrow" aria-hidden="true"></span></th>
+          <th data-sort="price" scope="col">Statewide file<span class="mtable__arrow" aria-hidden="true"></span></th>
+          <th data-sort="link" scope="col">Where to start<span class="mtable__arrow" aria-hidden="true"></span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for r in vf_rows -%}
+        {%- assign usd = r.statewide_usd | strip -%}
+        <tr data-search="{{ r.state | escape }}">
+          <th scope="row">{{ r.state }}</th>
+          <td>{{ r.who_may_have_it | escape }}</td>
+          {%- if usd == "" or usd == "NA" -%}
+          <td class="vfile__price vfile__price--none" data-num="">{{ r.price_basis | escape }}</td>
+          {%- else -%}
+            {%- assign n = usd | plus: 0 -%}
+            {%- if n == 0 -%}
+          <td class="vfile__price" data-num="0">free</td>
+            {%- else -%}
+              {%- if n >= 1000 -%}
+                {%- assign th = n | divided_by: 1000 -%}
+                {%- assign rest = n | modulo: 1000 | prepend: "00" | slice: -3, 3 -%}
+                {%- capture amount -%}${{ th }},{{ rest }}{%- endcapture -%}
+              {%- else -%}
+                {%- capture amount -%}${{ n }}{%- endcapture -%}
+              {%- endif -%}
+          <td class="vfile__price" data-num="{{ n }}">{{ amount }}{% if r.price_basis == "per record, cap reached" %} (cap){% endif %}</td>
+            {%- endif -%}
+          {%- endif -%}
+          <td><a href="{{ r.request_link | escape }}" target="_blank" rel="noopener">{{ r.link_is | escape }}<span class="resource__ext" aria-hidden="true">&#8599;</span></a></td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<p class="vfile__note">
+  A summary for research and teaching, not legal advice. Each row was read from the state’s
+  official pages and statutes, not from secondary compilations.
+</p>

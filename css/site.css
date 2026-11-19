@@ -421,6 +421,20 @@ img { max-width: 100%; height: auto; }
 @media (max-width: 600px) {
   .mt-outlet { white-space: normal; }
 }
+.mtable__controls[hidden] { display: none; }   /* JS-only controls ship hidden */
+
+/* ---------- Voter file table (/resources/voter-files/) ---------- */
+.vfile__note { color: var(--muted); font-size: .92rem; }
+.vfile .mtable__table tbody th { font-weight: 600; }
+.vfile__price { white-space: nowrap; }
+.vfile__price--none { white-space: normal; color: var(--muted); }
+@media (max-width: 600px) {
+  .vfile .mtable__table { font-size: .84rem; }
+  .vfile .mtable__table th, .vfile .mtable__table td { padding: .5rem .3rem; }
+  .vfile .mtable__table thead th { font-size: .74rem; white-space: normal; }
+  .vfile .mtable__arrow { width: .6em; }
+  .vfile__price { white-space: normal; }
+}
 
 /* ---------- Footer ---------- */
 .site-footer {
