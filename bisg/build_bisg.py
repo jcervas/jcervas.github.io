@@ -1,6 +1,6 @@
 """Build static data files for the BISG teaching tool (jonathancervas.com/bisg/).
 
-Usage:  python3 build_bisg.py <output dir, e.g. bisg/data> <download dir> [--names-only]
+Usage:  python3 build_bisg.py <output dir, e.g. bisg/data> <download dir> [--names-only | --zcta-only]
 
 Inputs in <download dir> (2020 Census name files; see
 https://www.census.gov/topics/population/genealogy/data/2020_names.html):
@@ -8,8 +8,11 @@ https://www.census.gov/topics/population/genealogy/data/2020_names.html):
       https://www2.census.gov/topics/genealogy/2020surnames/Names2020_LastNames_RaceHispanic.xlsx
   Names2020_FirstNames_RaceHispanic.xlsx
       https://www2.census.gov/topics/genealogy/2020surnames/Names2020_FirstNames_RaceHispanic.xlsx
+  tab20_zcta520_tract20_natl.txt   (2020 ZCTA-to-tract relationship file)
+      https://www2.census.gov/geo/docs/maps-data/data/rel2020/zcta520/tab20_zcta520_tract20_natl.txt
 Geography is fetched from the Census API (2020 DHC) using CENSUS_API_KEY in ~/.Renviron;
-the key is never written to the output. --names-only skips the geography step.
+the key is never written to the output. --names-only skips the geography step;
+--zcta-only rebuilds just the ZIP-area files (it reads the tract files already in OUT).
 
 Outputs (under OUT):
   surnames/<prefix>.json    {NAME: [rank, count, w, b, api, aian, multi, hisp]}  (2020 counts)
@@ -17,6 +20,8 @@ Outputs (under OUT):
   meta.json                 "All other names" rows and national totals for each list
   geo/states.json, geo/counties.json, geo/tract/<st>.json, geo/bg/<st>.json
       2020 Census DHC race-by-sex counts (table P12 iterations H-O)
+  geo/zcta/<first 3 digits>.json  {ZCTA: [12 counts..., "SSCCC"]}, where SSCCC is the county
+      holding most of the ZIP area's people (tract populations split by land-area overlap)
 
 Race order everywhere: white, black, api, aian, multi (2+), hispanic (all but hispanic are non-Hispanic).
 Geo arrays: [w_m, w_f, b_m, b_f, api_m, api_f, aian_m, aian_f, multi_m, multi_f, hisp_m, hisp_f]
@@ -27,6 +32,7 @@ import openpyxl
 
 OUT, DL = sys.argv[1], sys.argv[2]
 NAMES_ONLY = "--names-only" in sys.argv
+ZCTA_ONLY = "--zcta-only" in sys.argv
 os.makedirs(OUT, exist_ok=True)
 
 def dump(path, obj):
@@ -68,9 +74,10 @@ def build_names(xlsx, outdir):
     print(xlsx, "names:", n, "shards:", len(shards), "total people:", sum(totals))
     return {"allother": allother, "totals": totals, "n": n}
 
-sur = build_names("Names2020_LastNames_RaceHispanic.xlsx", "surnames")
-fst = build_names("Names2020_FirstNames_RaceHispanic.xlsx", "firstnames")
-dump("meta.json", {"surname": sur, "first": fst, "built": time.strftime("%Y-%m-%d")})
+if not ZCTA_ONLY:
+    sur = build_names("Names2020_LastNames_RaceHispanic.xlsx", "surnames")
+    fst = build_names("Names2020_FirstNames_RaceHispanic.xlsx", "firstnames")
+    dump("meta.json", {"surname": sur, "first": fst, "built": time.strftime("%Y-%m-%d")})
 
 if NAMES_ONLY:
     sys.exit(0)
@@ -109,41 +116,82 @@ def collapse(row, hdr):
 
 STATES = [f"{i:02d}" for i in [1,2,4,5,6,8,9,10,11,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,44,45,46,47,48,49,50,51,53,54,55,56]]
 
-d = fetch("state:*")
-hdr = d[0]
-states, names = {}, {}
-for row in d[1:]:
-    st = row[hdr.index("state")]
-    if st in STATES:
-        states[st] = collapse(row, hdr)
-        names[st] = row[0]
-us = [sum(v[i] for v in states.values()) for i in range(12)]
-dump("geo/states.json", {"us": us, "data": states, "names": names})
-print("states:", len(states), "US total (excl. SOR):", sum(us))
-
-d = fetch("county:*")
-hdr = d[0]
-counties, cnames = {}, {}
-for row in d[1:]:
-    st = row[hdr.index("state")]
-    if st in STATES:
-        g = st + row[hdr.index("county")]
-        counties[g] = collapse(row, hdr)
-        cnames[g] = row[0].split(",")[0]
-dump("geo/counties.json", {"data": counties, "names": cnames})
-print("counties:", len(counties))
-
-ntr = nbg = 0
-for st in STATES:
-    d = fetch("tract:*", [f"state:{st}"])
+def build_geo():
+    d = fetch("state:*")
     hdr = d[0]
-    tr = {row[hdr.index("county")] + row[hdr.index("tract")]: collapse(row, hdr) for row in d[1:]}
-    dump(f"geo/tract/{st}.json", tr)
-    d = fetch("block group:*", [f"state:{st}", "county:*", "tract:*"])
+    states, names = {}, {}
+    for row in d[1:]:
+        st = row[hdr.index("state")]
+        if st in STATES:
+            states[st] = collapse(row, hdr)
+            names[st] = row[0]
+    us = [sum(v[i] for v in states.values()) for i in range(12)]
+    dump("geo/states.json", {"us": us, "data": states, "names": names})
+    print("states:", len(states), "US total (excl. SOR):", sum(us))
+
+    d = fetch("county:*")
     hdr = d[0]
-    bg = {row[hdr.index("county")] + row[hdr.index("tract")] + row[hdr.index("block group")]: collapse(row, hdr) for row in d[1:]}
-    dump(f"geo/bg/{st}.json", bg)
-    ntr += len(tr); nbg += len(bg)
-    print(st, len(tr), len(bg), flush=True)
-print("tracts:", ntr, "block groups:", nbg)
+    counties, cnames = {}, {}
+    for row in d[1:]:
+        st = row[hdr.index("state")]
+        if st in STATES:
+            g = st + row[hdr.index("county")]
+            counties[g] = collapse(row, hdr)
+            cnames[g] = row[0].split(",")[0]
+    dump("geo/counties.json", {"data": counties, "names": cnames})
+    print("counties:", len(counties))
+
+    ntr = nbg = 0
+    for st in STATES:
+        d = fetch("tract:*", [f"state:{st}"])
+        hdr = d[0]
+        tr = {row[hdr.index("county")] + row[hdr.index("tract")]: collapse(row, hdr) for row in d[1:]}
+        dump(f"geo/tract/{st}.json", tr)
+        d = fetch("block group:*", [f"state:{st}", "county:*", "tract:*"])
+        hdr = d[0]
+        bg = {row[hdr.index("county")] + row[hdr.index("tract")] + row[hdr.index("block group")]: collapse(row, hdr) for row in d[1:]}
+        dump(f"geo/bg/{st}.json", bg)
+        ntr += len(tr); nbg += len(bg)
+        print(st, len(tr), len(bg), flush=True)
+    print("tracts:", ntr, "block groups:", nbg)
+
+def build_zcta():
+    # Population of each tract (all six groups), from the tract files
+    tpop = {}
+    for st in STATES:
+        with open(os.path.join(OUT, f"geo/tract/{st}.json")) as f:
+            for k, v in json.load(f).items():
+                tpop[st + k] = sum(v)
+    # Split each tract's people across ZIP areas by share of the tract's land, then sum by county
+    by = defaultdict(lambda: defaultdict(float))
+    with open(os.path.join(DL, "tab20_zcta520_tract20_natl.txt"), encoding="utf-8-sig") as f:
+        hdr = f.readline().rstrip("\n").split("|")
+        iz, it, ital, ipl = (hdr.index(c) for c in ("GEOID_ZCTA5_20", "GEOID_TRACT_20", "AREALAND_TRACT_20", "AREALAND_PART"))
+        for line in f:
+            r = line.rstrip("\n").split("|")
+            z, t = r[iz], r[it]
+            if not z or t[:2] not in STATES:
+                continue
+            land, part = int(r[ital] or 0), int(r[ipl] or 0)
+            share = part / land if land else 0
+            by[z][t[:5]] += tpop.get(t, 0) * share + part * 1e-12  # tiny area term breaks ties for empty tracts
+    d = fetch("zip code tabulation area:*")
+    hdr = d[0]
+    shards, n, nocty = defaultdict(dict), 0, 0
+    for row in d[1:]:
+        z = row[hdr.index("zip code tabulation area")]
+        c = by.get(z)
+        if not c:
+            nocty += 1  # Puerto Rico and other areas outside the 50 states and D.C.
+            continue
+        shards[z[:3]][z] = collapse(row, hdr) + [max(c, key=c.get)]
+        n += 1
+    shutil.rmtree(os.path.join(OUT, "geo/zcta"), ignore_errors=True)
+    for p, v in shards.items():
+        dump(f"geo/zcta/{p}.json", v)
+    print("ZIP areas:", n, "shards:", len(shards), "skipped (outside the states and D.C.):", nocty)
+
+if not ZCTA_ONLY:
+    build_geo()
+build_zcta()
 print("done")

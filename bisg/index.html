@@ -139,9 +139,9 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
         </select>
       </div>
       <div class="field">
-        <label for="address">Address <span class="hint">Optional. A full street address with city and state works best.</span></label>
+        <label for="address">Address or ZIP code <span class="hint">Optional. A full street address gives the most detail; a five-digit ZIP code alone also works.</span></label>
         <div class="addr-row">
-          <input type="text" id="address" placeholder="e.g., 5000 Forbes Ave, Pittsburgh, PA" spellcheck="false">
+          <input type="text" id="address" placeholder="e.g., 5000 Forbes Ave, Pittsburgh, PA, or just 15213" spellcheck="false">
           <button type="button" class="btn" id="geocode-btn">Locate</button>
         </div>
         <div class="geo-status" id="geo-status" aria-live="polite"></div>
@@ -152,6 +152,7 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
           <label><input type="radio" name="level" value="none" checked> None</label>
           <label class="disabled"><input type="radio" name="level" value="state" disabled> State</label>
           <label class="disabled"><input type="radio" name="level" value="county" disabled> County</label>
+          <label class="disabled"><input type="radio" name="level" value="zip" disabled> ZIP code</label>
           <label class="disabled"><input type="radio" name="level" value="tract" disabled> Tract</label>
           <label class="disabled"><input type="radio" name="level" value="bg" disabled> Block group</label>
         </div>
@@ -161,9 +162,9 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
         <div class="examples" id="examples"></div>
       </div>
       <p class="privacy">
-        Everything runs in your browser. Names are never sent anywhere. If you click <em>Locate</em>, the address alone is
-        sent to the <a href="https://geocoding.geo.census.gov/geocoder/" target="_blank" rel="noopener">U.S. Census Bureau Geocoder</a>
-        to find its census block. Nothing is saved.
+        Everything runs in your browser. Names are never sent anywhere. If you click <em>Locate</em> with a street address, the
+        address alone is sent to the <a href="https://geocoding.geo.census.gov/geocoder/" target="_blank" rel="noopener">U.S. Census Bureau Geocoder</a>
+        to find its census block. A ZIP code by itself is looked up on this site and sent nowhere. Nothing is saved.
       </p>
     </form>
 
@@ -242,9 +243,16 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
         <a href="https://www.census.gov/data/tables/2023/dec/2020-census-dhc.html" target="_blank" rel="noopener">Demographic and Housing Characteristics File</a>,
         tables P12H&ndash;P12O (sex by race and Hispanic origin), retrieved from the
         <a href="https://api.census.gov/data/2020/dec/dhc/variables.html" target="_blank" rel="noopener">Census API</a> for every state, county, tract,
-        and block group in the 50 states and D.C. Puerto Rico is not included.</li>
+        block group, and ZIP Code Tabulation Area in the 50 states and D.C. Puerto Rico is not included.</li>
+      <li><strong>ZIP codes:</strong> the Census Bureau does not tabulate USPS ZIP codes, which are mail routes. It tabulates
+        <a href="https://www.census.gov/programs-surveys/geography/guidance/geo-areas/zctas.html" target="_blank" rel="noopener">ZIP Code Tabulation Areas</a>
+        (ZCTAs), blocks grouped by the ZIP code most of their addresses use. A ZIP code that serves only post office boxes or
+        one large building has no ZCTA. When you enter only a ZIP code, the state and county shown are the ones holding most of
+        its residents, estimated from the Bureau&rsquo;s
+        <a href="https://www2.census.gov/geo/docs/maps-data/data/rel2020/zcta520/" target="_blank" rel="noopener">2020 ZCTA-to-tract relationship file</a>
+        (each tract&rsquo;s population split by shared land area).</li>
       <li><strong>Address lookup:</strong> the <a href="https://geocoding.geo.census.gov/geocoder/" target="_blank" rel="noopener">Census Geocoder</a>,
-        using the current address benchmark and 2020 census geography.</li>
+        using the current address benchmark and 2020 census geography. It returns the address&rsquo;s census block and its ZCTA.</li>
     </ul>
     <p>
       Every input comes from the 2020 Census. The six groups match the Census name files: non-Hispanic White, non-Hispanic
@@ -280,6 +288,8 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
       <li>Try <em>Lee</em>, <em>Smith</em>, or <em>Jackson</em> with addresses in different cities. Which input moves the
         answer more for these names, the surname or the neighborhood?</li>
       <li>Find a case where switching from tract to block group changes the most likely group. Should we trust the smaller area more?</li>
+      <li>Many companies know only a customer&rsquo;s ZIP code. Enter a name with just a ZIP, then with a full address in that
+        ZIP. How much does the prediction change, and for whom would a ZIP-only estimate be most misleading?</li>
       <li>A regulator uses BISG to check whether a lender charges minority borrowers more. Should it add up probabilities or
         assign each borrower to one group? What could go wrong with each?</li>
       <li>Voting rights cases use BISG to estimate the racial makeup of a voter file. Whose votes are most likely to be
@@ -327,6 +337,7 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
     { key: "none",   label: "No neighborhood (national)" },
     { key: "state",  label: "State" },
     { key: "county", label: "County" },
+    { key: "zip",    label: "ZIP code area" },
     { key: "tract",  label: "Census tract" },
     { key: "bg",     label: "Block group" }
   ];
@@ -339,6 +350,7 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
     { label: "Lee in Jackson, MS", s: "Lee", a: "1400 J R Lynch St, Jackson, MS 39217" },
     { label: "Smith in Pittsburgh's Hill District", s: "Smith", a: "2000 Wylie Ave, Pittsburgh, PA 15219" },
     { label: "Smith at CMU", s: "Smith", a: "5000 Forbes Ave, Pittsburgh, PA 15213" },
+    { label: "Lee, ZIP code only (94108)", s: "Lee", a: "94108" },
     { label: "Maria Smith", s: "Smith", f: "Maria" },
     { label: "Jose Kim", s: "Kim", f: "Jose" }
   ];
@@ -551,7 +563,7 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
     if (!state.geo) { $("levels-wrap").classList.add("hidden"); return; }
     $("levels-wrap").classList.remove("hidden");
     var head = "<thead><tr><th>Neighborhood used</th>" + ORDER.map(function (k) { return "<th>" + GROUPS[k].label + "</th>"; }).join("") + "<th></th></tr></thead>";
-    var rows = LEVELS.map(function (L) {
+    var rows = LEVELS.filter(function (L) { return L.key === "none" || state.geo.arrays[L.key]; }).map(function (L) {
       var savedOff = state.off.geo; state.off.geo = false;
       var r = compute(inp, L.key); state.off.geo = savedOff;
       var top = argmax(r.post);
@@ -563,7 +575,7 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
     $("levels-tbl").innerHTML = head + "<tbody>" + rows + "</tbody>";
 
     // Neighborhood composition
-    var g = state.geo, lv = inp.level === "none" ? "bg" : inp.level, arr = g.arrays[lv];
+    var g = state.geo, lv = inp.level === "none" ? finest() : inp.level, arr = g.arrays[lv];
     if (arr) {
       var c = counts(arr, null), comp = norm(c);
       $("neighborhood").innerHTML = comp ? '<h3>Who lives in ' + esc(g.names[lv]) + "?</h3>" +
@@ -611,48 +623,89 @@ description: "An interactive teaching tool for Bayesian Improved Surname Geocodi
       window[cb] = function (data) { if (done) return; finish(); resolve(data); };
       sc.onerror = function () { if (done) return; finish(); reject(new Error("Could not reach the Census Geocoder.")); };
       sc.src = "https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?address=" + encodeURIComponent(address) +
-        "&benchmark=Public_AR_Current&vintage=Census2020_Current&layers=10&format=jsonp&callback=" + cb;
+        "&benchmark=Public_AR_Current&vintage=Census2020_Current&layers=10,84&format=jsonp&callback=" + cb;
       document.head.appendChild(sc);
     });
   }
   function tractName(t) { var n = parseInt(t, 10); return "Census Tract " + (n % 100 === 0 ? String(n / 100) : (n / 100).toFixed(2)); }
 
+  // Finest level this location has data for
+  function finest() {
+    var a = state.geo ? state.geo.arrays : {};
+    return ["bg", "tract", "zip", "county", "state"].filter(function (k) { return a[k]; })[0] || "none";
+  }
+  // Enable the level choices this location has; keep the current one if it is still available
   function setLevelsEnabled(on) {
+    var a = on && state.geo ? state.geo.arrays : {};
     document.querySelectorAll("#levels label").forEach(function (l) {
       var i = l.querySelector("input");
       if (i.value === "none") return;
-      i.disabled = !on; l.classList.toggle("disabled", !on);
+      var ok = !!a[i.value];
+      i.disabled = !ok; l.classList.toggle("disabled", !ok);
     });
+    // A new kind of location (ZIP only vs. full address) starts at its finest level
+    var cur = document.querySelector('input[name=level]:checked'), kind = on && state.geo ? (state.geo.zipOnly ? "zip" : "addr") : null;
     if (!on) document.querySelector('input[name=level][value=none]').checked = true;
+    else if (!cur || cur.value === "none" || cur.disabled || kind !== state.lastKind) document.querySelector('input[name=level][value=' + finest() + ']').checked = true;
+    if (kind) state.lastKind = kind;
+  }
+  function zctaPath(z) { return "geo/zcta/" + z.slice(0, 3) + ".json"; }
+
+  // A ZIP code alone: use its ZIP Code Tabulation Area, plus the state and county holding most of its residents
+  function useZip(z) {
+    return Promise.all([getJSON(zctaPath(z)), getJSON("geo/counties.json")]).then(function (r) {
+      var rec = r[0] && r[0][z], counties = r[1];
+      if (!rec) throw new Error("The Census Bureau has no ZIP code area for " + z + ". It may serve only post office boxes or a single building, or lie outside the 50 states and D.C. Try a nearby ZIP code or a full street address.");
+      var c = rec[12], sf = c.slice(0, 2), sName = base.states.names[sf], cName = counties.names[c] || "County " + c.slice(2);
+      state.geo = {
+        zipOnly: true, geoid: z,
+        arrays: { state: base.states.data[sf], county: counties.data[c], zip: rec.slice(0, 12) },
+        names: { state: sName, county: cName + ", " + sName, zip: "ZIP code area " + z }
+      };
+      $("geo-status").innerHTML = "Using <b>ZIP code area " + esc(z) + "</b>, mostly in " + esc(cName) + ", " + esc(sName) +
+        ". A ZIP code alone can&rsquo;t place you in a tract or block group; enter a full street address for those.";
+      setLevelsEnabled(true);
+      run();
+    });
   }
 
   function doGeocode() {
     var a = $("address").value.trim(), st = $("geo-status"), btn = $("geocode-btn");
     st.classList.remove("err");
     if (!a) { state.geo = null; setLevelsEnabled(false); st.textContent = ""; run(); return Promise.resolve(); }
-    btn.disabled = true; st.textContent = "Looking up the address with the Census Geocoder…";
+    btn.disabled = true;
+    var zm = a.match(/^(\d{5})(?:-\d{4})?$/);
+    if (zm) {
+      st.textContent = "Looking up ZIP code " + zm[1] + "…";
+      return useZip(zm[1]).catch(function (e) {
+        state.geo = null; setLevelsEnabled(false);
+        st.classList.add("err"); st.textContent = e.message; run();
+      }).finally(function () { btn.disabled = false; });
+    }
+    st.textContent = "Looking up the address with the Census Geocoder…";
     return geocode(a).then(function (data) {
       var m = data && data.result && data.result.addressMatches && data.result.addressMatches[0];
       var blk = m && m.geographies && m.geographies["Census Blocks"] && m.geographies["Census Blocks"][0];
-      if (!blk) throw new Error("No match. Check the spelling and include a city and state, or a ZIP code.");
+      if (!blk) throw new Error("No match. Check the spelling and include a city and state, or enter just a five-digit ZIP code.");
       var gid = blk.GEOID, sf = gid.slice(0, 2), cty = gid.slice(2, 5), tr = gid.slice(5, 11), bg = gid.slice(11, 12);
-      return Promise.all([getJSON("geo/counties.json"), getJSON("geo/tract/" + sf + ".json"), getJSON("geo/bg/" + sf + ".json")]).then(function (r) {
-        var counties = r[0], tracts = r[1], bgs = r[2];
+      var zg = m.geographies["Zip Code Tabulation Areas"], zc = zg && zg[0] && zg[0].GEOID;
+      return Promise.all([getJSON("geo/counties.json"), getJSON("geo/tract/" + sf + ".json"), getJSON("geo/bg/" + sf + ".json"),
+                          zc ? getJSON(zctaPath(zc)) : null]).then(function (r) {
+        var counties = r[0], tracts = r[1], bgs = r[2], zrec = zc && r[3] && r[3][zc];
         if (!base.states.data[sf]) throw new Error("That address is outside the 50 states and D.C., which this tool covers.");
         var cName = counties.names[sf + cty] || "County " + cty, sName = base.states.names[sf];
         state.geo = {
           matched: m.matchedAddress, geoid: gid,
-          arrays: { state: base.states.data[sf], county: counties.data[sf + cty], tract: tracts && tracts[cty + tr], bg: bgs && bgs[cty + tr + bg] },
+          arrays: { state: base.states.data[sf], county: counties.data[sf + cty], zip: zrec ? zrec.slice(0, 12) : null,
+                    tract: tracts && tracts[cty + tr], bg: bgs && bgs[cty + tr + bg] },
           names: {
-            state: sName, county: cName + ", " + sName,
+            state: sName, county: cName + ", " + sName, zip: zc ? "ZIP code area " + zc : "",
             tract: tractName(tr) + ", " + cName + ", " + sName,
             bg: "Block Group " + bg + ", " + tractName(tr) + ", " + cName + ", " + sName
           }
         };
         st.innerHTML = "Matched <b>" + esc(m.matchedAddress) + "</b>, census block " + esc(gid) + ".";
         setLevelsEnabled(true);
-        var cur = document.querySelector('input[name=level]:checked');
-        if (!cur || cur.value === "none") document.querySelector('input[name=level][value=bg]').checked = true;
         run();
       });
     }).catch(function (e) {
