@@ -56,6 +56,10 @@ sections:
     title: "Data &amp; Mapping Tools"
     intro: "Where I go for clean redistricting data and for tools to draw and score maps."
     links:
+      - title: "How to get each state's voter file"
+        url: "/resources/voter-files/"
+        note: "Who may have each state's voter registration list, what the statewide file costs, and where to request it."
+        internal: true
       - title: "Redistricting Data Hub"
         url: "https://redistrictingdatahub.org/"
         note: "Cleaned, precinct-level election results and census data, ready for analysis."
